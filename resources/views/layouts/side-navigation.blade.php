@@ -10,8 +10,8 @@
         </div>
 
         <!-- parent pages-->
-        <a class="nav-link {{ request()->is('admin/groups*') ? 'active' : '' }}"
-            href="{{ route('groups.index') }}" role="button">
+        <a class="nav-link {{ request()->is('admin/groups*') ? 'active' : '' }}" href="{{ route('groups.index') }}"
+            role="button">
             <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                         class="fas fa-users"></span></span><span class="nav-link-text ps-1">Group</span>
             </div>
@@ -26,8 +26,8 @@
         </a>
 
         <!-- parent pages-->
-        <a class="nav-link {{ request()->is('admin/sites*') ? 'active' : '' }}"
-            href="{{ route('sites.index') }}" role="button">
+        <a class="nav-link {{ request()->is('admin/sites*') ? 'active' : '' }}" href="{{ route('sites.index') }}"
+            role="button">
             <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                         class="fas fa-building"></span></span><span class="nav-link-text ps-1">Site</span>
             </div>
@@ -42,8 +42,8 @@
         </a>
 
         <!-- parent pages-->
-        <a class="nav-link {{ request()->is('admin/logins*') ? 'active' : '' }}"
-            href="{{ route('logins.index') }}" role="button">
+        <a class="nav-link {{ request()->is('admin/logins*') ? 'active' : '' }}" href="{{ route('logins.index') }}"
+            role="button">
             <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                         class="fas fa-lock"></span></span><span class="nav-link-text ps-1">Login</span>
             </div>
@@ -90,13 +90,21 @@
                             </a>
                         @else
                             @foreach ($menu->subMenus as $subMenu)
-                                <a class="nav-link {{ count($subMenu->subMenus2) > 0 ? 'dropdown-indicator' : '' }}"
-                                    href="#{{ $subMenu->route_name }}" role="button" data-bs-toggle="collapse"
-                                    aria-expanded="false" aria-controls="checklist-monitoring">
-                                    <div class="d-flex align-items-center">
-                                        <span class="nav-link-text ps-1">{{ $subMenu->caption }}</span>
-                                    </div>
-                                </a>
+                                @if (count($subMenu->subMenus2) == 0)
+                                    <a class="nav-link" href="{{ route($subMenu->route_name) }}" role="button"
+                                        aria-expanded="false">
+                                        <div class="d-flex align-items-center">
+                                            <span class="nav-link-text ps-1">{{ $subMenu->caption }}</span>
+                                        </div>
+                                    </a>
+                                @else
+                                    <a class="nav-link dropdown-indicator" href="#{{ $subMenu->route_name }}"
+                                        role="button" data-bs-toggle="collapse" aria-controls="checklist-monitoring">
+                                        <div class="d-flex align-items-center">
+                                            <span class="nav-link-text ps-1">{{ $subMenu->caption }}</span>
+                                        </div>
+                                    </a>
+                                @endif
                                 <ul class="nav collapse" id="{{ $subMenu->route_name }}">
                                     <li class="nav-item">
                                         @foreach ($subMenu->subMenus2 as $subMenu2)
