@@ -11,7 +11,6 @@
                 <th scope="col">ID Tenant</th>
                 <th scope="col">ID Unit</th>
                 <th scope="col">ID Jenis Kendaraan</th>
-                <th scope="col">ID Status Tinggal</th>
                 <th scope="col">No Polisi</th>
                 <th class="text-end" scope="col">Actions</th>
             </tr>
@@ -22,7 +21,6 @@
                     <td>{{ $kendaraan->id_tenant }}</td>
                     <td>{{ $kendaraan->id_unit }}</td>
                     <td>{{ $kendaraan->id_jenis_kendaraan }}</td>
-                    <td>{{ $kendaraan->id_status_tinggal }}</td>
                     <td>{{ $kendaraan->no_polisi }}</td>
                     <td class="text-end">
                         <div>
@@ -89,10 +87,6 @@
                                 <div class="col-6">
                                     <label class="form-label">No Polisi </label>
                                     <input type="text" name="no_polisi" class="form-control" required>
-                                </div>
-                                <div class="col-6">
-                                    <label class="form-label">ID Status Tinggal</label>
-                                    <input type="text" name="id_status_tinggal" class="form-control" required>
                                 </div>
                             </div>
                         </div>

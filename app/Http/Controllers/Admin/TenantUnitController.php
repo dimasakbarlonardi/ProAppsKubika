@@ -230,7 +230,6 @@ class TenantUnitController extends Controller
                 'id_tenant' => $request->id_tenant,
                 'id_unit' => $request->id_unit,
                 'id_jenis_kendaraan' => $request->id_jenis_kendaraan,
-                'id_status_tinggal' => $request->id_status_tinggal,
                 'no_polisi' => $request->no_polisi,
             ]);
 

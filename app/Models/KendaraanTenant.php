@@ -19,7 +19,6 @@ class KendaraanTenant extends Model
         'id_tenant',
         'id_unit',
         'id_jenis_kendaraan',
-        'id_status_tinggal',
         'no_polisi'
     ];
 

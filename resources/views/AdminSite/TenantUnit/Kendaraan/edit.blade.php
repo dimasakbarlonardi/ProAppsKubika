@@ -35,10 +35,6 @@
                     <label class="form-label">No Polisi </label>
                     <input type="text" name="no_polisi" value="{{ $tenantkendaraan->no_polisi }}" class="form-control" required>
                 </div>
-                <div class="col-6">
-                    <label class="form-label">ID Status Tinggal</label>
-                    <input type="text" name="id_status_tinggal" value="{{ $tenantkendaraan->id_status_tinggal }}" class="form-control" required>
-                </div>
             </div>
         </div>
         <div class="modal-footer">
