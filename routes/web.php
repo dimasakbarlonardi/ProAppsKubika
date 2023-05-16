@@ -32,7 +32,7 @@ use App\Http\Controllers\Admin\OwnerHController;
 use App\Http\Controllers\Admin\PenempatanController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\PeriodeSewaController;
-use App\Http\Controllers\Admin\StatusKawinController;
+use App\Http\Controllers\Admin\SystemSettingController;
 use App\Models\JenisKendaraan;
 use App\Http\Controllers\Admin\StatusTinggalController;
 
@@ -54,6 +54,10 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
+
+Route::get('/testing-units', function () {
+    return view('units');
+})->name('dashboard');
 
 // Check role id
 Route::get('/check-role-id', [RoleController::class, 'checkRoleID']);
@@ -181,7 +185,7 @@ Route::prefix('admin')->group(function () {
 
          // CRUD Jabatan
          Route::resource('jabatans', JabatanController::class);
-         
+
          // CRUD Divisi
          Route::resource('divisis', DivisiController::class);
 
@@ -190,7 +194,7 @@ Route::prefix('admin')->group(function () {
 
          // CRUD Penempatan
          Route::resource('penempatans', PenempatanController::class);
-         
+
 
         // Akses form for user
         Route::get('/akses-form-user/{id}', [RoleController::class, 'aksesForm'])->name('akses-form');
