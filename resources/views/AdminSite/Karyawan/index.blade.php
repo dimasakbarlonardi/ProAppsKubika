@@ -55,8 +55,7 @@
                         <th scope="row">{{ $key + 1 }}</th>
                         <td>{{ $karyawan->id_karyawan }}</td>
                         <td>{{ $karyawan->id_site }}</td>
-                            {{dd($karyawan)}}
-                        <td>{{ $karyawan->idcard}}</td>
+                        <td>{{ $karyawan->idcard->card_id_name}}</td>
                         <td>{{ $karyawan->nik_karyawan }}</td>
                         <td>{{ $karyawan->nama_karyawan }}</td>
                         <td>{{ $karyawan->id_status_karyawan}}</td>

@@ -42,8 +42,6 @@ class KaryawanController extends Controller
         $conn = $this->setConnection($request);
 
         $data['karyawans'] = $conn->get();
-
-        dd($data);
    
         return view('AdminSite.Karyawan.index', $data);
     }

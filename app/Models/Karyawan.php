@@ -14,7 +14,7 @@ class Karyawan extends Model
     public $incrementing = false;
 
     protected $fillable = [
-        'id_kepemilikan_unit ',
+        'id_karyawan ',
         'id_site',
         'id_card_type',
         'nik_karyawan',
@@ -51,5 +51,5 @@ class Karyawan extends Model
     {
         return $this->hasOne(IdCard::class, 'id_card_type', 'id_card_type' );
     }
-    
+
 }
