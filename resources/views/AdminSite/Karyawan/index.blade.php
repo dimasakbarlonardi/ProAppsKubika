@@ -45,7 +45,7 @@
                     <th class="sort" data-sort="tempat_lahir">Tanggal Lahir</th>
                     <th class="sort" data-sort="tgl_lahir">ID Jenis Kelamin</th>
                     <th class="sort" data-sort="id_agama">ID Agama</th>
-                    <th class="sort" data-sort="id_jenis_kelamin">ID Status Kawin</th>             
+                    <th class="sort" data-sort="id_jenis_kelamin">ID Status Kawin</th>
                     <th class="sort">Action</th>
                 </tr>
             </thead>
@@ -55,8 +55,7 @@
                         <th scope="row">{{ $key + 1 }}</th>
                         <td>{{ $karyawan->id_karyawan }}</td>
                         <td>{{ $karyawan->id_site }}</td>
-                            {{dd($karyawan)}}
-                        <td>{{ $karyawan->idcard}}</td>
+                        <td>{{ $karyawan->IdCard->card_id_name }}</td>
                         <td>{{ $karyawan->nik_karyawan }}</td>
                         <td>{{ $karyawan->nama_karyawan }}</td>
                         <td>{{ $karyawan->id_status_karyawan}}</td>
