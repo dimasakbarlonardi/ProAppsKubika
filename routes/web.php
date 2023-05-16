@@ -26,6 +26,7 @@ use App\Http\Controllers\Admin\MemberTenantController;
 use App\Http\Controllers\Admin\OwnerHController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\PeriodeSewaController;
+use App\Http\Controllers\Admin\SystemSettingController;
 use App\Models\JenisKendaraan;
 
 /*
@@ -46,6 +47,10 @@ Route::get('/', function () {
 Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
+
+Route::get('/testing-units', function () {
+    return view('units');
+})->name('dashboard');
 
 // Check role id
 Route::get('/check-role-id', [RoleController::class, 'checkRoleID']);
@@ -158,6 +163,9 @@ Route::prefix('admin')->group(function () {
 
         // CRUD Agama
         Route::resource('agamas', AgamaController::class);
+
+        // System Settings
+        Route::resource('system-settings', SystemSettingController::class);
 
         // Akses form for user
         Route::get('/akses-form-user/{id}', [RoleController::class, 'aksesForm'])->name('akses-form');
