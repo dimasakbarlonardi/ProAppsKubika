@@ -12,6 +12,7 @@ class OwnerH extends Model
     
     protected $table = 'tb_pemilik_h';
     protected $primaryKey = 'id_pemilik';
+    public $incrementing = false;
 
     protected $fillable =[
         'id_pemilik',
