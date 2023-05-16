@@ -1,80 +1,3 @@
-{{-- @extends('layouts.master')
-
-@section('content')
-<div class="card">
-    <div class="card-header bg-light py-2">
-        <div class="row flex-between-center">
-            <div class="col-auto">
-                <h6 class="mb-0">List Unit</h6>
-            </div>
-            <div class="col-auto d-flex">
-                <a class="btn btn-primary" href="{{ route('units.create') }}">Tambah Unit</a>
-            </div>
-        </div>
-    </div>
-    <div class="p-5">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th class="sort" data-sort="">No</th>
-                    <th class="sort" data-sort="id_unit">Kode Unit</th>
-                    <th class="sort" data-sort="nama_hunian">Nama Hunian</th>
-                    <th class="sort" data-sort="nama_unit">Nama Unit</th>
-                    <th class="sort" data-sort="luas_unit">Luas Unit</th>
-                    <th class="sort" data-sort="barcode_meter_air">Barcode Meter Air</th>
-                    <th class="sort" data-sort="barcode_meter_listrik">Barcode Meter Listrik</th>
-                    <th class="sort" data-sort="barcode_meter_gas">Barcode Meter Gas</th>
-                    <th class="sort" data-sort="no_meter_air">No Meter Air</th>
-                    <th class="sort" data-sort="no_meter_listrik">No Meter Listrik</th>
-                    <th class="sort" data-sort="no_meter_gas">No Meter Gas</th>
-                    <th class="sort" data-sort="meter_air_awal">Meter Air Awal</th>
-                    <th class="sort" data-sort="meter_air_akhir">Meter Air Akhir</th>
-                    <th class="sort" data-sort="meter_listrik_awal">Meter Listrik Awal</th>
-                    <th class="sort" data-sort="meter_listrik_akhir">Meter Listrik Akhir</th>
-                    <th class="sort" data-sort="meter_gas_awal">Meter Gas Awal</th>
-                    <th class="sort" data-sort="meter_gas_akhir">Meter Gas Akhir</th>
-                    <th class="sort" data-sort="keterangan">Keterangan</th>
-                    <th class="sort">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($units as $key => $unit)
-                    <tr>
-                        <th scope="row">{{ $key + 1 }}</th>
-                        <td>{{ $unit->id_unit }}</td>
-                        <td>{{ $unit->hunian->nama_hunian }}</td>
-                        <td>{{ $unit->nama_unit }}</td>
-                        <td>{{ $unit->luas_unit }}</td>
-                        <td>{{ $unit->barcode_meter_air }}</td>
-                        <td>{{ $unit->barcode_meter_listrik }}</td>
-                        <td>{{ $unit->barcode_meter_gas }}</td>
-                        <td>{{ $unit->no_meter_air }}</td>
-                        <td>{{ $unit->no_meter_listrik }}</td>
-                        <td>{{ $unit->no_meter_gas }}</td>
-                        <td>{{ $unit->meter_air_awal }}</td>
-                        <td>{{ $unit->meter_air_akhir }}</td>
-                        <td>{{ $unit->meter_listrik_awal }}</td>
-                        <td>{{ $unit->meter_listrik_akhir }}</td>
-                        <td>{{ $unit->meter_gas_awal }}</td>
-                        <td>{{ $unit->meter_gas_akhir }}</td>
-                        <td>{{ $unit->keterangan }}</td>
-                        <td>
-                            <a href="{{ route('units.edit', $unit->id_unit) }}" class="btn btn-sm btn-warning">Edit</a>
-                            <form class="d-inline" action="{{ route('units.destroy', $unit->id_unit) }}" method="post">
-                                @method('DELETE')
-                                @csrf
-                                <button type="submit" class="btn btn-danger btn-sm"
-                                    onclick="return confirm('are you sure?')">Hapus</button>
-                            </form>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
-</div>
-@endsection --}}
-
 @extends('layouts.master')
 
 @section('content')
@@ -93,8 +16,9 @@
                                 <div class="col-auto">
                                     <form>
                                         <div class="input-group input-search-width">
-                                            <input class="form-control form-control-sm shadow-none search" type="search"
-                                                placeholder="Search  by name" aria-label="search" /><button
+                                            <input class="form-control form-control-sm shadow-none search"
+                                                type="search" placeholder="Search  by name"
+                                                aria-label="search" /><button
                                                 class="btn btn-sm btn-outline-secondary border-300 hover-border-secondary">
                                                 <span class="fa fa-search fs--1"></span>
                                             </button>
@@ -135,8 +59,9 @@
                                         </button>
                                         <div class="dropdown-menu dropdown-menu-end border py-2"
                                             aria-labelledby="preview-dropdown">
-                                            <a class="dropdown-item" href="{{ route('towers.create') }}">Tambah Tower</a>
-                                            <a class="dropdown-item" href="{{ route('towers.index') }}">List Tower</a>
+                                            <a class="dropdown-item" href="#!">Tambah Tower</a>
+                                            <a class="dropdown-item"
+                                                href="#!">List Tower</a>
                                         </div>
                                     </div>
 
@@ -149,8 +74,8 @@
                                         </button>
                                         <div class="dropdown-menu dropdown-menu-end border py-2"
                                             aria-labelledby="preview-dropdown">
-                                            <a class="dropdown-item" href="{{ route('floors.create') }}">Tambah Lantai</a>
-                                            <a class="dropdown-item" href="{{ route('floors.index') }}">List Lantai</a>
+                                            <a class="dropdown-item" href="#!">View</a><a class="dropdown-item"
+                                                href="#!">Export</a>
                                         </div>
                                     </div>
                                 </div>
@@ -203,8 +128,7 @@
                                     <div
                                         class="bg-white dark__bg-1100 d-md-flex d-xl-inline-block d-xxl-flex align-items-center p-x1 rounded-3 shadow-sm card-view-height">
                                         <div class="d-flex align-items-start align-items-sm-center">
-                                            <a class="d-none d-sm-block"
-                                                href="../../app/support-desk/contact-details.html">
+                                            <a class="d-none d-sm-block" href="../../app/support-desk/contact-details.html">
                                                 <div class="avatar avatar-xl avatar-3xl">
                                                     <div class="avatar-name rounded-circle">
                                                         <span>PG</span>
@@ -227,8 +151,7 @@
                                                         </h6>
                                                     </div>
                                                     <div class="col-auto lh-1 me-3">
-                                                        <small
-                                                            class="badge rounded badge-soft-info false">Responded</small>
+                                                        <small class="badge rounded badge-soft-info false">Responded</small>
                                                     </div>
                                                 </div>
                                             </div>
@@ -239,8 +162,7 @@
                                     <div
                                         class="bg-white dark__bg-1100 d-md-flex d-xl-inline-block d-xxl-flex align-items-center p-x1 rounded-3 shadow-sm card-view-height">
                                         <div class="d-flex align-items-start align-items-sm-center">
-                                            <a class="d-none d-sm-block"
-                                                href="../../app/support-desk/contact-details.html">
+                                            <a class="d-none d-sm-block" href="../../app/support-desk/contact-details.html">
                                                 <div class="avatar avatar-xl avatar-3xl">
                                                     <div class="avatar-name rounded-circle">
                                                         <span>PG</span>
@@ -263,119 +185,7 @@
                                                         </h6>
                                                     </div>
                                                     <div class="col-auto lh-1 me-3">
-                                                        <small
-                                                            class="badge rounded badge-soft-info false">Responded</small>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-4">
-                                    <div
-                                        class="bg-white dark__bg-1100 d-md-flex d-xl-inline-block d-xxl-flex align-items-center p-x1 rounded-3 shadow-sm card-view-height">
-                                        <div class="d-flex align-items-start align-items-sm-center">
-                                            <a class="d-none d-sm-block"
-                                                href="../../app/support-desk/contact-details.html">
-                                                <div class="avatar avatar-xl avatar-3xl">
-                                                    <div class="avatar-name rounded-circle">
-                                                        <span>PG</span>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            <div class="ms-1 ms-sm-3">
-                                                <p class="fw-semi-bold mb-3 mb-sm-2">
-                                                    <a href="../../app/support-desk/tickets-preview.html">I need your help
-                                                        #2256</a>
-                                                </p>
-                                                <div class="row align-items-center gx-0 gy-2">
-                                                    <div class="col-auto me-2">
-                                                        <h6 class="client mb-0">
-                                                            <a class="text-800 d-flex align-items-center gap-1"
-                                                                href="../../app/support-desk/contact-details.html"><span
-                                                                    class="fas fa-user"
-                                                                    data-fa-transform="shrink-3 up-1"></span><span>Peter
-                                                                    Gill</span></a>
-                                                        </h6>
-                                                    </div>
-                                                    <div class="col-auto lh-1 me-3">
-                                                        <small
-                                                            class="badge rounded badge-soft-info false">Responded</small>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div
-                                        class="bg-white dark__bg-1100 d-md-flex d-xl-inline-block d-xxl-flex align-items-center p-x1 rounded-3 shadow-sm card-view-height">
-                                        <div class="d-flex align-items-start align-items-sm-center">
-                                            <a class="d-none d-sm-block"
-                                                href="../../app/support-desk/contact-details.html">
-                                                <div class="avatar avatar-xl avatar-3xl">
-                                                    <div class="avatar-name rounded-circle">
-                                                        <span>PG</span>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            <div class="ms-1 ms-sm-3">
-                                                <p class="fw-semi-bold mb-3 mb-sm-2">
-                                                    <a href="../../app/support-desk/tickets-preview.html">I need your help
-                                                        #2256</a>
-                                                </p>
-                                                <div class="row align-items-center gx-0 gy-2">
-                                                    <div class="col-auto me-2">
-                                                        <h6 class="client mb-0">
-                                                            <a class="text-800 d-flex align-items-center gap-1"
-                                                                href="../../app/support-desk/contact-details.html"><span
-                                                                    class="fas fa-user"
-                                                                    data-fa-transform="shrink-3 up-1"></span><span>Peter
-                                                                    Gill</span></a>
-                                                        </h6>
-                                                    </div>
-                                                    <div class="col-auto lh-1 me-3">
-                                                        <small
-                                                            class="badge rounded badge-soft-info false">Responded</small>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div
-                                        class="bg-white dark__bg-1100 d-md-flex d-xl-inline-block d-xxl-flex align-items-center p-x1 rounded-3 shadow-sm card-view-height">
-                                        <div class="d-flex align-items-start align-items-sm-center">
-                                            <a class="d-none d-sm-block"
-                                                href="../../app/support-desk/contact-details.html">
-                                                <div class="avatar avatar-xl avatar-3xl">
-                                                    <div class="avatar-name rounded-circle">
-                                                        <span>PG</span>
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            <div class="ms-1 ms-sm-3">
-                                                <p class="fw-semi-bold mb-3 mb-sm-2">
-                                                    <a href="../../app/support-desk/tickets-preview.html">I need your help
-                                                        #2256</a>
-                                                </p>
-                                                <div class="row align-items-center gx-0 gy-2">
-                                                    <div class="col-auto me-2">
-                                                        <h6 class="client mb-0">
-                                                            <a class="text-800 d-flex align-items-center gap-1"
-                                                                href="../../app/support-desk/contact-details.html"><span
-                                                                    class="fas fa-user"
-                                                                    data-fa-transform="shrink-3 up-1"></span><span>Peter
-                                                                    Gill</span></a>
-                                                        </h6>
-                                                    </div>
-                                                    <div class="col-auto lh-1 me-3">
-                                                        <small
-                                                            class="badge rounded badge-soft-info false">Responded</small>
+                                                        <small class="badge rounded badge-soft-info false">Responded</small>
                                                     </div>
                                                 </div>
                                             </div>
@@ -389,8 +199,7 @@
                                     <div
                                         class="bg-white dark__bg-1100 d-md-flex d-xl-inline-block d-xxl-flex align-items-center p-x1 rounded-3 shadow-sm card-view-height">
                                         <div class="d-flex align-items-start align-items-sm-center">
-                                            <a class="d-none d-sm-block"
-                                                href="../../app/support-desk/contact-details.html">
+                                            <a class="d-none d-sm-block" href="../../app/support-desk/contact-details.html">
                                                 <div class="avatar avatar-xl avatar-3xl">
                                                     <div class="avatar-name rounded-circle">
                                                         <span>PG</span>
@@ -413,8 +222,7 @@
                                                         </h6>
                                                     </div>
                                                     <div class="col-auto lh-1 me-3">
-                                                        <small
-                                                            class="badge rounded badge-soft-info false">Responded</small>
+                                                        <small class="badge rounded badge-soft-info false">Responded</small>
                                                     </div>
                                                 </div>
                                             </div>
@@ -425,8 +233,7 @@
                                     <div
                                         class="bg-white dark__bg-1100 d-md-flex d-xl-inline-block d-xxl-flex align-items-center p-x1 rounded-3 shadow-sm card-view-height">
                                         <div class="d-flex align-items-start align-items-sm-center">
-                                            <a class="d-none d-sm-block"
-                                                href="../../app/support-desk/contact-details.html">
+                                            <a class="d-none d-sm-block" href="../../app/support-desk/contact-details.html">
                                                 <div class="avatar avatar-xl avatar-3xl">
                                                     <div class="avatar-name rounded-circle">
                                                         <span>PG</span>
@@ -449,8 +256,7 @@
                                                         </h6>
                                                     </div>
                                                     <div class="col-auto lh-1 me-3">
-                                                        <small
-                                                            class="badge rounded badge-soft-info false">Responded</small>
+                                                        <small class="badge rounded badge-soft-info false">Responded</small>
                                                     </div>
                                                 </div>
                                             </div>
@@ -461,8 +267,7 @@
                                     <div
                                         class="bg-white dark__bg-1100 d-md-flex d-xl-inline-block d-xxl-flex align-items-center p-x1 rounded-3 shadow-sm card-view-height">
                                         <div class="d-flex align-items-start align-items-sm-center">
-                                            <a class="d-none d-sm-block"
-                                                href="../../app/support-desk/contact-details.html">
+                                            <a class="d-none d-sm-block" href="../../app/support-desk/contact-details.html">
                                                 <div class="avatar avatar-xl avatar-3xl">
                                                     <div class="avatar-name rounded-circle">
                                                         <span>PG</span>
@@ -485,8 +290,112 @@
                                                         </h6>
                                                     </div>
                                                     <div class="col-auto lh-1 me-3">
-                                                        <small
-                                                            class="badge rounded badge-soft-info false">Responded</small>
+                                                        <small class="badge rounded badge-soft-info false">Responded</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-4">
+                                    <div
+                                        class="bg-white dark__bg-1100 d-md-flex d-xl-inline-block d-xxl-flex align-items-center p-x1 rounded-3 shadow-sm card-view-height">
+                                        <div class="d-flex align-items-start align-items-sm-center">
+                                            <a class="d-none d-sm-block" href="../../app/support-desk/contact-details.html">
+                                                <div class="avatar avatar-xl avatar-3xl">
+                                                    <div class="avatar-name rounded-circle">
+                                                        <span>PG</span>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                            <div class="ms-1 ms-sm-3">
+                                                <p class="fw-semi-bold mb-3 mb-sm-2">
+                                                    <a href="../../app/support-desk/tickets-preview.html">I need your help
+                                                        #2256</a>
+                                                </p>
+                                                <div class="row align-items-center gx-0 gy-2">
+                                                    <div class="col-auto me-2">
+                                                        <h6 class="client mb-0">
+                                                            <a class="text-800 d-flex align-items-center gap-1"
+                                                                href="../../app/support-desk/contact-details.html"><span
+                                                                    class="fas fa-user"
+                                                                    data-fa-transform="shrink-3 up-1"></span><span>Peter
+                                                                    Gill</span></a>
+                                                        </h6>
+                                                    </div>
+                                                    <div class="col-auto lh-1 me-3">
+                                                        <small class="badge rounded badge-soft-info false">Responded</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div
+                                        class="bg-white dark__bg-1100 d-md-flex d-xl-inline-block d-xxl-flex align-items-center p-x1 rounded-3 shadow-sm card-view-height">
+                                        <div class="d-flex align-items-start align-items-sm-center">
+                                            <a class="d-none d-sm-block" href="../../app/support-desk/contact-details.html">
+                                                <div class="avatar avatar-xl avatar-3xl">
+                                                    <div class="avatar-name rounded-circle">
+                                                        <span>PG</span>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                            <div class="ms-1 ms-sm-3">
+                                                <p class="fw-semi-bold mb-3 mb-sm-2">
+                                                    <a href="../../app/support-desk/tickets-preview.html">I need your help
+                                                        #2256</a>
+                                                </p>
+                                                <div class="row align-items-center gx-0 gy-2">
+                                                    <div class="col-auto me-2">
+                                                        <h6 class="client mb-0">
+                                                            <a class="text-800 d-flex align-items-center gap-1"
+                                                                href="../../app/support-desk/contact-details.html"><span
+                                                                    class="fas fa-user"
+                                                                    data-fa-transform="shrink-3 up-1"></span><span>Peter
+                                                                    Gill</span></a>
+                                                        </h6>
+                                                    </div>
+                                                    <div class="col-auto lh-1 me-3">
+                                                        <small class="badge rounded badge-soft-info false">Responded</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div
+                                        class="bg-white dark__bg-1100 d-md-flex d-xl-inline-block d-xxl-flex align-items-center p-x1 rounded-3 shadow-sm card-view-height">
+                                        <div class="d-flex align-items-start align-items-sm-center">
+                                            <a class="d-none d-sm-block" href="../../app/support-desk/contact-details.html">
+                                                <div class="avatar avatar-xl avatar-3xl">
+                                                    <div class="avatar-name rounded-circle">
+                                                        <span>PG</span>
+                                                    </div>
+                                                </div>
+                                            </a>
+                                            <div class="ms-1 ms-sm-3">
+                                                <p class="fw-semi-bold mb-3 mb-sm-2">
+                                                    <a href="../../app/support-desk/tickets-preview.html">I need your help
+                                                        #2256</a>
+                                                </p>
+                                                <div class="row align-items-center gx-0 gy-2">
+                                                    <div class="col-auto me-2">
+                                                        <h6 class="client mb-0">
+                                                            <a class="text-800 d-flex align-items-center gap-1"
+                                                                href="../../app/support-desk/contact-details.html"><span
+                                                                    class="fas fa-user"
+                                                                    data-fa-transform="shrink-3 up-1"></span><span>Peter
+                                                                    Gill</span></a>
+                                                        </h6>
+                                                    </div>
+                                                    <div class="col-auto lh-1 me-3">
+                                                        <small class="badge rounded badge-soft-info false">Responded</small>
                                                     </div>
                                                 </div>
                                             </div>
@@ -546,6 +455,8 @@
                                         <option>Low</option>
                                     </select>
                                 </div>
+
+
                             </form>
                         </div>
                         <div class="card-footer border-top border-200 py-x1">
@@ -599,7 +510,8 @@
                         <div class="row gx-2">
                             <div class="mb-3 col-sm-6">
                                 <label class="form-label" for="modal-auth-password">Password</label><input
-                                    class="form-control" type="password" autocomplete="on" id="modal-auth-password" />
+                                    class="form-control" type="password" autocomplete="on"
+                                    id="modal-auth-password" />
                             </div>
                             <div class="mb-3 col-sm-6">
                                 <label class="form-label" for="modal-auth-confirm-password">Confirm

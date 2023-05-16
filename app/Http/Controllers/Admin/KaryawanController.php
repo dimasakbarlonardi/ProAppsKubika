@@ -110,7 +110,7 @@ class KaryawanController extends Controller
     public function store(Request $request)
     {
         $conn = $this->setConnection($request);
-        
+
         try {
             DB::beginTransaction();
 
@@ -118,7 +118,7 @@ class KaryawanController extends Controller
             $login = Login::where('id', $id_user)->with('site')->first();
             $site = $login->site->id_site;
 
-            $count = $conn->count(); 
+            $count = $conn->count();
             $count += 1;
             if ($count < 10) {
                 $count = '0' . $count;
@@ -160,7 +160,7 @@ class KaryawanController extends Controller
             ]);
 
             DB::commit();
-            
+
             Alert::success('Berhasil', 'Berhasil menambahkan karyawan');
 
             return redirect()->route('karyawans.index');

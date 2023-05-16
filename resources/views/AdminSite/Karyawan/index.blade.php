@@ -45,7 +45,7 @@
                     <th class="sort" data-sort="tempat_lahir">Tanggal Lahir</th>
                     <th class="sort" data-sort="tgl_lahir">ID Jenis Kelamin</th>
                     <th class="sort" data-sort="id_agama">ID Agama</th>
-                    <th class="sort" data-sort="id_jenis_kelamin">ID Status Kawin</th>             
+                    <th class="sort" data-sort="id_jenis_kelamin">ID Status Kawin</th>
                     <th class="sort">Action</th>
                 </tr>
             </thead>

@@ -64,7 +64,7 @@
             @if (count($menu->subMenus) == 0)
                 <!-- parent pages-->
                 <a class="nav-link {{ request()->is('admin/groups*') ? 'active' : '' }}"
-                    href="{{ route($menu->route_name) }}" role="button">
+                    href="{{ Route::has($menu->route_name) ? route($menu->route_name) : '' }}" role="button">
                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span
                                 class="{{ $menu->icon }}"></span></span><span
                             class="nav-link-text ps-1">{{ $menu->caption }}</span>
@@ -91,7 +91,7 @@
                         @else
                             @foreach ($menu->subMenus as $subMenu)
                                 @if (count($subMenu->subMenus2) == 0)
-                                    <a class="nav-link" href="{{ route($subMenu->route_name) }}" role="button"
+                                    <a class="nav-link" href="{{ Route::has($subMenu->route_name) ? route($subMenu->route_name) : '' }}" role="button"
                                         aria-expanded="false">
                                         <div class="d-flex align-items-center">
                                             <span class="nav-link-text ps-1">{{ $subMenu->caption }}</span>
@@ -108,7 +108,7 @@
                                 <ul class="nav collapse" id="{{ $subMenu->route_name }}">
                                     <li class="nav-item">
                                         @foreach ($subMenu->subMenus2 as $subMenu2)
-                                            <a class="nav-link" href="{{ route($subMenu2->route_name) }}">
+                                            <a class="nav-link" href="{{ Route::has($subMenu2->route_name) ? route($subMenu2->route_name) : '' }}">
                                                 <div class="d-flex align-items-center">
                                                     <span class="nav-link-text ps-1">{{ $subMenu2->caption }}
                                                     </span>
