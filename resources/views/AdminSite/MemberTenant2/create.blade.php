@@ -52,9 +52,15 @@
                                 <label class="form-label">No Telp Member </label>
                                 <input type="text" name="no_telp_member" class="form-control" required>
                             </div>
-                            <div class="col-10 ">
-                                <label class="form-label">ID Status Tinggal </label>
-                                <input type="text" name="id_status_tinggal" class="form-control" required>
+                           -
+                            <div class="col-6">
+                                <label class="form-label">ID Status Tinggal</label>
+                                <select class="form-control" name="id_status_tinggal" required>
+                                      <option selected disabled>-- Pilih Status Tinggal --</option>
+                                    @foreach ($statustinggals as $statustinggal)
+                                            <option value="{{ $statustinggal->id_status_tinggal}}"> {{$statustinggal->status_tinggal}}</option>
+                                    @endforeach
+                                </select>
                             </div>
                         </div>
                     </div>

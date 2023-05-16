@@ -3,31 +3,35 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
-use App\Models\Agama;
-use App\Models\OwnerH;
-use Illuminate\Http\Request;
+use App\Models\Karyawan;
 use App\Models\Login;
-use App\Models\IdCard;
-use App\Models\JenisKelamin;
-use App\Models\StatusKawin;
-use App\Models\User;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
+use App\Models\IdCard;
+use App\Models\JenisKelamin;
+use App\Models\Agama;
+use App\Models\StatusKawin;
+use App\Models\Jabatan;
+use App\Models\Divisi;
+use App\Models\Departemen;
+use App\Models\KepemilikanUnit;
+use App\Models\Penempatan;
+use App\Models\User;
+use Illuminate\Http\Request;
 
-class OwnerHController extends Controller
+class KaryawanController extends Controller
 {
-    public function setConnection($model)
+    public function setConnection(Request $request)
     {
-        $request = Request();
         $user_id = $request->user()->id;
         $login = Login::where('id', $user_id)->with('site')->first();
         $conn = $login->site->db_name;
-        $model = $model;
-        $model->setConnection($conn);
+        $user = new Karyawan();
+        $user->setConnection($conn);
 
-        return $model;
-        
+        return $user;
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -35,11 +39,13 @@ class OwnerHController extends Controller
      */
     public function index(Request $request)
     {
-        $connOwner = $this->setConnection(new OwnerH());
+        $conn = $this->setConnection($request);
 
-        $data['owners'] = $connOwner->get();
+        $data['karyawans'] = $conn->get();
+
+        dd($data);
    
-        return view('AdminSite.Owner.index', $data);
+        return view('AdminSite.Karyawan.index', $data);
     }
 
     /**
@@ -50,10 +56,10 @@ class OwnerHController extends Controller
     public function create(Request $request)
     {
         $user_id = $request->user()->id;
-        $login = Login::where('id', $user_id)->with('site')->first();
+        $login = Login::where('id', $user_id)->first();
         $conn = $login->site->db_name;
-        $owner = new OwnerH();
-        $owner->setConnection($conn);
+
+        $user = $request->session()->get('user');
 
         $idcard = new IdCard();
         $idcard->setConnection($conn);
@@ -66,14 +72,35 @@ class OwnerHController extends Controller
 
         $statuskawin = new StatusKawin();
         $statuskawin->setConnection($conn);
-        
+
+        $jabatan = new Jabatan();
+        $jabatan->setConnection($conn);
+
+        $divisi = new Divisi();
+        $divisi->setConnection($conn);
+
+        $departemen = new Departemen();
+        $departemen->setConnection($conn);
+
+        $kepemilikan = new KepemilikanUnit();
+        $kepemilikan->setConnection($conn);
+
+        $penempatan = new Penempatan();
+        $penempatan->setConnection($conn);
+
         $data['agamas'] = $agama->get();
+        $data['jabatans'] = $jabatan->get();
+        $data['jeniskelamins'] = $gender->get();
+        $data['divisis'] = $divisi->get();
+        $data['departemens'] = $departemen->get();
+        $data['kepemilikans'] = $kepemilikan->get();
         $data['genders'] = $gender->get();
         $data['idcards'] = $idcard->get();
-        $data['idusers'] =  Login::where('id', $user_id)->get();
+        $data['idusers'] = $user->get();
         $data['statuskawins'] = $statuskawin->get();
+        $data['penempatans'] = $penempatan->get();
 
-        return view('AdminSite.Owner.create', $data);
+        return view('AdminSite.Karyawan.create', $data);
     }
 
     /**
@@ -85,7 +112,7 @@ class OwnerHController extends Controller
     public function store(Request $request)
     {
         $conn = $this->setConnection($request);
-
+        
         try {
             DB::beginTransaction();
 
@@ -100,55 +127,52 @@ class OwnerHController extends Controller
             }
 
             $conn->create([
-                'id_pemilik' => $count,
+                'id_karyawan' => $count,
                 'id_site' => $site,
-                'id_user' => $id_user,
                 'id_card_type' => $request->id_card_type,
-                'nik_pemilik' => $request->nik_pemilik,
-                'nama_pemilik' => $request->nama_pemilik,
-                // 'id_status_aktif_pemilik' => $request->id_statushunian_pemilik,
+                'nik_karyawan' => $request->nik_karyawan,
+                'nama_karyawan' => $request->nama_karyawan,
+                    // 'id_status_karyawan' => $request->id_status_karyawan,
+                    // 'id_status_kawin_karyawan' => $request->id_status_kawin_karyawan,
+                    // 'id_status_aktif_karyawan' => $request->id_status_aktif_karyawan,
                 'kewarganegaraan' => $request->kewarganegaraan,
                 'masa_berlaku_id' => $request->masa_berlaku_id,
-                'alamat_ktp_pemilik' => $request->alamat_ktp_pemilik,
-                'alamat_tinggal_pemilik' => $request->alamat_tinggal_pemilik,
+                'alamat_ktp_karyawan' => $request->alamat_ktp_karyawan,
+                'alamat_tinggal_karyawan' => $request->alamat_tinggal_karyawan,
                 'provinsi' => $request->provinsi,
                 'kode_pos' => $request->kode_pos,
-                'no_telp_pemilik' => $request->no_telp_pemilik,
+                'no_telp_karyawan' => $request->no_telp_karyawan,
                 'nik_pasangan_penjamin' => $request->nik_pasangan_penjamin,
                 'nama_pasangan_penjamin' => $request->nama_pasangan_penjamin,
                 'alamat_ktp_pasangan_penjamin' => $request->alamat_ktp_pasangan_penjamin,
                 'alamat_tinggal_pasangan_penjamin' => $request->alamat_tinggal_pasangan_penjamin,
                 'hubungan_penjamin' => $request->hubungan_penjamin,
-                'no_telp_penjamin'=> $request->no_telp_penjamin,
+                'no_telp_penjamin' => $request->no_telp_penjamin,
                 'tgl_masuk' => $request->tgl_masuk,
-                'tgl_keluar' => $request->tgl_keluar,
-                // 'id_kempemilikan_unit'=> $request->id_kempemilikan_unit,
+                'tgl_keluar'=> $request->tgl_keluar,
+                'id_jabatan' => $request->id_jabatan,
+                'id_divisi'=> $request->id_divisi,
+                'id_departemen'=> $request->id_departemen,
+                'id_penempatan'=> $request->id_penempatan,
                 'tempat_lahir'=> $request->tempat_lahir,
                 'tgl_lahir'=> $request->tgl_lahir,
                 'id_jenis_kelamin'=> $request->id_jenis_kelamin,
                 'id_agama'=> $request->id_agama,
                 'id_status_kawin'=> $request->id_status_kawin,
-                'pekerjaan'=> $request->pekerjaan,
-                'nik_kontak_pic'=> $request->nik_kontak_pic,
-                'nama_kontak_pic'=> $request->nama_kontak_pic,
-                'alamat_tinggal_kontak_pic'=> $request->alamat_tinggal_kontak_pic,
-                'email_kontak_pic'=> $request->email_kontak_pic,
-                'no_telp_kontak_pic'=> $request->no_telp_kontak_pic,
-                'hubungan_kontak_pic' => $request->hubungan_kontak_pic
             ]);
 
             DB::commit();
             
-            Alert::success('Berhasil', 'Berhasil menambahkan pemilik');
+            Alert::success('Berhasil', 'Berhasil menambahkan karyawan');
 
-            return redirect()->route('owners.index');
+            return redirect()->route('karyawans.index');
 
         } catch (\Throwable $e) {
             DB::rollBack();
             dd($e);
-            Alert::error('Gagal', 'Gagal menambahkan pemilik');
+            Alert::error('Gagal', 'Gagal menambahkan karyawan');
 
-            return redirect()->route('owners.index');
+            return redirect()->route('karyawans.index');
         }
     }
 
@@ -171,21 +195,11 @@ class OwnerHController extends Controller
      */
     public function edit(Request $request,$id)
     {
-        $connOwner = $this->setConnection(new OwnerH());
-        $connIdcard = $this->setConnection(new IdCard());
-        $connGender = $this->setConnection(new JenisKelamin());
-        $connAgama = $this->setConnection(new Agama());
-        $connKawin = $this->setConnection(new StatusKawin());
-        $user_id = $request->user()->id;
+        $conn = $this->setConnection($request);
 
-        $data['owner'] = $connOwner->where('id_pemilik', $id)->first();
-        $data['idcards'] = $connIdcard->get();
-        $data['genders'] = $connGender->get();
-        $data['agamas'] = $connAgama->get();
-        $data['statuskawins'] = $connKawin->get();
-        $data['idusers'] =  Login::where('id', $user_id)->get();
+        $data['karyawan'] = $conn->where('id_karyawan', $id)->first();
 
-        return view('AdminSite.Owner.edit', $data);
+        return view('AdminSite.Karyawan.edit', $data);
     }
 
     /**
@@ -198,12 +212,12 @@ class OwnerHController extends Controller
     public function update(Request $request, $id)
     {
         $conn = $this->setConnection($request);
-        $owner = $conn->find($id);
-        $owner->update($request->all());
+        $karyawan = $conn->find($id);
+        $karyawan->update($request->all());
 
-        Alert::success('Berhasil', 'Berhasil mengupdate pemilik');
+        Alert::success('Berhasil', 'Berhasil mengupdate karyawan');
 
-        return redirect()->route('owners.index');
+        return redirect()->route('karyawans.index');
     }
 
     /**
@@ -212,13 +226,13 @@ class OwnerHController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request ,$id)
+    public function destroy(Request $request, $id)
     {
         $conn = $this->setConnection($request);
         $conn->find($id)->delete();
 
-        Alert::success('Berhasil', 'Berhasil menghapus pemilik');
+        Alert::success('Berhasil', 'Berhasil menghapus karyawan');
 
-        return redirect()->route('owners.index');
+        return redirect()->route('karyawans.index');
     }
 }

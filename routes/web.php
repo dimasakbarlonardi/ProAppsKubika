@@ -2,6 +2,8 @@
 
 use App\Http\Controllers\Admin\FloorController;
 use App\Http\Controllers\Admin\AgamaController;
+use App\Http\Controllers\Admin\DepartemenController;
+use App\Http\Controllers\Admin\DivisiController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\GroupController;
 use App\Http\Controllers\Admin\InboxCntroller;
@@ -19,14 +21,20 @@ use App\Http\Controllers\Admin\TowerController;
 use App\Http\Controllers\Admin\UnitController;
 use App\Http\Controllers\Admin\HunianController;
 use App\Http\Controllers\Admin\IdcardController;
+use App\Http\Controllers\Admin\JabatanController;
 use App\Http\Controllers\Admin\JenisKelaminController;
 use App\Http\Controllers\Admin\JenisKendaraanController;
+use App\Http\Controllers\Admin\KaryawanController;
 use App\Http\Controllers\Admin\KendaraanTenantController;
+use App\Http\Controllers\Admin\KepemilikanUnitController;
 use App\Http\Controllers\Admin\MemberTenantController;
 use App\Http\Controllers\Admin\OwnerHController;
+use App\Http\Controllers\Admin\PenempatanController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\PeriodeSewaController;
+use App\Http\Controllers\Admin\StatusKawinController;
 use App\Models\JenisKendaraan;
+use App\Http\Controllers\Admin\StatusTinggalController;
 
 /*
 |--------------------------------------------------------------------------
@@ -158,6 +166,31 @@ Route::prefix('admin')->group(function () {
 
         // CRUD Agama
         Route::resource('agamas', AgamaController::class);
+
+        // CRUD StatusTinggal
+        Route::resource('statustinggals', StatusTinggalController::class);
+
+         // CRUD StatusKawin
+         Route::resource('statuskawins', StatusKawinController::class);
+
+         // CRUD KepemilikanUnit
+         Route::resource('kepemilikans', KepemilikanUnitController::class);
+
+         // CRUD Karyawan
+         Route::resource('karyawans', KaryawanController::class);
+
+         // CRUD Jabatan
+         Route::resource('jabatans', JabatanController::class);
+         
+         // CRUD Divisi
+         Route::resource('divisis', DivisiController::class);
+
+         // CRUD Departemen
+         Route::resource('departemens', DepartemenController::class);
+
+         // CRUD Penempatan
+         Route::resource('penempatans', PenempatanController::class);
+         
 
         // Akses form for user
         Route::get('/akses-form-user/{id}', [RoleController::class, 'aksesForm'])->name('akses-form');

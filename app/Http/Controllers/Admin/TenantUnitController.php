@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\Login;
 use App\Models\MemberTenant;
 use App\Models\PeriodeSewa;
+use App\Models\StatusTinggal;
 use App\Models\Tenant;
 use App\Models\Tower;
 use Illuminate\Support\Facades\DB;
@@ -75,6 +76,7 @@ class TenantUnitController extends Controller
         $connMemberTenant = $this->setConnection(new MemberTenant());
         $connKendaraanTenant = $this->setConnection(new KendaraanTenant());
         $connJenisKendaraan = $this->setConnection(new JenisKendaraan());
+        $connStatusTinggal = $this->setConnection(new StatusTinggal());
 
         $data['tenant'] = $connTenant->find($id);
         $data['tenant_units'] = $connTenantUnit->where('id_tenant', $id)->get();
@@ -84,6 +86,7 @@ class TenantUnitController extends Controller
         $data['tenant_members'] = $connMemberTenant->where('id_tenant', $id)->get();
         $data['kendaraan_tenants'] = $connKendaraanTenant->where('id_tenant', $id)->get();
         $data['jenis_kendaraan'] = $connJenisKendaraan->get();
+        $data['statustinggals'] = $connStatusTinggal->get();
 
         return view('AdminSite.TenantUnit.create', $data);
     }

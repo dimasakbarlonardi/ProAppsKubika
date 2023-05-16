@@ -6,17 +6,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class StatusKawin extends Model
+class Jabatan extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'tb_status_kawin';
-    protected $primaryKey = 'id_status_kawin';
+    protected $table = 'tb_jabatan';
+    protected $primaryKey = 'id_jabatan';
     public $incrementing = false;
 
     protected $fillable = [
-        'id_status_kawin',
-        'status_kawin',
+        'id_jabatan',
+        'nama_jabatan',
     ];
     protected $dates = ['deleted_at'];
 }
