@@ -141,7 +141,11 @@ class TenantController extends Controller
      */
     public function show($id)
     {
-        //
+        $connTenant = $this->setConnection(new Tenant());
+
+        $data['tenants'] = $connTenant->get();
+
+        return view('AdminSite.Tenant.index', $data);
     }
 
     /**

@@ -41,9 +41,14 @@ class Tenant extends Model
 
     protected $dates = ['deleted_at'];
 
-    public function StatusHunianTenant()
+    public function StatusHunian()
     {
         return $this->hasOne(StatusHunianTenant::class, 'id_statushunian_tenant', 'id_statushunian_tenant');
+    }
+
+    public function IdCard()
+    {
+        return $this->hasOne(IdCard::class, 'id_card_type', 'id_card_type');
     }
 
 }
