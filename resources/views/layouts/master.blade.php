@@ -68,8 +68,8 @@
                     </div>
                     <a class="navbar-brand" href="index.html">
                         <div class="d-flex align-items-center py-3"><img class="me-2"
-                                src="/assets/img/icons/spot-illustrations/falcon.png" alt="akmal"
-                                width="40" /><span class="font-sans-serif">falcon</span></div>
+                                src="/assets/img/icons/spot-illustrations/proapps.png" alt="akmal" width="150" />
+                        </div>
                     </a>
                 </div>
                 <div class="collapse navbar-collapse" id="navbarVerticalCollapse">
@@ -222,59 +222,28 @@
                 method: 'GET',
                 success: function(data) {
                     if (data === '') {
-                        Swal.fire({
-                            title: 'Pilih Role Anda',
-                            input: 'select',
-                            allowOutsideClick: false,
-                            inputOptions: {
-                                '1': 'Owner',
-                                '2': 'Karyawan',
-                                '3': 'Tenant',
-                            },
-                            inputValidator: function(value) {
-                                return new Promise(function(resolve, reject) {
-                                    if (value !== '') {
-                                        resolve();
-                                    } else {
-                                        resolve('You need to select a Tier');
-                                    }
-                                });
-                            }
-                        }).then(function(result) {
-                            if (result.isConfirmed) {
-                                $.ajax({
-                                    url: '/update-role-id',
-                                    type: 'POST',
-                                    data: {
-                                        'role_id': result.value
-                                    },
-                                    success: function(data) {
-                                        console.log(data);
-                                        location.reload();
-
-                                    }
-                                }).then(function() {
-                                    location.reload();
-                                    $("#top").css("visibility", "visible");
-                                })
-                            }
-                        });
+                        window.location.replace("/select-role");
                     } else {
                         $("#top").css("visibility", "visible");
                     }
                 }
             })
+
+            var user_id = "{{ Session::get('user_id') }}"
+            $.ajax({
+                url: '/admin/get-nav/' + user_id,
+                type: 'GET',
+                success: function(data) {
+                    $('#dynamicMenu').append(data.html)
+                }
+            }).then(function() {
+                var url = $(location).attr('href');
+                var id = url.split('/')[4];
+
+                $('#' + id).addClass('active my-2')
+            })
+
         });
-    </script>
-    <script>
-        var user_id = "{{ Session::get('user_id') }}"
-        $.ajax({
-            url: '/admin/get-nav/' + user_id,
-            type: 'GET',
-            success: function(data) {
-                $('#dynamicMenu').append(data.html)
-            }
-        })
     </script>
     @yield('script')
 </body>

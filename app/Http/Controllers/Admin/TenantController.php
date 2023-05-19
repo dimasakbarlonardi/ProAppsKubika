@@ -16,16 +16,16 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class TenantController extends Controller
 {
-    public function setConnection($model)
+    public function setConnection()
     {
         $request = Request();
         $user_id = $request->user()->id;
         $login = Login::where('id', $user_id)->with('site')->first();
         $conn = $login->site->db_name;
-        $model = $model;
-        $model->setConnection($conn);
+        // $model = $model;
+        // $model->setConnection($conn);
 
-        return $model;
+        return $conn;
     }
     /**
      * Display a listing of the resource.
@@ -34,9 +34,11 @@ class TenantController extends Controller
      */
     public function index(Request $request)
     {
-        $connTenant = $this->setConnection(new Tenant());
+        $connTenant = new Tenant();
+        $DBname = $this->setConnection();
+        $getAllTenants = $connTenant->getAllTenants($DBname);
 
-        $data['tenants'] = $connTenant->get();
+        $data['tenants'] = $getAllTenants;
 
         return view('AdminSite.Tenant.index', $data);
     }

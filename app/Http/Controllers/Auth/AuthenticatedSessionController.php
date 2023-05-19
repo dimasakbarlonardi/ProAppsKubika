@@ -53,35 +53,52 @@ class AuthenticatedSessionController extends Controller
                 Alert::error('Gagal', 'Mohon periksa kembali email dan password');
 
                 return redirect()->back();
+            } else {
+                $user = Login::where('email', $request->email)->with('site')->first();
+                if (!Hash::check($request->password, $user->password, [])) {
+                    throw new \Exception('Invalid Credentials');
+                }
+
+                $user->update(['id_site' => $request->id_site]);
+                $user->save();
+
+                $request->authenticate();
+
+                $request->session()->regenerate();
+
+                $currUser = new User();
+                $currUser = $currUser->setConnection($user->site->db_name);
+                $getUser = $currUser->where('login_user', $user->email)
+                    ->with('RoleH.AksesForm')
+                    ->first();
+
+                $request->session()->put('user', $getUser);
+                $request->session()->put('user_id', $getUser->id_user);
+
+                return redirect()->route('select-role');
             }
 
-            $user = Login::where('email', $request->email)->with('site')->first();
-            if (!Hash::check($request->password, $user->password, [])) {
-                throw new \Exception('Invalid Credentials');
-            }
-
-            $user->update(['id_site' => $request->id_site]);
-            $user->save();
-
-            $request->authenticate();
-
-            $request->session()->regenerate();
-
-            $currUser = new User();
-            $currUser = $currUser->setConnection($user->site->db_name);
-            $getUser = $currUser->where('login_user', $user->email)
-                ->with('RoleH.AksesForm')
-                ->first();
-
-            $request->session()->put('user', $getUser);
-            $request->session()->put('user_id', $getUser->id_user);
-
-            return redirect()->intended(RouteServiceProvider::HOME);
         } catch (Exception $error) {
             Alert::error('Gagal', 'Mohon periksa kembali email dan password');
 
             return redirect()->back();
         }
+    }
+
+    public function selectRole()
+    {
+        return view('auth.select-role');
+    }
+
+    public function storeRole(Request $request)
+    {
+        $user = $request->session()->get('user');
+        $user->id_role_hdr = $request->role_id;
+        $user->save();
+
+        $request->session()->put('has_role', 'yes');
+
+        return redirect()->route('dashboard');
     }
 
     /**
@@ -92,6 +109,10 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request)
     {
+        $user = $request->session()->get('user');
+        $user->id_role_hdr = '';
+        $user->save();
+
         Auth::guard('web')->logout();
 
         $request->session()->invalidate();
