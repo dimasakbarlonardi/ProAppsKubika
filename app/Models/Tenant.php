@@ -10,9 +10,7 @@ use Illuminate\Support\Facades\DB;
 class Tenant extends Model
 {
     use HasFactory, SoftDeletes;
-
     protected $conn;
-
     public function setConnection($db)
     {
         $this->conn = $db;
