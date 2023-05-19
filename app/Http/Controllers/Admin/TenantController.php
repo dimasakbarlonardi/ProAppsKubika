@@ -151,7 +151,6 @@ class TenantController extends Controller
     public function show($id)
     {
         $connTenant = $this->setConnection(new Tenant());
-        dd($connTenant);
         $connTenant = $connTenant->where('id_tenant', $id)->first();
 
         // dd($connTenant);
