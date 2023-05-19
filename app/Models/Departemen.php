@@ -11,8 +11,6 @@ class Departemen extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = 'tb_departemen';
-    protected $primaryKey = 'id_departemen';
-    public $incrementing = false;
 
     protected $fillable = [
         'id_departemen',

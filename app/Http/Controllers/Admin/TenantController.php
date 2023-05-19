@@ -164,9 +164,9 @@ class TenantController extends Controller
      */
     public function edit(Request $request, $id)
     {
-        $connTenant = $this->getDBname(new Tenant());
-        $connIdCard = $this->getDBname(new IdCard());
-        $connStatusHunian = $this->getDBname(new StatusHunianTenant());
+        $connTenant = $this->setConnection(new Tenant());
+        $connIdCard = $this->setConnection(new IdCard());
+        $connStatusHunian = $this->setConnection(new StatusHunianTenant());
 
         $data['tenant'] = $connTenant->where('id_tenant', $id)->first();
         $data['idcards'] = $connIdCard->get();

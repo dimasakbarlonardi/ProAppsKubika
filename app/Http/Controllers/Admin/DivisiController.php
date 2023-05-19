@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
 use App\Models\Divisi;
 use App\Models\Login;
@@ -11,15 +12,22 @@ use Illuminate\Http\Request;
 
 class DivisiController extends Controller
 {
-    public function setConnection(Request $request)
+    public function getDBname()
     {
+        $request = Request();
         $user_id = $request->user()->id;
         $login = Login::where('id', $user_id)->with('site')->first();
-        $conn = $login->site->db_name;
-        $user = new Divisi();
-        $user->setConnection($conn);
+        $db = $login->site->db_name;
 
-        return $user;
+        return $db;
+    }
+
+    public function setConnection($model)
+    {
+        $db = $this->getDBname();
+        $model = $model->setConnection($db);
+
+        return $model;
     }
 
     /**
@@ -29,7 +37,7 @@ class DivisiController extends Controller
      */
     public function index(Request $request)
     {
-        $conn = $this->setConnection($request);
+        $conn = ConnectionDB::setConnection($request);
         $data['divisis'] = $conn->get();
 
         return view('AdminSite.Divisi.index', $data);
@@ -58,7 +66,7 @@ class DivisiController extends Controller
         try {
             DB::beginTransaction();
 
-            $count = $conn->count(); 
+            $count = $conn->count();
             $count += 1;
             if ($count < 10) {
                 $count = '0' . $count;

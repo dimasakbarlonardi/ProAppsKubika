@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
 use App\Models\Departemen;
 use App\Models\Login;
@@ -11,25 +12,14 @@ use Illuminate\Http\Request;
 
 class DepartemenController extends Controller
 {
-
-    public function setConnection(Request $request)
-    {
-        $user_id = $request->user()->id;
-        $login = Login::where('id', $user_id)->with('site')->first();
-        $conn = $login->site->db_name;
-        $user = new Departemen();
-        $user->setConnection($conn);
-
-        return $user;
-    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        $conn = $this->setConnection($request);
+        $conn = ConnectionDB::setConnection(new Departemen());
         $data['departemens'] = $conn->get();
 
         return view('AdminSite.Departemen.index', $data);
@@ -53,18 +43,13 @@ class DepartemenController extends Controller
      */
     public function store(Request $request)
     {
-        $conn = $this->setConnection($request);
+        $conn = ConnectionDB::setConnection(new Departemen());
 
         try {
             DB::beginTransaction();
 
-            $count = $conn->count(); 
-            $count += 1;
-            if ($count < 10) {
-                $count = '0' . $count;
-            }
             $conn->create([
-                'id_departemen' => $count,
+                'id_departemen' => $request->id_departemen,
                 'nama_departemen' => $request->nama_departemen,
             ]);
 
@@ -99,9 +84,9 @@ class DepartemenController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Request $request ,$id)
+    public function edit($id)
     {
-        $conn = $this->setConnection($request);
+        $conn = ConnectionDB::setConnection(new Departemen());
 
         $data['departemen'] = $conn->find($id);
 
@@ -117,7 +102,7 @@ class DepartemenController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $conn = $this->setConnection($request);
+        $conn = ConnectionDB::setConnection(new Departemen());
 
         $departemen = $conn->find($id);
         $departemen->update($request->all());
@@ -133,10 +118,11 @@ class DepartemenController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request ,$id)
+    public function destroy($id)
     {
-        $conn = $this->setConnection($request);
-        $conn->find($id)->delete();
+        $conn = ConnectionDB::setConnection(new Departemen());
+        $conn = $conn->find($id);
+        $conn->delete();
 
         Alert::success('Berhasil', 'Berhasil menghapus departemen');
 
