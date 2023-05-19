@@ -30,8 +30,7 @@ class TenantController extends Controller
     {
         $model = $model;
         $db = $this->getDBname();
-        dd($db, $model);
-        $model = $model->setConnection('park-royale');
+        $model = $model->setConnection($db);
 
         return $model;
     }
@@ -151,13 +150,9 @@ class TenantController extends Controller
     public function show($id)
     {
         $connTenant = $this->setConnection(new Tenant());
-        $connTenant = $connTenant->where('id_tenant', $id)->first();
 
-        // dd($connTenant);
-        $data['tenants'] = $connTenant->first();
-        // $data['tenants'] = 
-
-
+        $data['tenant'] = $connTenant->where('id_tenant', $id)->first();
+        // dd($data);
         return view('AdminSite.Tenant.show', $data);
     }
 
