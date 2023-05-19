@@ -16,16 +16,24 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class TenantController extends Controller
 {
-    public function setConnection()
+    public function getDBname()
     {
         $request = Request();
         $user_id = $request->user()->id;
         $login = Login::where('id', $user_id)->with('site')->first();
         $conn = $login->site->db_name;
-        // $model = $model;
-        // $model->setConnection($conn);
 
         return $conn;
+    }
+
+    public function setConnection($model)
+    {
+        $model = $model;
+        $db = $this->getDBname();
+        dd($db, $model);
+        $model = $model->setConnection('park-royale');
+
+        return $model;
     }
     /**
      * Display a listing of the resource.
@@ -35,7 +43,7 @@ class TenantController extends Controller
     public function index(Request $request)
     {
         $connTenant = new Tenant();
-        $DBname = $this->setConnection();
+        $DBname = $this->getDBname();
         $getAllTenants = $connTenant->getAllTenants($DBname);
 
         $data['tenants'] = $getAllTenants;
@@ -53,16 +61,16 @@ class TenantController extends Controller
         $user_id = $request->user()->id;
         $login = Login::where('id', $user_id)->with('site')->first();
         $conn = $login->site->db_name;
-        $connTenant = $this->setConnection(new Tenant());
+        $connTenant = $this->getDBname(new Tenant());
 
         $statushunian = new StatusHunianTenant();
-        $statushunian->setConnection($conn);
+        $statushunian->getDBname($conn);
 
         $idcard = new IdCard();
-        $idcard->setConnection($conn);
+        $idcard->getDBname($conn);
 
         $owner = new OwnerH();
-        $owner->setConnection($conn);
+        $owner->getDBname($conn);
 
         $data['statushunians'] = $statushunian->get();
         $data['idcards'] = $idcard->get();
@@ -82,7 +90,7 @@ class TenantController extends Controller
      */
     public function store(Request $request)
     {
-        $connTenant = $this->setConnection(new Tenant());
+        $connTenant = $this->getDBname(new Tenant());
 
         try {
             DB::beginTransaction();
@@ -117,7 +125,7 @@ class TenantController extends Controller
                 'alamat_ktp_pasangan_penjamin' => $request->alamat_ktp_pasangan_penjamin,
                 'alamat_tinggal_pasangan_penjamin' => $request->alamat_tinggal_pasangan_penjamin,
                 'hubungan_penjamin' => $request->hubungan_penjamin,
-                'no_telp_penjamin'=> $request->no_telp_penjamin
+                'no_telp_penjamin' => $request->no_telp_penjamin
             ]);
 
             DB::commit();
@@ -125,7 +133,6 @@ class TenantController extends Controller
             Alert::success('Berhasil', 'Berhasil menambahkan tenant');
 
             return redirect()->route('tenants.index');
-
         } catch (\Throwable $e) {
             DB::rollBack();
             dd($e);
@@ -144,10 +151,13 @@ class TenantController extends Controller
     public function show($id)
     {
         $connTenant = $this->setConnection(new Tenant());
+        dd($connTenant);
+        $connTenant = $connTenant->where('id_tenant', $id)->first();
 
-        // $data['tenants'] = $connTenant->first();
-        $data['tenants'] = $connTenant->where('id_tenant', $id)->first();
-        
+        // dd($connTenant);
+        $data['tenants'] = $connTenant->first();
+        // $data['tenants'] = 
+
 
         return view('AdminSite.Tenant.show', $data);
     }
@@ -160,9 +170,9 @@ class TenantController extends Controller
      */
     public function edit(Request $request, $id)
     {
-        $connTenant = $this->setConnection(new Tenant());
-        $connIdCard = $this->setConnection(new IdCard());
-        $connStatusHunian = $this->setConnection(new StatusHunianTenant());
+        $connTenant = $this->getDBname(new Tenant());
+        $connIdCard = $this->getDBname(new IdCard());
+        $connStatusHunian = $this->getDBname(new StatusHunianTenant());
 
         $data['tenant'] = $connTenant->where('id_tenant', $id)->first();
         $data['idcards'] = $connIdCard->get();
@@ -181,28 +191,28 @@ class TenantController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $connTenant = $this->setConnection(new Tenant());
+        $connTenant = $this->getDBname(new Tenant());
         $connTenant->where('id_tenant', $id)->update([
-                'id_site' => $request->id_site,
-                'id_user' => $request->id_user,
-                // 'id_pemilik' => $request->id_pemilik,
-                'id_card_type' => $request->id_card_type,
-                'nik_tenant' => $request->nik_tenant,
-                'nama_tenant' => $request->nama_tenant,
-                'id_statushunian_tenant' => $request->id_statushunian_tenant,
-                'kewarganegaraan' => $request->kewarganegaraan,
-                'masa_berlaku_id' => $request->masa_berlaku_id,
-                'alamat_ktp_tenant' => $request->alamat_ktp_tenant,
-                'provinsi' => $request->provinsi,
-                'kode_pos' => $request->kode_pos,
-                'alamat_tinggal_tenant' => $request->alamat_tinggal_tenant,
-                'no_telp_tenant' => $request->no_telp_tenant,
-                'nik_pasangan_penjamin' => $request->nik_pasangan_penjamin,
-                'nama_pasangan_penjamin' => $request->nama_pasangan_penjamin,
-                'alamat_ktp_pasangan_penjamin' => $request->alamat_ktp_pasangan_penjamin,
-                'alamat_tinggal_pasangan_penjamin' => $request->alamat_tinggal_pasangan_penjamin,
-                'hubungan_penjamin' => $request->hubungan_penjamin,
-                'no_telp_penjamin'=> $request->no_telp_penjamin
+            'id_site' => $request->id_site,
+            'id_user' => $request->id_user,
+            // 'id_pemilik' => $request->id_pemilik,
+            'id_card_type' => $request->id_card_type,
+            'nik_tenant' => $request->nik_tenant,
+            'nama_tenant' => $request->nama_tenant,
+            'id_statushunian_tenant' => $request->id_statushunian_tenant,
+            'kewarganegaraan' => $request->kewarganegaraan,
+            'masa_berlaku_id' => $request->masa_berlaku_id,
+            'alamat_ktp_tenant' => $request->alamat_ktp_tenant,
+            'provinsi' => $request->provinsi,
+            'kode_pos' => $request->kode_pos,
+            'alamat_tinggal_tenant' => $request->alamat_tinggal_tenant,
+            'no_telp_tenant' => $request->no_telp_tenant,
+            'nik_pasangan_penjamin' => $request->nik_pasangan_penjamin,
+            'nama_pasangan_penjamin' => $request->nama_pasangan_penjamin,
+            'alamat_ktp_pasangan_penjamin' => $request->alamat_ktp_pasangan_penjamin,
+            'alamat_tinggal_pasangan_penjamin' => $request->alamat_tinggal_pasangan_penjamin,
+            'hubungan_penjamin' => $request->hubungan_penjamin,
+            'no_telp_penjamin' => $request->no_telp_penjamin
         ]);
 
         Alert::success('Berhasil', 'Berhasil mengupdate tenant');
@@ -216,9 +226,9 @@ class TenantController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request,$id)
+    public function destroy(Request $request, $id)
     {
-        $conn = $this->setConnection($request);
+        $conn = $this->getDBname($request);
         $conn->find($id)->delete();
 
         Alert::success('Berhasil', 'Berhasil menghapus tenant');
