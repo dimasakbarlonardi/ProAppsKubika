@@ -23,10 +23,12 @@
                             <select class="form-control" name="id_user" required>
                                 <option selected disabled>-- Pilih ID User --</option>
                                 @foreach ($idusers as $iduser)
+                                
                                 <option value="{{ $iduser->id }}">{{ $iduser->name }} </option>
                                 @endforeach
                             </select>
                         </div>
+
                     </div>
                     <div class="row">
                         <div class="col-6">

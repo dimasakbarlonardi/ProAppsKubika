@@ -24,25 +24,26 @@
                             <select class="form-control" name="id_user" required>
                                 <option selected disabled>-- Pilih ID User --</option>
                                 @foreach ($idusers as $iduser)
-                                <option value="{{ $iduser->id }} ">{{ $iduser->name }} </option>
+                                <option value="{{ $iduser->id }}" {{ $iduser->id == $owner->id_user ? 'selected' : '' }} >{{ $iduser->name }} </option>
                                 @endforeach
                             </select>
                         </div>
                     </div>
+                   
                     <div class="row">
                         <div class="col-6">
                             <label class="form-label">ID Card Pemilik</label>
                             <select class="form-control" name="id_card_type" required>
                                 <option selected disabled >-- Pilih ID Card --</option>
                                 @foreach ($idcards as $idcard)
-                                <option value="{{ $owner->id_card_type }}">{{ $idcard->card_id_name }} {{ $idcard->id_card_type }}</option>
+                                <option value="{{ $idcard->id_card_type }}" {{ $idcard->id_card_type == $owner->id_card_type ? 'selected' : ''}}>{{ $idcard->card_id_name }} {{ $idcard->id_card_type }}</option>
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-6">
-                            <label class="form-label">Nik Pemilik</label>
-                            <input type="text" name=nik_pemilik value="{{ $owner->nik_pemilik }}" class="form-control" required>
-                        </div>
+                    <div class="col-6">
+                        <label class="form-label">Nik Pemilik</label>
+                        <input type="text" name=nik_pemilik value="{{ $owner->nik_pemilik }}" class="form-control" required>
+                    </div>
                     </div>
                     <div class="row">
                         <div class="col-6">

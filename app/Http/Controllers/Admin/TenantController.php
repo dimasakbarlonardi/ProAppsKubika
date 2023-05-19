@@ -145,9 +145,11 @@ class TenantController extends Controller
     {
         $connTenant = $this->setConnection(new Tenant());
 
-        $data['tenants'] = $connTenant->get();
+        // $data['tenants'] = $connTenant->first();
+        $data['tenants'] = $connTenant->where('id_tenant', $id)->first();
+        
 
-        return view('AdminSite.Tenant.index', $data);
+        return view('AdminSite.Tenant.show', $data);
     }
 
     /**

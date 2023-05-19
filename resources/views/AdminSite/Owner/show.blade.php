@@ -197,6 +197,7 @@
                         </div>
                         </div>
                 </div>
+                </div>
 
             {{-- </form> --}}
                         <a href="{{ route('owners.edit', $owner->id_pemilik) }}" class="btn btn-sm btn-warning">Edit</a>
