@@ -84,7 +84,7 @@ class OwnerHController extends Controller
      */
     public function store(Request $request)
     {
-        $conn = $this->setConnection($request);
+        $connOwner = $this->setConnection(new OwnerH());
 
         try {
             DB::beginTransaction();
@@ -93,13 +93,10 @@ class OwnerHController extends Controller
             $login = Login::where('id', $id_user)->with('site')->first();
             $site = $login->site->id_site;
 
-            $count = $conn->count(); 
+            $count = $connOwner->count(); 
             $count += 1;
-            if ($count < 10) {
-                $count = '0' . $count;
-            }
 
-            $conn->create([
+            $connOwner->create([
                 'id_pemilik' => $count,
                 'id_site' => $site,
                 'id_user' => $id_user,
@@ -122,7 +119,7 @@ class OwnerHController extends Controller
                 'no_telp_penjamin'=> $request->no_telp_penjamin,
                 'tgl_masuk' => $request->tgl_masuk,
                 'tgl_keluar' => $request->tgl_keluar,
-                // 'id_kempemilikan_unit'=> $request->id_kempemilikan_unit,
+                'id_kepemilikan_unit'=> $request->id_kepemilikan_unit,
                 'tempat_lahir'=> $request->tempat_lahir,
                 'tgl_lahir'=> $request->tgl_lahir,
                 'id_jenis_kelamin'=> $request->id_jenis_kelamin,
@@ -160,7 +157,11 @@ class OwnerHController extends Controller
      */
     public function show($id)
     {
-        //
+        $connOwner = $this->setConnection(new OwnerH());
+
+        $data['owners'] = $connOwner->get();
+   
+        return view('AdminSite.Owner.show', $data);
     }
 
     /**
@@ -197,8 +198,8 @@ class OwnerHController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $conn = $this->setConnection($request);
-        $owner = $conn->find($id);
+        $connOwner = $this->setConnection(new OwnerH());
+        $owner = $connOwner->find($id);
         $owner->update($request->all());
 
         Alert::success('Berhasil', 'Berhasil mengupdate pemilik');
@@ -214,8 +215,8 @@ class OwnerHController extends Controller
      */
     public function destroy(Request $request ,$id)
     {
-        $conn = $this->setConnection($request);
-        $conn->find($id)->delete();
+        $connOwner = $this->setConnection(new OwnerH());
+        $connOwner->find($id)->delete();
 
         Alert::success('Berhasil', 'Berhasil menghapus pemilik');
 

@@ -24,6 +24,7 @@ use App\Http\Controllers\Admin\IdcardController;
 use App\Http\Controllers\Admin\JabatanController;
 use App\Http\Controllers\Admin\JenisKelaminController;
 use App\Http\Controllers\Admin\JenisKendaraanController;
+use App\Http\Controllers\Admin\JenisPekerjaanController;
 use App\Http\Controllers\Admin\KaryawanController;
 use App\Http\Controllers\Admin\KendaraanTenantController;
 use App\Http\Controllers\Admin\KepemilikanUnitController;
@@ -32,9 +33,11 @@ use App\Http\Controllers\Admin\OwnerHController;
 use App\Http\Controllers\Admin\PenempatanController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\PeriodeSewaController;
+use App\Http\Controllers\Admin\StatusRequestController;
 use App\Http\Controllers\Admin\SystemSettingController;
 use App\Models\JenisKendaraan;
 use App\Http\Controllers\Admin\StatusTinggalController;
+use App\Http\Controllers\Admin\WorkRelationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -195,7 +198,15 @@ Route::prefix('admin')->group(function () {
          // CRUD Penempatan
          Route::resource('penempatans', PenempatanController::class);
 
+         // CRUD Work Relation
+         Route::resource('workrelations', WorkRelationController::class);
 
+         // CRUD Status Request
+         Route::resource('statusrequests', StatusRequestController::class);
+
+         // CRUD Jenis Pekerjaan
+         Route::resource('jenispekerjaans', JenisPekerjaanController::class);
+         
         // Akses form for user
         Route::get('/akses-form-user/{id}', [RoleController::class, 'aksesForm'])->name('akses-form');
         Route::post('/akses-form-user/{id}', [RoleController::class, 'storeAksesForm'])->name('akses-form');

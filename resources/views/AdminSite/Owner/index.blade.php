@@ -12,23 +12,21 @@
             </div>
         </div>
     </div>
-    <div class="p-5">
-        <table class="table">
-            <thead>
+    <div class="p-5 table-responsive scrollbar">
+        <table class="table table-striped table-bordered ">
+            <thead class="table-success bg-200 text-900">
                 <tr>
                     <th class="sort" data-sort="">No</th>
-                    <th class="sort" data-sort="id_pemilik">ID Pemilik</th>
-                    <th class="sort" data-sort="id_site">ID Site</th>
-                    <th class="sort" data-sort="id_user">ID User</th>
-                    <th class="sort" data-sort="id_card_type">ID Card Type</th>
-                    <th class="sort" data-sort="nik_pemilik">Nik Pemilik</th>
-                    <th class="sort" data-sort="nama_pemilik">Nama Pemilik</th>
-                    <th class="sort" data-sort="id_status_aktif_pemilik">ID Status Aktif Pemilik</th>
-                    <th class="sort" data-sort="kewarganegaraan">Kewarganegaraan</th>
-                    <th class="sort" data-sort="masa_berlaku_id">Masa Berlaku ID</th>
-                    <th class="sort" data-sort="alamat_ktp_pemilik">Alamat KTP Pemilik</th>
-                    <th class="sort" data-sort="alamat_tinggal_pemilik">Alamat Tinggal Pemilik</th>
-                    <th class="sort" data-sort="provinsi">Provinsi</th>
+                    <th class="sort" data-sort="id_pemilik">IDPemilik</th>
+                    <th class="sort" data-sort="id_card_type">IDCardType</th>
+                    {{-- <th class="sort" data-sort="nik_pemilik">Nik Pemilik</th>  --}}
+                    <th class="sort" data-sort="nama_pemilik">Owner</th>
+                    <th class="sort" data-sort="alamat_tinggal_pemilik">AlamatTinggalPemilik</th>
+                    <th class="sort" data-sort="id_status_aktif_pemilik">IDStatusAktifPemilik</th>
+                    {{-- <th class="sort" data-sort="kewarganegaraan">Kewarganegaraan</th> --}}
+                    {{-- <th class="sort" data-sort="masa_berlaku_id">Masa Berlaku ID</th> --}}
+                    {{-- <th class="sort" data-sort="alamat_ktp_pemilik">Alamat KTP Pemilik</th> --}}
+                    {{-- <th class="sort" data-sort="provinsi">Provinsi</th>
                     <th class="sort" data-sort="kode_pos">Kode Pos</th>
                     <th class="sort" data-sort="no_telp_pemilik">No Telpon Pemilik</th>
                     <th class="sort" data-sort="nik_pasangan_penjamin">NIK Pasangan Penjamin</th>
@@ -51,26 +49,36 @@
                     <th class="sort" data-sort="alamat_tinggal_kontak_pic">Alamat Tinggal Kontak PIC</th>
                     <th class="sort" data-sort="email_kontak_pic">Email Kontak PIC</th>
                     <th class="sort" data-sort="no_telp_kontak_pic">No Telp Kontak PIC</th>
-                    <th class="sort" data-sort="hubungan_kontak_pic">Hubungan Kontak PIC</th>                 
+                    <th class="sort" data-sort="hubungan_kontak_pic">Hubungan Kontak PIC</th>                  --}}
                     <th class="sort">Action</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="list" >
                 @foreach ($owners as $key => $owner)
                     <tr>
                         <th scope="row">{{ $key + 1 }}</th>
                         <td>{{ $owner->id_pemilik }}</td>
-                        <td>{{ $owner->id_site }}</td>
-                        <td>{{ $owner->id_user }}</td>
-                        <td>{{ $owner->id_card_type }}</td>
-                        <td>{{ $owner->nik_pemilik }}</td>
-                        <td>{{ $owner->nama_pemilik  }}</td>
+                        <td class="nama_pemilik">
+                            <span> <b> KTP : </b>  <br> {{ $owner->IdCard->card_id_name }}</span> <br>
+                            <span> <b> Masa Berlaku : </b> <br> {{ $owner->masa_berlaku_id}}</span> <br> 
+                        </td>
+                        {{-- <td>{{ $owner->nik_pemilik }}</td> --}}
+                        <td class="nama_pemilik">
+                            <span> <b> Nama Pemilik : </b> <br> {{ $owner->nama_pemilik  }}</span> <br>
+                            <span> <b> Nik : </b> <br> {{ $owner->nik_pemilik }} </span> <br>
+                            <span> <b> Kewarganegaraan : </b> <br> {{ $owner->kewarganegaraan }} </span> <br>
+                            <span> <b> No Telp : </b> <br> {{ $owner->no_telp_pemilik }} </span> <br>
+                        </td>
+                        <td class="alamat_tinggal_pemilik">
+                            <span> <b> Alamat : </b> <br> {{ $owner->alamat_tinggal_pemilik }} </span> <br>
+                            <span> <b> Kode Pos : </b> <br> {{ $owner->kode_pos }} </span> <br>
+                            <span> <b> Provinsi : </b> <br> {{ $owner->provinsi }} </span> <br>
+                        </td>
                         <td>{{ $owner->id_status_aktif_pemilik }}</td>
-                        <td>{{ $owner->kewarganegaraan }}</td>
-                        <td>{{ $owner->masa_berlaku_id }}</td>
-                        <td>{{ $owner->alamat_ktp_pemilik }}</td>
-                        <td>{{ $owner->alamat_tinggal_pemilik }}</td>
-                        <td>{{ $owner->provinsi }}</td>
+                        {{-- <td>{{ $owner->kewarganegaraan }}</td> --}}
+                        {{-- <td>{{ $owner->masa_berlaku_id }}</td> --}}
+                        {{-- <td>{{ $owner->alamat_ktp_pemilik }}</td> --}}
+                        {{-- <td>{{ $owner->provinsi }}</td>
                         <td>{{ $owner->kode_pos }}</td>
                         <td>{{ $owner->no_telp_pemilik }}</td>
                         <td>{{ $owner->nik_pasangan_penjamin }}</td>
@@ -93,15 +101,9 @@
                         <td>{{ $owner->alamat_tinggal_kontak_pic }}</td>
                         <td>{{ $owner->email_kontak_pic }}</td>
                         <td>{{ $owner->no_telp_kontak_pic }}</td>
-                        <td>{{ $owner->hubungan_kontak_pic }}</td>
+                        <td>{{ $owner->hubungan_kontak_pic }}</td> --}}
                         <td>
-                            <a href="{{ route('owners.edit', $owner->id_pemilik) }}" class="btn btn-sm btn-warning">Edit</a>
-                            <form class="d-inline" action="{{ route('owners.destroy', $owner->id_pemilik) }}" method="post">
-                                @method('DELETE')
-                                @csrf
-                                <button type="submit" class="btn btn-danger btn-sm"
-                                    onclick="return confirm('are you sure?')">Hapus</button>
-                            </form>
+                            <a href="{{ route('owners.show', $owner->id_pemilik) }}" class="btn btn-sm btn-warning">Detail</a>
                         </td>
                     </tr>
                 @endforeach

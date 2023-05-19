@@ -21,15 +21,16 @@ use Illuminate\Http\Request;
 
 class KaryawanController extends Controller
 {
-    public function setConnection(Request $request)
+    public function setConnection($model)
     {
+        $request = Request();
         $user_id = $request->user()->id;
         $login = Login::where('id', $user_id)->with('site')->first();
         $conn = $login->site->db_name;
-        $user = new Karyawan();
-        $user->setConnection($conn);
+        $model = $model;
+        $model->setConnection($conn);
 
-        return $user;
+        return $model;
     }
 
     /**
@@ -39,9 +40,9 @@ class KaryawanController extends Controller
      */
     public function index(Request $request)
     {
-        $conn = $this->setConnection($request);
+        $connKaryawan = $this->setConnection(new Karyawan());
 
-        $data['karyawans'] = $conn->get();
+        $data['karyawans'] = $connKaryawan->get();
    
         return view('AdminSite.Karyawan.index', $data);
     }
@@ -109,7 +110,7 @@ class KaryawanController extends Controller
      */
     public function store(Request $request)
     {
-        $conn = $this->setConnection($request);
+        $connKaryawan = $this->setConnection(new Karyawan());
 
         try {
             DB::beginTransaction();
@@ -118,13 +119,13 @@ class KaryawanController extends Controller
             $login = Login::where('id', $id_user)->with('site')->first();
             $site = $login->site->id_site;
 
-            $count = $conn->count();
+            $count = $connKaryawan->count();
             $count += 1;
             if ($count < 10) {
                 $count = '0' . $count;
             }
 
-            $conn->create([
+            $connKaryawan->create([
                 'id_karyawan' => $count,
                 'id_site' => $site,
                 'id_card_type' => $request->id_card_type,
@@ -193,9 +194,30 @@ class KaryawanController extends Controller
      */
     public function edit(Request $request,$id)
     {
-        $conn = $this->setConnection($request);
+        $connKaryawan = $this->setConnection(new Karyawan());
+        $user = $request->session()->get('user');
+        $connIdCard = $this->setConnection(new IdCard());
+        $connGender = $this->setConnection(new JenisKelamin());
+        $connAgama = $this->setConnection(new Agama());
+        $connStatusKawin = $this->setConnection(new StatusKawin());
+        $connJabatan = $this->setConnection(new Jabatan());
+        $connDivisi = $this->setConnection(new Divisi());
+        $connDepartemen = $this->setConnection(new Departemen());
+        $connKepemilikan = $this->setConnection(new KepemilikanUnit());
+        $connPenempatan = $this->setConnection(new Penempatan());
 
-        $data['karyawan'] = $conn->where('id_karyawan', $id)->first();
+        $data['karyawan'] = $connKaryawan->where('id_karyawan', $id)->first();
+        $data['idusers'] = $user->get();
+        $data['agamas'] = $connAgama->get();
+        $data['jabatans'] = $connJabatan->get();
+        $data['jeniskelamins'] = $connGender->get();
+        $data['divisis'] = $connDivisi->get();
+        $data['departemens'] = $connDepartemen->get();
+        $data['kepemilikans'] = $connKepemilikan->get();
+        $data['idcards'] = $connIdCard->get();
+        $data['statuskawins'] = $connStatusKawin->get();
+        $data['penempatans'] = $connPenempatan->get();
+        
 
         return view('AdminSite.Karyawan.edit', $data);
     }

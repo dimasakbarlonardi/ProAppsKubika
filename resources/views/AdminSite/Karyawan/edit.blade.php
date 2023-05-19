@@ -14,11 +14,12 @@
                 @method('PUT')
                 @csrf
                 <div class="mb-3">
+                    <div class="row">
                     <div class="col-6">
                         <label class="form-label">Nama Site</label>
                         <input type="text" value="Park Royale" class="form-control" readonly>
                     </div>
-                    <div class="col-5">
+                    <div class="col-6">
                         <label class="form-label">ID User</label>
                         <select class="form-control" name="id_user" required>
                             <option selected disabled>-- Pilih ID User --</option>
@@ -27,7 +28,7 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="col-5">
+                    <div class="col-6">
                         <label class="form-label">ID Card Karyawan</label>
                         <select class="form-control" name="id_card_type" required>
                             <option selected disabled>-- Pilih ID Card --</option>
@@ -44,7 +45,7 @@
                         <label class="form-label">Nama Karyawan</label>
                         <input type="text" name="nama_karyawan" class="form-control" required>
                     </div>
-                    {{-- <div class="col-5">
+                    {{-- <div class="col-6">
                         <label class="form-label">ID Status Karyawan</label>
                         <select class="form-control" name="id_status_karyawan" required>
                             <option selected disabled>-- Pilih Status Karyawan --</option>
@@ -53,7 +54,7 @@
                             @endforeach
                         </select>
                     </div> --}}
-                    {{-- <div class="col-5">
+                    {{-- <div class="col-6">
                         <label class="form-label">ID Status Kawin Karyawan</label>
                         <select class="form-control" name="id_status_kawin_karyawan" required>
                             <option selected disabled>-- Pilih Status Pemilik --</option>
@@ -62,7 +63,7 @@
                             @endforeach
                         </select>
                     </div> --}}
-                    {{-- <div class="col-5">
+                    {{-- <div class="col-6">
                         <label class="form-label">ID Status Aktif Karyawan</label>
                         <select class="form-control" name="id_status_aktif_karyawan" required>
                             <option selected disabled>-- Pilih Status Pemilik --</option>
@@ -119,7 +120,7 @@
                         <label class="form-label">Tanggal Keluar</label>
                         <input type="date" name="tgl_keluar" class="form-control" required>
                     </div>
-                    <div class="col-5">
+                    <div class="col-6">
                         <label class="form-label">ID Jabatan</label>
                         <select class="form-control" name="id_jabatan" required>
                             <option selected disabled>-- Pilih Jabatan --</option>
@@ -128,7 +129,7 @@
                             @endforeach
                         </select>
                     </div> 
-                    <div class="col-5">
+                    <div class="col-6">
                         <label class="form-label">ID Divisi</label>
                         <select class="form-control" name="id_divisi" required>
                             <option selected disabled>-- Pilih Divisi --</option>
@@ -137,7 +138,7 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="col-5">
+                    <div class="col-6">
                         <label class="form-label">ID Departement</label>
                         <select class="form-control" name="id_departemen" required>
                             <option selected disabled>-- Pilih Departement --</option>
@@ -146,7 +147,7 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="col-5">
+                    <div class="col-6">
                         <label class="form-label">ID Penempatan</label>
                         <select class="form-control" name="id_penempatan" required>
                             <option selected disabled>-- Pilih Penempatan --</option>
@@ -163,7 +164,7 @@
                         <label class="form-label">Tanggal Lahir</label>
                         <input type="text" name="tgl_lahir" class="form-control" required>
                     </div>
-                    <div class="col-5">
+                    <div class="col-6">
                         <label class="form-label">ID Jenis Kelamin</label>
                         <select class="form-control" name="id_jenis_kelamin" required>
                             <option selected disabled>-- Pilih Jenis Kelamin --</option>
@@ -172,7 +173,7 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="col-5">
+                    <div class="col-6">
                         <label class="form-label">ID Agama</label>
                         <select class="form-control" name="id_agama" required>
                             <option selected disabled>-- Pilih Agama --</option>
@@ -181,7 +182,7 @@
                             @endforeach
                         </select>
                     </div>
-                    <div class="col-5">
+                    <div class="col-6">
                         <label class="form-label">ID Status Kawin</label>
                         <select class="form-control" name="id_status_kawin" required>
                             <option selected disabled>-- Pilih Status Kawin --</option>
@@ -190,6 +191,7 @@
                             @endforeach
                         </select>
                     </div>
+                </div>
             </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>

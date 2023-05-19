@@ -18,6 +18,15 @@
                     </select>
                 </div>
                 <div class="col-6">
+                    <label class="col-form-label">Owner :</label>
+                    <select class="form-control" name="id_pemilik" required>
+                        @foreach ($owners as $owner)
+                            <option value="{{ $owner->id_pemilik }}">
+                                {{ $owner->nama_pemilik }}</option>
+                        @endforeach
+                    </select>
+                </div>
+                <div class="col-6">
                     <label class="col-form-label">Periode
                         Sewa:</label>
                     <div class="input-group">

@@ -9,6 +9,7 @@
         <thead>
             <tr>
                 <th scope="col">Unit</th>
+                <th scope="col">Pemilik</th>
                 <th scope="col">Periode Sewa</th>
                 <th scope="col">Jatuh Tempo IPL</th>
                 <th scope="col">Jatuh Tempo UTIL</th>
@@ -19,11 +20,12 @@
             @foreach ($tenant_units as $key => $tu)
                 <tr>
                     <td>{{ $tu->id_unit }}</td>
+                    <td>{{ $tu->id_pemilik }}</td>
                     <td>
                         <b>{{ $tu->id_periode_sewa }}</b> <br>
                         {{ $tu->tgl_masuk }} - {{ $tu->tgl_keluar }}
                     </td>
-                    <td>
+                    <td>    
                         {{ $tu->tgl_jatuh_tempo_ipl }}
                     </td>
                     <td>
@@ -76,6 +78,15 @@
                                         @foreach ($getCreateUnits as $unit)
                                             <option value="{{ $unit->id_unit }}">
                                                 {{ $unit->nama_unit }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-6">
+                                    <label class="col-form-label">Owner :</label>
+                                    <select class="form-control" name="id_pemilik" required>
+                                        @foreach ($owners as $owner)
+                                            <option value="{{ $owner->id_pemilik }}">
+                                                {{ $owner->nama_pemilik }}</option>
                                         @endforeach
                                     </select>
                                 </div>

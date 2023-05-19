@@ -37,12 +37,11 @@
                     <th class="sort" data-sort="no_telp_penjamin">No Telpon Penjamin</th>
                     <th class="sort" data-sort="tgl_masuk">Tanggal Masuk</th>
                     <th class="sort" data-sort="tgl_keluar">Tanggal Keluar</th>
-                    <th class="sort" data-sort="id_unit">Provinsi</th>
-                    <th class="sort" data-sort="id_jabatan">Kode Pos</th>
-                    <th class="sort" data-sort="id_divisi">Alamat Tinggal Pasangan Penjamin</th>
-                    <th class="sort" data-sort="id_departemen">ID Kepemilikan Unit</th>
-                    <th class="sort" data-sort="id_penempatan">Tempat Lahir</th>
-                    <th class="sort" data-sort="tempat_lahir">Tanggal Lahir</th>
+                    <th class="sort" data-sort="id_jabatan">Jabatan</th>
+                    <th class="sort" data-sort="id_divisi">Divisi</th>
+                    <th class="sort" data-sort="id_departemen">Departement</th>
+                    <th class="sort" data-sort="id_penempatan">Penempatan</th>
+                    <th class="sort" data-sort="tempat_lahir">Tempat Lahir</th>
                     <th class="sort" data-sort="tgl_lahir">ID Jenis Kelamin</th>
                     <th class="sort" data-sort="id_agama">ID Agama</th>
                     <th class="sort" data-sort="id_jenis_kelamin">ID Status Kawin</th>
@@ -54,8 +53,8 @@
                     <tr>
                         <th scope="row">{{ $key + 1 }}</th>
                         <td>{{ $karyawan->id_karyawan }}</td>
-                        <td>{{ $karyawan->id_site }}</td>
-                        <td>{{ $karyawan->idcard->card_id_name}}</td>
+                        <td>{{ $karyawan->id_site}}</td>
+                        <td>{{ $karyawan->IdCard->card_id_name}}</td>
                         <td>{{ $karyawan->nik_karyawan }}</td>
                         <td>{{ $karyawan->nama_karyawan }}</td>
                         <td>{{ $karyawan->id_status_karyawan}}</td>
@@ -79,9 +78,9 @@
                         <td>{{ $karyawan->id_penempatan }}</td>
                         <td>{{ $karyawan->tempat_lahir }}</td>
                         <td>{{ $karyawan->tgl_lahir }}</td>
-                        <td>{{ $karyawan->id_agama }}</td>
-                        <td>{{ $karyawan->id_jenis_kelamin }}</td>
-                        <td>{{ $karyawan->id_status_kawin }}</td>
+                        <td>{{ $karyawan->agama->nama_agama }}</td>
+                        <td>{{ $karyawan->jeniskelamin->jenis_kelamin }}</td>
+                        <td>{{ $karyawan->statuskawin->status_kawin }}</td>
                         <td>
                             <a href="{{ route('karyawans.edit', $karyawan->id_karyawan) }}" class="btn btn-sm btn-warning">Edit</a>
                             <form class="d-inline" action="{{ route('karyawans.destroy', $karyawan->id_karyawan) }}" method="post">

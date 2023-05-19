@@ -69,7 +69,7 @@ return [
             'host'      => '127.0.0.1',
             'database'  => 'park-royale',
             'username'  => 'root',
-            'password'  => 'root',
+            'password'  => '',
             'charset'   => 'utf8',
         ),
 

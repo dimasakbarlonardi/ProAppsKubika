@@ -11,16 +11,16 @@ use Illuminate\Http\Request;
 
 class JenisKelaminController extends Controller
 {
-    public function setConnection(Request $request)
-    {
-        $user_id = $request->user()->id;
-        $login = Login::where('id', $user_id)->with('site')->first();
-        $conn = $login->site->db_name;
-        $gender = new JenisKelamin();
-        $gender->setConnection($conn);
+        public function setConnection(Request $request)
+        {
+            $user_id = $request->user()->id;
+            $login = Login::where('id', $user_id)->with('site')->first();
+            $conn = $login->site->db_name;
+            $gender = new JenisKelamin();
+            $gender->setConnection($conn);
 
-        return $gender;
-    }
+            return $gender;
+        }
 
     /**
      * Display a listing of the resource.

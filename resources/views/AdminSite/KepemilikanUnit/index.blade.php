@@ -29,9 +29,9 @@
                     <tr>
                         <th scope="row">{{ $key + 1 }}</th>
                         <td>{{ $kepemilikan->id_kepemilikan_unit }}</td>
-                        <td>{{ $kepemilikan->id_pemilik }}</td>
+                        <td>{{ $kepemilikan->Owner->nama_pemilik }}</td>
                         <td>{{ $kepemilikan->id_unit }}</td>
-                        <td>{{ $kepemilikan->id_status_hunian }}</td>
+                        <td>{{ $kepemilikan->StatusHunianTenant->status_hunian_tenant }}</td>
                         <td>
                             <a href="{{ route('kepemilikans.edit', $kepemilikan->id_kepemilikan_unit) }}" class="btn btn-sm btn-warning">Edit</a>
                             <form class="d-inline" action="{{ route('kepemilikans.destroy', $kepemilikan->id_kepemilikan_unit) }}" method="post">

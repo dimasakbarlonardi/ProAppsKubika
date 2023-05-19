@@ -9,6 +9,7 @@ use App\Models\TenantUnit;
 use Illuminate\Http\Request;
 use App\Models\Login;
 use App\Models\MemberTenant;
+use App\Models\OwnerH;
 use App\Models\PeriodeSewa;
 use App\Models\StatusTinggal;
 use App\Models\Tenant;
@@ -77,6 +78,7 @@ class TenantUnitController extends Controller
         $connKendaraanTenant = $this->setConnection(new KendaraanTenant());
         $connJenisKendaraan = $this->setConnection(new JenisKendaraan());
         $connStatusTinggal = $this->setConnection(new StatusTinggal());
+        $connOwner = $this->setConnection(new OwnerH());
 
         $data['tenant'] = $connTenant->find($id);
         $data['tenant_units'] = $connTenantUnit->where('id_tenant', $id)->get();
@@ -87,6 +89,7 @@ class TenantUnitController extends Controller
         $data['kendaraan_tenants'] = $connKendaraanTenant->where('id_tenant', $id)->get();
         $data['jenis_kendaraan'] = $connJenisKendaraan->get();
         $data['statustinggals'] = $connStatusTinggal->get();
+        $data['owners'] = $connOwner->get();
 
         return view('AdminSite.TenantUnit.create', $data);
     }
@@ -100,6 +103,7 @@ class TenantUnitController extends Controller
         $connTenantUnit->create([
             'id_tenant_unit' => $id_tenant_unit,
             'id_unit' => $request->id_unit,
+            'id_pemilik' => $request->id_pemilik,
             'id_tenant' => $request->id_tenant,
             'id_periode_sewa' => $request->id_periode_sewa,
             'tgl_masuk' => $request->tgl_masuk,
@@ -120,6 +124,7 @@ class TenantUnitController extends Controller
 
         $connTenantUnit->update([
             'id_unit' => $request->id_unit,
+            'id_pemilik' => $request->id_pemilik,
             'id_periode_sewa' => $request->id_periode_sewa,
             'tgl_masuk' => $request->tgl_masuk,
             'tgl_keluar' => $request->tgl_keluar,
@@ -175,9 +180,12 @@ class TenantUnitController extends Controller
         $connTenantUnit = $this->setConnection(new TenantUnit());
         $connUnit = $this->setConnection(new Unit());
         $periodeSewa = $this->setConnection(new PeriodeSewa());
+        $connOwner = $this->setConnection(new OwnerH());
+
 
         $data['id_tenant'] = $id;
         $data['units'] = $connUnit->get();
+        $data['owners'] = $connOwner->get();
         $data['periodeSewa'] = $periodeSewa->get();
         $data['tenantunit'] = $connTenantUnit->where('id_tenant_unit', $id)->first();
 

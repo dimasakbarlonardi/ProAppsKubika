@@ -17,30 +17,30 @@
                 <div class="col-4">
                     <label class="form-label">ID Pemilik</label>
                     <select class="form-control" name="id_pemilik" required>
-                        <option selected disabled>-- Ubah ID Pemilik --</option>
-                        @foreach ($kepemilikans as $kepemilikan)
-                        <option value="{{ $kepemilikan->id_pemilik }}">{{ $kepemilikan->nama_pemilik }}</option>
+                        <option selected disabled>-- Pilih ID Pemilik --</option>
+                        @foreach ($owners as $owner)
+                        <option value="{{ $owner->id_pemilik }}">{{ $owner->nama_pemilik }}</option>
                         @endforeach
                     </select>
                 </div>
                 <div class="col-4">
                     <label class="form-label">ID Unit</label>
                     <select class="form-control" name="id_unit" required>
-                        <option selected disabled>-- Ubah ID Unit --</option>
+                        <option selected disabled>-- Pilih ID Unit --</option>
                         @foreach ($units as $unit)
                         <option value="{{ $unit->id_unit }}">{{ $unit->nama_unit }}</option>
                         @endforeach
                     </select>
                 </div>
-                {{-- <div class="col-4">
+                <div class="col-4">
                     <label class="form-label">ID Status Hunian</label>
                     <select class="form-control" name="id_status_hunian" required>
-                        <option selected disabled>-- Ubah Status Hunian --</option>
+                        <option selected disabled>-- Pilih Status Hunian --</option>
                         @foreach ($statushunians as $statushunian)
-                        <option value="{{ $statushunian->id_status_hunian }}">{{ $statushunian->status_hunian }}</option>
+                        <option value="{{ $statushunian->id_statushunian_tenant }}">{{ $statushunian->status_hunian_tenant }}</option>
                         @endforeach
                     </select>
-                </div> --}}
+                </div>
                 </div>
                 </div>
 

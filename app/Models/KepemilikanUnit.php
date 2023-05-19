@@ -12,14 +12,24 @@ class KepemilikanUnit extends Model
 
     protected $table = 'tb_pemilik_d';
     protected $primaryKey = 'id_kepemilikan_unit';
-    // public $incrementing = false;
+    public $incrementing = false;
 
-    protected $fillable = [
-        'id_kepemilikan_unit ',
+    protected $fillable = ([
+        'id_kepemilikan_unit',
         'id_pemilik',
         'id_unit',
         'id_status_hunian',
-    ];
+    ]);
 
-    protected $date = ['deleted_at'];
+    protected $dates = ['deleted_at'];
+
+    public function Owner()
+    {
+        return $this->hasOne(OwnerH::class, 'id_pemilik', 'id_pemilik');
+    }
+
+    public function StatusHunianTenant()
+    {
+        return $this->hasOne(StatusHunianTenant::class, 'id_statushunian_tenant', 'id_status_hunian');
+    }
 }

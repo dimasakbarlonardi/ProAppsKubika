@@ -59,4 +59,9 @@ class OwnerH extends Model
     {
         return $this->hasOne(Login::class, 'id', 'id');
     }
+
+    public function IdCard()
+    {
+        return $this->hasOne(IdCard::class, 'id_card_type', 'id_card_type');
+    }
 }

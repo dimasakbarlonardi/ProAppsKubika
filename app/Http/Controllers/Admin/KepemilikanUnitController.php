@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\KepemilikanUnit;
 use App\Models\Login;
 use App\Models\OwnerH;
+use App\Models\StatusHunianTenant;
 use App\Models\Unit;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -13,16 +14,17 @@ use Illuminate\Http\Request;
 
 class KepemilikanUnitController extends Controller
 {
-    public function setConnection(Request $request)
+    public function setConnection($model)
     {
+        $request = Request();
         $user_id = $request->user()->id;
         $login = Login::where('id', $user_id)->with('site')->first();
         $conn = $login->site->db_name;
-        $user = new KepemilikanUnit();
-        $user->setConnection($conn);
+        $model = $model;
+        $model->setConnection($conn);
 
-        return $user;
-    } 
+        return $model;
+    }
 
     /**
      * Display a listing of the resource.
@@ -31,8 +33,8 @@ class KepemilikanUnitController extends Controller
      */
     public function index(Request $request)
     {
-        $conn = $this->setConnection($request);
-        $data['kepemilikans'] = $conn->get();
+        $connKepemilikan = $this->setConnection(new KepemilikanUnit());
+        $data['kepemilikans'] = $connKepemilikan->get();
 
         return view('AdminSite.KepemilikanUnit.index', $data);
     }
@@ -42,20 +44,15 @@ class KepemilikanUnitController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function create()
     {
-        $user_id = $request->user()->id;
-        $login = Login::where('id', $user_id)->with('site')->first();
-        $conn = $login->site->db_name;
+        $connOwner = $this->setConnection(new OwnerH());
+        $connUnit = $this->setConnection(new Unit());
+        $connStatushunian = $this->setConnection(new StatusHunianTenant());
 
-        $owner = new OwnerH();
-        $owner->setConnection($conn);
-
-        $unit = new Unit();
-        $unit->setConnection($conn);
-
-        $data['kepemilikans'] = $owner->get();
-        $data['units'] = $unit->get();
+        $data['owners'] = $connOwner->get();
+        $data['units'] = $connUnit->get();
+        $data['statushunians'] = $connStatushunian->get();
 
         return view('AdminSite.KepemilikanUnit.create', $data);
     }
@@ -68,22 +65,19 @@ class KepemilikanUnitController extends Controller
      */
     public function store(Request $request)
     {
-        $conn = $this->setConnection($request);
-
+        $connKepemilikan = $this->setConnection(new KepemilikanUnit());
         try {
+
             DB::beginTransaction();
 
-            // $count = $conn->count(); 
-            // $count += 1;
-            // if ($count < 10) {
-            //     $count = '0' . $count;
-            // }
+            $count = $connKepemilikan->count(); 
+            $count += 1;
             
-            $conn->create([
-                
+            $connKepemilikan->create([
+                'id_kepemilikan_unit' => $count,
                 'id_pemilik' => $request->id_pemilik,
                 'id_unit' => $request->id_unit,
-                // 'id_status_hunian' => $request->id_status_hunian,
+                'id_status_hunian' => $request->id_status_hunian,
             ]);
 
             DB::commit();
@@ -94,7 +88,7 @@ class KepemilikanUnitController extends Controller
         } catch (\Throwable $e) {
             DB::rollBack();
             dd($e);
-            Alert::error('Gagal', 'Gagal menambahkan kepemilikan unggal');
+            Alert::error('Gagal', 'Gagal menambahkan kepemilikan unit');
 
             return redirect()->route('kepemilikans.index');
         }
@@ -117,11 +111,17 @@ class KepemilikanUnitController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Request $request,$id)
+    public function edit($id)
     {
-        $conn = $this->setConnection($request);
+        $connKepemilikan = $this->setConnection(new KepemilikanUnit());
+        $connOwner = $this->setConnection(new OwnerH());
+        $connUnit = $this->setConnection(new Unit());
+        $connStatushunian = $this->setConnection(new StatusHunianTenant());
 
-        $data['kepemilikan'] = $conn->find($id);
+        $data['kepemilikan'] = $connKepemilikan->where('id_kepemilikan_unit', $id)->first();
+        $data['owners'] = $connOwner->get();
+        $data['units'] = $connUnit->get();
+        $data['statushunians'] = $connStatushunian->get();
 
         return view('AdminSite.KepemilikanUnit.edit', $data);
     }
@@ -135,9 +135,10 @@ class KepemilikanUnitController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $conn = $this->setConnection($request);
+        $connKepemilikan = $this->setConnection(new KepemilikanUnit());
+        
 
-        $kepemilikan = $conn->find($id);
+        $kepemilikan = $connKepemilikan->find($id);
         $kepemilikan->update($request->all());
 
         Alert::success('Berhasil', 'Berhasil mengupdate kepemilikan unit');
@@ -152,12 +153,12 @@ class KepemilikanUnitController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function destroy(Request $request, $id)
+    public function destroy($id)
     {
-        $conn = $this->setConnection($request);
-        $conn->find($id)->delete();
+        $connKepemilikan = $this->setConnection(new KepemilikanUnit());
+        $connKepemilikan->find($id)->delete();
 
-        Alert::success('Berhasil', 'Berhasil menghapus kepemiikan unit');
+        Alert::success('Berhasil', 'Berhasil menghapus kepemilikan unit');
 
         return redirect()->route('kepemilikans.index');
     }

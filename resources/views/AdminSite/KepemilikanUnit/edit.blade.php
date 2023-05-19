@@ -34,9 +34,9 @@
                 <div class="col-4">
                     <label class="form-label">ID Status Hunian</label>
                     <select class="form-control" name="id_status_hunian" required>
-                        <option selected disabled>-- Ubah Status Hunian --</option>
+                        <option selected disabled>-- Pilih Status Hunian --</option>
                         @foreach ($statushunians as $statushunian)
-                        <option value="{{ $statushunian->id_status_hunian }}">{{ $statushunian->status_hunian }}</option>
+                        <option value="{{ $statushunian->id_statushunian_tenant }}">{{ $statushunian->status_hunian_tenant }}</option>
                         @endforeach
                     </select>
                 </div>

@@ -36,7 +36,7 @@
                             <input type="text" value="ID : {{ $idusers->id }} Nama : {{ $idusers->name }}" class="form-control" readonly>
                         </div> --}}
 
-                        {{-- note id pemilik ke tb_tenant unit --}}
+                        {{-- pinda tenant unit --}}
                         {{-- <div class="col-5">
                             <label class="form-label">ID Pemilik</label>
                             <select class="form-control" name="id_pemilik" required>

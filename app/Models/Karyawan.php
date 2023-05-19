@@ -14,7 +14,7 @@ class Karyawan extends Model
     public $incrementing = false;
 
     protected $fillable = [
-        'id_karyawan ',
+        'id_karyawan',
         'id_site',
         'id_card_type',
         'nik_karyawan',
@@ -42,7 +42,7 @@ class Karyawan extends Model
         'tgl_lahir',
         'id_agama',
         'id_jenis_kelamin',
-        'id_status_kawi ',
+        'id_status_kawin',
     ];
 
     protected $date = ['deleted_at'];
@@ -50,6 +50,26 @@ class Karyawan extends Model
     public function IdCard()
     {
         return $this->hasOne(IdCard::class, 'id_card_type', 'id_card_type' );
+    }
+
+    public function site()
+    {
+        return $this->hasOne(Site::class, 'id_site', 'id_site' );
+    }
+
+    public function Agama()
+    {
+        return $this->hasOne(Agama::class, 'id_agama', 'id_agama' );
+    }
+
+    public function JenisKelamin()
+    {
+        return $this->hasOne(JenisKelamin::class, 'id_jenis_kelamin', 'id_jenis_kelamin' );
+    }
+
+    public function StatusKawin()
+    {
+        return $this->hasOne(StatusKawin::class, 'id_status_kawin', 'id_status_kawin' );
     }
 
 }

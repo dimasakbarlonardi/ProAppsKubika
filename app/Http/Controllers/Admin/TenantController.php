@@ -51,8 +51,7 @@ class TenantController extends Controller
         $user_id = $request->user()->id;
         $login = Login::where('id', $user_id)->with('site')->first();
         $conn = $login->site->db_name;
-        $tenant = new Tenant();
-        $tenant->setConnection($conn);
+        $connTenant = $this->setConnection(new Tenant());
 
         $statushunian = new StatusHunianTenant();
         $statushunian->setConnection($conn);
@@ -67,6 +66,7 @@ class TenantController extends Controller
         $data['idcards'] = $idcard->get();
         $data['idusers'] = Login::where('id', $user_id)->first();
         $data['idpemiliks'] = $owner->get();
+        $data['tenants'] = $connTenant->get();
 
 
         return view('AdminSite.Tenant.create', $data);
@@ -80,7 +80,7 @@ class TenantController extends Controller
      */
     public function store(Request $request)
     {
-        $conn = $this->setConnection($request);
+        $connTenant = $this->setConnection(new Tenant());
 
         try {
             DB::beginTransaction();
@@ -89,17 +89,16 @@ class TenantController extends Controller
             $login = Login::where('id', $id_user)->with('site')->first();
             $site = $login->site->id_site;
 
-            $count = $conn->count();
+            $count = $connTenant->count();
             $count += 1;
             if ($count < 10) {
                 $count = '0' . $count;
             }
 
-            $conn->create([
+            $connTenant->create([
                 'id_tenant' => $count,
                 'id_site' => $site,
                 'id_user' => $id_user,
-                // 'id_pemilik' => $request->id_pemilik,
                 'id_card_type' => $request->id_card_type,
                 'nik_tenant' => $request->nik_tenant,
                 'nama_tenant' => $request->nama_tenant,

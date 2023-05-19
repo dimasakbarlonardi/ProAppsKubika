@@ -18,6 +18,7 @@ class TenantUnit extends Model
         'id_tenant_unit',
         'id_tenant',
         'id_unit',
+        'id_pemilik',
         'id_periode_sewa',
         'tgl_masuk',
         'tgl_keluar',
