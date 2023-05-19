@@ -16,18 +16,23 @@
             </div>
 
             <ul class="nav nav-pills justify-content-around bg-white p-3 rounded" id="pill-myTab" role="tablist">
-                <li class="nav-item" role="presentation"><button
-                        class="nav-link {{ Session::get('active') == 'unit' || Session::get('active') == null ? 'active' : '' }}"
+                <li class="nav-item" role="presentation">
+                    <button
+                        class="nav-link
+                        {{ Session::get('active') == 'unit' || Session::get('active') == null ? 'active' : '' }}"
                         data-bs-toggle="pill" data-bs-target="#pill-tab-home" type="button" role="tab">
                         <span class="fas fa-home me-2"></span>
-                        <span class="fs--1">Tenant Unit</span></button></li>
+                        <span class="fs--1">Tenant Unit</span>
+                    </button>
+                </li>
 
 
-                <li class="nav-item" role="presentation"><button
-                        class="nav-link {{ Session::get('active') == 'member' ? 'active' : '' }}" data-bs-toggle="pill"
-                        data-bs-target="#pill-tab-profile" type="button" role="tab"><span
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link btn-primary {{ Session::get('active') == 'member' ? 'active' : '' }}"
+                        data-bs-toggle="pill" data-bs-target="#pill-tab-profile" type="button" role="tab"><span
                             class="fas fa-users me-2"></span><span
-                            class="d-none d-md-inline-block fs--1">Member</span></button></li>
+                            class="d-none d-md-inline-block fs--1">Member</span></button>
+                </li>
 
 
                 <li class="nav-item" role="presentation"><button

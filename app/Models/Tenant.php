@@ -5,11 +5,27 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 class Tenant extends Model
 {
-    use HasFactory, SoftDeletes ;
+    use HasFactory, SoftDeletes;
 
+    protected $conn;
+
+    public function setConnection($db)
+    {
+        $this->conn = $db;
+    }
+    public function getAllTenants($db)
+    {
+        $query = DB::connection($db)
+            ->table('tb_tenant')
+            ->leftJoin('tb_user', 'tb_user.id_user', '=', 'tb_tenant.id_user')
+            ->get();
+
+        return $query;
+    }
     protected $primaryKey = 'id_tenant';
     public $incrementing = false;
     protected $table = 'tb_tenant';
@@ -44,6 +60,11 @@ class Tenant extends Model
     public function StatusHunian()
     {
         return $this->hasOne(StatusHunianTenant::class, 'id_statushunian_tenant', 'id_statushunian_tenant');
+    }
+
+    public function user()
+    {
+        return $this->hasOne(User::class, 'id_user', 'id_user');
     }
 
     public function IdCard()

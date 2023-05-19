@@ -54,9 +54,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth'])->name('dashboard');
 
 Route::get('/testing-units', function () {
     return view('units');
@@ -64,10 +61,13 @@ Route::get('/testing-units', function () {
 
 // Check role id
 Route::get('/check-role-id', [RoleController::class, 'checkRoleID']);
-Route::post('/update-role-id', [RoleController::class, 'updateRoleID']);
 
 Route::prefix('admin')->group(function () {
     Route::middleware(['auth'])->group(function () {
+
+        Route::get('/dashboard', function () {
+            return view('dashboard');
+        })->middleware(['auth'])->name('dashboard');
 
         // CRUD Groups
         Route::resource('groups', GroupController::class);
@@ -149,6 +149,9 @@ Route::prefix('admin')->group(function () {
 
         // CRUD TenantUnit
         Route::resource('tenantunits', TenantUnitController::class);
+
+        // System Setting
+        Route::resource('system-settings', SystemSettingController::class);
 
         // CRUD MemberTenant
         Route::resource('membertenants', MemberTenantController::class);

@@ -7,7 +7,7 @@
                 <div class="card-header">
                     <div class="row flex-between-center">
                         <div class="col-auto">
-                            <h6 class="mb-0">Total Sales</h6>
+                            <h6 class="mb-0 text-light">Total Sales</h6>
                         </div>
                         <div class="col-auto d-flex"><select class="form-select form-select-sm select-month me-2">
                                 <option value="0">January</option>
@@ -23,11 +23,12 @@
                                 <option value="10">November</option>
                                 <option value="11">December</option>
                             </select>
-                            <div class="dropdown font-sans-serif btn-reveal-trigger"><button
-                                    class="btn btn-link text-600 btn-sm dropdown-toggle dropdown-caret-none btn-reveal"
+                            <div class="dropdown font-sans-serif btn-reveal-trigger">
+                                <button class="btn btn-link text-600 btn-sm dropdown-toggle dropdown-caret-none btn-reveal"
                                     type="button" id="dropdown-total-sales" data-bs-toggle="dropdown"
                                     data-boundary="viewport" aria-haspopup="true" aria-expanded="false"><span
-                                        class="fas fa-ellipsis-h fs--2"></span></button>
+                                        class="fas fa-ellipsis-h fs--2 text-light"></span>
+                                </button>
                                 <div class="dropdown-menu dropdown-menu-end border py-2"
                                     aria-labelledby="dropdown-total-sales"><a class="dropdown-item"
                                         href="#!">View</a><a class="dropdown-item" href="#!">Export</a>
@@ -360,7 +361,5 @@
 @endsection
 
 @section('script')
-    <script>
-
-    </script>
+    <script></script>
 @endsection

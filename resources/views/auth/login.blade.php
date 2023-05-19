@@ -1,53 +1,41 @@
-<x-guest-layout>
-    <x-auth-card>
-        <x-slot name="logo">
-            <a href="/">
-                <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
-            </a>
-        </x-slot>
+@extends('auth.layout')
 
-        <!-- Session Status -->
-        <x-auth-session-status class="mb-4" :status="session('status')" />
-
-        <!-- Validation Errors -->
-        <x-auth-validation-errors class="mb-4" :errors="$errors" />
-
-        <form method="POST" action="{{ route('login') }}">
-            @csrf
-
-            <!-- Email Address -->
-            <div>
-                <x-label for="email" :value="__('Email')" />
-
-                <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required
-                    autofocus />
+@section('content')
+    <div class="col-md-7 d-flex flex-center">
+        <div class="p-4 p-md-5 flex-grow-1">
+            <div class="row flex-between-center">
+                <div class="col-auto mb-5">
+                    <h3 class="text-primary">Login</h3>
+                </div>
             </div>
-
-            <!-- Password -->
-            <div class="mt-4">
-                <x-label for="password" :value="__('Password')" />
-
-                <x-input id="password" class="block mt-1 w-full" type="password" name="password" required
-                    autocomplete="current-password" />
-            </div>
-
-            <!-- Site -->
-            <div class="mt-4">
-                <label for="">Pilih Site</label>
-
-                <select class="block mt-1 w-full" name="id_site">
-                    <option value="004212">Park Royale</option>
-                    <option value="008914">Central Point</option>
-                </select>
-            </div>
-
-
-            <div class="flex items-center justify-end mt-4">
-
-                <x-button class="ml-3">
-                    {{ __('Log in') }}
-                </x-button>
-            </div>
-        </form>
-    </x-auth-card>
-</x-guest-layout>
+            <form method="POST" action="{{ route('login') }}">
+                @csrf
+                <div class="mb-3">
+                    <label class="form-label" for="card-email">Email
+                        address
+                    </label>
+                    <input class="form-control" id="card-email" type="email" name="email" />
+                </div>
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between">
+                        <label class="form-label" for="card-password">Password</label>
+                    </div>
+                    <input class="form-control" id="card-password" type="password" name="password" />
+                </div>
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between">
+                        <label class="form-label" for="card-password">Select Site</label>
+                    </div>
+                    <select name="id_site" id="" class="form-control">
+                        <option value="004212">Park Royale</option>
+                        <option value="008914">Central Point</option>
+                    </select>
+                </div>
+                <div class="my-5">
+                    <button class="btn btn-primary d-block w-100 mt-3" type="submit">Log
+                        in</button>
+                </div>
+            </form>
+        </div>
+    </div>
+@endsection

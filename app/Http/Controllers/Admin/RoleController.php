@@ -304,19 +304,6 @@ class RoleController extends Controller
         return $role_id;
     }
 
-    public function updateRoleID(Request $request)
-    {
-        $user = $request->session()->get('user');
-        $user->id_role_hdr = $request->role_id;
-        $user->save();
-
-        $request->session()->put('has_role', 'yes');
-
-        return response()->json([
-            'status' => 'sukses'
-        ]);
-    }
-
     public function getMenu($role_id)
     {
         $getHeadings = $this->pushHeadings($role_id);

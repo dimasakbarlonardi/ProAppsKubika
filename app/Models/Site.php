@@ -46,5 +46,5 @@ class Site extends Model
     {
         return $this->hasOne(Pengurus::class, 'id_pengurus', 'id_pengurus');
     }
- 
+
 }
