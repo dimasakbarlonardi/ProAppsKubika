@@ -183,7 +183,11 @@ class KaryawanController extends Controller
      */
     public function show($id)
     {
-        //
+        $connKaryawan = $this->setConnection(new Karyawan());
+
+        $data['karyawan'] = $connKaryawan->where('id_karyawan', $id)->first();
+   
+        return view('AdminSite.Karyawan.show', $data);
     }
 
     /**

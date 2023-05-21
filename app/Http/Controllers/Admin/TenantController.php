@@ -25,7 +25,6 @@ class TenantController extends Controller
 
         return $conn;
     }
-
     public function setConnection($model)
     {
         $model = $model;
@@ -34,6 +33,7 @@ class TenantController extends Controller
 
         return $model;
     }
+
     /**
      * Display a listing of the resource.
      *
@@ -41,11 +41,12 @@ class TenantController extends Controller
      */
     public function index(Request $request)
     {
-        $connTenant = new Tenant();
-        $DBname = $this->getDBname();
-        $getAllTenants = $connTenant->getAllTenants($DBname);
+        $connTenant = $this->setConnection(new Tenant());
+        // $connTenant = new Tenant();
+        // $DBname = $this->setConnection();
+        // $getAllTenants = $connTenant->getAllTenants($DBname);
 
-        $data['tenants'] = $getAllTenants;
+        $data['tenants'] = $connTenant->get();
 
         return view('AdminSite.Tenant.index', $data);
     }
@@ -60,16 +61,16 @@ class TenantController extends Controller
         $user_id = $request->user()->id;
         $login = Login::where('id', $user_id)->with('site')->first();
         $conn = $login->site->db_name;
-        $connTenant = $this->getDBname(new Tenant());
+        $connTenant = $this->setConnection(new Tenant());
 
         $statushunian = new StatusHunianTenant();
-        $statushunian->getDBname($conn);
+        $statushunian->setConnection($conn);
 
         $idcard = new IdCard();
-        $idcard->getDBname($conn);
+        $idcard->setConnection($conn);
 
         $owner = new OwnerH();
-        $owner->getDBname($conn);
+        $owner->setConnection($conn);
 
         $data['statushunians'] = $statushunian->get();
         $data['idcards'] = $idcard->get();
@@ -89,7 +90,7 @@ class TenantController extends Controller
      */
     public function store(Request $request)
     {
-        $connTenant = $this->getDBname(new Tenant());
+        $connTenant = $this->setConnection(new Tenant());
 
         try {
             DB::beginTransaction();
@@ -152,7 +153,7 @@ class TenantController extends Controller
         $connTenant = $this->setConnection(new Tenant());
 
         $data['tenant'] = $connTenant->where('id_tenant', $id)->first();
-        // dd($data);
+        
         return view('AdminSite.Tenant.show', $data);
     }
 
@@ -162,11 +163,11 @@ class TenantController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Request $request, $id)
+    public function edit($id)
     {
-        $connTenant = $this->getDBname(new Tenant());
-        $connIdCard = $this->getDBname(new IdCard());
-        $connStatusHunian = $this->getDBname(new StatusHunianTenant());
+        $connTenant = $this->setConnection(new Tenant());
+        $connIdCard = $this->setConnection(new IdCard());
+        $connStatusHunian = $this->setConnection(new StatusHunianTenant());
 
         $data['tenant'] = $connTenant->where('id_tenant', $id)->first();
         $data['idcards'] = $connIdCard->get();
@@ -185,11 +186,10 @@ class TenantController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $connTenant = $this->getDBname(new Tenant());
+        $connTenant = $this->setConnection(new Tenant());
         $connTenant->where('id_tenant', $id)->update([
             'id_site' => $request->id_site,
             'id_user' => $request->id_user,
-            // 'id_pemilik' => $request->id_pemilik,
             'id_card_type' => $request->id_card_type,
             'nik_tenant' => $request->nik_tenant,
             'nama_tenant' => $request->nama_tenant,
@@ -222,7 +222,7 @@ class TenantController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        $conn = $this->getDBname($request);
+        $conn = $this->setConnection($request);
         $conn->find($id)->delete();
 
         Alert::success('Berhasil', 'Berhasil menghapus tenant');

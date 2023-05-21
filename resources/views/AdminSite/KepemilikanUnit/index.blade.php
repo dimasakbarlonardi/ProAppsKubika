@@ -30,7 +30,7 @@
                         <th scope="row">{{ $key + 1 }}</th>
                         <td>{{ $kepemilikan->id_kepemilikan_unit }}</td>
                         <td>{{ $kepemilikan->Owner->nama_pemilik }}</td>
-                        <td>{{ $kepemilikan->id_unit }}</td>
+                        <td>{{ $kepemilikan->Unit->nama_unit }}</td>
                         <td>{{ $kepemilikan->StatusHunianTenant->status_hunian_tenant }}</td>
                         <td>
                             <a href="{{ route('kepemilikans.edit', $kepemilikan->id_kepemilikan_unit) }}" class="btn btn-sm btn-warning">Edit</a>

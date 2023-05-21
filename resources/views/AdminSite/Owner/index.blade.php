@@ -58,8 +58,8 @@
                     <tr>
                         <th scope="row">{{ $key + 1 }}</th>
                         <td>{{ $owner->id_pemilik }}</td>
-                        <td class="nama_pemilik">
-                            <span> <b> KTP : </b>  <br> {{ $owner->IdCard->card_id_name }}</span> <br>
+                        <td class="masa_berlaku_id">
+                            {{-- <span> <b> KTP : </b>  <br> {{ $owner->IdCard->card_id_name }}</span> <br> --}}
                             <span> <b> Masa Berlaku : </b> <br> {{ $owner->masa_berlaku_id}}</span> <br> 
                         </td>
                         {{-- <td>{{ $owner->nik_pemilik }}</td> --}}

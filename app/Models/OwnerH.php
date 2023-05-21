@@ -5,10 +5,21 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 class OwnerH extends Model
 {
     use HasFactory, SoftDeletes ;
+
+    public function getAllOwners($db)
+    {
+        $query = DB::connection($db)
+            ->table('tb_pemilik_h')
+            ->leftJoin('tb_user', 'tb_user.id_user', '=', 'tb_pemilik_h.id_pemilik')
+            ->get();
+
+        return $query;
+    }
     
     protected $table = 'tb_pemilik_h';
     protected $primaryKey = 'id_pemilik';

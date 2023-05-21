@@ -16,14 +16,21 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class OwnerHController extends Controller
 {
-    public function setConnection($model)
+    public function getDBname()
     {
         $request = Request();
         $user_id = $request->user()->id;
         $login = Login::where('id', $user_id)->with('site')->first();
         $conn = $login->site->db_name;
+
+        return $conn;
+    }
+
+    public function setConnection($model)
+    {
         $model = $model;
-        $model->setConnection($conn);
+        $db = $this->getDBname();
+        $model = $model->setConnection($db);
 
         return $model;
         
@@ -103,7 +110,7 @@ class OwnerHController extends Controller
                 'id_card_type' => $request->id_card_type,
                 'nik_pemilik' => $request->nik_pemilik,
                 'nama_pemilik' => $request->nama_pemilik,
-                // 'id_status_aktif_pemilik' => $request->id_statushunian_pemilik,
+                // 'id_status_aktif_pemilik' => $request->id_status_aktif_pemilik,
                 'kewarganegaraan' => $request->kewarganegaraan,
                 'masa_berlaku_id' => $request->masa_berlaku_id,
                 'alamat_ktp_pemilik' => $request->alamat_ktp_pemilik,
@@ -159,7 +166,7 @@ class OwnerHController extends Controller
     {
         $connOwner = $this->setConnection(new OwnerH());
 
-        $data['owners'] = $connOwner->get();
+        $data['owner'] = $connOwner->where('id_pemilik', $id)->first();
    
         return view('AdminSite.Owner.show', $data);
     }

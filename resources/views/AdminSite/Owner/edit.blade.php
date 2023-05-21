@@ -36,13 +36,13 @@
                             <select class="form-control" name="id_card_type" required>
                                 <option selected disabled >-- Pilih ID Card --</option>
                                 @foreach ($idcards as $idcard)
-                                <option value="{{ $idcard->id_card_type }}" {{ $idcard->id_card_type == $owner->id_card_type ? 'selected' : ''}}>{{ $idcard->card_id_name }} {{ $idcard->id_card_type }}</option>
+                                <option value="{{ $idcard->id_card_type }} {{ $idcard->id_card_type == $owner->id_card_type ? 'selected' : ''}}" {{ $idcard->id_card_type == $owner->id_card_type ? 'selected' : ''}}>{{ $idcard->card_id_name }} {{ $idcard->id_card_type }}</option>
                                 @endforeach
                             </select>
                         </div>
                     <div class="col-6">
                         <label class="form-label">Nik Pemilik</label>
-                        <input type="text" name=nik_pemilik value="{{ $owner->nik_pemilik }}" class="form-control" required>
+                        <input type="text" name=nik_pemilik value="{{ $owner->nik_pemilik }} " class="form-control" required>
                     </div>
                     </div>
                     <div class="row">
@@ -163,7 +163,7 @@
                             <select class="form-control" name="id_jenis_kelamin" required>
                                 <option selected disabled>-- Pilih Jenis Kelamin --</option>
                                 @foreach ($genders as $gender)
-                                <option value="{{ $owner->id_jenis_kelamin }}">{{ $gender->jenis_kelamin }}</option>
+                                <option value="{{ $owner->id_jenis_kelamin }}" {{ $gender->id_jenis_kelamin == $owner->id_jenis_kelamin  ? 'selected' : ''}}>{{ $gender->jenis_kelamin }}</option>
                                 @endforeach
                             </select>
                         </div> 
@@ -172,7 +172,7 @@
                             <select class="form-control" name="id_agama" required>
                                 <option selected disabled>-- Pilih Agama --</option>
                                 @foreach ($agamas as $agama)
-                                <option value="{{ $owner->id_agama }}">{{ $agama->nama_agama }}</option>
+                                <option value="{{ $agama->id_agama }}" {{$agama->id_agama == $owner->id_agama ? 'selected' : '' }} >{{ $agama->nama_agama }}</option>
                                 @endforeach
                             </select>
                         </div> 
@@ -183,7 +183,7 @@
                             <select class="form-control" name="id_status_kawin" required>
                                 <option selected disabled>-- Pilih Status Kawin --</option>
                                 @foreach ($statuskawins as $statuskawin)
-                                <option value="{{ $owner->id_status_kawin }}">{{ $statuskawin->status_kawin }}</option>
+                                <option value="{{ $statuskawin->id_status_kawin }}" {{$statuskawin->id_status_kawin == $owner->id_status_kawin ? 'selected' : '' }}>{{ $statuskawin->status_kawin }}</option>
                                 @endforeach
                             </select>
                         </div>

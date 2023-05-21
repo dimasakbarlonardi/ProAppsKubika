@@ -78,7 +78,7 @@ Route::prefix('admin')->group(function () {
         // CRUD Pengurus
         Route::resource('penguruses', PengurusController::class);
 
-        // CRUD Login
+        // CRUD Login  
         Route::resource('logins', LoginController::class);
 
         // CRUD User
