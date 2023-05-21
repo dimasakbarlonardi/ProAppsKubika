@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
 use App\Models\Agama;
 use App\Models\Login;
@@ -11,25 +12,15 @@ use Illuminate\Http\Request;
 
 class AgamaController extends Controller
 {
-    public function setConnection(Request $request)
-    {
-        $user_id = $request->user()->id;
-        $login = Login::where('id', $user_id)->with('site')->first();
-        $conn = $login->site->db_name;
-        $gender = new Agama();
-        $gender->setConnection($conn);
-
-        return $gender;
-    }
-
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        $conn = $this->setConnection($request);
+        $conn = ConnectionDB::setConnection(new Agama());
+
         $data['agamas'] = $conn->get();
 
         return view('AdminSite.Agama.index', $data);
@@ -53,21 +44,12 @@ class AgamaController extends Controller
      */
     public function store(Request $request)
     {
-        $conn = $this->setConnection($request);
+        $conn = ConnectionDB::setConnection(new Agama());
 
         try {
             DB::beginTransaction();
 
-            $count = $conn->count(); 
-            $count += 1;
-            if ($count < 10) {
-                $count = '0' . $count;
-            }
-            
-            $conn->create([
-                'id_agama' => $count,
-                'nama_agama' => $request->nama_agama,
-            ]);
+            $conn->create($request->all());
 
             DB::commit();
 
@@ -100,11 +82,11 @@ class AgamaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Request $request, $id)
+    public function edit($id)
     {
-        $conn = $this->setConnection($request);
+        $conn = ConnectionDB::setConnection(new Agama());
 
-        $data['agama'] = $conn->find($id);
+        $data['agama'] = $conn->where('id_agama', $id)->first();
 
         return view('AdminSite.Agama.edit', $data);
     }
@@ -118,10 +100,11 @@ class AgamaController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $conn = $this->setConnection($request);
+        $conn = ConnectionDB::setConnection(new Agama());
 
-        $gender = $conn->find($id);
-        $gender->update($request->all());
+        $agama = $conn->find($id);
+
+        $agama->update($request->all());
 
         Alert::success('Berhasil', 'Berhasil mengupdate agama');
 
@@ -134,9 +117,10 @@ class AgamaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, $id)
+    public function destroy($id)
     {
-        $conn = $this->setConnection($request);
+        $conn = ConnectionDB::setConnection(new Agama());
+
         $conn->find($id)->delete();
 
         Alert::success('Berhasil', 'Berhasil menghapus agama');

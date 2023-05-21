@@ -8021,6 +8021,10 @@ html[data-bs-theme=dark] .tox .tox-dialog__footer .tox-button--secondary,
     background-color: #27B29B !important;
 }
 
+.card-header h6 {
+    color: #fff;
+}
+
 .card-header:first-child {
     border-radius: var(--falcon-card-inner-border-radius) var(--falcon-card-inner-border-radius) 0 0
 }
