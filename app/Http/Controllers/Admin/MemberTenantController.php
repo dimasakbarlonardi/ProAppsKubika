@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
 use App\Models\MemberTenant;
 use App\Models\Login;
@@ -13,16 +14,16 @@ use Illuminate\Http\Request;
 
 class MemberTenantController extends Controller
 {
-    public function setConnection(Request $request)
-    {
-        $user_id = $request->user()->id;
-        $login = Login::where('id', $user_id)->with('site')->first();
-        $conn = $login->site->db_name;
-        $user = new MemberTenant();
-        $user->setConnection($conn);
+    // public function setConnection(Request $request)
+    // {
+    //     $user_id = $request->user()->id;
+    //     $login = Login::where('id', $user_id)->with('site')->first();
+    //     $conn = $login->site->db_name;
+    //     $user = new MemberTenant();
+    //     $user->setConnection($conn);
 
-        return $user;
-    }
+    //     return $user;
+    // }
 
     /**
      * Display a listing of the resource.
@@ -48,7 +49,7 @@ class MemberTenantController extends Controller
         $user_id = $request->user()->id;
         $login = Login::where('id', $user_id)->with('site')->first();
         $conn = $login->site->db_name;
-        
+
         $unit = new Unit();
         $unit->setConnection($conn);
 
@@ -74,12 +75,12 @@ class MemberTenantController extends Controller
         try {
             DB::beginTransaction();
 
-            $count = $conn->count(); 
+            $count = $conn->count();
             $count += 1;
             if ($count < 10) {
                 $count = '0' . $count;
             }
-            
+
             $conn->create([
                 'id_tenant_member' => $count,
                 'id_unit' => $request->id_unit,
@@ -145,7 +146,7 @@ class MemberTenantController extends Controller
         $membertenant->update($request->all());
 
         // $conn->where('id_member_tenant', $id)->update([
-          
+
         //     'nik_tenant_member' => $request->nik_tenant_member,
         //     'nama_tenant_member' => $request->nama_tenant_member,
         //     'hubungan_tenant' => $request->hubungan_tenant,
@@ -156,7 +157,7 @@ class MemberTenantController extends Controller
         Alert::success('Berhasil', 'Berhasil mengupdate member tenant');
 
         return redirect()->route('membertenants.index');
-        
+
     }
 
     /**
@@ -173,5 +174,20 @@ class MemberTenantController extends Controller
         Alert::success('Berhasil', 'Berhasil menghapus member tenant');
 
         return redirect()->route('membertenants.index');
+    }
+
+    public function kepemilikanUnitTenant($id_unit, Request $request)
+    {
+        $connMemberTenant = ConnectionDB::setConnection(new MemberTenant());
+
+        $data['tenant_members'] = $connMemberTenant->where('id_tenant', $request->id_tenant)
+        ->where('id_unit', $id_unit)
+        ->get();
+
+        return response()->json([
+            'html' => view('AdminSite.TenantUnit.Member.table', $data)->render(),
+        ]);
+
+        return response()->json(['members' => $data]);
     }
 }

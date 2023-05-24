@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
 use App\Models\Karyawan;
 use App\Models\Login;
@@ -21,29 +22,29 @@ use Illuminate\Http\Request;
 
 class KaryawanController extends Controller
 {
-    public function setConnection($model)
-    {
-        $request = Request();
-        $user_id = $request->user()->id;
-        $login = Login::where('id', $user_id)->with('site')->first();
-        $conn = $login->site->db_name;
-        $model = $model;
-        $model->setConnection($conn);
+    // public function setConnection($model)
+    // {
+    //     $request = Request();
+    //     $user_id = $request->user()->id;
+    //     $login = Login::where('id', $user_id)->with('site')->first();
+    //     $conn = $login->site->db_name;
+    //     $model = $model;
+    //     $model->setConnection($conn);
 
-        return $model;
-    }
+    //     return $model;
+    // }
 
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        $connKaryawan = $this->setConnection(new Karyawan());
+        $connKaryawan = ConnectionDB::setConnection(new Karyawan());
 
         $data['karyawans'] = $connKaryawan->get();
-   
+
         return view('AdminSite.Karyawan.index', $data);
     }
 
@@ -54,48 +55,23 @@ class KaryawanController extends Controller
      */
     public function create(Request $request)
     {
-        $user_id = $request->user()->id;
-        $login = Login::where('id', $user_id)->first();
-        $conn = $login->site->db_name;
-
-        $user = $request->session()->get('user');
-
-        $idcard = new IdCard();
-        $idcard->setConnection($conn);
-
-        $gender = new JenisKelamin();
-        $gender->setConnection($conn);
-
-        $agama = new Agama();
-        $agama->setConnection($conn);
-
-        $statuskawin = new StatusKawin();
-        $statuskawin->setConnection($conn);
-
-        $jabatan = new Jabatan();
-        $jabatan->setConnection($conn);
-
-        $divisi = new Divisi();
-        $divisi->setConnection($conn);
-
-        $departemen = new Departemen();
-        $departemen->setConnection($conn);
-
-        $kepemilikan = new KepemilikanUnit();
-        $kepemilikan->setConnection($conn);
-
-        $penempatan = new Penempatan();
-        $penempatan->setConnection($conn);
+        $agama = ConnectionDB::setConnection(new Agama());
+        $users = ConnectionDB::setConnection(new User());
+        $idcard = ConnectionDB::setConnection(new IdCard());
+        $jabatans = ConnectionDB::setConnection(new Jabatan());
+        $divisi = ConnectionDB::setConnection(new Divisi());
+        $departemen = ConnectionDB::setConnection(new Departemen());
+        $penempatan = ConnectionDB::setConnection(new Penempatan());
+        $gender = ConnectionDB::setConnection(new JenisKelamin());
+        $statuskawin = ConnectionDB::setConnection(new StatusKawin());
 
         $data['agamas'] = $agama->get();
-        $data['jabatans'] = $jabatan->get();
+        $data['jabatans'] = $jabatans->get();
         $data['jeniskelamins'] = $gender->get();
         $data['divisis'] = $divisi->get();
         $data['departemens'] = $departemen->get();
-        $data['kepemilikans'] = $kepemilikan->get();
-        $data['genders'] = $gender->get();
         $data['idcards'] = $idcard->get();
-        $data['idusers'] = $user->get();
+        $data['idusers'] = $users->get();
         $data['statuskawins'] = $statuskawin->get();
         $data['penempatans'] = $penempatan->get();
 
@@ -110,8 +86,8 @@ class KaryawanController extends Controller
      */
     public function store(Request $request)
     {
-        $connKaryawan = $this->setConnection(new Karyawan());
-
+        $connKaryawan = ConnectionDB::setConnection(new Karyawan());
+        // dd($request);
         try {
             DB::beginTransaction();
 
@@ -119,14 +95,13 @@ class KaryawanController extends Controller
             $login = Login::where('id', $id_user)->with('site')->first();
             $site = $login->site->id_site;
 
-            $count = $connKaryawan->count();
-            $count += 1;
-            if ($count < 10) {
-                $count = '0' . $count;
-            }
+            // $count = $connKaryawan->count();
+            // $count += 1;
+            // if ($count < 10) {
+            //     $count = '0' . $count;
+            // }
 
-            $connKaryawan->create([
-                'id_karyawan' => $count,
+            $karyawan = $connKaryawan->create([
                 'id_site' => $site,
                 'id_card_type' => $request->id_card_type,
                 'nik_karyawan' => $request->nik_karyawan,
@@ -160,6 +135,9 @@ class KaryawanController extends Controller
                 'id_status_kawin'=> $request->id_status_kawin,
             ]);
 
+            $karyawan->id_karyawan = sprintf("%04d", $karyawan->id);
+            $karyawan->save();
+
             DB::commit();
 
             Alert::success('Berhasil', 'Berhasil menambahkan karyawan');
@@ -183,7 +161,29 @@ class KaryawanController extends Controller
      */
     public function show($id)
     {
-        //
+        $agama = ConnectionDB::setConnection(new Agama());
+        $users = ConnectionDB::setConnection(new User());
+        $idcard = ConnectionDB::setConnection(new IdCard());
+        $jabatans = ConnectionDB::setConnection(new Jabatan());
+        $divisi = ConnectionDB::setConnection(new Divisi());
+        $departemen = ConnectionDB::setConnection(new Departemen());
+        $penempatan = ConnectionDB::setConnection(new Penempatan());
+        $gender = ConnectionDB::setConnection(new JenisKelamin());
+        $statuskawin = ConnectionDB::setConnection(new StatusKawin());
+        $karyawan = ConnectionDB::setConnection(new Karyawan());
+
+        $data['agamas'] = $agama->get();
+        $data['jabatans'] = $jabatans->get();
+        $data['jeniskelamins'] = $gender->get();
+        $data['divisis'] = $divisi->get();
+        $data['departemens'] = $departemen->get();
+        $data['idcards'] = $idcard->get();
+        $data['idusers'] = $users->get();
+        $data['statuskawins'] = $statuskawin->get();
+        $data['penempatans'] = $penempatan->get();
+        $data['karyawan'] = $karyawan->find($id);
+
+        return view('AdminSite.Karyawan.show', $data);
     }
 
     /**
@@ -217,7 +217,7 @@ class KaryawanController extends Controller
         $data['idcards'] = $connIdCard->get();
         $data['statuskawins'] = $connStatusKawin->get();
         $data['penempatans'] = $connPenempatan->get();
-        
+
 
         return view('AdminSite.Karyawan.edit', $data);
     }
@@ -231,7 +231,7 @@ class KaryawanController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $conn = $this->setConnection($request);
+        $conn = ConnectionDB::setConnection(new Karyawan());
         $karyawan = $conn->find($id);
         $karyawan->update($request->all());
 
@@ -246,9 +246,9 @@ class KaryawanController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, $id)
+    public function destroy($id)
     {
-        $conn = $this->setConnection($request);
+        $conn = ConnectionDB::setConnection(new Karyawan());
         $conn->find($id)->delete();
 
         Alert::success('Berhasil', 'Berhasil menghapus karyawan');

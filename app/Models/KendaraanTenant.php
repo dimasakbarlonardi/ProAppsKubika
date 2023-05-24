@@ -23,4 +23,9 @@ class KendaraanTenant extends Model
     ];
 
     protected $dates = ['deleted_at'];
+
+    public function unit()
+    {
+        return $this->hasOne(Unit::class, 'id_unit', 'id_unit');
+    }
 }

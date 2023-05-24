@@ -12,7 +12,6 @@ class JenisKelamin extends Model
 
     protected $table = 'tb_jenis_kelamin';
     protected $primaryKey = 'id_jenis_kelamin';
-    public $incrementing = false;
 
     protected $fillable = [
         'id_jenis_kelamin',

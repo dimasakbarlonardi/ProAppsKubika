@@ -2,13 +2,13 @@
 
 @section('content')
 <div class="card">
-    <div class="card-header bg-light py-2">
+    <div class="card-header py-2">
         <div class="row flex-between-center">
             <div class="col-auto">
-                <h6 class="mb-0">List ID Card</h6>
+                <h6 class="mb-0 text-light">List ID Card</h6>
             </div>
             <div class="col-auto d-flex">
-                <a class="btn btn-primary" href="{{ route('idcards.create') }}">Tambah ID Card</a>
+                <a class="btn btn-falcon-default btn-sm text-600" href="{{ route('idcards.create') }}">Tambah ID Card</a>
             </div>
         </div>
     </div>
@@ -17,16 +17,14 @@
             <thead>
                 <tr>
                     <th class="sort" data-sort="">No</th>
-                    <th class="sort" data-sort="id_card_type">ID Card Type</th>
                     <th class="sort" data-sort="card_id_name">Card ID Name</th>
-                   
+
                 </tr>
             </thead>
             <tbody>
                 @foreach ($idcards as $key => $idcard)
                     <tr>
                         <th scope="row">{{ $key + 1 }}</th>
-                        <td>{{ $idcard->id_card_type }}</td>
                         <td>{{ $idcard->card_id_name }}</td>
                         <td>
                             <a href="{{ route('idcards.edit', $idcard->id_card_type) }}" class="btn btn-sm btn-warning">Edit</a>

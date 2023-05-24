@@ -26,7 +26,7 @@ class OwnerHController extends Controller
         $model->setConnection($conn);
 
         return $model;
-        
+
     }
     /**
      * Display a listing of the resource.
@@ -38,7 +38,7 @@ class OwnerHController extends Controller
         $connOwner = $this->setConnection(new OwnerH());
 
         $data['owners'] = $connOwner->get();
-   
+
         return view('AdminSite.Owner.index', $data);
     }
 
@@ -66,7 +66,7 @@ class OwnerHController extends Controller
 
         $statuskawin = new StatusKawin();
         $statuskawin->setConnection($conn);
-        
+
         $data['agamas'] = $agama->get();
         $data['genders'] = $gender->get();
         $data['idcards'] = $idcard->get();
@@ -93,7 +93,7 @@ class OwnerHController extends Controller
             $login = Login::where('id', $id_user)->with('site')->first();
             $site = $login->site->id_site;
 
-            $count = $connOwner->count(); 
+            $count = $connOwner->count();
             $count += 1;
 
             $connOwner->create([
@@ -135,7 +135,7 @@ class OwnerHController extends Controller
             ]);
 
             DB::commit();
-            
+
             Alert::success('Berhasil', 'Berhasil menambahkan pemilik');
 
             return redirect()->route('owners.index');
@@ -160,7 +160,7 @@ class OwnerHController extends Controller
         $connOwner = $this->setConnection(new OwnerH());
 
         $data['owners'] = $connOwner->get();
-   
+
         return view('AdminSite.Owner.show', $data);
     }
 

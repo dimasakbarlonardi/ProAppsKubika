@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Hunian;
@@ -11,17 +12,6 @@ use Illuminate\Support\Facades\DB;
 
 class HunianController extends Controller
 {
-    public function setConnection(Request $request)
-    {
-        $user_id = $request->user()->id;
-        $login = Login::where('id', $user_id)->with('site')->first();
-        $conn = $login->site->db_name;
-        $user = new Hunian();
-        $user->setConnection($conn);
-
-        return $user;
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -29,7 +19,7 @@ class HunianController extends Controller
      */
     public function index(Request $request)
     {
-        $conn = $this->setConnection($request);
+        $conn = ConnectionDB::setConnection(new Hunian());
 
         $data['hunians'] = $conn->get();
 

@@ -9,10 +9,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class OwnerH extends Model
 {
     use HasFactory, SoftDeletes ;
-    
+
     protected $table = 'tb_pemilik_h';
-    protected $primaryKey = 'id_pemilik';
-    public $incrementing = false;
 
     protected $fillable =[
         'id_pemilik',
@@ -54,7 +52,7 @@ class OwnerH extends Model
     ];
 
     protected $dates = ['deleted_at'];
-    
+
     public function Login()
     {
         return $this->hasOne(Login::class, 'id', 'id');
@@ -63,5 +61,10 @@ class OwnerH extends Model
     public function IdCard()
     {
         return $this->hasOne(IdCard::class, 'id_card_type', 'id_card_type');
+    }
+
+    public function Kepemilikan()
+    {
+        return $this->hasMany(KepemilikanUnit::class, 'id_pemilik', 'id_pemilik');
     }
 }

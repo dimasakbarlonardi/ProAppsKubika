@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
 use App\Models\JenisPekerjaan;
 use App\Models\Login;
@@ -11,18 +12,6 @@ use Illuminate\Http\Request;
 
 class JenisPekerjaanController extends Controller
 {
-    public function setConnection($model)
-    {
-        $request = Request();
-        $user_id = $request->user()->id;
-        $login = Login::where('id', $user_id)->with('site')->first();
-        $conn = $login->site->db_name;
-        $model = $model;
-        $model->setConnection($conn);
-
-        return $model;
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -30,7 +19,7 @@ class JenisPekerjaanController extends Controller
      */
     public function index()
     {
-        $connStatusRequest = $this->setConnection(new JenisPekerjaan());
+        $connStatusRequest = ConnectionDB::setConnection(new JenisPekerjaan());
 
         $data['jenispekerjaans'] = $connStatusRequest->get();
 
@@ -55,17 +44,12 @@ class JenisPekerjaanController extends Controller
      */
     public function store(Request $request)
     {
-        $connJenisPekerjaan = $this->setConnection(new JenisPekerjaan());
+        $connJenisPekerjaan = ConnectionDB::setConnection(new JenisPekerjaan());
 
         try {
             DB::beginTransaction();
 
-            $count = $connJenisPekerjaan->count();
-            $count += 1;
-   
-
             $connJenisPekerjaan->create([
-                'id_jenis_pekerjaan' => $count,
                 'jenis_pekerjaan' => $request->jenis_pekerjaan,
             ]);
 
@@ -103,8 +87,9 @@ class JenisPekerjaanController extends Controller
      */
     public function edit($id)
     {
-        $connJenisPekerjaan = $this->setConnection(new JenisPekerjaan());
-        $data['jenispekerjaan'] = $connJenisPekerjaan->where('id_jenis_pekerjaan', $id)->first();
+        $connJenisPekerjaan = ConnectionDB::setConnection(new JenisPekerjaan());
+
+        $data['jenispekerjaan'] = $connJenisPekerjaan->find($id);
 
         return view('AdminSite.JenisPekerjaan.edit', $data);
     }
@@ -118,11 +103,9 @@ class JenisPekerjaanController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $connJenisPekerjaan = $this->setConnection(new JenisPekerjaan());
-        $count = $connJenisPekerjaan->count();
+        $connJenisPekerjaan = ConnectionDB::setConnection(new JenisPekerjaan());
 
         $connJenisPekerjaan->where('id_jenis_pekerjaan', $id)->update([
-            'id_jenis_pekerjaan' => $count,
             'jenis_pekerjaan' => $request->jenis_pekerjaan,
         ]);
 
@@ -139,7 +122,7 @@ class JenisPekerjaanController extends Controller
      */
     public function destroy($id)
     {
-        $connJenisPekerjaan = $this->setConnection(new JenisPekerjaan());
+        $connJenisPekerjaan = ConnectionDB::setConnection(new JenisPekerjaan());
         $connJenisPekerjaan->find($id)->delete();
 
         Alert::success('Berhasil', 'Berhasil Menghapus Jenis Pekerjaan');

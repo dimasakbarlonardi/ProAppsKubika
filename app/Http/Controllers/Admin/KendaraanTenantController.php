@@ -49,7 +49,7 @@ class KendaraanTenantController extends Controller
         $user_id = $request->user()->id;
         $login = Login::where('id', $user_id)->with('site')->first();
         $conn = $login->site->db_name;
-        
+
         $unit = new Unit();
         $unit->setConnection($conn);
 
@@ -79,12 +79,12 @@ class KendaraanTenantController extends Controller
         try {
             DB::beginTransaction();
 
-            $count = $conn->count(); 
+            $count = $conn->count();
             $count += 1;
             if ($count < 10) {
                 $count = '0' . $count;
             }
-            
+
             $conn->create([
                 'id_tenant_vehicle' => $count,
                 'id_tenant' => $request->id_tenant,
