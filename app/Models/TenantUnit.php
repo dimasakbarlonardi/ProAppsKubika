@@ -27,4 +27,6 @@ class TenantUnit extends Model
     ];
 
     protected $date = ['deleted_at'];
+    
+    
 }

@@ -4,13 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
-use App\Models\PeriodeSewa;
+use App\Models\JenisRequest;
 use Illuminate\Http\Request;
-use App\Models\Login;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 
-class PeriodeSewaController extends Controller
+class JenisRequestController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -19,11 +18,11 @@ class PeriodeSewaController extends Controller
      */
     public function index()
     {
-        $conn = ConnectionDB::setConnection(new PeriodeSewa());
+        $conn = ConnectionDB::setConnection( new JenisRequest());
 
-        $data['sewas'] = $conn->get();
+        $data['jenisrequests'] = $conn->get();
 
-        return view('AdminSite.PeriodeSewa.index', $data);
+        return view('AdminSite.JenisRequest.index', $data);
     }
 
     /**
@@ -31,14 +30,9 @@ class PeriodeSewaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(Request $request)
+    public function create()
     {
-        // $total_unit = $this->setConnection($request);
-        // $total_unit = $total_unit->count();
-        // $total_unit += 1;
-        // $data['current_id'] = $total_unit;
-
-        return view('AdminSite.PeriodeSewa.create');
+        return view('AdminSite.JenisRequest.create');
     }
 
     /**
@@ -47,30 +41,28 @@ class PeriodeSewaController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
     public function store(Request $request)
     {
-        
-        $conn = ConnectionDB::setConnection(new PeriodeSewa());
+        $conn = ConnectionDB::setConnection(new JenisRequest());
 
         try {
             DB::beginTransaction();
-            
-            $conn->create([
-                'id_periode_sewa' => $request->id_periode_sewa,
-                'periode_sewa' => $request->periode_sewa,
-            ]);
+
+            $conn->create($request->all());
 
             DB::commit();
 
-            Alert::success('Berhasil', 'Berhasil menambahkan Periode Sewa');
+            Alert::success('Berhasil', 'Berhasil menambahkan jenis request');
 
-            return redirect()->route('sewas.index');
+            return redirect()->route('jenisrequests.index');
+
         } catch (\Throwable $e) {
             DB::rollBack();
             dd($e);
-            Alert::error('Gagal', 'Gagal menambahkan Periode Sewa');
+            Alert::error('Gagal', 'Gagal menambahkan jenis request');
 
-            return redirect()->route('sewas.index');
+            return redirect()->route('jenisrequests.index');
         }
     }
 
@@ -93,11 +85,11 @@ class PeriodeSewaController extends Controller
      */
     public function edit($id)
     {
-        $conn = ConnectionDB::setConnection(new PeriodeSewa());
+        $conn = ConnectionDB::setConnection(new JenisRequest());
 
-        $data['sewa'] = $conn->find($id);
+        $data['jenisrequest'] = $conn->where('id_jenis_request', $id)->first();
 
-        return view('AdminSite.PeriodeSewa.edit', $data);
+        return view('AdminSite.JenisRequest.edit', $data);
     }
 
     /**
@@ -107,17 +99,16 @@ class PeriodeSewaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-
     public function update(Request $request, $id)
     {
-        $conn = ConnectionDB::setConnection(new PeriodeSewa());
+        $conn = ConnectionDB::setConnection(new JenisRequest());
 
-        $sewa = $conn->find($id);
-        $sewa->update($request->all());
+        $jenisrequest = $conn->find($id);
+        $jenisrequest->update($request->all());
 
-        Alert::success('Berhasil', 'Berhasil mengupdate Periode Sewa');
+        Alert::success('Berhasil', 'Berhasil mengupdate jenis request');
 
-        return redirect()->route('sewas.index');
+        return redirect()->route('jenisrequests.index');
     }
 
     /**
@@ -126,14 +117,14 @@ class PeriodeSewaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    
-    public function destroy(Request $request,$id)
+    public function destroy($id)
     {
-        $conn = ConnectionDB::setConnection(new PeriodeSewa());
+        $conn = ConnectionDB::setConnection(new JenisRequest());
+
         $conn->find($id)->delete();
 
-        Alert::success('Berhasil', 'Berhasil menghapus Periode Sewa');
+        Alert::success('Berhasil', 'Berhasil menghapus jenis request');
 
-        return redirect()->route('sewas.index');
+        return redirect()->route('jenisrequests.index');
     }
 }

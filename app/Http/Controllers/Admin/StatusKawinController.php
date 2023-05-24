@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
 use App\Models\StatusKawin;
 use App\Models\Login;
@@ -11,17 +12,6 @@ use Illuminate\Http\Request;
 
 class StatusKawinController extends Controller
 {
-    public function setConnection(Request $request)
-    {
-        $user_id = $request->user()->id;
-        $login = Login::where('id', $user_id)->with('site')->first();
-        $conn = $login->site->db_name;
-        $user = new StatusKawin();
-        $user->setConnection($conn);
-
-        return $user;
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -29,7 +19,8 @@ class StatusKawinController extends Controller
      */
     public function index(Request $request)
     {
-        $conn = $this->setConnection($request);
+        $conn = ConnectionDB::setConnection(new StatusKawin());
+
         $data['statuskawins'] = $conn->get();
 
         return view('AdminSite.StatusKawin.index', $data);
@@ -53,21 +44,12 @@ class StatusKawinController extends Controller
      */
     public function store(Request $request)
     {
-        $conn = $this->setConnection($request);
+        $conn = ConnectionDB::setConnection(new StatusKawin());
 
         try {
             DB::beginTransaction();
 
-            $count = $conn->count(); 
-            $count += 1;
-            if ($count < 10) {
-                $count = '0' . $count;
-            }
-
-            $conn->create([
-                'id_status_kawin' => $count,
-                'status_kawin' => $request->status_kawin
-            ]);
+            $conn->create($request->all());
 
             DB::commit();
 
@@ -102,7 +84,7 @@ class StatusKawinController extends Controller
      */
     public function edit(Request $request, $id)
     {
-        $conn = $this->setConnection($request);
+        $conn = ConnectionDB::setConnection(new StatusKawin());
 
         $data['statuskawin'] = $conn->where('id_status_kawin',$id)->first();
 
@@ -119,10 +101,11 @@ class StatusKawinController extends Controller
     public function update(Request $request, $id)
     {
         
-        $conn = $this->setConnection($request);
+        $conn = ConnectionDB::setConnection(new StatusKawin());
 
-        $statustinggal = $conn->find($id);
-        $statustinggal->update($request->all());
+        $statuskawin = $conn->find($id);
+
+        $statuskawin->update($request->all());
 
         Alert::success('Berhasil', 'Berhasil mengupdate status kawin');
 
@@ -137,7 +120,8 @@ class StatusKawinController extends Controller
      */
     public function destroy(Request $request ,$id)
     {
-        $conn = $this->setConnection($request);
+        $conn = ConnectionDB::setConnection(new StatusKawin());
+
         $conn->find($id)->delete();
 
         Alert::success('Berhasil', 'Berhasil menghapus status kawin');

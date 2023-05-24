@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="card">
-        <div class="card-header bg-light py-2">
+        <div class="card-header py-2">
             <div class="row flex-between-center">
                 <div class="col-auto">
                     <h6 class="my-3">Detail Karyawan</h6>
@@ -17,12 +17,8 @@
                         <input type="text" value="Park Royale" class="form-control" readonly>
                     </div>
                     <div class="col-6">
-                        <label class="form-label">ID User</label>
-                        <input type="text" value="{{$karyawan->id_user}}" class="form-control" readonly>
-                    </div>
-                    <div class="col-6">
                         <label class="form-label">ID Card Karyawan</label>
-                        <input type="text" value="{{$karyawan->id_card_type}}" class="form-control" readonly>
+                        <input type="text" value="{{$karyawan->IdCard->card_id_name}}" class="form-control" readonly>
                     </div>
                     <div class="col-6">
                         <label class="form-label">Nik Karyawan</label>
@@ -109,19 +105,19 @@
                     </div>
                     <div class="col-6">
                         <label class="form-label">ID Jabatan</label>
-                        <input type="text" value="{{$karyawan->id_jabatan}}" class="form-control" readonly>
+                        <input type="text" value="{{$karyawan->Jabatan->nama_jabatan}}" class="form-control" readonly>
                     </div>
                     <div class="col-6">
                         <label class="form-label">ID Divisi</label>
-                        <input type="text" value="{{$karyawan->id_divisi}}" class="form-control" readonly>
+                        <input type="text" value="{{$karyawan->Divisi->nama_divisi}}" class="form-control" readonly>
                     </div>
                     <div class="col-6">
                         <label class="form-label">ID Departement</label>
-                        <input type="text" value="{{$karyawan->id_departemen}}" class="form-control" readonly>
+                        <input type="text" value="{{$karyawan->Departemen->nama_departemen}}" class="form-control" readonly>
                     </div>
                     <div class="col-6">
                         <label class="form-label">ID Penempatan</label>
-                        <input type="text" value="{{$karyawan->id_penempatan}}" class="form-control" readonly>
+                        <input type="text" value="{{$karyawan->Penempatan->lokasi_penempatan}}" class="form-control" readonly>
                     </div>
                     <div class="col-6">
                         <label class="form-label">Tempat Lahir</label>
@@ -133,15 +129,15 @@
                     </div>
                     <div class="col-6">
                         <label class="form-label">ID Jenis Kelamin</label>
-                        <input type="text" value="{{$karyawan->id_jenis_kelamin}}" class="form-control" readonly>
+                        <input type="text" value="{{$karyawan->JenisKelamin->jenis_kelamin}}" class="form-control" readonly>
                     </div>
                     <div class="col-6">
                         <label class="form-label">ID Agama</label>
-                        <input type="text" value="{{$karyawan->id_agama}}" class="form-control" readonly>
+                        <input type="text" value="{{$karyawan->Agama->nama_agama}}" class="form-control" readonly>
                     </div>
                     <div class="col-6">
                         <label class="form-label">ID Status Kawin</label>
-                        <input type="text" value="{{$karyawan->id_status_kawin}}" class="form-control" readonly>
+                        <input type="text" value="{{$karyawan->StatusKawin->status_kawin}}" class="form-control" readonly>
                     </div>
                 </div>
             </div>

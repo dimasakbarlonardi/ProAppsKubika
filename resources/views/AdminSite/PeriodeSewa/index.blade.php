@@ -2,13 +2,13 @@
 
 @section('content')
 <div class="card">
-    <div class="card-header bg-light py-2">
+    <div class="card-header py-2">
         <div class="row flex-between-center">
             <div class="col-auto">
-                <h6 class="mb-0">List Periode Sewa</h6>
+                <h6 class="mb-0 text-white">List Periode Sewa</h6>
             </div>
             <div class="col-auto d-flex">
-                <a class="btn btn-primary" href="{{ route('sewas.create') }}">Tambah Periode Sewa</a>
+                <a class="btn btn-falcon-default text-600 btn-sm" href="{{ route('sewas.create') }}">Tambah Periode Sewa</a>
             </div>
         </div>
     </div>

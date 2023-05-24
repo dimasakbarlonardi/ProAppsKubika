@@ -2,10 +2,10 @@
 
 @section('content')
     <div class="card">
-        <div class="card-header bg-light py-2">
+        <div class="card-header  py-2">
             <div class="row flex-between-center">
                 <div class="col-auto">
-                    <h6 class="my-3">Tambah Periode Sewa</h6>
+                    <h6 class="my-3 text-white">Tambah Periode Sewa</h6>
                 </div>
             </div>
         </div>
@@ -14,10 +14,6 @@
                 @csrf
                 <div class="mb-3 col-10">
                 <div class="row">
-                    <div class="col-2 ">
-                        <label class="form-label">ID Periode Sewa</label>
-                        <input type="text" value="{{$current_id}}" class="form-control" required>
-                    </div>
                 </div>
                 <div class="col-6 ">
                     <label class="form-label">Periode Sewa</label>

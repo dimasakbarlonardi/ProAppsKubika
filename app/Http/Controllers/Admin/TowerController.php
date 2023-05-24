@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -14,17 +15,6 @@ use App\Models\Site;
 
 class TowerController extends Controller
 {
-    public function setConnection(Request $request)
-    {
-        $user_id = $request->user()->id;
-        $login = Login::where('id', $user_id)->with('site')->first();
-        $conn = $login->site->db_name;
-        $tower = new Tower();
-        $tower->setConnection($conn);
-
-        return $tower;
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -33,7 +23,7 @@ class TowerController extends Controller
     public function index(Request $request)
     {
 
-        $conn = $this->setConnection($request);
+        $conn = ConnectionDB::setConnection(new Tower());
 
         $data['towers'] = $conn->get();
 
@@ -46,7 +36,7 @@ class TowerController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function create()
-    {
+    {       
          $data['sites'] = Site::all();
 
         return view('AdminSite.Tower.create');
@@ -60,7 +50,7 @@ class TowerController extends Controller
      */
     public function store(Request $request)
     {
-        $conn = $this->setConnection($request);
+        $conn = ConnectionDB::setConnection(new Tower());
 
         try {
             DB::beginTransaction();
@@ -117,7 +107,7 @@ class TowerController extends Controller
      */
     public function edit(Request $request, $id)
     {
-        $conn = $this->setConnection($request);
+        $conn = ConnectionDB::setConnection(new Tower());
         $data['tower'] = $conn->where('id_tower', $id)->first();
 
         return view('AdminSite.Tower.edit', $data);
@@ -132,7 +122,7 @@ class TowerController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $conn = $this->setConnection($request);
+        $conn = ConnectionDB::setConnection(new Tower());
 
         $conn->where('id_tower', $id)->update([
             'nama_tower' => $request->nama_tower,
@@ -154,7 +144,8 @@ class TowerController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        $conn = $this->setConnection($request);
+        $conn = ConnectionDB::setConnection(new Tower());
+            
         $conn->where('id_tower', $id)->delete();
 
         Alert::success('Berhasil', 'Berhasil menghapus tower');

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
 use App\Models\Login;
 use App\Models\StatusTinggal;
@@ -11,24 +12,15 @@ use Illuminate\Http\Request;
 
 class StatusTinggalController extends Controller
 {
-    public function setConnection(Request $request)
-    {
-        $user_id = $request->user()->id;
-        $login = Login::where('id', $user_id)->with('site')->first();
-        $conn = $login->site->db_name;
-        $user = new StatusTinggal();
-        $user->setConnection($conn);
-
-        return $user;
-    }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        $conn = $this->setConnection($request);
+        $conn = ConnectionDB::setConnection(new StatusTinggal());
+        
         $data['statustinggals'] = $conn->get();
 
         return view('AdminSite.StatusTinggal.index', $data);
@@ -52,22 +44,13 @@ class StatusTinggalController extends Controller
      */
     public function store(Request $request)
     {
-        $conn = $this->setConnection($request);
+        $conn = ConnectionDB::setConnection(new StatusTinggal());
 
         try {
             DB::beginTransaction();
-
-            // $count = $conn->count(); 
-            // $count += 1;
-            // if ($count < 10) {
-            //     $count = '0' . $count;
-            // }
             
-            $conn->create([
-                'id_status_tinggal' => $request->id_status_tinggal,
-                'status_tinggal' => $request->status_tinggal
-            ]);
-
+            $conn->create($request->all());
+            
             DB::commit();
 
             Alert::success('Berhasil', 'Berhasil menambahkan status tinggal');
@@ -99,9 +82,9 @@ class StatusTinggalController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Request $request ,$id)
+    public function edit($id)
     {
-        $conn = $this->setConnection($request);
+        $conn = ConnectionDB::setConnection(new StatusTinggal());
 
         $data['statustinggal'] = $conn->find($id);
 
@@ -117,7 +100,7 @@ class StatusTinggalController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $conn = $this->setConnection($request);
+        $conn = ConnectionDB::setConnection(new StatusTinggal());
 
         $statustinggal = $conn->find($id);
         $statustinggal->update($request->all());
@@ -133,9 +116,10 @@ class StatusTinggalController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request ,$id)
+    public function destroy($id)
     {
-            $conn = $this->setConnection($request);
+            $conn = ConnectionDB::setConnection(new StatusTinggal());
+
             $conn->find($id)->delete();
 
             Alert::success('Berhasil', 'Berhasil menghapus status tinggal');

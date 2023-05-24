@@ -264,8 +264,8 @@ class TenantUnitController extends Controller
         $connTenantKendaraan = $this->setConnection(new KendaraanTenant());
         $connUnit = $this->setConnection(new Unit());
         $connJenisKendaraan = $this->setConnection(new JenisKendaraan());
+        
         // $periodeSewa = $this->setConnection(new PeriodeSewa());
-
         // $data['id_tenant'] = $id;
         $data['units'] = $connUnit->get();
         // $data['periodeSewa'] = $periodeSewa->get();

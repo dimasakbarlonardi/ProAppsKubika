@@ -12,7 +12,6 @@ class StatusKawin extends Model
 
     protected $table = 'tb_status_kawin';
     protected $primaryKey = 'id_status_kawin';
-    public $incrementing = false;
 
     protected $fillable = [
         'id_status_kawin',

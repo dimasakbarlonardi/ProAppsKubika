@@ -6,16 +6,16 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class TypeReservation extends Model
+class JenisRequest extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $table = 'tb_type_reservation';
-    protected $primaryKey = 'id_type_reservation';
+    protected $table = 'tb_jenis_request';
+    protected $primaryKey = 'id_jenis_request';
 
     protected $fillable = [
-        'id_type_reservation',
-        'type_reservation',
+        'id_jenis_request',
+        'jenis_request',
     ];
 
     protected $dates = ['deleted_at'];

@@ -75,4 +75,24 @@ class OwnerH extends Model
     {
         return $this->hasOne(IdCard::class, 'id_card_type', 'id_card_type');
     }
+
+    public function jeniskelamin()
+    {
+        return $this->hasOne(JenisKelamin::class, 'id_jenis_kelamin', 'id_jenis_kelamin');
+    }
+
+    public function statuskawin()
+    {
+        return $this->hasOne(StatusKawin::class, 'id_status_kawin', 'id_status_kawin');
+    }
+
+    public function agama()
+    {
+        return $this->hasOne(Agama::class, 'id_agama', 'id_agama');
+    }
+
+    public function iduser()
+    {
+        return $this->hasOne(User::class, 'id_user', 'id_user');
+    }
 }

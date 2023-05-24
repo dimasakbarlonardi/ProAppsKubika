@@ -12,7 +12,6 @@ class PeriodeSewa extends Model
 
     protected $table = 'tb_periode_sewa';
     protected $primaryKey = 'id_periode_sewa';
-    public $incrementing = false;
 
     protected $fillable = [
         'id_periode_sewa',

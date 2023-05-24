@@ -2,10 +2,10 @@
 
 @section('content')
     <div class="card">
-        <div class="card-header bg-light py-2">
+        <div class="card-header py-2">
             <div class="row flex-between-center">
                 <div class="col-auto">
-                    <h6 class="my-3">Tambah Karyawan</h6>
+                    <h6 class="my-3 text-white">Tambah Karyawan</h6>
                 </div>
             </div>
         </div>
@@ -53,6 +53,15 @@
                                 @endforeach
                             </select>
                         </div> --}}
+                        <div class="col-6">
+                            <label class="form-label">ID Status Kawin Karyawan</label>
+                            <select class="form-control" name="id_status_kawin_karyawan" required>
+                                <option selected disabled>-- Pilih Status Kawin --</option>
+                                @foreach ($statuskawins as $statuskawin)
+                                <option value="{{ $statuskawin->id_status_kawin }}">{{ $statuskawin->status_kawin }} </option>
+                                @endforeach
+                            </select>
+                        </div>
                         {{-- <div class="col-5">
                             <label class="form-label">ID Status Kawin Karyawan</label>
                             <select class="form-control" name="id_status_kawin_karyawan" required>
@@ -119,7 +128,7 @@
                             <label class="form-label">Tanggal Keluar</label>
                             <input type="date" name="tgl_keluar" class="form-control" required>
                         </div>
-                        <div class="col-5">
+                        <div class="col-6">
                             <label class="form-label">ID Jabatan</label>
                             <select class="form-control" name="id_jabatan" required>
                                 <option selected disabled>-- Pilih Jabatan --</option>
@@ -178,15 +187,6 @@
                                 <option selected disabled>-- Pilih Agama --</option>
                                 @foreach ($agamas as $agama)
                                 <option value="{{ $agama->id_agama }}">{{ $agama->nama_agama }} </option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label">ID Status Kawin</label>
-                            <select class="form-control" name="id_status_kawin" required>
-                                <option selected disabled>-- Pilih Status Kawin --</option>
-                                @foreach ($statuskawins as $statuskawin)
-                                <option value="{{ $statuskawin->id_status_kawin }}">{{ $statuskawin->status_kawin }} </option>
                                 @endforeach
                             </select>
                         </div>

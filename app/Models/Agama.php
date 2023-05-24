@@ -14,6 +14,7 @@ class Agama extends Model
     protected $primaryKey = 'id_agama';
 
     protected $fillable = [
+        'id_agama',
         'nama_agama'
     ];
 

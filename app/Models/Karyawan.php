@@ -87,5 +87,9 @@ class Karyawan extends Model
         return $this->hasOne(Departemen::class, 'id_departemen', 'id_departemen' );
     }
     
+    public function Penempatan()
+    {
+        return $this->hasOne(Penempatan::class, 'id_penempatan', 'id_penempatan' );
+    }
 
 }

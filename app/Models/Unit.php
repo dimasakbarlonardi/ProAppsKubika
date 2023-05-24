@@ -49,4 +49,14 @@ class Unit extends Model
     {
         return $this->hasOne(Hunian::class, 'id_hunian', 'id_hunian');
     }
+
+    public function tower()
+    {
+        return $this->hasOne(Tower::class, 'id_tower', 'id_tower');
+    }
+
+    public function floor()
+    {
+        return $this->hasOne(Floor::class, 'id_lantai', 'id_lantai');
+    }
 }

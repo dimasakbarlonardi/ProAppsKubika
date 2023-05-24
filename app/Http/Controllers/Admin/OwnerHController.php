@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
 use App\Models\Agama;
 use App\Models\OwnerH;
@@ -16,25 +17,6 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class OwnerHController extends Controller
 {
-    public function getDBname()
-    {
-        $request = Request();
-        $user_id = $request->user()->id;
-        $login = Login::where('id', $user_id)->with('site')->first();
-        $conn = $login->site->db_name;
-
-        return $conn;
-    }
-
-    public function setConnection($model)
-    {
-        $model = $model;
-        $db = $this->getDBname();
-        $model = $model->setConnection($db);
-
-        return $model;
-        
-    }
     /**
      * Display a listing of the resource.
      *
@@ -42,9 +24,9 @@ class OwnerHController extends Controller
      */
     public function index(Request $request)
     {
-        $connOwner = $this->setConnection(new OwnerH());
+        $conn = ConnectionDB::setConnection(new OwnerH());
 
-        $data['owners'] = $connOwner->get();
+        $data['owners'] = $conn->get();
    
         return view('AdminSite.Owner.index', $data);
     }
@@ -91,7 +73,7 @@ class OwnerHController extends Controller
      */
     public function store(Request $request)
     {
-        $connOwner = $this->setConnection(new OwnerH());
+        $conn = ConnectionDB::setConnection(new OwnerH());
 
         try {
             DB::beginTransaction();
@@ -100,10 +82,10 @@ class OwnerHController extends Controller
             $login = Login::where('id', $id_user)->with('site')->first();
             $site = $login->site->id_site;
 
-            $count = $connOwner->count(); 
+            $count = $conn->count(); 
             $count += 1;
 
-            $connOwner->create([
+            $conn->create([
                 'id_pemilik' => $count,
                 'id_site' => $site,
                 'id_user' => $id_user,
@@ -162,12 +144,12 @@ class OwnerHController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
-        $connOwner = $this->setConnection(new OwnerH());
+        $conn = ConnectionDB::setConnection(new OwnerH());
 
-        $data['owner'] = $connOwner->where('id_pemilik', $id)->first();
-   
+        $data['owners'] = $conn->where('id_pemilik', $id)->first();
+
         return view('AdminSite.Owner.show', $data);
     }
 
@@ -179,11 +161,11 @@ class OwnerHController extends Controller
      */
     public function edit(Request $request,$id)
     {
-        $connOwner = $this->setConnection(new OwnerH());
-        $connIdcard = $this->setConnection(new IdCard());
-        $connGender = $this->setConnection(new JenisKelamin());
-        $connAgama = $this->setConnection(new Agama());
-        $connKawin = $this->setConnection(new StatusKawin());
+        $connOwner = ConnectionDB::setConnection(new OwnerH());
+        $connIdcard = ConnectionDB::setConnection(new IdCard());
+        $connGender = ConnectionDB::setConnection(new JenisKelamin());
+        $connAgama = ConnectionDB::setConnection(new Agama());
+        $connKawin = ConnectionDB::setConnection(new StatusKawin());
         $user_id = $request->user()->id;
 
         $data['owner'] = $connOwner->where('id_pemilik', $id)->first();
@@ -205,8 +187,10 @@ class OwnerHController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $connOwner = $this->setConnection(new OwnerH());
-        $owner = $connOwner->find($id);
+        $conn = ConnectionDB::setConnection(new OwnerH());
+
+        $owner = $conn->find($id);
+
         $owner->update($request->all());
 
         Alert::success('Berhasil', 'Berhasil mengupdate pemilik');
@@ -222,8 +206,9 @@ class OwnerHController extends Controller
      */
     public function destroy(Request $request ,$id)
     {
-        $connOwner = $this->setConnection(new OwnerH());
-        $connOwner->find($id)->delete();
+        $conn = ConnectionDB::setConnection(new OwnerH());
+
+        $conn->find($id)->delete();
 
         Alert::success('Berhasil', 'Berhasil menghapus pemilik');
 

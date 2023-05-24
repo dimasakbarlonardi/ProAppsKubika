@@ -274,23 +274,22 @@
                         <div class="card-body">
                             <form>
                                 <div class="mb-3 mt-n2">
-                                    <label class="mb-1">Tower</label><select class="form-select form-select-sm">
-                                        <option>None</option>
-                                        <option>Urgent</option>
-                                        <option>High</option>
-                                        <option>Medium</option>
-                                        <option>Low</option>
+                                    <label class="mb-1">Tower</label>
+                                    <select class="form-select form-select-sm" name="id_tower" required id="id_tower">
+                                        @foreach ($towers as $tower)
+                                        <option value="{{ $tower->id_tower}}"> {{ $tower->nama_tower}}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                                 <div class="mb-3 mt-n2">
-                                    <label class="mb-1">Lantai</label><select class="form-select form-select-sm">
-                                        <option>None</option>
-                                        <option>Urgent</option>
-                                        <option>High</option>
-                                        <option>Medium</option>
-                                        <option>Low</option>
+                                    <label class="mb-1">Lantai</label>
+                                    <select class="form-select form-select-sm" name="id_tower" required>
+                                        @foreach ($floors as $floor)
+                                        <option value="{{ $floor->id_lantai}}"> {{ $floor->nama_lantai}}</option>
+                                        @endforeach
                                     </select>
                                 </div>
+
                             </form>
                         </div>
                         <div class="card-footer border-top border-200 py-x1">
@@ -316,3 +315,14 @@
         </footer>
     </div>
 @endsection
+
+{{-- @section('script')
+    <script>
+        $('document').ready(function() {
+            var id_tower = $('#id_tower').val()
+            console.log(id_tower)
+        })
+
+        
+    </script>
+@endsection --}}

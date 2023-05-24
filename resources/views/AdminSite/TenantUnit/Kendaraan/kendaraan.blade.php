@@ -18,9 +18,11 @@
         <tbody>
             @foreach ($kendaraan_tenants as $key => $kendaraan)
                 <tr>
-                    <td>{{ $kendaraan->id_tenant }}</td>
-                    <td>{{ $kendaraan->id_unit }}</td>
-                    <td>{{ $kendaraan->id_jenis_kendaraan }}</td>
+                    <td>{{ $kendaraan->tenant->nama_tenant }}</td>
+                    <td><b>ID Unit :</b> {{ $kendaraan->id_unit }} <br>
+                        <b> Unit : </b> {{ $kendaraan->unit->nama_unit }}
+                    </td>
+                    <td>{{ $kendaraan->jeniskendaraan->jenis_kendaraan }}</td>
                     <td>{{ $kendaraan->no_polisi }}</td>
                     <td class="text-end">
                         <div>

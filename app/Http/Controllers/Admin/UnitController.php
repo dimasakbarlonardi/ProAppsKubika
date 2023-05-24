@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -17,16 +18,6 @@ use App\Models\Hunian;
 
 class UnitController extends Controller
 {
-     public function setConnection(Request $request)
-    {
-        $user_id = $request->user()->id;
-        $login = Login::where('id', $user_id)->with('site')->first();
-        $conn = $login->site->db_name;
-        $user = new Unit();
-        $user->setConnection($conn);
-
-        return $user;
-    }
     /**
      * Display a listing of the resource.
      *
@@ -34,8 +25,15 @@ class UnitController extends Controller
      */
     public function index(Request $request)
     {
-        $conn = $this->setConnection($request);
+        $conn = ConnectionDB::setConnection(new Unit());
+        // $connTower = $this->setConnection(new Tower());
+        $connTower = ConnectionDB::setConnection(new Tower());
+        $connFloor = ConnectionDB::setConnection(new Floor());
+
+        $data['floors'] = $connFloor->get();
+        $data['towers'] = $connTower->get();
         $data['units'] = $conn->get();
+
         return view('AdminSite.Unit.index', $data);
     }
 
@@ -46,25 +44,13 @@ class UnitController extends Controller
      */
     public function create(Request $request)
     {
-        $user_id = $request->user()->id;
-        $login = Login::where('id', $user_id)->with('site')->first();
-        $conn = $login->site->db_name;
-        $tower = new Tower();
-        $tower->setConnection($conn);
+        $conn = ConnectionDB::setConnection(new Unit());
+        $connTower = $this->setConnection(new Tower());
+        $connFloor = $this->setConnection(new Tower());
 
-        $floor = new Floor();
-        $floor->setConnection($conn);
-
-        $hunian = new Hunian();
-        $hunian->setConnection($conn);
-
-        $total_unit = $this->setConnection($request);
-        $total_unit = $total_unit->count();
-        $data['current_id'] = $total_unit;
-
-        $data['towers'] = $tower->where('id_site', $login->id_site)->get();
-        $data['floors'] = $floor->get();
-        $data['hunians'] = $hunian->get();
+        $data['towers'] = $connTower->get();
+        $data['floors'] = $connFloor->get();
+        $data['units'] = $conn->get();
 
         return view ('AdminSite.Unit.create', $data);
     }

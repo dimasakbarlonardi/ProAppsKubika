@@ -11,8 +11,7 @@ class StatusRequest extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = 'tb_status_request';
-    protected $primaryKey = 'id_status_request';
-    public $incrementing = false;
+    protected $primaryKey = 'id_status_request';    
 
     protected $fillable = ([
         'id_status_request',
