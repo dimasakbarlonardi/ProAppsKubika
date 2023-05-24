@@ -25,16 +25,28 @@ class UnitController extends Controller
      */
     public function index(Request $request)
     {
-        $conn = ConnectionDB::setConnection(new Unit());
-        // $connTower = $this->setConnection(new Tower());
+        $connUnit = ConnectionDB::setConnection(new Unit());
         $connTower = ConnectionDB::setConnection(new Tower());
         $connFloor = ConnectionDB::setConnection(new Floor());
 
         $data['floors'] = $connFloor->get();
         $data['towers'] = $connTower->get();
-        $data['units'] = $conn->get();
+        $data['units'] = $connUnit->get();
 
         return view('AdminSite.Unit.index', $data);
+    }
+
+    public function unitsByFilter(Request $request)
+    {
+        $connUnit = ConnectionDB::setConnection(new Unit());
+
+        $data['units'] = $connUnit->where('id_lantai', $request->id_floor)
+        ->where('id_tower', $request->id_tower)
+        ->get();
+
+        return response()->json([
+            'html' => view('AdminSite.Unit.card', $data)->render(),
+        ]);
     }
 
     /**
@@ -45,12 +57,14 @@ class UnitController extends Controller
     public function create(Request $request)
     {
         $conn = ConnectionDB::setConnection(new Unit());
-        $connTower = $this->setConnection(new Tower());
-        $connFloor = $this->setConnection(new Tower());
+        $connTower = ConnectionDB::setConnection(new Tower());
+        $connFloor = ConnectionDB::setConnection(new Floor());
+        $connHunias = ConnectionDB::setConnection(new Hunian());
 
         $data['towers'] = $connTower->get();
         $data['floors'] = $connFloor->get();
         $data['units'] = $conn->get();
+        $data['hunians'] = $connHunias->get();
 
         return view ('AdminSite.Unit.create', $data);
     }
@@ -63,21 +77,18 @@ class UnitController extends Controller
      */
     public function store(Request $request)
     {
-        $conn = $this->setConnection($request);
+        $conn = ConnectionDB::setConnection(new Unit());
 
         try {
             DB::beginTransaction();
 
             $user_id = $request->user()->id;
             $login = Login::where('id', $user_id)->with('site')->first();
-            $tower = new Tower();
-            $tower = $tower->setConnection($login->site->db_name);
+            $tower = ConnectionDB::setConnection(new Tower());
             $site = $login->site->id_site;
             $tower = $tower->where('id_site', $site)->first();
 
-            $floor = new Floor();
-            $floor = $floor->setConnection($conn);
-
+            $floor = ConnectionDB::setConnection(new Floor());
 
             $count = $conn->count();
             $count += 1;

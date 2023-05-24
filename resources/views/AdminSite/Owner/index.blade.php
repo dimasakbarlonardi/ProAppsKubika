@@ -89,8 +89,8 @@
                                             <div class="row">
                                             <hr>
                                                 <button class="btn btn-outline-primary text-primary mb-2" type="button"><a class="text-primary" href="{{ route('kepemilikans.index') }}">Kepemilikan Unit</a></button>
-                                      
-                                                <button class="btn btn-outline-success text-success mb-2" type="button"><a class="text-success" href="{{ route('owners.show', $owner->id_pemilik) }} {{ $owner->nama_pemilik }}"> Detail</a></button>
+
+                                                <button class="btn btn-outline-success text-success mb-2" type="button"><a class="text-success" href="{{ route('owners.show', $owner->id_pemilik) }}"> Detail</a></button>
                                         </div>
                                         </div>
                                     </div>

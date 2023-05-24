@@ -97,6 +97,7 @@ Route::prefix('admin')->group(function () {
 
         // CRUD UNIT
         Route::resource('units', UnitController::class);
+        Route::get('units-by-filter', [UnitController::class, 'unitsByFilter'])->name('unitsByFilter');
 
         // CRUD Tenant
         Route::resource('tenants', TenantController::class);
