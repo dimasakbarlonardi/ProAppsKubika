@@ -14,7 +14,7 @@
                 @csrf
                 <div class="mb-3">
                     <label class="form-label">ID Departemen</label>
-                    <input type="text" name="id_departemen" class="form-control" required>
+                    <input type="text" maxlength="3" name="id_departemen" class="form-control" required>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Nama Departemen</label>

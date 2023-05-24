@@ -4,49 +4,21 @@
             Kendaraan</button>
     </div>
 </div>
-<div class="table-responsive scrollbar">
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">ID Tenant</th>
-                <th scope="col">ID Unit</th>
-                <th scope="col">ID Jenis Kendaraan</th>
-                <th scope="col">No Polisi</th>
-                <th class="text-end" scope="col">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($kendaraan_tenants as $key => $kendaraan)
-                <tr>
-                    <td>{{ $kendaraan->tenant->nama_tenant }}</td>
-                    <td><b>ID Unit :</b> {{ $kendaraan->id_unit }} <br>
-                        <b> Unit : </b> {{ $kendaraan->unit->nama_unit }}
-                    </td>
-                    <td>{{ $kendaraan->jeniskendaraan->jenis_kendaraan }}</td>
-                    <td>{{ $kendaraan->no_polisi }}</td>
-                    <td class="text-end">
-                        <div>
-                            <button class="btn btn-link p-0" type="button" data-bs-toggle="modal"
-                                data-bs-target="#edit-kendaraan" title="Edit"
-                                data-target-id="{{ $kendaraan->id_tenant_vehicle }}"
-                                onclick="editKendaraanModal('{{ $kendaraan->id_tenant_vehicle }}')"><span
-                                    class="text-500 fas fa-edit"></span>
-                            </button>
-                            <form action="{{ route('deleteTenantKendaraan', $kendaraan->id_tenant_vehicle) }}" method="post" class="d-inline">
-                                @csrf
-                                <button class="btn btn-link p-0 ms-2" type="submit" data-bs-toggle="tooltip"
-                                    data-bs-placement="top" title="Delete"
-                                    onClick="return confirm('Are you absolutely sure you want to delete?')"><span
-                                        class="text-500 fas fa-trash-alt"></span>
-                                </button>
-                            </form>
-                        </div>
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
+
+<div class="row p-3">
+    @foreach ($tenant_units as $unit)
+        <div class="col">
+            <button class="btn btn-falcon-primary me-1 mb-1 btn-unit" type="button"
+                onclick="btnUnitClick('{{ $unit->id_unit }}')"
+                id="btn-unit-{{ $unit->id_unit }}">{{ $unit->unit->nama_unit }}</button>
+        </div>
+    @endforeach
 </div>
+
+<div id="kendaraan_tenant">
+    @include('AdminSite.TenantUnit.Kendaraan.table')
+</div>
+
 
 <div class="modal fade" id="tambah-kendaraan" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 800px">
@@ -119,3 +91,16 @@
         </div>
     </div>
 </div>
+
+
+<script>
+    function btnUnitClick(id) {
+        $.ajax({
+            url: '/admin/get-vehicle/by-unit/' + id,
+            type: 'GET',
+            success: function(data) {
+                $('#kendaraan_tenant').html(data.html)
+            }
+        })
+    }
+</script>

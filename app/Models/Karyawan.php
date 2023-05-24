@@ -10,8 +10,6 @@ class Karyawan extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = 'tb_karyawan';
-    protected $primaryKey = 'id_karyawan';
-    public $incrementing = false;
 
     protected $fillable = [
         'id_karyawan',

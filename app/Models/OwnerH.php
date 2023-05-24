@@ -20,10 +20,8 @@ class OwnerH extends Model
 
         return $query;
     }
-    
+
     protected $table = 'tb_pemilik_h';
-    protected $primaryKey = 'id_pemilik';
-    public $incrementing = false;
 
     protected $fillable =[
         'id_pemilik',
@@ -65,7 +63,7 @@ class OwnerH extends Model
     ];
 
     protected $dates = ['deleted_at'];
-    
+
     public function Login()
     {
         return $this->hasOne(Login::class, 'id', 'id');
@@ -94,5 +92,10 @@ class OwnerH extends Model
     public function iduser()
     {
         return $this->hasOne(User::class, 'id_user', 'id_user');
+    }
+
+    public function Kepemilikan()
+    {
+        return $this->hasMany(KepemilikanUnit::class, 'id_pemilik', 'id_pemilik');
     }
 }

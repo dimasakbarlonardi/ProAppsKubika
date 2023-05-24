@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Floor;
@@ -12,25 +13,14 @@ use Illuminate\Support\Facades\DB;
 
 class FloorController extends Controller
 {
-    public function setConnection(Request $request)
-    {
-        $user_id = $request->user()->id;
-        $login = Login::where('id', $user_id)->with('site')->first();
-        $conn = $login->site->db_name;
-        $user = new Floor();
-        $user->setConnection($conn);
-
-        return $user;
-    }
-
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        $conn = $this->setConnection($request);
+        $conn = ConnectionDB::setConnection(new Floor());
 
         $data['floors'] = $conn->get();
 
@@ -55,19 +45,13 @@ class FloorController extends Controller
      */
     public function store(Request $request)
     {
-        $conn = $this->setConnection($request);
+        $conn = ConnectionDB::setConnection(new Floor());
 
         try {
             DB::beginTransaction();
 
-            $count = $conn->count();
-            $count += 1;
-            if ($count < 10) {
-                $count = '0' . $count;
-            }
-
             $conn->create([
-                'id_lantai' => $count,
+                'id_lantai' => $request->id_lantai,
                 'nama_lantai' => $request->nama_lantai,
             ]);
 
@@ -102,9 +86,9 @@ class FloorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Request $request, $id)
+    public function edit($id)
     {
-        $conn = $this->setConnection($request);
+        $conn = ConnectionDB::setConnection(new Floor());
 
         $data['floor'] = $conn->find($id);
 
@@ -120,7 +104,7 @@ class FloorController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $conn = $this->setConnection($request);
+        $conn = ConnectionDB::setConnection(new Floor());
 
         $floor = $conn->find($id);
         $floor->update($request->all());
@@ -136,10 +120,10 @@ class FloorController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request, $id)
+    public function destroy($id)
     {
 
-        $conn = $this->setConnection($request);
+        $conn = ConnectionDB::setConnection(new Floor());
         $conn->find($id)->delete();
 
         Alert::success('Berhasil', 'Berhasil menghapus lantai');

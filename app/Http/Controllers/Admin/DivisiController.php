@@ -12,32 +12,14 @@ use Illuminate\Http\Request;
 
 class DivisiController extends Controller
 {
-    public function getDBname()
-    {
-        $request = Request();
-        $user_id = $request->user()->id;
-        $login = Login::where('id', $user_id)->with('site')->first();
-        $db = $login->site->db_name;
-
-        return $db;
-    }
-
-    public function setConnection($model)
-    {
-        $db = $this->getDBname();
-        $model = $model->setConnection($db);
-
-        return $model;
-    }
-
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        $conn = ConnectionDB::setConnection($request);
+        $conn = ConnectionDB::setConnection(new Divisi());
         $data['divisis'] = $conn->get();
 
         return view('AdminSite.Divisi.index', $data);
@@ -61,18 +43,13 @@ class DivisiController extends Controller
      */
     public function store(Request $request)
     {
-        $conn = $this->setConnection($request);
+        $conn = ConnectionDB::setConnection(new Divisi());
 
         try {
             DB::beginTransaction();
 
-            $count = $conn->count();
-            $count += 1;
-            if ($count < 10) {
-                $count = '0' . $count;
-            }
             $conn->create([
-                'id_divisi' => $count,
+                'id_divisi' => $request->id_divisi,
                 'nama_divisi' => $request->nama_divisi,
             ]);
 
@@ -107,9 +84,9 @@ class DivisiController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Request $request ,$id)
+    public function edit($id)
     {
-        $conn = $this->setConnection($request);
+        $conn = ConnectionDB::setConnection(new Divisi());
 
         $data['divisi'] = $conn->find($id);
 
@@ -125,7 +102,7 @@ class DivisiController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $conn = $this->setConnection($request);
+        $conn = ConnectionDB::setConnection(new Divisi());
 
         $divisi = $conn->find($id);
         $divisi->update($request->all());
@@ -141,9 +118,9 @@ class DivisiController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request ,$id)
+    public function destroy($id)
     {
-        $conn = $this->setConnection($request);
+        $conn = ConnectionDB::setConnection(new Divisi());
         $conn->find($id)->delete();
 
         Alert::success('Berhasil', 'Berhasil menghapus divisi');

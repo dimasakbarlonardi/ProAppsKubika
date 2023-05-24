@@ -11,8 +11,6 @@ class Divisi extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = 'tb_divisi';
-    protected $primaryKey = 'id_divisi';
-    public $incrementing = false;
 
     protected $fillable = [
         'id_divisi',

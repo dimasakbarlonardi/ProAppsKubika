@@ -1,14 +1,14 @@
 {{-- @extends('layouts.master')
 
 @section('content')
-<div class="card">
-    <div class="card-header bg-light py-2">
+    {{-- <div class="card">
+    <div class="card-header py-3">
         <div class="row flex-between-center">
             <div class="col-auto">
                 <h6 class="mb-0">List Karyawan</h6>
             </div>
             <div class="col-auto d-flex">
-                <a class="btn btn-primary" href="{{ route('karyawans.create') }}">Tambah Karyawan</a>
+                <a class="btn btn-falcon-default btn-sm text-600" href="{{ route('karyawans.create') }}">Tambah Karyawan</a>
             </div>
         </div>
     </div>
@@ -104,7 +104,93 @@
             </tbody>
         </table>
     </div>
-</div>
+</div> --}}
+    <div class="content">
+        <div class="card" id="ticketsTable"
+            data-list='{"valueNames":["client","subject","status","priority","agent"],"page":7,"pagination":true,"fallback":"tickets-card-fallback"}'>
+            <div class="card-header border-bottom border-200 px-0">
+                <div class="d-lg-flex justify-content-between">
+                    <div class="row flex-between-center gy-2 px-x1 text-light">
+                        <div class="col-auto pe-0">
+                            <h6 class="mb-0 text-light">Karyawan</h6>
+                        </div>
+                        <div class="col-auto pe-0">
+                            <span class="nav-link-icon">
+                                <span class="fas fa-users"></span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="px-x1">
+                            <a class="btn btn-falcon-default text-600 btn-sm" href="{{ route('karyawans.create') }}">Tambah
+                                Karyawan</a>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-0">
+
+                <div class="list bg-light p-x1 d-flex flex-column gap-3" id="card-ticket-body">
+                    <div class="row">
+                        @foreach ($karyawans as $karyawan)
+                            <div class="col-3">
+                                <div
+                                    class="bg-white dark__bg-1100 d-md-flex d-xl-inline-block d-xxl-flex align-items-center p-x1 rounded-3 shadow-sm card-view-height">
+                                    <div class="d-flex align-items-start align-items-sm-center">
+                                        <a class="d-none d-sm-block" href="../../app/support-desk/contact-details.html">
+                                            <div class="avatar avatar-xl avatar-3xl">
+                                                <img src="/{{ $karyawan->profile_picture }}" alt="akmal"
+                                                    class="avatar-image" />
+                                            </div>
+                                        </a>
+                                        <div class="ms-1 ms-sm-3">
+                                            <p class="fw-semi-bold mb-3 mb-sm-2">
+                                                <a class="text-primary"
+                                                    href="{{ route('karyawans.show', $karyawan->id) }}">
+                                                    {{ $karyawan->nama_karyawan }}
+                                                </a>
+                                            </p>
+                                            <div class="row align-items-center gx-0 gy-2">
+                                                <div class="col-auto me-2">
+                                                    <h6 class="client mb-0">
+                                                        <a class="text-800 d-flex align-items-center gap-1"
+                                                            href="../../app/support-desk/contact-details.html"><span
+                                                                class="fas fa-user"
+                                                                data-fa-transform="shrink-3 up-1"></span><span>Peter
+                                                                Gill</span></a>
+                                                    </h6>
+                                                </div>
+
+                                            </div>
+                                            <hr>
+                                            <a href="{{ route('karyawans.show', $karyawan->id) }}"
+                                                class="btn btn-primary btn-sm">Detail Karyawan</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        @endforeach
+                    </div>
+
+                </div>
+                <div class="text-center d-none" id="tickets-card-fallback">
+                    <p class="fw-bold fs-1 mt-3">No ticket found</p>
+                </div>
+            </div>
+            <div class="card-footer">
+                <div class="d-flex justify-content-center">
+                    <button class="btn btn-sm btn-falcon-default me-1" type="button" title="Previous"
+                        data-list-pagination="prev">
+                        <span class="fas fa-chevron-left"></span>
+                    </button>
+                    <ul class="pagination mb-0"></ul>
+                    <button class="btn btn-sm btn-falcon-default ms-1" type="button" title="Next"
+                        data-list-pagination="next">
+                        <span class="fas fa-chevron-right"></span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @extends('layouts.master') --}}
