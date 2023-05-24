@@ -59,13 +59,18 @@
                                         <a class="d-none d-sm-block" href="../../app/support-desk/contact-details.html">
                                             {{-- {{ dd($tenant->profile_picture) }} --}}
                                             <div class="avatar avatar-xl avatar-3xl">
-                                                <img src="/{{ $tenant->profile_picture }}" alt="akmal"
+                                                <img src="/{{ $tenant->profile_picture }}" alt="IMG"
                                                     class="avatar-image" />
                                             </div>
                                         </a>
                                         <div class="ms-1 ms-sm-3">
                                             <p class="fw-semi-bold mb-3 mb-sm-2">
-                                                <a class="text-primary" href="{{ route('tenants.show', $tenant->id_tenant) }}">
+                                                <a class="text-primary">
+                                                    Tenant
+                                                </a>
+                                            </p>
+                                            <p class="fw-semi-bold mb-3 mb-sm-2">
+                                                <a class="text-black" href="{{ route('tenants.show', $tenant->id_tenant) }}">
                                                     {{ $tenant->nama_tenant }}
                                                 </a>
                                             </p>

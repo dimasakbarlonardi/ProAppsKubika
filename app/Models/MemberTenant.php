@@ -25,4 +25,14 @@ class MemberTenant extends Model
         'id_status_tinggal'
     ];
     protected $dates = ['deleted_at'];
+
+    public function status()
+    {
+        return $this->hasOne(StatusTinggal::class, 'id_status_tinggal','id_status_tinggal' );
+    }
+
+    public function tenant()
+    {
+        return $this->hasOne(Tenant::class, 'id_tenant','id_tenant' );
+    }
 }

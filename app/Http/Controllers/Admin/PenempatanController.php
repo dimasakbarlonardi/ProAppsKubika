@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
 use App\Models\Penempatan;
 use App\Models\Login;
@@ -11,28 +12,18 @@ use Illuminate\Http\Request;
 
 class PenempatanController extends Controller
 {
-    public function setConnection(Request $request)
-    {
-        $user_id = $request->user()->id;
-        $login = Login::where('id', $user_id)->with('site')->first();
-        $conn = $login->site->db_name;
-        $user = new Penempatan();
-        $user->setConnection($conn);
-
-        return $user;
-    }
-
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        $conn = $this->setConnection($request);
-        $data['penempatans'] = $conn->get();
+            $conn = ConnectionDB::setConnection( new Penempatan());
 
-        return view('AdminSite.Penempatan.index', $data);
+            $data['penempatans'] = $conn->get();
+
+            return view('AdminSite.Penempatan.index', $data);
     }
 
     /**
@@ -53,20 +44,12 @@ class PenempatanController extends Controller
      */
     public function store(Request $request)
     {
-        $conn = $this->setConnection($request);
+        $conn = ConnectionDB::setConnection(new Penempatan());
 
         try {
             DB::beginTransaction();
 
-            $count = $conn->count(); 
-            $count += 1;
-            if ($count < 10) {
-                $count = '0' . $count;
-            }
-            $conn->create([
-                'id_penempatan' => $count,
-                'lokasi_penempatan' => $request->lokasi_penempatan,
-            ]);
+            $conn->create($request->all());
 
             DB::commit();
 
@@ -99,11 +82,11 @@ class PenempatanController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Request $request ,$id)
+    public function edit($id)
     {
-        $conn = $this->setConnection($request);
+        $conn = ConnectionDB::setConnection(new Penempatan());
 
-        $data['penempatan'] = $conn->find($id);
+        $data['penempatan'] = $conn->where('id', $id)->first();
 
         return view('AdminSite.Penempatan.edit', $data);
     }
@@ -117,7 +100,7 @@ class PenempatanController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $conn = $this->setConnection($request);
+        $conn = ConnectionDB::setConnection(new Penempatan());
 
         $penempatan = $conn->find($id);
         $penempatan->update($request->all());
@@ -133,9 +116,10 @@ class PenempatanController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request ,$id)
+    public function destroy($id)
     {
-        $conn = $this->setConnection($request);
+        $conn = ConnectionDB::setConnection(new Penempatan());
+
         $conn->find($id)->delete();
 
         Alert::success('Berhasil', 'Berhasil menghapus penempatan');

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
 use App\Models\Login;
 use App\Models\WorkRelation;
@@ -11,17 +12,6 @@ use Illuminate\Support\Facades\DB;
 
 class WorkRelationController extends Controller
 {
-    public function setConnection($model)
-    {
-        $request = Request();
-        $user_id = $request->user()->id;
-        $login = Login::where('id', $user_id)->with('site')->first();
-        $conn = $login->site->db_name;
-        $model = $model;
-        $model->setConnection($conn);
-
-        return $model;
-    }
     /**
      * Display a listing of the resource.
      *
@@ -29,9 +19,9 @@ class WorkRelationController extends Controller
      */
     public function index()
     {
-        $connWorkRelation = $this->setConnection(new WorkRelation());
+        $conn = ConnectionDB::setConnection(new WorkRelation());
 
-        $data['workrelations'] = $connWorkRelation->get();
+        $data['workrelations'] = $conn->get();
 
         return view('AdminSite.WorkRelation.index', $data);
     }
@@ -54,17 +44,13 @@ class WorkRelationController extends Controller
      */
     public function store(Request $request)
     {
-        $connWorkRelation = $this->setConnection(new WorkRelation());
+        $conn = $this->setConnection(new WorkRelation());
 
         try {
-            DB::beginTransaction();
+            DB::beginTransaction();   
 
-            $count = $connWorkRelation->count();
-            $count += 1;
-   
-
-            $connWorkRelation->create([
-                'id_work_relation' => $count,
+            $conn->create([
+                'id_work_relation' => $request->id_work_relation,
                 'work_relation' => $request->work_relation,
             ]);
 

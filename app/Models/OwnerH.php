@@ -5,10 +5,21 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\DB;
 
 class OwnerH extends Model
 {
     use HasFactory, SoftDeletes ;
+
+    public function getAllOwners($db)
+    {
+        $query = DB::connection($db)
+            ->table('tb_pemilik_h')
+            ->leftJoin('tb_user', 'tb_user.id_user', '=', 'tb_pemilik_h.id_pemilik')
+            ->get();
+
+        return $query;
+    }
 
     protected $table = 'tb_pemilik_h';
 
@@ -61,6 +72,31 @@ class OwnerH extends Model
     public function IdCard()
     {
         return $this->hasOne(IdCard::class, 'id_card_type', 'id_card_type');
+    }
+
+    public function jeniskelamin()
+    {
+        return $this->hasOne(JenisKelamin::class, 'id_jenis_kelamin', 'id_jenis_kelamin');
+    }
+
+    public function statuskawin()
+    {
+        return $this->hasOne(StatusKawin::class, 'id_status_kawin', 'id_status_kawin');
+    }
+
+    public function agama()
+    {
+        return $this->hasOne(Agama::class, 'id_agama', 'id_agama');
+    }
+
+    public function iduser()
+    {
+        return $this->hasOne(User::class, 'id_user', 'id_user');
+    }
+
+    public function Kepemilikan()
+    {
+        return $this->hasMany(KepemilikanUnit::class, 'id_pemilik', 'id_pemilik');
     }
 
     public function Kepemilikan()

@@ -5,10 +5,10 @@
     <div class="card-header py-2">
         <div class="row flex-between-center">
             <div class="col-auto">
-                <h6 class="mb-0 text-white">List Status Kawin</h6>
+                <h6 class="mb-0 text-white">List Jenis Request</h6>
             </div>
             <div class="col-auto d-flex">
-                <a class="btn btn-falcon-default text-600 btn-sm" href="{{ route('statuskawins.create') }}">Tambah Status Kawin</a>
+                <a class="btn btn-falcon-default text-600 btn-sm " href="{{ route('jenisrequests.create') }}">Tambah Jenis Request</a>
             </div>
         </div>
     </div>
@@ -17,18 +17,18 @@
             <thead>
                 <tr>
                     <th class="sort" data-sort="">No</th>
-                    <th class="sort" data-sort="status_kawin">Status Kawin</th>
+                    <th class="sort" data-sort="jenis_request">Jenis Request</th>
                     <th class="sort">Action</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($statuskawins as $key => $statuskawin)
+                @foreach ($jenisrequests as $key => $jenisrequest)
                     <tr>
                         <th scope="row">{{ $key + 1 }}</th>
-                        <td>{{ $statuskawin->status_kawin }}</td>
+                        <td>{{ $jenisrequest->jenis_request }}</td>
                         <td>
-                            <a href="{{ route('statuskawins.edit', $statuskawin->id_status_kawin) }}" class="btn btn-sm btn-warning">Edit</a>
-                            <form class="d-inline" action="{{ route('statuskawins.destroy', $statuskawin->id_status_kawin) }}" method="post">
+                            <a href="{{ route('jenisrequests.edit', $jenisrequest->id_jenis_request) }}" class="btn btn-sm btn-warning">Edit</a>
+                            <form class="d-inline" action="{{ route('jenisrequests.destroy', $jenisrequest->id_jenis_request) }}" method="post">
                                 @method('DELETE')
                                 @csrf
                                 <button type="submit" class="btn btn-danger btn-sm"

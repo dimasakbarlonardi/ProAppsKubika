@@ -11,10 +11,10 @@ class Penempatan extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = 'tb_penempatan';
-    protected $primaryKey = 'id_penempatan';
-    public $incrementing = false;
+    protected $primaryKey = 'id';
 
     protected $fillable = [
+        'id',
         'id_penempatan',
         'lokasi_penempatan',
     ];

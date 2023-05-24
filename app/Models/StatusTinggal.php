@@ -12,11 +12,11 @@ class StatusTinggal extends Model
 
     protected $table = 'tb_statustinggal_tenant';
     protected $primaryKey = 'id_status_tinggal';
-    public $incrementing = false;
 
     protected $fillable = [
         'id_status_tinggal',
         'status_tinggal',
     ];
+    
     protected $dates = ['deleted_at'];
 }

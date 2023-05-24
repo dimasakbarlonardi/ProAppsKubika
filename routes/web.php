@@ -25,6 +25,7 @@ use App\Http\Controllers\Admin\JabatanController;
 use App\Http\Controllers\Admin\JenisKelaminController;
 use App\Http\Controllers\Admin\JenisKendaraanController;
 use App\Http\Controllers\Admin\JenisPekerjaanController;
+use App\Http\Controllers\Admin\JenisRequestController;
 use App\Http\Controllers\Admin\KaryawanController;
 use App\Http\Controllers\Admin\KendaraanTenantController;
 use App\Http\Controllers\Admin\KepemilikanUnitController;
@@ -33,6 +34,7 @@ use App\Http\Controllers\Admin\OwnerHController;
 use App\Http\Controllers\Admin\PenempatanController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\PeriodeSewaController;
+use App\Http\Controllers\Admin\StatusKawinController;
 use App\Http\Controllers\Admin\StatusRequestController;
 use App\Http\Controllers\Admin\SystemSettingController;
 use App\Models\JenisKendaraan;
@@ -95,6 +97,7 @@ Route::prefix('admin')->group(function () {
 
         // CRUD UNIT
         Route::resource('units', UnitController::class);
+        Route::get('units-by-filter', [UnitController::class, 'unitsByFilter'])->name('unitsByFilter');
 
         // CRUD Tenant
         Route::resource('tenants', TenantController::class);
@@ -102,6 +105,7 @@ Route::prefix('admin')->group(function () {
         // CRUD TenantUnit
         Route::resource('tenantunits', TenantUnitController::class);
         Route::get('tenant-unit/{id}', [TenantUnitController::class, 'getTenantUnit'])->name('getTenantUnit');
+        Route::get('get-vehicle/by-unit/{id}', [TenantUnitController::class, 'getVehicleUnit']);
         Route::get('get-vehicle/by-unit/{id}', [TenantUnitController::class, 'getVehicleUnit']);
 
         Route::get('/get/tenantunits-edit/{id}', [TenantUnitController::class, 'editTenantUnit']);
@@ -212,6 +216,9 @@ Route::prefix('admin')->group(function () {
 
         // CRUD Jenis Pekerjaan
         Route::resource('jenispekerjaans', JenisPekerjaanController::class);
+
+        // CRUD Jenis Request
+        Route::resource('jenisrequests', JenisRequestController::class);
 
         // Akses form for user
         Route::get('/akses-form-user/{id}', [RoleController::class, 'aksesForm'])->name('akses-form');

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Login;
@@ -11,17 +12,6 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class StatusRequestController extends Controller
 {
-    public function setConnection($model)
-    {
-        $request = Request();
-        $user_id = $request->user()->id;
-        $login = Login::where('id', $user_id)->with('site')->first();
-        $conn = $login->site->db_name;
-        $model = $model;
-        $model->setConnection($conn);
-
-        return $model;
-    }
     /**
      * Display a listing of the resource.
      *
@@ -29,9 +19,9 @@ class StatusRequestController extends Controller
      */
     public function index()
     {
-        $connStatusRequest = $this->setConnection(new StatusRequest());
+        $conn = ConnectionDB::setConnection(new StatusRequest());
 
-        $data['statusrequests'] = $connStatusRequest->get();
+        $data['statusrequests'] = $conn->get();
 
         return view('AdminSite.StatusRequest.index', $data);
     }
@@ -54,19 +44,12 @@ class StatusRequestController extends Controller
      */
     public function store(Request $request)
     {
-        $connStatusRequest = $this->setConnection(new StatusRequest());
+        $conn = ConnectionDB::setConnection(new StatusRequest());
 
         try {
             DB::beginTransaction();
 
-            $count = $connStatusRequest->count();
-            $count += 1;
-   
-
-            $connStatusRequest->create([
-                'id_status_request' => $count,
-                'status_request' => $request->status_request,
-            ]);
+            $conn->create($request->all());
 
             DB::commit();
 
@@ -102,8 +85,9 @@ class StatusRequestController extends Controller
      */
     public function edit($id)
     {
-        $connStatusRequest = $this->setConnection(new StatusRequest());
-        $data['statusrequest'] = $connStatusRequest->where('id_status_request', $id)->first();
+        $conn = ConnectionDB::setConnection(new StatusRequest());
+
+        $data['statusrequest'] = $conn->where('id_status_request', $id)->first();
 
         return view('AdminSite.StatusRequest.edit', $data);
     }
@@ -117,13 +101,11 @@ class StatusRequestController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $connStatusRequest = $this->setConnection(new StatusRequest());
-        $count = $connStatusRequest->count();
+        $conn = ConnectionDB::setConnection(new StatusRequest());
 
-        $connStatusRequest->where('id_status_request', $id)->update([
-            'id_status_request' => $count,
-            'status_request' => $request->status_request,
-        ]);
+        $agama = $conn->find($id);
+
+        $agama->update($request->all());
 
         Alert::success('Berhasil', 'Berhasil Mengupdate Status Request');
 
@@ -138,8 +120,9 @@ class StatusRequestController extends Controller
      */
     public function destroy($id)
     {
-        $connStatusRequest = $this->setConnection(new StatusRequest());
-        $connStatusRequest->find($id)->delete();
+        $conn = ConnectionDB::setConnection(new StatusRequest());
+
+        $conn->find($id)->delete();
 
         Alert::success('Berhasil', 'Berhasil Menghapus Status Request');
 

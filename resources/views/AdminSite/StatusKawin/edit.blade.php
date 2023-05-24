@@ -14,10 +14,6 @@
                 @method('PUT')
                 @csrf
                 <div class="mb-3">
-                    <label class="form-label">ID Status Kawin</label>
-                    <input type="text" name="" value="{{$statuskawin->id_status_kawin}}" class="form-control">
-                </div>
-                <div class="mb-3">
                     <label class="form-label">Status Kawin</label>
                     <input type="text" name="status_kawin" value="{{$statuskawin->status_kawin}}" class="form-control">
                 </div>

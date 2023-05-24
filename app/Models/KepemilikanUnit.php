@@ -30,4 +30,9 @@ class KepemilikanUnit extends Model
     {
         return $this->hasOne(StatusHunianTenant::class, 'id_statushunian_tenant', 'id_status_hunian');
     }
+
+    public function Unit()
+    {
+        return $this->hasOne(Unit::class, 'id_unit', 'id_unit');
+    }
 }

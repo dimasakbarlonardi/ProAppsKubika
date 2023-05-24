@@ -70,4 +70,24 @@ class Karyawan extends Model
         return $this->hasOne(StatusKawin::class, 'id_status_kawin', 'id_status_kawin' );
     }
 
+    public function Jabatan()
+    {
+        return $this->hasOne(Jabatan::class, 'id_jabatan', 'id_jabatan' );
+    }
+
+    public function Divisi()
+    {
+        return $this->hasOne(Divisi::class, 'id_divisi', 'id_divisi' );
+    }
+
+    public function Departemen()
+    {
+        return $this->hasOne(Departemen::class, 'id_departemen', 'id_departemen' );
+    }
+    
+    public function Penempatan()
+    {
+        return $this->hasOne(Penempatan::class, 'id_penempatan', 'id_penempatan' );
+    }
+
 }
