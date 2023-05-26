@@ -19,7 +19,7 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Ruang Reservation</label>
-                    <input type="text" name="ruang_reservation" value="{{$ruangreservation->id_ruang_reservation}}" class="form-control">
+                    <input type="text" name="ruang_reservation" value="{{$ruangreservation->ruang_reservation}}" class="form-control">
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>

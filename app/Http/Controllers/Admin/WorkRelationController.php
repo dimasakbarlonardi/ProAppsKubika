@@ -44,7 +44,7 @@ class WorkRelationController extends Controller
      */
     public function store(Request $request)
     {
-        $conn = $this->setConnection(new WorkRelation());
+        $conn = ConnectionDB::setConnection(new WorkRelation());
 
         try {
             DB::beginTransaction();   
@@ -88,7 +88,7 @@ class WorkRelationController extends Controller
      */
     public function edit($id)
     {
-        $connWorkRelation = $this->setConnection(new WorkRelation());
+        $connWorkRelation = ConnectionDB::setConnection(new WorkRelation());
 
         $data['workrelation'] = $connWorkRelation->where('id_work_relation', $id)->first();
 
@@ -104,7 +104,7 @@ class WorkRelationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $connWorkRelation = $this->setConnection(new WorkRelation());
+        $connWorkRelation = ConnectionDB::setConnection(new WorkRelation());
         $count = $connWorkRelation->count();
 
         $connWorkRelation->where('id_work_relation', $id)->update([
@@ -125,7 +125,7 @@ class WorkRelationController extends Controller
      */
     public function destroy($id)
     {
-        $connWorkRelation = $this->setConnection(new WorkRelation());
+        $connWorkRelation = ConnectionDB::setConnection(new WorkRelation());
         $connWorkRelation->find($id)->delete();
 
         Alert::success('Berhasil', 'Berhasil Menghapus Work Relation');

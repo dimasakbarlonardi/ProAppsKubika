@@ -18,7 +18,9 @@
                         </div>
                        <div class="col-6">
                            <label class="form-label">ID User</label>
-                           <input type="text" value="{{ $owners->iduser}}" class="form-control" readonly>
+                           @foreach ($idusers as $iduser)
+                           <input type="text" value="{{ $iduser->name}}" class="form-control" readonly>
+                           @endforeach
                        </div>
                         <div class="col-6">
                             <label class="form-label">ID Card Pemilik</label>

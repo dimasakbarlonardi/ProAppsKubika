@@ -44,15 +44,15 @@
                             <label class="form-label">Nama Karyawan</label>
                             <input type="text" name="nama_karyawan" class="form-control" required>
                         </div>
-                        {{-- <div class="col-5">
-                            <label class="form-label">ID Status Karyawan</label>
-                            <select class="form-control" name="id_status_karyawan" required>
-                                <option selected disabled>-- Pilih Status Karyawan --</option>
-                                @foreach ($statuspemiliks as $statuspemilik)
-                                <option value="{{ $statuspemilik->id_status_aktif_pemilik }}">{{ $statuspemilik->status_hunian_pemilik }} </option>
-                                @endforeach
-                            </select>
-                        </div> --}}
+                        <div class="col-6">
+                        <label class="form-label">ID Status Karyawan</label>
+                        <select class="form-control" name="id_status_karyawan" readonly>
+                            <option selected disabled>-- Pilih Status Karyawan --</option>
+                            @foreach ($statuskaryawans as $statuskaryawan)
+                            <option value="{{ $statuskaryawan->id_status_karyawan }}">{{ $statuskaryawan->status_karyawan }} </option>
+                            @endforeach
+                        </select>
+                        </div>
                         <div class="col-6">
                             <label class="form-label">ID Status Kawin Karyawan</label>
                             <select class="form-control" name="id_status_kawin_karyawan" required>
@@ -62,24 +62,15 @@
                                 @endforeach
                             </select>
                         </div>
-                        {{-- <div class="col-5">
-                            <label class="form-label">ID Status Kawin Karyawan</label>
-                            <select class="form-control" name="id_status_kawin_karyawan" required>
-                                <option selected disabled>-- Pilih Status Pemilik --</option>
-                                @foreach ($statuskawinkaryawans as $statuskawinkaryawan)
-                                <option value="{{ $statuskawinkaryawan->id_status_kawin_karyawan }}">{{ $statuskawinkaryawan-> }}</option>
-                                @endforeach
-                            </select>
-                        </div> --}}
-                        {{-- <div class="col-5">
+                        <div class="col-6">
                             <label class="form-label">ID Status Aktif Karyawan</label>
                             <select class="form-control" name="id_status_aktif_karyawan" required>
-                                <option selected disabled>-- Pilih Status Pemilik --</option>
+                                <option selected disabled>-- Pilih Status Aktif Karyawan --</option>
                                 @foreach ($statusaktifkaryawans as $statusaktifkaryawan)
-                                <option value="{{ $statusaktifkaryawan->id_status_aktif_karyawan }}">{{ $statusaktifkaryawan-> }} </option>
+                                <option value="{{ $statusaktifkaryawan->id_status_aktif_karyawan }}">{{ $statusaktifkaryawan->status_aktif_karyawan }} </option>
                                 @endforeach
                             </select>
-                        </div> --}}
+                        </div>
                         <div class="col-6">
                             <label class="form-label">Kewarganegaraan</label>
                             <input type="text" name="kewarganegaraan" class="form-control" required>

@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use App\Models\Tenant;
 use App\Models\Login;
 use App\Models\OwnerH;
+use App\Models\Site;
 use App\Models\StatusHunianTenant;
 use App\Models\User;
 use FTP\Connection;
@@ -127,12 +128,14 @@ class TenantController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
         $connTenant =  ConnectionDB::setConnection(new Tenant());
-
+        $user_id = $request->user()->id;
+    
         $data['tenant'] = $connTenant->where('id_tenant', $id)->first();
-        
+        $data['idusers'] =  Login::where('id', $user_id)->get();
+            
         return view('AdminSite.Tenant.show', $data);
     }
 

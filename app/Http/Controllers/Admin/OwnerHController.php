@@ -147,8 +147,10 @@ class OwnerHController extends Controller
     public function show(Request $request, $id)
     {
         $conn = ConnectionDB::setConnection(new OwnerH());
+        $user_id = $request->user()->id;
 
         $data['owners'] = $conn->where('id_pemilik', $id)->first();
+        $data['idusers'] =  Login::where('id', $user_id)->get();
 
         return view('AdminSite.Owner.show', $data);
     }

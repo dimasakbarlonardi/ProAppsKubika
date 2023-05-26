@@ -12,7 +12,6 @@ class WorkRelation extends Model
 
     protected $table = 'tb_work_relation';
     protected $primaryKey = 'id_work_relation';
-    public $incrementing = false;
 
     protected $fillable = [
         'id_work_relation',

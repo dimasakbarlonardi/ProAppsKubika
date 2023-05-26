@@ -42,7 +42,6 @@ class Karyawan extends Model
         'tgl_lahir',
         'id_agama',
         'id_jenis_kelamin',
-        'id_status_kawin',
     ];
 
     protected $date = ['deleted_at'];
@@ -90,6 +89,21 @@ class Karyawan extends Model
     public function Penempatan()
     {
         return $this->hasOne(Penempatan::class, 'id_penempatan', 'id_penempatan' );
+    }
+
+    public function StatusKaryawan()
+    {
+        return $this->hasOne(StatusKaryawan::class, 'id_status_karyawan', 'id_status_karyawan' );
+    }
+
+    public function StatusAktifKaryawan()
+    {
+        return $this->hasOne(StatusAktifKaryawan::class, 'id_status_aktif_karyawan', 'id_status_aktif_karyawan' );
+    }
+
+    public function StatusKawinKaryawan()
+    {
+        return $this->hasOne(StatusKawin::class, 'id_status_kawin', 'id_status_kawin_karyawan' );
     }
 
 }

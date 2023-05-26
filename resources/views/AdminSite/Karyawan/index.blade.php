@@ -199,7 +199,7 @@
                                             </div>
                                             <div class="row">
                                             <hr>
-                                                <button class="btn btn-outline-success text-success mb-2" type="button"><a class="text-success" href="{{ route('karyawans.show', $karyawan->id_karyawan) }} {{ $karyawan->nama_karyawan }}"> Detail</a></button>
+                                                <button class="btn btn-outline-success text-success mb-2" type="button"><a class="text-success" href="{{ route('karyawans.show', $karyawan->id_karyawan) }}"> Detail</a></button>
                                         </div>
                                         </div>
                                     </div>

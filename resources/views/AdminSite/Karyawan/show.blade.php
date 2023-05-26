@@ -28,33 +28,18 @@
                         <label class="form-label">Nama Karyawan</label>
                         <input type="text" value="{{$karyawan->nama_karyawan}}" class="form-control" readonly>
                     </div>
-                    {{-- <div class="col-6">
-                        <label class="form-label">ID Status Karyawan</label>
-                        <select class="form-control" value="{{$karyawan->id_status_karyawan" readonly>
-                            <option selected disabled>-- Pilih Status Karyawan --</option>
-                            @foreach ($statuspemiliks as $statuspemilik)
-                            <option value="{{ $statuspemilik->id_status_aktif_pemilik }}">{{ $statuspemilik->status_hunian_pemilik }} </option>
-                            @endforeach
-                        </select>
-                    </div> --}}
-                    {{-- <div class="col-6">
-                        <label class="form-label">ID Status Kawin Karyawan</label>
-                        <select class="form-control" value="{{$karyawan->id_status_kawin_karyawan" readonly>
-                            <option selected disabled>-- Pilih Status Pemilik --</option>
-                            @foreach ($statuskawinkaryawans as $statuskawinkaryawan)
-                            <option value="{{ $statuskawinkaryawan->id_status_kawin_karyawan }}">{{ $statuskawinkaryawan-> }}</option>
-                            @endforeach
-                        </select>
-                    </div> --}}
-                    {{-- <div class="col-6">
-                        <label class="form-label">ID Status Aktif Karyawan</label>
-                        <select class="form-control" value="{{$karyawan->id_status_aktif_karyawan" readonly>
-                            <option selected disabled>-- Pilih Status Pemilik --</option>
-                            @foreach ($statusaktifkaryawans as $statusaktifkaryawan)
-                            <option value="{{ $statusaktifkaryawan->id_status_aktif_karyawan }}">{{ $statusaktifkaryawan-> }} </option>
-                            @endforeach
-                        </select>
-                    </div> --}}
+                    <div class="col-6">
+                        <label class="form-label">Status Karyawan</label>
+                        <input type="text" value="{{$karyawan->StatusKaryawan->status_karyawan}}" class="form-control" readonly>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label">Status Aktif Karyawan</label>
+                        <input type="text" value="{{$karyawan->StatusAktifKaryawan->status_aktif_karyawan}}" class="form-control" readonly>
+                    </div>
+                    <div class="col-6">
+                        <label class="form-label">Status Kawin Karyawan</label>
+                        <input type="text" value="{{$karyawan->StatusKawinKaryawan->status_kawin}}" class="form-control" readonly>
+                    </div>
                     <div class="col-6">
                         <label class="form-label">Kewarganegaraan</label>
                         <input type="text" value="{{$karyawan->kewarganegaraan}}" class="form-control" readonly>
@@ -134,10 +119,6 @@
                     <div class="col-6">
                         <label class="form-label">ID Agama</label>
                         <input type="text" value="{{$karyawan->Agama->nama_agama}}" class="form-control" readonly>
-                    </div>
-                    <div class="col-6">
-                        <label class="form-label">ID Status Kawin</label>
-                        <input type="text" value="{{$karyawan->StatusKawin->status_kawin}}" class="form-control" readonly>
                     </div>
                 </div>
             </div>

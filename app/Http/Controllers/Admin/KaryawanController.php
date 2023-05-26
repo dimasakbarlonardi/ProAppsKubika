@@ -17,6 +17,8 @@ use App\Models\Divisi;
 use App\Models\Departemen;
 use App\Models\KepemilikanUnit;
 use App\Models\Penempatan;
+use App\Models\StatusAktifKaryawan;
+use App\Models\StatusKaryawan;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -49,32 +51,28 @@ class KaryawanController extends Controller
 
         $user = $request->session()->get('user');
 
-        $idcard = new IdCard();
-        $idcard->setConnection($conn);
+        $idcard = ConnectionDB::setConnection(new IdCard());
 
-        $gender = new JenisKelamin();
-        $gender->setConnection($conn);
+        $gender = ConnectionDB::setConnection(new JenisKelamin());
 
-        $agama = new Agama();
-        $agama->setConnection($conn);
+        $agama = ConnectionDB::setConnection(new Agama());
 
-        $statuskawin = new StatusKawin();
-        $statuskawin->setConnection($conn);
+        $statuskawin = ConnectionDB::setConnection(new StatusKawin());
 
-        $jabatan = new Jabatan();
-        $jabatan->setConnection($conn);
+        $jabatan = ConnectionDB::setConnection(new Jabatan());
 
-        $divisi = new Divisi();
-        $divisi->setConnection($conn);
+        $divisi = ConnectionDB::setConnection(new Divisi());
 
-        $departemen = new Departemen();
-        $departemen->setConnection($conn);
+        $departemen = ConnectionDB::setConnection(new Departemen());
 
-        $kepemilikan = new KepemilikanUnit();
-        $kepemilikan->setConnection($conn);
+        $kepemilikan = ConnectionDB::setConnection(new KepemilikanUnit());
 
-        $penempatan = new Penempatan();
-        $penempatan->setConnection($conn);
+        $penempatan = ConnectionDB::setConnection(new Penempatan());
+        
+        $statuskaryawan = ConnectionDB::setConnection(new StatusKaryawan());
+
+        $connStatusaktifkaryawan = ConnectionDB::setConnection(new StatusAktifKaryawan());
+
 
         $data['agamas'] = $agama->get();
         $data['jabatans'] = $jabatan->get();
@@ -87,6 +85,8 @@ class KaryawanController extends Controller
         $data['idusers'] = $user->get();
         $data['statuskawins'] = $statuskawin->get();
         $data['penempatans'] = $penempatan->get();
+        $data['statuskaryawans'] = $statuskaryawan->get();
+        $data['statusaktifkaryawans'] = $connStatusaktifkaryawan->get();
 
         return view('AdminSite.Karyawan.create', $data);
     }
@@ -120,9 +120,9 @@ class KaryawanController extends Controller
                 'id_card_type' => $request->id_card_type,
                 'nik_karyawan' => $request->nik_karyawan,
                 'nama_karyawan' => $request->nama_karyawan,
-                    // 'id_status_karyawan' => $request->id_status_karyawan,
+                'id_status_karyawan' => $request->id_status_karyawan,
                 'id_status_kawin_karyawan' => $request->id_status_kawin_karyawan,
-                    // 'id_status_aktif_karyawan' => $request->id_status_aktif_karyawan,
+                'id_status_aktif_karyawan' => $request->id_status_aktif_karyawan,
                 'kewarganegaraan' => $request->kewarganegaraan,
                 'masa_berlaku_id' => $request->masa_berlaku_id,
                 'alamat_ktp_karyawan' => $request->alamat_ktp_karyawan,
@@ -198,6 +198,8 @@ class KaryawanController extends Controller
         $connDepartemen = ConnectionDB::setConnection(new Departemen());
         $connKepemilikan = ConnectionDB::setConnection(new KepemilikanUnit());
         $connPenempatan = ConnectionDB::setConnection(new Penempatan());
+        $connStatuskaryawan = ConnectionDB::setConnection(new StatusKaryawan());
+        $connStatusaktifkaryawan = ConnectionDB::setConnection(new StatusAktifKaryawan());
 
         $data['karyawan'] = $connKaryawan->where('id_karyawan', $id)->first();
         $data['idusers'] = $user->get();
@@ -210,6 +212,8 @@ class KaryawanController extends Controller
         $data['idcards'] = $connIdCard->get();
         $data['statuskawins'] = $connStatusKawin->get();
         $data['penempatans'] = $connPenempatan->get();
+        $data['statuskaryawans'] = $connStatuskaryawan->get();
+        $data['statusaktifkaryawans'] = $connStatusaktifkaryawan->get();
         
 
         return view('AdminSite.Karyawan.edit', $data);

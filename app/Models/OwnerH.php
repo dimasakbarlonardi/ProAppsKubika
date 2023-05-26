@@ -91,8 +91,9 @@ class OwnerH extends Model
         return $this->hasOne(Agama::class, 'id_agama', 'id_agama');
     }
 
-    public function iduser()
+    public function idusers()
     {
         return $this->hasOne(User::class, 'id_user', 'id_user');
     }
+    
 }

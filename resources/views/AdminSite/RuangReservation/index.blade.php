@@ -25,7 +25,7 @@
                 @foreach ($ruangreservations as $key => $ruangreservation)
                     <tr>
                         <th scope="row">{{ $key + 1 }}</th>
-                        <td>{{ $ruangreservation->jenis_request }}</td>
+                        <td>{{ $ruangreservation->ruang_reservation }}</td>
                         <td>
                             <a href="{{ route('ruangreservations.edit', $ruangreservation->id_ruang_reservation) }}" class="btn btn-sm btn-warning">Edit</a>
                             <form class="d-inline" action="{{ route('ruangreservations.destroy', $ruangreservation->id_ruang_reservation) }}" method="post">

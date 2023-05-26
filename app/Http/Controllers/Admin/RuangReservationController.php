@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Helpers\ConnectionDB;
 use Illuminate\Support\Facades\DB;
 use App\Models\RuangReservation;
+use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Http\Request;
 
 class RuangReservationController extends Controller
@@ -31,7 +32,7 @@ class RuangReservationController extends Controller
      */
     public function create()
     {
-        //
+        return view('AdminSite.RuangReservation.create');
     }
 
     /**
@@ -42,7 +43,26 @@ class RuangReservationController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $conn = ConnectionDB::setConnection(new RuangReservation());
+
+        try {
+            DB::beginTransaction();
+
+            $conn->create($request->all());
+
+            DB::commit();
+
+            Alert::success('Berhasil', 'Berhasil menambahkan ruang reservation');
+
+            return redirect()->route('ruangreservations.index');
+
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            dd($e);
+            Alert::error('Gagal', 'Gagal menambahkan ruang reservation');
+
+            return redirect()->route('ruangreservations.index');
+        }
     }
 
     /**
@@ -64,7 +84,11 @@ class RuangReservationController extends Controller
      */
     public function edit($id)
     {
-        //
+        $conn = ConnectionDB::setConnection(new RuangReservation());
+
+        $data['ruangreservation'] = $conn->where('id_ruang_reservation', $id)->first();
+
+        return view('AdminSite.RuangReservation.edit', $data);
     }
 
     /**
@@ -76,7 +100,14 @@ class RuangReservationController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $conn = ConnectionDB::setConnection(new RuangReservation());
+
+        $jenisrequest = $conn->find($id);
+        $jenisrequest->update($request->all());
+
+        Alert::success('Berhasil', 'Berhasil mengupdate ruang reservation');
+
+        return redirect()->route('ruangreservations.index');
     }
 
     /**
@@ -87,6 +118,12 @@ class RuangReservationController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $conn = ConnectionDB::setConnection(new RuangReservation());
+
+        $conn->find($id)->delete();
+
+        Alert::success('Berhasil', 'Berhasil menghapus ruangan reservation');
+
+        return redirect()->route('ruangreservations.index');
     }
 }
