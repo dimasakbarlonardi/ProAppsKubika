@@ -45,12 +45,20 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request)
     {
+        $request->validate([
+            'email' => 'email|required',
+            'password' => 'required',
+            'id_site' => 'required'
+        ]);
+
         try {
-            $request->validate([
-                'email' => 'email|required',
-                'password' => 'required',
-                'id_site' => 'required'
-            ]);
+            $user = Login::where('email', $request->email)->with('site')->first();
+
+            $currUser = new User();
+            $currUser = $currUser->setConnection($user->site->db_name);
+            $getUser = $currUser->where('login_user', $user->email)
+                ->with('RoleH.AksesForm')
+                ->first();
 
             $credentials = request(['email', 'password']);
             if (!Auth::attempt($credentials)) {
@@ -59,16 +67,9 @@ class AuthenticatedSessionController extends Controller
                 return redirect()->back();
             } else {
                 if (Auth::check()) {
-                    $user = Login::where('email', $request->email)->with('site')->first();
                     if (!Hash::check($request->password, $user->password, [])) {
                         throw new \Exception('Invalid Credentials');
                     }
-
-                    $currUser = new User();
-                    $currUser = $currUser->setConnection($user->site->db_name);
-                    $getUser = $currUser->where('login_user', $user->email)
-                        ->with('RoleH.AksesForm')
-                        ->first();
 
                     if (isset($getUser)) {
                         $request->authenticate();
@@ -113,25 +114,26 @@ class AuthenticatedSessionController extends Controller
 
         $verified = false;
         if ($request->role_id == 1) {
-            $owner = $connOwner->where('id_user', $user->id_user)->first();
+            $owner = $connOwner->where('email_owner', $user->login_user)->first();
+            // dd($user, $owner);
             if (isset($owner)) {
                 $verified = true;
             }
         }
         if ($request->role_id == 2) {
-            $karyawan = $connKaryawan->where('id_user', $user->id_user)->first();
+            $karyawan = $connKaryawan->where('email_karyawan', $user->login_user)->first();
 
             if (isset($karyawan)) {
                 $verified = true;
             }
         }
         if ($request->role_id == 3) {
-            $tenant = $connTenant->where('id_user', $user->id_user)->first();
+            $tenant = $connTenant->where('email_tenant', $user->login_user)->first();
             if (isset($tenant)) {
                 $verified = true;
             }
         }
-        // dd($request->role_id, $user->id_user);
+
         if ($verified) {
             $request->session()->put('has_role', 'yes');
 
