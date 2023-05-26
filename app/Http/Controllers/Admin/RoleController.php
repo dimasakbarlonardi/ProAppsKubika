@@ -201,98 +201,104 @@ class RoleController extends Controller
         $menuCatArray = [];
         $menuIDArray = [];
 
-        foreach ($takeForms as $form) {
-            $kode_form = explode("|", $form);
-            $kodeFormArray[] = $kode_form[1];
-            $menuCatArray[] = $kode_form[0];
-            $menuIDArray[] = $kode_form[2];
-        }
+        if (isset($takeForms)) {
+            foreach ($takeForms as $form) {
+                $kode_form = explode("|", $form);
+                $kodeFormArray[] = $kode_form[1];
+                $menuCatArray[] = $kode_form[0];
+                $menuIDArray[] = $kode_form[2];
+            }
 
-
-        $deletes = $aksesForm->where('role_id', $role_id)
-            ->whereNotIn('kode_form', $kodeFormArray)
-            ->get();
-
-        if (count($deletes) > 0) {
-            $aksesForm->where('role_id', $role_id)
+            $deletes = $aksesForm->where('role_id', $role_id)
                 ->whereNotIn('kode_form', $kodeFormArray)
-                ->delete();
-        } else {
-            foreach ($request->to as $data) {
+                ->get();
 
-                $get_req = explode("|", $data);
-                $menu_id = $get_req[2];
+            if (count($deletes) > 0) {
+                $aksesForm->where('role_id', $role_id)
+                    ->whereNotIn('kode_form', $kodeFormArray)
+                    ->delete();
+            } else {
+                foreach ($request->to as $data) {
 
-                if ($get_req[0] == 'sub_menus2') {
-                    $submenu2 = SubMenu2::where('id', $menu_id)
-                        ->with('subMenu.menu')->first();
+                    $get_req = explode("|", $data);
+                    $menu_id = $get_req[2];
 
-                    $this->aksesFormStore(
-                        $aksesForm,
-                        $submenu2->subMenu->menu->kode_form,
-                        $submenu2->subMenu->menu->id,
-                        'menus',
-                        $submenu2->subMenu->menu->heading_id,
-                        $role_id
-                    );
+                    if ($get_req[0] == 'sub_menus2') {
+                        $submenu2 = SubMenu2::where('id', $menu_id)
+                            ->with('subMenu.menu')->first();
 
-                    $this->aksesFormStore(
-                        $aksesForm,
-                        $submenu2->subMenu->kode_form,
-                        $submenu2->subMenu->id,
-                        'sub_menus',
-                        $submenu2->subMenu->menu->heading_id,
-                        $role_id
-                    );
+                        $this->aksesFormStore(
+                            $aksesForm,
+                            $submenu2->subMenu->menu->kode_form,
+                            $submenu2->subMenu->menu->id,
+                            'menus',
+                            $submenu2->subMenu->menu->heading_id,
+                            $role_id
+                        );
 
-                    $this->aksesFormStore(
-                        $aksesForm,
-                        $submenu2->kode_form,
-                        $submenu2->id,
-                        'sub_menus2',
-                        $submenu2->subMenu->menu->heading_id,
-                        $role_id
-                    );
-                }
+                        $this->aksesFormStore(
+                            $aksesForm,
+                            $submenu2->subMenu->kode_form,
+                            $submenu2->subMenu->id,
+                            'sub_menus',
+                            $submenu2->subMenu->menu->heading_id,
+                            $role_id
+                        );
 
-                if ($get_req[0] == 'sub_menus') {
+                        $this->aksesFormStore(
+                            $aksesForm,
+                            $submenu2->kode_form,
+                            $submenu2->id,
+                            'sub_menus2',
+                            $submenu2->subMenu->menu->heading_id,
+                            $role_id
+                        );
+                    }
 
-                    $submenu = SubMenu::where('id', $menu_id)
-                        ->with('menu')->first();
+                    if ($get_req[0] == 'sub_menus') {
 
-                    $this->aksesFormStore(
-                        $aksesForm,
-                        $submenu->menu->kode_form,
-                        $submenu->menu->id,
-                        'menus',
-                        $submenu->menu->heading_id,
-                        $role_id
-                    );
+                        $submenu = SubMenu::where('id', $menu_id)
+                            ->with('menu')->first();
 
-                    $this->aksesFormStore(
-                        $aksesForm,
-                        $submenu->kode_form,
-                        $submenu->id,
-                        'sub_menus',
-                        $submenu->menu->heading_id,
-                        $role_id
-                    );
-                }
+                        $this->aksesFormStore(
+                            $aksesForm,
+                            $submenu->menu->kode_form,
+                            $submenu->menu->id,
+                            'menus',
+                            $submenu->menu->heading_id,
+                            $role_id
+                        );
 
-                if ($get_req[0] == 'menus') {
-                    $menu = Menu::where('id', $menu_id)->first();
+                        $this->aksesFormStore(
+                            $aksesForm,
+                            $submenu->kode_form,
+                            $submenu->id,
+                            'sub_menus',
+                            $submenu->menu->heading_id,
+                            $role_id
+                        );
+                    }
 
-                    $this->aksesFormStore(
-                        $aksesForm,
-                        $menu->kode_form,
-                        $menu->id,
-                        'menus',
-                        $menu->heading_id,
-                        $role_id
-                    );
+                    if ($get_req[0] == 'menus') {
+                        $menu = Menu::where('id', $menu_id)->first();
+
+                        $this->aksesFormStore(
+                            $aksesForm,
+                            $menu->kode_form,
+                            $menu->id,
+                            'menus',
+                            $menu->heading_id,
+                            $role_id
+                        );
+                    }
                 }
             }
+        } else {
+            $aksesForm->where('role_id', $role_id)
+                ->whereNotIn('kode_form', $kodeFormArray)
+                ->get();
         }
+
 
         return redirect()->back();
     }

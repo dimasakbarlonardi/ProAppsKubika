@@ -15,18 +15,6 @@ use Illuminate\Http\Request;
 
 class KepemilikanUnitController extends Controller
 {
-    // public function setConnection($model)
-    // {
-    //     $request = Request();
-    //     $user_id = $request->user()->id;
-    //     $login = Login::where('id', $user_id)->with('site')->first();
-    //     $conn = $login->site->db_name;
-    //     $model = $model;
-    //     $model->setConnection($conn);
-
-    //     return $model;
-    // }
-
     /**
      * Display a listing of the resource.
      *
@@ -65,6 +53,8 @@ class KepemilikanUnitController extends Controller
     public function store(Request $request)
     {
         $connKepemilikan = ConnectionDB::setConnection(new KepemilikanUnit());
+        $connUnit = ConnectionDB::setConnection(new Unit());
+
         try {
 
             DB::beginTransaction();
@@ -74,6 +64,9 @@ class KepemilikanUnitController extends Controller
                 'id_unit' => $request->id_unit,
                 'id_status_hunian' => $request->id_status_hunian,
             ]);
+
+            $unit = $connUnit->find($request->id_unit);
+            $unit->update($request->all());
 
             DB::commit();
 
@@ -108,12 +101,12 @@ class KepemilikanUnitController extends Controller
      */
     public function edit($id)
     {
-        $connKepemilikan = $this->setConnection(new KepemilikanUnit());
-        $connOwner = $this->setConnection(new OwnerH());
-        $connUnit = $this->setConnection(new Unit());
-        $connStatushunian = $this->setConnection(new StatusHunianTenant());
+        $connKepemilikan = ConnectionDB::setConnection(new KepemilikanUnit());
+        $connOwner = ConnectionDB::setConnection(new OwnerH());
+        $connUnit = ConnectionDB::setConnection(new Unit());
+        $connStatushunian = ConnectionDB::setConnection(new StatusHunianTenant());
 
-        $data['kepemilikan'] = $connKepemilikan->where('id_kepemilikan_unit', $id)->first();
+        $data['kepemilikans'] = $connKepemilikan->where('id_pemilik', $id)->get();
         $data['owners'] = $connOwner->get();
         $data['units'] = $connUnit->get();
         $data['statushunians'] = $connStatushunian->get();
@@ -174,5 +167,14 @@ class KepemilikanUnitController extends Controller
         return response()->json([
             'units' => $getUnits
         ]);
+    }
+
+    public function unitByID($id)
+    {
+        $connUnit = ConnectionDB::setConnection(new Unit());
+
+        $unit = $connUnit->find($id);
+
+        return response()->json(['unit' => $unit]);
     }
 }

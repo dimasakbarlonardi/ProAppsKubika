@@ -22,13 +22,8 @@
                                 <input type="text" value="Park Royale" class="form-control" readonly>
                             </div>
                             <div class="col-6">
-                                <label class="form-label">User</label>
-                                <select class="form-control" name="id_user" required>
-                                    <option selected disabled>-- Pilih ID User --</option>
-                                    @foreach ($idusers as $iduser)
-                                        <option value="{{ $iduser->id }}">{{ $iduser->nama_user }} </option>
-                                    @endforeach
-                                </select>
+                                <label class="form-label">Email</label>
+                                <input type="email" name="email_karyawan" class="form-control" required>
                             </div>
                         </div>
                     </div>

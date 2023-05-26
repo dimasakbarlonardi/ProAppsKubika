@@ -34,11 +34,6 @@ class KendaraanTenant extends Model
         return $this->hasOne(Tenant::class, 'id_tenant','id_tenant' );
     }
 
-    public function unit()
-    {
-        return $this->hasOne(Unit::class, 'id_unit', 'id_unit');
-    }
-
     public function jeniskendaraan()
     {
         return $this->hasOne(JenisKendaraan::class, 'id_jenis_kendaraan', 'id_jenis_kendaraan');

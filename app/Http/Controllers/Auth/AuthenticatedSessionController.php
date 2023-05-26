@@ -2,11 +2,15 @@
 
 namespace App\Http\Controllers\Auth;
 
+use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
+use App\Models\Karyawan;
 use App\Models\Login;
 use App\Models\Menu;
 use App\Models\MenuHeading;
+use App\Models\OwnerH;
+use App\Models\Tenant;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
@@ -54,30 +58,39 @@ class AuthenticatedSessionController extends Controller
 
                 return redirect()->back();
             } else {
-                $user = Login::where('email', $request->email)->with('site')->first();
-                if (!Hash::check($request->password, $user->password, [])) {
-                    throw new \Exception('Invalid Credentials');
+                if (Auth::check()) {
+                    $user = Login::where('email', $request->email)->with('site')->first();
+                    if (!Hash::check($request->password, $user->password, [])) {
+                        throw new \Exception('Invalid Credentials');
+                    }
+
+                    $currUser = new User();
+                    $currUser = $currUser->setConnection($user->site->db_name);
+                    $getUser = $currUser->where('login_user', $user->email)
+                        ->with('RoleH.AksesForm')
+                        ->first();
+
+                    if (isset($getUser)) {
+                        $request->authenticate();
+                        $request->session()->regenerate();
+
+                        $request->session()->put('user', $getUser);
+                        $request->session()->put('user_id', $getUser->id_user);
+
+                        return redirect()->route('select-role');
+                    } else {
+                        Auth::guard('web')->logout();
+
+                        $request->session()->invalidate();
+
+                        $request->session()->regenerateToken();
+
+                        Alert::error('Gagal', 'Anda tidak terdaftar');
+
+                        return redirect()->route('login');
+                    }
                 }
-
-                $user->update(['id_site' => $request->id_site]);
-                $user->save();
-
-                $request->authenticate();
-
-                $request->session()->regenerate();
-
-                $currUser = new User();
-                $currUser = $currUser->setConnection($user->site->db_name);
-                $getUser = $currUser->where('login_user', $user->email)
-                    ->with('RoleH.AksesForm')
-                    ->first();
-
-                $request->session()->put('user', $getUser);
-                $request->session()->put('user_id', $getUser->id_user);
-
-                return redirect()->route('select-role');
             }
-
         } catch (Exception $error) {
             Alert::error('Gagal', 'Mohon periksa kembali email dan password');
 
@@ -93,12 +106,41 @@ class AuthenticatedSessionController extends Controller
     public function storeRole(Request $request)
     {
         $user = $request->session()->get('user');
-        $user->id_role_hdr = $request->role_id;
-        $user->save();
 
-        $request->session()->put('has_role', 'yes');
+        $connKaryawan = ConnectionDB::setConnection(new Karyawan());
+        $connOwner = ConnectionDB::setConnection(new OwnerH());
+        $connTenant = ConnectionDB::setConnection(new Tenant());
 
-        return redirect()->route('dashboard');
+        $verified = false;
+        if ($request->role_id == 1) {
+            $owner = $connOwner->where('id_user', $user->id_user)->first();
+            if (isset($owner)) {
+                $verified = true;
+            }
+        }
+        if ($request->role_id == 2) {
+            $karyawan = $connKaryawan->where('id_user', $user->id_user)->first();
+
+            if (isset($karyawan)) {
+                $verified = true;
+            }
+        }
+        if ($request->role_id == 3) {
+            $tenant = $connTenant->where('id_user', $user->id_user)->first();
+            if (isset($tenant)) {
+                $verified = true;
+            }
+        }
+        // dd($request->role_id, $user->id_user);
+        if ($verified) {
+            $request->session()->put('has_role', 'yes');
+
+            return redirect()->route('dashboard');
+        }
+
+        Alert::error('Gagal', 'Anda tidak terdaftar');
+
+        return redirect()->back();
     }
 
     /**
@@ -109,9 +151,9 @@ class AuthenticatedSessionController extends Controller
      */
     public function destroy(Request $request)
     {
-        $user = $request->session()->get('user');
-        $user->id_role_hdr = '';
-        $user->save();
+        // $user = $request->session()->get('user');
+        // $user->id_role_hdr = '';
+        // $user->save();
 
         Auth::guard('web')->logout();
 

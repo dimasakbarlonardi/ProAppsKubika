@@ -12,6 +12,8 @@ class Karyawan extends Model
     protected $table = 'tb_karyawan';
 
     protected $fillable = [
+        'id_user',
+        'email_karyawan',
         'id_karyawan',
         'id_site',
         'id_card_type',
@@ -84,7 +86,7 @@ class Karyawan extends Model
     {
         return $this->hasOne(Departemen::class, 'id_departemen', 'id_departemen' );
     }
-    
+
     public function Penempatan()
     {
         return $this->hasOne(Penempatan::class, 'id_penempatan', 'id_penempatan' );

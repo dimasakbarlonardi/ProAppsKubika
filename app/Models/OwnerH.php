@@ -98,9 +98,4 @@ class OwnerH extends Model
     {
         return $this->hasMany(KepemilikanUnit::class, 'id_pemilik', 'id_pemilik');
     }
-
-    public function Kepemilikan()
-    {
-        return $this->hasMany(KepemilikanUnit::class, 'id_pemilik', 'id_pemilik');
-    }
 }

@@ -94,6 +94,7 @@ class KaryawanController extends Controller
                 'id_card_type' => $request->id_card_type,
                 'nik_karyawan' => $request->nik_karyawan,
                 'nama_karyawan' => $request->nama_karyawan,
+                'email_karyawan' => $request->email_karyawan,
                     // 'id_status_karyawan' => $request->id_status_karyawan,
                 'id_status_kawin_karyawan' => $request->id_status_kawin_karyawan,
                     // 'id_status_aktif_karyawan' => $request->id_status_aktif_karyawan,

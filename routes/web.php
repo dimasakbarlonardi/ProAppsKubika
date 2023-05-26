@@ -192,6 +192,7 @@ Route::prefix('admin')->group(function () {
         // CRUD KepemilikanUnit
         Route::resource('kepemilikans', KepemilikanUnitController::class);
         Route::get('kepemilikan-unit/{id}', [KepemilikanUnitController::class, 'notKepemilikanUnit'])->name('create-kepemilikan-unit');
+        Route::get('unit-by-id/{id}', [KepemilikanUnitController::class, 'unitByID'])->name('unit-by-id');
 
         // CRUD Karyawan
         Route::resource('karyawans', KaryawanController::class);
