@@ -57,7 +57,6 @@
                                     class="bg-white dark__bg-1100 d-md-flex d-xl-inline-block d-xxl-flex align-items-center p-x1 rounded-3 shadow-sm card-view-height">
                                     <div class="d-flex align-items-start align-items-sm-center">
                                         <a class="d-none d-sm-block" href="../../app/support-desk/contact-details.html">
-                                            {{-- {{ dd($tenant->profile_picture) }} --}}
                                             <div class="avatar avatar-xl avatar-3xl">
                                                 <img src="/{{ $tenant->profile_picture }}" alt="IMG"
                                                     class="avatar-image" />

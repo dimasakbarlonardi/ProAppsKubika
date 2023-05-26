@@ -43,13 +43,27 @@ class UserController extends Controller
     {
         $connRole = ConnectionDB::setConnection(new Role());
         $connKaryawan = ConnectionDB::setConnection(new Karyawan());
+        $connTenant = ConnectionDB::setConnection(new Tenant());
+        $connOwner = ConnectionDB::setConnection(new OwnerH());
 
         $email = [];
         $karyawan = $connKaryawan->where('id_user', null)
             ->get('email_karyawan');
 
+        $tenant = $connTenant->where('id_user', null)
+            ->get('email_tenant');
+
+        $owner = $connOwner->where('id_user', null)
+            ->get('email_owner');
+
         foreach ($karyawan as $k) {
             $email[] = $k->email_karyawan;
+        }
+        foreach ($owner as $o) {
+            $email[] = $o->email_owner;
+        }
+        foreach ($tenant as $t) {
+            $email[] = $t->email_tenant;
         }
 
         $data['email'] = $email;
@@ -79,9 +93,8 @@ class UserController extends Controller
         }
         if (isset($getOwner)) {
             $user = $getOwner;
-            $nama = $getOwner->nama_owner;
+            $nama = $getOwner->nama_pemilik;
             $email = $getOwner->email_owner;
-
         }
         if (isset($getTenant)) {
             $user = $getTenant;

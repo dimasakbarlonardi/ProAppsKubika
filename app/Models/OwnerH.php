@@ -25,6 +25,7 @@ class OwnerH extends Model
 
     protected $fillable =[
         'id_pemilik',
+        'email_owner',
         'id_site',
         'id_user',
         'id_card_type',

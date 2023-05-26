@@ -82,13 +82,14 @@ class OwnerHController extends Controller
             $login = Login::where('id', $id_user)->with('site')->first();
             $site = $login->site->id_site;
 
-            $count = $conn->count();
-            $count += 1;
+            $count = $conn->get();
+            $count = $count->count() + 1;
 
             $conn->create([
-                'id_pemilik' => $count,
+                'id_pemilik' => sprintf("%09d", $count),
                 'id_site' => $site,
-                'id_user' => $id_user,
+                // 'id_user' => $id_user,
+                'email_owner' => $request->email_owner,
                 'id_card_type' => $request->id_card_type,
                 'nik_pemilik' => $request->nik_pemilik,
                 'nama_pemilik' => $request->nama_pemilik,

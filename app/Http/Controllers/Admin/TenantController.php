@@ -70,6 +70,8 @@ class TenantController extends Controller
     public function store(Request $request)
     {
         $connTenant =  ConnectionDB::setConnection(new Tenant());
+        $count = $connTenant->count();
+        $count = $count + 1;
 
         try {
             DB::beginTransaction();
@@ -78,16 +80,10 @@ class TenantController extends Controller
             $login = Login::where('id', $id_user)->with('site')->first();
             $site = $login->site->id_site;
 
-            $count = $connTenant->count();
-            $count += 1;
-            if ($count < 10) {
-                $count = '0' . $count;
-            }
-
             $connTenant->create([
-                'id_tenant' => $count,
+                'id_tenant' => sprintf("%03d", $count),
+                'email_tenant' => $request->email_tenant,
                 'id_site' => $site,
-                'id_user' => $id_user,
                 'id_card_type' => $request->id_card_type,
                 'nik_tenant' => $request->nik_tenant,
                 'nama_tenant' => $request->nama_tenant,
@@ -132,7 +128,7 @@ class TenantController extends Controller
         $connTenant =  ConnectionDB::setConnection(new Tenant());
 
         $data['tenant'] = $connTenant->where('id_tenant', $id)->first();
-        
+
         return view('AdminSite.Tenant.show', $data);
     }
 
@@ -168,7 +164,7 @@ class TenantController extends Controller
         $connTenant = ConnectionDB::setConnection(new Tenant());
         $connTenant->where('id_tenant', $id)->update([
             'id_site' => $request->id_site,
-            'id_user' => $request->id_user,
+            // 'id_user' => $request->id_user,
             'id_card_type' => $request->id_card_type,
             'nik_tenant' => $request->nik_tenant,
             'nama_tenant' => $request->nama_tenant,
