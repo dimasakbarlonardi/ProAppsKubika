@@ -56,11 +56,10 @@
                                 <div
                                     class="bg-white dark__bg-1100 d-md-flex d-xl-inline-block d-xxl-flex align-items-center p-x1 rounded-3 shadow-sm card-view-height">
                                     <div class="d-flex align-items-start align-items-sm-center">
-                                        <a class="d-none d-sm-block" href="../../app/support-desk/contact-details.html">
-                                            {{-- {{ dd($tenant->profile_picture) }} --}}
+                                        <a class="d-none d-sm-block" href="">
                                             <div class=" row avatar avatar-xl avatar-3xl">
-                                                <img src="/{{ $owner->profile_picture }}" alt="akmal"
-                                                    class="avatar-image" />
+                                                <img src="{{ $owner->profile_picture ? '/' . $owner->profile_picture : '/assets/img/team/3-thumb.png' }}" alt="akmal"
+                                                class="avatar-image" />
                                             </div>
                                         </a>
                                         <div class="ms-2 ms-sm-4">
@@ -88,9 +87,11 @@
                                             </div>
                                             <div class="row">
                                             <hr>
-                                                <button class="btn btn-outline-primary text-primary mb-2" type="button"><a class="text-primary" href="{{ route('kepemilikans.index') }}">Kepemilikan Unit</a></button>
-                                      
-                                                <button class="btn btn-outline-success text-success mb-2" type="button"><a class="text-success" href="{{ route('owners.show', $owner->id_pemilik) }} {{ $owner->nama_pemilik }}"> Detail</a></button>
+                                                <button class="btn btn-outline-primary mb-2" type="button">
+                                                <a class="text-black" href="{{ route('kepemilikans.index') }}">Kepemilikan Unit</a></button>
+
+                                                <button class="btn btn-outline-success mb-2" type="button">
+                                                <a class="text-black" href="{{ route('owners.show', $owner->id_pemilik) }}"> Detail</a></button>
                                         </div>
                                         </div>
                                     </div>

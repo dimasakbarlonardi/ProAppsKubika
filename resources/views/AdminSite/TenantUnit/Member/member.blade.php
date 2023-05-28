@@ -4,50 +4,19 @@
             Member</button>
     </div>
 </div>
-<div class="table-responsive scrollbar">
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col" rowspan="2">ID Unit</th>
-                <th scope="col">Nama Member</th>
-                <th scope="col">Hubungan Tenant</th>
-                <th scope="col">No Telp Member</th>
-                <th scope="col">ID Status Tinggal</th>
-                <th scope="col">ID Tenant</th>
-                <th class="text-end" scope="col">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($tenant_members as $key => $tm)
-                <tr>
-                    <td>{{ $tm->id_unit }}</td>
-                    <td>{{ $tm->nama_tenant_member }}</td>
-                    <td>{{ $tm->hubungan_tenant }}</td>
-                    <td>{{ $tm->no_telp_member }}</td>
-                    <td>{{ $tm->status->status_tinggal}}</td>
-                    <td>{{ $tm->tenant->nama_tenant }}</td>
-                    <td class="text-end">
-                        <div>
-                            <button class="btn btn-link p-0" type="button" data-bs-toggle="modal"
-                                data-bs-target="#edit-member" title="Edit"
-                                data-target-id="{{ $tm->id_tenant_member }}"
-                                onclick="editMemberModal('{{ $tm->id_tenant_member }}')">
-                                <span class="text-500 fas fa-edit"></span>
-                            </button>
-                            <form action="{{ route('deleteTenantMember', $tm->id_tenant_member) }}" method="post" class="d-inline">
-                                @csrf
-                                <button class="btn btn-link p-0 ms-2" type="submit" data-bs-toggle="tooltip"
-                                    data-bs-placement="top" title="Delete"
-                                    onClick="return confirm('Are you absolutely sure you want to delete?')"><span
-                                        class="text-500 fas fa-trash-alt"></span>
-                                </button>
-                            </form>
-                        </div>
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
+
+<div class="row p-3">
+    @foreach ($tenant_units as $unit)
+    <div class="col">
+        <button class="btn btn-falcon-primary me-1 mb-1 btn-unit" type="button"
+            onclick="btnUnitClick1('{{ $unit->id_unit }}')"
+            id="btn-unit-{{ $unit->id_unit }}">{{ $unit->unit->nama_unit }}</button>
+    </div>
+    @endforeach
+</div>
+
+<div id="member_tenant">
+    @include('AdminSite.TenantUnit.Member.table')
 </div>
 
 <div class="modal fade" id="tambah-member" tabindex="-1" role="dialog" aria-hidden="true">
@@ -71,7 +40,7 @@
                                     <label class="form-label">Unit</label>
                                     <select class="form-control" name="id_unit" required>
                                         <option selected disabled>-- Pilih Unit --</option>
-                                        @foreach ($units as $unit)
+                                        @foreach ($getCreateUnits as $unit)
                                             <option value="{{ $unit->id_unit }}">{{ $unit->nama_unit }}</option>
                                         @endforeach
                                     </select>
@@ -116,7 +85,7 @@
                             <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
                             <button class="btn btn-primary" type="submit">Tambah</button>
                         </div>
-                        <input type="hidden" name="id_tenant" value="{{ $tenant->id_tenant }}">
+                        <input type="hidden" name="id_tenant" id="id_tenant" value="{{ $tenant->id_tenant }}">
                     </form>
                 </div>
             </div>
@@ -139,3 +108,20 @@
         </div>
     </div>
 </div>
+
+<script>
+    function btnUnitClick1(id) {
+        var id_tenant = $('#id_tenant').val();
+        console.log(id)
+        $.ajax({
+            url: '/admin/kepemilikan-member-unit/' + id,
+            type: 'GET',
+            data: {
+                id_tenant
+            },
+            success: function(data) {
+                $('#member_tenant').html(data.html)
+            }
+        })
+    }
+</script>

@@ -2,13 +2,13 @@
 
 @section('content')
 <div class="card">
-    <div class="card-header bg-light py-2">
+    <div class="card-header py-3">
         <div class="row flex-between-center">
             <div class="col-auto">
                 <h6 class="mb-0">List Jenis Pekerjaan</h6>
             </div>
             <div class="col-auto d-flex">
-                <a class="btn btn-primary" href="{{ route('jenispekerjaans.create') }}">Tambah Jenis Pekerjaan</a>
+                <a class="btn btn-falcon-default btn-sm text-600" href="{{ route('jenispekerjaans.create') }}">Tambah Jenis Pekerjaan</a>
             </div>
         </div>
     </div>
@@ -17,7 +17,6 @@
             <thead>
                 <tr>
                     <th class="sort" data-sort="">No</th>
-                    <th class="sort" data-sort="id_jenis_pekerjaan">ID Jenis Pekerjaan</th>
                     <th class="sort" data-sort="jenis_pekerjaan">Jenis Pekerjaan</th>
                     <th class="sort">Action</th>
                 </tr>
@@ -26,8 +25,7 @@
                 @foreach ($jenispekerjaans as $key => $jenispekerjaan)
                     <tr>
                         <th scope="row">{{ $key + 1 }}</th>
-                        <td>{{ $gender->id_jenis_pekerjaan }}</td>
-                        <td>{{ $gender->jenis_pekerjaan }}</td>
+                        <td>{{ $jenispekerjaan->jenis_pekerjaan }}</td>
                         <td>
                             <a href="{{ route('jenispekerjaans.edit', $jenispekerjaan->id_jenis_pekerjaan) }}" class="btn btn-sm btn-warning">Edit</a>
                             <form class="d-inline" action="{{ route('jenispekerjaans.destroy', $jenispekerjaan->id_jenis_pekerjaan) }}" method="post">

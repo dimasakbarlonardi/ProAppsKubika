@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
 use App\Models\JenisKendaraan;
 use App\Models\KendaraanTenant;
@@ -321,5 +322,15 @@ class TenantUnitController extends Controller
         Alert::success('Berhasil', 'Berhasil menghapus kendaraan member');
 
         return redirect()->back()->with(['active' => 'vehicle']);
+    }
+
+    public function getVehicleUnit($id)
+    {
+        $conn = ConnectionDB::setConnection(new KendaraanTenant());
+        $data['kendaraan_tenants'] = $conn->where('id_unit', $id)->get();
+
+        return response()->json([
+            'html' => view('AdminSite.TenantUnit.Kendaraan.table', $data)->render(),
+        ]);
     }
 }

@@ -12,10 +12,8 @@ class JenisPekerjaan extends Model
 
     protected $table = 'tb_jenis_pekerjaan';
     protected $primaryKey = 'id_jenis_pekerjaan';
-    public $incrementing = false;
 
     protected $fillable = ([
-        'id_jenis_pekerjaan',
         'jenis_pekerjaan',
     ]);
 

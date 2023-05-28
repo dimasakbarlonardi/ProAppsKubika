@@ -12,8 +12,6 @@ class KepemilikanUnit extends Model
 
     protected $table = 'tb_pemilik_d';
     protected $primaryKey = 'id_kepemilikan_unit';
-    public $incrementing = false;
-
     protected $fillable = ([
         'id_kepemilikan_unit',
         'id_pemilik',

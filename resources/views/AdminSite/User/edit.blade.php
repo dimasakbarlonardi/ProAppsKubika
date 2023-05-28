@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="card">
-        <div class="card-header bg-light py-2">
+        <div class="card-header py-2">
             <div class="row flex-between-center">
                 <div class="col-auto">
                     <h6 class="my-3">Edit User</h6>
@@ -21,16 +21,21 @@
                     <label class="form-label">Email</label>
                     <input type="text" name="login_user" value="{{ $user->login_user }}" class="form-control" required>
                 </div>
-                <div class="mb-3">
+                {{-- <div class="mb-3">
                     <label class="form-label">ID Status User</label>
                     <input type="text" name="id_status_user" value="" class="form-control">
-                </div>
+                </div> --}}
                 <div class="mb-3">
                     <label class="form-label">ID Role HDR</label>
-                    <input type="text" name="id_role_hdr" value="" class="form-control">
+                    <select class="form-control" name="id_role_hdr">
+                        @foreach ($roles as $role)
+                            <option value="{{ $role->id }}">{{ $role->nama_role }}</option>
+                        @endforeach
+                    </select>
                 </div>
-
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <div class="mt-5">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
             </form>
         </div>
     </div>

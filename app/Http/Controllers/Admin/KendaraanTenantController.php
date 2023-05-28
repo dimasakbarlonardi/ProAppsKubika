@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
 use App\Models\JenisKendaraan;
 use App\Models\KendaraanTenant;
@@ -14,17 +15,6 @@ use Illuminate\Http\Request;
 
 class KendaraanTenantController extends Controller
 {
-    public function setConnection(Request $request)
-    {
-        $user_id = $request->user()->id;
-        $login = Login::where('id', $user_id)->with('site')->first();
-        $conn = $login->site->db_name;
-        $user = new KendaraanTenant();
-        $user->setConnection($conn);
-
-        return $user;
-    }
-
     /**
      * Display a listing of the resource.
      *
@@ -32,7 +22,7 @@ class KendaraanTenantController extends Controller
      */
     public function index(Request $request)
     {
-        $conn = $this->setConnection($request);
+        $conn = ConnectionDB::setConnection(new KendaraanTenant());
 
         $data['kendaraans'] = $conn->get();
 
@@ -49,7 +39,7 @@ class KendaraanTenantController extends Controller
         $user_id = $request->user()->id;
         $login = Login::where('id', $user_id)->with('site')->first();
         $conn = $login->site->db_name;
-        
+
         $unit = new Unit();
         $unit->setConnection($conn);
 
@@ -74,17 +64,17 @@ class KendaraanTenantController extends Controller
      */
     public function store(Request $request)
     {
-        $conn = $this->setConnection($request);
+        $conn = ConnectionDB::setConnection(new KendaraanTenant());
 
         try {
             DB::beginTransaction();
 
-            $count = $conn->count(); 
+            $count = $conn->count();
             $count += 1;
             if ($count < 10) {
                 $count = '0' . $count;
             }
-            
+
             $conn->create([
                 'id_tenant_vehicle' => $count,
                 'id_tenant' => $request->id_tenant,
@@ -126,7 +116,7 @@ class KendaraanTenantController extends Controller
      */
     public function edit(Request $request, $id)
     {
-        $conn = $this->setConnection($request);
+        $conn = ConnectionDB::setConnection(new KendaraanTenant());
         $data['kendaraan'] = $conn->where('id_tenant_vehicle', $id)->first();
 
         return view('AdminSite.TenantKendaraan.edit', $data);
@@ -141,7 +131,7 @@ class KendaraanTenantController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $conn = $this->setConnection($request);
+        $conn = ConnectionDB::setConnection(new KendaraanTenant());
 
         $membertenant = $conn->find($id);
         $membertenant->update($request->all());
@@ -159,7 +149,7 @@ class KendaraanTenantController extends Controller
      */
     public function destroy(Request $request,$id)
     {
-        $conn = $this->setConnection($request);
+        $conn = ConnectionDB::setConnection(new KendaraanTenant());
         $conn->find($id)->delete();
 
         Alert::success('Berhasil', 'Berhasil menghapus Kendaraan Tenant');

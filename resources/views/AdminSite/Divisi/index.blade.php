@@ -2,13 +2,13 @@
 
 @section('content')
 <div class="card">
-    <div class="card-header bg-light py-2">
+    <div class="card-header py-2">
         <div class="row flex-between-center">
             <div class="col-auto">
-                <h6 class="mb-0">List Jabatan</h6>
+                <h6 class="mb-0 text-light">List Jabatan</h6>
             </div>
             <div class="col-auto d-flex">
-                <a class="btn btn-primary" href="{{ route('divisis.create') }}">Tambah Jabatan</a>
+                <a class="btn btn-falcon-default btn-sm text-600" href="{{ route('divisis.create') }}">Tambah Jabatan</a>
             </div>
         </div>
     </div>
@@ -29,8 +29,8 @@
                         <td>{{ $divisi->id_divisi }}</td>
                         <td>{{ $divisi->nama_divisi }}</td>
                         <td>
-                            <a href="{{ route('divisis.edit', $divisi->id_divisi) }}" class="btn btn-sm btn-warning">Edit</a>
-                            <form class="d-inline" action="{{ route('divisis.destroy', $divisi->id_divisi) }}" method="post">
+                            <a href="{{ route('divisis.edit', $divisi->id) }}" class="btn btn-sm btn-warning">Edit</a>
+                            <form class="d-inline" action="{{ route('divisis.destroy', $divisi->id) }}" method="post">
                                 @method('DELETE')
                                 @csrf
                                 <button type="submit" class="btn btn-danger btn-sm"

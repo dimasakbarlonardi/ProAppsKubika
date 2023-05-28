@@ -23,7 +23,6 @@
     <!--    Favicons-->
     <!-- ===============================================-->
     <link rel="apple-touch-icon" sizes="180x180" href="assets/img/favicons/apple-touch-icon.png">
-    <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicons/favicon.ico">
     <meta name="msapplication-TileImage" content="assets/img/favicons/mstile-150x150.png">
     <meta name="theme-color" content="#ffffff">
     <script src="{{ url('assets/js/config.js') }}"></script>
@@ -32,9 +31,6 @@
     <!--    Favicons-->
     <!-- ===============================================-->
     <link rel="apple-touch-icon" sizes="180x180" href="assets/img/favicons/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicons/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="assets/img/favicons/favicon-16x16.png">
-    <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicons/favicon.ico">
     <meta name="msapplication-TileImage" content="assets/img/favicons/mstile-150x150.png">
     <meta name="theme-color" content="#ffffff">
     <script src="{{ url('assets/js/config.js') }}"></script>
@@ -57,6 +53,8 @@
     <!-- ===============================================-->
     <!--    Main Content-->
     <!-- ===============================================-->
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+
     <main class="main" id="top" style="visibility: hidden">
         <div class="container-fluid" data-layout="container">
             <nav class="navbar navbar-light navbar-vertical navbar-expand-xl">
@@ -185,7 +183,9 @@
                     navbarTopVertical.removeAttribute('style');
                 </script>
 
-                @yield('content')
+                <div class="mt-5">
+                    @yield('content')
+                </div>
 
             </div>
         </div>
@@ -208,7 +208,7 @@
     @include('sweetalert::alert')
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+    {{-- <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script> --}}
     <script>
         $.ajaxSetup({
             headers: {

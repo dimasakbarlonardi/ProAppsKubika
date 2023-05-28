@@ -19,10 +19,10 @@
         <tbody>
             @foreach ($tenant_units as $key => $tu)
                 <tr>
-                    <td>{{ $tu->id_unit }}</td>
+                    <td>{{ $tu->unit->nama_unit }}</td>
                     <td>{{ $tu->id_pemilik }}</td>
                     <td>
-                        <b>{{ $tu->id_periode_sewa }}</b> <br>
+                        {{-- <b>{{ $tu->id_periode_sewa }}</b> <br> --}}
                         {{ $tu->tgl_masuk }} - {{ $tu->tgl_keluar }}
                     </td>
                     <td>    

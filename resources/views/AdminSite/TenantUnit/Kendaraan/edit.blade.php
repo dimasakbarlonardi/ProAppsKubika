@@ -10,7 +10,7 @@
                     <label class="form-label">Unit</label>
                     <select class="form-control" name="id_unit" required>
                         <option selected disabled>-- Pilih Unit --</option>
-                        @foreach ($units as $unit)
+                        @foreach ($getCreateUnits as $unit)
                             <option value="{{ $unit->id_unit }}"
                                 {{ $tenantkendaraan->id_unit == $unit->id_unit ? 'selected' : '' }}>
                                 {{ $unit->nama_unit }}

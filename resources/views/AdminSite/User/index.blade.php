@@ -2,13 +2,13 @@
 
 @section('content')
     <div class="card">
-        <div class="card-header bg-light py-2">
+        <div class="card-header py-2">
             <div class="row flex-between-center">
                 <div class="col-auto">
                     <h6 class="mb-0">List Users</h6>
                 </div>
                 <div class="col-auto d-flex">
-                    <a class="btn btn-primary" href="{{ route('users.create') }}">Tambah User</a>
+                    <a class="btn btn-falcon-default btn-sm text-600" href="{{ route('users.create') }}">Tambah User</a>
                 </div>
             </div>
         </div>

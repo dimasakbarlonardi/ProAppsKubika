@@ -27,7 +27,7 @@ class OwnerHController extends Controller
         $conn = ConnectionDB::setConnection(new OwnerH());
 
         $data['owners'] = $conn->get();
-   
+
         return view('AdminSite.Owner.index', $data);
     }
 
@@ -55,7 +55,7 @@ class OwnerHController extends Controller
 
         $statuskawin = new StatusKawin();
         $statuskawin->setConnection($conn);
-        
+
         $data['agamas'] = $agama->get();
         $data['genders'] = $gender->get();
         $data['idcards'] = $idcard->get();
@@ -82,7 +82,7 @@ class OwnerHController extends Controller
             $login = Login::where('id', $id_user)->with('site')->first();
             $site = $login->site->id_site;
 
-            $count = $conn->count(); 
+            $count = $conn->count();
             $count += 1;
 
             $conn->create([
@@ -124,7 +124,7 @@ class OwnerHController extends Controller
             ]);
 
             DB::commit();
-            
+
             Alert::success('Berhasil', 'Berhasil menambahkan pemilik');
 
             return redirect()->route('owners.index');

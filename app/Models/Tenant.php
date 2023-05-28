@@ -16,6 +16,7 @@ class Tenant extends Model
         $query = DB::connection($db)
             ->table('tb_tenant')
             ->leftJoin('tb_user', 'tb_user.id_user', '=', 'tb_tenant.id_user')
+            ->where('tb_tenant.deleted_at', null)
             ->get();
 
         return $query;

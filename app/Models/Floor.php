@@ -11,8 +11,6 @@ class Floor extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = 'tb_nolantai';
-    protected $primaryKey = 'id_lantai';
-    public $incrementing = false;
 
     protected $fillable = [
         'id_lantai',

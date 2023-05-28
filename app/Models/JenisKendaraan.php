@@ -12,10 +12,8 @@ class JenisKendaraan extends Model
 
     protected $table = 'tb_jenis_vehicle';
     protected $primaryKey = 'id_jenis_kendaraan';
-    public $incrementing = false;
 
     protected $fillable = [
-        'id_jenis_kendaraan',
         'jenis_kendaraan',
     ];
 

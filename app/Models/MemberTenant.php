@@ -35,4 +35,9 @@ class MemberTenant extends Model
     {
         return $this->hasOne(Tenant::class, 'id_tenant','id_tenant' );
     }
+
+    public function unit()
+    {
+        return $this->hasOne(Unit::class, 'id_unit', 'id_unit');
+    }
 }

@@ -87,7 +87,7 @@ Route::prefix('admin')->group(function () {
         // CRUD Pengurus
         Route::resource('penguruses', PengurusController::class);
 
-        // CRUD Login  
+        // CRUD Login
         Route::resource('logins', LoginController::class);
 
         // CRUD User
@@ -104,6 +104,7 @@ Route::prefix('admin')->group(function () {
 
         // CRUD UNIT
         Route::resource('units', UnitController::class);
+        Route::get('units-by-filter', [UnitController::class, 'unitsByFilter'])->name('unitsByFilter');
 
         // CRUD Tenant
         Route::resource('tenants', TenantController::class);
@@ -111,6 +112,8 @@ Route::prefix('admin')->group(function () {
         // CRUD TenantUnit
         Route::resource('tenantunits', TenantUnitController::class);
         Route::get('tenant-unit/{id}', [TenantUnitController::class, 'getTenantUnit'])->name('getTenantUnit');
+        Route::get('get-vehicle/by-unit/{id}', [TenantUnitController::class, 'getVehicleUnit']);
+        Route::get('get-vehicle/by-unit/{id}', [TenantUnitController::class, 'getVehicleUnit']);
 
         Route::get('/get/tenantunits-edit/{id}', [TenantUnitController::class, 'editTenantUnit']);
         Route::post('/store/tenantunits', [TenantUnitController::class, 'storeTenantUnit'])->name('storeTenantUnit');
@@ -164,6 +167,7 @@ Route::prefix('admin')->group(function () {
 
         // CRUD MemberTenant
         Route::resource('membertenants', MemberTenantController::class);
+        Route::get('kepemilikan-member-unit/{id}', [MemberTenantController::class, 'kepemilikanUnitTenant'])->name('kepemilikan-unit-tenant');
 
         // CRUD KendaraanTenant
         Route::resource('kendaraans', KendaraanTenantController::class);
@@ -189,35 +193,40 @@ Route::prefix('admin')->group(function () {
         // CRUD StatusTinggal
         Route::resource('statustinggals', StatusTinggalController::class);
 
-         // CRUD StatusKawin
-         Route::resource('statuskawins', StatusKawinController::class);
+        // CRUD StatusKawin
+        Route::resource('statuskawins', StatusKawinController::class);
 
-         // CRUD KepemilikanUnit
-         Route::resource('kepemilikans', KepemilikanUnitController::class);
+        // CRUD KepemilikanUnit
+        Route::resource('kepemilikans', KepemilikanUnitController::class);
+        Route::get('kepemilikan-unit/{id}', [KepemilikanUnitController::class, 'notKepemilikanUnit'])->name('create-kepemilikan-unit');
+        Route::get('unit-by-id/{id}', [KepemilikanUnitController::class, 'unitByID'])->name('unit-by-id');
 
-         // CRUD Karyawan
-         Route::resource('karyawans', KaryawanController::class);
+        // CRUD Karyawan
+        Route::resource('karyawans', KaryawanController::class);
 
-         // CRUD Jabatan
-         Route::resource('jabatans', JabatanController::class);
+        // CRUD Jabatan
+        Route::resource('jabatans', JabatanController::class);
 
-         // CRUD Divisi
-         Route::resource('divisis', DivisiController::class);
+        // CRUD Divisi
+        Route::resource('divisis', DivisiController::class);
 
-         // CRUD Departemen
-         Route::resource('departemens', DepartemenController::class);
+        // CRUD Departemen
+        Route::resource('departemens', DepartemenController::class);
 
-         // CRUD Penempatan
-         Route::resource('penempatans', PenempatanController::class);
+        // CRUD Penempatan
+        Route::resource('penempatans', PenempatanController::class);
 
-         // CRUD Work Relation
-         Route::resource('workrelations', WorkRelationController::class);
+        // CRUD Work Relation
+        Route::resource('workrelations', WorkRelationController::class);
 
-         // CRUD Status Request
-         Route::resource('statusrequests', StatusRequestController::class);
+        // CRUD Status Request
+        Route::resource('statusrequests', StatusRequestController::class);
 
-         // CRUD Jenis Pekerjaan
-         Route::resource('jenispekerjaans', JenisPekerjaanController::class);
+        // CRUD Jenis Pekerjaan
+        Route::resource('jenispekerjaans', JenisPekerjaanController::class);
+
+        // CRUD Jenis Request
+        Route::resource('jenisrequests', JenisRequestController::class);
 
          // CRUD Jenis Request
          Route::resource('jenisrequests', JenisRequestController::class);

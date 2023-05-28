@@ -12,10 +12,8 @@ class IdCard extends Model
 
     protected $table = 'tb_id_card';
     protected $primaryKey = 'id_card_type';
-    public $incrementing = false;
 
     protected $fillable = [
-        'id_card_type',
         'card_id_name',
     ];
 
