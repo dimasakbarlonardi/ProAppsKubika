@@ -2,10 +2,10 @@
 
 @section('content')
     <div class="card">
-        <div class="card-header bg-light py-2">
+        <div class="card-header py-2">
             <div class="row flex-between-center">
                 <div class="col-auto">
-                    <h6 class="my-3">Tambah Tenant</h6>
+                    <h6 class="my-3 text-white">Tambah Tenant</h6>
                 </div>
             </div>
         </div>
@@ -80,7 +80,7 @@
                         </div>
                         <div class="col-6">
                             <label class="form-label">Alamat KTP Tenant</label>
-                           <textarea type="text" rows ="10" name="alamat_ktp_tenant" class="form-control" required></textarea>
+                           <input type="text" rows ="10" name="alamat_ktp_tenant" class="form-control" required>
                         </div>
                         </div>
 

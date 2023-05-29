@@ -66,11 +66,6 @@ class Karyawan extends Model
         return $this->hasOne(JenisKelamin::class, 'id_jenis_kelamin', 'id_jenis_kelamin' );
     }
 
-    public function StatusKawin()
-    {
-        return $this->hasOne(StatusKawin::class, 'id_status_kawin', 'id_status_kawin' );
-    }
-
     public function Jabatan()
     {
         return $this->hasOne(Jabatan::class, 'id_jabatan', 'id_jabatan' );

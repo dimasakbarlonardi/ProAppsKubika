@@ -170,7 +170,7 @@ class KaryawanController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request,$id)
     {
         $agama = ConnectionDB::setConnection(new Agama());
         $users = ConnectionDB::setConnection(new User());
@@ -182,6 +182,7 @@ class KaryawanController extends Controller
         $gender = ConnectionDB::setConnection(new JenisKelamin());
         $statuskawin = ConnectionDB::setConnection(new StatusKawin());
         $karyawan = ConnectionDB::setConnection(new Karyawan());
+        $user_id = $request->user()->id;
 
         $data['agamas'] = $agama->get();
         $data['jabatans'] = $jabatans->get();
@@ -193,6 +194,7 @@ class KaryawanController extends Controller
         $data['statuskawins'] = $statuskawin->get();
         $data['penempatans'] = $penempatan->get();
         $data['karyawan'] = $karyawan->find($id);
+        $data['idusers'] =  Login::where('id', $user_id)->get();
 
         return view('AdminSite.Karyawan.show', $data);
     }
