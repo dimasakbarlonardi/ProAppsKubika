@@ -90,21 +90,32 @@ class UserController extends Controller
             $user = $getKaryawan;
             $nama = $getKaryawan->nama_karyawan;
             $email = $getKaryawan->email_karyawan;
+            $user_category = 2;
         }
         if (isset($getOwner)) {
             $user = $getOwner;
             $nama = $getOwner->nama_pemilik;
             $email = $getOwner->email_owner;
+            $user_category = 1;
         }
         if (isset($getTenant)) {
             $user = $getTenant;
             $nama = $getTenant->nama_tenant;
             $email = $getTenant->email_tenant;
+            $user_category = 3;
         }
 
         try {
             DB::beginTransaction();
-            $createUser = $connUser->create([
+
+            $createLogin = Login::create([
+                'name' => $nama,
+                'email' => $email,
+                'password' => $login->password,
+                'id_site' => $login->id_site
+            ]);
+
+            $connUser->create([
                 'id_site' => $login->id_site,
                 'id_user' => strval($lastID->id_user + 1),
                 'nama_user' => $nama,
@@ -112,17 +123,11 @@ class UserController extends Controller
                 'password_user' => Hash::make($request->password_user),
                 'id_status_user' => 1,
                 'id_role_hdr' => $request->id_role_hdr,
-            ]);
-
-            Login::create([
-                'name' => $createUser->nama_user,
-                'email' => $createUser->login_user,
-                'password' => $createUser->password_user,
-                'id_site' => $login->id_site
+                'user_category' => $user_category
             ]);
 
             $user->update([
-                'id_user' => $createUser->id_user
+                'id_user' => $createLogin->id
             ]);
 
             DB::commit();
