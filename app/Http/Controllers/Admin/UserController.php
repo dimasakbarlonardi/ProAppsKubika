@@ -46,27 +46,40 @@ class UserController extends Controller
         $connTenant = ConnectionDB::setConnection(new Tenant());
         $connOwner = ConnectionDB::setConnection(new OwnerH());
 
+        $user = [];
         $email = [];
+        $nik = [];
+        $nama = [];
+
         $karyawan = $connKaryawan->where('id_user', null)
-            ->get('email_karyawan');
+            ->get();
 
         $tenant = $connTenant->where('id_user', null)
-            ->get('email_tenant');
+            ->get();
 
         $owner = $connOwner->where('id_user', null)
-            ->get('email_owner');
+            ->get();
 
         foreach ($karyawan as $k) {
             $email[] = $k->email_karyawan;
+            $nik[] = $k->nik_karyawan;
+            $nama[] = $k->nama_karyawan;
         }
         foreach ($owner as $o) {
             $email[] = $o->email_owner;
+            $nik[] = $o->nik_pemilik;
+            $nama[] = $o->nama_pemilik;
         }
         foreach ($tenant as $t) {
             $email[] = $t->email_tenant;
+            $nik[] = $t->nik_tenant;
+            $nama[] = $t->nama_tenant;
         }
+        $user['email'] = $email;
+        $user['nik'] = $nik;
+        $user['nama'] = $nama;
 
-        $data['email'] = $email;
+        $data['data'] = $user;
         $data['roles'] = $connRole->get();
 
         return view('AdminSite.User.create', $data);

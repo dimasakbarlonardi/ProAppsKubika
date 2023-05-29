@@ -19,10 +19,10 @@
             <form method="post" action="{{ route('users.store') }}">
                 @csrf
                 <div class="mb-3">
-                    <label class="form-label">Email</label>
+                    <label class="form-label">User</label>
                     <select name="email" class="form-control" id="email">
-                        @foreach ($email as $item)
-                            <option value="{{ $item }}">{{ $item }}</option>
+                        @foreach ($data['email'] as $key => $item)
+                            <option value="{{ $item }}">{{ $data['nik'][$key] }} - {{ $data['nama'][$key] }} - {{ $item }}</option>
                         @endforeach
                     </select>
                 </div>

@@ -23,15 +23,9 @@
                                 <input type="text" value="Park Royale" class="form-control" disabled>
                             </div>
                             <div class="col-6">
-                                <label class="form-label">User</label>
-                                <select class="form-control" name="id_user" required disabled>
-                                    <option selected disabled>-- Pilih ID User --</option>
-                                    @foreach ($idusers as $iduser)
-                                        <option value="{{ $iduser->id }}"
-                                            {{ $iduser->id == $karyawan->id_user ? 'selected' : '' }}>
-                                            {{ $iduser->nama_user }} </option>
-                                    @endforeach
-                                </select>
+                                <label class="form-label">Email</label>
+                                <input type="email" value="{{ $karyawan->email_karyawan }}" name="email_karyawan"
+                                    class="form-control" required disabled>
                             </div>
                         </div>
                     </div>
@@ -49,70 +43,61 @@
                                 </select>
                             </div>
                             <div class="col-6">
-                                <label class="form-label">NIK Karyawan</label>
-                                <input type="text" maxlength="16" name="nik_karyawan"
-                                    value="{{ $karyawan->nik_karyawan }}" class="form-control" required disabled>
+                                <label class="form-label">Nama Karyawan</label>
+                                <input type="text" name="nama_karyawan" value="{{ $karyawan->nama_karyawan }}"
+                                    class="form-control" required disabled>
                             </div>
                         </div>
                     </div>
                     <div class="mb-3">
                         <div class="row">
-                            <div class="col-6">
-                                <label class="form-label">Nama Karyawan</label>
-                                <input type="text" name="nama_karyawan" value="{{ $karyawan->nama_karyawan }}"
-                                    class="form-control" required disabled>
-                            </div>
                             <div class="col-6">
                                 <label class="form-label">Kewarganegaraan</label>
                                 <input type="text" name="kewarganegaraan" value="{{ $karyawan->kewarganegaraan }}"
                                     class="form-control" required disabled>
                             </div>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <div class="row">
                             <div class="col-6">
                                 <label class="form-label">Masa Berlaku ID</label>
                                 <input type="date" name="masa_berlaku_id" value="{{ $karyawan->masa_berlaku_id }}"
                                     class="form-control" required disabled>
                             </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="row">
                             <div class="col-6">
                                 <label class="form-label">Alamat KTP Karyawan</label>
                                 <input type="text" name="alamat_ktp_karyawan"
                                     value="{{ $karyawan->alamat_ktp_karyawan }}" class="form-control" required disabled>
                             </div>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <div class="row">
                             <div class="col-6">
                                 <label class="form-label">No Telp Karyawan</label>
                                 <input type="text" name="no_telp_karyawan" value="{{ $karyawan->no_telp_karyawan }}"
                                     class="form-control" required disabled>
                             </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="row">
                             <div class="col-6">
                                 <label class="form-label">NIK Pasangan Penjamin</label>
                                 <input type="text" maxlength="16" value="{{ $karyawan->nik_pasangan_penjamin }}"
                                     name="nik_pasangan_penjamin" class="form-control" required disabled>
                             </div>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <div class="row">
                             <div class="col-6">
                                 <label class="form-label">Tanggal Masuk</label>
                                 <input type="date" name="tgl_masuk" value="{{ $karyawan->tgl_masuk }}"
                                     class="form-control" required disabled>
                             </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="row">
                             <div class="col-6">
                                 <label class="form-label">Tanggal Keluar</label>
                                 <input type="date" name="tgl_keluar" value="{{ $karyawan->tgl_keluar }}"
                                     class="form-control" required disabled>
                             </div>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <div class="row">
                             <div class="col-6">
                                 <label class="form-label">Departement</label>
                                 <select class="form-control" name="id_departemen" required disabled>
@@ -125,6 +110,10 @@
                                     @endforeach
                                 </select>
                             </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="row">
                             <div class="col-6">
                                 <label class="form-label">Divisi</label>
                                 <select class="form-control" name="id_divisi" required disabled>
@@ -136,10 +125,6 @@
                                     @endforeach
                                 </select>
                             </div>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <div class="row">
                             <div class="col-6">
                                 <label class="form-label">Jabatan</label>
                                 <select class="form-control" name="id_jabatan" required disabled>
@@ -151,6 +136,10 @@
                                     @endforeach
                                 </select>
                             </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="row">
                             <div class="col-6">
                                 <label class="form-label">Penempatan</label>
                                 <select class="form-control" name="id_penempatan" required disabled>
@@ -163,24 +152,20 @@
                                     @endforeach
                                 </select>
                             </div>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <div class="row">
                             <div class="col-6">
                                 <label class="form-label">Tanggal Lahir</label>
                                 <input type="date" name="tgl_lahir" value="{{ $karyawan->tgl_keluar }}"
                                     class="form-control" required disabled>
                             </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="row">
                             <div class="col-6">
                                 <label class="form-label">Tempat Lahir</label>
                                 <input type="text" name="tempat_lahir" value="{{ $karyawan->tgl_keluar }}"
                                     class="form-control" required disabled>
                             </div>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <div class="row">
                             <div class="col-6">
                                 <label class="form-label">Agama</label>
                                 <select class="form-control" name="id_agama" required disabled>
@@ -192,6 +177,10 @@
                                     @endforeach
                                 </select>
                             </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="row">
                             <div class="col-6">
                                 <label class="form-label">Jenis Kelamin</label>
                                 <select class="form-control" name="id_jenis_kelamin" required disabled>
@@ -203,13 +192,9 @@
                                     @endforeach
                                 </select>
                             </div>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <div class="row">
                             <div class="col-6">
                                 <label class="form-label">Status Kawin</label>
-                                <select class="form-control" name="id_status_kawin" required disabled>
+                                <select class="form-control" name="id_status_kawin" id="id_status_kawin" required disabled>
                                     <option selected disabled>-- Pilih Status Kawin --</option>
                                     @foreach ($statuskawins as $statuskawin)
                                         <option value="{{ $statuskawin->id_status_kawin }}"
@@ -222,7 +207,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="penjamin mt-5">
+                <div class="penjamin mt-5" id="penjamin">
                     <h5>Penjamin</h5>
                     <hr>
                     <div class="mb-3">
@@ -234,36 +219,40 @@
                                     disabled>
                             </div>
                             <div class="col-6">
-                                <label class="form-label">Alamat KTP Pasangan Penjamin</label>
-                                <input type="text" name="alamat_ktp_pasangan_penjamin"
-                                    value="{{ $karyawan->alamat_ktp_pasangan_penjamin }}" class="form-control" required
-                                    disabled>
+                                <label class="form-label">NIK Karyawan</label>
+                                <input type="text" maxlength="16" name="nik_karyawan"
+                                    value="{{ $karyawan->nik_karyawan }}" class="form-control" required disabled>
                             </div>
                         </div>
                     </div>
                     <div class="mb-3">
                         <div class="row">
+                            <div class="col-6">
+                                <label class="form-label">Alamat KTP Pasangan Penjamin</label>
+                                <input type="text" name="alamat_ktp_pasangan_penjamin"
+                                    value="{{ $karyawan->alamat_ktp_pasangan_penjamin }}" class="form-control" required
+                                    disabled>
+                            </div>
                             <div class="col-6">
                                 <label class="form-label">Alamat Tinggal Pasangan Penjamin</label>
                                 <input type="text" name="alamat_tinggal_pasangan_penjamin"
                                     value="{{ $karyawan->alamat_tinggal_pasangan_penjamin }}" class="form-control"
                                     required disabled>
                             </div>
-                            <div class="col-6">
-                                <label class="form-label">Hubungan Penjamin</label>
-                                <input type="text" name="hubungan_penjamin"
-                                    value="{{ $karyawan->hubungan_penjamin }}" class="form-control" required disabled>
-                            </div>
                         </div>
                     </div>
                     <div class="mb-3">
                         <div class="row">
                             <div class="col-6">
+                                <label class="form-label">Hubungan Penjamin</label>
+                                <input type="text" name="hubungan_penjamin"
+                                    value="{{ $karyawan->hubungan_penjamin }}" class="form-control" required disabled>
+                            </div>
+                            <div class="col-6">
                                 <label class="form-label">No Telp Penjamin</label>
                                 <input type="text" name="no_telp_penjamin" value="{{ $karyawan->no_telp_penjamin }}"
                                     class="form-control" required disabled>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -321,28 +310,6 @@
     <script>
         var isEdit = false;
         $('document').ready(function() {
-            // $('#button-edit').on('click', function() {
-            //     isEdit = !isEdit;
-            //     if (isEdit) {
-            //         $('#button-back').css('display', 'inline')
-            //         $('#button-edit').css('display', 'none');
-            //         $('#button-update').css('display', 'inline');
-            //         $('#button-delete').css('display', 'none');
-            //         $('.form-control').removeAttr('disabled');
-            //     } else {
-            //         $('.form-control').prop('disabled', true);
-            //     }
-            // })
-            // $('#button-back').on('click', function() {
-            //     if (isEdit) {
-            //         $('.form-control').prop('disabled', true);
-            //     } else {
-            //         $('#button-back').css('display', 'none')
-            //         $('#button-edit').css('display', 'inline');
-            //         $('#button-update').css('display', 'none');
-            //         $('#button-delete').css('display', 'inline');
-            //     }
-            // })
             $('#button-edit').on('click', function() {
                 $('.form-control').removeAttr('disabled');
                 $('#button-edit').css('display', 'none')
@@ -362,6 +329,15 @@
                 $('#button-cancel').css('display', 'none')
                 $('#button-delete').css('display', 'inline')
 
+            })
+
+            $('#id_status_kawin').on('change', function() {
+                var status = $(this).val();
+                if (status == 1) {
+                    $('#penjamin').css('display', 'block')
+                } else {
+                    $('#penjamin').css('display', 'none')
+                }
             })
         })
     </script>

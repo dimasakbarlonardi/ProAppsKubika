@@ -111,7 +111,11 @@ class AuthenticatedSessionController extends Controller
             ->where('user_category', $request->role_id)
             ->with('RoleH.AksesForm')
             ->first();
+        if (!isset($getUser)) {
+            Alert::error('Gagal', 'Anda tidak terdaftar');
 
+            return redirect()->back();
+        }
         $request->session()->put('user', $getUser);
         $request->session()->put('user_id', $getUser->id_user);
 
@@ -145,10 +149,6 @@ class AuthenticatedSessionController extends Controller
 
             return redirect()->route('dashboard');
         }
-
-        Alert::error('Gagal', 'Anda tidak terdaftar');
-
-        return redirect()->back();
     }
 
     /**

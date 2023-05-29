@@ -70,6 +70,20 @@ class TenantController extends Controller
     public function store(Request $request)
     {
         $connTenant =  ConnectionDB::setConnection(new Tenant());
+
+        $checkNIK = $connTenant->where('nik_tenant', $request->nik_tenant)->first();
+        $checkEmail = $connTenant->where('email_tenant', $request->email_tenant)->first();
+
+        if (isset($checkNIK)) {
+            Alert::error('Maaf', 'NIK sudah terdaftar');
+            return redirect()->back()->withInput();
+        }
+
+        if (isset($checkEmail)) {
+            Alert::error('Maaf', 'Email sudah terdaftar');
+            return redirect()->back()->withInput();
+        }
+
         $count = $connTenant->count();
         $count = $count + 1;
 

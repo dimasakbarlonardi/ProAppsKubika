@@ -19,6 +19,7 @@ use App\Models\KepemilikanUnit;
 use App\Models\Penempatan;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Symfony\Component\Console\Input\Input;
 
 class KaryawanController extends Controller
 {
@@ -76,18 +77,25 @@ class KaryawanController extends Controller
     {
         $connKaryawan = ConnectionDB::setConnection(new Karyawan());
 
+        $checkNIK = $connKaryawan->where('nik_karyawan', $request->nik_karyawan)->first();
+        $checkEmail = $connKaryawan->where('email_karyawan', $request->email_karyawan)->first();
+
+        if (isset($checkNIK)) {
+            Alert::error('Maaf', 'NIK sudah terdaftar');
+            return redirect()->back()->withInput();
+        }
+
+        if (isset($checkEmail)) {
+            Alert::error('Maaf', 'Email sudah terdaftar');
+            return redirect()->back()->withInput();
+        }
+
         try {
             DB::beginTransaction();
 
             $id_user = $request->user()->id;
             $login = Login::where('id', $id_user)->with('site')->first();
             $site = $login->site->id_site;
-
-            // $count = $connKaryawan->count();
-            // $count += 1;
-            // if ($count < 10) {
-            //     $count = '0' . $count;
-            // }
 
             $karyawan = $connKaryawan->create([
                 'id_site' => $site,
@@ -221,6 +229,7 @@ class KaryawanController extends Controller
     public function update(Request $request, $id)
     {
         $conn = ConnectionDB::setConnection(new Karyawan());
+
         $karyawan = $conn->find($id);
         $karyawan->update($request->all());
 
