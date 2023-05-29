@@ -13,15 +13,15 @@
             <div class="accordion" id="accordionExample">
                 @foreach ($kepemilikans as $key => $kepemilikan)
                     <div class="accordion-item">
-                        <h2 class="accordion-header" id="heading{{ $key }}"><button class="accordion-button"
+                        <h3 class="accordion-header" id="heading{{ $key }}"><button class="accordion-button text-black"
                                 type="button" data-bs-toggle="collapse" data-bs-target="#collapse{{ $key }}"
-                                aria-expanded="true" aria-controls="collapse{{ $key }}">Unit
-                                #{{ $kepemilikan->id_unit }}</button></h2>
+                                aria-expanded="true" aria-controls="collapse{{ $key }}"><b>Unit   {{ $kepemilikan->Owner->nama_pemilik}} </b>
+                               </button></h3> 
                         <div class="accordion-collapse collapse {{ $key == 0 ? 'show' : '' }}"
                             id="collapse{{ $key }}" aria-labelledby="heading{{ $key }}"
                             data-bs-parent="#accordionExample">
                             <div class="accordion-body">
-                                <form method="post" action="{{ route('kepemilikans.update', $kepemilikan->id) }}">
+                                <form method="post" action="{{ route('kepemilikans.update', $kepemilikan->id_kepemilikan_unit) }}">
                                     @method('PUT')
                                     @csrf
                                     <div class="row justify-content-between">

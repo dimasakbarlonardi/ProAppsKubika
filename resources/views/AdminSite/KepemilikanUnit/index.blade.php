@@ -32,8 +32,9 @@
                                 {{ $kepemilikan->Kepemilikan->count() }}
                             </td>
                             <td>
-                                <a href="{{ route('kepemilikans.edit', $kepemilikan->id) }}"
-                                    class="btn btn-sm btn-warning">Edit</a>
+                                @if($kepemilikan->Kepemilikan->count() > 0)
+                                    <a href="{{ route('kepemilikans.edit', $kepemilikan->id_pemilik) }}" class="btn btn-sm btn-warning">Edit</a>
+                                @endif  
                             </td>
                         </tr>
                     @endforeach

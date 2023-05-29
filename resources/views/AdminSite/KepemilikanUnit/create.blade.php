@@ -48,76 +48,79 @@
                     <div class="table-responsive scrollbar">
                         <table class="table">
                             <tr>
+                                <th scope="col"><b> Information Kepemilikan Unit     </b></th>
+                            </tr>
+                            <tr>
                                 <th scope="col">Luas Unit</th>
                                 <td scope="col">
-                                    <input type="text" maxlength="3" id="luas_unit" name="luas_unit" class="form-control" required>
+                                    <input type="text" maxlength="3" id="luas_unit" name="luas_unit" class="form-control" readonly>
                                 </td>
                             </tr>
                             <tr>
                                 <th scope="col">Barcode unit</th>
                                 <td scope="col">
-                                    <input type="text" id="barcode_unit" name="barcode_unit" class="form-control" required>
+                                    <input type="text" id="barcode_unit" name="barcode_unit" class="form-control" readonly>
                                 </td>
                             </tr>
                             <tr>
                                 <th scope="col">Barcode meter air</th>
                                 <td scope="col">
-                                    <input type="text" id="barcode_meter_air" name="barcode_meter_air" class="form-control" required>
+                                    <input type="text" id="barcode_meter_air" name="barcode_meter_air" class="form-control" readonly>
                                 </td>
                             </tr>
                             <tr>
                                 <th scope="col">Barcode meter listrik</th>
                                 <td scope="col">
-                                    <input type="text" id="barcode_meter_listrik" name="barcode_meter_listrik" class="form-control" required>
+                                    <input type="text" id="barcode_meter_listrik" name="barcode_meter_listrik" class="form-control" readonly>
                                 </td>
                             </tr>
                             <tr>
                                 <th scope="col">Barcode meter gas</th>
                                 <td scope="col">
-                                    <input type="text" id="barcode_meter_gas" name="barcode_meter_gas" class="form-control" required>
+                                    <input type="text" id="barcode_meter_gas" name="barcode_meter_gas" class="form-control" readonly>
                                 </td>
                             </tr>
                             <tr>
                                 <td scope="col">
                                     <label class="form-label">No meter air</label>
-                                    <input type="text" id="no_meter_air" name="no_meter_air" class="form-control" required>
+                                    <input type="text" id="no_meter_air" name="no_meter_air" class="form-control" readonly>
                                 </td>
                                 <td scope="col">
                                     <label class="form-label">No air awal</label>
-                                    <input type="text" id="meter_air_awal" name="meter_air_awal" class="form-control" required>
+                                    <input type="text" id="meter_air_awal" name="meter_air_awal" class="form-control" readonly>
                                 </td>
                                 <td scope="col">
                                     <label class="form-label">No air akhir</label>
-                                    <input type="text" id="meter_air_akhir" name="meter_air_akhir" class="form-control" required>
+                                    <input type="text" id="meter_air_akhir" name="meter_air_akhir" class="form-control" readonly>
                                 </td>
                             </tr>
                             <tr>
                                 <td scope="col">
                                     <label class="form-label">No meter listrik</label>
-                                    <input type="text" id="no_meter_listrik" name="no_meter_listrik" class="form-control" required>
+                                    <input type="text" id="no_meter_listrik" name="no_meter_listrik" class="form-control" readonly>
                                 </td>
                                 <td scope="col">
                                     <label class="form-label">No listrik awal</label>
-                                    <input type="text" id="meter_listrik_awal" name="meter_listrik_awal" class="form-control" required>
+                                    <input type="text" id="meter_listrik_awal" name="meter_listrik_awal" class="form-control" readonly>
                                 </td>
                                 <td scope="col">
                                     <label class="form-label">No listrik akhir</label>
-                                    <input type="text" id="meter_listrik_akhir" name="meter_listrik_akhir" class="form-control" required>
+                                    <input type="text" id="meter_listrik_akhir" name="meter_listrik_akhir" class="form-control" readonly>
                                 </td>
                             </tr>
                             <tr>
                                 <td scope="col">
                                     <label class="form-label">No meter gas</label>
-                                    <input type="text" id="no_meter_gas" name="no_meter_gas" class="form-control" required>
+                                    <input type="text" id="no_meter_gas" name="no_meter_gas" class="form-control" readonly>
                                 </td>
                                 <td scope="col">
                                     <label class="form-label">No gas awal</label>
-                                    <input type="text" id="meter_gas_awal" name="meter_gas_awal" class="form-control" required>
+                                    <input type="text" id="meter_gas_awal" name="meter_gas_awal" class="form-control" readonly>
                                 </td>
                                 <td scope="col">
                                     <label class="form-label">No gas akhir</label>
                                     <input type="text" id="meter_gas_akhir" name="meter_gas_akhir" class="form-control"
-                                        required>
+                                        readonly>
                                 </td>
                             </tr>
                             <input type="hidden" name="id_unit" id="id_unit_input">

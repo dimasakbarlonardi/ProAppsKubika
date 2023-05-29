@@ -2,10 +2,10 @@
 
 @section('content')
     <div class="card">
-        <div class="card-header bg-light py-2">
+        <div class="card-header py-2">
             <div class="row flex-between-center">
                 <div class="col-auto">
-                    <h6 class="my-3">Tambah Work Relation</h6>
+                    <h6 class="my-3 text-white">Tambah Work Relation</h6>
                 </div>
             </div>
         </div>

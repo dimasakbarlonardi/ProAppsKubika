@@ -58,7 +58,7 @@ class Tenant extends Model
         return $this->hasOne(StatusHunianTenant::class, 'id_statushunian_tenant', 'id_statushunian_tenant');
     }
 
-    public function user()
+    public function idusers()
     {
         return $this->hasOne(User::class, 'id_user', 'id_user');
     }
@@ -68,4 +68,8 @@ class Tenant extends Model
         return $this->hasOne(IdCard::class, 'id_card_type', 'id_card_type');
     }
 
+    public function sites()
+    {
+        return $this->hasOne(Site::class, 'id_site', 'id_site');
+    }
 }

@@ -11,7 +11,7 @@
                     <select class="form-control" name="id_unit" required>
                         <option selected disabled>-- Pilih Unit --</option>
                         @foreach ($units as $unit)
-                            <option value="{{ $unit->id_unit }}"
+                            <option value="{{ $getCreateUnits->id_unit }}"
                                 {{ $tenantmember->id_unit == $unit->id_unit ? 'selected' : '' }}>
                                 {{ $unit->nama_unit }}
                             </option>

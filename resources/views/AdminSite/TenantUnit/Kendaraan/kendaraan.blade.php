@@ -41,7 +41,7 @@
                                     <label class="form-label">Unit</label>
                                     <select class="form-control" name="id_unit" required>
                                         <option selected disabled>-- Pilih Unit --</option>
-                                        @foreach ($units as $unit)
+                                        @foreach ($getCreateUnits as $unit)
                                             <option value="{{ $unit->id_unit }}">{{ $unit->nama_unit }}</option>
                                         @endforeach
                                     </select>
@@ -91,7 +91,6 @@
         </div>
     </div>
 </div>
-
 
 <script>
     function btnUnitClick(id) {

@@ -19,7 +19,7 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Status Request</label>
-                    <input type="text" name="status_request" value="" class="form-control">
+                    <input type="text" name="status_request" value="{{$statusrequest->status_request}}" class="form-control">
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>

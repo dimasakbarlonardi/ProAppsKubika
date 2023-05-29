@@ -78,6 +78,60 @@
                                 <label class="form-label">Tanggal Masuk</label>
                                 <input type="date" value="{{ old('tgl_masuk') }}" name="tgl_masuk" class="form-control" required>
                             </div>
+                        <div class="col-6">
+                            <label class="form-label">Nama Karyawan</label>
+                            <input type="text" name="nama_karyawan" class="form-control" required>
+                        </div>
+                        <div class="col-6">
+                        <label class="form-label">ID Status Karyawan</label>
+                        <select class="form-control" name="id_status_karyawan" readonly>
+                            <option selected disabled>-- Pilih Status Karyawan --</option>
+                            @foreach ($statuskaryawans as $statuskaryawan)
+                            <option value="{{ $statuskaryawan->id_status_karyawan }}">{{ $statuskaryawan->status_karyawan }} </option>
+                            @endforeach
+                        </select>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">ID Status Kawin Karyawan</label>
+                            <select class="form-control" name="id_status_kawin_karyawan" required>
+                                <option selected disabled>-- Pilih Status Kawin --</option>
+                                @foreach ($statuskawins as $statuskawin)
+                                <option value="{{ $statuskawin->id_status_kawin }}">{{ $statuskawin->status_kawin }} </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">ID Status Aktif Karyawan</label>
+                            <select class="form-control" name="id_status_aktif_karyawan" required>
+                                <option selected disabled>-- Pilih Status Aktif Karyawan --</option>
+                                @foreach ($statusaktifkaryawans as $statusaktifkaryawan)
+                                <option value="{{ $statusaktifkaryawan->id_status_aktif_karyawan }}">{{ $statusaktifkaryawan->status_aktif_karyawan }} </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">Kewarganegaraan</label>
+                            <input type="text" name="kewarganegaraan" class="form-control" required>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">Masa Berlaku ID</label>
+                            <input type="date" name="masa_berlaku_id" class="form-control" required>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">Alamat KTP Karyawan</label>
+                            <input type="text" name="alamat_ktp_karyawan" class="form-control" required>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">No Telp Karyawan</label>
+                            <input type="text" name="no_telp_karyawan" class="form-control" required>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">NIK Pasangan Penjamin</label>
+                            <input type="text" name="nik_pasangan_penjamin" class="form-control" required>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">Nama Pasangan Penjamin</label>
+                            <input type="text" name="nama_pasangan_penjamin" class="form-control" required>
                         </div>
                     </div>
                     <div class="mb-3">

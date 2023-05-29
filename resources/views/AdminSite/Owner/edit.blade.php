@@ -36,7 +36,7 @@
                             <select class="form-control" name="id_card_type" required>
                                 <option selected disabled >-- Pilih ID Card --</option>
                                 @foreach ($idcards as $idcard)
-                                <option value="{{ $idcard->id_card_type }} {{ $idcard->id_card_type == $owner->id_card_type ? 'selected' : ''}}" {{ $idcard->id_card_type == $owner->id_card_type ? 'selected' : ''}}>{{ $idcard->card_id_name }} {{ $idcard->id_card_type }}</option>
+                                <option value="{{ $idcard->id_card_type }}" {{ $idcard->id_card_type == $owner->id_card_type ? 'selected' : ''}} {{ $idcard->id_card_type == $owner->id_card_type ? 'selected' : ''}}>{{ $idcard->card_id_name }} {{ $idcard->id_card_type }}</option>
                                 @endforeach
                             </select>
                         </div>

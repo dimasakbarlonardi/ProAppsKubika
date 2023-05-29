@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\FloorController;
 use App\Http\Controllers\Admin\AgamaController;
+use App\Http\Controllers\Admin\BayarnonController;
 use App\Http\Controllers\Admin\DepartemenController;
 use App\Http\Controllers\Admin\DivisiController;
 use App\Http\Controllers\Admin\RoleController;
@@ -22,6 +23,7 @@ use App\Http\Controllers\Admin\UnitController;
 use App\Http\Controllers\Admin\HunianController;
 use App\Http\Controllers\Admin\IdcardController;
 use App\Http\Controllers\Admin\JabatanController;
+use App\Http\Controllers\Admin\JenisAcaraController;
 use App\Http\Controllers\Admin\JenisKelaminController;
 use App\Http\Controllers\Admin\JenisKendaraanController;
 use App\Http\Controllers\Admin\JenisPekerjaanController;
@@ -34,12 +36,17 @@ use App\Http\Controllers\Admin\OwnerHController;
 use App\Http\Controllers\Admin\PenempatanController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\PeriodeSewaController;
+use App\Http\Controllers\Admin\RuangReservationController;
+use App\Http\Controllers\Admin\StatusAktifKaryawanController;
+use App\Http\Controllers\Admin\StatusKaryawanController;
 use App\Http\Controllers\Admin\StatusKawinController;
 use App\Http\Controllers\Admin\StatusRequestController;
 use App\Http\Controllers\Admin\SystemSettingController;
-use App\Models\JenisKendaraan;
 use App\Http\Controllers\Admin\StatusTinggalController;
+use App\Http\Controllers\Admin\TypeReservationController;
+use App\Http\Controllers\Admin\WorkPriorityController;
 use App\Http\Controllers\Admin\WorkRelationController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -221,6 +228,30 @@ Route::prefix('admin')->group(function () {
         // CRUD Jenis Request
         Route::resource('jenisrequests', JenisRequestController::class);
 
+         // CRUD Jenis Request
+         Route::resource('jenisrequests', JenisRequestController::class);
+
+         // CRUD Ruang Reservation
+         Route::resource('ruangreservations', RuangReservationController::class);
+
+         // CRUD Jenis Acara
+         Route::resource('jenisacaras', JenisAcaraController::class);
+
+         // CRUD Status Karyawan
+         Route::resource('statuskaryawans', StatusKaryawanController::class);
+
+          // CRUD Status Aktif Karyawan
+          Route::resource('statusaktifkaryawans', StatusAktifKaryawanController::class);
+
+          // CRUD Type Reservation
+          Route::resource('typereservations', TypeReservationController::class);
+
+          // CRUD Work Priority
+          Route::resource('workprioritys', WorkPriorityController::class);
+
+          // CRUD BayarNon
+          Route::resource('bayarnons', BayarnonController::class);
+         
         // Akses form for user
         Route::get('/akses-form-user/{id}', [RoleController::class, 'aksesForm'])->name('akses-form');
         Route::post('/akses-form-user/{id}', [RoleController::class, 'storeAksesForm'])->name('akses-form');

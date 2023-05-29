@@ -9,7 +9,7 @@ use App\Models\SubMenu2;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 
-class SubMenuController extends Controller
+class   SubMenuController extends Controller
 {
     public function createSubMenu($id)
     {

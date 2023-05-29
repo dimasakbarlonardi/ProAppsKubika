@@ -53,14 +53,12 @@
                     <div class="row">
                         @foreach ($owners as $owner)
                             <div class="col-3">
-                                <div
-                                    class="bg-white dark__bg-1100 d-md-flex d-xl-inline-block d-xxl-flex align-items-center p-x1 rounded-3 shadow-sm card-view-height">
+                                <div class="bg-white dark__bg-1100 d-md-flex d-xl-inline-block d-xxl-flex align-items-center p-x1 rounded-3 shadow-sm card-view-height">
                                     <div class="d-flex align-items-start align-items-sm-center">
                                         <a class="d-none d-sm-block" href="../../app/support-desk/contact-details.html">
-                                            {{-- {{ dd($tenant->profile_picture) }} --}}
-                                            <div class=" row avatar avatar-xl avatar-3xl">
-                                                <img src="/{{ $owner->profile_picture }}" alt="akmal"
-                                                    class="avatar-image" />
+                                            <div class=" avatar avatar-xl avatar-3xl">
+                                                <img src="{{ $owner->profile_picture ? '/' . $owner->profile_picture : '/assets/img/team/3-thumb.png' }}" alt="akmal"
+                                                class="avatar-image" />
                                             </div>
                                         </a>
                                         <div class="ms-2 ms-sm-4">
@@ -76,7 +74,7 @@
                                             </p>
                                             <div class="row align-items-center gx-0 gy-2">
                                                 <div class="col-auto me-2">
-                                                    <h6 class="client mb-0">
+                                                    <h6 class="client mb-2">
                                                         <a class="text-800 d-flex align-items-center gap-1"
                                                             href="../../app/support-desk/contact-details.html"><span
                                                                 class="fas fa-user"
@@ -86,13 +84,15 @@
                                                 </div>
 
                                             </div>
-                                            <div class="row">
-                                            <hr>
-                                                <button class="btn btn-outline-primary text-primary mb-2" type="button"><a class="text-primary" href="{{ route('kepemilikans.index') }}">Kepemilikan Unit</a></button>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <hr>
+                                        <button class="btn btn-outline-primary mb-2" href={{ route('kepemilikans.index') }} type="button">
+                                                <a class="text-black" href={{ route('kepemilikans.index') }}>Kepemilikan Unit</a></button>
 
-                                                <button class="btn btn-outline-success text-success mb-2" type="button"><a class="text-success" href="{{ route('owners.show', $owner->id_pemilik) }}"> Detail</a></button>
-                                        </div>
-                                        </div>
+                                            <button class="btn btn-outline-success mb-2" type="button">
+                                            <a class="text-black" href="{{ route('owners.show', $owner->id_pemilik) }}"> Detail</a></button>
                                     </div>
                                 </div>
                             </div>

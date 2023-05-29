@@ -13,7 +13,7 @@
                 @foreach ($kendaraan_tenants as $key => $kendaraan)
                     <tr>
                         <td>{{ $kendaraan->unit->nama_unit }}</td>
-                        <td>{{ $kendaraan->id_jenis_kendaraan }}</td>
+                        <td>{{ $kendaraan->jeniskendaraan->jenis_kendaraan }}</td>
                         <td>{{ $kendaraan->no_polisi }}</td>
                         <td class="text-end">
                             <div>

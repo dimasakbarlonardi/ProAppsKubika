@@ -9,7 +9,7 @@
                 <div class="col-6">
                     <label class="col-form-label">Unit:</label>
                     <select class="form-control" name="id_unit">
-                        @foreach ($units as $unit)
+                        @foreach ($getCreateUnits as $unit)
                             <option value="{{ $unit->id_unit }}"
                                 {{ $tenantunit->id_unit == $unit->id_unit ? 'selected' : '' }}>
                                 {{ $unit->nama_unit }}

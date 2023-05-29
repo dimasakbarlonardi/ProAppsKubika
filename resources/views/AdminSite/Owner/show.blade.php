@@ -18,7 +18,9 @@
                         </div>
                        <div class="col-6">
                            <label class="form-label">ID User</label>
-                           <input type="text" value="{{ $owners->iduser}}" class="form-control" readonly>
+                           @foreach ($idusers as $iduser)
+                           <input type="text" value="{{ $iduser->name}}" class="form-control" readonly>
+                           @endforeach
                        </div>
                         <div class="col-6">
                             <label class="form-label">ID Card Pemilik</label>
@@ -74,33 +76,7 @@
                             <input type="text" value="{{$owners->no_telp_pemilik}}" class="form-control" readonly>
                         </div>
       
-                        <div class="col-6">
-                            <label class="form-label">Nik Pasangan Penjamin</label>
-                            <input type="text" value="{{$owners->nik_pasangan_penjamin}}" class="form-control" readonly>
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label">Nama Pasangan Penjamin</label>
-                            <input type="text" value="{{$owners->nama_pasangan_penjamin}}" class="form-control" readonly>
-                        </div>
-              
-                        <div class="col-6">
-                            <label class="form-label">Alamat KTP Pasangan Penjamin</label>
-                            <input type="text" value="{{$owners->alamat_ktp_pasangan_penjamin}}" class="form-control" readonly>
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label">Alamat Tinggal Pasangan Penjamin</label>
-                            <input type="text" value="{{$owners->alamat_tinggal_pasangan_penjamin}}" class="form-control" readonly>
-                        </div>
-                
-                        <div class="col-6">
-                            <label class="form-label">Hubungan Penjamin</label>
-                            <input type="text" value="{{$owners->hubungan_penjamin}}" class="form-control" readonly>
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label">No Telp Penjamin</label>
-                            <input type="text" value="{{$owners->no_telp_penjamin}}" class="form-control" readonly>
-                        </div>
-              
+                        
                         <div class="col-6">
                             <label class="form-label">Tanggal Masuk</label>
                             <input type="text" value="{{$owners->tgl_masuk}}" class="form-control" readonly>
@@ -110,20 +86,12 @@
                             <input type="text" value="{{$owners->tgl_keluar}}" class="form-control" readonly>
                         </div>
              
-                        {{-- {-- <div class="col-5">
-                            <label class="form-label">ID Status Aktif Pemilik</label>
-                            <select class="form-control" name="id_kempemilikan_unit" readonly>
-                                <option selected disabled>-- Pilih Status Pemilik --</option>
-                                @foreach ($statuspemiliks as $statuspemilik)
-                                <option value="{{ $statuspemilik->id_kempemilikan_unit }}">{{ $statuspemilik->status_hunian_pemilik }} {{ $statushunian->id_kempemilikan_unit }}</option>
-                                @endforeach
-                            </select>
-                        </div> --}} 
+                    
                         {{-- <div class="col-6">
                             <label class="form-label">ID Kepemilikan Unit</label>
                             <input type="text" name="" value="{{$kepemilikan->id_kempemilikan_unit}}" class="form-control" readonly>
                         </div> --}}
-            
+                        
                         <div class="col-6">
                             <label class="form-label">Tempat Lahir</label>
                             <input type="text" value="{{$owners->tempat_lahir}}" class="form-control" readonly>
@@ -132,7 +100,7 @@
                             <label class="form-label">Tanggal Lahir</label>
                             <input type="text" value="{{$owners->tgl_lahir}}" class="form-control" readonly>
                         </div>
-          
+                        
                         <div class="col-6">
                             <label class="form-label">ID Jenis Kelamin</label>
                             <input type="text" value="{{ $owners->jeniskelamin->jenis_kelamin }}" class="form-control" readonly>
@@ -141,7 +109,7 @@
                             <label class="form-label">ID Agama</label>
                             <input type="text" value="{{ $owners->agama->nama_agama }}" class="form-control" readonly>
                         </div>
-                
+                        
                         <div class="col-6">
                             <label class="form-label">ID Status Kawin</label>
                             <input type="text" value="{{$owners->statuskawin->status_kawin }}" class="form-control" readonly>
@@ -150,7 +118,7 @@
                             <label class="form-label">Pekerjaan</label>
                             <input type="text" value="{{$owners->pekerjaan}}" class="form-control" readonly>
                         </div>
-          
+                        
                         <div class="col-6">
                             <label class="form-label">NIK Kontak PIC</label>
                             <input type="text" value="{{$owners->nik_kontak_pic}}" class="form-control" readonly>
@@ -176,6 +144,41 @@
                         <div class="col-6">
                             <label class="form-label">Hubungan Kontak PIC</label>
                             <input type="text" value="{{$owners->hubungan_kontak_pic}}" class="form-control" readonly>
+                        </div>
+                        
+                        <div class="penjamin mt-5">
+                            <h5>Penjamin</h5>
+                            <hr>
+                            <div class="mb-3">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label class="form-label">Nik Pasangan Penjamin</label>
+                                        <input type="text" value="{{$owners->nik_pasangan_penjamin}}" class="form-control" readonly>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label">Nama Pasangan Penjamin</label>
+                                        <input type="text" value="{{$owners->nama_pasangan_penjamin}}" class="form-control" readonly>
+                                    </div>
+                          
+                                    <div class="col-6">
+                                        <label class="form-label">Alamat KTP Pasangan Penjamin</label>
+                                        <input type="text" value="{{$owners->alamat_ktp_pasangan_penjamin}}" class="form-control" readonly>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label">Alamat Tinggal Pasangan Penjamin</label>
+                                        <input type="text" value="{{$owners->alamat_tinggal_pasangan_penjamin}}" class="form-control" readonly>
+                                    </div>
+                            
+                                    <div class="col-6">
+                                        <label class="form-label">Hubungan Penjamin</label>
+                                        <input type="text" value="{{$owners->hubungan_penjamin}}" class="form-control" readonly>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label">No Telp Penjamin</label>
+                                        <input type="text" value="{{$owners->no_telp_penjamin}}" class="form-control" readonly>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                 </div>
                 </div>

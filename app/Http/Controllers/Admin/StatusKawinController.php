@@ -100,7 +100,6 @@ class StatusKawinController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
         $conn = ConnectionDB::setConnection(new StatusKawin());
 
         $statuskawin = $conn->find($id);

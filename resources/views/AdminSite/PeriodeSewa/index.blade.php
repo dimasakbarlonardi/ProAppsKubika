@@ -17,7 +17,6 @@
             <thead>
                 <tr>
                     <th class="sort" data-sort="">No</th>
-                    <th class="sort" data-sort="id_periode_sewa">ID Periode Sewa</th>
                     <th class="sort" data-sort="periode_sewa">Periode Sewa</th>
                     <th class="sort">Action</th>
                 </tr>
@@ -26,7 +25,6 @@
                 @foreach ($sewas as $key => $sewa)
                     <tr>
                         <th scope="row">{{ $key + 1 }}</th>
-                        <td>{{ $sewa->id_periode_sewa }}</td>
                         <td>{{ $sewa->periode_sewa }}</td>
                         <td>
                             <a href="{{ route('sewas.edit', $sewa->id_periode_sewa) }}" class="btn btn-sm btn-warning">Edit</a>

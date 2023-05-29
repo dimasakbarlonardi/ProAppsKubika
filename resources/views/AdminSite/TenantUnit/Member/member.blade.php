@@ -6,12 +6,12 @@
 </div>
 
 <div class="row p-3">
-    @foreach ($units as $unit)
-        <div class="col">
-            <button class="btn btn-falcon-primary me-1 mb-1 btn-unit" type="button"
-                onclick="btnUnitClick1('{{ $unit->id_unit }}')"
-                id="btn-unit-{{ $unit->id_unit }}">{{ $unit->nama_unit }}</button>
-        </div>
+    @foreach ($tenant_units as $unit)
+    <div class="col">
+        <button class="btn btn-falcon-primary me-1 mb-1 btn-unit" type="button"
+            onclick="btnUnitClick1('{{ $unit->id_unit }}')"
+            id="btn-unit-{{ $unit->id_unit }}">{{ $unit->unit->nama_unit }}</button>
+    </div>
     @endforeach
 </div>
 
@@ -40,8 +40,8 @@
                                     <label class="form-label">Unit</label>
                                     <select class="form-control" name="id_unit" required>
                                         <option selected disabled>-- Pilih Unit --</option>
-                                        @foreach ($units as $unit)
-                                            {{-- <option value="{{ $unit->id_unit }}">{{ $unit->nama_unit }}</option> --}}
+                                        @foreach ($getCreateUnits as $unit)
+                                            <option value="{{ $unit->id_unit }}">{{ $unit->nama_unit }}</option>
                                         @endforeach
                                     </select>
                                 </div>

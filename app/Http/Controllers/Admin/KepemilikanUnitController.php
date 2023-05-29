@@ -21,7 +21,7 @@ class KepemilikanUnitController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
-    {
+    {   
         $connKepemilikan = ConnectionDB::setConnection(new OwnerH());
         $data['kepemilikans'] = $connKepemilikan->get();
 
@@ -99,14 +99,15 @@ class KepemilikanUnitController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
+
     public function edit($id)
     {
-        $connKepemilikan = ConnectionDB::setConnection(new KepemilikanUnit());
+        $conn = ConnectionDB::setConnection(new KepemilikanUnit());
         $connOwner = ConnectionDB::setConnection(new OwnerH());
         $connUnit = ConnectionDB::setConnection(new Unit());
         $connStatushunian = ConnectionDB::setConnection(new StatusHunianTenant());
 
-        $data['kepemilikans'] = $connKepemilikan->where('id_pemilik', $id)->get();
+        $data['kepemilikans'] = $conn->where('id_kepemilikan_unit', $id)->get();
         $data['owners'] = $connOwner->get();
         $data['units'] = $connUnit->get();
         $data['statushunians'] = $connStatushunian->get();
@@ -123,7 +124,7 @@ class KepemilikanUnitController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $connKepemilikan = $this->setConnection(new KepemilikanUnit());
+        $connKepemilikan = ConnectionDB::setConnection(new KepemilikanUnit());
 
 
         $kepemilikan = $connKepemilikan->find($id);
@@ -143,7 +144,7 @@ class KepemilikanUnitController extends Controller
 
     public function destroy($id)
     {
-        $connKepemilikan = $this->setConnection(new KepemilikanUnit());
+        $connKepemilikan = ConnectionDB::setConnection(new KepemilikanUnit());
         $connKepemilikan->find($id)->delete();
 
         Alert::success('Berhasil', 'Berhasil menghapus kepemilikan unit');

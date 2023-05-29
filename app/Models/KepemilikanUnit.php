@@ -11,7 +11,7 @@ class KepemilikanUnit extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = 'tb_pemilik_d';
-
+    protected $primaryKey = 'id_kepemilikan_unit';
     protected $fillable = ([
         'id_kepemilikan_unit',
         'id_pemilik',
