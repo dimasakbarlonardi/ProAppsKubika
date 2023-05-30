@@ -12,6 +12,7 @@ use App\Models\Login;
 use App\Models\OwnerH;
 use App\Models\Site;
 use App\Models\StatusHunianTenant;
+use App\Models\StatusKawin;
 use App\Models\User;
 use FTP\Connection;
 use Illuminate\Support\Facades\DB;
@@ -42,14 +43,10 @@ class TenantController extends Controller
     public function create(Request $request)
     {
         $user_id = $request->user()->id;
-        $login = Login::where('id', $user_id)->with('site')->first();
-        $conn = $login->site->db_name;
+        $statuskawin = ConnectionDB::setConnection(new StatusKawin());
         $connTenant = ConnectionDB::setConnection(new Tenant());
-
         $statushunian = ConnectionDB::setConnection(new StatusHunianTenant());
-
         $idcard = ConnectionDB::setConnection(new IdCard());
-
         $owner = ConnectionDB::setConnection(new OwnerH());
 
         $data['statushunians'] = $statushunian->get();
@@ -57,7 +54,7 @@ class TenantController extends Controller
         $data['idusers'] = Login::where('id', $user_id)->first();
         $data['idpemiliks'] = $owner->get();
         $data['tenants'] = $connTenant->get();
-
+        $data['statuskawins'] = $statuskawin->get();
 
         return view('AdminSite.Tenant.create', $data);
     }
@@ -144,6 +141,7 @@ class TenantController extends Controller
         $user_id = $request->user()->id;
 
         $data['tenant'] = $connTenant->where('id_tenant', $id)->first();
+        $data['idusers'] =  Login::where('id', $user_id)->get();
 
         return view('AdminSite.Tenant.show', $data);
     }

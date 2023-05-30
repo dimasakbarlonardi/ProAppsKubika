@@ -75,6 +75,19 @@ class OwnerHController extends Controller
     {
         $conn = ConnectionDB::setConnection(new OwnerH());
 
+        $checkNIK = $conn->where('nik_pemilik', $request->nik_pemilik)->first();
+        $checkEmail = $conn->where('email_owner', $request->email_owner)->first();
+
+        if (isset($checkNIK)) {
+            Alert::error('Maaf', 'NIK sudah terdaftar');
+            return redirect()->back()->withInput();
+        }
+
+        if (isset($checkEmail)) {
+            Alert::error('Maaf', 'Email sudah terdaftar');
+            return redirect()->back()->withInput();
+        }
+
         try {
             DB::beginTransaction();
 
