@@ -204,7 +204,7 @@ class TenantController extends Controller
      */
     public function destroy(Request $request, $id)
     {
-        $conn = ConnectionDB::setConnection($request);
+        $conn = ConnectionDB::setConnection(new Tenant());
         $conn->find($id)->delete();
 
         Alert::success('Berhasil', 'Berhasil menghapus tenant');

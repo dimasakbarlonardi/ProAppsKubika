@@ -11,7 +11,10 @@ class IPLType extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = 'tb_ipl_type';
-    protected $fillabel = [
+
+    protected $primaryKey = 'id_ipl_type';
+    
+    protected $fillable = [
         'id_ipl_type',
         'nama_ipl_type',
         'biaya_permeter',

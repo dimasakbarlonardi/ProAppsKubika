@@ -12,7 +12,6 @@ class KendaraanTenant extends Model
 
     protected $table = 'tb_tenant_vehicle';
     protected $primaryKey = 'id_tenant_vehicle';
-    public $incrementing = false;
 
     protected $fillable = [
         'id_tenant_vehicle',

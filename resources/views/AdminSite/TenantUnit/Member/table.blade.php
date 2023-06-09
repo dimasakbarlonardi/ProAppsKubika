@@ -14,11 +14,11 @@
         <tbody>
             @foreach ($tenant_members as $key => $tm)
                 <tr>
-                    <td>{{ $tm->unit->nama_unit }}</td>
+                    <td>{{ $tm->unit }}</td>
                     <td>{{ $tm->nama_tenant_member }}</td>
                     <td>{{ $tm->hubungan_tenant }}</td>
                     <td>{{ $tm->no_telp_member }}</td>
-                    <td>{{ $tm->status->status_tinggal }}</td>
+                    <td>{{ $tm->id_status_tinggal }}</td>
                     <td>{{ $tm->tenant->nama_tenant }}</td>
                     <td class="text-end">
                         <div>

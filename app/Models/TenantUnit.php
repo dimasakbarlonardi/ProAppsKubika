@@ -33,5 +33,10 @@ class TenantUnit extends Model
         return $this->hasOne(Unit::class, 'id_unit', 'id_unit');
     }
 
+    public function pemilik()
+    {
+        return $this->hasOne(OwnerH::class, 'id_pemilik', 'id_pemilik');
+    }
+
     
 }

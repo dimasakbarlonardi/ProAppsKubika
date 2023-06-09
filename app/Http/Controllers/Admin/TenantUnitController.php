@@ -69,6 +69,16 @@ class TenantUnitController extends Controller
         return $units;
     }
 
+    public function getIDunitFromTU()
+    {
+        $tenant_units = $this->setConnection(new TenantUnit());
+        $tenant_units['getIDunitFromTU'] = $tenant_units->get();
+
+        $tenant_units = $tenant_units->whereNotIn('id_tenant_unit', $tenant_units)->get();
+
+        return $tenant_units;
+    }
+
     public function getTenantUnit($id)
     {
         $connTenantUnit = $this->setConnection(new TenantUnit());
@@ -84,6 +94,9 @@ class TenantUnitController extends Controller
         $data['tenant'] = $connTenant->find($id);
         $data['tenant_units'] = $connTenantUnit->where('id_tenant', $id)->get();
         $data['getCreateUnits'] = $this->getUnitIDFromTU();
+
+        $data['getIDunitFromTU'] = $this->getIDunitFromTU();
+
         $data['units'] = $connUnit->get();
         $data['periodeSewa'] = $connPeriodeSewa->get();
         $data['tenant_members'] = $connMemberTenant->where('id_tenant', $id)->get();
@@ -189,6 +202,7 @@ class TenantUnitController extends Controller
         $data['owners'] = $connOwner->get();
         $data['periodeSewa'] = $periodeSewa->get();
         $data['tenantunit'] = $connTenantUnit->where('id_tenant_unit', $id)->first();
+        $data['getCreateUnits'] = $this->getUnitIDFromTU();
 
         return view('AdminSite.TenantUnit.Unit.edit', $data)->render();
     }

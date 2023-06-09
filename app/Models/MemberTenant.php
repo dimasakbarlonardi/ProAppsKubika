@@ -12,7 +12,6 @@ class MemberTenant extends Model
 
     protected $table = 'tb_tenant_member';
     protected $primaryKey = 'id_tenant_member';
-    public $incrementing = false;
 
     protected $fillable = [
         'id_tenant_member',
@@ -22,7 +21,7 @@ class MemberTenant extends Model
         'nama_tenant_member',
         'hubungan_tenant',
         'no_telp_member',
-        'id_status_tinggal'
+        'id_status_tinggal',
     ];
     protected $dates = ['deleted_at'];
 

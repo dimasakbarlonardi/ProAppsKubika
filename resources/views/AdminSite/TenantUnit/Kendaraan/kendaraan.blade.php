@@ -41,8 +41,8 @@
                                     <label class="form-label">Unit</label>
                                     <select class="form-control" name="id_unit" required>
                                         <option selected disabled>-- Pilih Unit --</option>
-                                        @foreach ($getCreateUnits as $unit)
-                                            <option value="{{ $unit->id_unit }}">{{ $unit->nama_unit }}</option>
+                                        @foreach ($getIDunitFromTU as $unit)
+                                            <option value="{{ $unit->id_tenant_unit }}">{{ $unit->unit->nama_unit }}</option>
                                         @endforeach
                                     </select>
                                 </div>

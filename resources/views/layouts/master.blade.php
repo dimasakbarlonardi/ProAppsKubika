@@ -13,11 +13,11 @@
     <!-- ===============================================-->
     <!--    Document Title-->
     <!-- ===============================================-->
-    <title>Falcon | Dashboard &amp; Web App Template</title>
+    <title>Pro Apps | Dashboard &amp; Web App Template</title>
     <!-- ===============================================-->
     <!--    Document Title-->
     <!-- ===============================================-->
-    <title>Falcon | Dashboard &amp; Web App Template</title>
+    <title>Pro Apps | Dashboard &amp; Web App Template</title>
 
     <!-- ===============================================-->
     <!--    Favicons-->

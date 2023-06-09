@@ -21,6 +21,7 @@ class Login extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
+        'id',
         'id_site',
         'name',
         'email',

@@ -59,7 +59,7 @@
                                         <a class="d-none d-sm-block" href="../../app/support-desk/contact-details.html">
                                             {{-- {{ dd($tenant->profile_picture) }} --}}
                                             <div class="avatar avatar-xl avatar-3xl">
-                                                <img src="/{{ $tenant->profile_picture }}" alt="IMG"
+                                                <img src="{{ $tenant->profile_picture ? '/' . $tenant->profile_picture : '/assets/img/team/3-thumb.png' }}" alt="akmal"
                                                     class="avatar-image" />
                                             </div>
                                         </a>

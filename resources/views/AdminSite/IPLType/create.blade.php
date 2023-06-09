@@ -12,26 +12,67 @@
         <div class="p-5">
             <form method="post" action="{{ route('ipltypes.store') }}">
                 @csrf
-                <div class="mb-3 col-10">
-                    <label class="form-label">ID IPL Type</label>
-                    <input type="text" maxlength="3" name="id_jabatan" class="form-control" required>
-                </div>
-                <div class="mb-3 col-10">
+                <div class="row">
+                <div class="col-6">
                     <label class="form-label">Nama IPL Type</label>
                     <input type="text" name="nama_ipl_type" class="form-control" required>
                 </div>
-                <div class="mb-3 col-10">
-                    <label class="form-label">Biaya Permeter</label>
-                    <input type="text" name="biaya_permeter" class="form-control" required>
+                <div class="col-6">
+                    <label class="form-label">Pilih Biaya</label>
+                    <select class="form-control" id="pilihbiayaipl" required>
+                        <option selected disabled>-- Pilih Biaya --</option>
+                        <option value="1">Biaya Permeter </option>
+                        <option value="2">Biaya Procentage </option>
+                    </select>
                 </div>
-                <div class="mb-3 col-10">
+
+                <div class="mt-5" id="biaya">
+                    <h5>Isi Biaya</h5>
+                    <hr>
+                 <div class="mb-3">
+                 <div class="row">
+                <div class=" col-6" id="biaya_permeter">
+                    <label class="form-label">Biaya Permeter</label>
+                    <div class="input-group mb-3"><input class="form-control" type="text" name="biaya_permeter" aria-describedby="basic-addon2" /><span class="input-group-text text-primary" id="basic-addon2">Rupiah</span></div>
+                </div>
+                <div class="col-6" id="biaya_procentage">
                     <label class="form-label">Biaya Procentage</label>
-                    <input type="text" name="biaya_procentage" class="form-control" required>
+                    <div class="input-group mb-3"><input class="form-control" type="text" name="biaya_procentage" aria-describedby="basic-addon2" /><span class="input-group-text text-primary" id="basic-addon2">%</span></div>
                 </div>
                 <div class="mt-5">
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
+                </div>
+                </div>
+                </div>
+                </div>
             </form>
-        </div>
+        </div>  
     </div>
+@endsection
+
+@section('script')
+    <script>
+        $(document).ready(function() {
+            var status = $('#pilihbiayaipl').val();
+            console.log(status)
+            {
+                $('#biaya').css('display', 'none')
+            }
+
+            $('#pilihbiayaipl').on('change', function() {
+                var status = $(this).val();
+                $('#biaya').css('display', 'block')
+                if (status == '1') {
+                    $('#biaya_permeter').css('display', 'block')
+                    $('#biaya_procentage').css('display', 'none')
+
+                } else {
+                    $('#biaya_procentage').css('display', 'block')
+                    $('#biaya_permeter').css('display', 'none')
+
+                }
+            })
+        })
+    </script>
 @endsection

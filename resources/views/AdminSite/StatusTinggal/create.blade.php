@@ -12,16 +12,14 @@
         <div class="p-5">
             <form method="post" action="{{ route('statustinggals.store') }}">
                 @csrf
-                <div class="mb-3 col-10">
                 <div class="row">
                 <div class="col-10 ">
                     <label class="form-label">Status Tinggal</label>
                     <input type="text" name="status_tinggal" class="form-control" required>
                 </div>
                 </div>
-                </div>
 
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary mt-3">Submit</button>
             </form>
         </div>
     </div>

@@ -61,12 +61,8 @@
                             <label class="form-label">Status Aktif Karyawan</label>
                             <input type="text" value="{{$karyawan->StatusAktifKaryawan->status_aktif_karyawan }}" class="form-control" readonly>
                          </div>
-                        <div class="col-6 mb-3">
-                           <label class="form-label">Status Kawin Karyawan</label>
-                           <input type="text" value="{{$karyawan->StatusKawinKaryawan->StatusKawinKaryawan }}" class="form-control" readonly>
-                        </div>
-                        <div class="col-6 mb-3">
-                           <label class="form-label">Kewarganegaraan</label>
+                         <div class="col-6 mb-3">
+                             <label class="form-label">Kewarganegaraan</label>
                            <input type="text" value="{{$karyawan->kewarganegaraan}}" class="form-control" readonly>
                         </div>
                             <div class="col-6 mb-3">
@@ -82,7 +78,7 @@
                             <div class="col-6 mb-3">
                                 <label class="form-label">No Telp Karyawan</label>
                                 <input type="text" name="no_telp_karyawan" value="{{ $karyawan->no_telp_karyawan }}"
-                                    class="form-control" readonly>
+                                class="form-control" readonly>
                             </div>
                             <div class="col-6 mb-3">
                                 <label class="form-label">NIK Pasangan Penjamin</label>
@@ -92,7 +88,7 @@
                             <div class="col-6 mb-3">
                                 <label class="form-label">Tanggal Masuk</label>
                                 <input type="date" name="tgl_masuk" value="{{ $karyawan->tgl_masuk }}"
-                                    class="form-control" readonly>
+                                class="form-control" readonly>
                             </div>
                             <div class="col-6 mb-3">
                                 <label class="form-label">Tanggal Keluar</label>
@@ -101,7 +97,7 @@
                             </div>
                             <div class="col-6 mb-3">
                                 <label class="form-label">Departement</label>
-                                <input type="text" name="id_departemen" value="{{ $karyawan->Departemen }}"
+                                <input type="text" name="id_departemen" value="{{ $karyawan->Departemen->nama_departemen }}"
                                     class="form-control" readonly>
                             </div>
                             <div class="col-6 mb-3">
@@ -122,7 +118,7 @@
                             <div class="col-6 mb-3">
                                 <label class="form-label">Tanggal Lahir</label>
                                 <input type="date" name="tgl_lahir" value="{{ $karyawan->tgl_keluar }}"
-                                    class="form-control" readonly>
+                                class="form-control" readonly>
                             </div>
                             <div class="col-6 mb-3">
                                 <label class="form-label">Tempat Lahir</label>
@@ -137,7 +133,11 @@
                             <div class="col-6 mb-3">
                                 <label class="form-label">Jenis Kelamin</label>
                                 <input type="text" name="id_jenis_kelamin" value="{{ $karyawan->jeniskelamin->jenis_kelamin }}"
-                                    class="form-control" readonly>
+                                class="form-control" readonly>
+                            </div>
+                            <div class="col-6 mb-3">
+                               <label class="form-label">Status Kawin Karyawan</label>
+                               <input type="text" value="{{$karyawan->StatusKawinKaryawan->status_kawin }}" class="form-control" readonly>
                             </div>
                         </div>
                     </div>

@@ -244,7 +244,7 @@
                     </div>
                 </div>
                 <div class="penjamin mt-5">
-                    <h5>Penjamin</h5>
+                    <h5>Penjamin</h5>   
                     <hr>
                     <div class="mb-3">
                         <div class="row">
@@ -280,37 +280,6 @@
                         </div>
                     </div>
                 </div>
-                {{-- <div class="mb-3">
-                    <div class="row">
-                        <div class="col-5">
-                            <label class="form-label">ID Status Karyawan</label>
-                            <select class="form-control" name="id_status_karyawan" required>
-                                <option selected disabled>-- Pilih Status Karyawan --</option>
-                                @foreach ($statuspemiliks as $statuspemilik)
-                                <option value="{{ $statuspemilik->id_status_aktif_pemilik }}">{{ $statuspemilik->status_hunian_pemilik }} </option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-5">
-                            <label class="form-label">ID Status Kawin Karyawan</label>
-                            <select class="form-control" name="id_status_kawin_karyawan" required>
-                                <option selected disabled>-- Pilih Status Pemilik --</option>
-                                @foreach ($statuskawinkaryawans as $statuskawinkaryawan)
-                                <option value="{{ $statuskawinkaryawan->id_status_kawin_karyawan }}">{{ $statuskawinkaryawan-> }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                       <div class="col-5">
-                            <label class="form-label">ID Status Aktif Karyawan</label>
-                            <select class="form-control" name="id_status_aktif_karyawan" required>
-                                <option selected disabled>-- Pilih Status Pemilik --</option>
-                                @foreach ($statusaktifkaryawans as $statusaktifkaryawan)
-                                <option value="{{ $statusaktifkaryawan->id_status_aktif_karyawan }}">{{ $statusaktifkaryawan-> }} </option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                </div> --}}
                 <div class="mt-5">
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </div>

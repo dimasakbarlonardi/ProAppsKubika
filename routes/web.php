@@ -3,8 +3,17 @@
 use App\Http\Controllers\Admin\FloorController;
 use App\Http\Controllers\Admin\AgamaController;
 use App\Http\Controllers\Admin\BayarnonController;
+use App\Http\Controllers\Admin\ChecklistAhuDetailController;
+use App\Http\Controllers\Admin\ChecklistAhuHController;
 use App\Http\Controllers\Admin\DepartemenController;
 use App\Http\Controllers\Admin\DivisiController;
+use App\Http\Controllers\Admin\EngAHUController;
+use App\Http\Controllers\Admin\EngChillerController;
+use App\Http\Controllers\Admin\EngDeepWheelController;
+use App\Http\Controllers\Admin\EngGroundController;
+use App\Http\Controllers\Admin\EngListrikController;
+use App\Http\Controllers\Admin\EngPamController;
+use App\Http\Controllers\Admin\EngPompasumpitController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\GroupController;
 use App\Http\Controllers\Admin\InboxCntroller;
@@ -22,8 +31,10 @@ use App\Http\Controllers\Admin\TowerController;
 use App\Http\Controllers\Admin\UnitController;
 use App\Http\Controllers\Admin\HunianController;
 use App\Http\Controllers\Admin\IdcardController;
+use App\Http\Controllers\Admin\IPLTypeController;
 use App\Http\Controllers\Admin\JabatanController;
 use App\Http\Controllers\Admin\JenisAcaraController;
+use App\Http\Controllers\Admin\JenisDendaController;
 use App\Http\Controllers\Admin\JenisKelaminController;
 use App\Http\Controllers\Admin\JenisKendaraanController;
 use App\Http\Controllers\Admin\JenisPekerjaanController;
@@ -32,10 +43,14 @@ use App\Http\Controllers\Admin\KaryawanController;
 use App\Http\Controllers\Admin\KendaraanTenantController;
 use App\Http\Controllers\Admin\KepemilikanUnitController;
 use App\Http\Controllers\Admin\MemberTenantController;
+use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\OwnerHController;
 use App\Http\Controllers\Admin\PenempatanController;
+use App\Http\Controllers\Admin\PerhitDendaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\PeriodeSewaController;
+use App\Http\Controllers\Admin\ReminderLetterController;
+use App\Http\Controllers\Admin\RoomController;
 use App\Http\Controllers\Admin\RuangReservationController;
 use App\Http\Controllers\Admin\StatusAktifKaryawanController;
 use App\Http\Controllers\Admin\StatusKaryawanController;
@@ -44,9 +59,10 @@ use App\Http\Controllers\Admin\StatusRequestController;
 use App\Http\Controllers\Admin\SystemSettingController;
 use App\Http\Controllers\Admin\StatusTinggalController;
 use App\Http\Controllers\Admin\TypeReservationController;
+use App\Http\Controllers\Admin\UtilityController;
 use App\Http\Controllers\Admin\WorkPriorityController;
 use App\Http\Controllers\Admin\WorkRelationController;
-
+use App\Models\MonthlyArTenant;
 
 /*
 |--------------------------------------------------------------------------
@@ -251,7 +267,58 @@ Route::prefix('admin')->group(function () {
 
           // CRUD BayarNon
           Route::resource('bayarnons', BayarnonController::class);
+          
+          // CRUD IPLType
+          Route::resource('ipltypes', IPLTypeController::class);
+
+          // CRUD Utility
+          Route::resource('utilitys', UtilityController::class);
+
+          // CRUD JenisDenda
+          Route::resource('jenisdendas', JenisDendaController::class);
          
+          //CRUD Perhit Denda
+          Route::resource('perhitdendas', PerhitDendaController::class);
+
+          //CRUD Reminder Letter
+          Route::resource('reminders', ReminderLetterController::class);
+
+          //CRUD Notification
+          Route::resource('notifications', NotificationController::class);
+
+          //CRUD Room
+          Route::resource('rooms', RoomController::class);
+
+          //CRUD Checklist AHU H
+          Route::resource('checklistahus', ChecklistAhuHController::class);
+
+          //CRUD Checklist AHU Detail
+          Route::resource('ahudetails', ChecklistAhuDetailController::class);
+
+          //CRUD Engeneering AHU 
+          Route::resource('engahus', EngAHUController::class);
+
+          //CRUD Engeneering Chiller 
+          Route::resource('engchillers', EngChillerController::class);
+
+          //CRUD Engeneering Chiller 
+          Route::resource('englistriks', EngListrikController::class);
+          
+          //CRUD Engeneering PAM 
+          Route::resource('engpams', EngPamController::class);
+
+          //CRUD Engeneering DeepWheel 
+          Route::resource('engdeeps', EngDeepWheelController::class);
+
+          //CRUD Engeneering PompaSumpit 
+          Route::resource('engpompas', EngPompasumpitController::class);
+
+          //CRUD Engeneering GroundRoffTank 
+          Route::resource('enggrounds', EngGroundController::class);
+          
+          //CRUD Finn Monthly AR Tenant 
+          Route::resource('monthlyartenants', MonthlyArTenant::class);
+
         // Akses form for user
         Route::get('/akses-form-user/{id}', [RoleController::class, 'aksesForm'])->name('akses-form');
         Route::post('/akses-form-user/{id}', [RoleController::class, 'storeAksesForm'])->name('akses-form');

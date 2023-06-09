@@ -20,7 +20,7 @@
             @foreach ($tenant_units as $key => $tu)
                 <tr>
                     <td>{{ $tu->unit->nama_unit }}</td>
-                    <td>{{ $tu->id_pemilik }}</td>
+                    <td>{{ $tu->pemilik->nama_pemilik }}</td>
                     <td>
                         {{-- <b>{{ $tu->id_periode_sewa }}</b> <br> --}}
                         {{ $tu->tgl_masuk }} - {{ $tu->tgl_keluar }}
