@@ -25,4 +25,9 @@ class Tower extends Model
     ];
 
     protected $dates = ['deleted_at'];
+
+    public function site()
+    {
+        return $this->hasOne(Site::class, 'id_site', 'id_site');
+    }
 }

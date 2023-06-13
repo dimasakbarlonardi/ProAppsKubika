@@ -122,7 +122,7 @@ class TenantUnitController extends Controller
     public function storeTenantUnit(Request $request)
     {
         $connTenantUnit = $this->setConnection(new TenantUnit());
-       
+
 
         $id_tenant_unit = $this->generateTenantUnitID($connTenantUnit);
 
@@ -144,7 +144,7 @@ class TenantUnitController extends Controller
         return redirect()->back();
     }
 
-    
+
 
     public function storeTenantMember(Request $request)
     {
@@ -253,7 +253,7 @@ class TenantUnitController extends Controller
         }
     }
 
-    public function editTenantKendaraan($id)        
+    public function editTenantKendaraan($id)
     {
 
         $connTenantKendaraan = $this->setConnection(new KendaraanTenant());
