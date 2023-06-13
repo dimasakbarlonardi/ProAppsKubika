@@ -291,8 +291,8 @@ Route::prefix('admin')->group(function () {
         // CRUD Work Priority
         Route::resource('workprioritys', WorkPriorityController::class);
 
-          // CRUD BayarNon
-          Route::resource('bayarnons', BayarnonController::class);
+        // CRUD BayarNon
+        Route::resource('bayarnons', BayarnonController::class);
 
         // Akses form for user
         Route::get('/akses-form-user/{id}', [RoleController::class, 'aksesForm'])->name('get-akses-form');
