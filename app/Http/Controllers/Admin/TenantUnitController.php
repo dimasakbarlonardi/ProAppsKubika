@@ -14,7 +14,7 @@ use App\Models\OwnerH;
 use App\Models\PeriodeSewa;
 use App\Models\StatusTinggal;
 use App\Models\Tenant;
-use App\Models\Tower;    
+use App\Models\Tower;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Models\Unit;
@@ -183,7 +183,7 @@ class TenantUnitController extends Controller
         $periodeSewa = $this->setConnection(new PeriodeSewa());
         $connOwner = $this->setConnection(new OwnerH());
 
-
+        $data['getCreateUnits'] = $this->getUnitIDFromTU();
         $data['id_tenant'] = $id;
         $data['units'] = $connUnit->get();
         $data['owners'] = $connOwner->get();
@@ -265,7 +265,7 @@ class TenantUnitController extends Controller
         $connTenantKendaraan = $this->setConnection(new KendaraanTenant());
         $connUnit = $this->setConnection(new Unit());
         $connJenisKendaraan = $this->setConnection(new JenisKendaraan());
-        
+
         // $periodeSewa = $this->setConnection(new PeriodeSewa());
         // $data['id_tenant'] = $id;
         $data['units'] = $connUnit->get();

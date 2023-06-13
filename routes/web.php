@@ -32,6 +32,8 @@ use App\Http\Controllers\Admin\KaryawanController;
 use App\Http\Controllers\Admin\KendaraanTenantController;
 use App\Http\Controllers\Admin\KepemilikanUnitController;
 use App\Http\Controllers\Admin\MemberTenantController;
+use App\Http\Controllers\Admin\OpenTicket;
+use App\Http\Controllers\Admin\OpenTicketController;
 use App\Http\Controllers\Admin\OwnerHController;
 use App\Http\Controllers\Admin\PenempatanController;
 use Illuminate\Support\Facades\Route;
@@ -228,35 +230,38 @@ Route::prefix('admin')->group(function () {
         // CRUD Jenis Request
         Route::resource('jenisrequests', JenisRequestController::class);
 
-         // CRUD Jenis Request
-         Route::resource('jenisrequests', JenisRequestController::class);
+        // CRUD Jenis Request
+        Route::resource('jenisrequests', JenisRequestController::class);
 
-         // CRUD Ruang Reservation
-         Route::resource('ruangreservations', RuangReservationController::class);
+        // CRUD Ruang Reservation
+        Route::resource('ruangreservations', RuangReservationController::class);
 
-         // CRUD Jenis Acara
-         Route::resource('jenisacaras', JenisAcaraController::class);
+        // CRUD Jenis Acara
+        Route::resource('jenisacaras', JenisAcaraController::class);
 
-         // CRUD Status Karyawan
-         Route::resource('statuskaryawans', StatusKaryawanController::class);
+        // CRUD Status Karyawan
+        Route::resource('statuskaryawans', StatusKaryawanController::class);
 
-          // CRUD Status Aktif Karyawan
-          Route::resource('statusaktifkaryawans', StatusAktifKaryawanController::class);
+        // CRUD Status Aktif Karyawan
+        Route::resource('statusaktifkaryawans', StatusAktifKaryawanController::class);
 
-          // CRUD Type Reservation
-          Route::resource('typereservations', TypeReservationController::class);
+        // CRUD Type Reservation
+        Route::resource('typereservations', TypeReservationController::class);
 
-          // CRUD Work Priority
-          Route::resource('workprioritys', WorkPriorityController::class);
+        // CRUD Work Priority
+        Route::resource('workprioritys', WorkPriorityController::class);
 
-          // CRUD BayarNon
-          Route::resource('bayarnons', BayarnonController::class);
-         
+        // CRUD BayarNon
+        Route::resource('bayarnons', BayarnonController::class);
+
         // Akses form for user
         Route::get('/akses-form-user/{id}', [RoleController::class, 'aksesForm'])->name('akses-form');
         Route::post('/akses-form-user/{id}', [RoleController::class, 'storeAksesForm'])->name('akses-form');
 
         Route::get('/get-nav/{id}', [RoleController::class, 'getNavByRole'])->name('getNav');
+
+        // CRUD Open Ticket
+        Route::resource('/open-tickets', OpenTicketController::class);
     });
 });
 
