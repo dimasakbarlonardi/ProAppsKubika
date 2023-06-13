@@ -46,6 +46,8 @@ use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\OffBoardingKepemilikanUnitController;
 use App\Http\Controllers\Admin\OffBoardingTenantUnitController;
 use App\Http\Controllers\Admin\OfficeManagementController;
+use App\Http\Controllers\Admin\OpenTicket;
+use App\Http\Controllers\Admin\OpenTicketController;
 use App\Http\Controllers\Admin\OwnerHController;
 use App\Http\Controllers\Admin\PenempatanController;
 use App\Http\Controllers\Admin\PerhitDendaController;
