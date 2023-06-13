@@ -227,6 +227,20 @@
                             </div>
                         </div>
                     </div>
+                    <div class="mb-3">
+                        <div class="col-6">
+                            <label class="form-label">Status Kawin</label>
+                            <select class="form-control" name="id_status_kawin" id="id_status_kawin" required>
+                                <option selected disabled>-- Pilih Status Kawin --</option>
+                                @foreach ($statuskawins as $statuskawin)
+                                    <option value="{{ $statuskawin->id_status_kawin }}"
+                                        @if (old('id_status_kawin') == $statuskawin->id_status_kawin) selected @endif>
+                                        {{ $statuskawin->status_kawin }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
                 </div>
                 <div class="penjamin mt-5" id="penjamin">
                     <h5>Penjamin</h5>

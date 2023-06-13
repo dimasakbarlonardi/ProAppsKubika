@@ -46,6 +46,8 @@ use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\OffBoardingKepemilikanUnitController;
 use App\Http\Controllers\Admin\OffBoardingTenantUnitController;
 use App\Http\Controllers\Admin\OfficeManagementController;
+use App\Http\Controllers\Admin\OpenTicket;
+use App\Http\Controllers\Admin\OpenTicketController;
 use App\Http\Controllers\Admin\OwnerHController;
 use App\Http\Controllers\Admin\PenempatanController;
 use App\Http\Controllers\Admin\PerhitDendaController;
@@ -232,7 +234,7 @@ Route::prefix('admin')->group(function () {
         Route::get('unit-by-id/{id}', [KepemilikanUnitController::class, 'unitByID'])->name('unit-by-id');
         Route::get('/unit-filter', [KepemilikanUnitController::class, 'unitdetail']);
         Route::post('kepemilikans', [KepemilikanUnitController::class, 'destroy'])->name('destroy');
-        
+
 
         // CRUD Karyawan
         Route::resource('karyawans', KaryawanController::class);
