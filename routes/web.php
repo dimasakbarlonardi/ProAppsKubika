@@ -303,175 +303,29 @@ Route::prefix('admin')->group(function () {
         // CRUD Work Priority
         Route::resource('workprioritys', WorkPriorityController::class);
 
-        // CRUD BayarNon
-        Route::resource('bayarnons', BayarnonController::class);
-
-        // CRUD IPLType
-        Route::resource('ipltypes', IPLTypeController::class);
-
-        // CRUD Utility
-        Route::resource('utilitys', UtilityController::class);
-
-        // CRUD JenisDenda
-        Route::resource('jenisdendas', JenisDendaController::class);
-
-        //CRUD Perhit Denda
-        Route::resource('perhitdendas', PerhitDendaController::class);
-
-        //CRUD Reminder Letter
-        Route::resource('reminders', ReminderLetterController::class);
-
-        //CRUD Notification
-        Route::resource('notifications', NotificationController::class);
-
-        //CRUD Room
-        Route::resource('rooms', RoomController::class);
-
-        //CRUD Checklist AHU H
-        Route::resource('checklistahus', ChecklistAhuHController::class);
-        Route::get('/checklist-filter-ahu', [ChecklistAhuHController::class, 'filterByNoChecklist']);
-
-        //CRUD Checklist AHU Detail
-        Route::resource('ahudetails', ChecklistAhuDetailController::class);
-
-        //CRUD Engeneering AHU 
-        Route::resource('engahus', EngAHUController::class);
-
-        //CRUD Engeneering Chiller 
-        Route::resource('engchillers', EngChillerController::class);
-
-        //CRUD Engeneering Listrik 
-        Route::resource('englistriks', EngListrikController::class);
-
-        //CRUD Engeneering PAM 
-        Route::resource('engpams', EngPamController::class);
-
-        //CRUD Engeneering DeepWheel 
-        Route::resource('engdeeps', EngDeepWheelController::class);
-
-        //CRUD Engeneering PompaSumpit 
-        Route::resource('engpompas', EngPompasumpitController::class);
-
-        //CRUD Engeneering GroundRoffTank 
-        Route::resource('enggrounds', EngGroundController::class);
-
-        //CRUD Engeneering Pemadam 
-        Route::resource('engpemadams', EngPemadamController::class);
-
-        //CRUD Engeneering Putr 
-        Route::resource('engputrs', EngPutrController::class);
-
-        //CRUD Engeneering Gas 
-        Route::resource('enggases', EngGasController::class);
-
-        //CRUD HK Toilet 
-        Route::resource('toilets', ToiletController::class);
-
-        //CRUD HK OfficeManagemet 
-        Route::resource('officemanagements', OfficeManagementController::class);
-
-        //CRUD HK Lift 
-        Route::resource('lifts', LiftController::class);
-
-        //CRUD HK Floor 
-        Route::resource('hkfloors', HKFloorController::class);
-
-        //CRUD HK Koridor 
-        Route::resource('hkkoridors', HKKoridorController::class);
-
-        //CRUD HK TanggaDarurat 
-        Route::resource('hktanggadarurats', HKTanggaDaruratController::class);
-
-        //CRUD Finn Monthly AR Tenant 
-        Route::resource('monthlyartenants', MonthlyArTenant::class);
-
-        //CRUD Checklist Chiller 
-        Route::resource('checklistchillers', ChecklistChillerHController::class);
-        Route::get('/checklist-filter-chiller ', [ChecklistChillerHController::class, 'filterByNoChecklist']);
-
-        //CRUD Checklist Chiller 
-        Route::resource('checklistchillers', ChecklistChillerHController::class);
-
-        //CRUD Checklist Listrik 
-        Route::resource('checklistlistriks', ChecklistListrikHController::class);
-        Route::get('/checklist-filter-listrik', [ChecklistListrikHController::class, 'filterByNoChecklist']);
-
-        //CRUD Checklist Pompa Sumpit 
-        Route::resource('checklistpompasumpits', ChecklistPompaSumpitHController::class);
-        Route::get('/checklist-filter-pompasumpit', [ChecklistPompaSumpitHController::class, 'filterByNoChecklist']);
-
-        //CRUD Checklist GroundRoof 
-        Route::resource('checklistgroundroofs', ChecklistGroundRoofHController::class);
-        Route::get('/checklist-filter-groundroof', [ChecklistGroundRoofHController::class, 'filterByNoChecklist']);
-
-        //CRUD Checklist Gas 
-        Route::resource('checklistgases', ChecklistGasHController::class);
-        Route::get('/checklist-filter-gas', [ChecklistGasHController::class, 'filterByNoChecklist']);
-
-        //CRUD Checklist Genset 
-        Route::resource('checklistgensets', ChecklistGensetHController::class);
-        Route::get('/checklist-filter-genset', [ChecklistGensetHController::class, 'filterByNoChecklist']);
-
-        //CRUD Checklist Pemadam 
-        Route::resource('checklistpemadams', ChecklistPemadamHController::class);
-        Route::get('/checklist-filter-pemadam', [ChecklistPemadamHController::class, 'filterByNoChecklist']);
-
-        //CRUD Checklist PUTR 
-        Route::resource('checklistputrs', ChecklistPutrHController::class);
-        Route::get('/checklist-filter-putr', [ChecklistPutrHController::class, 'filterByNoChecklist']);
-
-        //CRUD Checklist Solar 
-        Route::resource('checklistsolars', ChecklistSolarHController::class);
-        Route::get('/checklist-filter-solar', [ChecklistSolarHController::class, 'filterByNoChecklist']);
-
-        //CRUD Checklist Temperatur 
-        Route::resource('checklisttemperaturs', ChecklistTemperaturHController::class);
-        Route::get('/checklist-filter-temperatur', [ChecklistTemperaturHController::class, 'filterByNoChecklist']);
-
-        //CRUD Checklist Toilet 
-        Route::resource('checklisttoilets', ChecklistToiletHController::class);
-        Route::get('/checklist-filter-toilet', [ChecklistToiletHController::class, 'filterByNoChecklist']);
-
-        //CRUD Checklist Office Management 
-        Route::resource('checklistoffices', ChecklistOfficeManagementHController::class);
-        Route::get('/checklist-filter-office_management', [ChecklistOfficeManagementHController::class, 'filterByNoChecklist']);
-
-        //CRUD Checklist Lift 
-        Route::resource('checklistlifts', ChecklistLiftHController::class);
-        Route::get('/checklist-filter-lift', [ChecklistLiftHController::class, 'filterByNoChecklist']);
-
-        //CRUD Checklist Floor 
-        Route::resource('checklistfloors', ChecklistFloorHController::class);
-        Route::get('/checklist-filter-floor', [ChecklistFloorHController::class, 'filterByNoChecklist']);
-
-        //CRUD Checklist Tangga Darurat 
-        Route::resource('checklisttanggadarurats', ChecklistTanggaDaruratHController::class);
-        Route::get('/checklist-filter-tangga_darurat', [ChecklistTanggaDaruratHController::class, 'filterByNoChecklist']);
-
-        //CRUD Checklist Koridor 
-        Route::resource('checklistkoridors', ChecklistKoridorHController::class);
-        Route::get('/checklist-filter-koridor', [ChecklistKoridorHController::class, 'filterByNoChecklist']);
+          // CRUD BayarNon
+          Route::resource('bayarnons', BayarnonController::class);
 
         // Akses form for user
         Route::get('/akses-form-user/{id}', [RoleController::class, 'aksesForm'])->name('akses-form');
         Route::post('/akses-form-user/{id}', [RoleController::class, 'storeAksesForm'])->name('akses-form');
 
-        //CRUD OffBoarding Tenant Unit 
+        //CRUD OffBoarding Tenant Unit
         Route::resource('offtenantunits', OffBoardingTenantUnitController::class);
-        
-        //CRUD OffBoarding Kepemilikan Unit 
+
+        //CRUD OffBoarding Kepemilikan Unit
         Route::resource('offkepemilkanunits', OffBoardingKepemilikanUnitController::class);
-        
+
         Route::get('/get-jatuh-tempo', [OffBoardingTenantUnitController::class, 'jatuhtempo']);
-        
+
         Route::get('/get-nav/{id}', [RoleController::class, 'getNavByRole'])->name('getNav');
-        
-        //CRUD OffBoarding Owner 
+
+        //CRUD OffBoarding Owner
         Route::resource('offowners', OffBoardingOwnerController::class);
         Route::get('ownerunit-by-id/{id}', [OffBoardingOwnerController::class, 'ownerByID'])->name('owner-by-id');
         Route::get('pic-by-id/{id}', [OffBoardingOwnerController::class, 'picByID'])->name('pic-by-id');
-        
-        //CRUD OffBoarding Tenant 
+
+        //CRUD OffBoarding Tenant
         Route::resource('offtenants', OffBoardingTenantController::class);
         Route::get('tenant-unit-by-id/{id}', [OffBoardingTenantController::class, 'tenantByID'])->name('owner-by-id');
         Route::get('penjamin-by-id/{id}', [OffBoardingTenantController::class, 'penjaminByID'])->name('penjamin-by-id');
