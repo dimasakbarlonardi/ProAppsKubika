@@ -313,11 +313,7 @@ class WorkOrderController extends Controller
 
         $user = $request->session()->get('user');
         $wo = $connWO->find($id);
-
-        $createNotif = $this->createNotif($connNotif, $id, $user, $wo);
-        $createNotif->notif_message = 'Work Order sudah dikerjakan, mohon periksa kembali pekerjaan kami';
-        $createNotif->receiver = $wo->Ticket->Tenant->User->id_user;
-        $createNotif->save();
+        $getUser = $wo->WorkRequest->Ticket->Tenant->User;
 
         $wo->status_wo = 'WORK DONE';
         $wo->save();
