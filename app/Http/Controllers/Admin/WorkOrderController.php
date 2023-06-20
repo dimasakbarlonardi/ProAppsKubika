@@ -261,35 +261,31 @@ class WorkOrderController extends Controller
             $createNotif->notif_title = $wo->no_work_order;
         }
 
+        $notif = $connNotif->where('models', 'WorkOrder')
+            ->where('is_read', 0)
+            ->where('id_data', $id)
+            ->first();
+
+        if (!$notif) {
+            $createNotif = $connNotif;
+            $createNotif->sender = $user->id_user;
+            $createNotif->is_read = 0;
+            $createNotif->models = 'WorkOrder';
+            $createNotif->id_data = $id;
+
+            if (!$wo->sign_approve_tr) {
+                $createNotif->division_receiver = 4;
+            }
+
+            $createNotif->notif_title = $wo->no_work_order;
+            $createNotif->notif_message = 'Work Order sudah dikerjakan, mohon periksa kembali pekerjaan kami';
+            $createNotif->save();
+        }
+
         $wo->status_wo = 'WORK DONE';
         $wo->save();
 
-
-
-        // if (!$checkNotif) {
-        //     $connNotif->create([
-        //         'receiver' => $getUser->id_user,
-        //         'notif_title' => $wo->no_work_order,
-        //         'notif_message' => 'Work Order sudah dikerjakan, mohon periksa kembali pekerjaan kami'
-        //     ]);
-        // }
-        // dd('out');
-
-        return response()->json(['status' => 'ok']);
-    }
-
-    public function workDone(Request $request, $id)
-    {
-        $connUser = ConnectionDB::setConnection(new User());
-        $connWO = ConnectionDB::setConnection(new WorkOrder());
-        $connNotif = ConnectionDB::setConnection(new Notifikasi());
-
-        $sender = $connUser->where('id_role_hdr', 10)->first();
-
-        $wo = $connWO->find($id);
-        $getUser = $wo->WorkRequest->Ticket->Tenant->User;
-
-        $notif = $connNotif->where('models', 'WorkOrder')
+        $checkNotif = $connNotif->where('models', 'WorkOrder')
             ->where('is_read', 0)
             ->where('id_data', $id_data)
             ->first();
@@ -324,26 +320,6 @@ class WorkOrderController extends Controller
 
             return redirect()->back();
         }
-
-        return response()->json(['status' => 'ok']);
-    }
-
-    public function done($id)
-    {
-        $connWO = ConnectionDB::setConnection(new WorkOrder());
-        $connTicket = ConnectionDB::setConnection(new OpenTicket());
-        $connWR = ConnectionDB::setConnection(new WorkRequest());
-
-        $wo = $connWO->find($id);
-        $ticket = $connTicket->where('no_tiket', $wo->no_tiket)->first();
-        $wr = $connWR->where('no_work_request', $wo->no_work_request)->first();
-
-        $wo->status_wo = 'DONE';
-        $wo->save();
-        $ticket->status_request = 'DONE';
-        $ticket->save();
-        $wr->status_request = 'DONE';
-        $wr->save();
 
         Alert::success('Berhasil', 'Berhasil menselesaikan WO');
 
