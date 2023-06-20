@@ -48,19 +48,21 @@
 
                             </div>
 
-                            <div class="row gx-card mx-0 border-bottom border-200">
-                                <div class="col-9 py-3">
-                                    <input class="form-control" type="text" id="input_detil_pekerjaan">
-                                </div>
-                                <div class="col-3 py-3 text-end">
-                                    <div class="input-group flex-nowrap">
-                                        <span class="input-group-text" id="addon-wrapping">Rp</span>
-                                        <input class="form-control" type="number" id="input_biaya_alat" />
+                            @if ($wr->status_request != 'WORK ORDER')
+                                <div class="row gx-card mx-0 border-bottom border-200">
+                                    <div class="col-9 py-3">
+                                        <input class="form-control" type="text" id="input_detil_pekerjaan">
                                     </div>
-                                    <button type="button" class="btn btn-primary mt-3" id="btnAddService"
-                                        onclick="onAddService()">Tambah</button>
+                                    <div class="col-3 py-3 text-end">
+                                        <div class="input-group flex-nowrap">
+                                            <span class="input-group-text" id="addon-wrapping">Rp</span>
+                                            <input class="form-control" type="number" id="input_biaya_alat" />
+                                        </div>
+                                        <button type="button" class="btn btn-primary mt-3" id="btnAddService"
+                                            onclick="onAddService()">Tambah</button>
+                                    </div>
                                 </div>
-                            </div>
+                            @endif
 
                             <div class="row fw-bold gx-card mx-0">
                                 <div class="col-12 col-md-4 py-2 text-end text-900">Total</div>
@@ -183,10 +185,13 @@
                                     <button type="submit" class="btn btn-primary w-100" name="status_request"
                                         value="ON WORK">Kerjakan</button>
                                 @elseif ($wr->status_request == 'ON WORK')
-                                    <button type="submit" class="btn btn-primary w-100" name="status_request" value="WORK DONE">Pekerjaan Selesai</button>
+                                    <button type="submit" class="btn btn-primary w-100" name="status_request"
+                                        id="btn_pekerjaan_selesai" value="WORK DONE">Pekerjaan Selesai</button>
                                 @endif
-                                <button type="button" class="btn btn-primary w-100" id="btn_request_wo">Ajukan Work
-                                    Order</button>
+                                @if ($wr->status_request != 'WORK ORDER')
+                                    <button type="button" class="btn btn-primary w-100" id="btn_request_wo">Ajukan Work
+                                        Order</button>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -295,6 +300,7 @@
                 $('#btn_update').css('display', 'none');
                 $('#deskripsi_wr_section').css('display', 'block');
                 $('#select_id_bayarnon').css('display', 'block');
+                $('#btn_pekerjaan_selesai').css('display', 'none');
                 $('#select_estimasi_pengerjaan').css('display', 'block');
                 $('#btn_request_wo').css('display', 'block');
             } else {
@@ -302,6 +308,7 @@
                 $('#btn_update').css('display', 'block')
                 $('#btn_request_wo').css('display', 'none')
                 $('#select_id_bayarnon').css('display', 'none');
+                $('#btn_pekerjaan_selesai').css('display', 'block');
                 $('#select_estimasi_pengerjaan').css('display', 'none');
             }
         }

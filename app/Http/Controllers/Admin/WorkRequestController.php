@@ -44,7 +44,7 @@ class WorkRequestController extends Controller
         $connTicket = ConnectionDB::setConnection(new OpenTicket());
 
         $data['work_relations'] = $connWorkRelation->get();
-        $data['tickets'] = $connTicket->get();
+        $data['tickets'] = $connTicket->where('status_request', 'PROSES KE WR')->get();
 
         return view('AdminSite.WorkRequest.create', $data);
     }

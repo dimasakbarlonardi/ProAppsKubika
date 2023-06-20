@@ -97,8 +97,23 @@
                                         <div class="">
                                             <span
                                                 class="badge rounded-pill badge-subtle-primary">{{ $wr->workRelation->work_relation }}</span>
-                                            <span
-                                                class="badge rounded bg-info red__bg-1000">{{ $wr->status_request }}</span>
+                                            @switch($wr->status_request)
+                                                @case('PENDING')
+                                                    <span
+                                                        class="badge rounded bg-warning red__bg-1000">{{ $wr->status_request }}</span>
+                                                @break
+                                                @case('WORK ORDER')
+                                                    <span
+                                                        class="badge rounded bg-info red__bg-1000">{{ $wr->status_request }}</span>
+                                                @break
+                                                @case('DONE')
+                                                    <span
+                                                        class="badge rounded bg-success red__bg-1000">{{ $wr->status_request }}</span>
+                                                @break
+
+                                                @default
+                                            @endswitch
+
                                         </div>
                                     </div>
                                 </div>
