@@ -1,0 +1,135 @@
+@extends('layouts.master')
+
+@section('css')
+    <script src="https://cdn.tiny.cloud/1/zqt3b05uqsuxthyk5xvi13srgf4ru0l5gcvuxltlpgm6rcki/tinymce/6/tinymce.min.js"
+        referrerpolicy="origin"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" />
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+@endsection
+
+@section('content')
+    <form action="{{ route('work-requests.store') }}" method="post" style="display: inline">
+        @csrf
+        <div class="row g-3">
+            <div class="col-xxl-12 col-xl-8">
+                <div class="card">
+                    <div class="card-header d-flex flex-between-center">
+                        <button class="btn btn-falcon-default btn-sm" type="button">
+                            <span class="fas fa-arrow-left"></span>
+                        </button>
+                    </div>
+                </div>
+                <div class="card mt-3" style="display: none" id="ticket_detail">
+                    <div class="card-body">
+                        <div class="request">
+                            <div class="d-md-flex d-xl-inline-block d-xxl-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="avatar avatar-2xl">
+                                        <img class="rounded-circle" src="/assets/img/team/1-thumb.png" alt="" />
+                                    </div>
+                                    <p class="mb-0"><a class="fw-semi-bold mb-0 text-800"
+                                            href="../../app/support-desk/contact-details.html">Emma Waston</a>
+                                        <a class="mb-0 fs--1 d-block text-500"
+                                            href="mailto:emma@watson.com">emma@watson.com</a>
+                                    </p>
+                                </div>
+                                <p class="mb-0 fs--2 fs-sm--1 fw-semi-bold mt-2 mt-md-0 mt-xl-2 mt-xxl-0 ms-5">01 March,
+                                    2020<span class="mx-1">|</span><span class="fst-italic">8:40 AM (1 Day ago)</span></p>
+                            </div>
+                        </div>
+                        <div class="pt-4">
+                            <h6 class="mb-3 fw-semi-bold text-1000" id="ticket_detail_heading"></h6>
+                            <div id="ticket_detail_desc">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                {{-- <div class="card mt-3">
+                    <div class="card">
+                        <div class="card-header d-flex flex-between-center">
+                            <h6 class="mb-0">Deskripsi Work Request</h6>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <textarea class="form-control" name="deskripsi_wr" id="myeditorinstance" cols="30" rows="10"></textarea>
+                    </div>
+                </div> --}}
+            </div>
+
+            <div class="col-xxl-3 col-xl-4">
+                <div class="row g-3 position-sticky top-0">
+                    <div class="col-md-6 col-xl-12 rounded-3">
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="mb-0">Properties</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-4 mt-n2"><label class="mb-1">Tickets</label>
+                                    <select name="no_tiket" class="form-select form-select-sm" id="select_ticket">
+                                        <option disabled selected>--Pilih Ticket ---</option>
+                                        @foreach ($tickets as $ticket)
+                                            <option value="{{ $ticket->id }}">{{ $ticket->no_tiket }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="mb-4 mt-n2"><label class="mb-1">Work Relation</label>
+                                    <select name="id_work_relation" class="form-select form-select-sm">
+                                        <option disabled selected>--Pilih Work Relation ---</option>
+                                        @foreach ($work_relations as $work_relation)
+                                            <option value="{{ $work_relation->id_work_relation }}">
+                                                {{ $work_relation->work_relation }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-footer border-top border-200 py-x1">
+                            <button type="submit" class="btn btn-primary w-100">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+@endsection
+
+@section('script')
+    <script src="https://cdn.tiny.cloud/1/zqt3b05uqsuxthyk5xvi13srgf4ru0l5gcvuxltlpgm6rcki/tinymce/6/tinymce.min.js"
+        referrerpolicy="origin"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.full.min.js"></script>
+
+    <script>
+        tinymce.init({
+            selector: 'textarea#myeditorinstance', // Replace this CSS selector to match the placeholder element for TinyMCE
+            plugins: 'code table lists',
+            toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist | code | table'
+        });
+    </script>
+    <script>
+        $('document').ready(function() {
+            $('#select_ticket').select2({
+                theme: 'bootstrap-5'
+            });
+
+            $('#select_ticket').on('change', function() {
+                var id = $(this).val()
+                $.ajax({
+                    url: '/admin/open-tickets/' + id,
+                    data: {
+                        'data_type': 'json'
+                    },
+                    type: 'GET',
+                    success: function(data) {
+                        $('#ticket_detail').css('display', 'block')
+                        $('#ticket_detail_desc').html(data.data.deskripsi_request)
+                        $('#ticket_detail_heading').html(data.data.judul_request)
+                        console.log(data.data)
+                    }
+                })
+                console.log($(this).val());
+            })
+        })
+    </script>
+@endsection
