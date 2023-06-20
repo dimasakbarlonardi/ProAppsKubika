@@ -1,5 +1,10 @@
 @extends('layouts.master')
 
+@section('css')
+    <script src="https://cdn.tiny.cloud/1/zqt3b05uqsuxthyk5xvi13srgf4ru0l5gcvuxltlpgm6rcki/tinymce/6/tinymce.min.js"
+        referrerpolicy="origin"></script>
+@endsection
+
 @section('content')
     <div class="row g-3">
         <div class="col {{ $user->user_category == 2 ? '-xxl-12 col-xl-8' : '' }}">
@@ -12,95 +17,106 @@
             </div>
             <div class="card mt-3">
                 <div class="card-header bg-light">
-                    <h5><span class="fas fa-envelope me-2"></span><span>Received a broken TV</span></h5>
+                    <h5><span class="fas fa-ticket-alt me-2"></span><span> {{ $ticket->no_tiket }}</span></h5>
                 </div>
                 <div class="card-body">
-                    <div class="request border-bottom mb-5 pb-5">
+                    <div class="request">
                         <div
                             class="d-md-flex d-xl-inline-block d-xxl-flex align-items-center justify-content-between mb-x1">
                             <div class="d-flex align-items-center gap-2">
                                 <div class="avatar avatar-2xl">
-                                    <img class="rounded-circle" src="/assets/img/team/1-thumb.png" alt="" />
+                                    <img class="rounded-circle"
+                                        src="{{ url($ticket->Tenant->profile_picture) }}"
+                                        alt="" />
                                 </div>
                                 <p class="mb-0"><a class="fw-semi-bold mb-0 text-800"
-                                        href="../../app/support-desk/contact-details.html">Emma Waston</a><span
-                                        class="fs--2 text-800 fw-normal mx-2">via email</span><a
-                                        class="mb-0 fs--1 d-block text-500"
-                                        href="mailto:emma@watson.com">emma@watson.com</a>
+                                        href="../../app/support-desk/contact-details.html">{{ $ticket->Tenant->nama_tenant }}</a>
+                                    <a class="mb-0 fs--1 d-block text-500"
+                                        href="mailto:emma@watson.com">{{ $ticket->Tenant->email_tenant }}</a>
                                 </p>
                             </div>
-                            <p class="mb-0 fs--2 fs-sm--1 fw-semi-bold mt-2 mt-md-0 mt-xl-2 mt-xxl-0 ms-5">01 March,
-                                2020<span class="mx-1">|</span><span class="fst-italic">8:40 AM (1 Day ago)</span><span
-                                    class="fas fa-star ms-2 text-warning"></span></p>
+                            <p class="mb-0 fs--2 fs-sm--1 fw-semi-bold mt-2 mt-md-0 mt-xl-2 mt-xxl-0 ms-5">
+                                {{ HumanDate($ticket->created_at) }}
+                                <span class="mx-1">|</span><span class="fst-italic">{{ HumanTime($ticket->created_at) }}
+                                    ({{ TimeAgo($ticket->created_at) }})</span>
+                            </p>
                         </div>
                         <div>
-                            <h6 class="mb-3 fw-semi-bold text-1000">Improve in A purposed Manner</h6>
-                            <p>Hi</p>
-                            <p>The television I ordered from your site was delivered with a cracked screen. I need some help
-                                with a refund or a replacement.</p>
-                            <p>Here is the order number FD07062010</p>
-                            <p class="mb-0">Thanks</p>
-                            <p class="mb-0">Emma Watson</p>
-                            <div class="p-x1 bg-light rounded-3 mt-3">
-                                <div class="d-inline-flex flex-column">
-                                    <div class="border p-2 rounded-3 d-flex bg-white dark__bg-1000 fs--1 mb-2"><span
-                                            class="fs-1 far fa-image"></span><span class="ms-2 me-3">broken_tv_solve.jpg
-                                            (873kb)</span><a class="text-300 ms-auto" href="#!"
-                                            data-bs-toggle="tooltip" data-bs-placement="right" title="Download"><span
-                                                class="fas fa-arrow-down"></span></a></div>
-                                </div>
-                                <hr class="my-x1" />
-                                <div class="row flex-between-center gx-4 gy-2">
-                                    <div class="col-auto">
-                                        <p class="fs--1 text-1000 mb-sm-0 font-sans-serif fw-medium mb-0"><span
-                                                class="fas fa-link me-2"></span>1 files attached</p>
+                            <h6 class="mb-3 fw-semi-bold text-1000">{{ $ticket->judul_request }}</h6>
+                            {!! $ticket->deskripsi_request !!}
+                            @if ($ticket->upload_image)
+                                <div class="px-x1 py-3 bg-light">
+                                    <div class="d-inline-flex flex-column">
+                                        <div class="border p-2 rounded-3 d-flex bg-white dark__bg-1000 fs--1 mb-2">
+                                            <a class="ms-auto text-decoration-none" target="_blank"
+                                                href="/uploads/image/ticket/{{ $ticket->upload_image }}">
+                                                <span class="fs-1 far fa-image"></span>
+                                                <span class="ms-2 me-3">{{ $ticket->upload_image }}</span>
+                                            </a>
+                                        </div>
                                     </div>
-                                    <div class="col-auto"><button class="btn btn-falcon-default btn-sm"><span
-                                                class="fas fa-file-download me-2"></span>Download all</button></div>
                                 </div>
+                            @endif
+                        </div>
+                        @if ($user->user_category == 2 && $ticket->status_respon == null)
+                            <div class="card-footer text-end" id="preview-footer">
+                                <button class="btn btn-falcon-default btn-sm fs--1" type="button" onclick="onReply()"
+                                    id="btnReply">
+                                    <span class="fas fa-reply"></span>
+                                    <span class="d-none d-sm-inline-block ms-1">Reply</span>
+                                </button>
                             </div>
-
-                        </div>
-                        <div class="card-footer text-end" id="preview-footer">
-                            <button class="btn btn-falcon-default btn-sm fs--1" type="button" data-bs-toggle="collapse"
-                                data-bs-target="#previewMailForm" aria-expanded="false" aria-controls="previewMailForm">
-                                <span class="fas fa-reply"></span>
-                                <span class="d-none d-sm-inline-block ms-1">Reply</span>
-                            </button>
-                        </div>
+                        @endif
                     </div>
                     @if ($ticket->status_respon != null)
-                        <div class="response">
-                            <div
-                                class="d-md-flex d-xl-inline-block d-xxl-flex align-items-center justify-content-between mb-x1">
-                                <div class="d-flex align-items-center gap-2">
-                                    <div class="avatar avatar-2xl">
-                                        <img class="rounded-circle" src="/assets/img/team/1-thumb.png" alt="" />
-                                    </div>
-                                    <p class="mb-0"><a class="fw-semi-bold mb-0 text-800"
-                                            href="../../app/support-desk/contact-details.html">Mike</a><span
-                                            class="fs--2 text-800 fw-normal mx-2">replied</span><a
-                                            class="mb-0 fs--1 d-block text-500"
-                                            href="mailto:mike@support.com">mike@support.com</a></p>
+                        <div class="my-5 position-relative text-center">
+                            <hr class="position-absolute top-50 border-300 w-100 my-0" />
+                            <span class="position-relative bg-white dark__bg-card-dark px-3 z-index-1">
+                                <button
+                                    class="btn btn-sm btn-outline-secondary rounded-pill border-300 px-lg-5">Reply</button>
+                            </span>
+                        </div>
+                        <div
+                            class="d-md-flex d-xl-inline-block d-xxl-flex align-items-center justify-content-between mb-x1">
+                            <div class="d-flex align-items-center gap-2">
+                                <div class="avatar avatar-2xl">
+                                    <img class="rounded-circle"
+                                        src="{{ $ticket->TenantRelation->Karyawan->profile_picture }}"
+                                        alt="" />
                                 </div>
-                                <p class="mb-0 fs--2 fs-sm--1 fw-semi-bold mt-2 mt-md-0 mt-xl-2 mt-xxl-0 ms-5">01 March,
-                                    2020<span class="mx-1">|</span><span class="fst-italic">8:40 AM (1 Day
-                                        ago)</span><span class="fas fa-star ms-2 text-warning"></span></p>
+                                <p class="mb-0"><a class="fw-semi-bold mb-0 text-800"
+                                        href="../../app/support-desk/contact-details.html">{{ $ticket->TenantRelation->Karyawan->nama_karyawan }}</a>
+                                    <a class="mb-0 fs--1 d-block text-500"
+                                        href="mailto:{{ $ticket->TenantRelation->Karyawan->email_karyawan }}">{{ $ticket->TenantRelation->Karyawan->email_karyawan }}</a>
+                                </p>
                             </div>
-                            <div class="border-bottom mb-5 pb-5">
-                                <h6 class="mb-3 fw-semi-bold text-1000">Television with cracked screen</h6>
-                                <p>Hi Emma Waston,</p>
-                                <p>I am sorry to hear about your experience with our TV. It sounds like you received a
-                                    damaged
-                                    product. Please provide me with the order number and we will work to resolve this issue
-                                    as
-                                    quickly as possible.</p>
-                                <p>We are here to help!</p>
-                                <p class="mb-0">Thanks</p>
-                                <p class="mb-0">Customer Support</p>
-                            </div>
+                            <p class="mb-0 fs--2 fs-sm--1 fw-semi-bold mt-2 mt-md-0 mt-xl-2 mt-xxl-0 ms-5">
+                                {{ HumanDate($ticket->tgl_respon_tiket) }}
+                                <span class="mx-1">|</span>
+                                <span class="fst-italic">{{ HumanTime($ticket->jam_respon) }} ({{ TimeAgo($ticket->tgl_respon_tiket . ' ' . $ticket->jam_respon) }})</span>
+                            </p>
+                        </div>
+                        <div>
+                            <h6 class="mb-3 fw-semi-bold text-1000">{{ $ticket->judul_request }}</h6>
+                            {!! $ticket->deskripsi_respon !!}
                         </div>
                     @endif
+                    <div class="response" style="display: none" id="response">
+                        <div class="my-5 position-relative text-center">
+                            <hr class="position-absolute top-50 border-300 w-100 my-0" />
+                            <span class="position-relative bg-white dark__bg-card-dark px-3 z-index-1">
+                                <button
+                                    class="btn btn-sm btn-outline-secondary rounded-pill border-300 px-lg-5">Reply</button>
+                            </span>
+                        </div>
+                        <div class="border-bottom mb-5 pb-5 text-right">
+                            <form action="{{ route('updateRequestTicket', $ticket->id) }}" method="post">
+                                @csrf
+                                <textarea class="form-control" name="deskripsi_respon" id="myeditorinstance" cols="30" rows="10"></textarea>
+                                <button type="submit" class="btn btn-success mt-5">Kirim</button>
+                            </form>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -120,39 +136,26 @@
                                         <select name="id_jenis_request" class="form-select form-select-sm">
                                             <option disabled selected>--Pilih Jenis Request---</option>
                                             @foreach ($jenis_requests as $request)
-                                                <option {{ $ticket->id_jenis_request == $request->id_jenis_request ? 'selected' : '' }} value="{{ $request->id_jenis_request }}">
+                                                <option
+                                                    {{ $ticket->id_jenis_request == $request->id_jenis_request ? 'selected' : '' }}
+                                                    value="{{ $request->id_jenis_request }}">
                                                     {{ $request->jenis_request }}</option>
                                             @endforeach
                                         </select>
                                     </div>
-                                    <div class="mb-2"><label class="mb-1 mt-2">Status</label>
-                                        <select name="status_request" class="form-select form-select-sm">
-                                            <option disabled selected>--Pilih Status---</option>
-                                            <option value="PENDING">Pending</option>
-                                            <option value="RESPONDED">Responded</option>
-                                            <option value="PROSES">Proses</option>
-                                            <option value="CLOSED">CLosed</option>
-                                            <option value="DONE">Done</option>
-                                        </select>
-                                    </div>
-                                    <div class="mb-2"><label class="mb-1 mt-2">Work Priority</label>
-                                        <select name="id_work_prior" class="form-select form-select-sm">
-                                            <option disabled selected>--Pilih Work Priority---</option>
-                                            @foreach ($work_priorities as $wp)
-                                                <option value="{{ $wp->id_work_priority }}">
-                                                    {{ $wp->work_priority }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    <div class="mb-2"><label class="mb-1 mt-2">Work Relation</label>
-                                        <select name="id_work_relation" class="form-select form-select-sm">
-                                            <option disabled selected>--Pilih Work Relation---</option>
-                                            @foreach ($work_relations as $relation)
-                                                <option value="{{ $relation->id_work_relation }}">
-                                                    {{ $relation->work_relation }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
+                                    @if ($ticket->status_request != 'PENDING')
+                                        <div class="mb-2"><label class="mb-1 mt-2">Status</label>
+                                            <select name="status_request" class="form-select form-select-sm">
+                                                <option disabled selected>--Pilih Status---</option>
+                                                <option {{ $ticket->status_request == 'PROSES' ? 'selected' : '' }}
+                                                    value="PROSES">Proses</option>
+                                                <option {{ $ticket->status_request == 'CLOSED' ? 'selected' : '' }}
+                                                    value="CLOSED">Closed</option>
+                                                <option {{ $ticket->status_request == 'DONE' ? 'selected' : '' }}
+                                                    value="DONE">Done</option>
+                                            </select>
+                                        </div>
+                                    @endif
                                 </div>
                                 <div class="card-footer border-top border-200 py-x1">
                                     <button class="btn btn-primary w-100">Update</button>
@@ -169,14 +172,14 @@
                                 <div class="row g-0 border-bottom pb-x1 mb-x1 align-items-sm-center align-items-xl-start">
                                     <div class="col-12 col-sm-auto col-xl-12 me-sm-3 me-xl-0">
                                         <div class="avatar avatar-3xl">
-                                            <img class="rounded-circle" src="../../assets/img/team/1.jpg"
+                                            <img class="rounded-circle" src="{{ url($ticket->Tenant->profile_picture) }}"
                                                 alt="" />
                                         </div>
                                     </div>
                                     <div class="col-12 col-sm-auto col-xl-12">
-                                        <p class="fw-semi-bold text-800 mb-0">Emma Watson</p><a
+                                        <p class="fw-semi-bold text-800 mb-0">{{ $ticket->Tenant->nama_tenant }}</p><a
                                             class="btn btn-link btn-sm p-0 fe-medium fs--1"
-                                            href="../../app/support-desk/contact-details.html">View more details</a>
+                                            href="#">View more details</a>
                                     </div>
                                 </div>
                                 <div class="row g-0 justify-content-lg-between">
@@ -184,11 +187,17 @@
                                         <div class="row">
                                             <div class="col-md-auto mb-4 mb-md-0 mb-xl-4">
                                                 <h6 class="mb-1">Email</h6><a class="fs--1"
-                                                    href="mailto:mattrogers@gmail.com">mattrogers@gmail.com</a>
+                                                    href="mailto:mattrogers@gmail.com">{{ $ticket->Tenant->email_tenant }}</a>
                                             </div>
                                             <div class="col-md-auto mb-4 mb-md-0 mb-xl-4">
                                                 <h6 class="mb-1">Phone Number</h6><a class="fs--1"
-                                                    href="tel:+6(855)747677">+6(855) 747 677</a>
+                                                    href="tel:+6(855)747677">{{ $ticket->Tenant->no_telp_tenant }}</a>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-auto mb-4 mb-md-0 mb-xl-4">
+                                                <h6 class="mb-1">Unit</h6><a class="fs--1"
+                                                    href="mailto:mattrogers@gmail.com">Lantai : {{ $ticket->Unit->floor->nama_lantai }}, {{ $ticket->Unit->nama_unit }}</a>
                                             </div>
                                         </div>
                                     </div>
@@ -204,4 +213,22 @@
             </div>
         @endif
     </div>
+@endsection
+
+@section('script')
+    <script src="https://cdn.tiny.cloud/1/zqt3b05uqsuxthyk5xvi13srgf4ru0l5gcvuxltlpgm6rcki/tinymce/6/tinymce.min.js"
+        referrerpolicy="origin"></script>
+    <script>
+        tinymce.init({
+            selector: 'textarea#myeditorinstance', // Replace this CSS selector to match the placeholder element for TinyMCE
+            plugins: 'code table lists',
+            toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist | code | table'
+        });
+    </script>
+    <script>
+        function onReply() {
+            $('#response').css('display', 'block')
+            $('#btnReply').css('display', 'none')
+        }
+    </script>
 @endsection

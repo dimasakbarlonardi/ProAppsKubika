@@ -14,10 +14,19 @@ class Role extends Model
 
     protected $fillable = [
         'nama_role',
+        'work_relation_id'
     ];
 
     public function AksesForm()
     {
         return $this->hasMany(AksesForm::class, 'role_id', 'id');
     }
+
+    public function WorkRelation()
+    {
+        return $this->hasOne(WorkRelation::class, 'id_work_relation', 'work_relation_id');
+    }
+
+    protected $dates = ['deleted_at'];
+
 }

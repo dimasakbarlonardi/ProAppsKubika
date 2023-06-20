@@ -14,7 +14,6 @@ class WorkRelation extends Model
     protected $primaryKey = 'id_work_relation';
 
     protected $fillable = [
-        'id_work_relation',
         'work_relation',
     ];
 
