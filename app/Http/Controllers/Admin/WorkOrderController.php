@@ -422,7 +422,7 @@ class WorkOrderController extends Controller
             $ticket->save();
 
             $wr->status_request = 'COMPLETE';
-            $wr->save();          
+            $wr->save();
 
             DB::commit();
         } catch (Exception $e) {
