@@ -56,6 +56,8 @@ class OpenTicketController extends Controller
         $user = $request->session()->get('user');
         $connTenant = ConnectionDB::setConnection(new Tenant());
         $connTU = ConnectionDB::setConnection(new TenantUnit());
+        $connJenisReq = ConnectionDB::setConnection(new JenisRequest());
+        $connTenant = ConnectionDB::setConnection(new Tenant());
 
         if ($user->user_category == 2) {
             $data['units'] = $connTU->get();
@@ -74,6 +76,7 @@ class OpenTicketController extends Controller
     public function store(Request $request)
     {
         $connOpenTicket = ConnectionDB::setConnection(new OpenTicket());
+        $connSystem = ConnectionDB::setConnection(new System());
         $connSystem = ConnectionDB::setConnection(new System());
         $connUnit = ConnectionDB::setConnection(new Unit());
 
