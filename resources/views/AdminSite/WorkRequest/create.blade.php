@@ -22,21 +22,8 @@
                 </div>
                 <div class="card mt-3" style="display: none" id="ticket_detail">
                     <div class="card-body">
-                        <div class="request">
-                            <div class="d-md-flex d-xl-inline-block d-xxl-flex align-items-center justify-content-between">
-                                <div class="d-flex align-items-center gap-2">
-                                    <div class="avatar avatar-2xl">
-                                        <img class="rounded-circle" src="/assets/img/team/1-thumb.png" alt="" />
-                                    </div>
-                                    <p class="mb-0"><a class="fw-semi-bold mb-0 text-800"
-                                            href="../../app/support-desk/contact-details.html">Emma Waston</a>
-                                        <a class="mb-0 fs--1 d-block text-500"
-                                            href="mailto:emma@watson.com">emma@watson.com</a>
-                                    </p>
-                                </div>
-                                <p class="mb-0 fs--2 fs-sm--1 fw-semi-bold mt-2 mt-md-0 mt-xl-2 mt-xxl-0 ms-5">01 March,
-                                    2020<span class="mx-1">|</span><span class="fst-italic">8:40 AM (1 Day ago)</span></p>
-                            </div>
+                        <div class="request" id="ticket_head">
+
                         </div>
                         <div class="pt-4">
                             <h6 class="mb-3 fw-semi-bold text-1000" id="ticket_detail_heading"></h6>
@@ -125,11 +112,52 @@
                         $('#ticket_detail').css('display', 'block')
                         $('#ticket_detail_desc').html(data.data.deskripsi_request)
                         $('#ticket_detail_heading').html(data.data.judul_request)
-                        console.log(data.data)
+                        $('#ticket_head').html(`
+                            <div class="d-md-flex d-xl-inline-block d-xxl-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="avatar avatar-2xl">
+                                        <img class="rounded-circle" src="${data.data.tenant.profile_picture}" alt="${data.data.tenant.profile_picture}" />
+                                    </div>
+                                    <p class="mb-0"><a class="fw-semi-bold mb-0 text-800"
+                                            href="#">${data.data.tenant.nama_tenant}</a>
+                                        <a class="mb-0 fs--1 d-block text-500"
+                                            href="mailto:${data.data.tenant.email_tenant}">${data.data.tenant.email_tenant}</a>
+                                    </p>
+                                </div>
+                                <p class="mb-0 fs--2 fs-sm--1 fw-semi-bold mt-2 mt-md-0 mt-xl-2 mt-xxl-0 ms-5">
+                                    ${new Date(data.data.created_at).toDateString()}
+                                    <span class="mx-1">|</span><span class="fst-italic">${new Date(data.data.created_at).toLocaleTimeString()} (${timeDifference(new Date(), new Date(data.data.created_at))})</span></p>
+                            </div>
+                        `)
+                        console.log(data.data.tenant)
                     }
                 })
                 console.log($(this).val());
             })
+
+            function timeDifference(current, previous) {
+                var msPerMinute = 60 * 1000;
+                var msPerHour = msPerMinute * 60;
+                var msPerDay = msPerHour * 24;
+                var msPerMonth = msPerDay * 30;
+                var msPerYear = msPerDay * 365;
+
+                var elapsed = current - previous;
+
+                if (elapsed < msPerMinute) {
+                    return Math.round(elapsed / 1000) + ' seconds ago';
+                } else if (elapsed < msPerHour) {
+                    return Math.round(elapsed / msPerMinute) + ' minutes ago';
+                } else if (elapsed < msPerDay) {
+                    return Math.round(elapsed / msPerHour) + ' hours ago';
+                } else if (elapsed < msPerMonth) {
+                    return Math.round(elapsed / msPerDay) + ' days ago';
+                } else if (elapsed < msPerYear) {
+                    return Math.round(elapsed / msPerMonth) + ' months ago';
+                } else {
+                    return Math.round(elapsed / msPerYear) + ' years ago';
+                }
+            }
         })
     </script>
 @endsection

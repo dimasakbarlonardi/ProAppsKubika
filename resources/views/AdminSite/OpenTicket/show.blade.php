@@ -143,16 +143,14 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    @if ($ticket->status_request != 'PENDING')
+                                    @if ($ticket->status_request == 'RESPONDED')
                                         <div class="mb-2"><label class="mb-1 mt-2">Status</label>
                                             <select name="status_request" class="form-select form-select-sm">
                                                 <option disabled selected>--Pilih Status---</option>
-                                                <option {{ $ticket->status_request == 'PROSES' ? 'selected' : '' }}
-                                                    value="PROSES">Proses</option>
+                                                <option {{ $ticket->status_request == 'PROSES KE WR' ? 'selected' : '' }}
+                                                    value="PROSES KE WR">Proses ke WR</option>
                                                 <option {{ $ticket->status_request == 'CLOSED' ? 'selected' : '' }}
                                                     value="CLOSED">Closed</option>
-                                                <option {{ $ticket->status_request == 'DONE' ? 'selected' : '' }}
-                                                    value="DONE">Done</option>
                                             </select>
                                         </div>
                                     @endif

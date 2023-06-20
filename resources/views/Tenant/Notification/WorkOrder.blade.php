@@ -136,7 +136,7 @@
                                     </div>
                                 </div>
                             </div>
-                            @if (!$wo->sign_approval_1)
+                            @if (!$wo->sign_approve_acc_wo)
                                 <div class="text-center">
                                     <form action="{{ route('acceptWO', $wo->id) }}" method="post">
                                         @csrf

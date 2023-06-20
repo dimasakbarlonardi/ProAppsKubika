@@ -268,16 +268,19 @@
             })
 
             $.ajax({
-                url: '/admin/get-notifications/' + user_id,
+                url: '/admin/get-notifications',
+                data: {
+                    'receiver': user_id
+                },
                 type: 'GET',
                 success: function(data) {
+                    console.log(data)
                     if (data.length > 0) {
                         var is_notif = 0;
                         data.map((item) => {
                             if (item.is_read == 0) {
                                 is_notif += 1;
                             }
-                            console.log(item)
                             var current = new Date();
                             $('#notification-lists').append(`
                                 <div class="list-group-item">

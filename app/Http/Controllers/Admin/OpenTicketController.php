@@ -135,7 +135,7 @@ class OpenTicketController extends Controller
         $connRequest = ConnectionDB::setConnection(new OpenTicket());
         $connJenisReq = ConnectionDB::setConnection(new JenisRequest());
 
-        $ticket = $connRequest->find($id);
+        $ticket = $connRequest->where('id', $id)->with('Tenant')->first();
         $user = $request->session()->get('user');
 
         $data['jenis_requests'] = $connJenisReq->get();

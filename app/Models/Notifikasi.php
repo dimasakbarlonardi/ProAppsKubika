@@ -13,6 +13,7 @@ class Notifikasi extends Model
     protected $table = 'tb_notifikasi';
 
     protected $fillable = [
+        'division_receiver',
         'receiver',
         'sender',
         'is_read',
