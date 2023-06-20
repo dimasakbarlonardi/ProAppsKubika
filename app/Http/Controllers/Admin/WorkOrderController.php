@@ -278,6 +278,27 @@ class WorkOrderController extends Controller
         $wo = $connWO->find($id);
         $getUser = $wo->WorkRequest->Ticket->Tenant->User;
 
+        $notif = $connNotif->where('models', 'WorkOrder')
+            ->where('is_read', 0)
+            ->where('id_data', $id)
+            ->first();
+
+        if (!$notif) {
+            $createNotif = $connNotif;
+            $createNotif->sender = $user->id_user;
+            $createNotif->is_read = 0;
+            $createNotif->models = 'WorkOrder';
+            $createNotif->id_data = $id;
+
+            if (!$wo->sign_approve_tr) {
+                $createNotif->division_receiver = 4;
+            }
+
+            $createNotif->notif_title = $wo->no_work_order;
+            $createNotif->notif_message = 'Work Order sudah dikerjakan, mohon periksa kembali pekerjaan kami';
+            $createNotif->save();
+        }
+
         $wo->status_wo = 'WORK DONE';
         $wo->save();
 
