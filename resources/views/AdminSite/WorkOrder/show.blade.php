@@ -101,8 +101,8 @@
                                 <div class="row g-0 border-bottom pb-x1 mb-x1 align-items-sm-center align-items-xl-start">
                                     <div class="col-3">
                                         <div class="avatar avatar-3xl">
-                                            <img class="rounded-circle" src="{{ url($wo->Ticket->Tenant->profile_picture) }}"
-                                                alt="" />
+                                            <img class="rounded-circle"
+                                                src="{{ url($wo->Ticket->Tenant->profile_picture) }}" alt="" />
                                         </div>
                                     </div>
                                     <div class="col-6">
@@ -175,10 +175,15 @@
                                     Tenant</button>
                             </div>
                         @endif
-                        @if ($wo->status_wo == 'ACCEPTED' && $user->id_role_hdr == 4)
+                        @if ($wo->status_wo == 'APPROVED' && $user->id_role_hdr == 4)
                             <div class="card-footer border-top border-200 py-x1">
                                 <button type="button" class="btn btn-primary w-100"
                                     onclick="workDone({{ $wo->id }})">PEKERJAAN SELESAI</button>
+                            </div>
+                        @endif
+                        @if ($user->id_role_hdr == 8 && $wo->status_wo == 'WAITING APPROVE')
+                            <div class="card-footer border-top border-200 py-x1">
+                                <button type="submit" class="btn btn-primary w-100" value="send">Update</button>
                             </div>
                         @endif
                     </div>
@@ -219,9 +224,8 @@
                             'Berhasil!',
                             'Berhasil mengupdate Work Order!',
                             'success'
-                        )
+                        ).then(() =>  window.location.reload())
                     }
-                    window.location.reload();
                 }
             })
         }

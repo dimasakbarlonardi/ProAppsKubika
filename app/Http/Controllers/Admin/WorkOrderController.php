@@ -22,7 +22,7 @@ class WorkOrderController extends Controller
     {
         $connWO = ConnectionDB::setConnection(new WorkOrder());
 
-        $data['wos'] = $connWO->get();
+        $data['wos'] = $connWO->latest()->get();
 
         return view('AdminSite.WorkOrder.index', $data);
     }
@@ -193,9 +193,9 @@ class WorkOrderController extends Controller
 
         $wo = $connWO->find($id);
 
-        $wo->status_wo = 'ACCEPTED';
-        $wo->sign_approval_1 = '1';
-        $wo->date_approval_1 = Carbon::now();
+        $wo->status_wo = 'APPROVED';
+        $wo->sign_approve_acc_wo = '1';
+        $wo->date_approve_acc_wo = Carbon::now();
         $wo->save();
 
         Alert::success('Berhasil', 'Berhasil menerima WO');
@@ -212,8 +212,63 @@ class WorkOrderController extends Controller
         $wo = $connWO->find($id);
         $getUser = $wo->WorkRequest->Ticket->Tenant->User;
 
+        $notif = $connNotif->where('models', 'WorkOrder')
+            ->where('is_read', 0)
+            ->where('id_data', $id)
+            ->first();
+
+        if (!$notif) {
+            $createNotif = $connNotif;
+            $createNotif->sender = $user->id_user;
+            $createNotif->is_read = 0;
+            $createNotif->models = 'WorkOrder';
+            $createNotif->id_data = $id;
+
+            if (!$wo->sign_approve_tr) {
+                $createNotif->division_receiver = 4;
+            }
+
+            $createNotif->notif_title = $wo->no_work_order;
+            $createNotif->notif_message = 'Work Order sudah dikerjakan, mohon periksa kembali pekerjaan kami';
+            $createNotif->save();
+        }
+
         $wo->status_wo = 'WORK DONE';
         $wo->save();
+
+
+
+        // if (!$checkNotif) {
+        //     $connNotif->create([
+        //         'receiver' => $getUser->id_user,
+        //         'notif_title' => $wo->no_work_order,
+        //         'notif_message' => 'Work Order sudah dikerjakan, mohon periksa kembali pekerjaan kami'
+        //     ]);
+        // }
+        // dd('out');
+
+        return response()->json(['status' => 'ok']);
+    }
+
+    public function done(Request $request, $id)
+    {
+        $connWO = ConnectionDB::setConnection(new WorkOrder());
+        $connTicket = ConnectionDB::setConnection(new OpenTicket());
+        $connWR = ConnectionDB::setConnection(new WorkRequest());
+        $connNotif = ConnectionDB::setConnection(new Notifikasi());
+
+        $user = $request->session()->get('user');
+
+        $wo = $connWO->find($id);
+        $ticket = $connTicket->where('no_tiket', $wo->no_tiket)->first();
+        $wr = $connWR->where('no_work_request', $wo->no_work_request)->first();
+
+        // $wo->status_wo = 'DONE';
+        // $wo->save();
+        // $ticket->status_request = 'DONE';
+        // $ticket->save();
+        // $wr->status_request = 'DONE';
+        // $wr->save();
 
         $checkNotif = $connNotif->where('models', 'WorkOrder')
             ->where('is_read', 0)
@@ -231,26 +286,6 @@ class WorkOrderController extends Controller
                 'notif_message' => 'Work Order sudah dikerjakan, mohon periksa kembali pekerjaan kami'
             ]);
         }
-
-        return response()->json(['status' => 'ok']);
-    }
-
-    public function done($id)
-    {
-        $connWO = ConnectionDB::setConnection(new WorkOrder());
-        $connTicket = ConnectionDB::setConnection(new OpenTicket());
-        $connWR = ConnectionDB::setConnection(new WorkRequest());
-
-        $wo = $connWO->find($id);
-        $ticket = $connTicket->where('no_tiket', $wo->no_tiket)->first();
-        $wr = $connWR->where('no_work_request', $wo->no_work_request)->first();
-
-        $wo->status_wo = 'DONE';
-        $wo->save();
-        $ticket->status_request = 'DONE';
-        $ticket->save();
-        $wr->status_request = 'DONE';
-        $wr->save();
 
         Alert::success('Berhasil', 'Berhasil menselesaikan WO');
 

@@ -24,11 +24,14 @@ class DashboardController extends Controller
         return view('Tenant.Notification.index', $data);
     }
 
-    public function getNotifications($id)
+    public function getNotifications(Request $request)
     {
-        $connNotif = ConnectionDB::setConnection(new Notifikasi());
+        $user = $request->session()->get('user');
 
-        $notifications = $connNotif->where('receiver', $id)
+        $receiver = $request->receiver;
+        $connNotif = ConnectionDB::setConnection(new Notifikasi());
+        $notifications = $connNotif->where('receiver', $receiver)
+        ->orWhere('division_receiver', $user->RoleH->work_relation_id)
         ->with(['sender'])
         ->latest()
         ->get();
