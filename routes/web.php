@@ -3,6 +3,7 @@
 use App\Http\Controllers\Admin\FloorController;
 use App\Http\Controllers\Admin\AgamaController;
 use App\Http\Controllers\Admin\BayarnonController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DepartemenController;
 use App\Http\Controllers\Admin\DivisiController;
 use App\Http\Controllers\Admin\RoleController;
@@ -46,9 +47,10 @@ use App\Http\Controllers\Admin\StatusRequestController;
 use App\Http\Controllers\Admin\SystemSettingController;
 use App\Http\Controllers\Admin\StatusTinggalController;
 use App\Http\Controllers\Admin\TypeReservationController;
+use App\Http\Controllers\Admin\WorkOrderController;
 use App\Http\Controllers\Admin\WorkPriorityController;
 use App\Http\Controllers\Admin\WorkRelationController;
-
+use App\Http\Controllers\Admin\WorkRequestController;
 
 /*
 |--------------------------------------------------------------------------
@@ -148,6 +150,7 @@ Route::prefix('admin')->group(function () {
 
         // CRUD UNIT
         Route::resource('units', UnitController::class);
+        Route::get('/units-by-tenant/{id}', [UnitController::class, 'UnitByTenant'])->name('UnitByTenant');
 
         // CRUD Tower
         Route::resource('towers', TowerController::class);
@@ -262,6 +265,23 @@ Route::prefix('admin')->group(function () {
 
         // CRUD Open Ticket
         Route::resource('/open-tickets', OpenTicketController::class);
+        Route::post('/open-ticket/update-response/{id}',[OpenTicketController::class, 'updateRequestTicket'])->name('updateRequestTicket');
+
+        // CRUD Work Request
+        Route::resource('/work-requests', WorkRequestController::class);
+        Route::post('/done/work-request/{id}', [WorkRequestController::class, 'done'])->name('doneWR'); // done wo from tenant
+
+        // CRUD Work Order
+        Route::resource('/work-orders', WorkOrderController::class);
+        Route::get('/work-order/no-wo', [WorkOrderController::class, 'showByNoWO']);
+        Route::post('/accept/work-order/{id}', [WorkOrderController::class, 'acceptWO'])->name('acceptWO'); // accept wo from tenant
+        Route::post('/work-done/work-order/{id}', [WorkOrderController::class, 'workDone'])->name('workDone'); // update wo from engineering
+        Route::post('/done/work-order/{id}', [WorkOrderController::class, 'done'])->name('doneWO'); // done wo from tenant
+
+       // Notification
+       Route::get('/notifications', [DashboardController::class, 'notifications'])->name('notifications');  // Get all notifications list
+        Route::get('/get-notifications/{id}', [DashboardController::class, 'getNotifications'])->name('getNotifications');  // Get all notifications by user_id
+        Route::get('/notification/{id}', [DashboardController::class, 'showNotification'])->name('showNotification'); // Show all notification by user_id
     });
 });
 

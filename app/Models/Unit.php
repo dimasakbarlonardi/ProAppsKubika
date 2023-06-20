@@ -59,4 +59,9 @@ class Unit extends Model
     {
         return $this->hasOne(Floor::class, 'id_lantai', 'id_lantai');
     }
+
+    public function TenantUnit()
+    {
+        return $this->hasOne(TenantUnit::class, 'id_unit', 'id_unit');
+    }
 }

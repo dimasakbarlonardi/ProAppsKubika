@@ -58,9 +58,9 @@ class Tenant extends Model
         return $this->hasOne(StatusHunianTenant::class, 'id_statushunian_tenant', 'id_statushunian_tenant');
     }
 
-    public function idusers()
+    public function User()
     {
-        return $this->hasOne(User::class, 'id_user', 'id_user');
+        return $this->hasOne(User::class, 'login_user', 'email_tenant');
     }
 
     public function IdCard()

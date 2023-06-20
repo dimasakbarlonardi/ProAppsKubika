@@ -29,4 +29,9 @@ class User extends Model
     {
        return $this->hasOne(Role::class, 'id', 'id_role_hdr');
     }
+
+    public function Karyawan()
+    {
+        return $this->hasOne(Karyawan::class, 'email_karyawan', 'login_user');
+    }
 }
