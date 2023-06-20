@@ -84,6 +84,11 @@
                                                         <small class="badge rounded bg-warning dark__bg-1000">Pending</small>
                                                     @break
 
+                                                    @case('ON WORK')
+                                                        <small
+                                                            class="badge rounded bg-info dark__bg-1000">{{ $ticket->status_request }}</small>
+                                                    @break
+
                                                     @case('DONE')
                                                         <small
                                                             class="badge rounded bg-success dark__bg-1000">{{ $ticket->status_request }}</small>
