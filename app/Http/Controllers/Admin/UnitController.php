@@ -14,7 +14,7 @@ use RealRashid\SweetAlert\Facades\Alert;
 use App\Models\Unit;
 use App\Models\Floor;
 use App\Models\Hunian;
-
+use App\Models\TenantUnit;
 
 class UnitController extends Controller
 {
@@ -209,5 +209,16 @@ class UnitController extends Controller
         Alert::success('Berhasil', 'Berhasil menghapus unit');
 
         return redirect()->route('units.index');
+    }
+
+    public function UnitByTenant($id)
+    {
+        $connTenantUnit = ConnectionDB::setConnection(new TenantUnit());
+
+        $tenantUnit = $connTenantUnit->where('id_tenant', $id)
+        ->with(['unit'])
+        ->get();
+
+        return response()->json(['data' => $tenantUnit]);
     }
 }

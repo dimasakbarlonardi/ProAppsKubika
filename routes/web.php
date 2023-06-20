@@ -3,24 +3,7 @@
 use App\Http\Controllers\Admin\FloorController;
 use App\Http\Controllers\Admin\AgamaController;
 use App\Http\Controllers\Admin\BayarnonController;
-use App\Http\Controllers\Admin\ChecklistAhuDetailController;
-use App\Http\Controllers\Admin\ChecklistAhuHController;
-use App\Http\Controllers\Admin\ChecklistChillerHController;
-use App\Http\Controllers\Admin\ChecklistFloorHController;
-use App\Http\Controllers\Admin\ChecklistGasHController;
-use App\Http\Controllers\Admin\ChecklistGensetHController;
-use App\Http\Controllers\Admin\ChecklistGroundRoofHController;
-use App\Http\Controllers\Admin\ChecklistKoridorHController;
-use App\Http\Controllers\Admin\ChecklistLiftHController;
-use App\Http\Controllers\Admin\ChecklistListrikHController;
-use App\Http\Controllers\Admin\ChecklistOfficeManagementHController;
-use App\Http\Controllers\Admin\ChecklistPemadamHController;
-use App\Http\Controllers\Admin\ChecklistPompaSumpitHController;
-use App\Http\Controllers\Admin\ChecklistPutrHController;
-use App\Http\Controllers\Admin\ChecklistSolarHController;
-use App\Http\Controllers\Admin\ChecklistTanggaDaruratHController;
-use App\Http\Controllers\Admin\ChecklistTemperaturHController;
-use App\Http\Controllers\Admin\ChecklistToiletHController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DepartemenController;
 use App\Http\Controllers\Admin\DivisiController;
 use App\Http\Controllers\Admin\EngAHUController;
@@ -195,6 +178,7 @@ Route::prefix('admin')->group(function () {
 
         // CRUD UNIT
         Route::resource('units', UnitController::class);
+        Route::get('/units-by-tenant/{id}', [UnitController::class, 'UnitByTenant'])->name('UnitByTenant');
 
         // CRUD Tower
         Route::resource('towers', TowerController::class);

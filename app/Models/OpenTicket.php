@@ -30,4 +30,24 @@ class OpenTicket extends Model
         'deskripsi_respon',
         'id_user_resp_request'
     ];
+
+    public function jenisRequest()
+    {
+        return $this->hasOne(JenisRequest::class, 'id_jenis_request', 'id_jenis_request');
+    }
+
+    public function Tenant()
+    {
+        return $this->hasOne(Tenant::class, 'id_tenant', 'id_tenant');
+    }
+
+    public function TenantRelation()
+    {
+        return $this->hasOne(User::class, 'id_user', 'id_user_resp_request');
+    }
+
+    public function Unit()
+    {
+        return $this->hasOne(Unit::class, 'id_unit', 'id_unit');
+    }
 }
