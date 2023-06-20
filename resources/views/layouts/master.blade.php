@@ -64,7 +64,7 @@
                             data-bs-toggle="tooltip" data-bs-placement="left" title="Toggle Navigation"><span
                                 class="navbar-toggle-icon"><span class="toggle-line"></span></span></button>
                     </div>
-                    <a class="navbar-brand" href="index.html">
+                    <a class="navbar-brand" href="{{ route('dashboard') }}">
                         <div class="d-flex align-items-center py-3"><img class="me-2"
                                 src="/assets/img/icons/spot-illustrations/proapps.png" alt="akmal" width="150" />
                         </div>
@@ -86,7 +86,7 @@
                         aria-controls="navbarVerticalCollapse" aria-expanded="false"
                         aria-label="Toggle   Navigation"><span class="navbar-toggle-icon"><span
                                 class="toggle-line"></span></span></button>
-                    <a class="navbar-brand me-1 me-sm-3" href="index.html">
+                    <a class="navbar-brand me-1 me-sm-3" href="{{ route('dashboard') }}">
                         <div class="d-flex align-items-center"><img class="me-2"
                                 src="/assets/img/icons/spot-illustrations/proapps.png" alt="" width="150" />
                         </div>
@@ -125,28 +125,6 @@
                                             </div>
                                         </a>
                                         <hr class="text-200 dark__text-900" />
-                                        <h6 class="dropdown-header fw-medium text-uppercase px-x1 fs--2 pt-0 pb-2">
-                                            Suggested Filter</h6>
-                                        <a class="dropdown-item px-x1 py-1 fs-0" href="app/e-commerce/customers.html">
-                                            <div class="d-flex align-items-center"><span
-                                                    class="badge fw-medium text-decoration-none me-2 badge-subtle-warning">customers:</span>
-                                                <div class="flex-1 fs--1 title">All customers list</div>
-                                            </div>
-                                        </a>
-                                        <a class="dropdown-item px-x1 py-1 fs-0" href="app/events/event-detail.html">
-                                            <div class="d-flex align-items-center"><span
-                                                    class="badge fw-medium text-decoration-none me-2 badge-subtle-success">events:</span>
-                                                <div class="flex-1 fs--1 title">Latest events in current month</div>
-                                            </div>
-                                        </a>
-                                        <a class="dropdown-item px-x1 py-1 fs-0"
-                                            href="app/e-commerce/product/product-grid.html">
-                                            <div class="d-flex align-items-center"><span
-                                                    class="badge fw-medium text-decoration-none me-2 badge-subtle-info">products:</span>
-                                                <div class="flex-1 fs--1 title">Most popular products</div>
-                                            </div>
-                                        </a>
-                                        <hr class="text-200 dark__text-900" />
                                     </div>
                                     <div class="text-center mt-n3">
                                         <p class="fallback fw-bold fs-1 d-none">No Result Found.</p>
@@ -154,9 +132,41 @@
                                 </div>
                             </div>
                         </li>
-
                     </ul>
                     <ul class="navbar-nav navbar-nav-icons ms-auto flex-row align-items-center">
+                        <li class="nav-item dropdown">
+                            <a class="nav-link notification-indicator-danger px-0 fa-icon-wait"
+                                id="navbarDropdownNotification" role="button" data-bs-toggle="dropdown">
+                                <span class="fas fa-bell" data-fa-transform="shrink-6"
+                                    style="font-size: 33px"></span>
+                            </a>
+                            <div class="dropdown-menu dropdown-caret dropdown-caret dropdown-menu-end dropdown-menu-card dropdown-menu-notification dropdown-caret-bg"
+                                aria-labelledby="navbarDropdownNotification">
+                                <div class="card card-notification shadow-none">
+                                    <div class="card-header">
+                                        <div class="row justify-content-between align-items-center">
+                                            <div class="col-auto">
+                                                <h6 class="card-header-title mb-0">Notifications</h6>
+                                            </div>
+                                            <div class="col-auto ps-0 ps-sm-3">
+                                                <a class="card-link text-light fw-normal" href="#">Mark all as
+                                                    read</a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="scrollbar-overlay" style="max-height: 19rem">
+                                        <div class="list-group list-group-flush fw-normal fs--1">
+                                            <div id="notification-lists">
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-footer text-center border-top">
+                                        <a class="card-link d-block" href="{{ route('notifications') }}">View all</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link pe-0 ps-2" id="navbarDropdownUser" role="button"
                                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -189,8 +199,10 @@
                 <footer class="footer">
                     <div class="row g-0 justify-content-between fs--1 mt-4 mb-3">
                         <div class="col-12 col-sm-auto text-center">
-                            <p class="mb-0 text-600">Thank you for creating with Falcon <span class="d-none d-sm-inline-block">|
-                                </span><br class="d-sm-none" /> 2022 &copy; <a href="https://themewagon.com">Themewagon</a></p>
+                            <p class="mb-0 text-600">Thank you for creating with Falcon <span
+                                    class="d-none d-sm-inline-block">|
+                                </span><br class="d-sm-none" /> 2022 &copy; <a
+                                    href="https://themewagon.com">Themewagon</a></p>
                         </div>
                         <div class="col-12 col-sm-auto text-center">
                             <p class="mb-0 text-600">v3.14.0</p>
@@ -229,6 +241,7 @@
     </script>
     <script>
         $('document').ready(function() {
+            var user_id = "{{ Session::get('user_id') }}"
             $.ajax({
                 url: '/check-role-id',
                 method: 'GET',
@@ -241,7 +254,6 @@
                 }
             })
 
-            var user_id = "{{ Session::get('user_id') }}"
             $.ajax({
                 url: '/admin/get-nav/' + user_id,
                 type: 'GET',
@@ -255,6 +267,80 @@
                 $('#' + id).addClass('active my-2')
             })
 
+            $.ajax({
+                url: '/admin/get-notifications/' + user_id,
+                type: 'GET',
+                success: function(data) {
+                    if (data.length > 0) {
+                        var is_notif = 0;
+                        data.map((item) => {
+                            if (item.is_read == 0) {
+                                is_notif += 1;
+                            }
+                            console.log(item)
+                            var current = new Date();
+                            $('#notification-lists').append(`
+                                <div class="list-group-item">
+                                    <a class="notification notification-flush ${item.is_read == 1 ? 'notification' : 'notification-unread' }"
+                                        href="/admin/notification/${item.id}">
+                                        <div class="notification-avatar">
+                                            <div class="avatar avatar-2xl me-3">
+                                                <img class="rounded-circle"
+                                                    src="${item.sender.profile_picture}"
+                                                    alt="" />
+                                            </div>
+                                        </div>
+                                        <div class="notification-body">
+                                            <p class="mb-1">
+                                                <strong>${item.sender.nama_user}</strong> Mengirim anda :
+                                                ${item.notif_message} ${item.notif_title}
+                                            </p>
+                                            <span class="notification-time">
+                                                ${timeDifference(current, new Date(item.created_at))}
+                                            </span>
+                                        </div>
+                                    </a>
+                                </div>
+                            `)
+                        })
+                        if (is_notif > 0) {
+                            $('#navbarDropdownNotification').addClass('notification-indicator')
+                        }
+                    } else {
+                        $('#notification-lists').append(`
+                            <div class="list-group-item">
+                                <div class="notification-body my-3 text-center">
+                                    <strong>Tidak ada Notifikasi</strong>
+                                </div>
+                            </div>
+                        `)
+                    }
+                }
+            })
+
+            function timeDifference(current, previous) {
+                var msPerMinute = 60 * 1000;
+                var msPerHour = msPerMinute * 60;
+                var msPerDay = msPerHour * 24;
+                var msPerMonth = msPerDay * 30;
+                var msPerYear = msPerDay * 365;
+
+                var elapsed = current - previous;
+
+                if (elapsed < msPerMinute) {
+                    return Math.round(elapsed / 1000) + ' seconds ago';
+                } else if (elapsed < msPerHour) {
+                    return Math.round(elapsed / msPerMinute) + ' minutes ago';
+                } else if (elapsed < msPerDay) {
+                    return Math.round(elapsed / msPerHour) + ' hours ago';
+                } else if (elapsed < msPerMonth) {
+                    return Math.round(elapsed / msPerDay) + ' days ago';
+                } else if (elapsed < msPerYear) {
+                    return Math.round(elapsed / msPerMonth) + ' months ago';
+                } else {
+                    return Math.round(elapsed / msPerYear) + ' years ago';
+                }
+            }
         });
     </script>
     @yield('script')

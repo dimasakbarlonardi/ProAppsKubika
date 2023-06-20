@@ -65,7 +65,7 @@ class AuthenticatedSessionController extends Controller
                 $currUser = new User();
                 $currUser = $currUser->setConnection($user->site->db_name);
                 $getUser = $currUser->where('login_user', $user->email)
-                    ->with('RoleH.AksesForm')
+                    ->with(['RoleH.AksesForm', 'RoleH.WorkRelation'])
                     ->first();
 
                 if (Auth::check()) {
@@ -109,7 +109,7 @@ class AuthenticatedSessionController extends Controller
         $currUser = ConnectionDB::setConnection(new User());
         $getUser = $currUser->where('login_user', $email)
             ->where('user_category', $request->role_id)
-            ->with('RoleH.AksesForm')
+            ->with(['RoleH.AksesForm', 'RoleH.WorkRelation'])
             ->first();
         if (!isset($getUser)) {
             Alert::error('Gagal', 'Anda tidak terdaftar');

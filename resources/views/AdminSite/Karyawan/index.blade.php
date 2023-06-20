@@ -58,7 +58,7 @@
                                     <div class="d-flex align-items-start align-items-sm-center">
                                         <a class="d-none d-sm-block" href="">
                                             <div class="avatar avatar-xl avatar-3xl">
-                                                <img src="{{ $karyawan->profile_picture ? '/' . $karyawan->profile_picture : '/assets/img/team/3-thumb.png' }}" alt="akmal"
+                                                <img src="{{ $karyawan->profile_picture ? '/' . $karyawan->profile_picture : '/assets/img/team/3-thumb.png' }}" alt="{{ $karyawan->profile_picture }}"
                                                     class="avatar-image" />
                                             </div>
                                         </a>
