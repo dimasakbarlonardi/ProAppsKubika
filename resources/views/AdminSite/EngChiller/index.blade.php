@@ -8,7 +8,7 @@
                 <h6 class="mb-0">List Engeneering Chiller</h6>
             </div>
             <div class="col-auto d-flex">
-                <a class="btn btn-falcon-default btn-sm text-600" href="{{ route('engchillers.create') }}">Tambah Engeneering Chiller</a>
+                <a class="btn btn-falcon-default btn-sm text-600" href="{{ route('engchillers.create') }}"><span class="fas fa-plus fs--2 me-1"></span>Tambah Engeneering Chiller</a>
             </div>
         </div>
     </div>
@@ -31,12 +31,12 @@
                         <td>{{ $engchiller->subject }}</td>
                         <td>{{ $engchiller->dsg }}</td>
                         <td>
-                            <a href="{{ route('engchillers.edit', $engchiller->id_eng_chiller) }}" class="btn btn-sm btn-warning">Edit</a>
+                            <a href="{{ route('engchillers.edit', $engchiller->id_eng_chiller) }}" class="btn btn-sm btn-warning"><span class="fas fa-pencil-alt fs--2 me-1"></span>Edit</a>
                             <form class="d-inline" action="{{ route('engchillers.destroy', $engchiller->id_eng_chiller) }}" method="post">
                                 @method('DELETE')
                                 @csrf
                                 <button type="submit" class="btn btn-danger btn-sm"
-                                    onclick="return confirm('are you sure?')">Hapus</button>
+                                    onclick="return confirm('are you sure?')"><span class="fas fa-trash-alt fs--2 me-1"></span>Hapus</button>
                             </form>
                         </td>
                     </tr>

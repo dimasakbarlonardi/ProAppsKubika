@@ -104,14 +104,11 @@ class WorkPriorityController extends Controller
     public function update(Request $request, $id)
     {
         $connWorkPriority = ConnectionDB::setConnection(new WorkPriority());
-        $count = $connWorkPriority->count();
 
-        $connWorkPriority->where('id_work_priority', $id)->update([
-            'id_work_priority' => $count,
-            'work_priority' => $request->work_relation,
-        ]);
+        $connWorkPriority = $connWorkPriority->find($id);
+        $connWorkPriority->update($request->all());
 
-        Alert::success('Berhasil', 'Berhasil Mengupdate Work Priority');
+        Alert::success('Berhasil', 'Berhasil mengupdate Work Priority');
 
         return redirect()->route('workprioritys.index');
     }

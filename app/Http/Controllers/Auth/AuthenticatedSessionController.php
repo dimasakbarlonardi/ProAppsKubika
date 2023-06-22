@@ -45,37 +45,37 @@ class AuthenticatedSessionController extends Controller
      */
     public function store(LoginRequest $request)
     {
-        try {
-            $request->validate([
-                'email' => 'email|required',
-                'password' => 'required',
-                'id_site' => 'required'
-            ]);
+        $request->validate([
+            'email' => 'email|required',
+            'password' => 'required',
+            'id_site' => 'required'
+        ]);
 
+        try {
             $credentials = request(['email', 'password']);
             if (!Auth::attempt($credentials)) {
                 Alert::error('Gagal', 'Mohon periksa kembali email dan password');
 
                 return redirect()->back();
             } else {
+                $user = Login::where('email', $request->email)
+                    ->with('site')
+                    ->first();
+
+                $currUser = new User();
+                $currUser = $currUser->setConnection($user->site->db_name);
+                $getUser = $currUser->where('login_user', $user->email)
+                    ->with('RoleH.AksesForm')
+                    ->first();
+
                 if (Auth::check()) {
-                    $user = Login::where('email', $request->email)->with('site')->first();
                     if (!Hash::check($request->password, $user->password, [])) {
                         throw new \Exception('Invalid Credentials');
                     }
 
-                    $currUser = new User();
-                    $currUser = $currUser->setConnection($user->site->db_name);
-                    $getUser = $currUser->where('login_user', $user->email)
-                        ->with('RoleH.AksesForm')
-                        ->first();
-
                     if (isset($getUser)) {
                         $request->authenticate();
                         $request->session()->regenerate();
-
-                        $request->session()->put('user', $getUser);
-                        $request->session()->put('user_id', $getUser->id_user);
 
                         return redirect()->route('select-role');
                     } else {
@@ -105,7 +105,19 @@ class AuthenticatedSessionController extends Controller
 
     public function storeRole(Request $request)
     {
-        $user = $request->session()->get('user');
+        $email = Auth::user()->email;
+        $currUser = ConnectionDB::setConnection(new User());
+        $getUser = $currUser->where('login_user', $email)
+            ->where('user_category', $request->role_id)
+            ->with('RoleH.AksesForm')
+            ->first();
+        if (!isset($getUser)) {
+            Alert::error('Gagal', 'Anda tidak terdaftar');
+
+            return redirect()->back();
+        }
+        $request->session()->put('user', $getUser);
+        $request->session()->put('user_id', $getUser->id_user);
 
         $connKaryawan = ConnectionDB::setConnection(new Karyawan());
         $connOwner = ConnectionDB::setConnection(new OwnerH());
@@ -113,34 +125,30 @@ class AuthenticatedSessionController extends Controller
 
         $verified = false;
         if ($request->role_id == 1) {
-            $owner = $connOwner->where('id_user', $user->id_user)->first();
+            $owner = $connOwner->where('email_owner', $getUser->login_user)->first();
             if (isset($owner)) {
                 $verified = true;
             }
         }
         if ($request->role_id == 2) {
-            $karyawan = $connKaryawan->where('id_user', $user->id_user)->first();
+            $karyawan = $connKaryawan->where('email_karyawan', $getUser->login_user)->first();
 
             if (isset($karyawan)) {
                 $verified = true;
             }
         }
         if ($request->role_id == 3) {
-            $tenant = $connTenant->where('id_user', $user->id_user)->first();
+            $tenant = $connTenant->where('email_tenant', $getUser->login_user)->first();
             if (isset($tenant)) {
                 $verified = true;
             }
         }
-        // dd($request->role_id, $user->id_user);
+
         if ($verified) {
             $request->session()->put('has_role', 'yes');
 
             return redirect()->route('dashboard');
         }
-
-        Alert::error('Gagal', 'Anda tidak terdaftar');
-
-        return redirect()->back();
     }
 
     /**

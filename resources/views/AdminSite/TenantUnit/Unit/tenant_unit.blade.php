@@ -72,12 +72,12 @@
                         @csrf
                         <div class="mb-3">
                             <div class="row">
-                                <div class="col-6">
-                                    <label class="col-form-label">Unit:</label>
+                                  <div class="col-6">
+                                    <label class="form-label">Unit :</label>
                                     <select class="form-control" name="id_unit" required>
+                                        <option selected disabled>-- Pilih Unit --</option>
                                         @foreach ($getCreateUnits as $unit)
-                                            <option value="{{ $unit->id_unit }}">
-                                                {{ $unit->nama_unit }}</option>
+                                            <option value="{{ $unit->id_unit }}">{{ $unit->nama_unit }}</option>
                                         @endforeach
                                     </select>
                                 </div>

@@ -12,6 +12,7 @@ use App\Models\Login;
 use App\Models\OwnerH;
 use App\Models\Site;
 use App\Models\StatusHunianTenant;
+use App\Models\StatusKawin;
 use App\Models\User;
 use FTP\Connection;
 use Illuminate\Support\Facades\DB;
@@ -42,14 +43,10 @@ class TenantController extends Controller
     public function create(Request $request)
     {
         $user_id = $request->user()->id;
-        $login = Login::where('id', $user_id)->with('site')->first();
-        $conn = $login->site->db_name;
+        $statuskawin = ConnectionDB::setConnection(new StatusKawin());
         $connTenant = ConnectionDB::setConnection(new Tenant());
-
         $statushunian = ConnectionDB::setConnection(new StatusHunianTenant());
-
         $idcard = ConnectionDB::setConnection(new IdCard());
-
         $owner = ConnectionDB::setConnection(new OwnerH());
 
         $data['statushunians'] = $statushunian->get();
@@ -57,7 +54,7 @@ class TenantController extends Controller
         $data['idusers'] = Login::where('id', $user_id)->first();
         $data['idpemiliks'] = $owner->get();
         $data['tenants'] = $connTenant->get();
-
+        $data['statuskawins'] = $statuskawin->get();
 
         return view('AdminSite.Tenant.create', $data);
     }
@@ -72,6 +69,22 @@ class TenantController extends Controller
     {
         $connTenant =  ConnectionDB::setConnection(new Tenant());
 
+        $checkNIK = $connTenant->where('nik_tenant', $request->nik_tenant)->first();
+        $checkEmail = $connTenant->where('email_tenant', $request->email_tenant)->first();
+
+        if (isset($checkNIK)) {
+            Alert::error('Maaf', 'NIK sudah terdaftar');
+            return redirect()->back()->withInput();
+        }
+
+        if (isset($checkEmail)) {
+            Alert::error('Maaf', 'Email sudah terdaftar');
+            return redirect()->back()->withInput();
+        }
+
+        $count = $connTenant->count();
+        $count = $count + 1;
+
         try {
             DB::beginTransaction();
 
@@ -79,16 +92,10 @@ class TenantController extends Controller
             $login = Login::where('id', $id_user)->with('site')->first();
             $site = $login->site->id_site;
 
-            $count = $connTenant->count();
-            $count += 1;
-            if ($count < 10) {
-                $count = '0' . $count;
-            }
-
             $connTenant->create([
-                'id_tenant' => $count,
+                'id_tenant' => sprintf("%03d", $count),
+                'email_tenant' => $request->email_tenant,
                 'id_site' => $site,
-                'id_user' => $id_user,
                 'id_card_type' => $request->id_card_type,
                 'nik_tenant' => $request->nik_tenant,
                 'nama_tenant' => $request->nama_tenant,
@@ -132,10 +139,10 @@ class TenantController extends Controller
     {
         $connTenant =  ConnectionDB::setConnection(new Tenant());
         $user_id = $request->user()->id;
-    
+
         $data['tenant'] = $connTenant->where('id_tenant', $id)->first();
         $data['idusers'] =  Login::where('id', $user_id)->get();
-            
+
         return view('AdminSite.Tenant.show', $data);
     }
 
@@ -171,7 +178,7 @@ class TenantController extends Controller
         $connTenant = ConnectionDB::setConnection(new Tenant());
         $connTenant->where('id_tenant', $id)->update([
             'id_site' => $request->id_site,
-            'id_user' => $request->id_user,
+            // 'id_user' => $request->id_user,
             'id_card_type' => $request->id_card_type,
             'nik_tenant' => $request->nik_tenant,
             'nama_tenant' => $request->nama_tenant,

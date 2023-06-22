@@ -43,16 +43,43 @@ class UserController extends Controller
     {
         $connRole = ConnectionDB::setConnection(new Role());
         $connKaryawan = ConnectionDB::setConnection(new Karyawan());
+        $connTenant = ConnectionDB::setConnection(new Tenant());
+        $connOwner = ConnectionDB::setConnection(new OwnerH());
 
+        $user = [];
         $email = [];
+        $nik = [];
+        $nama = [];
+
         $karyawan = $connKaryawan->where('id_user', null)
-            ->get('email_karyawan');
+            ->get();
+
+        $tenant = $connTenant->where('id_user', null)
+            ->get();
+
+        $owner = $connOwner->where('id_user', null)
+            ->get();
 
         foreach ($karyawan as $k) {
             $email[] = $k->email_karyawan;
+            $nik[] = $k->nik_karyawan;
+            $nama[] = $k->nama_karyawan;
         }
+        foreach ($owner as $o) {
+            $email[] = $o->email_owner;
+            $nik[] = $o->nik_pemilik;
+            $nama[] = $o->nama_pemilik;
+        }
+        foreach ($tenant as $t) {
+            $email[] = $t->email_tenant;
+            $nik[] = $t->nik_tenant;
+            $nama[] = $t->nama_tenant;
+        }
+        $user['email'] = $email;
+        $user['nik'] = $nik;
+        $user['nama'] = $nama;
 
-        $data['email'] = $email;
+        $data['data'] = $user;
         $data['roles'] = $connRole->get();
 
         return view('AdminSite.User.create', $data);
@@ -76,22 +103,32 @@ class UserController extends Controller
             $user = $getKaryawan;
             $nama = $getKaryawan->nama_karyawan;
             $email = $getKaryawan->email_karyawan;
+            $user_category = 2;
         }
         if (isset($getOwner)) {
             $user = $getOwner;
-            $nama = $getOwner->nama_owner;
+            $nama = $getOwner->nama_pemilik;
             $email = $getOwner->email_owner;
-
+            $user_category = 1;
         }
         if (isset($getTenant)) {
             $user = $getTenant;
             $nama = $getTenant->nama_tenant;
             $email = $getTenant->email_tenant;
+            $user_category = 3;
         }
 
         try {
             DB::beginTransaction();
-            $createUser = $connUser->create([
+
+            $createLogin = Login::create([
+                'name' => $nama,
+                'email' => $email,
+                'password' => $login->password,
+                'id_site' => $login->id_site
+            ]);
+
+            $connUser->create([
                 'id_site' => $login->id_site,
                 'id_user' => strval($lastID->id_user + 1),
                 'nama_user' => $nama,
@@ -99,17 +136,11 @@ class UserController extends Controller
                 'password_user' => Hash::make($request->password_user),
                 'id_status_user' => 1,
                 'id_role_hdr' => $request->id_role_hdr,
-            ]);
-
-            Login::create([
-                'name' => $createUser->nama_user,
-                'email' => $createUser->login_user,
-                'password' => $createUser->password_user,
-                'id_site' => $login->id_site
+                'user_category' => $user_category
             ]);
 
             $user->update([
-                'id_user' => $createUser->id_user
+                'id_user' => $createLogin->id
             ]);
 
             DB::commit();

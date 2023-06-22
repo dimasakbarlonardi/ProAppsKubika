@@ -5,7 +5,12 @@
         <div class="card-header py-2">
             <div class="row flex-between-center">
                 <div class="col-auto">
-                    <h6 class="my-3 text-light">Tambah Engeneering Listrik</h6>
+                    <nav aria-label="breadcrumb">
+                        <ol class="my-3 breadcrumb">
+                            <li class="breadcrumb-item text-white"> <a href="{{ route('englistriks.index')}}" class="text-white"> List Engeneering Listrik </a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Edit Engeneering Listrik</li>
+                        </ol>
+                    </nav>
                 </div>
             </div>
         </div>
@@ -27,6 +32,7 @@
                 </div>
                 <div class="mt-5">
                     <button type="submit" class="btn btn-primary">Submit</button>
+                    <button class="btn btn-danger"><a class="text-white" href="{{ route('englistriks.index')}}">Cancel</a></button>
                 </div>
                 </div>
             </form>

@@ -14,11 +14,12 @@
                 @method('PUT')
                 @csrf
                 <div class="mb-3">
-                    <label class="form-label">Agama</label>
+                    <label class="form-label">Pembayaran</label>
                     <input type="text" name="bayarnon" value="{{ $bayarnon->bayarnon }}" class="form-control">
                 </div>
                 <div class="mt-5">
                     <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="button" class="btn btn-danger"><a class="text-white" href="{{ route('bayarnons.index')}}">Cancel</a></button>
                 </div>
             </form>
         </div>

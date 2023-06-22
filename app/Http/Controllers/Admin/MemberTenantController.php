@@ -72,6 +72,8 @@ class MemberTenantController extends Controller
     {
         $conn = $this->setConnection($request);
 
+        $id_unit = ConnectionDB::setConnection(new Unit());
+
         try {
             DB::beginTransaction();
 
@@ -80,10 +82,10 @@ class MemberTenantController extends Controller
             if ($count < 10) {
                 $count = '0' . $count;
             }
-
+      
             $conn->create([
                 'id_tenant_member' => $count,
-                'id_unit' => $request->id_unit,
+                'id_unit' => $id_unit,
                 'id_tenant' => $request->id_tenant,
                 'nik_tenant_member' => $request->nik_tenant_member,
                 'nama_tenant_member' => $request->nama_tenant_member,

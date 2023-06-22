@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\User;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Notification extends Model
@@ -27,8 +28,8 @@ class Notification extends Model
 
     protected $dates = ['deleted_at'];
     
-    public function idusers()
+    public function user()
     {
-        return $this->hasOne(Login::class, 'id', 'id_user');
+        return $this->hasOne(User::class , 'id', 'id_user');
     }
 }

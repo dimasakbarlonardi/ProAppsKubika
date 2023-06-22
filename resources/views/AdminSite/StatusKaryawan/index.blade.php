@@ -8,7 +8,7 @@
                 <h6 class="mb-0 text-white">List Status Karyawan</h6>
             </div>
             <div class="col-auto d-flex">
-                <a class="btn btn-falcon-default text-600 btn-sm" href="{{ route('statuskaryawans.create') }}">Tambah Status Karyawan</a>
+                <a class="btn btn-falcon-default text-600 btn-sm" href="{{ route('statuskaryawans.create') }}"><span class="fas fa-plus fs--2 me-1"></span>Create Status Karyawan</a>
             </div>
         </div>
     </div>
@@ -27,12 +27,12 @@
                         <th scope="row">{{ $key + 1 }}</th>
                         <td>{{ $statuskaryawan->status_karyawan }}</td>
                         <td>
-                            <a href="{{ route('statuskaryawans.edit', $statuskaryawan->id_status_karyawan) }}" class="btn btn-sm btn-warning">Edit</a>
+                            <a href="{{ route('statuskaryawans.edit', $statuskaryawan->id_status_karyawan) }}" class="btn btn-sm btn-warning"><span class="fas fa-pencil-alt fs--2 me-1"></span>Edit</a>
                             <form class="d-inline" action="{{ route('statuskaryawans.destroy', $statuskaryawan->id_status_karyawan) }}" method="post">
                                 @method('DELETE')
                                 @csrf
                                 <button type="submit" class="btn btn-danger btn-sm"
-                                    onclick="return confirm('are you sure?')">Hapus</button>
+                                    onclick="return confirm('are you sure?')"><span class="fas fa-trash-alt fs--2 me-1"></span>Hapus</button>
                             </form>
                         </td>
                     </tr>

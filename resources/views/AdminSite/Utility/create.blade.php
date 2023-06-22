@@ -5,7 +5,12 @@
         <div class="card-header py-2">
             <div class="row flex-between-center">
                 <div class="col-auto">
-                    <h6 class="my-3 text-white">Tambah Utility</h6>
+                    <nav aria-label="breadcrumb">
+                        <ol class="my-3 breadcrumb">
+                            <li class="breadcrumb-item text-white"> <a href="{{ route('utilitys.index')}}" class="text-white"> List Utility</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Edit Utility</li>
+                        </ol>
+                    </nav>
                 </div>
             </div>
         </div>
@@ -18,34 +23,38 @@
                     <label class="form-label">Nama Utility</label>
                     <input type="text" name="nama_utility" class="form-control" required>
                 </div>
-                <div class="col-6 ">
+                </div>
+                <div class="row mt-4">
+                    <h6>ISI BIAYA <hr></h6>
+                <div class="col-6 mt-3 ">
                     <label class="form-label">Biaya Admin</label>
-                    <input type="text" name="biaya_admin" class="form-control" required>
+                    <div class="input-group mb-3"><input class="form-control" type="text" name="biaya_admin" aria-describedby="basic-addon2" /><span class="input-group-text text-primary" id="basic-addon2">Rupiah</span></div>
                 </div>
-                <div class="col-6 ">
+                <div class="col-6 mt-3 ">
                     <label class="form-label">Biaya Abodemen</label>
-                    <input type="text" name="biaya_abodemen" class="form-control" required>
+                    <div class="input-group mb-3"><input class="form-control" type="text" name="biaya_abodemen" aria-describedby="basic-addon2" /><span class="input-group-text text-primary" id="basic-addon2">Rupiah</span></div>
                 </div>
-                <div class="col-6 ">
+                <div class="col-6 mt-3 ">
                     <label class="form-label">Biaya Tetap</label>
-                    <input type="text" name="biaya_tetap" class="form-control" required>
+                    <div class="input-group mb-3"><input class="form-control" type="text" name="biaya_tetap" aria-describedby="basic-addon2" /><span class="input-group-text text-primary" id="basic-addon2">Rupiah</span></div>
                 </div>
-                <div class="col-6 ">
+                <div class="col-6 mt-3 ">
                     <label class="form-label">Biaya M3</label>
-                    <input type="text" name="biaya_m3" class="form-control" required>
+                    <div class="input-group mb-3"><input class="form-control" type="text" name="biaya_m3" aria-describedby="basic-addon2" /><span class="input-group-text text-primary" id="basic-addon2">Rupiah</span></div>
                 </div>
-                <div class="col-6 ">
+                <div class="col-6 mt-3 ">
                     <label class="form-label">Biaya PJU</label>
-                    <input type="text" name="biaya_pju" class="form-control" required>
+                    <div class="input-group mb-3"><input class="form-control" type="text" name="biaya_pju" aria-describedby="basic-addon2" /><span class="input-group-text text-primary" id="basic-addon2">Rupiah</span></div>
                 </div>
-                <div class="col-6 ">
+                <div class="col-6 mt-3 ">
                     <label class="form-label">Biaya PPJ</label>
-                    <input type="text" name="biaya_ppj" class="form-control" required>
+                    <div class="input-group mb-3"><input class="form-control" type="text" name="biaya_ppj" aria-describedby="basic-addon2" /><span class="input-group-text text-primary" id="basic-addon2">Rupiah</span></div>
                 </div>
-                </div>
-                </div>
-
-                <button type="submit" class="btn btn-primary">Submit</button>
+            </div>
+            <button type="submit" class="btn btn-primary mt-5">Submit</button>
+            <button class="btn btn-danger"><a class="text-white" href="{{ route('utilitys.index')}}">Cancel</a></button>
+        </div>
+    </div>
             </form>
         </div>
     </div>

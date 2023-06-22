@@ -5,7 +5,12 @@
         <div class="card-header py-2">
             <div class="row flex-between-center">
                 <div class="col-auto">
-                    <h6 class="my-3 text-light">Edit Engeneering PAM</h6>
+                    <nav aria-label="breadcrumb">
+                        <ol class="my-3 breadcrumb">
+                            <li class="breadcrumb-item text-white"> <a href="{{ route('engpams.index')}}" class="text-white"> List Engeneering PAM </a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Edit Engeneering PAM</li>
+                        </ol>
+                    </nav>
                 </div>
             </div>
         </div>
@@ -13,12 +18,6 @@
             <form method="post" action="{{ route('engpams.update', $engpam->id_eng_pam) }}">
                 @method('PUT')
                 @csrf
-                <div class="row">
-                    <div class="col-3">
-                        <label class="form-label"><b>ID Engeneering PAM</label>
-                        <input type="text" value="{{$engpam->id_eng_pam}}" class="form-control" readonly></b>
-                    </div>
-                </div>
                 <div class="row">
                     <div class="col-6">
                         <label class="form-label">Nama Engeneering PAM</label>
@@ -34,6 +33,7 @@
                     </div>
                 <div class="mt-5">
                     <button type="submit" class="btn btn-primary">Submit</button>
+                    <button class="btn btn-danger"><a class="text-white" href="{{ route('engpams.index') }}">Cancel</a></button>
                 </div>
             </form>
         </div>

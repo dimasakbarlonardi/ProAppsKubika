@@ -22,10 +22,7 @@ class NotificationController extends Controller
     {
         $conn = ConnectionDB::setConnection(new Notification());
         $user_id = $request->user()->id;
-        $cinidu = ConnectionDB::setConnection(new Login());
 
-        
-        
         $data ['notifications'] = $conn->get();
         $data['idusers'] = Login::where('id', $user_id)->get();
 
@@ -43,6 +40,7 @@ class NotificationController extends Controller
         $user_id = $request->user()->id;
 
         $data['idusers'] = Login::where('id', $user_id)->get();
+        $data['users'] = $connuser->get();
 
         return view('AdminSite.Notification.create', $data); 
     }

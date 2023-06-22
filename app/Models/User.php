@@ -19,6 +19,7 @@ class User extends Model
         'id_site',
         'login_user',
         'nama_user',
+        'user_category',
         'password_user',
         'id_status_user',
         'id_role_hdr'

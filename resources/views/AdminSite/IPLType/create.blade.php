@@ -5,7 +5,12 @@
         <div class="card-header py-2">
             <div class="row flex-between-center">
                 <div class="col-auto">
-                    <h6 class="my-3 text-light">Tambah IPL Type</h6>
+                    <nav aria-label="breadcrumb">
+                        <ol class="my-3 breadcrumb">
+                            <li class="breadcrumb-item text-white"> <a href="{{ route('ipltypes.index')}}" class="text-white"> List IPL Type</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Create IPL Type</li>
+                        </ol>
+                    </nav>
                 </div>
             </div>
         </div>
@@ -25,9 +30,12 @@
                         <option value="2">Biaya Procentage </option>
                     </select>
                 </div>
+                <div class="mt-5" id="cancel">
+                    <button class="btn btn-danger"><a class="text-white" href="{{ route('ipltypes.index')}}">Cancel</a></button>
+                </div>
 
                 <div class="mt-5" id="biaya">
-                    <h5>Isi Biaya</h5>
+                    <h6>ISI BIAYA</h6>
                     <hr>
                  <div class="mb-3">
                  <div class="row">
@@ -41,6 +49,7 @@
                 </div>
                 <div class="mt-5">
                     <button type="submit" class="btn btn-primary">Submit</button>
+                    <button class="btn btn-danger"><a class="text-white" href="{{ route('ipltypes.index')}}">Cancel</a></button>
                 </div>
                 </div>
                 </div>
@@ -66,10 +75,12 @@
                 if (status == '1') {
                     $('#biaya_permeter').css('display', 'block')
                     $('#biaya_procentage').css('display', 'none')
+                    $('#cancel').css('display', 'none')
 
                 } else {
                     $('#biaya_procentage').css('display', 'block')
                     $('#biaya_permeter').css('display', 'none')
+                    $('#cancel').css('display', 'none')
 
                 }
             })

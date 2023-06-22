@@ -34,5 +34,9 @@ class ChecklistAhuH extends Model
         return $this->hasOne(ChecklistAhuDetail::class, 'id_ahu', 'id_ahu');
     }
 
+    public function engahu()
+    {
+        return $this->hasOne(EngAhu::class, 'id_eng_ahu', 'id_eng_ahu');
+    }
 
 }

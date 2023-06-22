@@ -8,6 +8,7 @@
     --falcon-orange: #fd7e14;
     --falcon-yellow: #f5803e;
     --falcon-green: #00d27a;
+    --falcon-greentua: #176B5D;
     --falcon-teal: #02a8b5;
     --falcon-cyan: #27bcfd;
     --falcon-black: #000;
@@ -270,7 +271,7 @@
     --falcon-btn-falcon-primary-color: var(--falcon-primary);
     --falcon-btn-falcon-primary-hover-color: #2566be;
     --falcon-btn-falcon-primary-active-background: #d5e5fa;
-    --falcon-btn-falcon-primary-active-color: #2566be;
+    --falcon-btn-falcon-primary-active-color: #176B5D;
     --falcon-list-group-item-background-primary: #d5e5fa;
     --falcon-list-group-item-color-primary: #1a4a89;
     --falcon-badge-subtle-primary-background-color: #d5e5fa;
@@ -8326,7 +8327,7 @@ html[data-bs-theme=dark] .tox .tox-dialog__footer .tox-button--secondary,
     --falcon-breadcrumb-border-radius: ;
     --falcon-breadcrumb-divider-color: var(--falcon-secondary-color);
     --falcon-breadcrumb-item-padding-x: 0.5rem;
-    --falcon-breadcrumb-item-active-color: var(--falcon-secondary-color);
+    --falcon-breadcrumb-item-active-color: var(--falcon-secondary-color);   
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;

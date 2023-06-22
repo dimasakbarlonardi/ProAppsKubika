@@ -5,7 +5,12 @@
         <div class="card-header py-2">
             <div class="row flex-between-center">
                 <div class="col-auto">
-                    <h6 class="my-3 text-light">Tambah Jenis Denda</h6>
+                    <nav aria-label="breadcrumb">
+                        <ol class="my-3 breadcrumb">
+                            <li class="breadcrumb-item text-white"> <a href="{{ route('jenisdendas.index')}}" class="text-white"> List Jenis Denda</a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Create Jenis Denda</li>
+                        </ol>
+                    </nav>
                 </div>
             </div>
         </div>
@@ -25,6 +30,9 @@
                         <option value="2">Biaya Amount </option>
                     </select>
                 </div>
+                <div class="mt-5" id="cancel">
+                    <button class="btn btn-danger"><a class="text-white" href="{{ route('jenisdendas.index')}}">Cancel</a></button>
+                </div>
 
                 <div class="mt-5" id="biaya">
                     <h5>Isi Biaya </h5>
@@ -41,6 +49,7 @@
                 </div>
                 <div class="mt-5">
                     <button type="submit" class="btn btn-primary">Submit</button>
+                    <button class="btn btn-danger"><a class="text-white" href="{{ route('jenisdendas.index')}}">Cancel</a></button>
                 </div>
                 </div>
                 </div>
@@ -66,10 +75,12 @@
                 if (status == '1') {
                     $('#denda_flat_procetage').css('display', 'block')
                     $('#denda_flat_amount').css('display', 'none')
+                    $('#cancel').css('display', 'none')
 
                 } else {
                     $('#denda_flat_amount').css('display', 'block')
                     $('#denda_flat_procetage').css('display', 'none')
+                    $('#cancel').css('display', 'none')
 
                 }
             })

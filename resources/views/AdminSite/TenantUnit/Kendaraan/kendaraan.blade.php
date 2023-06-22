@@ -10,7 +10,8 @@
         <div class="col">
             <button class="btn btn-falcon-primary me-1 mb-1 btn-unit" type="button"
                 onclick="btnUnitClick('{{ $unit->id_unit }}')"
-                id="btn-unit-{{ $unit->id_unit }}">{{ $unit->unit->nama_unit }}</button>
+                id="btn-unit-{{ $unit->id_unit }}"><span
+                class="fas fa-building me-2"></span>{{ $unit->unit->nama_unit }}</button>
         </div>
     @endforeach
 </div>
@@ -41,8 +42,8 @@
                                     <label class="form-label">Unit</label>
                                     <select class="form-control" name="id_unit" required>
                                         <option selected disabled>-- Pilih Unit --</option>
-                                        @foreach ($getIDunitFromTU as $unit)
-                                            <option value="{{ $unit->id_tenant_unit }}">{{ $unit->unit->nama_unit }}</option>
+                                        @foreach ($tenant_units as $unit)
+                                            <option value="{{ $unit->id_unit }}">{{ $unit->unit->nama_unit }}</option>
                                         @endforeach
                                     </select>
                                 </div>

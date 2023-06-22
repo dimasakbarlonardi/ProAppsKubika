@@ -128,7 +128,7 @@
                             <option value="{{ $jabatan->id_jabatan }}" {{ $jabatan->id_jabatan == $karyawan->id_jabatan ? 'selected' : ''}}>{{ $jabatan->nama_jabatan }} </option>
                             @endforeach
                         </select>
-                    </div> 
+                    </div>
                     <div class="col-6">
                         <label class="form-label">ID Divisi</label>
                         <select class="form-control" name="id_divisi" required>

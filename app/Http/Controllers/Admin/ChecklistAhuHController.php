@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Models\ChecklistAhuH;
 use App\Helpers\ConnectionDB;
 use App\Models\ChecklistAhuDetail;
+use App\Models\EngAhu;
 use App\Models\Login;
 use App\Models\Room;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Http\Request;
@@ -25,9 +27,18 @@ class ChecklistAhuHController extends Controller
         $connahudetail = ConnectionDB::setConnection(new ChecklistAhuDetail());
 
         $data ['checklistahus'] = $conn->get();
-        $data ['ahudetails'] = $connahudetail->get();
+        $data ['ahudetails'] = $connahudetail->first();
 
         return view('AdminSite.ChecklistAhuH.index', $data);
+    }
+
+    public function filterByNoChecklist(Request $request)
+    {
+        $conn = ConnectionDB::setConnection(new ChecklistAhuH());
+
+        $data = $conn->where('no_checklist_ahu', $request->no_checklist_ahu)->get();
+
+        return response()->json(['checklists' => $data]);
     }
 
     /**
@@ -38,10 +49,12 @@ class ChecklistAhuHController extends Controller
     public function create(Request $request)
     {
         $connroom = ConnectionDB::setConnection(new Room());
+        $connahu = ConnectionDB::setConnection(new EngAhu());
         $user_id = $request->user()->id;
 
         
         $data ['rooms'] = $connroom->get();
+        $data ['engahus'] = $connahu->get();
         $data['idusers'] = Login::where('id', $user_id)->get();
 
         return view('AdminSite.ChecklistAhuH.create', $data);
@@ -56,21 +69,46 @@ class ChecklistAhuHController extends Controller
     public function store(Request $request)
     {
         $conn = ConnectionDB::setConnection(new ChecklistAhuH());
+        $conndetail = ConnectionDB::setConnection(new ChecklistAhuDetail());
 
         try {
             
             DB::beginTransaction();
 
+            $ahu = ConnectionDB::setConnection(new EngAhu());
+
+            $id_ahu = $ahu->first('id_eng_ahu');
+
+            $today = Carbon::now()->format('dmY');
+
+            $tgl = Carbon::now()->format('y-m-d');
+
+            $current = Carbon::now()->format('hi');
+
+            $time = Carbon::now()->format('his');
+
+            $no_checklist_ahu = $id_ahu->id_eng_ahu . $today . $current;
+
+            
             $conn->create([
                 'id_checklist_ahu_h' => $request->id_checklist_ahu_h,
                 'barcode_room' => $request->barcode_room,
                 'id_room' => $request->id_room,
-                'tgl_checklist' => $request->tgl_checklist,
-                'time_checklist' => $request->time_checklist,
-                'id_user' => $request->id_user,
-                'no_checklist_ahu' => $request->no_checklist_ahu,
+                'tgl_checklist' => $tgl,
+                'time_checklist' => $time,
+                // 'id_user' => $request->id_user,
+                'no_checklist_ahu' => $no_checklist_ahu,
             ]);
 
+            $conndetail->create([
+                'id_ahu' => $request->id_ahu,
+                'no_checklist_ahu' => $no_checklist_ahu,
+                'in_out' => $request->in_out,
+                'check_point' => $request->check_point,
+                'keterangan' => $request->keterangan,
+            ]);
+           
+            
             DB::commit();
 
             Alert::success('Berhasil', 'Berhasil menambahkan Checklis AHU');
@@ -93,7 +131,13 @@ class ChecklistAhuHController extends Controller
      */
     public function show($id)
     {
-        //
+        $conn = ConnectionDB::setConnection(new ChecklistAhuH());
+        $conndetail = ConnectionDB::setConnection(new ChecklistAhuDetail());
+
+        $data['checklistahu'] = $conn->where('no_checklist_ahu', $id)->first();
+        $data['ahudetail'] = $conndetail->where('no_checklist_ahu', $id)->first();
+        
+        return view('AdminSite.ChecklistAhuH.show',$data);
     }
 
     /**
@@ -105,12 +149,12 @@ class ChecklistAhuHController extends Controller
     public function edit(Request $request ,$id)
     {
         $conn = ConnectionDB::setConnection(new ChecklistAhuH());
+        $conndetail = ConnectionDB::setConnection(new ChecklistAhuDetail());
         $connroom = ConnectionDB::setConnection(new Room());
         $user_id = $request->user()->id;
 
-        
-        
-        $data['checklistahu'] = $conn->find($id);
+        $data['checklistahu'] = $conn->where('no_checklist_ahu', $id)->first();
+        $data['ahudetail'] = $conndetail->where('no_checklist_ahu', $id)->first();
         $data ['rooms'] = $connroom->get();
         $data['idusers'] = Login::where('id', $user_id)->get();
 

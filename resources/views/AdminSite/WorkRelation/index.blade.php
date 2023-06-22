@@ -4,11 +4,11 @@
 <div class="card">
     <div class="card-header py-2">
         <div class="row flex-between-center">
-            <div class="col-auto">
+            <div class="my-3 col-auto">
                 <h6 class="mb-0 text-white">List Work Relation</h6>
             </div>
             <div class="col-auto d-flex">
-                <a class="btn btn-falcon-default text-600 btn-sm" href="{{ route('workrelations.create') }}">Tambah Work Relation</a>
+                <a class="btn btn-falcon-default text-600 btn-sm" href="{{ route('workrelations.create') }}"><span class="fas fa-plus fs--2 me-1"></span>Create Work Relation</a>
             </div>
         </div>
     </div>
@@ -27,12 +27,12 @@
                         <th scope="row">{{ $key + 1 }}</th>
                         <td>{{ $workrelation->work_relation }}</td>
                         <td>
-                            <a href="{{ route('workrelations.edit', $workrelation->id_work_relation) }}" class="btn btn-sm btn-warning">Edit</a>
+                            <a href="{{ route('workrelations.edit', $workrelation->id_work_relation) }}" class="btn btn-sm btn-warning"><span class="fas fa-pencil-alt fs--2 me-1"></span>Edit</a>
                             <form class="d-inline" action="{{ route('workrelations.destroy', $workrelation->id_work_relation) }}" method="post">
                                 @method('DELETE')
                                 @csrf
                                 <button type="submit" class="btn btn-danger btn-sm"
-                                    onclick="return confirm('are you sure?')">Hapus</button>
+                                    onclick="return confirm('are you sure?')"><span class="fas fa-trash-alt fs--2 me-1"></span>Hapus</button>
                             </form>
                         </td>
                     </tr>

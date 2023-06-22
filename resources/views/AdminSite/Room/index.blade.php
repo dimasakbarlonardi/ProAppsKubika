@@ -4,7 +4,7 @@
 <div class="card">
     <div class="card-header py-2">
         <div class="row flex-between-center">
-            <div class="col-auto">
+            <div class="my-3 col-auto">
                 <h6 class="mb-0">List Room</h6>
             </div>
             <div class="col-auto d-flex">

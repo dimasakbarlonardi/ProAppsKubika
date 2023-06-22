@@ -105,14 +105,11 @@ class WorkRelationController extends Controller
     public function update(Request $request, $id)
     {
         $connWorkRelation = ConnectionDB::setConnection(new WorkRelation());
-        $count = $connWorkRelation->count();
 
-        $connWorkRelation->where('id_work_relation', $id)->update([
-            'id_work_relation' => $count,
-            'work_relation' => $request->work_relation,
-        ]);
+        $connWorkRelation = $connWorkRelation->find($id);
+        $connWorkRelation->update($request->all());
 
-        Alert::success('Berhasil', 'Berhasil Mengupdate Work Relation');
+        Alert::success('Berhasil', 'Berhasil mengupdate Work Relation');
 
         return redirect()->route('workrelations.index');
     }

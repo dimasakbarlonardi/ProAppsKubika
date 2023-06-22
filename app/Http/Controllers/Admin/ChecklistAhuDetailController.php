@@ -61,13 +61,13 @@ class ChecklistAhuDetailController extends Controller
 
             Alert::success('Berhasil', 'Berhasil menambahkan Checklis AHU Detail');
 
-            return redirect()->route('ahusdetails.index');
+            return redirect()->route('ahudetails.index');
         } catch (\Throwable $e) {
             DB::rollBack();
             dd($e);
             Alert::error('Gagal', 'Gagal menambahkan Checklis AHU Detail');
 
-            return redirect()->route('ahusdetails.index');
+            return redirect()->route('ahudetails.index');
         }
     }
 
@@ -122,7 +122,7 @@ class ChecklistAhuDetailController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id)                            
     {
         $conn = ConnectionDB::setConnection(new ChecklistAhuDetail());
 

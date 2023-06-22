@@ -88,7 +88,7 @@ class UnitController extends Controller
             $site = $login->site->id_site;
             $tower = $tower->where('id_site', $site)->first();
 
-            $floor = ConnectionDB::setConnection(new Floor());
+            $floor = ConnectionDB::setConnection(new Floor());Fget
 
             $count = $conn->count();
             $count += 1;

@@ -5,7 +5,12 @@
         <div class="card-header py-2">
             <div class="row flex-between-center">
                 <div class="col-auto">
-                    <h6 class="my-3 text-light">Edit Engeneering AHU</h6>
+                    <nav aria-label="breadcrumb">
+                        <ol class="my-3 breadcrumb">
+                            <li class="breadcrumb-item text-white"> <a href="{{ route('engahus.index')}}" class="text-white"> List Engeneering AHU </a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Edit Engeneering AHU</li>
+                        </ol>
+                    </nav>
                 </div>
             </div>
         </div>
@@ -14,14 +19,8 @@
                 @method('PUT')
                 @csrf
                 <div class="row">
-                    <div class="col-3">
-                        <label class="form-label"><b>ID Engeneering AHU</label>
-                        <input type="text" value="{{$engahu->id_eng_ahu}}" class="form-control" readonly></b>
-                    </div>
-                </div>
-                <div class="row">
                     <div class="col-6 mt-3">
-                        <label class="form-label">Nama Engeneering AHU</label>
+                        <label class="form-label">No Engeneering AHU</label>
                         <input type="text" name="nama_eng_ahu" value="{{ $engahu->nama_eng_ahu}}" class="form-control" required>
                     </div>
                     <div class="col-6 mt-3">
@@ -34,6 +33,7 @@
                     </div>
                 <div class="mt-5">
                     <button type="submit" class="btn btn-primary">Submit</button>
+                    <button class="btn btn-danger"><a class="text-white" href="{{ route('engahus.index')}}">Cancel</a></button>
                 </div>
             </form>
         </div>

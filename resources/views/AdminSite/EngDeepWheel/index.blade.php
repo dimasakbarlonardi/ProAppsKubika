@@ -8,7 +8,7 @@
                 <h6 class="mb-0">List Engeneering DeepWheel</h6>
             </div>
             <div class="col-auto d-flex">
-                <a class="btn btn-falcon-default btn-sm text-600" href="{{ route('engdeeps.create') }}">Tambah Engeneering DeepWheel</a>
+                <a class="btn btn-falcon-default btn-sm text-600" href="{{ route('engdeeps.create') }}"><span class="fas fa-plus fs--2 me-1"></span>Tambah Engeneering DeepWheel</a>
             </div>
         </div>
     </div>
@@ -31,12 +31,12 @@
                         <td>{{ $engdeep->subject }}</td>
                         <td>{{ $engdeep->dsg }}</td>
                         <td>
-                            <a href="{{ route('engdeeps.edit', $engdeep->id_eng_deep) }}" class="btn btn-sm btn-warning">Edit</a>
+                            <a href="{{ route('engdeeps.edit', $engdeep->id_eng_deep) }}" class="btn btn-sm btn-warning"><span class="fas fa-pencil-alt fs--2 me-1"></span>Edit</a>
                             <form class="d-inline" action="{{ route('engdeeps.destroy', $engdeep->id_eng_deep) }}" method="post">
                                 @method('DELETE')
                                 @csrf
                                 <button type="submit" class="btn btn-danger btn-sm"
-                                    onclick="return confirm('are you sure?')">Hapus</button>
+                                    onclick="return confirm('are you sure?')"><span class="fas fa-trash-alt fs--2 me-1"></span>Hapus</button>
                             </form>
                         </td>
                     </tr>

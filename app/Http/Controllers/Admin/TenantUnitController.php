@@ -91,8 +91,8 @@ class TenantUnitController extends Controller
         $connStatusTinggal = $this->setConnection(new StatusTinggal());
         $connOwner = $this->setConnection(new OwnerH());
 
-        $data['tenant'] = $connTenant->find($id);
         $data['tenant_units'] = $connTenantUnit->where('id_tenant', $id)->get();
+        $data['tenant'] = $connTenant->find($id);
         $data['getCreateUnits'] = $this->getUnitIDFromTU();
 
         $data['getIDunitFromTU'] = $this->getIDunitFromTU();
@@ -196,7 +196,6 @@ class TenantUnitController extends Controller
         $periodeSewa = $this->setConnection(new PeriodeSewa());
         $connOwner = $this->setConnection(new OwnerH());
 
-
         $data['id_tenant'] = $id;
         $data['units'] = $connUnit->get();
         $data['owners'] = $connOwner->get();
@@ -211,10 +210,13 @@ class TenantUnitController extends Controller
     {
         $connTenantMember = $this->setConnection(new MemberTenant());
         $connUnit = $this->setConnection(new Unit());
+        $connStatusTinggal = $this->setConnection(new StatusTinggal());
 
+        $data['getIDunitFromTU'] = $this->getIDunitFromTU();
         $data['id_tenant'] = $id;
         $data['units'] = $connUnit->get();
         $data['tenantmember'] = $connTenantMember->where('id_tenant_member', $id)->first();
+        $data['statustinggals'] = $connStatusTinggal->get();
 
         return view('AdminSite.TenantUnit.Member.edit', $data)->render();
     }

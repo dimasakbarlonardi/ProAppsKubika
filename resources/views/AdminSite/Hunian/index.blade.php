@@ -4,7 +4,7 @@
 <div class="card">
     <div class="card-header py-3">
         <div class="row flex-between-center">
-            <div class="col-auto">
+            <div class="my-3 col-auto">
                 <h6 class="mb-0">List Hunian</h6>
             </div>
             {{-- <div class="col-auto d-flex">
@@ -17,7 +17,6 @@
             <thead>
                 <tr>
                     <th class="sort" data-sort="">No</th>
-                    <th class="sort" data-sort="id_hunian">ID Hunian</th>
                     <th class="sort" data-sort="nama_hunian">Nama Hunian</th>
 
                 </tr>
@@ -26,7 +25,6 @@
                 @foreach ($hunians as $key => $hunian)
                     <tr>
                         <th scope="row">{{ $key + 1 }}</th>
-                        <td>{{ $hunian->id_hunian }}</td>
                         <td>{{ $hunian->nama_hunian }}</td>
                         {{-- <td>
                             <a href="{{ route('hunians.edit', $hunian->id_lantai) }}" class="btn btn-sm btn-warning">Edit</a>

@@ -10,14 +10,15 @@
                     <label class="form-label">Unit</label>
                     <select class="form-control" name="id_unit" required>
                         <option selected disabled>-- Pilih Unit --</option>
-                        @foreach ($units as $unit)
-                            <option value="{{ $getCreateUnits->id_unit }}"
-                                {{ $tenantmember->id_unit == $unit->id_unit ? 'selected' : '' }}>
-                                {{ $unit->nama_unit }}
+                        @foreach ($getIDunitFromTU as $unit)
+                            <option value="{{ $unit->id_tenant_unit }}"
+                                {{ $tenantmember->id_tenant_unit == $unit->id_tenant_unit ? 'selected' : '' }}>
+                                {{ $unit->unit->nama_unit}}
                             </option>
                         @endforeach
                     </select>
                 </div>
+
                 <div class="col-6">
                     <label class="form-label">Nik Tenant Member </label>
                     <input type="text" name="nik_tenant_member" value="{{ $tenantmember->nik_tenant_member }}" class="form-control" required>
@@ -43,8 +44,16 @@
                     <input type="text" name="no_telp_member" value="{{ $tenantmember->no_telp_member }}" class="form-control" required>
                 </div>
                 <div class="col-6">
-                    <label class="form-label">ID Status Tinggal </label>
-                    <input type="text" name="id_status_tinggal" value="{{ $tenantmember->id_status_tinggal }}" class="form-control" required>
+                    <label class="form-label">ID Status Tinggal</label>
+                    <select class="form-control" name="id_status_tinggal" required>
+                        <option selected disabled>-- Pilih Status Tinggal --</option>
+                        @foreach ($statustinggals as $statustinggal)
+                        <option value="{{ $statustinggal->id_status_tinggal }}"
+                            {{ $tenantmember->id_status_tinggal == $statustinggal->id_status_tinggal ? 'selected' : '' }}>
+                            {{ $statustinggal->status_tinggal}}
+                        </option>
+                        @endforeach
+                    </select>
                 </div>
             </div>
         </div>

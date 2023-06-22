@@ -38,5 +38,4 @@ class TenantUnit extends Model
         return $this->hasOne(OwnerH::class, 'id_pemilik', 'id_pemilik');
     }
 
-    
 }
