@@ -81,7 +81,18 @@
                                             <div class="col-auto lh-1 me-3">
                                                 @switch($ticket->status_request)
                                                     @case('PENDING')
-                                                        <small class="badge rounded bg-warning dark__bg-1000">Pending</small>
+                                                        <small
+                                                            class="badge rounded bg-warning dark__bg-1000">{{ $ticket->status_request }}</small>
+                                                    @break
+
+                                                    @case('RESPONDED')
+                                                        <small
+                                                            class="badge rounded bg-info dark__bg-1000">{{ $ticket->status_request }}</small>
+                                                    @break
+
+                                                    @case('PROSES')
+                                                        <small
+                                                            class="badge rounded bg-info dark__bg-1000">{{ $ticket->status_request }}</small>
                                                     @break
 
                                                     @case('ON WORK')
