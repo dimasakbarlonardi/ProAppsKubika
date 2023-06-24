@@ -6,13 +6,21 @@ use App\Http\Controllers\Admin\BayarnonController;
 use App\Http\Controllers\Admin\ChecklistAhuDetailController;
 use App\Http\Controllers\Admin\ChecklistAhuHController;
 use App\Http\Controllers\Admin\ChecklistChillerHController;
+use App\Http\Controllers\Admin\ChecklistFloorHController;
 use App\Http\Controllers\Admin\ChecklistGasHController;
 use App\Http\Controllers\Admin\ChecklistGensetHController;
 use App\Http\Controllers\Admin\ChecklistGroundRoofHController;
+use App\Http\Controllers\Admin\ChecklistKoridorHController;
+use App\Http\Controllers\Admin\ChecklistLiftHController;
 use App\Http\Controllers\Admin\ChecklistListrikHController;
+use App\Http\Controllers\Admin\ChecklistOfficeManagementHController;
 use App\Http\Controllers\Admin\ChecklistPemadamHController;
 use App\Http\Controllers\Admin\ChecklistPompaSumpitHController;
 use App\Http\Controllers\Admin\ChecklistPutrHController;
+use App\Http\Controllers\Admin\ChecklistSolarHController;
+use App\Http\Controllers\Admin\ChecklistTanggaDaruratHController;
+use App\Http\Controllers\Admin\ChecklistTemperaturHController;
+use App\Http\Controllers\Admin\ChecklistToiletHController;
 use App\Http\Controllers\Admin\DepartemenController;
 use App\Http\Controllers\Admin\DivisiController;
 use App\Http\Controllers\Admin\EngAHUController;
@@ -82,6 +90,7 @@ use App\Http\Controllers\Admin\WorkRelationController;
 use App\Models\ChecklistGensetH;
 use App\Models\ChecklistGroundRoofH;
 use App\Models\ChecklistListrikH;
+use App\Models\ChecklistOfficeManagementH;
 use App\Models\ChecklistPemadamH;
 use App\Models\ChecklistPutrH;
 use App\Models\MonthlyArTenant;
@@ -403,6 +412,38 @@ Route::prefix('admin')->group(function () {
           //CRUD Checklist PUTR 
           Route::resource('checklistputrs', ChecklistPutrHController::class);
           Route::get('/checklist-filter-putr', [ChecklistPutrHController::class, 'filterByNoChecklist']);
+
+          //CRUD Checklist Solar 
+          Route::resource('checklistsolars', ChecklistSolarHController::class);
+          Route::get('/checklist-filter-solar', [ChecklistSolarHController::class, 'filterByNoChecklist']);
+
+          //CRUD Checklist Temperatur 
+          Route::resource('checklisttemperaturs', ChecklistTemperaturHController::class);
+          Route::get('/checklist-filter-temperatur', [ChecklistTemperaturHController::class, 'filterByNoChecklist']);
+
+          //CRUD Checklist Toilet 
+          Route::resource('checklisttoilets', ChecklistToiletHController::class);
+          Route::get('/checklist-filter-toilet', [ChecklistToiletHController::class, 'filterByNoChecklist']);
+
+          //CRUD Checklist Office Management 
+          Route::resource('checklistoffices', ChecklistOfficeManagementHController::class);
+          Route::get('/checklist-filter-office_management', [ChecklistOfficeManagementHController::class, 'filterByNoChecklist']);
+
+          //CRUD Checklist Lift 
+          Route::resource('checklistlifts', ChecklistLiftHController::class);
+          Route::get('/checklist-filter-lift', [ChecklistLiftHController::class, 'filterByNoChecklist']);
+
+          //CRUD Checklist Floor 
+          Route::resource('checklistfloors', ChecklistFloorHController::class);
+          Route::get('/checklist-filter-floor', [ChecklistFloorHController::class, 'filterByNoChecklist']);
+
+          //CRUD Checklist Tangga Darurat 
+          Route::resource('checklisttanggadarurats', ChecklistTanggaDaruratHController::class);
+          Route::get('/checklist-filter-tangga_darurat', [ChecklistTanggaDaruratHController::class, 'filterByNoChecklist']);
+
+          //CRUD Checklist Koridor 
+          Route::resource('checklistkoridors', ChecklistKoridorHController::class);
+          Route::get('/checklist-filter-koridor', [ChecklistKoridorHController::class, 'filterByNoChecklist']);
  
         // Akses form for user
         Route::get('/akses-form-user/{id}', [RoleController::class, 'aksesForm'])->name('akses-form');

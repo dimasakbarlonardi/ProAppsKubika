@@ -35,7 +35,7 @@
                 </div>
 
                 <div class="mt-3" id="biaya">
-                    <h6><b>DETAIL CHECKLIS  SOLAR</b></h6>
+                    <h6><b>DETAIL CHECKLIS Solar</b></h6>
                     <hr>
                  <div class="row mb-3">
 
@@ -45,16 +45,29 @@
                             <thead class="bg-200 text-900">
                               <tr>
                                 <th class="sort" data-sort="no_checklist_solar">Nomer Checklist Solar</th>
-                                <th class="sort" data-sort="nilai">Nilai</th>
-                                <th class="sort" data-sort="hasil">Hasil</th>
+                                <th class="sort" data-sort="checkpoint1">CheckPoint 1</th>
+                                <th class="sort" data-sort="checkpoint2">CheckPoint 2</th>
+                                <th class="sort" data-sort="checkpoint3">CheckPoint 3</th>
+                                <th class="sort" data-sort="checkpoint4">CheckPoint 4</th>
+                                <th class="sort" data-sort="data1">Data 1</th>
+                                <th class="sort" data-sort="data2">Data 2</th>
+                                <th class="sort" data-sort="jam1">Jam 1</th>
+                                <th class="sort" data-sort="jam2">Jam 2</th>
+
                                 <th class="sort" data-sort="keterangan">Keterangan</th>
                               </tr>
                             </thead>
                             <tbody class="list">
                               <tr>
                                 <td class="no_checklist_solar">{{ $solardetail->no_checklist_solar }}</td>
-                                <td class="nilai">{{ $solardetail->nilai}}</td>
-                                <td class="hasil">{{ $solardetail->hasil }}</td>
+                                <td class="check_point1">{{ $solardetail->check_point1}}</td>
+                                <td class="check_point2">{{ $solardetail->check_point2 }}</td>
+                                <td class="check_point3">{{ $solardetail->check_point3}}</td>
+                                <td class="check_point4">{{ $solardetail->check_point4 }}</td>
+                                <td class="data1">{{ $solardetail->data1}}</td>
+                                <td class="data2">{{ $solardetail->data2 }}</td>
+                                <td class="jam1">{{ $solardetail->jam1}}</td>
+                                <td class="jam2">{{ $solardetail->jam2 }}</td>
                                 <td class="keterangan">{{ $solardetail->keterangan }}</td>
                               </tr>
                             </tbody>
