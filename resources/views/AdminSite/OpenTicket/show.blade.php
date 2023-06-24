@@ -25,8 +25,7 @@
                             class="d-md-flex d-xl-inline-block d-xxl-flex align-items-center justify-content-between mb-x1">
                             <div class="d-flex align-items-center gap-2">
                                 <div class="avatar avatar-2xl">
-                                    <img class="rounded-circle"
-                                        src="{{ url($ticket->Tenant->profile_picture) }}"
+                                    <img class="rounded-circle" src="{{ url($ticket->Tenant->profile_picture) }}"
                                         alt="" />
                                 </div>
                                 <p class="mb-0"><a class="fw-semi-bold mb-0 text-800"
@@ -81,8 +80,7 @@
                             <div class="d-flex align-items-center gap-2">
                                 <div class="avatar avatar-2xl">
                                     <img class="rounded-circle"
-                                        src="{{ $ticket->TenantRelation->Karyawan->profile_picture }}"
-                                        alt="" />
+                                        src="{{ $ticket->TenantRelation->Karyawan->profile_picture }}" alt="" />
                                 </div>
                                 <p class="mb-0"><a class="fw-semi-bold mb-0 text-800"
                                         href="../../app/support-desk/contact-details.html">{{ $ticket->TenantRelation->Karyawan->nama_karyawan }}</a>
@@ -93,7 +91,8 @@
                             <p class="mb-0 fs--2 fs-sm--1 fw-semi-bold mt-2 mt-md-0 mt-xl-2 mt-xxl-0 ms-5">
                                 {{ HumanDate($ticket->tgl_respon_tiket) }}
                                 <span class="mx-1">|</span>
-                                <span class="fst-italic">{{ HumanTime($ticket->jam_respon) }} ({{ TimeAgo($ticket->tgl_respon_tiket . ' ' . $ticket->jam_respon) }})</span>
+                                <span class="fst-italic">{{ HumanTime($ticket->jam_respon) }}
+                                    ({{ TimeAgo($ticket->tgl_respon_tiket . ' ' . $ticket->jam_respon) }})</span>
                             </p>
                         </div>
                         <div>
@@ -133,7 +132,8 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="mb-2 mt-n2"><label class="mb-1">Jenis Request</label>
-                                        <select name="id_jenis_request" class="form-select form-select-sm">
+                                        <select name="id_jenis_request" class="form-select form-select-sm"
+                                            {{ $ticket->status_request != 'RESPONDED' ? 'disabled' : '' }}>
                                             <option disabled selected>--Pilih Jenis Request---</option>
                                             @foreach ($jenis_requests as $request)
                                                 <option
@@ -143,25 +143,36 @@
                                             @endforeach
                                         </select>
                                     </div>
-                                    @if ($ticket->status_request == 'RESPONDED')
+                                    @if (
+                                        ($ticket->status_request != 'PENDING' || $ticket->status_request == 'RESPONDED') &&
+                                            $ticket->status_request != 'COMPLETE')
                                         <div class="mb-2"><label class="mb-1 mt-2">Status</label>
-                                            <select name="status_request" class="form-select form-select-sm">
+                                            <select name="status_request" class="form-select form-select-sm"
+                                                {{ $ticket->status_request != 'RESPONDED' ? 'disabled' : '' }}>
                                                 <option disabled selected>--Pilih Status---</option>
                                                 <option {{ $ticket->status_request == 'PROSES KE WR' ? 'selected' : '' }}
                                                     value="PROSES KE WR">Proses ke WR</option>
-                                                <option {{ $ticket->status_request == 'CLOSED' ? 'selected' : '' }}
-                                                    value="CLOSED">Closed</option>
+                                                <option {{ $ticket->status_request == 'DONE' ? 'selected' : '' }}
+                                                    value="DONE">DONE</option>
                                             </select>
                                         </div>
+                                    @elseif ($ticket->status_request == 'COMPLETE')
+                                        <div class="mb-3">
+                                            <div class="mb-2"><label class="mb-1 mt-2">Status</label>
+                                                <input type="text" value="{{ $ticket->status_request }}"
+                                                    class="form-control" disabled>
+                                            </div>
                                     @endif
                                 </div>
-                                <div class="card-footer border-top border-200 py-x1">
-                                    <button class="btn btn-primary w-100">Update</button>
-                                </div>
+                                @if ($ticket->status_request == 'RESPONDED')
+                                    <div class="card-footer border-top border-200 py-x1">
+                                        <button class="btn btn-primary w-100">Update</button>
+                                    </div>
+                                @endif
                             </form>
                         </div>
                     </div>
-                    <div class="col-12">
+                    <div class="col-12 mt-3">
                         <div class="card">
                             <div class="card-header d-flex flex-between-center py-3">
                                 <h6 class="mb-0">Contact Information</h6>
@@ -176,8 +187,8 @@
                                     </div>
                                     <div class="col-12 col-sm-auto col-xl-12">
                                         <p class="fw-semi-bold text-800 mb-0">{{ $ticket->Tenant->nama_tenant }}</p><a
-                                            class="btn btn-link btn-sm p-0 fe-medium fs--1"
-                                            href="#">View more details</a>
+                                            class="btn btn-link btn-sm p-0 fe-medium fs--1" href="#">View more
+                                            details</a>
                                     </div>
                                 </div>
                                 <div class="row g-0 justify-content-lg-between">
@@ -195,7 +206,9 @@
                                         <div class="row">
                                             <div class="col-md-auto mb-4 mb-md-0 mb-xl-4">
                                                 <h6 class="mb-1">Unit</h6><a class="fs--1"
-                                                    href="mailto:mattrogers@gmail.com">Lantai : {{ $ticket->Unit->floor->nama_lantai }}, {{ $ticket->Unit->nama_unit }}</a>
+                                                    href="mailto:mattrogers@gmail.com">Lantai :
+                                                    {{ $ticket->Unit->floor->nama_lantai }},
+                                                    {{ $ticket->Unit->nama_unit }}</a>
                                             </div>
                                         </div>
                                     </div>

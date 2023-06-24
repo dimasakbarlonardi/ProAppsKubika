@@ -10,6 +10,7 @@ use App\Models\OwnerH;
 use App\Models\Role;
 use App\Models\Tenant;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -91,7 +92,7 @@ class UserController extends Controller
         $connKaryawan = ConnectionDB::setConnection(new Karyawan());
         $connOwner = ConnectionDB::setConnection(new OwnerH());
         $connTenant = ConnectionDB::setConnection(new Tenant());
-        $lastID = $connUser->latest()->limit(1)->first();
+        $count = $connUser->count();
 
         $login = Login::find($request->user()->id);
 
@@ -130,7 +131,7 @@ class UserController extends Controller
 
             $connUser->create([
                 'id_site' => $login->id_site,
-                'id_user' => strval($lastID->id_user + 1),
+                'id_user' => strval(Carbon::now()->format('Y') . sprintf("%03d", $count + 1)),
                 'nama_user' => $nama,
                 'login_user' => $email,
                 'password_user' => Hash::make($request->password_user),
