@@ -28,7 +28,11 @@ class OpenTicket extends Model
         'tgl_respon_tiket',
         'jam_respon',
         'deskripsi_respon',
-        'id_user_resp_request'
+        'id_user_resp_request',
+        'sign_approve_1',
+        'date_approve_1',
+        'sign_approve_2',
+        'date_approve_2',
     ];
 
     public function jenisRequest()

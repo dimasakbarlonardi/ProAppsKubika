@@ -4,9 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
+use App\Models\Approve;
+use App\Models\ApproveRequest;
 use App\Models\Divisi;
 use App\Models\JenisRequest;
 use App\Models\Login;
+use App\Models\Notifikasi;
 use App\Models\OpenTicket;
 use App\Models\Site;
 use App\Models\System;
@@ -75,12 +78,7 @@ class OpenTicketController extends Controller
         $connSystem = ConnectionDB::setConnection(new System());
         $connSystem = ConnectionDB::setConnection(new System());
         $connUnit = ConnectionDB::setConnection(new Unit());
-        $connTenant = ConnectionDB::setConnection(new Tenant());
 
-        // $user = $request->session()->get('user');
-        // $site = Site::find($user->id_site);
-
-        // $tenant = $connTenant->where('email_tenant', $user->login_user)->first();
         $system = $connSystem->find(1);
         $count = $system->sequence_notiket + 1;
 
@@ -152,15 +150,38 @@ class OpenTicketController extends Controller
     public function update(Request $request, $id)
     {
         $connRequest = ConnectionDB::setConnection(new OpenTicket());
+        $connNotif = ConnectionDB::setConnection(new Notifikasi());
+        $user = $request->session()->get('user');
 
         try {
             DB::beginTransaction();
             $ticket = $connRequest->find($id);
-            $ticket->status_request = $request->status_request;
             $ticket->id_jenis_request = $request->id_jenis_request;
+            $ticket->status_request = $request->status_request;
+            if ($request->status_request == 'DONE') {
+                $notif = $connNotif->where('models', 'OpenTicket')
+                    ->where('is_read', 0)
+                    ->where('id_data', $id)
+                    ->first();
 
+                if (!$notif) {
+                    $createNotif = $connNotif;
+                    $createNotif->sender = $user->id_user;
+                    $createNotif->receiver = $ticket->Tenant->User->id_user;
+                    $createNotif->is_read = 0;
+                    $createNotif->models = 'OpenTicket';
+                    $createNotif->id_data = $id;
+                    $createNotif->notif_title = $ticket->no_tiket;
+                    $createNotif->notif_message = 'Keluhan sudah dikerjakan, mohon periksa kembali pekerjaan kami';
+                    $createNotif->save();
+                }
+            } elseif (!$request->status_request) {
+                $ticket->status_request = 'RESPONDED';
+            }
             $ticket->save();
+            DB::commit();
         } catch (Throwable $e) {
+            DB::rollBack();
             dd($e);
             Alert::error('Gagal', 'Gagal mengupdate tiket');
 
@@ -187,6 +208,58 @@ class OpenTicketController extends Controller
         $ticket->save();
 
         Alert::success('Berhasil', 'Berhasil merespon tiket');
+
+        return redirect()->back();
+    }
+
+    public function ticketApprove1(Request $request, $id)
+    {
+        $connRequest = ConnectionDB::setConnection(new OpenTicket());
+        $connNotif = ConnectionDB::setConnection(new Notifikasi());
+        $connTktApprove = ConnectionDB::setConnection(new Approve());
+
+        $tktApprove = $connTktApprove->find(1);
+
+        $user = $request->session()->get('user');
+
+        $ticket = $connRequest->find($id);
+        $ticket->sign_approve_1 = 1;
+        $ticket->date_approve_1 = Carbon::now();
+        $ticket->save();
+
+        $notif = $connNotif->where('models', 'OpenTicket')
+            ->where('is_read', 0)
+            ->where('id_data', $id)
+            ->first();
+
+        if (!$notif) {
+            $createNotif = $connNotif;
+            $createNotif->sender = $user->id_user;
+            $createNotif->receiver = $tktApprove->approval_2;
+            $createNotif->is_read = 0;
+            $createNotif->models = 'OpenTicket';
+            $createNotif->id_data = $id;
+            $createNotif->notif_title = $ticket->no_tiket;
+            $createNotif->notif_message = 'Keluhan sudah saya approve, mohon approve untuk menselesaikan Request';
+            $createNotif->save();
+        }
+
+        Alert::success('Berhasil', 'Berhasil approve tiket');
+
+        return redirect()->back();
+    }
+
+    public function ticketApprove2($id)
+    {
+        $connRequest = ConnectionDB::setConnection(new OpenTicket());
+
+        $ticket = $connRequest->find($id);
+        $ticket->sign_approve_2 = 1;
+        $ticket->date_approve_2 = Carbon::now();
+        $ticket->status_request = 'COMPLETE';
+        $ticket->save();
+
+        Alert::success('Berhasil', 'Berhasil approve tiket');
 
         return redirect()->back();
     }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
+use App\Models\Approve;
 use App\Models\BayarNon;
 use App\Models\Notifikasi;
 use App\Models\OpenTicket;
@@ -149,11 +150,15 @@ class WorkRequestController extends Controller
         return redirect()->back();
     }
 
-    public function done($id)
+    public function done(Request $request, $id)
     {
         $connTicket = ConnectionDB::setConnection(new OpenTicket());
         $connWR = ConnectionDB::setConnection(new WorkRequest());
+        $connNotif = ConnectionDB::setConnection(new Notifikasi());
+        $connApprove = ConnectionDB::setConnection(new Approve());
 
+        $user = $request->session()->get('user');
+        $approve = $connApprove->find(2);
         $wr = $connWR->find($id);
         $ticket = $connTicket->where('no_tiket', $wr->no_tiket)->first();
 
@@ -162,7 +167,42 @@ class WorkRequestController extends Controller
         $wr->status_request = 'DONE';
         $wr->save();
 
-        Alert::success('Berhasil', 'Berhasil menselesaikan WR');
+        $notif = $connNotif->where('models', 'WorkRequest')
+            ->where('is_read', 0)
+            ->where('id_data', $id)
+            ->first();
+
+        if (!$notif) {
+            $createNotif = $connNotif;
+            $createNotif->sender = $user->id_user;
+            $createNotif->receiver = $approve->approval_2;
+            $createNotif->is_read = 0;
+            $createNotif->models = 'WorkRequest';
+            $createNotif->id_data = $id;
+            $createNotif->notif_title = $ticket->no_tiket;
+            $createNotif->notif_message = 'Work Request sudah saya approve';
+            $createNotif->save();
+        }
+
+        Alert::success('Berhasil', 'Berhasil approve WR');
+
+        return redirect()->back();
+    }
+
+    public function complete($id)
+    {
+        $connTicket = ConnectionDB::setConnection(new OpenTicket());
+        $connWR = ConnectionDB::setConnection(new WorkRequest());
+
+        $wr = $connWR->find($id);
+        $ticket = $connTicket->where('no_tiket', $wr->no_tiket)->first();
+
+        $ticket->status_request = 'COMPLETE';
+        $ticket->save();
+        $wr->status_request = 'COMPLETE';
+        $wr->save();
+
+        Alert::success('Berhasil', 'Berhasil approve WR');
 
         return redirect()->back();
     }
