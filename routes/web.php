@@ -466,23 +466,29 @@ Route::prefix('admin')->group(function () {
 
         // CRUD Open Ticket
         Route::resource('/open-tickets', OpenTicketController::class);
-        Route::post('/open-ticket/update-response/{id}',[OpenTicketController::class, 'updateRequestTicket'])->name('updateRequestTicket');
+        Route::post('/open-ticket/update-response/{id}', [OpenTicketController::class, 'updateRequestTicket'])->name('updateRequestTicket');
+        Route::post('/open-ticket/approve1/{id}', [OpenTicketController::class, 'ticketApprove1'])->name('ticketApprove1');
+        Route::post('/open-ticket/approve2/{id}', [OpenTicketController::class, 'ticketApprove2'])->name('ticketApprove2');
 
         // CRUD Work Request
         Route::resource('/work-requests', WorkRequestController::class);
         Route::post('/done/work-request/{id}', [WorkRequestController::class, 'done'])->name('doneWR'); // done wo from tenant
+        Route::post('/complete/work-request/{id}', [WorkRequestController::class, 'complete'])->name('completeWR'); // done wo from tenant
 
         // CRUD Work Order
         Route::resource('/work-orders', WorkOrderController::class);
         Route::get('/work-order/no-wo', [WorkOrderController::class, 'showByNoWO']);
         Route::post('/accept/work-order/{id}', [WorkOrderController::class, 'acceptWO'])->name('acceptWO'); // accept wo from tenant
         Route::post('/work-done/work-order/{id}', [WorkOrderController::class, 'workDone'])->name('workDone'); // update wo from engineering
+        Route::post('/approve-tr/work-order/{id}', [WorkOrderController::class, 'approveTR'])->name('approveTR'); // approve work done from engineering
+        Route::post('/approve-spv/work-order/{id}', [WorkOrderController::class, 'approveSPV'])->name('approveSPV'); // approve work done from engineering SPV
         Route::post('/done/work-order/{id}', [WorkOrderController::class, 'done'])->name('doneWO'); // done wo from tenant
 
-       // Notification
-       Route::get('/notifications', [DashboardController::class, 'notifications'])->name('notifications');  // Get all notifications list
+        // Notification
+        Route::get('/notifications', [DashboardController::class, 'notifications'])->name('notifications');  // Get all notifications list
         Route::get('/get-notifications', [DashboardController::class, 'getNotifications'])->name('getNotifications');  // Get all notifications by user_id
         Route::get('/notification/{id}', [DashboardController::class, 'showNotification'])->name('showNotification'); // Show all notification by user_id
+
     });
 });
 
