@@ -148,7 +148,31 @@
                                         <a href="#!">Customer Support</a>.</small>
                                 </div>
                             @endif
-                            @if ($wo->status_wo == 'WORK DONE')
+                            @if ($wo->status_wo == 'WORK DONE' && $user->id_role_hdr == 8 && !$wo->sign_approve_tr)
+                                <div class="text-center">
+                                    <form action="{{ route('approveTR', $wo->id) }}" method="post">
+                                        @csrf
+                                        <button type="submit" class="btn btn-success btn-lg my-4" type="button">
+                                            Approve
+                                        </button>
+                                    </form>
+                                    <small class="d-block">For any technical issues faced, please contact
+                                        <a href="#!">Customer Support</a>.</small>
+                                </div>
+                            @endif
+                            @if ($wo->status_wo == 'WORK DONE' && $user->id_role_hdr == 4 && !$wo->sign_approve_spv)
+                                <div class="text-center">
+                                    <form action="{{ route('approveSPV', $wo->id) }}" method="post">
+                                        @csrf
+                                        <button type="submit" class="btn btn-success btn-lg my-4" type="button">
+                                            Approve
+                                        </button>
+                                    </form>
+                                    <small class="d-block">For any technical issues faced, please contact
+                                        <a href="#!">Customer Support</a>.</small>
+                                </div>
+                            @endif
+                            @if ($wo->status_wo == 'WORK DONE' && $user->id_role_hdr == 3 && $wo->sign_approve_spv)
                                 <div class="text-center">
                                     <form action="{{ route('doneWO', $wo->id) }}" method="post">
                                         @csrf

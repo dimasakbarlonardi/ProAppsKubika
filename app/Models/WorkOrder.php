@@ -29,13 +29,13 @@ class WorkOrder extends Model
         'status_wo',
         'sign_approve_acc_wo',
         'sign_approve_tr',
-        'sign_approval_3',
-        'sign_approval_4',
+        'sign_approve_spv',
+        'sign_approve_tenant',
         'sign_approval_5',
         'date_approve_acc_wo',
         'date_approve_tr',
-        'date_approval_3',
-        'date_approval_4',
+        'date_approve_spv',
+        'date_approve_tenant',
         'date_approval_5',
     ];
 
