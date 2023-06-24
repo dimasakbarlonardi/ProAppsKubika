@@ -132,7 +132,6 @@
                         console.log(data.data.tenant)
                     }
                 })
-                console.log($(this).val());
             })
 
             function timeDifference(current, previous) {

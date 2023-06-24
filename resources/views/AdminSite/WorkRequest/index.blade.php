@@ -106,6 +106,10 @@
                                                     <span
                                                         class="badge rounded bg-info red__bg-1000">{{ $wr->status_request }}</span>
                                                 @break
+                                                @case('ON WORK')
+                                                    <span
+                                                        class="badge rounded bg-info red__bg-1000">{{ $wr->status_request }}</span>
+                                                @break
                                                 @case('DONE')
                                                     <span
                                                         class="badge rounded bg-success red__bg-1000">{{ $wr->status_request }}</span>

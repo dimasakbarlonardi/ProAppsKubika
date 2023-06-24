@@ -43,7 +43,7 @@
                                         </div>
                                         <div class="card-body">
                                             <textarea class="form-control" name="deskripsi_wr" id="deskripsi_wr" cols="10" rows="5" disabled>
-                                                {!! $wr->deskripsi_wr !!}
+                                                {!! $ticket->deskripsi_request !!}
                                             </textarea>
                                         </div>
                                     </div>
@@ -59,38 +59,30 @@
                                                 <div class="card-body">
                                                     <div class="mb-4 mt-n2"><label class="mb-1">Work Relation</label>
                                                         <input type="text" class="form-control" disabled
-                                                            value="{{ $wr->status_request }}">
+                                                            value="{{ $ticket->status_request }}">
                                                     </div>
                                                 </div>
                                             </div>
+                                            @if ($sysApprove->approval_1 == $user->id_role_hdr && !$ticket->sign_approve_1)
+                                                <div class="card-footer border-top border-200 py-x1">
+                                                    <form action="{{ route('ticketApprove1', $ticket->id) }}" method="post">
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-primary w-100">Selesai</button>
+                                                    </form>
+                                                </div>
+                                            @endif
+                                            @if ($sysApprove->approval_2 == $user->id_user && !$ticket->sign_approve_2)
+                                                <div class="card-footer border-top border-200 py-x1">
+                                                    <form action="{{ route('ticketApprove2', $ticket->id) }}" method="post">
+                                                        @csrf
+                                                        <button type="submit" class="btn btn-primary w-100">Selesai</button>
+                                                    </form>
+                                                </div>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            @if ($wr->status_request == 'WORK DONE' && $user->id_role_hdr == $approve->approval_1)
-                                <div class="text-center">
-                                    <form action="{{ route('doneWR', $wr->id) }}" method="post">
-                                        @csrf
-                                        <button type="submit" class="btn btn-success btn-lg my-4" type="button">
-                                            Selesai
-                                        </button>
-                                    </form>
-                                    <small class="d-block">For any technical issues faced, please contact
-                                        <a href="#!">Customer Support</a>.</small>
-                                </div>
-                            @endif
-                            @if ($wr->status_request == 'DONE' && $user->id_user == $approve->approval_2)
-                                <div class="text-center">
-                                    <form action="{{ route('completeWR', $wr->id) }}" method="post">
-                                        @csrf
-                                        <button type="submit" class="btn btn-success btn-lg my-4" type="button">
-                                            Complete
-                                        </button>
-                                    </form>
-                                    <small class="d-block">For any technical issues faced, please contact
-                                        <a href="#!">Customer Support</a>.</small>
-                                </div>
-                            @endif
                         </div>
                     </div>
                 </div>
