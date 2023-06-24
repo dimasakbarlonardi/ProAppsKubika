@@ -46,6 +46,11 @@ class Karyawan extends Model
 
     protected $date = ['deleted_at'];
 
+    public function User()
+    {
+        return $this->hasOne(User::class, 'login_user', 'email_karyawan');
+    }
+
     public function IdCard()
     {
         return $this->hasOne(IdCard::class, 'id_card_type', 'id_card_type' );
