@@ -280,7 +280,7 @@ class WorkOrderController extends Controller
 
         $notif = $connNotif->where('models', 'WorkOrder')
             ->where('is_read', 0)
-            ->where('id_data', $id)
+            ->where('id_data', $id_data)
             ->first();
 
         if (!$notif) {
@@ -288,16 +288,24 @@ class WorkOrderController extends Controller
             $createNotif->sender = $user->id_user;
             $createNotif->is_read = 0;
             $createNotif->models = 'WorkOrder';
-            $createNotif->id_data = $id;
-
-            if (!$wo->sign_approve_tr) {
-                $createNotif->division_receiver = 4;
-            }
-
+            $createNotif->id_data = $id_data;
             $createNotif->notif_title = $wo->no_work_order;
-            $createNotif->notif_message = 'Work Order sudah dikerjakan, mohon periksa kembali pekerjaan kami';
-            $createNotif->save();
         }
+
+        return $createNotif;
+    }
+
+    public function workDone(Request $request, $id)
+    {
+        $connWO = ConnectionDB::setConnection(new WorkOrder());
+        $connNotif = ConnectionDB::setConnection(new Notifikasi());
+        $user = $request->session()->get('user');
+
+        $wo = $connWO->find($id);
+        $createNotif = $this->createNotif($connNotif, $id, $user, $wo);
+        $createNotif->notif_message = 'Work Order sudah dikerjakan, mohon periksa kembali pekerjaan kami';
+        $createNotif->division_receiver = 4;
+        $createNotif->save();
 
         $wo->status_wo = 'WORK DONE';
         $wo->save();
@@ -359,6 +367,7 @@ class WorkOrderController extends Controller
 
     public function done($id)
     {
+        $connUser = ConnectionDB::setConnection(new User());
         $connWO = ConnectionDB::setConnection(new WorkOrder());
         $connTicket = ConnectionDB::setConnection(new OpenTicket());
         $connWR = ConnectionDB::setConnection(new WorkRequest());
