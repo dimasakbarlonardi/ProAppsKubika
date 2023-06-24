@@ -2481,35 +2481,32 @@
             "time": "2022-04-17T13:12:02+00:00"
         },
         {
-            "name": "masterminds/html5",
-            "version": "2.8.0",
+            "name": "midtrans/midtrans-php",
+            "version": "2.5.2",
             "source": {
                 "type": "git",
-                "url": "https://github.com/Masterminds/html5-php.git",
-                "reference": "3c5d5a56d56f48a1ca08a0670f0f80c1dad368f3"
+                "url": "https://github.com/Midtrans/midtrans-php.git",
+                "reference": "a1ad0c824449ca8c68c4cf11b3417ad518311d2b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Masterminds/html5-php/zipball/3c5d5a56d56f48a1ca08a0670f0f80c1dad368f3",
-                "reference": "3c5d5a56d56f48a1ca08a0670f0f80c1dad368f3",
+                "url": "https://api.github.com/repos/Midtrans/midtrans-php/zipball/a1ad0c824449ca8c68c4cf11b3417ad518311d2b",
+                "reference": "a1ad0c824449ca8c68c4cf11b3417ad518311d2b",
                 "shasum": ""
             },
             "require": {
-                "ext-dom": "*",
-                "php": ">=5.3.0"
+                "ext-curl": "*",
+                "ext-json": "*",
+                "php": ">=5.4"
             },
             "require-dev": {
-                "phpunit/phpunit": "^4.8.35 || ^5.7.21 || ^6 || ^7 || ^8"
+                "phpunit/phpunit": "5.7.*",
+                "psy/psysh": "0.4.*"
             },
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "2.7-dev"
-                }
-            },
             "autoload": {
                 "psr-4": {
-                    "Masterminds\\": "src"
+                    "Midtrans\\": "Midtrans/"
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
@@ -2518,34 +2515,25 @@
             ],
             "authors": [
                 {
-                    "name": "Matt Butcher",
-                    "email": "technosophos@gmail.com"
+                    "name": "Andri Setiawan",
+                    "email": "andri.setiawan@veritrans.co.id"
                 },
                 {
-                    "name": "Matt Farina",
-                    "email": "matt@mattfarina.com"
+                    "name": "Alvin Litani",
+                    "email": "alvin.litani@veritrans.co.id"
                 },
                 {
-                    "name": "Asmir Mustafic",
-                    "email": "goetas@gmail.com"
+                    "name": "Ismail Faruqi",
+                    "email": "ismail.faruqi@veritrans.co.id"
                 }
             ],
-            "description": "An HTML5 parser and serializer.",
-            "homepage": "http://masterminds.github.io/html5-php",
-            "keywords": [
-                "HTML5",
-                "dom",
-                "html",
-                "parser",
-                "querypath",
-                "serializer",
-                "xml"
-            ],
+            "description": "PHP Wrapper for Midtrans Payment API.",
+            "homepage": "https://midtrans.com",
             "support": {
-                "issues": "https://github.com/Masterminds/html5-php/issues",
-                "source": "https://github.com/Masterminds/html5-php/tree/2.8.0"
+                "issues": "https://github.com/Midtrans/midtrans-php/issues",
+                "source": "https://github.com/Midtrans/midtrans-php/tree/2.5.2"
             },
-            "time": "2023-04-26T07:27:39+00:00"
+            "time": "2021-08-23T08:52:05+00:00"
         },
         {
             "name": "midtrans/midtrans-php",

@@ -291,7 +291,7 @@ class WorkOrderController extends Controller
 
         $notif = $connNotif->where('models', 'WorkOrder')
             ->where('is_read', 0)
-            ->where('id_data', $id)
+            ->where('id_data', $id_data)
             ->first();
 
         if (!$notif) {
@@ -299,16 +299,24 @@ class WorkOrderController extends Controller
             $createNotif->sender = $user->id_user;
             $createNotif->is_read = 0;
             $createNotif->models = 'WorkOrder';
-            $createNotif->id_data = $id;
-
-            if (!$wo->sign_approve_tr) {
-                $createNotif->division_receiver = 4;
-            }
-
+            $createNotif->id_data = $id_data;
             $createNotif->notif_title = $wo->no_work_order;
-            $createNotif->notif_message = 'Work Order sudah dikerjakan, mohon periksa kembali pekerjaan kami';
-            $createNotif->save();
         }
+
+        return $createNotif;
+    }
+
+    public function workDone(Request $request, $id)
+    {
+        $connWO = ConnectionDB::setConnection(new WorkOrder());
+        $connNotif = ConnectionDB::setConnection(new Notifikasi());
+        $user = $request->session()->get('user');
+
+        $wo = $connWO->find($id);
+        $createNotif = $this->createNotif($connNotif, $id, $user, $wo);
+        $createNotif->notif_message = 'Work Order sudah dikerjakan, mohon periksa kembali pekerjaan kami';
+        $createNotif->division_receiver = 4;
+        $createNotif->save();
 
         $wo->status_wo = 'WORK DONE';
         $wo->save();
@@ -317,16 +325,7 @@ class WorkOrderController extends Controller
         } catch (Exception $e) {
             DB::rollBack();
 
-        if (!$checkNotif) {
-            $connNotif->create([
-                'receiver' => $getUser->id_user,
-                'sender' => $user->id_user,
-                'is_read' => 0,
-                'models' => 'WorkOrder',
-                'id_data' => $id,
-                'notif_title' => $wo->no_work_order,
-                'notif_message' => 'Work Order sudah dikerjakan, mohon periksa kembali pekerjaan kami'
-            ]);
+            return redirect()->back();
         }
 
         return response()->json(['status' => 'ok']);
@@ -352,5 +351,52 @@ class WorkOrderController extends Controller
         Alert::success('Berhasil', 'Berhasil menselesaikan WO');
 
         return redirect()->back();
+    }
+
+    public function createTransaction($wo)
+    {
+        $connSystem = ConnectionDB::setConnection(new System());
+        $connTransaction = ConnectionDB::setConnection(new Transaction());
+        $system = $connSystem->find(1);
+
+        $count = $system->sequence_no_invoice + 1;
+        $no_invoice = $system->kode_unik_perusahaan . '/' .
+            $system->kode_unik_invoice . '/' .
+            Carbon::now()->format('m') . Carbon::now()->format('Y') . '/' .
+            sprintf("%06d", $count);
+
+        $admin_fee = 5000;
+
+        try {
+            DB::beginTransaction();
+
+            $total = $wo->jumlah_bayar_wo + $admin_fee;
+            $items = $wo->WODetail;
+
+            $createTransaction = $connTransaction;
+            $createTransaction->no_invoice = $no_invoice;
+            $createTransaction->no_transaction = $wo->no_work_order;
+            $createTransaction->admin_fee = $admin_fee;
+            $createTransaction->sub_total = $wo->jumlah_bayar_wo;
+            $createTransaction->total = $total;
+            $createTransaction->id_user = $wo->Ticket->Tenant->User->id_user;
+
+            $midtrans = new CreateSnapTokenService($createTransaction, $items, $admin_fee);
+            $createTransaction->snap_token = $midtrans->getSnapToken();
+            $createTransaction->save();
+
+            $system->sequence_no_invoice = $count;
+            $system->save();
+
+            DB::commit();
+
+        } catch (Throwable $e) {
+            dd($e);
+            DB::rollBack();
+
+            return redirect()->back();
+        }
+
+        return $createTransaction;
     }
 }
