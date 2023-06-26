@@ -13,11 +13,13 @@ class Transaction extends Model
 
     protected $fillable = [
         'no_invoice',
+        'transaction_type',
         'no_transaction',
         'admin_fee',
         'sub_total',
         'total',
         'id_user',
+        'status',
         'snap_token'
     ];
 
