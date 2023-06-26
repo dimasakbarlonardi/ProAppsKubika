@@ -23,7 +23,7 @@ class CallbackService extends Midtrans
     }
 
     public function isSignatureKeyVerified()
-    {                
+    {
         return ($this->_createLocalSignatureKey() == $this->_createLocalSignatureKey());
     }
 

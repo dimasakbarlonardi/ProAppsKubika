@@ -34,4 +34,9 @@ class User extends Model
     {
         return $this->hasOne(Karyawan::class, 'email_karyawan', 'login_user');
     }
+
+    public function Tenant()
+    {
+        return $this->hasOne(Tenant::class, 'email_tenant', 'login_user');
+    }
 }
