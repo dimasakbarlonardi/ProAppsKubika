@@ -361,9 +361,9 @@ class WorkOrderController extends Controller
         $system = $connSystem->find(1);
 
         $count = $system->sequence_no_invoice + 1;
-        $no_invoice = $system->kode_unik_perusahaan . '-' .
-            $system->kode_unik_invoice . '-' .
-            Carbon::now()->format('m') . Carbon::now()->format('Y') . '-' .
+        $no_invoice = $system->kode_unik_perusahaan . '/' .
+            $system->kode_unik_invoice . '/' .
+            Carbon::now()->format('m') . Carbon::now()->format('Y') . '/' .
             sprintf("%06d", $count);
 
         $admin_fee = 5000;
@@ -383,12 +383,17 @@ class WorkOrderController extends Controller
             $createTransaction->id_user = $wo->Ticket->Tenant->User->id_user;
             $createTransaction->status = 'PENDING';
             $createTransaction->save();
-            $midtrans = new CreateSnapTokenService($createTransaction, $items, $admin_fee);
-            $createTransaction->snap_token = $midtrans->getSnapToken();
+
+            $ct = $this->transactionCenter($createTransaction);
+            $midtrans = new CreateSnapTokenService($ct, $items, $admin_fee);
+            $ct->snap_token = $midtrans->getSnapToken();
+            $ct->save();
+
             $createTransaction->save();
 
             $system->sequence_no_invoice = $count;
             $system->save();
+
 
             DB::commit();
         } catch (Throwable $e) {
@@ -401,40 +406,29 @@ class WorkOrderController extends Controller
         return $createTransaction;
     }
 
-    public function complete($id)
+    public function transactionCenter($transaction)
     {
-        $connWO = ConnectionDB::setConnection(new WorkOrder());
-        $connTicket = ConnectionDB::setConnection(new OpenTicket());
-        $connWR = ConnectionDB::setConnection(new WorkRequest());
-        $connApprove = ConnectionDB::setConnection(new Approve());
-
-        $sender = $connApprove->find(3);
-        $sender = $sender->approval_4;
-
-        $wo = $connWO->find($id);
-        $ticket = $connTicket->where('no_tiket', $wo->no_tiket)->first();
-        $wr = $connWR->where('no_work_request', $wo->no_work_request)->first();
+        $request = Request();
+        $user = $request->session()->get('user');
 
         try {
             DB::beginTransaction();
-
-            $wo->status_wo = 'COMPLETE';
-            $wo->sign_approval_5 = 1;
-            $wo->save();
-
-            $ticket->status_request = 'COMPLETE';
-            $ticket->save();
-
-            $wr->status_request = 'COMPLETE';
-            $wr->save();
-
+            TransactionCenter::create([
+                'id_sites' => $user->id_site,
+                'no_invoice' => $transaction->no_invoice,
+                'transaction_type' => $transaction->transaction_type,
+                'no_transaction' => $transaction->no_transaction,
+                'admin_fee' => $transaction->admin_fee,
+                'sub_total' => $transaction->sub_total,
+                'total' => $transaction->total,
+                'id_user' => $transaction->id_user,
+                'status' => $transaction->status,
+            ]);
             DB::commit();
-        } catch (Exception $e) {
+        } catch (Throwable $e) {
             DB::rollBack();
             dd($e);
             return redirect()->back();
         }
-
-        return response()->json(['status' => 'ok']);
     }
 }
