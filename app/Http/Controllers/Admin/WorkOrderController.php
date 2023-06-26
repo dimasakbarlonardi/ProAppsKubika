@@ -545,6 +545,7 @@ class WorkOrderController extends Controller
 
             $createTransaction = $connTransaction;
             $createTransaction->no_invoice = $no_invoice;
+            $createTransaction->transaction_type = 'WorkOrder';
             $createTransaction->no_transaction = $wo->no_work_order;
             $createTransaction->admin_fee = $admin_fee;
             $createTransaction->sub_total = $wo->jumlah_bayar_wo;
@@ -560,9 +561,8 @@ class WorkOrderController extends Controller
 
             DB::commit();
         } catch (Throwable $e) {
-            dd($e);
             DB::rollBack();
-
+            dd($e);
             return redirect()->back();
         }
 
