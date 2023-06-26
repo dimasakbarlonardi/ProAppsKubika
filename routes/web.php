@@ -96,6 +96,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::post('/payments/midtrans-notifications', [PaymentController::class, 'receive']);
+Route::get('/delete/midtrans', [PaymentController::class, 'delete']);
+Route::get('/check/midtrans', [PaymentController::class, 'check']);
+
 // Check role id
 Route::get('/check-role-id', [RoleController::class, 'checkRoleID']);
 
