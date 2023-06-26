@@ -69,11 +69,13 @@ class CallbackService extends Midtrans
 
     protected function _handleNotification()
     {
-        $connTransaction = ConnectionDB::setConnection(new Transaction());
+        $transaction = new Transaction();
+        $transaction = $transaction->setConnection('park-royale');
+
         $notification = new Notification();
 
         $orderNumber = $notification->order_id;
-        $order = $connTransaction->where('no_invoice', $orderNumber)->first();
+        $order = $transaction->find($orderNumber);
 
         $this->notification = $notification;
         $this->order = $order;
