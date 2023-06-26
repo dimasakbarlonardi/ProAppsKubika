@@ -26,6 +26,6 @@ class TransactionCenter extends Model
 
     public function Site()
     {
-        return $this->hasOne(Site::class, 'id_site', 'id_site');
+        return $this->hasOne(Site::class, 'id_site', 'id_sites');
     }
 }
