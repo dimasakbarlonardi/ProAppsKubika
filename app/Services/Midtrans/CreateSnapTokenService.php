@@ -8,10 +8,11 @@ class CreateSnapTokenService extends Midtrans
 {
     protected $order;
 
-    public function __construct($order, $items, $admin_fee)
+    public function __construct($ct, $order, $items, $admin_fee)
     {
         parent::__construct();
 
+        $this->ct = $ct;
         $this->order = $order;
         $this->items = $items;
         $this->admin_fee = $admin_fee;
@@ -37,7 +38,7 @@ class CreateSnapTokenService extends Midtrans
 
         $params = [
             'transaction_details' => [
-                'order_id' => $this->order->id,
+                'order_id' => $this->ct->id,
                 'gross_amount' => $this->admin_fee + $this->order->total,
             ],
             'item_details' => $items,
