@@ -4,6 +4,7 @@ namespace App\Services\Midtrans;
 
 use App\Helpers\ConnectionDB;
 use App\Models\Transaction;
+use App\Models\TransactionCenter;
 use App\Services\Midtrans\Midtrans;
 use Midtrans\Notification;
 
@@ -22,7 +23,7 @@ class CallbackService extends Midtrans
     }
 
     public function isSignatureKeyVerified()
-    {              
+    {
         $key = $this->notification;
         $orderId = $key->order_id;
         $statusCode = $key->status_code;
@@ -35,7 +36,7 @@ class CallbackService extends Midtrans
     }
 
     public function isSuccess()
-    {        
+    {
         $statusCode = $this->notification->status_code;
         $transactionStatus = $this->notification->transaction_status;
         $fraudStatus = !empty($this->notification->fraud_status) ? ($this->notification->fraud_status == 'accept') : true;
@@ -59,32 +60,29 @@ class CallbackService extends Midtrans
     }
 
     public function getOrder()
-    {       
+    {
         return $this->order;
     }
 
     protected function _createLocalSignatureKey()
-    {                
+    {
         $orderId = $this->order->id;
         $statusCode = $this->notification->status_code;
         $grossAmount = $this->order->total;
         $serverKey = $this->serverKey;
         $input = $orderId . $statusCode . (int) $grossAmount . $serverKey;
         $signature = openssl_digest($input, 'sha512');
-       
+
         return $signature;
     }
 
     protected function _handleNotification()
     {
-        $transaction = new Transaction();
-        $transaction = $transaction->setConnection('park-royale');
-
         $notification = new Notification();
         $orderNumber = $notification->order_id;
-        $order = $transaction->find($orderNumber);
+        $order = TransactionCenter::find($orderNumber);
         $this->notification = $notification;
-        
+
         $this->order = $order;
     }
 }
