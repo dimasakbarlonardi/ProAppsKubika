@@ -9,6 +9,7 @@ use App\Models\ApproveRequest;
 use App\Models\Notifikasi;
 use App\Models\OpenTicket;
 use App\Models\Transaction;
+use App\Models\TransactionCenter;
 use App\Models\WorkOrder;
 use App\Models\WorkRequest;
 use Illuminate\Http\Request;
@@ -95,7 +96,8 @@ class DashboardController extends Controller
             case ('Transaction'):
                 $model = new Transaction();
                 $getData = ConnectionDB::setConnection($model);
-                $data['transaction'] = $getData->find($getNotif->id_data);
+                $getData = $getData->find($getNotif->id_data);
+                $data['transaction'] = TransactionCenter::where('no_invoice', $getData->no_invoice)->first();
                 return view('Tenant.Notification.Payment', $data);
                 break;
 
