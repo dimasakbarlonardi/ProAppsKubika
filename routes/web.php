@@ -98,11 +98,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
-Route::get('/testing-units', function () {
-    return view('units');
-})->name('dashboard');
-
 // Check role id
 Route::get('/check-role-id', [RoleController::class, 'checkRoleID']);
 
@@ -294,7 +289,7 @@ Route::prefix('admin')->group(function () {
           Route::resource('bayarnons', BayarnonController::class);
 
         // Akses form for user
-        Route::get('/akses-form-user/{id}', [RoleController::class, 'aksesForm'])->name('akses-form');
+        Route::get('/akses-form-user/{id}', [RoleController::class, 'aksesForm'])->name('get-akses-form');
         Route::post('/akses-form-user/{id}', [RoleController::class, 'storeAksesForm'])->name('akses-form');
 
         //CRUD OffBoarding Tenant Unit
