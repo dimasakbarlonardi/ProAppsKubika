@@ -23,4 +23,9 @@ class TransactionCenter extends Model
         'status',
         'snap_token'
     ];
+
+    public function Site()
+    {
+        return $this->hasOne(Site::class, 'id_site', 'id_site');
+    }
 }
