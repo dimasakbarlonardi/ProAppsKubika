@@ -94,6 +94,10 @@
                                                         <small
                                                             class="badge rounded bg-info dark__bg-1000">{{ $ticket->status_request }}</small>
                                                     @break
+                                                    @case('PROSES KE WR')
+                                                        <small
+                                                            class="badge rounded bg-info dark__bg-1000">{{ $ticket->status_request }}</small>
+                                                    @break
 
                                                     @case('ON WORK')
                                                         <small
