@@ -530,9 +530,9 @@ class WorkOrderController extends Controller
         $system = $connSystem->find(1);
 
         $count = $system->sequence_no_invoice + 1;
-        $no_invoice = $system->kode_unik_perusahaan . '-' .
-            $system->kode_unik_invoice . '-' .
-            Carbon::now()->format('m') . Carbon::now()->format('Y') . '-' .
+        $no_invoice = $system->kode_unik_perusahaan . '/' .
+            $system->kode_unik_invoice . '/' .
+            Carbon::now()->format('m') . Carbon::now()->format('Y') . '/' .
             sprintf("%06d", $count);
 
         $admin_fee = 5000;
@@ -553,12 +553,17 @@ class WorkOrderController extends Controller
             $createTransaction->id_user = $wo->Ticket->Tenant->User->id_user;
             $createTransaction->status = 'PENDING';
             $createTransaction->save();
-            $midtrans = new CreateSnapTokenService($createTransaction, $items, $admin_fee);
-            $createTransaction->snap_token = $midtrans->getSnapToken();
+
+            $ct = $this->transactionCenter($createTransaction);
+            $midtrans = new CreateSnapTokenService($ct, $items, $admin_fee);
+            $ct->snap_token = $midtrans->getSnapToken();
+            $ct->save();
+
             $createTransaction->save();
 
             $system->sequence_no_invoice = $count;
             $system->save();
+
 
             DB::commit();
         } catch (Throwable $e) {
