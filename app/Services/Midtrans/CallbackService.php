@@ -22,12 +22,20 @@ class CallbackService extends Midtrans
     }
 
     public function isSignatureKeyVerified()
-    {
-        return ($this->_createLocalSignatureKey() == $this->notification->signature_key);
+    {              
+        $key = $this->notification;
+        $orderId = $key->order_id;
+        $statusCode = $key->status_code;
+        $grossAmount = $key->gross_amount;
+        $serverKey = $this->serverKey;
+        $input = $orderId . $statusCode . (int) $grossAmount . $serverKey;
+        $signature = openssl_digest($input, 'sha512');
+
+        return ($this->_createLocalSignatureKey() == $signature);
     }
 
     public function isSuccess()
-    {
+    {        
         $statusCode = $this->notification->status_code;
         $transactionStatus = $this->notification->transaction_status;
         $fraudStatus = !empty($this->notification->fraud_status) ? ($this->notification->fraud_status == 'accept') : true;
@@ -51,19 +59,19 @@ class CallbackService extends Midtrans
     }
 
     public function getOrder()
-    {
+    {       
         return $this->order;
     }
 
     protected function _createLocalSignatureKey()
-    {
-        $orderId = $this->order->number;
+    {                
+        $orderId = $this->order->id;
         $statusCode = $this->notification->status_code;
-        $grossAmount = $this->order->total_price;
+        $grossAmount = $this->order->total;
         $serverKey = $this->serverKey;
-        $input = $orderId . $statusCode . $grossAmount . $serverKey;
+        $input = $orderId . $statusCode . (int) $grossAmount . $serverKey;
         $signature = openssl_digest($input, 'sha512');
-
+       
         return $signature;
     }
 
@@ -73,11 +81,10 @@ class CallbackService extends Midtrans
         $transaction = $transaction->setConnection('park-royale');
 
         $notification = new Notification();
-
         $orderNumber = $notification->order_id;
         $order = $transaction->find($orderNumber);
-
         $this->notification = $notification;
+        
         $this->order = $order;
     }
 }
