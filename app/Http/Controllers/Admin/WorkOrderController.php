@@ -282,12 +282,13 @@ class WorkOrderController extends Controller
     {
         $connWO = ConnectionDB::setConnection(new WorkOrder());
         $connNotif = ConnectionDB::setConnection(new Notifikasi());
-        $user = $request->session()->get('user');
 
+        $user = $request->session()->get('user');
         $wo = $connWO->find($id);
+
         $createNotif = $this->createNotif($connNotif, $id, $user, $wo);
         $createNotif->notif_message = 'Work Order sudah dikerjakan, mohon periksa kembali pekerjaan kami';
-        $createNotif->division_receiver = 4;
+        $createNotif->receiver = $wo->Ticket->Tenant->User->id_user;
         $createNotif->save();
 
         $wo->status_wo = 'WORK DONE';
@@ -336,7 +337,6 @@ class WorkOrderController extends Controller
 
     public function completeWO(Request $request, $id)
     {
-        $connUser = ConnectionDB::setConnection(new User());
         $connWO = ConnectionDB::setConnection(new WorkOrder());
         $connTicket = ConnectionDB::setConnection(new OpenTicket());
         $connWR = ConnectionDB::setConnection(new WorkRequest());
@@ -347,12 +347,9 @@ class WorkOrderController extends Controller
         $getUser = $wo->Ticket->Tenant->User->id_user;
 
         try {
-
             DB::beginTransaction();
 
             $wo->status_wo = 'DONE';
-            $wo->sign_approve_tenant = 1;
-            $wo->date_approve_tenant = Carbon::now();
             $wo->save();
 
             $ticket->status_request = 'DONE';
@@ -361,10 +358,20 @@ class WorkOrderController extends Controller
             $wr->status_request = 'DONE';
             $wr->save();
 
-            $createNotif = $this->createNotif($connNotif, $wo->id, $sender, $wo);
-            $createNotif->notif_message = 'Harap melakukan pembayaran untuk menselesaikan transaksi';
-            $createNotif->receiver = $getUser;
-            $createNotif->models = 'Transaction';
+            $notif = $connNotif->where('models', 'WorkOrder')
+                ->where('is_read', 0)
+                ->where('id_data', $wo->id)
+                ->first();
+
+            if (!$notif) {
+                $createNotif = $connNotif;
+                $createNotif->sender = $sender;
+                $createNotif->receiver = $getUser;
+                $createNotif->is_read = 0;
+                $createNotif->notif_title = $wo->no_work_order;
+                $createNotif->notif_message = 'Harap melakukan pembayaran untuk menselesaikan transaksi';
+                $createNotif->models = 'Transaction';
+            }
 
             $createTransaction = $this->createTransaction($wo);
             $createNotif->id_data = $createTransaction->id;
