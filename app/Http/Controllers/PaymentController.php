@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\ConnectionDB;
 use App\Models\Transaction;
+use App\Models\TransactionCenter;
 use App\Services\Midtrans\CallbackService;
 use Symfony\Component\HttpFoundation\Request;
 
@@ -11,27 +12,24 @@ class PaymentController extends Controller
 {
     public function receive()
     {
-        $transaction = new Transaction();
-        $transaction = $transaction->setConnection('park-royale');
-
         $callback = new CallbackService;
         if ($callback->isSignatureKeyVerified()) {
             $order = $callback->getOrder();
 
             if ($callback->isSuccess()) {
-                $transaction->find($order->id)->update([
+                TransactionCenter::find($order->id)->update([
                     'status' => 'PAYED',
                 ]);
             }
 
             if ($callback->isExpire()) {
-                $transaction->find($order->id)->update([
+                TransactionCenter::find($order->id)->update([
                     'status' => 'EXPIRED',
                 ]);
             }
 
             if ($callback->isCancelled()) {
-                $transaction->find($order->id)->update([
+                TransactionCenter::find($order->id)->update([
                     'status' => 'CANCELLED',
                 ]);
             }
