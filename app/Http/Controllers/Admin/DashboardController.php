@@ -77,8 +77,10 @@ class DashboardController extends Controller
         switch ($getNotif->models) {
             case ('WorkOrder'):
                 $model = new WorkOrder();
+                $data['approve'] = $connApprove->find(3);
                 $getData = ConnectionDB::setConnection($model);
                 $data['wo'] = $getData->find($getNotif->id_data);
+                $data['notif'] = $getNotif;
                 return view('Tenant.Notification.WorkOrder', $data);
                 break;
 

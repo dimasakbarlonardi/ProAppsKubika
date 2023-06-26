@@ -175,15 +175,27 @@
                                     Tenant</button>
                             </div>
                         @endif
-                        @if ($wo->status_wo == 'APPROVED' && $user->id_role_hdr == 4)
+                        @if ($wo->status_wo == 'APPROVED' && $user->RoleH->WorkRelation->id_work_relation == $approve->approval_2 && !$wo->sign_approve_2)
                             <div class="card-footer border-top border-200 py-x1">
                                 <button type="button" class="btn btn-primary w-100"
-                                    onclick="workDone({{ $wo->id }})">PEKERJAAN SELESAI</button>
+                                    onclick="approve2({{ $wo->id }})">Approve</button>
+                            </div>
+                        @endif
+                        @if ($wo->status_wo == 'APPROVED' && $wo->sign_approve_3)
+                            <div class="card-footer border-top border-200 py-x1">
+                                <button type="button" class="btn btn-primary w-100"
+                                    onclick="workDone({{ $wo->id }})">Pekerjaan Selesai</button>
                             </div>
                         @endif
                         @if ($user->id_role_hdr == 8 && $wo->status_wo == 'WAITING APPROVE')
                             <div class="card-footer border-top border-200 py-x1">
                                 <button type="submit" class="btn btn-primary w-100" value="send">Update</button>
+                            </div>
+                        @endif
+                        @if ($wo->status_wo == 'DONE' && $approve->approval_4 == $user->id_user && $wo->sign_approve_4)
+                            <div class="card-footer border-top border-200 py-x1">
+                                <button type="button" class="btn btn-primary w-100"
+                                    onclick="complete({{ $wo->id }})">COMPLETE</button>
                             </div>
                         @endif
                     </div>
@@ -217,6 +229,36 @@
         function workDone(id) {
             $.ajax({
                 url: `/admin/work-done/work-order/${id}`,
+                type: 'POST',
+                success: function(data) {
+                    if (data.status === 'ok') {
+                        Swal.fire(
+                            'Berhasil!',
+                            'Berhasil mengupdate Work Order!',
+                            'success'
+                        ).then(() =>  window.location.reload())
+                    }
+                }
+            })
+        }
+        function approve2(id) {
+            $.ajax({
+                url: `/admin/approve-2/work-order/${id}`,
+                type: 'POST',
+                success: function(data) {
+                    if (data.status === 'ok') {
+                        Swal.fire(
+                            'Berhasil!',
+                            'Berhasil mengupdate Work Order!',
+                            'success'
+                        ).then(() =>  window.location.reload())
+                    }
+                }
+            })
+        }
+        function complete(id) {
+            $.ajax({
+                url: `/admin/complete/work-order/${id}`,
                 type: 'POST',
                 success: function(data) {
                     if (data.status === 'ok') {
