@@ -466,8 +466,6 @@ class WorkOrderController extends Controller
             $createTransaction->status = 'PENDING';
             $createTransaction->save();
 
-            $midtrans = new CreateSnapTokenService($createTransaction, $items, $admin_fee);
-
             $ct = $this->transactionCenter($createTransaction);
 
             $midtrans = new CreateSnapTokenService($ct, $createTransaction, $items, $admin_fee);
