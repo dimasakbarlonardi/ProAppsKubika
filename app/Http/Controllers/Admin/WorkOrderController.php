@@ -397,7 +397,7 @@ class WorkOrderController extends Controller
 
         try {
             DB::beginTransaction();
-            TransactionCenter::create([
+            $ct = TransactionCenter::create([
                 'id_sites' => $user->id_site,
                 'no_invoice' => $transaction->no_invoice,
                 'transaction_type' => $transaction->transaction_type,
@@ -409,6 +409,8 @@ class WorkOrderController extends Controller
                 'status' => $transaction->status,
             ]);
             DB::commit();
+
+            return $ct;
         } catch (Throwable $e) {
             DB::rollBack();
             dd($e);
