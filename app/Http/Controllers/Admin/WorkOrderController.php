@@ -437,9 +437,9 @@ class WorkOrderController extends Controller
         $system = $connSystem->find(1);
 
         $count = $system->sequence_no_invoice + 1;
-        $no_invoice = $system->kode_unik_perusahaan . '-' .
-            $system->kode_unik_invoice . '-' .
-            Carbon::now()->format('m') . Carbon::now()->format('Y') . '-' .
+        $no_invoice = $system->kode_unik_perusahaan . '/' .
+            $system->kode_unik_invoice . '/' .
+            Carbon::now()->format('m') . Carbon::now()->format('Y') . '/' .
             sprintf("%06d", $count);
 
         $admin_fee = 5000;
