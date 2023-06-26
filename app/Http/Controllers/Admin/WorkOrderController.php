@@ -310,12 +310,13 @@ class WorkOrderController extends Controller
     {
         $connWO = ConnectionDB::setConnection(new WorkOrder());
         $connNotif = ConnectionDB::setConnection(new Notifikasi());
-        $user = $request->session()->get('user');
 
+        $user = $request->session()->get('user');
         $wo = $connWO->find($id);
+
         $createNotif = $this->createNotif($connNotif, $id, $user, $wo);
         $createNotif->notif_message = 'Work Order sudah dikerjakan, mohon periksa kembali pekerjaan kami';
-        $createNotif->division_receiver = 4;
+        $createNotif->receiver = $wo->Ticket->Tenant->User->id_user;
         $createNotif->save();
 
         $wo->status_wo = 'WORK DONE';
@@ -389,7 +390,6 @@ class WorkOrderController extends Controller
             $system->save();
 
             DB::commit();
-
         } catch (Throwable $e) {
             dd($e);
             DB::rollBack();
@@ -398,5 +398,42 @@ class WorkOrderController extends Controller
         }
 
         return $createTransaction;
+    }
+
+    public function complete($id)
+    {
+        $connWO = ConnectionDB::setConnection(new WorkOrder());
+        $connTicket = ConnectionDB::setConnection(new OpenTicket());
+        $connWR = ConnectionDB::setConnection(new WorkRequest());
+        $connApprove = ConnectionDB::setConnection(new Approve());
+
+        $sender = $connApprove->find(3);
+        $sender = $sender->approval_4;
+
+        $wo = $connWO->find($id);
+        $ticket = $connTicket->where('no_tiket', $wo->no_tiket)->first();
+        $wr = $connWR->where('no_work_request', $wo->no_work_request)->first();
+
+        try {
+            DB::beginTransaction();
+
+            $wo->status_wo = 'COMPLETE';
+            $wo->sign_approval_5 = 1;
+            $wo->save();
+
+            $ticket->status_request = 'COMPLETE';
+            $ticket->save();
+
+            $wr->status_request = 'COMPLETE';
+            $wr->save();
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            dd($e);
+            return redirect()->back();
+        }
+
+        return response()->json(['status' => 'ok']);
     }
 }
