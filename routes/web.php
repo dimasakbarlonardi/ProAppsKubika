@@ -411,7 +411,10 @@ Route::prefix('admin')->group(function () {
         Route::resource('/work-orders', WorkOrderController::class);
         Route::get('/work-order/no-wo', [WorkOrderController::class, 'showByNoWO']);
         Route::post('/accept/work-order/{id}', [WorkOrderController::class, 'acceptWO'])->name('acceptWO'); // accept wo from tenant
+        Route::post('/approve-2/work-order/{id}', [WorkOrderController::class, 'approve2'])->name('approve2'); // approve wo from engineering
+        Route::post('/approve-3/work-order/{id}', [WorkOrderController::class, 'approve3'])->name('approve3'); // approve wo from engineering
         Route::post('/work-done/work-order/{id}', [WorkOrderController::class, 'workDone'])->name('workDone'); // update wo from engineering
+        Route::post('/complete/work-order/{id}', [WorkOrderController::class, 'complete'])->name('completeWO'); // update wo to complete from finance
         Route::post('/approve-tr/work-order/{id}', [WorkOrderController::class, 'approveTR'])->name('approveTR'); // approve work done from engineering
         Route::post('/approve-spv/work-order/{id}', [WorkOrderController::class, 'approveSPV'])->name('approveSPV'); // approve work done from engineering SPV
         Route::post('/done/work-order/{id}', [WorkOrderController::class, 'done'])->name('doneWO'); // done wo from tenant
