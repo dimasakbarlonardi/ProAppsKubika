@@ -136,7 +136,7 @@
                                     </div>
                                 </div>
                             </div>
-                            @if (!$wo->sign_approve_acc_wo)
+                            @if (!$wo->sign_approve_1 && $notif->receiver == $wo->Ticket->Tenant->User->id_user)
                                 <div class="text-center">
                                     <form action="{{ route('acceptWO', $wo->id) }}" method="post">
                                         @csrf
@@ -148,9 +148,9 @@
                                         <a href="#!">Customer Support</a>.</small>
                                 </div>
                             @endif
-                            @if ($wo->status_wo == 'WORK DONE' && $user->id_role_hdr == 8 && !$wo->sign_approve_tr)
+                            @if ($wo->status_wo == 'APPROVED' && $user->id_user == $approve->approval_3 && !$wo->sign_approve_3)
                                 <div class="text-center">
-                                    <form action="{{ route('approveTR', $wo->id) }}" method="post">
+                                    <form action="{{ route('approve3', $wo->id) }}" method="post">
                                         @csrf
                                         <button type="submit" class="btn btn-success btn-lg my-4" type="button">
                                             Approve
@@ -160,19 +160,7 @@
                                         <a href="#!">Customer Support</a>.</small>
                                 </div>
                             @endif
-                            @if ($wo->status_wo == 'WORK DONE' && $user->id_role_hdr == 4 && !$wo->sign_approve_spv)
-                                <div class="text-center">
-                                    <form action="{{ route('approveSPV', $wo->id) }}" method="post">
-                                        @csrf
-                                        <button type="submit" class="btn btn-success btn-lg my-4" type="button">
-                                            Approve
-                                        </button>
-                                    </form>
-                                    <small class="d-block">For any technical issues faced, please contact
-                                        <a href="#!">Customer Support</a>.</small>
-                                </div>
-                            @endif
-                            @if ($wo->status_wo == 'WORK DONE' && $user->id_role_hdr == 3 && $wo->sign_approve_spv)
+                            @if ($wo->status_wo == 'WORK DONE' && $notif->receiver == $wo->Ticket->Tenant->User->id_user)
                                 <div class="text-center">
                                     <form action="{{ route('doneWO', $wo->id) }}" method="post">
                                         @csrf
