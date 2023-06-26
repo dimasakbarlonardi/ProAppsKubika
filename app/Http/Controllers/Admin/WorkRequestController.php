@@ -83,6 +83,24 @@ class WorkRequestController extends Controller
             $ticket->status_request = 'PROSES';
             $ticket->save();
 
+            // $connNotif = ConnectionDB::setConnection(new Notifikasi());
+            // $checkNotif = $connNotif->where('models', 'OpenTicket')
+            //     ->where('is_read', 0)
+            //     ->where('id_data', $request->no_tiket)
+            //     ->first();
+            // $user = $request->session()->get('user');
+            // if (!$checkNotif) {
+            //     $connNotif->create([
+            //         'receiver' => $ticket->Tenant->User->id_user,
+            //         'sender' => $user->id_user,
+            //         'is_read' => 0,
+            //         'models' => 'OpenTicket',
+            //         'id_data' => $request->no_tiket,
+            //         'notif_title' => $connWorkRequest->no_work_request,
+            //         'notif_message' => 'Work Request sudah dibuat, mohon di approve'
+            //     ]);
+            // }
+
             DB::commit();
 
             Alert::success('Berhasil', 'Berhasil menambahkan request');
