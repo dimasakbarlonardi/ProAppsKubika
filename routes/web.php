@@ -51,6 +51,7 @@ use App\Http\Controllers\Admin\WorkOrderController;
 use App\Http\Controllers\Admin\WorkPriorityController;
 use App\Http\Controllers\Admin\WorkRelationController;
 use App\Http\Controllers\Admin\WorkRequestController;
+use App\Http\Controllers\PaymentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -66,6 +67,8 @@ use App\Http\Controllers\Admin\WorkRequestController;
 Route::get('/', function () {
     return view('welcome');
 });
+
+Route::post('/payments/midtrans-notifications', [PaymentController::class, 'receive']);
 
 // Check role id
 Route::get('/check-role-id', [RoleController::class, 'checkRoleID']);
@@ -275,9 +278,9 @@ Route::prefix('admin')->group(function () {
         Route::resource('/work-orders', WorkOrderController::class);
         Route::get('/work-order/no-wo', [WorkOrderController::class, 'showByNoWO']);
         Route::post('/accept/work-order/{id}', [WorkOrderController::class, 'acceptWO'])->name('acceptWO'); // accept wo from tenant
+        Route::post('/approve2/work-order/{id}', [WorkOrderController::class, 'approve2WO'])->name('approve2WO'); // update wo from approve 2
+        Route::post('/approve3/work-order/{id}', [WorkOrderController::class, 'approve3WO'])->name('approve3WO'); // update wo from approve 3
         Route::post('/work-done/work-order/{id}', [WorkOrderController::class, 'workDone'])->name('workDone'); // update wo from engineering
-        Route::post('/approve-tr/work-order/{id}', [WorkOrderController::class, 'approveTR'])->name('approveTR'); // approve work done from engineering
-        Route::post('/approve-spv/work-order/{id}', [WorkOrderController::class, 'approveSPV'])->name('approveSPV'); // approve work done from engineering SPV
         Route::post('/done/work-order/{id}', [WorkOrderController::class, 'done'])->name('doneWO'); // done wo from tenant
 
         // Notification

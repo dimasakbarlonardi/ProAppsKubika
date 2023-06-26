@@ -18,10 +18,10 @@ class WorkRequest extends Model
         'status_request',
         'no_work_request',
         'id_work_relation',
-        'sign_approve_acc_wo',
+        'sign_approve_1',
         'sign_approval_2',
         'sign_approval_3',
-        'date_approve_acc_wo',
+        'date_approve_2',
         'date_approval_2',
         'date_approval_3',
     ];

@@ -78,6 +78,7 @@ class DashboardController extends Controller
             case ('WorkOrder'):
                 $model = new WorkOrder();
                 $getData = ConnectionDB::setConnection($model);
+                $data['approve'] = $connApprove->find(3);
                 $data['wo'] = $getData->find($getNotif->id_data);
                 return view('Tenant.Notification.WorkOrder', $data);
                 break;

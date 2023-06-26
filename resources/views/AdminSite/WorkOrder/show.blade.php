@@ -175,12 +175,30 @@
                                     Tenant</button>
                             </div>
                         @endif
-                        @if ($wo->status_wo == 'APPROVED' && $user->id_role_hdr == 4)
+                        @if ($wo->status_wo == 'APPROVED' && $approve->approval_2 == $user->RoleH->WorkRelation->id_work_relation && !$wo->sign_approve_2)
+                            <div class="card-footer border-top border-200 py-x1">
+                                <button type="button" class="btn btn-primary w-100"
+                                    onclick="approve2({{ $wo->id }})">Approve</button>
+                            </div>
+                        @endif
+                        @if ($wo->status_wo == 'APPROVED' && $approve->approval_3 == $user->id_user && !$wo->sign_approve_3)
+                            <div class="card-footer border-top border-200 py-x1">
+                                <button type="button" class="btn btn-primary w-100"
+                                    onclick="approve2({{ $wo->id }})">Approve</button>
+                            </div>
+                        @endif
+                        @if ($wo->status_wo == 'APPROVED' && $wo->sign_approve_3)
                             <div class="card-footer border-top border-200 py-x1">
                                 <button type="button" class="btn btn-primary w-100"
                                     onclick="workDone({{ $wo->id }})">PEKERJAAN SELESAI</button>
                             </div>
                         @endif
+                        {{-- @if ($wo->status_wo == 'APPROVED' && $user->id_role_hdr == 4)
+                            <div class="card-footer border-top border-200 py-x1">
+                                <button type="button" class="btn btn-primary w-100"
+                                    onclick="workDone({{ $wo->id }})">PEKERJAAN SELESAI</button>
+                            </div>
+                        @endif --}}
                         @if ($user->id_role_hdr == 8 && $wo->status_wo == 'WAITING APPROVE')
                             <div class="card-footer border-top border-200 py-x1">
                                 <button type="submit" class="btn btn-primary w-100" value="send">Update</button>
@@ -224,7 +242,23 @@
                             'Berhasil!',
                             'Berhasil mengupdate Work Order!',
                             'success'
-                        ).then(() =>  window.location.reload())
+                        ).then(() => window.location.reload())
+                    }
+                }
+            })
+        }
+
+        function approve2(id) {
+            $.ajax({
+                url: `/admin/approve2/work-order/${id}`,
+                type: 'POST',
+                success: function(data) {
+                    if (data.status === 'ok') {
+                        Swal.fire(
+                            'Berhasil!',
+                            'Berhasil mengupdate Work Order!',
+                            'success'
+                        ).then(() => window.location.reload())
                     }
                 }
             })

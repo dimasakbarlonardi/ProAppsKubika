@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
+use App\Models\Approve;
 use App\Models\Karyawan;
 use App\Models\Notifikasi;
 use App\Models\OpenTicket;
@@ -140,9 +141,11 @@ class WorkOrderController extends Controller
     {
         $user = $request->session()->get('user');
         $connWO = ConnectionDB::setConnection(new WorkOrder());
+        $connApprove = ConnectionDB::setConnection(new Approve());
 
         $data['wo'] = $connWO->find($id);
         $data['user'] = $user;
+        $data['approve'] = $connApprove->find(3);
 
         return view('AdminSite.WorkOrder.show', $data);
     }
@@ -199,11 +202,50 @@ class WorkOrderController extends Controller
         $wo = $connWO->find($id);
 
         $wo->status_wo = 'APPROVED';
-        $wo->sign_approve_acc_wo = '1';
-        $wo->date_approve_acc_wo = Carbon::now();
+        $wo->sign_approve_1 = '1';
+        $wo->date_approve_1 = Carbon::now();
         $wo->save();
 
         Alert::success('Berhasil', 'Berhasil menerima WO');
+
+        return redirect()->back();
+    }
+
+    public function approve2WO(Request $request, $id)
+    {
+        $connNotif = ConnectionDB::setConnection(new Notifikasi());
+        $user = $request->session()->get('user');
+        $connWO = ConnectionDB::setConnection(new WorkOrder());
+        $connApprove = ConnectionDB::setConnection(new Approve());
+
+        $approve = $connApprove->find(3);
+        $wo = $connWO->find($id);
+
+        $wo->status_wo = 'APPROVED';
+        $wo->sign_approve_2 = '1';
+        $wo->date_approve_2 = Carbon::now();
+        $wo->save();
+
+        $createNotif = $this->createNotif($connNotif, $id, $user, $wo);
+        $createNotif->notif_message = 'Work Order kami approve, mohon approve untuk kami bisa bekerja';
+        $createNotif->receiver = $approve->approval_3;
+        $createNotif->save();
+
+        return response()->json(['status' => 'ok']);
+    }
+
+    public function approve3WO(Request $request, $id)
+    {
+        $connWO = ConnectionDB::setConnection(new WorkOrder());
+
+        $wo = $connWO->find($id);
+
+        $wo->status_wo = 'APPROVED';
+        $wo->sign_approve_3 = '1';
+        $wo->date_approve_3 = Carbon::now();
+        $wo->save();
+
+        Alert::success('Berhasil', 'Berhasil approve WO');
 
         return redirect()->back();
     }
@@ -236,65 +278,13 @@ class WorkOrderController extends Controller
         $wo = $connWO->find($id);
         $createNotif = $this->createNotif($connNotif, $id, $user, $wo);
         $createNotif->notif_message = 'Work Order sudah dikerjakan, mohon periksa kembali pekerjaan kami';
-        $createNotif->division_receiver = 4;
+        $createNotif->receiver = $wo->Ticket->Tenant->User->id_user;
         $createNotif->save();
 
         $wo->status_wo = 'WORK DONE';
         $wo->save();
 
         return response()->json(['status' => 'ok']);
-    }
-
-    public function approveTR(Request $request, $id)
-    {
-        $connKaryawan = ConnectionDB::setConnection(new Karyawan());
-        $connWO = ConnectionDB::setConnection(new WorkOrder());
-        $connNotif = ConnectionDB::setConnection(new Notifikasi());
-        $user = $request->session()->get('user');
-
-        $getSpv = $connKaryawan->where('id_jabatan', '003')->get();
-
-        $wo = $connWO->find($id);
-
-        foreach ($getSpv as $spv) {
-            $createNotif = $this->createNotif($connNotif, $id, $user, $wo);
-            $createNotif->notif_message = 'Engineering sudah mengerjakan WO, mohon di periksa kembali';
-            $createNotif->receiver = $spv->User->id_user;
-            $createNotif->save();
-        }
-
-        $wo->sign_approve_tr = 1;
-        $wo->date_approve_tr = Carbon::now();
-        $wo->save();
-
-        Alert::success('Berhasil', 'Berhasil approve WO');
-
-        return redirect()->back();
-    }
-
-    public function approveSPV(Request $request, $id)
-    {
-        $connWO = ConnectionDB::setConnection(new WorkOrder());
-        $connNotif = ConnectionDB::setConnection(new Notifikasi());
-        $user = $request->session()->get('user');
-
-        $wo = $connWO->find($id);
-
-        $getUser = $wo->Ticket->Tenant->User->id_user;
-
-        $createNotif = $this->createNotif($connNotif, $id, $user, $wo);
-        $createNotif->notif_message = 'Work Order sudah dikerjakan, mohon periksa kembali pekerjaan kami';
-        $createNotif->receiver = $getUser;
-        $createNotif->save();
-
-
-        $wo->sign_approve_spv = 1;
-        $wo->date_approve_spv = Carbon::now();
-        $wo->save();
-
-        Alert::success('Berhasil', 'Berhasil approve WO');
-
-        return redirect()->back();
     }
 
     public function done(Request $request, $id)
@@ -317,8 +307,6 @@ class WorkOrderController extends Controller
             DB::beginTransaction();
 
             $wo->status_wo = 'DONE';
-            $wo->sign_approve_tenant = 1;
-            $wo->date_approve_tenant = Carbon::now();
             $wo->save();
 
             $ticket->status_request = 'DONE';
@@ -340,7 +328,7 @@ class WorkOrderController extends Controller
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
-
+            dd($e);
             return redirect()->back();
         }
 
@@ -371,6 +359,7 @@ class WorkOrderController extends Controller
 
             $createTransaction = $connTransaction;
             $createTransaction->no_invoice = $no_invoice;
+            $createTransaction->transaction_type = 'WorkOrder';
             $createTransaction->no_transaction = $wo->no_work_order;
             $createTransaction->admin_fee = $admin_fee;
             $createTransaction->sub_total = $wo->jumlah_bayar_wo;
@@ -387,9 +376,8 @@ class WorkOrderController extends Controller
             DB::commit();
 
         } catch (Throwable $e) {
-            dd($e);
             DB::rollBack();
-
+            dd($e);
             return redirect()->back();
         }
 
