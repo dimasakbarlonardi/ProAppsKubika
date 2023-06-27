@@ -192,10 +192,9 @@
                                 <button type="submit" class="btn btn-primary w-100" value="send">Update</button>
                             </div>
                         @endif
-                        @if ($wo->status_wo == 'DONE' && $approve->approval_4 == $user->id_user && $wo->sign_approve_4)
+                        @if ($user->id_user == $approve->approval_4 && $wo->sign_approve_5 && !$wo->sign_approve_4)
                             <div class="card-footer border-top border-200 py-x1">
-                                <button type="button" class="btn btn-primary w-100"
-                                    onclick="complete({{ $wo->id }})">COMPLETE</button>
+                                <button type="button" class="btn btn-primary w-100" onclick="completeWO({{ $wo->id }})">COMPLETE</button>
                             </div>
                         @endif
                     </div>
@@ -243,7 +242,7 @@
         }
         function approve2(id) {
             $.ajax({
-                url: `/admin/approve-2/work-order/${id}`,
+                url: `/admin/approve2/work-order/${id}`,
                 type: 'POST',
                 success: function(data) {
                     if (data.status === 'ok') {
@@ -251,12 +250,14 @@
                             'Berhasil!',
                             'Berhasil mengupdate Work Order!',
                             'success'
-                        ).then(() =>  window.location.reload())
+                        ).then(() => window.location.reload())
                     }
                 }
             })
         }
-        function complete(id) {
+
+        function completeWO(id) {
+            console.log(id);
             $.ajax({
                 url: `/admin/complete/work-order/${id}`,
                 type: 'POST',
@@ -266,7 +267,7 @@
                             'Berhasil!',
                             'Berhasil mengupdate Work Order!',
                             'success'
-                        ).then(() =>  window.location.reload())
+                        ).then(() => window.location.reload())
                     }
                 }
             })
