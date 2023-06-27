@@ -333,6 +333,40 @@ class WorkOrderController extends Controller
         return response()->json(['status' => 'ok']);
     }
 
+    public function completeWO(Request $request, $id)
+    {
+        $connWO = ConnectionDB::setConnection(new WorkOrder());
+        $connTicket = ConnectionDB::setConnection(new OpenTicket());
+        $connWR = ConnectionDB::setConnection(new WorkRequest());
+
+        $wo = $connWO->find($id);
+        $ticket = $connTicket->where('no_tiket', $wo->no_tiket)->first();
+        $wr = $connWR->where('no_work_request', $wo->no_work_request)->first();
+
+        try {
+            DB::beginTransaction();
+
+            $wo->status_wo = 'COMPLETE';
+            $wo->sign_approve_4 = 1;
+            $wo->date_approve_4 = Carbon::now();
+            $wo->save();
+
+            $ticket->status_request = 'COMPLETE';
+            $ticket->save();
+
+            $wr->status_request = 'COMPLETE';
+            $wr->save();          
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            dd($e);
+            return redirect()->back();
+        }
+
+        return response()->json(['status' => 'ok']);
+    }
+
     public function createTransaction($wo)
     {
         $connSystem = ConnectionDB::setConnection(new System());
