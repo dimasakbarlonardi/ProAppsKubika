@@ -31,7 +31,7 @@ class CallbackService extends Midtrans
         $serverKey = $this->serverKey;
         $input = $orderId . $statusCode . (int) $grossAmount . $serverKey;
         $signature = openssl_digest($input, 'sha512');
-
+        
         return ($this->_createLocalSignatureKey() == $signature);
     }
 
