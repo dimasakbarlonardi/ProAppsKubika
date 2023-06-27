@@ -28,6 +28,6 @@ class Transaction extends Model
 
     public function WorkOrder()
     {
-        return $this->belongsTo(WorkOrder::class, 'no_work_order', 'no_transaction');
+        return $this->hasOne(WorkOrder::class, 'no_work_order', 'no_transaction');
     }
 }
