@@ -13,25 +13,27 @@ class PaymentController extends Controller
     public function receive()
     {
         $callback = new CallbackService;
-        if ($callback->isSignatureKeyVerified()) {
+        if ($callback->isSignatureKeyVerified()) {            
             $order = $callback->getOrder();
-
+            // dd($order->Site->db_name);
+            $ct = TransactionCenter::find($order->id);
+            $transaction = new Transaction();
+            $transaction = $transaction->setConnection($order->Site->db_name);
+            $transaction = $transaction->where('no_invoice', $ct->no_invoice)->first();
+          
             if ($callback->isSuccess()) {
-                TransactionCenter::find($order->id)->update([
-                    'status' => 'PAYED',
-                ]);
+                $ct->status = 'PAYED';
+                $transaction->WorkOrder->sign_approve_4 = 1;
+                $transaction->WorkOrder->save();
             }
 
             if ($callback->isExpire()) {
-                TransactionCenter::find($order->id)->update([
-                    'status' => 'EXPIRED',
-                ]);
+                $ct->status = 'EXPIRED';
+
             }
 
             if ($callback->isCancelled()) {
-                TransactionCenter::find($order->id)->update([
-                    'status' => 'CANCELLED',
-                ]);
+                $ct->status = 'CANCELLED';                
             }
 
             return response()
