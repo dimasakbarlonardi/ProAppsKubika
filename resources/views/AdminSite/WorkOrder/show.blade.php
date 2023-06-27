@@ -293,12 +293,14 @@
                             'Berhasil!',
                             'Berhasil mengupdate Work Order!',
                             'success'
-                        ).then(() =>  window.location.reload())
+                        ).then(() => window.location.reload())
                     }
                 }
             })
         }
-        function complete(id) {
+
+        function completeWO(id) {
+            console.log(id);
             $.ajax({
                 url: `/admin/complete/work-order/${id}`,
                 type: 'POST',
