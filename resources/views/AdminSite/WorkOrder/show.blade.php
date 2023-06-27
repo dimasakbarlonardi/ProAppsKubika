@@ -10,8 +10,8 @@
     <form action="{{ route('work-orders.update', $wo->id) }}" method="post">
         @method('PUT')
         @csrf
-        <div class="row g-3">
-            <div class="col-xxl-12 col-xl-8">
+        <div class="row">
+            <div class="col-8">
                 <div class="card">
                     <div class="card">
                         <div class="card-header d-flex flex-between-center">
@@ -75,130 +75,132 @@
                 </div>
             </div>
 
-            <div class="col-xxl-3 col-xl-4">
-                <div class="row g-3 position-sticky top-0">
-                    <div class="col-md-6 col-xl-12 rounded-3">
-                        <div class="card">
-                            <div class="card-header">
-                                <h6 class="mb-0">Status</h6>
+            <div class="col-4 rounded-3">
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="mb-0">Status</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-4 mt-n2"><label class="mb-1">Status</label>
+                            <input type="text" class="form-control" disabled value="{{ $wo->status_wo }}"
+                                id="">
+                        </div>
+                        <div class="mb-4 mt-n2"><label class="mb-1">Status Berbayar WO</label>
+                            <input type="text" class="form-control" disabled
+                                value="{{ $wo->id_bayarnon == 1 ? 'Berbayar' : 'Non Berbayar' }}" id="">
+                        </div>
+                    </div>
+                </div>
+                <div class="card mt-2">
+                    <div class="card-header d-flex flex-between-center py-3">
+                        <h6 class="mb-0">Contact Information</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-0 border-bottom pb-x1 mb-x1 align-items-sm-center align-items-xl-start">
+                            <div class="col-3">
+                                <div class="avatar avatar-3xl">
+                                    <img class="rounded-circle"
+                                        src="{{ url($wo->Ticket->Tenant->profile_picture) }}" alt="" />
+                                </div>
                             </div>
-                            <div class="card-body">
-                                <div class="mb-4 mt-n2"><label class="mb-1">Status</label>
-                                    <input type="text" class="form-control" disabled value="{{ $wo->status_wo }}"
-                                        id="">
-                                </div>
-                                <div class="mb-4 mt-n2"><label class="mb-1">Status Berbayar WO</label>
-                                    <input type="text" class="form-control" disabled
-                                        value="{{ $wo->id_bayarnon == 1 ? 'Berbayar' : 'Non Berbayar' }}" id="">
-                                </div>
+                            <div class="col-6">
+                                <p class="fw-semi-bold text-800 mb-0">{{ $wo->Ticket->Tenant->nama_tenant }}</p>
+                                <a class="btn btn-link btn-sm p-0 fe-medium fs--1" href="#">View more
+                                    details
+                                </a>
                             </div>
                         </div>
-                        <div class="card mt-2">
-                            <div class="card-header d-flex flex-between-center py-3">
-                                <h6 class="mb-0">Contact Information</h6>
-                            </div>
-                            <div class="card-body">
-                                <div class="row g-0 border-bottom pb-x1 mb-x1 align-items-sm-center align-items-xl-start">
-                                    <div class="col-3">
-                                        <div class="avatar avatar-3xl">
-                                            <img class="rounded-circle"
-                                                src="{{ url($wo->Ticket->Tenant->profile_picture) }}" alt="" />
-                                        </div>
+                        <div class="row g-0 justify-content-lg-between">
+                            <div class="col-auto col-md-6 col-lg-auto">
+                                <div class="row">
+                                    <div class="col-md-auto mb-4 mb-md-0 mb-xl-4">
+                                        <h6 class="mb-1">Email</h6>
+                                        <a class="fs--1"
+                                            href="mailto:mattrogers@gmail.com">{{ $wo->Ticket->Tenant->email_tenant }}
+                                        </a>
                                     </div>
-                                    <div class="col-6">
-                                        <p class="fw-semi-bold text-800 mb-0">{{ $wo->Ticket->Tenant->nama_tenant }}</p>
-                                        <a class="btn btn-link btn-sm p-0 fe-medium fs--1" href="#">View more
-                                            details
+                                    <div class="col-md-auto mb-4 mb-md-0 mb-xl-4">
+                                        <h6 class="mb-1">Phone Number</h6>
+                                        <a class="fs--1"
+                                            href="tel:+6(855)747677">{{ $wo->Ticket->Tenant->no_telp_tenant }}
                                         </a>
                                     </div>
                                 </div>
-                                <div class="row g-0 justify-content-lg-between">
-                                    <div class="col-auto col-md-6 col-lg-auto">
-                                        <div class="row">
-                                            <div class="col-md-auto mb-4 mb-md-0 mb-xl-4">
-                                                <h6 class="mb-1">Email</h6>
-                                                <a class="fs--1"
-                                                    href="mailto:mattrogers@gmail.com">{{ $wo->Ticket->Tenant->email_tenant }}
-                                                </a>
-                                            </div>
-                                            <div class="col-md-auto mb-4 mb-md-0 mb-xl-4">
-                                                <h6 class="mb-1">Phone Number</h6>
-                                                <a class="fs--1"
-                                                    href="tel:+6(855)747677">{{ $wo->Ticket->Tenant->no_telp_tenant }}
-                                                </a>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-auto mb-4 mb-md-0 mb-xl-4">
-                                                <h6 class="mb-1">Unit</h6>
-                                                <a class="fs--1" href="mailto:mattrogers@gmail.com">Lantai :
-                                                    {{ $wo->Ticket->Unit->floor->nama_lantai }},
-                                                    {{ $wo->Ticket->Unit->nama_unit }}
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-auto col-md-6 col-lg-auto ps-md-5 ps-xl-0">
-                                        <div class="border-start position-absolute start-50 d-none d-md-block d-xl-none"
-                                            style="height: 72px"></div>
+                                <div class="row">
+                                    <div class="col-md-auto mb-4 mb-md-0 mb-xl-4">
+                                        <h6 class="mb-1">Unit</h6>
+                                        <a class="fs--1" href="mailto:mattrogers@gmail.com">Lantai :
+                                            {{ $wo->Ticket->Unit->floor->nama_lantai }},
+                                            {{ $wo->Ticket->Unit->nama_unit }}
+                                        </a>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="col-auto col-md-6 col-lg-auto ps-md-5 ps-xl-0">
+                                <div class="border-start position-absolute start-50 d-none d-md-block d-xl-none"
+                                    style="height: 72px"></div>
                             </div>
                         </div>
-                        <div class="card mt-2">
-                            <div class="card-header">
-                                <h6 class="mb-0">Detail Pengerjaan</h6>
-                            </div>
-                            <div class="card-body">
-                                <div class="mb-3">
-                                    <label class="mb-1">Estimasi Pengerjaan</label>
-                                    <div class="input-group">
-                                        <input class="form-control" value="{{ $wo->estimasi_pengerjaan }}"
-                                            {{ $wo->estimasi_pengerjaan ? 'disabled' : '' }} type="text"
-                                            name="estimasi_pengerjaan" id="estimasi_pengerjaan" />
-                                        <span class="input-group-text">Jam</span>
-                                    </div>
-                                </div>
-                                <div class="mb-4">
-                                    <label class="mb-1">Jadwal Pengerjaan</label>
-                                    <input value="{{ $wo->jadwal_pengerjaan }}"
-                                        {{ $user->id_role_hdr != 8 ? 'disabled' : '' }}
-                                        class="form-control datetimepicker" name="jadwal_pengerjaan" id="datetimepicker"
-                                        type="text" placeholder="d/m/y H:i"
-                                        data-options='{"enableTime":true,"dateFormat":"Y-m-d H:i","disableMobile":true}' />
-                                </div>
-                            </div>
-                        </div>
-                        @if ($user->id_role_hdr == 8 && $wo->status_wo == 'PENDING')
-                            <div class="card-footer border-top border-200 py-x1">
-                                <button type="submit" class="btn btn-primary w-100" value="send">Send to
-                                    Tenant</button>
-                            </div>
-                        @endif
-                        @if ($wo->status_wo == 'APPROVED' && $user->RoleH->WorkRelation->id_work_relation == $approve->approval_2 && !$wo->sign_approve_2)
-                            <div class="card-footer border-top border-200 py-x1">
-                                <button type="button" class="btn btn-primary w-100"
-                                    onclick="approve2({{ $wo->id }})">Approve</button>
-                            </div>
-                        @endif
-                        @if ($wo->status_wo == 'APPROVED' && $wo->sign_approve_3)
-                            <div class="card-footer border-top border-200 py-x1">
-                                <button type="button" class="btn btn-primary w-100"
-                                    onclick="workDone({{ $wo->id }})">Pekerjaan Selesai</button>
-                            </div>
-                        @endif
-                        @if ($user->id_role_hdr == 8 && $wo->status_wo == 'WAITING APPROVE')
-                            <div class="card-footer border-top border-200 py-x1">
-                                <button type="submit" class="btn btn-primary w-100" value="send">Update</button>
-                            </div>
-                        @endif
-                        @if ($user->id_user == $approve->approval_4 && $wo->sign_approve_5 && !$wo->sign_approve_4)
-                            <div class="card-footer border-top border-200 py-x1">
-                                <button type="button" class="btn btn-primary w-100" onclick="completeWO({{ $wo->id }})">COMPLETE</button>
-                            </div>
-                        @endif
                     </div>
                 </div>
+                <div class="card mt-2">
+                    <div class="card-header">
+                        <h6 class="mb-0">Detail Pengerjaan</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label class="mb-1">Estimasi Pengerjaan</label>
+                            <div class="input-group">
+                                <input class="form-control" value="{{ $wo->estimasi_pengerjaan }}"
+                                    {{ $wo->estimasi_pengerjaan ? 'disabled' : '' }} type="text"
+                                    name="estimasi_pengerjaan" id="estimasi_pengerjaan" />
+                                <span class="input-group-text">Jam</span>
+                            </div>
+                        </div>
+                        <div class="mb-4">
+                            <label class="mb-1">Jadwal Pengerjaan</label>
+                            <input value="{{ $wo->jadwal_pengerjaan }}"
+                                {{ $user->id_role_hdr != 8 ? 'disabled' : '' }}
+                                class="form-control datetimepicker" name="jadwal_pengerjaan" id="datetimepicker"
+                                type="text" placeholder="d/m/y H:i"
+                                data-options='{"enableTime":true,"dateFormat":"Y-m-d H:i","disableMobile":true}' />
+                        </div>
+                    </div>
+                </div>
+                @if ($user->id_role_hdr == 8 && $wo->status_wo == 'PENDING')
+                    <div class="card-footer border-top border-200 py-x1">
+                        <button type="submit" class="btn btn-primary w-100" value="send">Send to
+                            Tenant</button>
+                    </div>
+                @endif
+                @if ($wo->status_wo == 'APPROVED' && $user->RoleH->WorkRelation->id_work_relation == $wo->WorkRequest->id_work_relation && !$wo->sign_approve_2)
+                    <div class="card-footer border-top border-200 py-x1">
+                        <button type="button" class="btn btn-primary w-100"
+                            onclick="approve2({{ $wo->id }})">Approve</button>
+                    </div>
+                @endif
+                @if ($wo->status_wo == 'APPROVED' && $approve->approval_3 == $user->id_user && !$wo->sign_approve_3)
+                    <div class="card-footer border-top border-200 py-x1">
+                        <button type="button" class="btn btn-primary w-100"
+                            onclick="approve3({{ $wo->id }})">Approve</button>
+                    </div>
+                @endif
+                @if ($wo->status_wo == 'APPROVED' && $wo->sign_approve_3)
+                    <div class="card-footer border-top border-200 py-x1">
+                        <button type="button" class="btn btn-primary w-100"
+                            onclick="workDone({{ $wo->id }})">PEKERJAAN SELESAI</button>
+                    </div>
+                @endif
+                @if ($user->id_role_hdr == 8 && $wo->status_wo == 'WAITING APPROVE')
+                    <div class="card-footer border-top border-200 py-x1">
+                        <button type="submit" class="btn btn-primary w-100" value="send">Update</button>
+                    </div>
+                @endif
+                @if ($user->id_user == $approve->approval_4 && $wo->sign_approve_5 && !$wo->sign_approve_4)
+                    <div class="card-footer border-top border-200 py-x1">
+                        <button type="button" class="btn btn-primary w-100" onclick="completeWO({{ $wo->id }})">COMPLETE</button>
+                    </div>
+                @endif
             </div>
         </div>
     </form>

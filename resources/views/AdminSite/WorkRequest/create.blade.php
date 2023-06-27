@@ -12,7 +12,7 @@
     <form action="{{ route('work-requests.store') }}" method="post" style="display: inline">
         @csrf
         <div class="row g-3">
-            <div class="col-xxl-12 col-xl-8">
+            <div class="col-9">
                 <div class="card">
                     <div class="card-header d-flex flex-between-center">
                         <button class="btn btn-falcon-default btn-sm" type="button">
@@ -33,19 +33,9 @@
                         </div>
                     </div>
                 </div>
-                {{-- <div class="card mt-3">
-                    <div class="card">
-                        <div class="card-header d-flex flex-between-center">
-                            <h6 class="mb-0">Deskripsi Work Request</h6>
-                        </div>
-                    </div>
-                    <div class="card-body">
-                        <textarea class="form-control" name="deskripsi_wr" id="myeditorinstance" cols="30" rows="10"></textarea>
-                    </div>
-                </div> --}}
             </div>
 
-            <div class="col-xxl-3 col-xl-4">
+            <div class="col-3">
                 <div class="row g-3 position-sticky top-0">
                     <div class="col-md-6 col-xl-12 rounded-3">
                         <div class="card">
