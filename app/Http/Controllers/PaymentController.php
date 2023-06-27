@@ -7,6 +7,7 @@ use App\Models\Transaction;
 use App\Models\TransactionCenter;
 use App\Services\Midtrans\CallbackService;
 use Symfony\Component\HttpFoundation\Request;
+use Carbon\Carbon;
 
 class PaymentController extends Controller
 {
@@ -23,7 +24,8 @@ class PaymentController extends Controller
             if ($callback->isSuccess()) {
                 $ct->status = 'PAYED';
                 $transaction->status = 'PAYED';
-                $transaction->WorkOrder->sign_approve_4 = 1;
+                $transaction->WorkOrder->sign_approve_5 = 1;
+                $transaction->WorkOrder->date_approve_5 = Carbon::now();
                 $transaction->WorkOrder->save();
             }
 
