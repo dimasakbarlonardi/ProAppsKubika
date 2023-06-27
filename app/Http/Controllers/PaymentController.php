@@ -14,15 +14,15 @@ class PaymentController extends Controller
     {
         $callback = new CallbackService;
         if ($callback->isSignatureKeyVerified()) {            
-            $order = $callback->getOrder();
-            // dd($order->Site->db_name);
+            $order = $callback->getOrder();           
             $ct = TransactionCenter::find($order->id);
             $transaction = new Transaction();
             $transaction = $transaction->setConnection($order->Site->db_name);
             $transaction = $transaction->where('no_invoice', $ct->no_invoice)->first();
-          
+            
             if ($callback->isSuccess()) {
                 $ct->status = 'PAYED';
+                $transaction->status = 'PAYED';
                 $transaction->WorkOrder->sign_approve_4 = 1;
                 $transaction->WorkOrder->save();
             }
@@ -35,6 +35,9 @@ class PaymentController extends Controller
             if ($callback->isCancelled()) {
                 $ct->status = 'CANCELLED';                
             }
+
+            $ct->save();
+            $transaction->save();
 
             return response()
                 ->json([
