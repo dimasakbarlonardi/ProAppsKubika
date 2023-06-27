@@ -10,7 +10,7 @@
         @method('PUT')
         @csrf
         <div class="row g-3">
-            <div class="col-xxl-12 col-xl-8">
+            <div class="col-9">
                 <div class="card">
                     <div class="card">
                         <div class="card-header d-flex flex-between-center">
@@ -80,7 +80,7 @@
             </div>
 
             @if ($user->id_role_hdr != 8)
-                <div class="col-xxl-3 col-xl-4">
+                <div class="col-3">
                     <div class="row g-3 position-sticky top-0">
                         <div class="col-md-6 col-xl-12 rounded-3">
                             <div class="card">
@@ -173,7 +173,7 @@
                                         <div class="mb-4 mt-n2" id="select_estimasi_pengerjaan" style="display: none">
                                             <label class="mb-1">Estimasi Pengerjaan</label>
                                             <div class="input-group">
-                                                <input class="form-control" type="text" name="estimasi_pengerjaan"
+                                                <input class="form-control" value="{{ $wr->WorkOrder ? $wr->WorkOrder->estimasi_pengerjaan : '' }}" type="text" name="estimasi_pengerjaan"
                                                     id="estimasi_pengerjaan" /><span class="input-group-text">Jam</span>
                                             </div>
                                         </div>
@@ -273,7 +273,7 @@
                         'Berhasil!',
                         'Berhasil mengajukan Work Order!',
                         'success'
-                    )
+                    ).then(() => window.location.reload());
                 }
             })
         })

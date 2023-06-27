@@ -58,11 +58,14 @@
                                     </a>
                                     <div class="ms-1 ms-sm-3">
                                         <p class="fw-semi-bold mb-3 mb-sm-2">
-                                            <a href="{{ route('open-tickets.show', $ticket->id) }}">Ticket
+                                            <a href="{{ route('open-tickets.show', $ticket->id) }}" class="mr-5">Ticket
                                                 #{{ $ticket->no_tiket }}</a>
+                                            <span class="badge bg-info ml-">
+                                                {{ $ticket->jenisRequest->jenis_request }}
+                                            </span>
                                         </p>
                                         <div class="d-flex justify-content-between">
-                                            <div class="">
+                                            <div class="my-1">
                                                 <h5>{{ $ticket->judul_request }}</h5>
                                             </div>
                                         </div>
@@ -88,6 +91,10 @@
                                                     @break
 
                                                     @case('PROSES')
+                                                        <small
+                                                            class="badge rounded bg-info dark__bg-1000">{{ $ticket->status_request }}</small>
+                                                    @break
+                                                    @case('PROSES KE WR')
                                                         <small
                                                             class="badge rounded bg-info dark__bg-1000">{{ $ticket->status_request }}</small>
                                                     @break
@@ -118,19 +125,6 @@
                                                     {{ \Carbon\Carbon::createFromTimeStamp(strtotime($ticket->created_at))->diffForHumans() }}
                                                 </h6>
                                             </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="border-bottom mt-4 mb-x1"></div>
-                                <div class="d-flex justify-content-between">
-                                    <div class="">
-                                        <h5>{{ $ticket->judul_request }}</h5>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <span class="badge rounded bg-info red__bg-1000">
-                                                {{ $ticket->jenisRequest->jenis_request }}
-                                            </span>
                                         </div>
                                     </div>
                                 </div>
