@@ -82,8 +82,7 @@
                     </div>
                     <div class="card-body">
                         <div class="mb-4 mt-n2"><label class="mb-1">Status</label>
-                            <input type="text" class="form-control" disabled value="{{ $wo->status_wo }}"
-                                id="">
+                            <input type="text" class="form-control" disabled value="{{ $wo->status_wo }}" id="">
                         </div>
                         <div class="mb-4 mt-n2"><label class="mb-1">Status Berbayar WO</label>
                             <input type="text" class="form-control" disabled
@@ -99,8 +98,8 @@
                         <div class="row g-0 border-bottom pb-x1 mb-x1 align-items-sm-center align-items-xl-start">
                             <div class="col-3">
                                 <div class="avatar avatar-3xl">
-                                    <img class="rounded-circle"
-                                        src="{{ url($wo->Ticket->Tenant->profile_picture) }}" alt="" />
+                                    <img class="rounded-circle" src="{{ url($wo->Ticket->Tenant->profile_picture) }}"
+                                        alt="" />
                                 </div>
                             </div>
                             <div class="col-6">
@@ -159,8 +158,7 @@
                         </div>
                         <div class="mb-4">
                             <label class="mb-1">Jadwal Pengerjaan</label>
-                            <input value="{{ $wo->jadwal_pengerjaan }}"
-                                {{ $user->id_role_hdr != 8 ? 'disabled' : '' }}
+                            <input value="{{ $wo->jadwal_pengerjaan }}" {{ $user->id_role_hdr != 8 ? 'disabled' : '' }}
                                 class="form-control datetimepicker" name="jadwal_pengerjaan" id="datetimepicker"
                                 type="text" placeholder="d/m/y H:i"
                                 data-options='{"enableTime":true,"dateFormat":"Y-m-d H:i","disableMobile":true}' />
@@ -173,7 +171,11 @@
                             Tenant</button>
                     </div>
                 @endif
-                @if ($wo->status_wo == 'APPROVED' && $user->RoleH->WorkRelation->id_work_relation == $wo->WorkRequest->id_work_relation && !$wo->sign_approve_2)
+                @if (
+                    $wo->status_wo == 'APPROVED' &&
+                        $user->RoleH->WorkRelation->id_work_relation == $wo->WorkRequest->id_work_relation &&
+                        !$wo->sign_approve_2 &&
+                        $approve->approval_2 == $user->id_user)
                     <div class="card-footer border-top border-200 py-x1">
                         <button type="button" class="btn btn-primary w-100"
                             onclick="approve2({{ $wo->id }})">Approve</button>
@@ -198,7 +200,8 @@
                 @endif
                 @if ($user->id_user == $approve->approval_4 && $wo->sign_approve_5 && !$wo->sign_approve_4)
                     <div class="card-footer border-top border-200 py-x1">
-                        <button type="button" class="btn btn-primary w-100" onclick="completeWO({{ $wo->id }})">COMPLETE</button>
+                        <button type="button" class="btn btn-primary w-100"
+                            onclick="completeWO({{ $wo->id }})">COMPLETE</button>
                     </div>
                 @endif
             </div>
