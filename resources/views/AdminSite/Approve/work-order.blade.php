@@ -26,10 +26,10 @@
                         <div class="col-6">
                             <label class="form-label">Approve 2</label>
                             <select name="approval_2" class="form-control">
-                                @foreach ($roles as $role)
-                                    <option {{ $role->WorkRelation->id_work_relation == $approve->approval_2 ? 'selected' : '' }}
-                                        value="{{ $role->WorkRelation->id_work_relation }}">{{ $role->nama_role }}</option>
-                                @endforeach
+                                @foreach ($karyawans as $karyawan)
+                                <option {{ $karyawan->User->id_user == $approve->approval_3 ? 'selected' : '' }}
+                                    value="{{ $karyawan->User->id_user }}">Work Relation : {{ $karyawan->User->RoleH->WorkRelation->work_relation }} - User :{{ $karyawan->nama_karyawan }}</option>
+                            @endforeach
                             </select>
                         </div>
                     </div>
