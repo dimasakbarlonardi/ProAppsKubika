@@ -35,7 +35,6 @@ class CreateSnapTokenService extends Midtrans
             'quantity' => 1,
             'name' => 'Biaya admin'
         ];
-
         $params = [
             'transaction_details' => [
                 'order_id' => $this->ct->id,
