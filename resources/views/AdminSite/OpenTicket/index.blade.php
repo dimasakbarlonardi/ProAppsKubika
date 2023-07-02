@@ -94,7 +94,7 @@
                                                         <small
                                                             class="badge rounded bg-info dark__bg-1000">{{ $ticket->status_request }}</small>
                                                     @break
-                                                    @case('PROSES KE WR')
+                                                    @case('PROSES KE WR' || 'PROSES KE PERMIT')
                                                         <small
                                                             class="badge rounded bg-info dark__bg-1000">{{ $ticket->status_request }}</small>
                                                     @break
