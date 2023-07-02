@@ -30,17 +30,24 @@
                             <div class="col-6 mb-3">
                                 <label class="form-label">E-MAIL</label>
                                 <input type="text" maxlength="16" name="email_karyawan"
-                                    value="{{ $karyawan->email_karyawan }}" class="form-control" readonly>
+                                    value="{{ $karyawan->email_karyawan }}" class="form-control" readonly disabled>
                             </div>
                             <div class="col-6 mb-3">
                                 <label class="form-label">NIK Karyawan</label>
                                 <input type="text" maxlength="16" name="nik_karyawan"
-                                    value="{{ $karyawan->nik_karyawan }}" class="form-control" readonly>
+                                    value="{{ $karyawan->nik_karyawan }}" class="form-control" readonly disabled>
                             </div>
                             <div class="col-6 mb-3">
                                 <label class="form-label">ID Card</label>
-                                <input type="text" maxlength="16" name="id_card_type"
-                                    value="{{ $karyawan->IdCard->card_id_name }}" class="form-control" readonly>
+                                <select class="form-control" name="id_card_type" id="id_card_type" required disabled>
+                                    <option selected disabled>-- Pilih Status Kawin --</option>
+                                    @foreach ($idcards as $idcard)
+                                        <option value="{{ $idcard->id_card_type }}"
+                                            {{ $idcard->id_card_type == $karyawan->id_card_type ? 'selected' : '' }}>
+                                            {{ $idcard->card_id_name }}
+                                        </option>
+                                    @endforeach
+                                </select>
                             </div>
                             <div class="col-6">
                                 <label class="form-label">Nama Karyawan</label>
@@ -79,11 +86,7 @@
                     </div>
                     <div class="mb-3">
                         <div class="row">
-                            <div class="col-6">
-                                <label class="form-label">NIK Pasangan Penjamin</label>
-                                <input type="text" maxlength="16" value="{{ $karyawan->nik_pasangan_penjamin }}"
-                                    name="nik_pasangan_penjamin" class="form-control" readonly>
-                            </div>
+
                             <div class="col-6">
                                 <label class="form-label">Tanggal Masuk</label>
                                 <input type="date" name="tgl_masuk" value="{{ $karyawan->tgl_masuk }}"
@@ -100,7 +103,7 @@
                             </div>
                             <div class="col-6">
                                 <label class="form-label">Departement</label>
-                                <input type="text" name="id_departemen" value="{{ $karyawan->Departemen }}"
+                                <input type="text" name="id_departemen" value="{{ $karyawan->Departemen->id_departemen }}"
                                     class="form-control" readonly>
                             </div>
                         </div>
@@ -109,13 +112,13 @@
                         <div class="row">
                             <div class="col-6">
                                 <label class="form-label">Divisi</label>
-                                <input type="text" name="id_divisi" value="{{ $karyawan->Divisi->nama_divisi }}"
-                                    class="form-control" readonly>
+                                {{-- <input type="text" name="id_divisi" value="{{ $karyawan->Divisi->nama_divisi }}"
+                                    class="form-control" readonly> --}}
                             </div>
                             <div class="col-6">
                                 <label class="form-label">Jabatan</label>
-                                <input type="text" name="id_jabatan" value="{{ $karyawan->Jabatan->nama_jabatan }}"
-                                    class="form-control" readonly>
+                                {{-- <input type="text" name="id_jabatan" value="{{ $karyawan->Jabatan->nama_jabatan }}"
+                                    class="form-control" readonly> --}}
                             </div>
                         </div>
                     </div>
@@ -123,8 +126,8 @@
                         <div class="row">
                             <div class="col-6">
                                 <label class="form-label">Penempatan</label>
-                                <input type="text" name="id_penempatan" value="{{ $karyawan->Penempatan->lokasi_penempatan }}"
-                                    class="form-control" readonly>
+                                {{-- <input type="text" name="id_penempatan"
+                                    value="{{ $karyawan->Penempatan->lokasi_penempatan }}" class="form-control" readonly> --}}
                             </div>
                             <div class="col-6">
                                 <label class="form-label">Tanggal Lahir</label>
@@ -142,8 +145,8 @@
                             </div>
                             <div class="col-6">
                                 <label class="form-label">Agama</label>
-                                <input type="text" name="id_agama" value="{{ $karyawan->Agama->nama_agama }}"
-                                    class="form-control" readonly>
+                                {{-- <input type="text" name="id_agama" value="{{ $karyawan->Agama->nama_agama }}"
+                                    class="form-control" readonly> --}}
                             </div>
                         </div>
                     </div>
@@ -151,12 +154,13 @@
                         <div class="row">
                             <div class="col-6">
                                 <label class="form-label">Jenis Kelamin</label>
-                                <input type="text" name="id_jenis_kelamin" value="{{ $karyawan->jeniskelamin->jenis_kelamin }}"
-                                    class="form-control" readonly>
+                                {{-- <input type="text" name="id_jenis_kelamin"
+                                    value="{{ $karyawan->jeniskelamin->jenis_kelamin }}" class="form-control" readonly> --}}
                             </div>
                             <div class="col-6">
                                 <label class="form-label">Status Kawin</label>
-                                <select class="form-control" name="id_status_kawin" id="id_status_kawin" required disabled>
+                                <select class="form-control" name="id_status_kawin" id="id_status_kawin" required
+                                    disabled>
                                     <option selected disabled>-- Pilih Status Kawin --</option>
                                     @foreach ($statuskawins as $statuskawin)
                                         <option value="{{ $statuskawin->id_status_kawin }}"
@@ -164,6 +168,18 @@
                                             {{ $statuskawin->status_kawin }}
                                         </option>
                                     @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="row">
+                            <div class="col-6">
+                                <label class="form-label">Bisa Approve</label>
+                                <select class="form-control" name="is_can_approve" id="is_can_approve" required disabled>
+                                    <option selected disabled>-- Pilih Status --</option>
+                                    <option {{ $karyawan->is_can_approve ? 'selected' : '' }} value="1">Yes</option>
+                                    <option {{ !$karyawan->is_can_approve ? 'selected' : '' }} value="">No</option>
                                 </select>
                             </div>
                         </div>
@@ -177,13 +193,12 @@
                             <div class="col-6">
                                 <label class="form-label">Nama Pasangan Penjamin</label>
                                 <input type="text" name="nama_pasangan_penjamin"
-                                    value="{{ $karyawan->nama_pasangan_penjamin }}" class="form-control" required
-                                    disabled>
+                                    value="{{ $karyawan->nama_pasangan_penjamin }}" class="form-control" disabled>
                             </div>
                             <div class="col-6">
                                 <label class="form-label">NIK Karyawan</label>
                                 <input type="text" maxlength="16" name="nik_karyawan"
-                                    value="{{ $karyawan->nik_karyawan }}" class="form-control" required disabled>
+                                    value="{{ $karyawan->nik_pasangan_penjamin }}" class="form-control" disabled>
                             </div>
                         </div>
                     </div>
@@ -192,8 +207,7 @@
                             <div class="col-6">
                                 <label class="form-label">Alamat KTP Pasangan Penjamin</label>
                                 <input type="text" name="alamat_ktp_pasangan_penjamin"
-                                    value="{{ $karyawan->alamat_ktp_pasangan_penjamin }}" class="form-control" required
-                                    disabled>
+                                    value="{{ $karyawan->alamat_ktp_pasangan_penjamin }}" class="form-control" disabled>
                             </div>
                             <div class="col-6">
                                 <label class="form-label">Alamat Tinggal Pasangan Penjamin</label>

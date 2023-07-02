@@ -39,8 +39,10 @@
                         <label class="form-label">Approve 3</label>
                         <select name="approval_3" class="form-control">
                             @foreach ($karyawans as $karyawan)
-                                <option {{ $karyawan->User->id_user == $approve->approval_3 ? 'selected' : '' }}
-                                    value="{{ $karyawan->User->id_user }}">{{ $karyawan->nama_karyawan }}</option>
+                                @if ($karyawan->User)
+                                    <option {{ $karyawan->User->id_user == $approve->approval_3 ? 'selected' : '' }}
+                                        value="{{ $karyawan->User->id_user }}">{{ $karyawan->nama_karyawan }}</option>
+                                @endif
                             @endforeach
                         </select>
                     </div>

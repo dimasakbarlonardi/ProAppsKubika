@@ -39,6 +39,7 @@ use App\Http\Controllers\Admin\OwnerHController;
 use App\Http\Controllers\Admin\PenempatanController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\PeriodeSewaController;
+use App\Http\Controllers\Admin\RequestPermitController;
 use App\Http\Controllers\Admin\RuangReservationController;
 use App\Http\Controllers\Admin\StatusAktifKaryawanController;
 use App\Http\Controllers\Admin\StatusKaryawanController;
@@ -48,6 +49,7 @@ use App\Http\Controllers\Admin\SystemSettingController;
 use App\Http\Controllers\Admin\StatusTinggalController;
 use App\Http\Controllers\Admin\TypeReservationController;
 use App\Http\Controllers\Admin\WorkOrderController;
+use App\Http\Controllers\Admin\WorkPermitController;
 use App\Http\Controllers\Admin\WorkPriorityController;
 use App\Http\Controllers\Admin\WorkRelationController;
 use App\Http\Controllers\Admin\WorkRequestController;
@@ -285,6 +287,17 @@ Route::prefix('admin')->group(function () {
         Route::post('/work-done/work-order/{id}', [WorkOrderController::class, 'workDone'])->name('workDone'); // update wo from engineering
         Route::post('/done/work-order/{id}', [WorkOrderController::class, 'done'])->name('doneWO'); // done wo from tenant
         Route::post('/complete/work-order/{id}', [WorkOrderController::class, 'completeWO'])->name('completeWO'); // complete wo from finance
+
+        // Request Permit
+        Route::resource('/request-permits', RequestPermitController::class);
+        Route::post('/request-permits/approve1/{id}', [RequestPermitController::class, 'approveRP1'])->name('approveRP1');
+
+        // Work Permit
+        Route::resource('/work-permits', WorkPermitController::class);
+        Route::get('/open/request-permits', [WorkPermitController::class, 'openRP'])->name('openRP');
+        Route::post('/work-permit/approve1/{id}', [WorkPermitController::class, 'approveWP1'])->name('approveWP1');
+        Route::post('/work-permit/approve2/{id}', [WorkPermitController::class, 'approveWP2'])->name('approveWP2');
+
 
         // Notification
         Route::get('/notifications', [DashboardController::class, 'notifications'])->name('notifications');  // Get all notifications list
