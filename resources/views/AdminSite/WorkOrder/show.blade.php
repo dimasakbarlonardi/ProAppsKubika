@@ -171,11 +171,11 @@
                             Tenant</button>
                     </div>
                 @endif
-                @if ($wo->status_wo == 'APPROVED' &&
-                    $user->RoleH->WorkRelation->id_work_relation == $wo->WorkRequest->id_work_relation &&
-                    !$wo->sign_approve_2 &&
-                    $approve->approval_2 == $user->id_user
-                    )
+                @if (
+                    $wo->status_wo == 'APPROVED' &&
+                        $user->RoleH->WorkRelation->id_work_relation == $wo->WorkRequest->id_work_relation &&
+                        !$wo->sign_approve_2 &&
+                        $user->Karyawan->is_can_approve)
                     <div class="card-footer border-top border-200 py-x1">
                         <button type="button" class="btn btn-primary w-100"
                             onclick="approve2({{ $wo->id }})">Approve</button>

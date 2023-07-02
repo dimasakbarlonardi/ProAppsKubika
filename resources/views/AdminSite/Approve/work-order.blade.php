@@ -35,25 +35,16 @@
                     </div>
                 </div>
                 <div class="mb-3">
-                    <div class="row">
-                        <div class="col-6">
-                            <label class="form-label">Approve 3</label>
-                            <select name="approval_3" class="form-control">
-                                @foreach ($karyawans as $karyawan)
+                    <div class="col-6">
+                        <label class="form-label">Approve 3</label>
+                        <select name="approval_3" class="form-control">
+                            @foreach ($karyawans as $karyawan)
+                                @if ($karyawan->User)
                                     <option {{ $karyawan->User->id_user == $approve->approval_3 ? 'selected' : '' }}
                                         value="{{ $karyawan->User->id_user }}">{{ $karyawan->nama_karyawan }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label">Approve 3</label>
-                            <select name="approval_4" class="form-control">
-                                @foreach ($karyawans as $karyawan)
-                                    <option {{ $karyawan->User->id_user == $approve->approval_4 ? 'selected' : '' }}
-                                        value="{{ $karyawan->User->id_user }}">{{ $karyawan->nama_karyawan }}</option>
-                                @endforeach
-                            </select>
-                        </div>
+                                @endif
+                            @endforeach
+                        </select>
                     </div>
                 </div>
                 <div class="mt-5">

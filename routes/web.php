@@ -351,6 +351,17 @@ Route::prefix('admin')->group(function () {
         Route::post('/done/work-order/{id}', [WorkOrderController::class, 'done'])->name('doneWO'); // done wo from tenant
         Route::post('/complete/work-order/{id}', [WorkOrderController::class, 'completeWO'])->name('completeWO'); // complete wo from finance
 
+        // Request Permit
+        Route::resource('/request-permits', RequestPermitController::class);
+        Route::post('/request-permits/approve1/{id}', [RequestPermitController::class, 'approveRP1'])->name('approveRP1');
+
+        // Work Permit
+        Route::resource('/work-permits', WorkPermitController::class);
+        Route::get('/open/request-permits', [WorkPermitController::class, 'openRP'])->name('openRP');
+        Route::post('/work-permit/approve1/{id}', [WorkPermitController::class, 'approveWP1'])->name('approveWP1');
+        Route::post('/work-permit/approve2/{id}', [WorkPermitController::class, 'approveWP2'])->name('approveWP2');
+
+
         // Notification
         Route::get('/notifications', [DashboardController::class, 'notifications'])->name('notifications');  // Get all notifications list
         Route::get('/get-notifications', [DashboardController::class, 'getNotifications'])->name('getNotifications');  // Get all notifications by user_id

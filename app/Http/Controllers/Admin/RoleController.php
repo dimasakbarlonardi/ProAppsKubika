@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
 use App\Models\AksesForm;
 use App\Models\Login;
@@ -11,6 +12,7 @@ use App\Models\Role;
 use App\Models\SubMenu;
 use App\Models\SubMenu2;
 use App\Models\User;
+use App\Models\WorkRelation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -104,7 +106,11 @@ class RoleController extends Controller
 
     public function create()
     {
-        return view('AdminSite.Role.create');
+        $connWorkRelation = ConnectionDB::setConnection(new WorkRelation());
+
+        $data['work_relations'] = $connWorkRelation->get();
+
+        return view('AdminSite.Role.create', $data);
     }
 
     public function store(Request $request)
@@ -143,8 +149,10 @@ class RoleController extends Controller
     public function edit($id)
     {
         $conn = $this->setConnection(new Role());
+        $connWorkRelation = ConnectionDB::setConnection(new WorkRelation());
 
         $data['role'] = $conn->find($id);
+        $data['work_relations'] = $connWorkRelation->get();
 
         return view('AdminSite.Role.edit', $data);
     }

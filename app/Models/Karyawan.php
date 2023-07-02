@@ -42,6 +42,7 @@ class Karyawan extends Model
         'tgl_lahir',
         'id_agama',
         'id_jenis_kelamin',
+        'is_can_approve'
     ];
 
     protected $date = ['deleted_at'];
