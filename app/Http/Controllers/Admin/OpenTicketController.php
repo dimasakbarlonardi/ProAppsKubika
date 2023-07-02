@@ -77,7 +77,6 @@ class OpenTicketController extends Controller
     {
         $connOpenTicket = ConnectionDB::setConnection(new OpenTicket());
         $connSystem = ConnectionDB::setConnection(new System());
-        $connSystem = ConnectionDB::setConnection(new System());
         $connUnit = ConnectionDB::setConnection(new Unit());
 
         $system = $connSystem->find(1);
