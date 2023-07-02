@@ -8,9 +8,11 @@ use App\Models\Approve;
 use App\Models\ApproveRequest;
 use App\Models\Notifikasi;
 use App\Models\OpenTicket;
+use App\Models\RequestPermit;
 use App\Models\Transaction;
 use App\Models\TransactionCenter;
 use App\Models\WorkOrder;
+use App\Models\WorkPermit;
 use App\Models\WorkRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -108,6 +110,36 @@ class DashboardController extends Controller
                 $data['sysApprove'] = $connSysApprove->find(1);
                 $data['ticket'] = $getData->find($getNotif->id_data);
                 return view('Tenant.Notification.Ticket', $data);
+                break;
+
+            case ('RequestPermit'):
+                $model = new RequestPermit();
+                $getData = ConnectionDB::setConnection($model);
+                $connSysApprove = ConnectionDB::setConnection(new Approve());
+                $data['sysApprove'] = $connSysApprove->find(4);
+                $permit =  $getData->find($getNotif->id_data);
+                $data['permit'] = $permit;
+                $dataJSON = json_decode($permit->RPDetail->data);
+                $dataJSON = json_decode($dataJSON);
+                $data['personels'] = $dataJSON->personels;
+                $data['alats'] = $dataJSON->alats;
+                $data['materials'] = $dataJSON->materials;
+                return view('Tenant.Notification.RequestPermit', $data);
+                break;
+
+            case ('WorkPermit'):
+                $model = new WorkPermit();
+                $getData = ConnectionDB::setConnection($model);
+                $connSysApprove = ConnectionDB::setConnection(new Approve());
+                $data['sysApprove'] = $connSysApprove->find(5);
+                $permit =  $getData->find($getNotif->id_data);
+                $data['permit'] = $permit;
+                $dataJSON = json_decode($permit->RequestPermit->RPDetail->data);
+                $dataJSON = json_decode($dataJSON);
+                $data['personels'] = $dataJSON->personels;
+                $data['alats'] = $dataJSON->alats;
+                $data['materials'] = $dataJSON->materials;
+                return view('Tenant.Notification.WorkPermit', $data);
                 break;
         }
     }

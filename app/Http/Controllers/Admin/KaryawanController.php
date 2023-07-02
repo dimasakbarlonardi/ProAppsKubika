@@ -69,7 +69,7 @@ class KaryawanController extends Controller
         $kepemilikan = ConnectionDB::setConnection(new KepemilikanUnit());
 
         $penempatan = ConnectionDB::setConnection(new Penempatan());
-        
+
         $statuskaryawan = ConnectionDB::setConnection(new StatusKaryawan());
 
         $connStatusaktifkaryawan = ConnectionDB::setConnection(new StatusAktifKaryawan());
@@ -242,7 +242,7 @@ class KaryawanController extends Controller
         $data['penempatans'] = $connPenempatan->get();
         $data['statuskaryawans'] = $connStatuskaryawan->get();
         $data['statusaktifkaryawans'] = $connStatusaktifkaryawan->get();
-        
+
 
         return view('AdminSite.Karyawan.edit', $data);
     }

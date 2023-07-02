@@ -84,19 +84,19 @@ class SystemSettingController extends Controller
                 return view('AdminSite.Approve.work-order', $data);
                 break;
             case 4:
-                return view('AdminSite.Approve.request', $data);
+                return view('AdminSite.Approve.request-permit', $data);
                 break;
             case 5:
-                return view('AdminSite.Approve.request', $data);
+                return view('AdminSite.Approve.work-permit', $data);
                 break;
             case 6:
-                return view('AdminSite.Approve.request', $data);
+                // return view('AdminSite.Approve.request', $data);
                 break;
             case 7:
-                return view('AdminSite.Approve.request', $data);
+                // return view('AdminSite.Approve.request', $data);
                 break;
             case 8:
-                return view('AdminSite.Approve.request', $data);
+                // return view('AdminSite.Approve.request', $data);
                 break;
         }
     }
@@ -129,7 +129,7 @@ class SystemSettingController extends Controller
         if ($id == 8) {
             $approve = $connApprove->find(8);
         }
-        // dd($request);
+
         $approve->update($request->all());
 
         Alert::success('Berhasil', 'Berhasil mengupdate approve');
