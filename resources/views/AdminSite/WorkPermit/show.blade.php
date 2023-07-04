@@ -173,12 +173,34 @@
                             </div>
                         </div>
                     </div>
-                    @if ($wp->id_work_relation == $user->RoleH->WorkRelation->id_work_relation && $user->Karyawan->is_can_approve && $wp->sign_approval_1 && !$wp->sign_approval_2)
+                    @if (
+                        $wp->id_work_relation == $user->RoleH->WorkRelation->id_work_relation &&
+                            $user->Karyawan->is_can_approve &&
+                            $wp->sign_approval_1 &&
+                            !$wp->sign_approval_2)
                         <div class="card-footer border-top border-200 py-x1">
                             <button type="button" class="btn btn-primary w-100"
                                 onclick="approve2({{ $wp->id }})">Submit</button>
                         </div>
                     @endif
+                    @if ($approve->approval_3 == $user->id_user && $wp->status_bayar == 'PAYED' && !$wp->sign_approval_3)
+                        <div class="card-footer border-top border-200 py-x1">
+                            <button type="button" class="btn btn-primary w-100"
+                                onclick="approve3({{ $wp->id }})">Approve</button>
+                        </div>
+                    @endif
+                    @if ($wp->sign_approval_4 && $wp->status_request != 'WORK DONE')
+                        <div class="card-footer border-top border-200 py-x1">
+                            <button type="button" class="btn btn-primary w-100"
+                                onclick="workDoneWP({{ $wp->id }})">Pekerjaan Selesai</button>
+                        </div>
+                    @endif
+                    @if ($approve->approval_3 == $user->id_user && $wp->status_request == 'WORK DONE')
+                    <div class="card-footer border-top border-200 py-x1">
+                        <button type="button" class="btn btn-primary w-100"
+                            onclick="workDoneWP({{ $wp->id }})">Sudah Transfer Depo</button>
+                    </div>
+                @endif
                 </div>
             </div>
         </div>
@@ -201,6 +223,38 @@
         function approve2(id) {
             $.ajax({
                 url: `/admin/work-permit/approve2/${id}`,
+                type: 'POST',
+                success: function(data) {
+                    if (data.status === 'ok') {
+                        Swal.fire(
+                            'Berhasil!',
+                            'Berhasil mengupdate Work Order!',
+                            'success'
+                        ).then(() => window.location.reload())
+                    }
+                }
+            })
+        }
+
+        function approve3(id) {
+            $.ajax({
+                url: `/admin/work-permit/approve3/${id}`,
+                type: 'POST',
+                success: function(data) {
+                    if (data.status === 'ok') {
+                        Swal.fire(
+                            'Berhasil!',
+                            'Berhasil mengupdate Work Order!',
+                            'success'
+                        ).then(() => window.location.reload())
+                    }
+                }
+            })
+        }
+
+        function workDoneWP(id) {
+            $.ajax({
+                url: `/admin/work-permit/workDoneWP/${id}`,
                 type: 'POST',
                 success: function(data) {
                     if (data.status === 'ok') {

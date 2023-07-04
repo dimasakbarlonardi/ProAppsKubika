@@ -58,7 +58,8 @@
                                     </a>
                                     <div class="ms-1 ms-sm-3">
                                         <p class="fw-semi-bold mb-3 mb-sm-2">
-                                            <a href="{{ route('work-permits.show', $wp->id) }}">Work Permit #{{ $wp->no_work_permit }}</a>
+                                            <a href="{{ route('work-permits.show', $wp->id) }}">Work Permit
+                                                #{{ $wp->no_work_permit }}</a>
                                         </p>
                                         <div class="d-flex justify-content-between">
                                             <div class="">
@@ -101,7 +102,9 @@
 
                                                 @default
                                             @endswitch
-
+                                            @if ($wp->status_bayar == 'PAYED')
+                                                <span class="badge rounded bg-success">{{ $wp->status_bayar }}</span>
+                                            @endif
                                         </div>
                                     </div>
                                 </div>
