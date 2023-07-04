@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
+use App\Models\Approve;
+use App\Models\BAPP;
 use App\Models\Notifikasi;
 use App\Models\RequestPermit;
 use App\Models\System;
@@ -50,9 +52,11 @@ class WorkPermitController extends Controller
         $connRP = ConnectionDB::setConnection(new RequestPermit());
         $connWP = ConnectionDB::setConnection(new WorkPermit());
         $connWorkRelation = ConnectionDB::setConnection(new WorkRelation());
+        $connApprove = ConnectionDB::setConnection(new Approve());
 
         $rp = $connRP->where('id', $id)->with(['tenant', 'ticket', 'rpdetail'])->first();
 
+        $data['approve'] = $connApprove->find(5);
         $data['user'] = $request->session()->get('user');
         $data['work_relations'] = $connWorkRelation->get();
 
@@ -252,5 +256,65 @@ class WorkPermitController extends Controller
             dd($e);
             return redirect()->back();
         }
+    }
+
+    public function approveWP3(Request $request, $id)
+    {
+        $connWP = ConnectionDB::setConnection(new WorkPermit());
+        $connNotif = ConnectionDB::setConnection(new Notifikasi());
+        $connApprove = ConnectionDB::setConnection(new Approve());
+
+
+        $wp = $connWP->find($id);
+        $wp->sign_approval_3 = Carbon::now();
+        $wp->save();
+
+        $approve = $connApprove->find(5);
+        $user = $request->session()->get('user');
+
+        $checkNotif = $connNotif->where('models', 'WorkPermit')
+            ->where('is_read', 0)
+            ->where('id_data', $id)
+            ->first();
+
+        if (!$checkNotif) {
+            $connNotif->create([
+                'receiver' => $approve->approval_4,
+                'sender' => $user->id_user,
+                'is_read' => 0,
+                'models' => 'WorkPermit',
+                'id_data' => $id,
+                'notif_title' => $wp->no_work_permit,
+                'notif_message' => 'Work Permit diterima, pembayaran sudah terverifikasi'
+            ]);
+        }
+
+        return response()->json(['status' => 'ok']);
+    }
+
+    public function approveWP4($id)
+    {
+        $connWP = ConnectionDB::setConnection(new WorkPermit());
+
+        $wp = $connWP->find($id);
+        $wp->sign_approval_4 = Carbon::now();
+        $wp->save();
+
+        return response()->json(['status' => 'ok']);
+    }
+
+    public function workDoneWP($id)
+    {
+        $connWP = ConnectionDB::setConnection(new WorkPermit());
+
+        $wp = $connWP->find($id);
+        $wp->status_request = 'WORK DONE';
+        $wp->save();
+        $wp->RequestPermit->status_request = 'WORK DONE';
+        $wp->RequestPermit->save();
+        $wp->Ticket->status_request = 'WORK DONE';
+        $wp->Ticket->save();
+
+        return response()->json(['status' => 'ok']);
     }
 }

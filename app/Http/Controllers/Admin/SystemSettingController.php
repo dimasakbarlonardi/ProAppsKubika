@@ -90,7 +90,7 @@ class SystemSettingController extends Controller
                 return view('AdminSite.Approve.work-permit', $data);
                 break;
             case 6:
-                // return view('AdminSite.Approve.request', $data);
+                return view('AdminSite.Approve.bapp', $data);
                 break;
             case 7:
                 // return view('AdminSite.Approve.request', $data);

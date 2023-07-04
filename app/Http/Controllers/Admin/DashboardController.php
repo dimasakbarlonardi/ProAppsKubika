@@ -6,6 +6,7 @@ use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
 use App\Models\Approve;
 use App\Models\ApproveRequest;
+use App\Models\BAPP;
 use App\Models\Notifikasi;
 use App\Models\OpenTicket;
 use App\Models\RequestPermit;
@@ -140,6 +141,16 @@ class DashboardController extends Controller
                 $data['alats'] = $dataJSON->alats;
                 $data['materials'] = $dataJSON->materials;
                 return view('Tenant.Notification.WorkPermit', $data);
+                break;
+
+            case ('BAPP'):
+                $model = new BAPP();
+                $getData = ConnectionDB::setConnection($model);
+                $connSysApprove = ConnectionDB::setConnection(new Approve());
+                $data['sysApprove'] = $connSysApprove->find(6);
+                $bapp =  $getData->find($getNotif->id_data);
+                $data['bapp'] = $bapp;
+                return view('Tenant.Notification.BAPP', $data);
                 break;
         }
     }
