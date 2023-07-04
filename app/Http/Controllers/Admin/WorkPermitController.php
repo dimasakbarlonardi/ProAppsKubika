@@ -28,7 +28,7 @@ class WorkPermitController extends Controller
         $connWP = ConnectionDB::setConnection(new WorkPermit());
 
         $data['user'] = $request->session()->get('user');
-        $data['work_permits'] = $connWP->get();
+        $data['work_permits'] = $connWP->orderBy('no_work_permit', 'desc')->get();
 
         return view('AdminSite.WorkPermit.index', $data);
     }
@@ -110,6 +110,9 @@ class WorkPermitController extends Controller
 
             $rp->status_request = 'PROSES';
             $rp->save();
+
+            $system->sequence_no_po = $count;
+            $system->save();
 
             DB::commit();
 
