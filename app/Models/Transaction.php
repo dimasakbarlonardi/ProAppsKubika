@@ -32,4 +32,9 @@ class Transaction extends Model
     {
         return $this->hasOne(WorkOrder::class, 'no_work_order', 'no_transaction');
     }
+
+    public function WorkPermit()
+    {
+        return $this->hasOne(WorkPermit::class, 'no_work_permit', 'no_transaction');
+    }
 }

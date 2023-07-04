@@ -37,7 +37,7 @@ class WorkPermitController extends Controller
         $connWorkRelation = ConnectionDB::setConnection(new WorkRelation());
 
         $data['request_permits'] = $connRP->where('status_request', 'APPROVED')
-            ->where('sign_approval_1', '!=', 'null')
+            ->where('sign_approval_1', '!=', null)
             ->get();
 
         $data['work_relations'] = $connWorkRelation->get();
