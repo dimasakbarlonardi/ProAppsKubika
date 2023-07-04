@@ -21,6 +21,7 @@ class System extends Model
         'kode_unik_wo',
         'kode_unik_pr',
         'kode_unik_po',
+        'kode_unik_bapp',
         'kode_unik_invoice',
         'kode_unik_cash_payment',
         'kode_unik_cash_receipt',
@@ -29,6 +30,7 @@ class System extends Model
         'sequence_no_wo',
         'sequence_no_pr',
         'sequence_no_po',
+        'sequence_no_bapp',
         'sequence_no_invoice',
         'sequence_no_cash_payment',
         'sequence_no_cash_receiptment'
