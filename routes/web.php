@@ -41,6 +41,7 @@ use App\Http\Controllers\Admin\KaryawanController;
 use App\Http\Controllers\Admin\KendaraanTenantController;
 use App\Http\Controllers\Admin\KepemilikanUnitController;
 use App\Http\Controllers\Admin\LiftController;
+use App\Http\Controllers\Admin\MainFormController;
 use App\Http\Controllers\Admin\MemberTenantController;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\OffBoardingKepemilikanUnitController;
@@ -74,6 +75,8 @@ use App\Http\Controllers\Admin\WorkOrderController;
 use App\Http\Controllers\Admin\WorkPermitController;
 use App\Http\Controllers\Admin\WorkPriorityController;
 use App\Http\Controllers\Admin\WorkRelationController;
+use App\Http\Controllers\Admin\WorkRequestController;
+use App\Http\Controllers\PaymentController;
 use App\Models\ChecklistGensetH;
 use App\Models\ChecklistGroundRoofH;
 use App\Models\ChecklistListrikH;
@@ -81,8 +84,6 @@ use App\Models\ChecklistOfficeManagementH;
 use App\Models\ChecklistPemadamH;
 use App\Models\ChecklistPutrH;
 use App\Models\MonthlyArTenant;
-use App\Http\Controllers\Admin\WorkRequestController;
-use App\Http\Controllers\PaymentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -109,9 +110,11 @@ Route::get('/check-role-id', [RoleController::class, 'checkRoleID']);
 Route::prefix('admin')->group(function () {
     Route::middleware(['auth'])->group(function () {
 
-        Route::get('/dashboard', function () {
-            return view('dashboard');
-        })->middleware(['auth'])->name('dashboard');
+        Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+        // Tracking ticket
+        Route::get('tracking-tickets', [MainFormController::class, 'index'])->name('trackingTickets');
+        Route::get('tracking-ticket/{id}', [MainFormController::class, 'show'])->name('trackingTicketShow');
 
         // CRUD Groups
         Route::resource('groups', GroupController::class);
@@ -150,10 +153,9 @@ Route::prefix('admin')->group(function () {
         Route::get('get-vehicle/by-unit/{id}', [TenantUnitController::class, 'getVehicleUnit']);
         Route::get('get-vehicle/by-unit/{id}', [TenantUnitController::class, 'getVehicleUnit']);
 
-        Route::get('/tenantunits/{id}', [TenantUnitController::class, 'show'])->name('tenantunits.show');
+        Route::get('/tenantunits/{id}', [TenantUnitController::class, 'show'])->name('tenantunitsShow');
         Route::post('/store/tenantunits', [TenantUnitController::class, 'storeTenantUnit'])->name('storeTenantUnit');
         Route::post('/update/tenantunits/{id}', [TenantUnitController::class, 'updateTenantUnit'])->name('updateTenantUnit');
-        Route::post('/store/tenantunit', [TenantUnitController::class, 'storeTenantUnit'])->name('storeTenantUnit');
         Route::post('/delete/tenantunit/{id}', [TenantUnitController::class, 'deleteTenantUnit'])->name('deleteTenantUnit');
 
         Route::get('/get/tenantmember-edit/{id}', [TenantUnitController::class, 'editTenantMember']);
@@ -319,6 +321,74 @@ Route::prefix('admin')->group(function () {
         Route::get('penjamin-by-id/{id}', [OffBoardingTenantController::class, 'penjaminByID'])->name('penjamin-by-id');
         Route::post('/update/tenantunits-offtenant/{id}', [OffBoardingTenantController::class, 'offdeleteTenantUnit'])->name('offdeleteTenantUnit');
 
+        // CRUD Open Ticket
+        Route::resource('/open-tickets', OpenTicketController::class);
+        Route::post('/open-ticket/update-response/{id}', [OpenTicketController::class, 'updateRequestTicket'])->name('updateRequestTicket');
+        Route::post('/open-ticket/approve1/{id}', [OpenTicketController::class, 'ticketApprove1'])->name('ticketApprove1');
+        Route::post('/open-ticket/approve2/{id}', [OpenTicketController::class, 'ticketApprove2'])->name('ticketApprove2');
+
+        // CRUD Work Request
+        Route::resource('/work-requests', WorkRequestController::class);
+        Route::post('/done/work-request/{id}', [WorkRequestController::class, 'done'])->name('doneWR'); // done wo from tenant
+        Route::post('/complete/work-request/{id}', [WorkRequestController::class, 'complete'])->name('completeWR'); // done wo from tenant
+
+        // CRUD Work Order
+        Route::resource('/work-orders', WorkOrderController::class);
+        Route::get('/work-order/no-wo', [WorkOrderController::class, 'showByNoWO']);
+        Route::post('/accept/work-order/{id}', [WorkOrderController::class, 'acceptWO'])->name('acceptWO'); // accept wo from tenant
+        Route::post('/approve2/work-order/{id}', [WorkOrderController::class, 'approve2WO'])->name('approve2WO'); // update wo from approve 2
+        Route::post('/approve3/work-order/{id}', [WorkOrderController::class, 'approve3WO'])->name('approve3WO'); // update wo from approve 3
+        Route::post('/work-done/work-order/{id}', [WorkOrderController::class, 'workDone'])->name('workDone'); // update wo from engineering
+        Route::post('/done/work-order/{id}', [WorkOrderController::class, 'done'])->name('doneWO'); // done wo from tenant
+        Route::post('/complete/work-order/{id}', [WorkOrderController::class, 'completeWO'])->name('completeWO'); // complete wo from finance
+
+        // Request Permit
+        Route::resource('/request-permits', RequestPermitController::class);
+        Route::post('/request-permits/approve1/{id}', [RequestPermitController::class, 'approveRP1'])->name('approveRP1');
+
+        // Work Permit
+        Route::resource('/work-permits', WorkPermitController::class);
+        Route::get('/open/request-permits', [WorkPermitController::class, 'openRP'])->name('openRP');
+        Route::post('/work-permit/approve1/{id}', [WorkPermitController::class, 'approveWP1'])->name('approveWP1');
+        Route::post('/work-permit/approve2/{id}', [WorkPermitController::class, 'approveWP2'])->name('approveWP2');
+        Route::post('/work-permit/approve3/{id}', [WorkPermitController::class, 'approveWP3'])->name('approveWP3');
+        Route::post('/work-permit/approve4/{id}', [WorkPermitController::class, 'approveWP4'])->name('approveWP4');
+        Route::post('/work-permit/workDoneWP/{id}', [WorkPermitController::class, 'workDoneWP'])->name('workDoneWP');
+
+        // BAPP
+        Route::resource('/bapp', BAPPController::class);
+        Route::post('doneTF/{id}', [BAPPController::class, 'doneTF'])->name('doneTF');
+        Route::post('bappApprove1/{id}', [BAPPController::class, 'bappApprove1'])->name('bappApprove1');
+        Route::post('bappApprove2/{id}', [BAPPController::class, 'bappApprove2'])->name('bappApprove2');
+        Route::post('bappApprove3/{id}', [BAPPController::class, 'bappApprove3'])->name('bappApprove3');
+        Route::post('bappApprove4/{id}', [BAPPController::class, 'bappApprove4'])->name('bappApprove4');
+
+        // GIGO
+        Route::resource('gigo', GIGOController::class);
+        Route::post('gigo/add-good', [GIGOController::class, 'addGood']);
+        Route::post('gigo/remove-good', [GIGOController::class, 'removeGood']);
+        Route::post('gigo/approve1/{id}', [GIGOController::class, 'gigoApprove1'])->name('gigoApprove1');
+        Route::post('gigo/approve2/{id}', [GIGOController::class, 'gigoApprove2'])->name('gigoApprove2');
+        Route::post('gigo/done/{id}', [GIGOController::class, 'gigoDone'])->name('gigoDone');
+        Route::post('gigo/complete/{id}', [GIGOController::class, 'gigoComplete'])->name('gigoComplete');
+
+        // Eng BAPP
+        Route::resource('eng-bapp', EngBAPPcontroller::class);
+
+        // Reservation
+        Route::resource('request-reservations', ReservationController::class);
+        Route::post('rsvApprove1/{id}', [ReservationController::class, 'approve1'])->name('rsvApprove1');
+        Route::post('rsvApprove2/{id}', [ReservationController::class, 'approve2'])->name('rsvApprove2');
+        Route::post('rsvApprove3/{id}', [ReservationController::class, 'approve3'])->name('rsvApprove3');
+        Route::post('rsvDone/{id}', [ReservationController::class, 'rsvDone'])->name('rsvDone');
+        Route::post('rsvComplete/{id}', [ReservationController::class, 'rsvComplete'])->name('rsvComplete');
+
+        // Notification
+        Route::get('/notifications', [DashboardController::class, 'notifications'])->name('notifications');  // Get all notifications list
+        Route::get('/get-notifications', [DashboardController::class, 'getNotifications'])->name('getNotifications');  // Get all notifications by user_id
+        Route::get('/notification/{id}', [DashboardController::class, 'showNotification'])->name('showNotification'); // Show all notification by user_id
+
+
         // CRUD PerubahanUnit
         Route::resource('perubahanunits', PerubahanUnitController::class);
         Route::get('tenantunit-by-id/{id}', [PerubahanUnitController::class, 'unitBy'])->name('unit-by');
@@ -338,8 +408,9 @@ Route::prefix('admin')->group(function () {
         Route::post('/update/tenantunits-perpanjangan/{id}', [PerubahanUnitController::class, 'updateTenantUnit'])->name('updateTenantUnit');
         // Route::post('/update/kepemilikanunits-pindah/{id}', [PerubahanUnitController::class, 'updateKU'])->name('updateKU');
         Route::post('/update/tenantunits-pindahkepemilikan/{id}', [PerubahanUnitController::class, 'deleteKepemilikanUnit'])->name('deleteKepemilikanUnit');
+        Route::post('/update/tenantunits-perpanjangan/{id}', [PerubahanUnitController::class, 'updateTenantUnit'])->name('updateTenantUnit2');
+        Route::post('/update/kepemilikanunits-pindah/{id}', [PerubahanUnitController::class, 'updateKU'])->name('updateKU');
         Route::post('/update/tenantunits-perubahan/{id}', [PerubahanUnitController::class, 'updatePerubahanUnit'])->name('updatePerubahanUnit');
-        Route::post('/update/tenantunits-tidakperpanjang/{id}', [PerubahanUnitController::class, 'deleteTenantUnit'])->name('deleteTenantUnit');
         // CRUD Work Order
         Route::resource('/work-orders', WorkOrderController::class);
         Route::get('/work-order/no-wo', [WorkOrderController::class, 'showByNoWO']);
@@ -453,13 +524,6 @@ Route::prefix('admin')->group(function () {
         // Eng BAPP
         Route::resource('eng-bapp', EngBAPPcontroller::class);
 
-        // Reservation
-        Route::resource('request-reservations', ReservationController::class);
-        Route::post('rsvApprove1/{id}', [ReservationController::class, 'approve1'])->name('rsvApprove1');
-        Route::post('rsvApprove2/{id}', [ReservationController::class, 'approve2'])->name('rsvApprove2');
-        Route::post('rsvApprove3/{id}', [ReservationController::class, 'approve3'])->name('rsvApprove3');
-        Route::post('rsvDone/{id}', [ReservationController::class, 'rsvDone'])->name('rsvDone');
-        Route::post('rsvComplete/{id}', [ReservationController::class, 'rsvComplete'])->name('rsvComplete');
 
         // Notification
         Route::get('/notifications', [DashboardController::class, 'notifications'])->name('notifications');  // Get all notifications list
