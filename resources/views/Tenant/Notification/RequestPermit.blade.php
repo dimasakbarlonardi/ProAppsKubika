@@ -170,7 +170,7 @@
                                     </div>
                                 </div>
                             </div>
-                            @if ($sysApprove->approval_1 == $user->id_role_hdr && !$permit->sign_approval_1)
+                            @if (!$permit->sign_approval_1)
                                 <div class="card-footer border-top border-200 py-x1">
                                     <form action="{{ route('approveRP1', $permit->id) }}" method="post">
                                         @csrf
