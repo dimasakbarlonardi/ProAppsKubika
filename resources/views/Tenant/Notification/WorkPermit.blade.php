@@ -40,12 +40,13 @@
                                 <div class="row">
                                     <div class="col-6">
                                         <label class="form-label">Nama Kontraktor</label>
-                                        <input type="text" class="form-control" value="{{ $permit->RequestPermit->nama_kontraktor }}"
-                                            disabled>
+                                        <input type="text" class="form-control"
+                                            value="{{ $permit->RequestPermit->nama_kontraktor }}" disabled>
                                     </div>
                                     <div class="col-6">
                                         <label class="form-label">Penanggung Jawab</label>
-                                        <input type="text" class="form-control" value="{{ $permit->RequestPermit->pic }}" disabled>
+                                        <input type="text" class="form-control" value="{{ $permit->RequestPermit->pic }}"
+                                            disabled>
                                     </div>
                                 </div>
                             </div>
@@ -169,8 +170,8 @@
                                             value="{{ $permit->RequestPermit->JenisPekerjaan->jenis_pekerjaan }}">
                                     </div>
                                     <div class="mb-4 mt-n2"><label class="mb-1">Tickets</label>
-                                        <input class="form-control" type="text" value="{{ $permit->Ticket->no_tiket }}"
-                                            disabled>
+                                        <input class="form-control" type="text"
+                                            value="{{ $permit->Ticket->no_tiket }}" disabled>
                                     </div>
                                     <div class="mb-4 mt-n2"><label class="mb-1">No Request Permit</label>
                                         <input class="form-control" type="text"
@@ -181,15 +182,16 @@
                                             name="nama_project" required disabled>
                                     </div>
                                     <div class="mb-4 mt-n2"><label class="mb-1">Work Relation</label>
-                                        <input type="text" value="{{ $permit->WorkRelation->work_relation }}" class="form-control"
-                                            name="nama_project" required disabled>
+                                        <input type="text" value="{{ $permit->WorkRelation->work_relation }}"
+                                            class="form-control" name="nama_project" required disabled>
                                     </div>
                                     <div class="mb-4 mt-n2"><label class="mb-1">Permit Berbayar</label>
-                                        <input type="text" value="{{ $permit->id_bayarnon == 1 ? 'Yes' : 'No' }}" class="form-control"
-                                            name="nama_project" required disabled>
+                                        <input type="text" value="{{ $permit->id_bayarnon == 1 ? 'Yes' : 'No' }}"
+                                            class="form-control" name="nama_project" required disabled>
                                     </div>
                                     <div class="mb-4 mt-n2"><label class="mb-1">Jumlah Deposit</label>
-                                        <input type="text" value="{{ $permit->jumlah_deposit }}" class="form-control" name="jumlah_deposit" required disabled>
+                                        <input type="text" value="{{ $permit->jumlah_deposit }}" class="form-control"
+                                            name="jumlah_deposit" required disabled>
                                     </div>
                                 </div>
                             </div>
@@ -201,12 +203,9 @@
                                     </form>
                                 </div>
                             @endif
-                            @if ($permit->sign_approval_2)
+                            @if ($sysApprove->approval_4 == $user->id_user && $permit->sign_approval_3 && !$permit->sign_approval_4)
                                 <div class="card-footer border-top border-200 py-x1">
-                                    <form action="{{ route('approveWP1', $permit->id) }}" method="post">
-                                        @csrf
-                                        <button type="submit" class="btn btn-primary w-100">Bayar</button>
-                                    </form>
+                                    <button type="button" class="btn btn-primary w-100" onclick="approve4({{ $permit->id }})">Approve</button>
                                 </div>
                             @endif
                         </div>
@@ -231,5 +230,21 @@
             readonly: true,
             height: "180"
         });
+
+        function approve4(id) {
+            $.ajax({
+                url: `/admin/work-permit/approve4/${id}`,
+                type: 'POST',
+                success: function(data) {
+                    if (data.status === 'ok') {
+                        Swal.fire(
+                            'Berhasil!',
+                            'Berhasil mengupdate Work Order!',
+                            'success'
+                        ).then(() => window.location.reload())
+                    }
+                }
+            })
+        }
     </script>
 @endsection
