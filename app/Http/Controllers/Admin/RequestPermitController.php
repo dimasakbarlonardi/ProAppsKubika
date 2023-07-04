@@ -94,6 +94,9 @@ class RequestPermitController extends Controller
             $tiket->status_request = 'PROSES';
             $tiket->save();
 
+            $system->sequence_no_pr = $count;
+            $system->save();
+
             DB::commit();
 
             $connNotif = ConnectionDB::setConnection(new Notifikasi());
