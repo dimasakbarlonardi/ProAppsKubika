@@ -24,9 +24,19 @@ class PaymentController extends Controller
             if ($callback->isSuccess()) {
                 $ct->status = 'PAYED';
                 $transaction->status = 'PAYED';
-                $transaction->WorkOrder->sign_approve_5 = 1;
-                $transaction->WorkOrder->date_approve_5 = Carbon::now();
-                $transaction->WorkOrder->save();
+                switch($transaction->transaction_type) {
+                    case ('WorkOrder'):
+                        $transaction->WorkOrder->sign_approve_5 = 1;
+                        $transaction->WorkOrder->date_approve_5 = Carbon::now();
+                        $transaction->WorkOrder->save();
+                        break;
+                    
+                    case ('WorkPermit'):
+                        $transaction->WorkPermit->status_bayar = 'PAYED';
+                        $transaction->WorkPermit->sign_approval_5 = Carbon::now();
+                        $transaction->WorkPermit->save();
+                        break;
+                }                
             }
 
             if ($callback->isExpire()) {
