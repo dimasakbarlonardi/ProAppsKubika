@@ -121,7 +121,7 @@ class BAPPController extends Controller
         $bapp->WorkPermit->save();
         $bapp->RequestPermit->status_request = 'DONE';
         $bapp->RequestPermit->save();
-        $bapp->Ticket->status_request = 'COMPLETE';
+        $bapp->Ticket->status_request = 'DONE';
         $bapp->Ticket->save();
 
         Alert::success('Berhasil', 'Berhasil mengupdate BAPP');
