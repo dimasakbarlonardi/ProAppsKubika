@@ -96,7 +96,7 @@ class SystemSettingController extends Controller
                 // return view('AdminSite.Approve.request', $data);
                 break;
             case 8:
-                // return view('AdminSite.Approve.request', $data);
+                return view('AdminSite.Approve.gigo', $data);
                 break;
         }
     }
