@@ -9,6 +9,7 @@ use App\Models\ApproveRequest;
 use App\Models\BAPP;
 use App\Models\Notifikasi;
 use App\Models\OpenTicket;
+use App\Models\RequestGIGO;
 use App\Models\RequestPermit;
 use App\Models\Transaction;
 use App\Models\TransactionCenter;
@@ -80,78 +81,137 @@ class DashboardController extends Controller
 
         switch ($getNotif->models) {
             case ('WorkOrder'):
-                $model = new WorkOrder();
-                $data['approve'] = $connApprove->find(3);
-                $getData = ConnectionDB::setConnection($model);
-                $data['wo'] = $getData->find($getNotif->id_data);
-                $data['notif'] = $getNotif;
+                $data = $this->handleWO($connApprove, $getNotif);
                 return view('Tenant.Notification.WorkOrder', $data);
                 break;
 
             case ('WorkRequest'):
-                $model = new WorkRequest();
-                $getData = ConnectionDB::setConnection($model);
-                $data['approve'] = $connApprove->find(2);
-                $data['wr'] = $getData->find($getNotif->id_data);
+                $data = $this->handleWO($connApprove, $getNotif);
                 return view('Tenant.Notification.WorkRequest', $data);
                 break;
 
             case ('Transaction'):
-                $model = new Transaction();
-                $getData = ConnectionDB::setConnection($model);
-                $getData = $getData->find($getNotif->id_data);
-                $data['transaction'] = TransactionCenter::where('no_invoice', $getData->no_invoice)->first();
+                $data = $this->handleTransaction($getNotif);
                 return view('Tenant.Notification.Payment', $data);
                 break;
 
             case ('OpenTicket'):
-                $model = new OpenTicket();
-                $getData = ConnectionDB::setConnection($model);
-                $connSysApprove = ConnectionDB::setConnection(new Approve());
-                $data['sysApprove'] = $connSysApprove->find(1);
-                $data['ticket'] = $getData->find($getNotif->id_data);
+                $data = $this->handleTransaction($connApprove, $getNotif);
                 return view('Tenant.Notification.Ticket', $data);
                 break;
 
             case ('RequestPermit'):
-                $model = new RequestPermit();
-                $getData = ConnectionDB::setConnection($model);
-                $connSysApprove = ConnectionDB::setConnection(new Approve());
-                $data['sysApprove'] = $connSysApprove->find(4);
-                $permit =  $getData->find($getNotif->id_data);
-                $data['permit'] = $permit;
-                $dataJSON = json_decode($permit->RPDetail->data);
-                $dataJSON = json_decode($dataJSON);
-                $data['personels'] = $dataJSON->personels;
-                $data['alats'] = $dataJSON->alats;
-                $data['materials'] = $dataJSON->materials;
+                $data = $this->handleRP($connApprove, $getNotif);
                 return view('Tenant.Notification.RequestPermit', $data);
                 break;
 
             case ('WorkPermit'):
-                $model = new WorkPermit();
-                $getData = ConnectionDB::setConnection($model);
-                $connSysApprove = ConnectionDB::setConnection(new Approve());
-                $data['sysApprove'] = $connSysApprove->find(5);
-                $permit =  $getData->find($getNotif->id_data);
-                $data['permit'] = $permit;
-                $dataJSON = json_decode($permit->RequestPermit->RPDetail->data);
-                $dataJSON = json_decode($dataJSON);
-                $data['personels'] = $dataJSON->personels;
-                $data['alats'] = $dataJSON->alats;
-                $data['materials'] = $dataJSON->materials;
+                $data = $this->handleWP($connApprove, $getNotif);
                 return view('Tenant.Notification.WorkPermit', $data);
                 break;
 
             case ('BAPP'):
-                $model = new BAPP();
-                $getData = ConnectionDB::setConnection($model);
-                $connSysApprove = ConnectionDB::setConnection(new Approve());
-                $data['sysApprove'] = $connSysApprove->find(6);
-                $bapp =  $getData->find($getNotif->id_data);
-                $data['bapp'] = $bapp;
+                $data = $this->handleBAPP($connApprove, $getNotif);
                 return view('Tenant.Notification.BAPP', $data);
                 break;
+
+            case ('GIGO'):
+                $data = $this->handleGIGO($getNotif);
+                return view('Tenant.Notification.GIGO', $data);
+                break;
         }
+    }
+
+    public function handleRequest($connApprove, $getNotif)
+    {
+        $model = new OpenTicket();
+        $getData = ConnectionDB::setConnection($model);
+        $data['sysApprove'] = $connApprove->find(1);
+        $data['ticket'] = $getData->find($getNotif->id_data);
+
+        return $data;
+    }
+
+    public function handleWO($connApprove, $getNotif)
+    {
+        $model = new WorkOrder();
+        $getData = ConnectionDB::setConnection($model);
+        $data['approve'] = $connApprove->find(3);
+        $data['wo'] = $getData->find($getNotif->id_data);
+
+        return $data;
+    }
+
+    public function handleWR($connApprove, $getNotif)
+    {
+        $model = new WorkRequest();
+        $getData = ConnectionDB::setConnection($model);
+        $data['approve'] = $connApprove->find(2);
+        $data['wr'] = $getData->find($getNotif->id_data);
+
+        return $data;
+    }
+
+    public function handleTransaction($getNotif)
+    {
+        $model = new Transaction();
+        $getData = ConnectionDB::setConnection($model);
+        $getData = $getData->find($getNotif->id_data);
+        $data['transaction'] = TransactionCenter::where('no_invoice', $getData->no_invoice)->first();
+
+        return $data;
+    }
+
+    public function handleRP($connApprove, $getNotif)
+    {
+        $model = new RequestPermit();
+        $getData = ConnectionDB::setConnection($model);
+        $data['sysApprove'] = $connApprove->find(4);
+        $permit =  $getData->find($getNotif->id_data);
+        $data['permit'] = $permit;
+        $dataJSON = json_decode($permit->RPDetail->data);
+        $dataJSON = json_decode($dataJSON);
+        $data['personels'] = $dataJSON->personels;
+        $data['alats'] = $dataJSON->alats;
+        $data['materials'] = $dataJSON->materials;
+
+        return $data;
+    }
+
+    public function handleWP($connApprove, $getNotif)
+    {
+        $model = new WorkPermit();
+        $getData = ConnectionDB::setConnection($model);
+        $data['sysApprove'] = $connApprove->find(5);
+        $permit =  $getData->find($getNotif->id_data);
+        $data['permit'] = $permit;
+        $dataJSON = json_decode($permit->RequestPermit->RPDetail->data);
+        $dataJSON = json_decode($dataJSON);
+        $data['personels'] = $dataJSON->personels;
+        $data['alats'] = $dataJSON->alats;
+        $data['materials'] = $dataJSON->materials;
+
+        return $data;
+    }
+
+    public function handleBAPP($connApprove, $getNotif)
+    {
+        $model = new BAPP();
+        $getData = ConnectionDB::setConnection($model);
+        $data['sysApprove'] = $connApprove->find(6);
+        $bapp =  $getData->find($getNotif->id_data);
+        $data['bapp'] = $bapp;
+
+        return $data;
+    }
+
+    public function handleGIGO($getNotif)
+    {
+        $model = new RequestGIGO();
+        $getData = ConnectionDB::setConnection($model);
+        $gigo =  $getData->find($getNotif->id_data);
+        $data['gigo'] = $gigo;
+
+        return $data;
     }
 }
