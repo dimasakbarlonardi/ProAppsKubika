@@ -441,6 +441,15 @@ Route::prefix('admin')->group(function () {
         Route::post('bappApprove3/{id}', [BAPPController::class, 'bappApprove3'])->name('bappApprove3');
         Route::post('bappApprove4/{id}', [BAPPController::class, 'bappApprove4'])->name('bappApprove4');
 
+        // GIGO
+        Route::resource('gigo', GIGOController::class);
+        Route::post('gigo/add-good', [GIGOController::class, 'addGood']);
+        Route::post('gigo/remove-good', [GIGOController::class, 'removeGood']);
+        Route::post('gigo/approve1/{id}', [GIGOController::class, 'gigoApprove1'])->name('gigoApprove1');
+        Route::post('gigo/approve2/{id}', [GIGOController::class, 'gigoApprove2'])->name('gigoApprove2');
+        Route::post('gigo/done/{id}', [GIGOController::class, 'gigoDone'])->name('gigoDone');
+        Route::post('gigo/complete/{id}', [GIGOController::class, 'gigoComplete'])->name('gigoComplete');
+
         // Notification
         Route::get('/notifications', [DashboardController::class, 'notifications'])->name('notifications');  // Get all notifications list
         Route::get('/get-notifications', [DashboardController::class, 'getNotifications'])->name('getNotifications');  // Get all notifications by user_id
