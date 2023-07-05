@@ -7,16 +7,7 @@ use App\Http\Controllers\Admin\BayarnonController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DepartemenController;
 use App\Http\Controllers\Admin\DivisiController;
-use App\Http\Controllers\Admin\EngAHUController;
-use App\Http\Controllers\Admin\EngChillerController;
-use App\Http\Controllers\Admin\EngDeepWheelController;
-use App\Http\Controllers\Admin\EngGasController;
-use App\Http\Controllers\Admin\EngGroundController;
-use App\Http\Controllers\Admin\EngListrikController;
-use App\Http\Controllers\Admin\EngPamController;
-use App\Http\Controllers\Admin\EngPemadamController;
-use App\Http\Controllers\Admin\EngPompasumpitController;
-use App\Http\Controllers\Admin\EngPutrController;
+use App\Http\Controllers\Admin\GIGOController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\GroupController;
 use App\Http\Controllers\Admin\HKFloorController;
@@ -357,6 +348,15 @@ Route::prefix('admin')->group(function () {
         Route::post('bappApprove2/{id}', [BAPPController::class, 'bappApprove2'])->name('bappApprove2');
         Route::post('bappApprove3/{id}', [BAPPController::class, 'bappApprove3'])->name('bappApprove3');
         Route::post('bappApprove4/{id}', [BAPPController::class, 'bappApprove4'])->name('bappApprove4');
+
+        // GIGO
+        Route::resource('gigo', GIGOController::class);
+        Route::post('gigo/add-good', [GIGOController::class, 'addGood']);
+        Route::post('gigo/remove-good', [GIGOController::class, 'removeGood']);
+        Route::post('gigo/approve1/{id}', [GIGOController::class, 'gigoApprove1'])->name('gigoApprove1');
+        Route::post('gigo/approve2/{id}', [GIGOController::class, 'gigoApprove2'])->name('gigoApprove2');
+        Route::post('gigo/done/{id}', [GIGOController::class, 'gigoDone'])->name('gigoDone');
+        Route::post('gigo/complete/{id}', [GIGOController::class, 'gigoComplete'])->name('gigoComplete');
 
         // Notification
         Route::get('/notifications', [DashboardController::class, 'notifications'])->name('notifications');  // Get all notifications list
