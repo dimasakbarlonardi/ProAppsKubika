@@ -107,11 +107,13 @@ class DashboardController extends Controller
 
             case ('WorkPermit'):
                 $data = $this->handleWP($connApprove, $getNotif);
+                $data['user'] = $user;
                 return view('Tenant.Notification.WorkPermit', $data);
                 break;
 
             case ('BAPP'):
                 $data = $this->handleBAPP($connApprove, $getNotif);
+                $data['user'] = $user;
                 return view('Tenant.Notification.BAPP', $data);
                 break;
 
