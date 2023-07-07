@@ -185,9 +185,9 @@ class AuthenticatedSessionController extends Controller
 
         $path = base_path('.env');
         $test = file_get_contents($path);
-        file_put_contents($path, str_replace('MIDTRANS_IS_PRODUCTION=', 'MIDTRANS_IS_PRODUCTION=' . $data['midtrans']['MIDTRANS_IS_PRODUCTION'], $test));
-        file_put_contents($path, str_replace('MIDTRANS_MERCHAT_ID=', 'MIDTRANS_MERCHAT_ID=' . $data['midtrans']['MIDTRANS_MERCHAT_ID'], $test));
-        file_put_contents($path, str_replace('MIDTRANS_SERVER_KEY=', 'MIDTRANS_SERVER_KEY=' . $data['midtrans']['MIDTRANS_SERVER_KEY'], $test));
-        file_put_contents($path, str_replace('MIDTRANS_CLIENT_KEY=', 'MIDTRANS_CLIENT_KEY=' . $data['midtrans']['MIDTRANS_CLIENT_KEY'], $test));
+        // file_put_contents($path, str_replace('MIDTRANS_IS_PRODUCTION=', 'MIDTRANS_IS_PRODUCTION=' . $data['midtrans']['MIDTRANS_IS_PRODUCTION'], $test));
+        // file_put_contents($path, str_replace('MIDTRANS_MERCHAT_ID=', 'MIDTRANS_MERCHAT_ID=' . $data['midtrans']['MIDTRANS_MERCHAT_ID'], $test));
+        // file_put_contents($path, str_replace('MIDTRANS_SERVER_KEY=', 'MIDTRANS_SERVER_KEY=' . $data['midtrans']['MIDTRANS_SERVER_KEY'], $test));
+        // file_put_contents($path, str_replace('MIDTRANS_CLIENT_KEY=', 'MIDTRANS_CLIENT_KEY=' . $data['midtrans']['MIDTRANS_CLIENT_KEY'], $test));
     }
 }
