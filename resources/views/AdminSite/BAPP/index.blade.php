@@ -34,7 +34,7 @@
                                 <td>{{ $bapp->no_work_permit }}</td>
                                 <td>{{ $bapp->no_bapp }}</td>
                                 <td>
-                                    <a href="{{ route('bapp.edit', $bapp->id) }}" class="btn btn-sm btn-warning">Edit</a>
+                                    <a href="{{ route('bapp.edit', $bapp->id) }}" class="btn btn-sm btn-warning">View</a>
                                     @if (!$bapp->sign_approval_1)
                                         <form class="d-inline" action="{{ route('doneTF', $bapp->id) }}" method="post">
                                             @csrf
@@ -59,7 +59,7 @@
                                 <td>{{ $bapp->no_work_permit }}</td>
                                 <td>{{ $bapp->no_bapp }}</td>
                                 <td>
-                                    <a href="{{ route('bapp.edit', $bapp->id) }}" class="btn btn-sm btn-warning">Edit</a>
+                                    <a href="{{ route('bapp.edit', $bapp->id) }}" class="btn btn-sm btn-warning">View</a>
                                     @if (!$bapp->sign_approval_2 && $bapp->sign_approval_1 && $bapp->WorkPermit->id_work_relation == $user->RoleH->work_relation_id)
                                         <form class="d-inline" action="{{ route('bappApprove2', $bapp->id) }}" method="post">
                                             @csrf
@@ -71,7 +71,7 @@
                                         <form class="d-inline" action="{{ route('bappApprove4', $bapp->id) }}" method="post">
                                             @csrf
                                             <button type="submit" class="btn btn-info btn-sm"
-                                                onclick="return confirm('are you sure?')">Approve</button>
+                                                onclick="return confirm('are you sure?')">Complete</button>
                                         </form>
                                     @endif
                                 </td>
