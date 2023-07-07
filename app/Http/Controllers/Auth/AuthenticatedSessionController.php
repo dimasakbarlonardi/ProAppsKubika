@@ -69,8 +69,6 @@ class AuthenticatedSessionController extends Controller
                     ->with(['RoleH.AksesForm', 'RoleH.WorkRelation'])
                     ->first();
 
-                $this->setMidtrans();
-
                 if (Auth::check()) {
                     if (!Hash::check($request->password, $user->password, [])) {
                         throw new \Exception('Invalid Credentials');
@@ -174,6 +172,7 @@ class AuthenticatedSessionController extends Controller
 
         return redirect('/');
     }
+<<<<<<< HEAD
 
     public function setMidtrans()
     {
@@ -190,4 +189,6 @@ class AuthenticatedSessionController extends Controller
         // file_put_contents($path, str_replace('MIDTRANS_SERVER_KEY=', 'MIDTRANS_SERVER_KEY=' . $data['midtrans']['MIDTRANS_SERVER_KEY'], $test));
         // file_put_contents($path, str_replace('MIDTRANS_CLIENT_KEY=', 'MIDTRANS_CLIENT_KEY=' . $data['midtrans']['MIDTRANS_CLIENT_KEY'], $test));
     }
+=======
+>>>>>>> e89679c16ae31f5599d104a939d14b896241f67d
 }
