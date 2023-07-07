@@ -54,6 +54,25 @@
                         </div>
                     </div>
                 </div>
+
+                <div id="detail_bapp">
+                    <h5 class="mt-5">Detail BAPP</h5>
+                    <hr>
+                    <div class="mb-3">
+                        <div class="row">
+                            @foreach ($engs as $eng)
+                                <div class="col-4">
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-text">
+                                            <input type="checkbox" name="detail_bapp[]" value="{{ $eng->id }}" />
+                                        </div>
+                                        <input class="form-control" type="text" readonly value="{{ $eng->subject }}">
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
                 <h5 class="mt-5">Informasi Deposit</h5>
                 <hr>
                 <div class="mb-3">
@@ -106,6 +125,11 @@
                             <input type="text" class="form-control" name="rek_pemohon">
                         </div>
                     </div>
+                </div>
+                <h5 class="mt-5">Keterangan</h5>
+                <hr>
+                <div class="mb-3">
+                    <textarea type="text" class="form-control" name="keterangan"></textarea>
                 </div>
                 <div class="mt-5">
                     <button type="submit" class="btn btn-primary">Submit</button>
