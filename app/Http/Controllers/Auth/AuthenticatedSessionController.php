@@ -69,6 +69,8 @@ class AuthenticatedSessionController extends Controller
                     ->with(['RoleH.AksesForm', 'RoleH.WorkRelation'])
                     ->first();
 
+                $this->setMidtrans();
+
                 if (Auth::check()) {
                     if (!Hash::check($request->password, $user->password, [])) {
                         throw new \Exception('Invalid Credentials');
