@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\BayarnonController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DepartemenController;
 use App\Http\Controllers\Admin\DivisiController;
+use App\Http\Controllers\Admin\EngBAPPcontroller;
 use App\Http\Controllers\Admin\GIGOController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\GroupController;
@@ -352,6 +353,9 @@ Route::prefix('admin')->group(function () {
         Route::post('gigo/approve2/{id}', [GIGOController::class, 'gigoApprove2'])->name('gigoApprove2');
         Route::post('gigo/done/{id}', [GIGOController::class, 'gigoDone'])->name('gigoDone');
         Route::post('gigo/complete/{id}', [GIGOController::class, 'gigoComplete'])->name('gigoComplete');
+
+        // Eng BAPP
+        Route::resource('eng-bapp', EngBAPPcontroller::class);
 
         // Notification
         Route::get('/notifications', [DashboardController::class, 'notifications'])->name('notifications');  // Get all notifications list

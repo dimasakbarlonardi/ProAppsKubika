@@ -6,6 +6,8 @@ use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
 use App\Models\Approve;
 use App\Models\BAPP;
+use App\Models\DetailBAPP;
+use App\Models\EngBAPP;
 use App\Models\Notifikasi;
 use App\Models\OpenTicket;
 use App\Models\RequestPermit;
@@ -34,7 +36,9 @@ class BAPPController extends Controller
         $connTiket = ConnectionDB::setConnection(new OpenTicket());
         $connRP = ConnectionDB::setConnection(new RequestPermit());
         $connWPS = ConnectionDB::setConnection(new WorkPermit());
+        $connEngBAPP = ConnectionDB::setConnection(new EngBAPP());
 
+        $data['engs'] = $connEngBAPP->get();
         $data['tickets'] = $connTiket->get();
         $data['rps'] = $connRP->get();
         $data['wps'] = $connWPS->get();
@@ -46,6 +50,7 @@ class BAPPController extends Controller
     {
         $connBAPP = ConnectionDB::setConnection(new BAPP());
         $connSystem = ConnectionDB::setConnection(new System());
+        $connDetailBAPP = ConnectionDB::setConnection(new DetailBAPP());
 
         $system = $connSystem->find(1);
         $count = $system->sequence_no_bapp + 1;
@@ -54,6 +59,12 @@ class BAPPController extends Controller
             $system->kode_unik_invoice . '/' .
             Carbon::now()->format('m') . Carbon::now()->format('Y') . '/' .
             sprintf("%06d", $count);
+
+        $connDetailBAPP->create([
+            'no_bapp' => $no_bapp,
+            'id_eng_bapp' => json_encode($request->detail_bapp),
+            'keterangan' => $request->keterangan
+        ]);
 
         $connBAPP->create([
             'no_tiket' => $request->no_tiket,
