@@ -435,6 +435,9 @@ Route::prefix('admin')->group(function () {
         Route::post('gigo/done/{id}', [GIGOController::class, 'gigoDone'])->name('gigoDone');
         Route::post('gigo/complete/{id}', [GIGOController::class, 'gigoComplete'])->name('gigoComplete');
 
+        // Eng BAPP
+        Route::resource('eng-bapp', EngBAPPcontroller::class);
+
         // Notification
         Route::get('/notifications', [DashboardController::class, 'notifications'])->name('notifications');  // Get all notifications list
         Route::get('/get-notifications', [DashboardController::class, 'getNotifications'])->name('getNotifications');  // Get all notifications by user_id
