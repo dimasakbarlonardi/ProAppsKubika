@@ -251,6 +251,7 @@ Route::prefix('admin')->group(function () {
         Route::get('unit-by-id/{id}', [KepemilikanUnitController::class, 'unitByID'])->name('unit-by-id');
         Route::get('/unit-filter', [KepemilikanUnitController::class, 'unitdetail']);
         Route::post('kepemilikans', [KepemilikanUnitController::class, 'destroy'])->name('destroy');
+        
 
         // CRUD Karyawan
         Route::resource('karyawans', KaryawanController::class);

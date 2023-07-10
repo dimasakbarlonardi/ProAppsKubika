@@ -10,7 +10,7 @@
             </div>
         </div>
         <div class="p-5">
-            <form method="post" action="{{ route('kepemilikans.store') }}">
+                <form method="post" action="/admin/kepemilikans">
                 @csrf
                 <div class="mb-5">
                     <div class="row">
@@ -44,15 +44,15 @@
                         </div>
                         <div class="col-6 mb-3 ">
                             <label class="form-label">Tanggal Mulai</label>
-                            <input type="text" name="tgl_mulai" class="form-control" required>
+                            <input type="date" name="tgl_mulai" class="form-control">
                         </div>
                         <div class="col-6 mb-3 ">
                             <label class="form-label">No Bukti Milik</label>
-                            <input type="text" name="no_bukti_milik" class="form-control" required>
+                            <input type="text" name="no_bukti_milik" class="form-control" >
                         </div>
                         <div class="col-6 mb-3 ">
                             <label class="form-label">Keterangan</label>
-                            <input type="text" name="keterangan" class="form-control" required>
+                            <input type="text" name="keterangan" class="form-control" >
                         </div>
                     </div>
                 </div>

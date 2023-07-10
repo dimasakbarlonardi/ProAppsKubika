@@ -60,4 +60,11 @@
 @endsection
 
 @section('script')
+<script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+<script>
+    new DataTable('#table-perpanjang');
+    new DataTable('#table-perubahan');
+    new DataTable('#table-pindah');
+    new DataTable('#table-tidakperpanjang');
+</script>
 @endsection

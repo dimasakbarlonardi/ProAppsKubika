@@ -149,7 +149,7 @@
                 </div>
 
                 <div class="mt-5">
-                    <button type="button" class="btn btn-danger"><a class="text-white" href="{{ route('kepemilikans', $kepemilikans->id_pemilik)}}">Back</a></button>
+                    <button type="button" class="btn btn-danger"><a class="text-white" href="{{ route('perubahanunits.index')}}">Back</a></button>
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
             </form>

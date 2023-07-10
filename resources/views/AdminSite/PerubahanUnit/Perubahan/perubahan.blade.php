@@ -1,10 +1,10 @@
 <div class="table-responsive scrollbar">
-    <table class="table" id="table-perpanjang">
+    <table class="table" id="table-perubahan">
         <thead>
             <tr>
+                <th scope="col">Tenant</th>
                 <th scope="col">Unit</th>
                 <th scope="col">Pemilik</th>
-                <th scope="col">Tenant</th>
                 <th scope="col">Periode Sewa</th>
                 <th scope="col">Sewa Ke</th>
                 <th scope="col">Jatuh Tempo IPL</th>
@@ -15,14 +15,14 @@
         <tbody>
             @foreach ($tenant_units as $key => $tu)
                 <tr>
+                    <td>{{ $tu->tenant->nama_tenant }}</td>
                     <td>{{ $tu->unit->nama_unit }}</td>
                     <td>{{ $tu->Owner->nama_pemilik }}</td>
-                    <td>{{ $tu->tenant->nama_tenant}}</td>
                     <td>
                         {{ \Carbon\Carbon::parse($tu->tgl_masuk)->format(' d-M-Y') }} -
                         {{ \Carbon\Carbon::parse($tu->tgl_keluar)->format(' d-M-Y') }}
                     </td>
-                    <td>{{ $tu->sewa_ke}}</td>
+                    <td>{{ $tu->sewa_ke }}</td>
                     <td>
                         {{ \Carbon\Carbon::parse($tu->tgl_jatuh_tempo_ipl)->format(' d-M-Y') }}
                     </td>
@@ -31,11 +31,12 @@
                     </td>
                     <td class="text-center">
                         <div>
-                            <a class="btn btn-sm btn-warning" href="{{ route('perubahanunit', $tu->id_tenant_unit)}}">Detail</a>
+                            <a class="btn btn-sm btn-warning"
+                                href="{{ route('perubahanunit', $tu->id_tenant_unit) }}">Detail</a>
                         </div>
                     </td>
                 </tr>
-                @endforeach
+            @endforeach
         </tbody>
     </table>
 </div>
@@ -55,20 +56,3 @@
         </div>
     </div>
 </div>
-
-@section('script')
-    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
-    <script>
-        let table = new DataTable('#table-perpanjang');
-
-        function editUnitModal(id) {
-            $.ajax({
-                url: '/admin/get/tenantunits-edit/' + id,
-                type: 'GET',
-                success: function(data) {
-                    $(".modal-body-unit-edit").html(data);
-                }
-            })
-        }
-    </script>
-@endsection

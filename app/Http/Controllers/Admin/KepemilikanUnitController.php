@@ -39,7 +39,9 @@ class KepemilikanUnitController extends Controller
     {
         $connOwner = ConnectionDB::setConnection(new OwnerH());
         $connStatushunian = ConnectionDB::setConnection(new StatusHunianTenant());
+        // $conn = ConnectionDB::setConnection(new KepemilikanUnit());
 
+        // $data['kepemilikans'] = $conn->where('id_pemilik', $id)->first();
         $data['owners'] = $connOwner->get();
         $data['statushunians'] = $connStatushunian->get();
 

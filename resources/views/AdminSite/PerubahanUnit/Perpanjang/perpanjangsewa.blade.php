@@ -56,20 +56,3 @@
         </div>
     </div>
 </div>
-
-@section('script')
-    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
-    <script>
-        let table = new DataTable('#table-perpanjang');
-
-        function editUnitModal(id) {
-            $.ajax({
-                url: '/admin/get/tenantunits-edit/' + id,
-                type: 'GET',
-                success: function(data) {
-                    $(".modal-body-unit-edit").html(data);
-                }
-            })
-        }
-    </script>
-@endsection

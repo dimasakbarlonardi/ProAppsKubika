@@ -21,10 +21,11 @@
                     <td>
                         {{ $kepemilikan->unit->nama_unit }}
                     </td>
-                    <td> {{ $kepemilikan->StatusHunianTenant->status_hunian_tenant}}</td>
+                    <td> {{ $kepemilikan->StatusHunianTenant->status_hunian_tenant }}</td>
                     <td>
                         <div>
-                            <a class="btn btn-sm btn-warning" href="{{ route('kepemilikans', $kepemilikan->id)}}">Detail</a>
+                            <a class="btn btn-sm btn-warning"
+                                href="{{ route('kepemilikans', $kepemilikan->id) }}">Detail</a>
                         </div>
                     </td>
                 </tr>
@@ -48,20 +49,3 @@
         </div>
     </div>
 </div>
-
-@section('script')
-    {{-- <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script> --}}
-    <script>
-        let table = new DataTable('#table-pindah');
-
-        function editUnitModal(id) {
-            $.ajax({
-                url: '/admin/get/kepemilikan-edit/' + id,
-                type: 'GET',
-                success: function(data) {
-                    $(".modal-body-unit-edit").html(data);
-                }
-            })
-        }
-    </script>
-@endsection

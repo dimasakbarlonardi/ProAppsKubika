@@ -97,11 +97,11 @@ class PerubahanUnitController extends Controller
         $createOff->id_pemilik = $tu->id_pemilik;
         $createOff->id_tenant = $tu->id_tenant;
         $createOff->id_unit = $tu->id_unit;
-        $createOff->id_periode_sewa = $request->id_periode_sewa;
+        $createOff->id_periode_sewa = $tu->id_periode_sewa;
         $createOff->tgl_masuk = $tu->tgl_masuk;
         $createOff->tgl_keluar = $tu->tgl_keluar;
         $createOff->sewa_ke = $tu->sewa_ke;
-        $createOff->keterangan = 'perpanjangan sewa unit';
+        $createOff->keterangan = $request->keterangan;
         $createOff->save();
 
         $tu->id_periode_sewa = $request->id_periode_sewa;
@@ -130,23 +130,20 @@ class PerubahanUnitController extends Controller
         $createOff->id_pemilik = $tu->id_pemilik;
         $createOff->id_tenant = $tu->id_tenant;
         $createOff->id_unit = $tu->id_unit;
-        $createOff->id_periode_sewa = $request->id_periode_sewa;
+        $createOff->id_periode_sewa = $tu->id_periode_sewa;
         $createOff->tgl_masuk = $tu->tgl_masuk;
         $createOff->tgl_keluar = $tu->tgl_keluar;
         $createOff->sewa_ke = $tu->sewa_ke;
         $createOff->keterangan = 'perubahan unit';
         $createOff->save();
 
-        // $tu->id_periode_sewa = $request->id_periode_sewa;
-        // $tu->tgl_masuk = $request->tgl_masuk;
+        $tu->id_unit = $request->id_unit;
+        // $tu->id_periode_sewa = $tu->id_periode_sewa;
         // $tu->tgl_keluar = $request->tgl_keluar;
         // $tu->sewa_ke = $tu->sewa_ke + $countOff;
 
-        $tu->id_unit = $request->id_unit;
-        
-
         $tu->save();
-
+        dd($tu);
         DB::commit();
 
         Alert::success('Berhasil', 'Berhasil Perubahan Unit');
@@ -161,7 +158,7 @@ class PerubahanUnitController extends Controller
 
 
         $tu = $connKepemilikan->where('id_pemilik', $id)->first();
-         
+
         $createOff = $connKUOFF;
         $createOff->id_pemilik = $tu->id_pemilik;
         $createOff->id_unit = $tu->id_unit;
