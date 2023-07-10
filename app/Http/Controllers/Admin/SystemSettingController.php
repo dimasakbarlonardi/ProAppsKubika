@@ -93,7 +93,7 @@ class SystemSettingController extends Controller
                 return view('AdminSite.Approve.bapp', $data);
                 break;
             case 7:
-                // return view('AdminSite.Approve.request', $data);
+                return view('AdminSite.Approve.reservation', $data);
                 break;
             case 8:
                 return view('AdminSite.Approve.gigo', $data);

@@ -37,4 +37,9 @@ class Transaction extends Model
     {
         return $this->hasOne(WorkPermit::class, 'no_work_permit', 'no_transaction');
     }
+
+    public function Reservation()
+    {
+        return $this->hasOne(Reservation::class, 'no_request_reservation', 'no_transaction');
+    }
 }
