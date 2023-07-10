@@ -10,6 +10,7 @@ use App\Models\Notifikasi;
 use App\Models\OpenTicket;
 use App\Models\System;
 use App\Models\Transaction;
+use App\Models\TransactionCenter;
 use App\Models\User;
 use App\Models\WorkOrder;
 use App\Models\WorkOrderDetail;
@@ -212,36 +213,38 @@ class WorkOrderController extends Controller
         return redirect()->back();
     }
 
-    public function approve2(Request $request, $id)
+    public function approve2WO(Request $request, $id)
     {
-        $connWO = ConnectionDB::setConnection(new WorkOrder());
         $connNotif = ConnectionDB::setConnection(new Notifikasi());
+        $user = $request->session()->get('user');
+        $connWO = ConnectionDB::setConnection(new WorkOrder());
         $connApprove = ConnectionDB::setConnection(new Approve());
 
         $approve = $connApprove->find(3);
-        $user = $request->session()->get('user');
-
         $wo = $connWO->find($id);
-        $createNotif = $this->createNotif($connNotif, $id, $user, $wo);
-        $createNotif->notif_message = 'Work Order sudah diapprove, menunggu persetujuan untuk pengerjaan';
-        $createNotif->receiver = $approve->approval_3;
-        $createNotif->save();
 
         $wo->status_wo = 'APPROVED';
-        $wo->sign_approve_2 = 1;
+        $wo->sign_approve_2 = '1';
+        $wo->date_approve_2 = Carbon::now();
         $wo->save();
+
+        $createNotif = $this->createNotif($connNotif, $id, $user, $wo);
+        $createNotif->notif_message = 'Work Order kami approve, mohon approve untuk kami bisa bekerja';
+        $createNotif->receiver = $approve->approval_3;
+        $createNotif->save();
 
         return response()->json(['status' => 'ok']);
     }
 
-    public function approve3(Request $request, $id)
+    public function approve3WO(Request $request, $id)
     {
         $connWO = ConnectionDB::setConnection(new WorkOrder());
 
         $wo = $connWO->find($id);
 
         $wo->status_wo = 'APPROVED';
-        $wo->sign_approve_3 = 1;
+        $wo->sign_approve_3 = '1';
+        $wo->date_approve_3 = Carbon::now();
         $wo->save();
 
         Alert::success('Berhasil', 'Berhasil approve WO');
@@ -287,59 +290,7 @@ class WorkOrderController extends Controller
         return response()->json(['status' => 'ok']);
     }
 
-    public function approveTR(Request $request, $id)
-    {
-        $connKaryawan = ConnectionDB::setConnection(new Karyawan());
-        $connWO = ConnectionDB::setConnection(new WorkOrder());
-        $connNotif = ConnectionDB::setConnection(new Notifikasi());
-        $user = $request->session()->get('user');
-
-        $getSpv = $connKaryawan->where('id_jabatan', '003')->get();
-
-        $wo = $connWO->find($id);
-
-        foreach ($getSpv as $spv) {
-            $createNotif = $this->createNotif($connNotif, $id, $user, $wo);
-            $createNotif->notif_message = 'Engineering sudah mengerjakan WO, mohon di periksa kembali';
-            $createNotif->receiver = $spv->User->id_user;
-            $createNotif->save();
-        }
-
-        $wo->sign_approve_tr = 1;
-        $wo->date_approve_tr = Carbon::now();
-        $wo->save();
-
-        Alert::success('Berhasil', 'Berhasil approve WO');
-
-        return redirect()->back();
-    }
-
-    public function approveSPV(Request $request, $id)
-    {
-        $connWO = ConnectionDB::setConnection(new WorkOrder());
-        $connNotif = ConnectionDB::setConnection(new Notifikasi());
-        $user = $request->session()->get('user');
-
-        $wo = $connWO->find($id);
-
-        $getUser = $wo->Ticket->Tenant->User->id_user;
-
-        $createNotif = $this->createNotif($connNotif, $id, $user, $wo);
-        $createNotif->notif_message = 'Work Order sudah dikerjakan, mohon periksa kembali pekerjaan kami';
-        $createNotif->receiver = $getUser;
-        $createNotif->save();
-
-
-        $wo->sign_approve_spv = 1;
-        $wo->date_approve_spv = Carbon::now();
-        $wo->save();
-
-        Alert::success('Berhasil', 'Berhasil approve WO');
-
-        return redirect()->back();
-    }
-
-    public function done($id)
+    public function done(Request $request, $id)
     {
         $connWO = ConnectionDB::setConnection(new WorkOrder());
         $connTicket = ConnectionDB::setConnection(new OpenTicket());
@@ -399,6 +350,40 @@ class WorkOrderController extends Controller
         return redirect()->back();
     }
 
+    public function completeWO(Request $request, $id)
+    {
+        $connWO = ConnectionDB::setConnection(new WorkOrder());
+        $connTicket = ConnectionDB::setConnection(new OpenTicket());
+        $connWR = ConnectionDB::setConnection(new WorkRequest());
+
+        $wo = $connWO->find($id);
+        $ticket = $connTicket->where('no_tiket', $wo->no_tiket)->first();
+        $wr = $connWR->where('no_work_request', $wo->no_work_request)->first();
+
+        try {
+            DB::beginTransaction();
+
+            $wo->status_wo = 'COMPLETE';
+            $wo->sign_approve_4 = 1;
+            $wo->date_approve_4 = Carbon::now();
+            $wo->save();
+
+            $ticket->status_request = 'COMPLETE';
+            $ticket->save();
+
+            $wr->status_request = 'COMPLETE';
+            $wr->save();
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            dd($e);
+            return redirect()->back();
+        }
+
+        return response()->json(['status' => 'ok']);
+    }
+
     public function createTransaction($wo)
     {
         $connSystem = ConnectionDB::setConnection(new System());
@@ -421,64 +406,63 @@ class WorkOrderController extends Controller
 
             $createTransaction = $connTransaction;
             $createTransaction->no_invoice = $no_invoice;
+            $createTransaction->transaction_type = 'WorkOrder';
             $createTransaction->no_transaction = $wo->no_work_order;
             $createTransaction->admin_fee = $admin_fee;
             $createTransaction->sub_total = $wo->jumlah_bayar_wo;
             $createTransaction->total = $total;
             $createTransaction->id_user = $wo->Ticket->Tenant->User->id_user;
+            $createTransaction->status = 'PENDING';
+            $createTransaction->save();
 
-            $midtrans = new CreateSnapTokenService($createTransaction, $items, $admin_fee);
-            $createTransaction->snap_token = $midtrans->getSnapToken();
+            $ct = $this->transactionCenter($createTransaction);
+
+            $midtrans = new CreateSnapTokenService($ct, $createTransaction, $items, $admin_fee);
+
+            $ct->snap_token = $midtrans->getSnapToken();
+            $ct->save();
+
             $createTransaction->save();
 
             $system->sequence_no_invoice = $count;
             $system->save();
 
+
             DB::commit();
         } catch (Throwable $e) {
-            dd($e);
             DB::rollBack();
-
+            dd($e);
             return redirect()->back();
         }
 
         return $createTransaction;
     }
 
-    public function complete($id)
+    public function transactionCenter($transaction)
     {
-        $connWO = ConnectionDB::setConnection(new WorkOrder());
-        $connTicket = ConnectionDB::setConnection(new OpenTicket());
-        $connWR = ConnectionDB::setConnection(new WorkRequest());
-        $connApprove = ConnectionDB::setConnection(new Approve());
-
-        $sender = $connApprove->find(3);
-        $sender = $sender->approval_4;
-
-        $wo = $connWO->find($id);
-        $ticket = $connTicket->where('no_tiket', $wo->no_tiket)->first();
-        $wr = $connWR->where('no_work_request', $wo->no_work_request)->first();
+        $request = Request();
+        $user = $request->session()->get('user');
 
         try {
             DB::beginTransaction();
-
-            $wo->status_wo = 'COMPLETE';
-            $wo->sign_approval_5 = 1;
-            $wo->save();
-
-            $ticket->status_request = 'COMPLETE';
-            $ticket->save();
-
-            $wr->status_request = 'COMPLETE';
-            $wr->save();
-
+            $ct = TransactionCenter::create([
+                'id_sites' => $user->id_site,
+                'no_invoice' => $transaction->no_invoice,
+                'transaction_type' => $transaction->transaction_type,
+                'no_transaction' => $transaction->no_transaction,
+                'admin_fee' => $transaction->admin_fee,
+                'sub_total' => $transaction->sub_total,
+                'total' => $transaction->total,
+                'id_user' => $transaction->id_user,
+                'status' => $transaction->status,
+            ]);
             DB::commit();
-        } catch (Exception $e) {
+
+            return $ct;
+        } catch (Throwable $e) {
             DB::rollBack();
             dd($e);
             return redirect()->back();
         }
-
-        return response()->json(['status' => 'ok']);
     }
 }

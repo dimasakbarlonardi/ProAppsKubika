@@ -13,11 +13,33 @@ class Transaction extends Model
 
     protected $fillable = [
         'no_invoice',
+        'transaction_type',
         'no_transaction',
         'admin_fee',
         'sub_total',
         'total',
         'id_user',
+        'status',
         'snap_token'
     ];
+
+    public function User()
+    {
+        return $this->hasOne(User::class, 'id_user', 'id_user');
+    }
+
+    public function WorkOrder()
+    {
+        return $this->hasOne(WorkOrder::class, 'no_work_order', 'no_transaction');
+    }
+
+    public function WorkPermit()
+    {
+        return $this->hasOne(WorkPermit::class, 'no_work_permit', 'no_transaction');
+    }
+
+    public function Reservation()
+    {
+        return $this->hasOne(Reservation::class, 'no_request_reservation', 'no_transaction');
+    }
 }

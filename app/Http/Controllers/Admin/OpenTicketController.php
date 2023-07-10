@@ -11,6 +11,7 @@ use App\Models\JenisRequest;
 use App\Models\Login;
 use App\Models\Notifikasi;
 use App\Models\OpenTicket;
+use App\Models\RequestGIGO;
 use App\Models\Site;
 use App\Models\System;
 use App\Models\Tenant;
@@ -75,7 +76,6 @@ class OpenTicketController extends Controller
     public function store(Request $request)
     {
         $connOpenTicket = ConnectionDB::setConnection(new OpenTicket());
-        $connSystem = ConnectionDB::setConnection(new System());
         $connSystem = ConnectionDB::setConnection(new System());
         $connUnit = ConnectionDB::setConnection(new Unit());
 
@@ -175,6 +175,8 @@ class OpenTicketController extends Controller
                     $createNotif->notif_message = 'Keluhan sudah dikerjakan, mohon periksa kembali pekerjaan kami';
                     $createNotif->save();
                 }
+            } elseif($request->status_request == 'PROSES KE GIGO') {
+                $this->createGIGO($connNotif, $user, $ticket);
             } elseif (!$request->status_request) {
                 $ticket->status_request = 'RESPONDED';
             }
@@ -191,6 +193,45 @@ class OpenTicketController extends Controller
         Alert::success('Berhasil', 'Berhasil mengupdate tiket');
 
         return redirect()->back();
+    }
+
+    public function createGIGO($connNotif, $user, $ticket)
+    {
+        $connSystem = ConnectionDB::setConnection(new System());
+        $nowDate = Carbon::now();
+
+        $system = $connSystem->find(1);
+        $count = $system->sequence_no_gigo + 1;
+
+        $no_gigo = $system->kode_unik_perusahaan . '/' .
+                $system->kode_unik_gigo . '/' .
+                Carbon::now()->format('m') . $nowDate->year . '/' .
+                sprintf("%06d", $count);
+
+        $createRG = ConnectionDB::setConnection(new RequestGIGO());
+        $createRG->no_tiket = $ticket->no_tiket;
+        $createRG->no_request_gigo = $no_gigo;
+        $createRG->save();
+
+        $system->sequence_no_gigo = $count;
+        $system->save();
+
+        $notif = $connNotif->where('models', 'GIGO')
+            ->where('is_read', 0)
+            ->where('id_data', $createRG->id)
+            ->first();
+
+        if (!$notif) {
+            $createNotif = $connNotif;
+            $createNotif->sender = $user->id_user;
+            $createNotif->receiver = $ticket->Tenant->User->id_user;
+            $createNotif->is_read = 0;
+            $createNotif->models = 'GIGO';
+            $createNotif->id_data = $createRG->id;
+            $createNotif->notif_title = $createRG->no_request_gigo;
+            $createNotif->notif_message = 'Request GIGO disetujui, mohon mengisi formulir GIGO';
+            $createNotif->save();
+        }
     }
 
     public function updateRequestTicket(Request $request, $id)

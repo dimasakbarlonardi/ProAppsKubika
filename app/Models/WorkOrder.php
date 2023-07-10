@@ -31,12 +31,12 @@ class WorkOrder extends Model
         'sign_approve_2',
         'sign_approve_3',
         'sign_approve_4',
-        'sign_approval_5',
+        'sign_approve_5',
         'date_approve_1',
         'date_approve_2',
         'date_approve_3',
         'date_approve_4',
-        'date_approval_5',
+        'date_approve_5',
     ];
 
     protected $dates = ['deleted_at'];

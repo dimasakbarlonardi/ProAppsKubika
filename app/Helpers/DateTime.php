@@ -16,6 +16,13 @@ function HumanTime($time)
     return $time;
 }
 
+function HumanDateTime($time)
+{
+    $time =  date('d M Y - H:i A', strtotime($time));
+
+    return $time;
+}
+
 function TimeAgo($time)
 {
     $time = Carbon::createFromTimeStamp(strtotime($time))->diffForHumans();

@@ -20,7 +20,7 @@
                 @csrf
                 <div class="mb-3">
                     <label class="form-label">Jenis Request</label>
-                    <select name="id_jenis_request" class="form-control">
+                    <select name="id_jenis_request" class="form-control" id="id_jenis_request">
                         @foreach ($jenis_requests as $jr)
                             <option value="{{ $jr->id_jenis_request }}">{{ $jr->jenis_request }}</option>
                         @endforeach
@@ -49,20 +49,33 @@
                                     @endforeach
                                 </select>
                             </div>
+                        @else
+                            <div class="col-6">
+                                <label class="form-label">Unit</label>
+                                <select name="id_unit" class="form-control" id="id_unit">
+                                    @if ($user->user_category != 2)
+                                        @foreach ($units as $unit)
+                                            <option value="{{ $unit->unit->id_unit }}">{{ $unit->unit->nama_unit }}</option>
+                                        @endforeach
+                                    @endif
+                                </select>
+                            </div>
                         @endif
                     </div>
                 </div>
                 <div class="mb-3">
-                    <div class="col-6">
-                        <label class="form-label">Unit</label>
-                        <select name="id_unit" class="form-control" id="id_unit">
-                            @if ($user->user_category != 2)
-                                @foreach ($units as $unit)
-                                    <option value="{{ $unit->unit->id_unit }}">{{ $unit->unit->nama_unit }}</option>
-                                @endforeach
-                            @endif
-                        </select>
-                    </div>
+                    @if ($user->user_category == 2)
+                        <div class="col-6">
+                            <label class="form-label">Unit</label>
+                            <select name="id_unit" class="form-control" id="id_unit">
+                                @if ($user->user_category != 2)
+                                    @foreach ($units as $unit)
+                                        <option value="{{ $unit->unit->id_unit }}">{{ $unit->unit->nama_unit }}</option>
+                                    @endforeach
+                                @endif
+                            </select>
+                        </div>
+                    @endif
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Deskripsi Request</label>

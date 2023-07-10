@@ -89,7 +89,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="d-flex justify-content-between">
+                                <div class="d-flex justify-content-between text-end">
                                     <div class="">
                                         <h5>{{ $wr->judul_request }}</h5>
                                     </div>
@@ -102,14 +102,22 @@
                                                     <span
                                                         class="badge rounded bg-warning red__bg-1000">{{ $wr->status_request }}</span>
                                                 @break
+
+                                                @case('COMPLETE')
+                                                    <span
+                                                        class="badge rounded bg-success red__bg-1000">{{ $wr->status_request }}</span>
+                                                @break
+
                                                 @case('WORK ORDER')
                                                     <span
                                                         class="badge rounded bg-info red__bg-1000">{{ $wr->status_request }}</span>
                                                 @break
+
                                                 @case('ON WORK')
                                                     <span
                                                         class="badge rounded bg-info red__bg-1000">{{ $wr->status_request }}</span>
                                                 @break
+
                                                 @case('DONE')
                                                     <span
                                                         class="badge rounded bg-success red__bg-1000">{{ $wr->status_request }}</span>
