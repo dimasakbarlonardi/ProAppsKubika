@@ -11,6 +11,7 @@ use App\Models\Notifikasi;
 use App\Models\OpenTicket;
 use App\Models\RequestGIGO;
 use App\Models\RequestPermit;
+use App\Models\Reservation;
 use App\Models\Transaction;
 use App\Models\TransactionCenter;
 use App\Models\WorkOrder;
@@ -117,6 +118,11 @@ class DashboardController extends Controller
                 return view('Tenant.Notification.BAPP', $data);
                 break;
 
+            case ('Reservation'):
+                $data = $this->handleReservation($getNotif);
+                return view('Tenant.Notification.Reservation', $data);
+                break;
+
             case ('GIGO'):
                 $data = $this->handleGIGO($getNotif);
                 return view('Tenant.Notification.GIGO', $data);
@@ -203,6 +209,16 @@ class DashboardController extends Controller
         $data['sysApprove'] = $connApprove->find(6);
         $bapp =  $getData->find($getNotif->id_data);
         $data['bapp'] = $bapp;
+
+        return $data;
+    }
+
+    public function handleReservation($getNotif)
+    {
+        $model = new Reservation();
+        $getData = ConnectionDB::setConnection($model);
+        $bapp =  $getData->find($getNotif->id_data);
+        $data['reservation'] = $bapp;
 
         return $data;
     }
