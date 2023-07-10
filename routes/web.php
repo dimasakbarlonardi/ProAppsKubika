@@ -438,6 +438,14 @@ Route::prefix('admin')->group(function () {
         // Eng BAPP
         Route::resource('eng-bapp', EngBAPPcontroller::class);
 
+        // Reservation
+        Route::resource('request-reservations', ReservationController::class);
+        Route::post('rsvApprove1/{id}', [ReservationController::class, 'approve1'])->name('rsvApprove1');
+        Route::post('rsvApprove2/{id}', [ReservationController::class, 'approve2'])->name('rsvApprove2');
+        Route::post('rsvApprove3/{id}', [ReservationController::class, 'approve3'])->name('rsvApprove3');
+        Route::post('rsvDone/{id}', [ReservationController::class, 'rsvDone'])->name('rsvDone');
+        Route::post('rsvComplete/{id}', [ReservationController::class, 'rsvComplete'])->name('rsvComplete');
+
         // Notification
         Route::get('/notifications', [DashboardController::class, 'notifications'])->name('notifications');  // Get all notifications list
         Route::get('/get-notifications', [DashboardController::class, 'getNotifications'])->name('getNotifications');  // Get all notifications by user_id
