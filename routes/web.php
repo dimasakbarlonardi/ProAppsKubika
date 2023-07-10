@@ -53,6 +53,8 @@ use App\Http\Controllers\Admin\PenempatanController;
 use App\Http\Controllers\Admin\PerhitDendaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\PeriodeSewaController;
+use App\Http\Controllers\Admin\RequestPermitController;
+use App\Http\Controllers\Admin\ReservationController;
 use App\Http\Controllers\Admin\PerubahanUnitController;
 use App\Http\Controllers\Admin\ReminderLetterController;
 use App\Http\Controllers\Admin\RoomController;
@@ -376,6 +378,14 @@ Route::prefix('admin')->group(function () {
 
         // Eng BAPP
         Route::resource('eng-bapp', EngBAPPcontroller::class);
+
+        // Reservation
+        Route::resource('request-reservations', ReservationController::class);
+        Route::post('rsvApprove1/{id}', [ReservationController::class, 'approve1'])->name('rsvApprove1');
+        Route::post('rsvApprove2/{id}', [ReservationController::class, 'approve2'])->name('rsvApprove2');
+        Route::post('rsvApprove3/{id}', [ReservationController::class, 'approve3'])->name('rsvApprove3');
+        Route::post('rsvDone/{id}', [ReservationController::class, 'rsvDone'])->name('rsvDone');
+        Route::post('rsvComplete/{id}', [ReservationController::class, 'rsvComplete'])->name('rsvComplete');
 
         // Notification
         Route::get('/notifications', [DashboardController::class, 'notifications'])->name('notifications');  // Get all notifications list
