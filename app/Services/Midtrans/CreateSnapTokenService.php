@@ -42,9 +42,9 @@ class CreateSnapTokenService extends Midtrans
             ],
             'item_details' => $items,
             'customer_details' => [
-                'first_name' => 'Martin Mulyo Syahidin',
-                'email' => 'mulyosyahidin95@gmail.com',
-                'phone' => '081234567890',
+                'first_name' => $this->order->User->nama_user,
+                'email' => $this->order->User->login_user,
+                'phone' => $this->order->User->Tenant->no_telp_tenant,
             ]
         ];
 
