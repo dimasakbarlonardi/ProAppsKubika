@@ -26,11 +26,13 @@ class TenantController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $conn = ConnectionDB::setConnection(new Tenant());
+        $user_id = $request->user()->id;
 
         $data['tenants'] = $conn->get();
+        $data['idusers'] = Login::where('id', $user_id)->get();
 
         return view('AdminSite.Tenant.index', $data);
     }
@@ -96,6 +98,7 @@ class TenantController extends Controller
                 'id_tenant' => sprintf("%03d", $count),
                 'email_tenant' => $request->email_tenant,
                 'id_site' => $site,
+                'id_user' => $id_user,
                 'id_card_type' => $request->id_card_type,
                 'nik_tenant' => $request->nik_tenant,
                 'nama_tenant' => $request->nama_tenant,
@@ -178,7 +181,7 @@ class TenantController extends Controller
         $connTenant = ConnectionDB::setConnection(new Tenant());
         $connTenant->where('id_tenant', $id)->update([
             'id_site' => $request->id_site,
-            // 'id_user' => $request->id_user,
+            'id_user' => $request->id_user,
             'id_card_type' => $request->id_card_type,
             'nik_tenant' => $request->nik_tenant,
             'nama_tenant' => $request->nama_tenant,

@@ -9,7 +9,7 @@
     @foreach ($tenant_units as $unit)
         <div class="col">
             <button class="btn btn-falcon-primary me-1 mb-1 btn-unit" type="button"
-                onclick="btnUnitClick('{{ $unit->id_unit }}')"
+                onclick="btnUnitClick1('{{ $unit->id_unit }}')"
                 id="btn-unit-{{ $unit->id_unit }}"><span
                 class="fas fa-building me-2"></span>{{ $unit->unit->nama_unit }}</button>
         </div>
@@ -94,7 +94,7 @@
 </div>
 
 <script>
-    function btnUnitClick(id) {
+    function btnUnitClick1(id) {
         $.ajax({
             url: '/admin/get-vehicle/by-unit/' + id,
             type: 'GET',

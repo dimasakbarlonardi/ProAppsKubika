@@ -139,8 +139,6 @@
                     </div>
                 </div>
 
-
-
                 <div class="penjamin mt-5" id="penjamin">
                     <h5>Penjamin</h5>
                     <hr>

@@ -14,10 +14,10 @@ class ChecklistChillerDetail extends Model
     protected $primaryKey = 'id_eng_chiller';
 
     protected $fillable = [
-        'id_eng_listrik',
-        'no_checklist_listrik',
+        'id_eng_chiller',
+        'no_checklist_chiller',
         'in_out',
-        'checkpoint',
+        'check_point',
         'keterangan',
     ];
     protected $dates = ['deleted_at'];

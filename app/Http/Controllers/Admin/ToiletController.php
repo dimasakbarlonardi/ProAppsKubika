@@ -8,6 +8,33 @@ use App\Helpers\ConnectionDB;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Http\Request;
+//  public function deleteTenantUnit(Request $request, $id)
+//     {
+//         $conn = $this->setConnection(new TenantUnit());
+//         $connTUOFF = ConnectionDB::setConnection(new TenantUnitOFF());
+
+//         $nowDate = Carbon::now();
+
+//         $conn = $conn->where('id_tenant_unit', $id)->first();
+//         $conn->unit->isempty = 1;
+//         $conn->unit->save();
+//         $conn->delete();
+
+//         $connTUOFF->create([
+//             'id_tenant' => $conn->id_tenant,
+//             'id_unit' => $conn->id_unit,
+//             'id_pemilik' => $conn->id_pemilik,
+//             'tgl_masuk' => $conn->tgl_masuk,
+//             'tgl_keluar' => $conn->tgl_keluar,
+//             'tgl_sys' => $nowDate,
+//             'keterangan' => $request->keterangan,
+//             'sewa_ke' => 2
+//         ]);
+
+//         Alert::success('Berhasil', 'Berhasil menghapus tenant unit');
+
+//         return redirect()->route('getTenantUnit', $id);
+//     }
 
 class ToiletController extends Controller
 {

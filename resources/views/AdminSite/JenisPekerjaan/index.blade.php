@@ -35,7 +35,7 @@
                                     onclick="return confirm('are you sure?')"><span class="fas fa-trash-alt fs--2 me-1"></span>Hapus</button>
                             </form>
                         </td>
-                    </tr>
+                    </tr>   
                 @endforeach
             </tbody>
         </table>

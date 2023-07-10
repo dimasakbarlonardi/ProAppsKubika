@@ -25,8 +25,10 @@ class OwnerHController extends Controller
     public function index(Request $request)
     {
         $conn = ConnectionDB::setConnection(new OwnerH());
+        $user_id = $request->user()->id;
 
         $data['owners'] = $conn->get();
+        $data['idusers'] = Login::where('id', $user_id)->get();
 
         return view('AdminSite.Owner.index', $data);
     }
@@ -205,10 +207,51 @@ class OwnerHController extends Controller
     {
         $conn = ConnectionDB::setConnection(new OwnerH());
 
-        $owner = $conn->find($id);
-
-        $owner->update($request->all());
-
+        $id_user = $request->user()->id;
+        $login = Login::where('id', $id_user)->with('site')->first();
+        $site = $login->site->id_site;
+        $count = $conn->get();
+        $count = $count->count() + 1;
+        
+        $conn->where('id_pemilik', $id)->update([
+            'id_pemilik' => sprintf("%09d", $count),
+            'id_site' => $site,
+            // 'id_user' => $id_user,
+            'email_owner' => $request->email_owner,
+            'id_card_type' => $request->id_card_type,
+            'nik_pemilik' => $request->nik_pemilik,
+            'nama_pemilik' => $request->nama_pemilik,
+            // 'id_status_aktif_pemilik' => $request->id_status_aktif_pemilik,
+            'kewarganegaraan' => $request->kewarganegaraan,
+            'masa_berlaku_id' => $request->masa_berlaku_id,
+            'alamat_ktp_pemilik' => $request->alamat_ktp_pemilik,
+            'alamat_tinggal_pemilik' => $request->alamat_tinggal_pemilik,
+            'provinsi' => $request->provinsi,
+            'kode_pos' => $request->kode_pos,
+            'no_telp_pemilik' => $request->no_telp_pemilik,
+            'nik_pasangan_penjamin' => $request->nik_pasangan_penjamin,
+            'nama_pasangan_penjamin' => $request->nama_pasangan_penjamin,
+            'alamat_ktp_pasangan_penjamin' => $request->alamat_ktp_pasangan_penjamin,
+            'alamat_tinggal_pasangan_penjamin' => $request->alamat_tinggal_pasangan_penjamin,
+            'hubungan_penjamin' => $request->hubungan_penjamin,
+            'no_telp_penjamin'=> $request->no_telp_penjamin,
+            'tgl_masuk' => $request->tgl_masuk,
+            'tgl_keluar' => $request->tgl_keluar,
+            'id_kepemilikan_unit'=> $request->id_kepemilikan_unit,
+            'tempat_lahir'=> $request->tempat_lahir,
+            'tgl_lahir'=> $request->tgl_lahir,
+            'id_jenis_kelamin'=> $request->id_jenis_kelamin,
+            'id_agama'=> $request->id_agama,
+            'id_status_kawin'=> $request->id_status_kawin,
+            'pekerjaan'=> $request->pekerjaan,
+            'nik_kontak_pic'=> $request->nik_kontak_pic,
+            'nama_kontak_pic'=> $request->nama_kontak_pic,
+            'alamat_tinggal_kontak_pic'=> $request->alamat_tinggal_kontak_pic,
+            'email_kontak_pic'=> $request->email_kontak_pic,
+            'no_telp_kontak_pic'=> $request->no_telp_kontak_pic,
+            'hubungan_kontak_pic' => $request->hubungan_kontak_pic
+        ]);
+            
         Alert::success('Berhasil', 'Berhasil mengupdate pemilik');
 
         return redirect()->route('owners.index');

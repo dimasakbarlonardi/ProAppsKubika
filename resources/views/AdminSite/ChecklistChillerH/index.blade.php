@@ -1,5 +1,9 @@
 @extends('layouts.master')
 
+@section('css')
+    <link rel="stylesheet" href="{{ asset('assets/vendors/flatpickr/flatpickr.min.css') }}">
+@endsection
+
 @section('content')
     <div class="content">
         <div class="row gx-3">
@@ -114,18 +118,23 @@
                         <div class="card-body">
                             <form>
                                 <div class="mb-3 mt-n2">
-                                    <label class="mb-1">Tanggal Checklist Chiller</label>
-                                    <select class="form-select form-select-sm" name="tgl_checklist" required id="tgl_checklist">
-                                        @foreach ($checklistchillers as $checklistchiller)
-                                            <option value="{{ $checklistchiller->tgl_checklist }}"> {{ $checklistchiller->tgl_checklist }}</option>
-                                        @endforeach
-                                    </select>
+                                    <label class="form-label" for="timepicker2">Tanggal Checklist chiller</label>
+                                    <input id="tgl_checklist" class="form-control datetimepicker" id="timepicker2" type="text" placeholder="d/m/y to d/m/y" data-options='{"mode":"range","dateFormat":"Y-m-d","disableMobile":true}' />
                                 </div>
                                 <div class="mb-3 mt-n2">
-                                    <label class="mb-1">Nomer Checklist Chiller</label>
+                                    <label class="mb-1">Nomer Checklist chiller</label>
                                     <select class="form-select form-select-sm" name="no_checklist_chiller" required id="no_checklist_chiller">
+                                        <option type="reset" value=""> All </option>
                                         @foreach ($checklistchillers as $checklistchiller)
                                             <option value="{{ $checklistchiller->no_checklist_chiller }}"> {{ $checklistchiller->no_checklist_chiller }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>     
+                                <div class="mb-3 mt-n2">
+                                    <label class="mb-1">User Checklist chiller</label>
+                                    <select class="form-select form-select-sm" name="no_checklist_chiller" required id="no_checklist_chiller">
+                                        @foreach ($idusers as $iduser)
+                                            <option value="{{ $iduser->id }}"> {{ $iduser->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -143,41 +152,45 @@
 @endsection
 
 @section('script')
+    <script src="{{ asset('assets/js/flatpickr.js') }}"></script>
     <script>
         $('document').ready(function() {
-            var tgl_checklist = $('#tgl_checklist').val()
             var no_checklist_chiller = $('#no_checklist_chiller').val()
 
+            $('#tgl_checklist').on('change', function() {
+                var no_checklist_chiller = $('#no_checklist_chiller').val()
+                var tgl_checklist = $('#tgl_checklist').val()
+                var date_from = tgl_checklist.substr(0, 10)
+                var date_to = tgl_checklist.substr(14, 23)
+                 
+                console.log("date from : ", date_from)
+                console.log("date to : ", date_to)
+
+                index(no_checklist_chiller, date_from, date_to)
+            })
             $('#no_checklist_chiller').on('change', function() {
                 var no_checklist_chiller = $('#no_checklist_chiller').val()
                 var tgl_checklist = $('#tgl_checklist').val()
+                var date_from = tgl_checklist.substr(0, 10)
+                var date_to = tgl_checklist.substr(14, 23)
 
-                console.log(tgl_checklist, no_checklist_chiller)
+                // console.log(tgl_checklist, no_checklist_chiller)
 
-                index(no_checklist_chiller,tgl_checklist)
+                index(no_checklist_chiller, date_from, date_to)
             })
-
-            $('#tgl_checklist').on('change', function() {
-                var tgl_checklist = $('#tgl_checklist').val()
-
-                console.log(tgl_checklist)
-
-                index(tgl_checklist)
-            })
-
         })
 
-        function index(tgl_checklist, no_checklist_chiller) {
+        function index(no_checklist_chiller, date_from, date_to) {
             $.ajax({
                 url: '/admin/checklist-filter-chiller',
                 type: 'GET',
                 data: {
-                    tgl_checklist,
-                    no_checklist_chiller
+                    no_checklist_chiller,
+                    date_from,
+                    date_to
                 },
                 success: function(data) {
                     $('#checklist_body').html("")
-                    console.log(data.checklists)
                     data.checklists.map((item, i) => {
                         $('#checklist_body').append(`
                             <tr>
@@ -187,15 +200,16 @@
                                 <td>
                                     <div class="dropdown font-sans-serif position-static"><button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal" type="button" id="order-dropdown-0" data-bs-toggle="dropdown" data-boundary="viewport" aria-haspopup="true" aria-expanded="false"><span class="fas fa-ellipsis-h fs--1"></span></button>
                                         <div class="dropdown-menu dropdown-menu-end border py-0" aria-labelledby="order-dropdown-0">
-                                            <a class="dropdown-item text" href="/admin/checklistchillers/${item.no_checklist_chiller}">Detail Chiller Checklist</a>
+                                            <a class="dropdown-item text" href="/admin/checklistchillers/${item.no_checklist_chiller}">Detail chiller Checklist</a>
                                         </div>
                                     </div>                        
                                 </td>
                             </tr>
                         `)
                     })
+                    
                 }
             })
         }
     </script>
-@endsection
+@endsection 

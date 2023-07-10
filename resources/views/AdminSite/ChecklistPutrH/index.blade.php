@@ -132,6 +132,7 @@
                                 <div class="mb-3 mt-n2">
                                     <label class="mb-1">Nomer Checklist Putr</label>
                                     <select class="form-select form-select-sm" name="no_checklist_putr" required id="no_checklist_putr">
+                                            <option value="" type="reset">All</option>
                                         @foreach ($checklistputrs as $checklistputr)
                                             <option value="{{ $checklistputr->no_checklist_putr }}"> {{ $checklistputr->no_checklist_putr }}</option>
                                         @endforeach
@@ -145,10 +146,10 @@
                                         @endforeach
                                     </select>
                                 </div>                        
+                                <div class="card-footer border-top border-200 py-x1">
+                                    <button type="reset" class="btn btn-primary w-100">Reset</button>
+                                </div>
                             </form>
-                        </div>
-                        <div class="card-footer border-top border-200 py-x1">
-                            <button class="btn btn-primary w-100">Update</button>
                         </div>
                     </div>
                 </div>

@@ -21,11 +21,13 @@ class ChecklistGasHController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $conn = ConnectionDB::setConnection(new ChecklistGasH());
+        $user_id = $request->user()->id;
         
         $data ['checklistgases'] = $conn->get();
+        $data['idusers'] = Login::where('id', $user_id)->get();
         
         return view('AdminSite.ChecklistGasH.index', $data);
     }
@@ -34,9 +36,16 @@ class ChecklistGasHController extends Controller
     {
         $conn = ConnectionDB::setConnection(new ChecklistGasH());
 
-        $data = $conn->where('no_checklist_gas', $request->no_checklist_gas)
-        ->whereBetween('tgl_checklist', [$request->date_from, $request->date_to])
-        ->get();
+        if ($request->date_to == null) {
+            $data = $conn->where('tgl_checklist', $request->date_from);
+        } else {     
+            $data = $conn->whereBetween('tgl_checklist', [$request->date_from, $request->date_to]);
+        }
+
+        if ($request->no_checklist_gas) {
+            $data = $data->where('no_checklist_gas', $request->no_checklist_gas);
+        }
+        $data = $data->get();
 
         return response()->json(['checklists' => $data]);
     }

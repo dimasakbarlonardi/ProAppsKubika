@@ -55,7 +55,7 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="col-6 text-end">
+                                        {{-- <div class="col-6 text-end">
                                             <div class="mb-3">
                                                 <div class="row">
                                                     <div class="col-6">
@@ -92,7 +92,8 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div> --}}
+                                        
                                     </div>
                                     <div class="mt-3 text-end">
                                         <button type="submit" class="btn btn-primary mt-3">Submit</button>

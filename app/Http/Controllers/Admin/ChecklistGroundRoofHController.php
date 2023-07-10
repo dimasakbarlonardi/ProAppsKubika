@@ -21,12 +21,14 @@ class ChecklistGroundRoofHController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $conn = ConnectionDB::setConnection(new ChecklistGroundRoofH());
+        $user_id = $request->user()->id;
         
         $data ['checklistgroundroofs'] = $conn->get();
-        
+        $data['idusers'] = Login::where('id', $user_id)->get();
+
         return view('AdminSite.ChecklistGroundRoofH.index', $data);
     }
 
@@ -34,9 +36,16 @@ class ChecklistGroundRoofHController extends Controller
     {
         $conn = ConnectionDB::setConnection(new ChecklistGroundRoofH());
 
-        $data = $conn->where('no_checklist_tank', $request->no_checklist_tank)
-        ->whereBetween('tgl_checklist', [$request->date_from, $request->date_to])
-        ->get();
+        if ($request->date_to == null) {
+            $data = $conn->where('tgl_checklist', $request->date_from);
+        } else {     
+            $data = $conn->whereBetween('tgl_checklist', [$request->date_from, $request->date_to]);
+        }
+
+        if ($request->no_checklist_tank) {
+            $data = $data->where('no_checklist_tank', $request->no_checklist_tank);
+        }
+        $data = $data->get();
 
         return response()->json(['checklists' => $data]);
     }

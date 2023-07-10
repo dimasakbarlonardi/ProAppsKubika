@@ -22,12 +22,8 @@
                     <td>{{ $tm->tenant->nama_tenant }}</td>
                     <td class="text-end">
                         <div>
-                            <button class="btn btn-link p-0" type="button" data-bs-toggle="modal"
-                                data-bs-target="#edit-member" title="Edit"
-                                data-target-id="{{ $tm->id_tenant_member }}"
-                                onclick="editMemberModal('{{ $tm->id_tenant_member }}')">
-                                <span class="text-500 fas fa-edit"></span>
-                            </button>
+                      
+                            
                             <form action="{{ route('deleteTenantMember', $tm->id_tenant_member) }}" method="post" class="d-inline">
                                 @csrf
                                 <button class="btn btn-link p-0 ms-2" type="submit" data-bs-toggle="tooltip"

@@ -36,10 +36,16 @@ class ChecklistGensetHController extends Controller
     {
         $conn = ConnectionDB::setConnection(new ChecklistGensetH());
 
-        $data = $conn->where('no_checklist_genset', $request->no_checklist_genset)
-        ->whereBetween('tgl_checklist', [$request->date_from, $request->date_to])
-        ->get();
+        if ($request->date_to == null) {
+            $data = $conn->where('tgl_checklist', $request->date_from);
+        } else {     
+            $data = $conn->whereBetween('tgl_checklist', [$request->date_from, $request->date_to]);
+        }
 
+        if ($request->no_checklist_genset) {
+            $data = $data->where('no_checklist_genset', $request->no_checklist_genset);
+        }
+        $data = $data->get();
         return response()->json(['checklists' => $data]);
     }
 

@@ -35,9 +35,16 @@ class ChecklistTemperaturHController extends Controller
     {
         $conn = ConnectionDB::setConnection(new ChecklistTemperaturH());
 
-        $data = $conn->where('no_checklist_suhu', $request->no_checklist_suhu)
-        ->whereBetween('tgl_checklist', [$request->date_from, $request->date_to])
-        ->get();
+        if ($request->date_to == null) {
+            $data = $conn->where('tgl_checklist', $request->date_from);
+        } else {     
+            $data = $conn->whereBetween('tgl_checklist', [$request->date_from, $request->date_to]);
+        }
+
+        if ($request->no_checklist_suhu) {
+            $data = $data->where('no_checklist_suhu', $request->no_checklist_suhu);
+        }
+        $data = $data->get();
 
         return response()->json(['checklists' => $data]);
     }

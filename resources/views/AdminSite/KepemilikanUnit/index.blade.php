@@ -19,7 +19,8 @@
                     <tr>
                         <th class="sort" data-sort="">No</th>
                         <th class="sort" data-sort="">Owner</th>
-                        <th class="sort" data-sort="">Kepemilikan Unit</th>
+                        <th class="sort" data-sort="">Unit</th>
+                        <th class="sort" data-sort="">Status Hunian</th>
                         <th class="sort">Action</th>
                     </tr>
                 </thead>
@@ -27,14 +28,13 @@
                     @foreach ($kepemilikans as $key => $kepemilikan)
                         <tr>
                             <th scope="row">{{ $key + 1 }}</th>
-                            <td>{{ $kepemilikan->nama_pemilik }}</td>
+                            <td>{{ $kepemilikan->Pemilik->nama_pemilik }}</td>
                             <td>
-                                {{ $kepemilikan->Kepemilikan->count() }}
+                                {{ $kepemilikan->unit->nama_unit }}
                             </td>
+                            <td> {{ $kepemilikan->StatusHunianTenant->status_hunian_tenant}}</td>
                             <td>
-                                @if($kepemilikan->Kepemilikan->count() > 0)
-                                    <a href="{{ route('kepemilikans.edit', $kepemilikan->id_pemilik) }}" class="btn btn-sm btn-warning">Edit</a>
-                                @endif  
+                              <a href="{{ route('kepemilikans.show', $kepemilikan->id_pemilik) }}" class="btn btn-sm btn-primary">Detail</a>
                             </td>
                         </tr>
                     @endforeach

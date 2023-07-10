@@ -36,6 +36,7 @@ class Unit extends Model
         'meter_gas_awal',
         'meter_gas_akhir',
         'keterangan',
+        'isempty',
     ];
 
     protected $dates = ['deleted_at'];

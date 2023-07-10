@@ -6,15 +6,14 @@
                 <div class="d-flex align-items-start align-items-sm-center">
                     <div class="ms-1 ms-sm-3">
                         <p class="fw-semi-bold mb-3 mb-sm-2">
-                            <a class="text-primary" href="../../app/support-desk/tickets-preview.html">{{ $unit->nama_unit }}</a>
+                            <a class="text-primary" href="{{route('units.show', $unit->id_unit)}}">{{ $unit->nama_unit }}</a>
                         </p>
                         <div class="row align-items-center gx-0 gy-2">
                             <div class="col-auto me-2">
                                 <h6 class="client mb-0">
                                     <a class="text-800 d-flex align-items-center gap-1"
-                                        href="../../app/support-desk/contact-details.html"><span class="fas fa-user"
-                                            data-fa-transform="shrink-3 up-1"></span><span>Peter
-                                            Gill</span></a>
+                                        href="../../app/support-desk/contact-details.html"><span class="fas fa-city"
+                                            data-fa-transform="shrink-3 up-1"></span><span>{{$unit->tower->nama_tower}}</span></a>
                                 </h6>
                             </div>
                             <div class="col-auto lh-1 me-3">

@@ -1,59 +1,52 @@
-<div class="mb-3">
-    <div class="text-end my-3">
-        <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#tambah-unit">Tambah
-            Unit</button>
+<div class="list bg-light p-x1 d-flex flex-column gap-3" id="card-ticket-body">
+    <div class="mb-3">
+        <div class="text-end my-3">
+            <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#tambah-unit">Tambah
+                Unit</button>
+        </div>
     </div>
-</div>
-<div class="table-responsive scrollbar">
-    <table class="table">
-        <thead>
-            <tr>
-                <th scope="col">Unit</th>
-                <th scope="col">Pemilik</th>
-                <th scope="col">Periode Sewa</th>
-                <th scope="col">Jatuh Tempo IPL</th>
-                <th scope="col">Jatuh Tempo UTIL</th>
-                <th class="text-end" scope="col">Actions</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach ($tenant_units as $key => $tu)
-                <tr>
-                    <td>{{ $tu->unit->nama_unit }}</td>
-                    <td>{{ $tu->pemilik->nama_pemilik }}</td>
-                    <td>
-                        {{-- <b>{{ $tu->id_periode_sewa }}</b> <br> --}}
-                        {{ $tu->tgl_masuk }} - {{ $tu->tgl_keluar }}
-                    </td>
-                    <td>    
-                        {{ $tu->tgl_jatuh_tempo_ipl }}
-                    </td>
-                    <td>
-                        {{ $tu->tgl_jatuh_tempo_util }}
-                    </td>
-                    <td class="text-end">
-                        <div>
-                            <button class="btn btn-link p-0" type="button" data-bs-toggle="modal"
-                                data-bs-target="#edit-unit" title="Edit" data-target-id="{{ $tu->id_tenant_unit }}"
-                                onclick="editUnitModal('{{ $tu->id_tenant_unit }}')"><span
-                                    class="text-500 fas fa-edit"></span>
-                            </button>
-                            <form action="{{ route('deleteTenantUnit', $tu->id_tenant_unit) }}" method="post"
-                                class="d-inline">
-                                @csrf
-                                <button class="btn btn-link p-0 ms-2" type="submit" data-bs-toggle="tooltip"
-                                    data-bs-placement="top" title="Delete"
-                                    onClick="return confirm('Are you absolutely sure you want to delete?')"><span
-                                        class="text-500 fas fa-trash-alt"></span>
-                                </button>
-                            </form>
+    <div class="row">
+        @foreach ($tenant_units as $key => $tu)
+            <div class="col-3">
+                <div
+                    class="bg-white dark__bg-1100 d-md-flex d-xl-inline-block d-xxl-flex align-items-center p-x1 rounded-3 shadow-sm card-view-height">
+                    <div class="d-flex align-items-start align-items-sm-center">
+                        <a class="d-none d-sm-block" href="../../app/support-desk/contact-details.html">
+                            <div class="avatar avatar-xl avatar-3xl">
+                                <img src="{{ $tenant->profile_picture ? '/' . $tenant->profile_picture : '/assets/img/team/3-thumb.png' }}" alt="akmal"
+                                    class="avatar-image" />
+                            </div>
+                        </a>
+                        <div class="ms-1 ms-sm-3">
+                            <p class="fw-semi-bold mb-3 mb-sm-2">
+                                <a class="text-primary">
+                                    Tenant Unit
+                                </a>
+                            </p>
+                            <p class="fw-semi-bold mb-3 mb-sm-2">
+                                <a class="text-black" href="{{ route('tenantunits.show',$tu->id_tenant_unit ) }}">
+                                    {{ $tu->unit->nama_unit }}
+                                </a>
+                            </p>
+                            <div class="row align-items-center gx-0 gy-2">
+                                <div class="col-auto me-2">
+                                    <h6 class="client mb-0">
+                                        <a class="text-800 d-flex align-items-center gap-1"><span
+                                                class="fas fa-user"
+                                                data-fa-transform="shrink-3 up-1"></span><span>{{ $tu->Owner->nama_pemilik }}</span></a>
+                                    </h6>
+                                </div>
+                            </div>
+                            <hr>
+                            {{-- <a href="{{ route('getTenantUnit', $tenant->id_tenant) }}"
+                                class="btn btn-primary btn-sm">Tenant Unit</a> --}}
                         </div>
-                    </td>
-                </tr>
-            @endforeach
-        </tbody>
-    </table>
-</div>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    </div>
+</div> 
 
 <div class="modal fade" id="tambah-unit" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 800px">

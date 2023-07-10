@@ -36,9 +36,16 @@ class ChecklistFloorHController extends Controller
     {
         $conn = ConnectionDB::setConnection(new ChecklistFloorH());
 
-        $data = $conn->where('no_checklist_floor', $request->no_checklist_floor)
-        ->whereBetween('tgl_checklist', [$request->date_from, $request->date_to])
-        ->get();
+        if ($request->date_to == null) {
+            $data = $conn->where('tgl_checklist', $request->date_from);
+        } else {     
+            $data = $conn->whereBetween('tgl_checklist', [$request->date_from, $request->date_to]);
+        }
+
+        if ($request->no_checklist_floor) {
+            $data = $data->where('no_checklist_floor', $request->no_checklist_floor);
+        }
+        $data = $data->get();
 
         return response()->json(['checklists' => $data]);
     }

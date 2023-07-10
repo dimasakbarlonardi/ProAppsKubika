@@ -77,10 +77,10 @@
                                                 <div class="col-auto me-2">
                                                     <h6 class="client mb-0">
                                                         <a class="text-800 d-flex align-items-center gap-1"
-                                                            href="../../app/support-desk/contact-details.html"><span
-                                                                class="fas fa-user"
-                                                                data-fa-transform="shrink-3 up-1"></span><span>Peter
-                                                                Gill</span></a>
+                                                            href="../../app/support-desk/contact-details.html">
+                                                            @foreach ($idusers as $iduser)
+                                                            <span class="fas fa-user" data-fa-transform="shrink-3 up-1"></span><span>{{$iduser->name}} </span></a>
+                                                            @endforeach
                                                     </h6>
                                                 </div>
                                             </div>

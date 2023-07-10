@@ -67,12 +67,15 @@ use App\Http\Controllers\Admin\KepemilikanUnitController;
 use App\Http\Controllers\Admin\LiftController;
 use App\Http\Controllers\Admin\MemberTenantController;
 use App\Http\Controllers\Admin\NotificationController;
+use App\Http\Controllers\Admin\OffBoardingKepemilikanUnitController;
+use App\Http\Controllers\Admin\OffBoardingTenantUnitController;
 use App\Http\Controllers\Admin\OfficeManagementController;
 use App\Http\Controllers\Admin\OwnerHController;
 use App\Http\Controllers\Admin\PenempatanController;
 use App\Http\Controllers\Admin\PerhitDendaController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\PeriodeSewaController;
+use App\Http\Controllers\Admin\PerubahanUnitController;
 use App\Http\Controllers\Admin\ReminderLetterController;
 use App\Http\Controllers\Admin\RoomController;
 use App\Http\Controllers\Admin\RuangReservationController;
@@ -162,9 +165,8 @@ Route::prefix('admin')->group(function () {
         Route::get('get-vehicle/by-unit/{id}', [TenantUnitController::class, 'getVehicleUnit']);
         Route::get('get-vehicle/by-unit/{id}', [TenantUnitController::class, 'getVehicleUnit']);
 
-        Route::get('/get/tenantunits-edit/{id}', [TenantUnitController::class, 'editTenantUnit']);
+        Route::get('/tenantunits/{id}', [TenantUnitController::class, 'show'])->name('tenantunits.show');
         Route::post('/store/tenantunits', [TenantUnitController::class, 'storeTenantUnit'])->name('storeTenantUnit');
-        Route::post('/update/tenantunits/{id}', [TenantUnitController::class, 'updateTenantUnit'])->name('updateTenantUnit');
         Route::post('/store/tenantunit', [TenantUnitController::class, 'storeTenantUnit'])->name('storeTenantUnit');
         Route::post('/delete/tenantunit/{id}', [TenantUnitController::class, 'deleteTenantUnit'])->name('deleteTenantUnit');
 
@@ -247,6 +249,8 @@ Route::prefix('admin')->group(function () {
         Route::resource('kepemilikans', KepemilikanUnitController::class);
         Route::get('kepemilikan-unit/{id}', [KepemilikanUnitController::class, 'notKepemilikanUnit'])->name('create-kepemilikan-unit');
         Route::get('unit-by-id/{id}', [KepemilikanUnitController::class, 'unitByID'])->name('unit-by-id');
+        Route::get('/unit-filter', [KepemilikanUnitController::class, 'unitdetail']);
+        Route::post('kepemilikans', [KepemilikanUnitController::class, 'destroy'])->name('destroy');
 
         // CRUD Karyawan
         Route::resource('karyawans', KaryawanController::class);
@@ -275,181 +279,205 @@ Route::prefix('admin')->group(function () {
         // CRUD Jenis Request
         Route::resource('jenisrequests', JenisRequestController::class);
 
-         // CRUD Jenis Request
-         Route::resource('jenisrequests', JenisRequestController::class);
+        // CRUD Jenis Request
+        Route::resource('jenisrequests', JenisRequestController::class);
 
-         // CRUD Ruang Reservation
-         Route::resource('ruangreservations', RuangReservationController::class);
+        // CRUD Ruang Reservation
+        Route::resource('ruangreservations', RuangReservationController::class);
 
-         // CRUD Jenis Acara
-         Route::resource('jenisacaras', JenisAcaraController::class);
+        // CRUD Jenis Acara
+        Route::resource('jenisacaras', JenisAcaraController::class);
 
-         // CRUD Status Karyawan
-         Route::resource('statuskaryawans', StatusKaryawanController::class);
+        // CRUD Status Karyawan
+        Route::resource('statuskaryawans', StatusKaryawanController::class);
 
-          // CRUD Status Aktif Karyawan
-          Route::resource('statusaktifkaryawans', StatusAktifKaryawanController::class);
+        // CRUD Status Aktif Karyawan
+        Route::resource('statusaktifkaryawans', StatusAktifKaryawanController::class);
 
-          // CRUD Type Reservation
-          Route::resource('typereservations', TypeReservationController::class);
+        // CRUD Type Reservation
+        Route::resource('typereservations', TypeReservationController::class);
 
-          // CRUD Work Priority
-          Route::resource('workprioritys', WorkPriorityController::class);
+        // CRUD Work Priority
+        Route::resource('workprioritys', WorkPriorityController::class);
 
-          // CRUD BayarNon
-          Route::resource('bayarnons', BayarnonController::class);
-          
-          // CRUD IPLType
-          Route::resource('ipltypes', IPLTypeController::class);
+        // CRUD BayarNon
+        Route::resource('bayarnons', BayarnonController::class);
 
-          // CRUD Utility
-          Route::resource('utilitys', UtilityController::class);
+        // CRUD IPLType
+        Route::resource('ipltypes', IPLTypeController::class);
 
-          // CRUD JenisDenda
-          Route::resource('jenisdendas', JenisDendaController::class);
-         
-          //CRUD Perhit Denda
-          Route::resource('perhitdendas', PerhitDendaController::class);
+        // CRUD Utility
+        Route::resource('utilitys', UtilityController::class);
 
-          //CRUD Reminder Letter
-          Route::resource('reminders', ReminderLetterController::class);
+        // CRUD JenisDenda
+        Route::resource('jenisdendas', JenisDendaController::class);
 
-          //CRUD Notification
-          Route::resource('notifications', NotificationController::class);
+        //CRUD Perhit Denda
+        Route::resource('perhitdendas', PerhitDendaController::class);
 
-          //CRUD Room
-          Route::resource('rooms', RoomController::class);
+        //CRUD Reminder Letter
+        Route::resource('reminders', ReminderLetterController::class);
 
-          //CRUD Checklist AHU H
-          Route::resource('checklistahus', ChecklistAhuHController::class);
-          Route::get('/checklist-filter-ahu', [ChecklistAhuHController::class, 'filterByNoChecklist']);
+        //CRUD Notification
+        Route::resource('notifications', NotificationController::class);
 
-          //CRUD Checklist AHU Detail
-          Route::resource('ahudetails', ChecklistAhuDetailController::class);
+        //CRUD Room
+        Route::resource('rooms', RoomController::class);
 
-          //CRUD Engeneering AHU 
-          Route::resource('engahus', EngAHUController::class);
+        //CRUD Checklist AHU H
+        Route::resource('checklistahus', ChecklistAhuHController::class);
+        Route::get('/checklist-filter-ahu', [ChecklistAhuHController::class, 'filterByNoChecklist']);
 
-          //CRUD Engeneering Chiller 
-          Route::resource('engchillers', EngChillerController::class);
+        //CRUD Checklist AHU Detail
+        Route::resource('ahudetails', ChecklistAhuDetailController::class);
 
-          //CRUD Engeneering Listrik 
-          Route::resource('englistriks', EngListrikController::class);
-          
-          //CRUD Engeneering PAM 
-          Route::resource('engpams', EngPamController::class);
+        //CRUD Engeneering AHU 
+        Route::resource('engahus', EngAHUController::class);
 
-          //CRUD Engeneering DeepWheel 
-          Route::resource('engdeeps', EngDeepWheelController::class);
+        //CRUD Engeneering Chiller 
+        Route::resource('engchillers', EngChillerController::class);
 
-          //CRUD Engeneering PompaSumpit 
-          Route::resource('engpompas', EngPompasumpitController::class);
+        //CRUD Engeneering Listrik 
+        Route::resource('englistriks', EngListrikController::class);
 
-          //CRUD Engeneering GroundRoffTank 
-          Route::resource('enggrounds', EngGroundController::class);
+        //CRUD Engeneering PAM 
+        Route::resource('engpams', EngPamController::class);
 
-          //CRUD Engeneering Pemadam 
-          Route::resource('engpemadams', EngPemadamController::class);
+        //CRUD Engeneering DeepWheel 
+        Route::resource('engdeeps', EngDeepWheelController::class);
 
-          //CRUD Engeneering Putr 
-          Route::resource('engputrs', EngPutrController::class);
+        //CRUD Engeneering PompaSumpit 
+        Route::resource('engpompas', EngPompasumpitController::class);
 
-          //CRUD Engeneering Gas 
-          Route::resource('enggases', EngGasController::class);
+        //CRUD Engeneering GroundRoffTank 
+        Route::resource('enggrounds', EngGroundController::class);
 
-          //CRUD HK Toilet 
-          Route::resource('toilets', ToiletController::class);
+        //CRUD Engeneering Pemadam 
+        Route::resource('engpemadams', EngPemadamController::class);
 
-          //CRUD HK OfficeManagemet 
-          Route::resource('officemanagements', OfficeManagementController::class);
-          
-          //CRUD HK Lift 
-          Route::resource('lifts', LiftController::class);
+        //CRUD Engeneering Putr 
+        Route::resource('engputrs', EngPutrController::class);
 
-          //CRUD HK Floor 
-          Route::resource('hkfloors', HKFloorController::class);
+        //CRUD Engeneering Gas 
+        Route::resource('enggases', EngGasController::class);
 
-          //CRUD HK Koridor 
-          Route::resource('hkkoridors', HKKoridorController::class);
+        //CRUD HK Toilet 
+        Route::resource('toilets', ToiletController::class);
 
-          //CRUD HK TanggaDarurat 
-          Route::resource('hktanggadarurats', HKTanggaDaruratController::class);
-          
-          //CRUD Finn Monthly AR Tenant 
-          Route::resource('monthlyartenants', MonthlyArTenant::class);
+        //CRUD HK OfficeManagemet 
+        Route::resource('officemanagements', OfficeManagementController::class);
 
-          //CRUD Checklist Chiller 
-          Route::resource('checklistchillers', ChecklistChillerHController::class);
-          Route::get('/checklist-filter-chiller ', [ChecklistChillerHController::class, 'filterByNoChecklist']);
+        //CRUD HK Lift 
+        Route::resource('lifts', LiftController::class);
 
-          //CRUD Checklist Chiller 
-          Route::resource('checklistchillers', ChecklistChillerHController::class);
+        //CRUD HK Floor 
+        Route::resource('hkfloors', HKFloorController::class);
 
-          //CRUD Checklist Listrik 
-          Route::resource('checklistlistriks', ChecklistListrikHController::class);
-          Route::get('/checklist-filter-listrik', [ChecklistListrikHController::class, 'filterByNoChecklist']);
+        //CRUD HK Koridor 
+        Route::resource('hkkoridors', HKKoridorController::class);
 
-          //CRUD Checklist Pompa Sumpit 
-          Route::resource('checklistpompasumpits', ChecklistPompaSumpitHController::class);
-          Route::get('/checklist-filter-pompasumpit', [ChecklistPompaSumpitHController::class, 'filterByNoChecklist']);
+        //CRUD HK TanggaDarurat 
+        Route::resource('hktanggadarurats', HKTanggaDaruratController::class);
 
-          //CRUD Checklist GroundRoof 
-          Route::resource('checklistgroundroofs', ChecklistGroundRoofHController::class);
-          Route::get('/checklist-filter-groundroof', [ChecklistGroundRoofHController::class, 'filterByNoChecklist']);
+        //CRUD Finn Monthly AR Tenant 
+        Route::resource('monthlyartenants', MonthlyArTenant::class);
 
-          //CRUD Checklist Gas 
-          Route::resource('checklistgases', ChecklistGasHController::class);
-          Route::get('/checklist-filter-gas', [ChecklistGasHController::class, 'filterByNoChecklist']);
+        //CRUD Checklist Chiller 
+        Route::resource('checklistchillers', ChecklistChillerHController::class);
+        Route::get('/checklist-filter-chiller ', [ChecklistChillerHController::class, 'filterByNoChecklist']);
 
-          //CRUD Checklist Genset 
-          Route::resource('checklistgensets', ChecklistGensetHController::class);
-          Route::get('/checklist-filter-genset', [ChecklistGensetHController::class, 'filterByNoChecklist']);
+        //CRUD Checklist Chiller 
+        Route::resource('checklistchillers', ChecklistChillerHController::class);
 
-          //CRUD Checklist Pemadam 
-          Route::resource('checklistpemadams', ChecklistPemadamHController::class);
-          Route::get('/checklist-filter-pemadam', [ChecklistPemadamHController::class, 'filterByNoChecklist']);
+        //CRUD Checklist Listrik 
+        Route::resource('checklistlistriks', ChecklistListrikHController::class);
+        Route::get('/checklist-filter-listrik', [ChecklistListrikHController::class, 'filterByNoChecklist']);
 
-          //CRUD Checklist PUTR 
-          Route::resource('checklistputrs', ChecklistPutrHController::class);
-          Route::get('/checklist-filter-putr', [ChecklistPutrHController::class, 'filterByNoChecklist']);
+        //CRUD Checklist Pompa Sumpit 
+        Route::resource('checklistpompasumpits', ChecklistPompaSumpitHController::class);
+        Route::get('/checklist-filter-pompasumpit', [ChecklistPompaSumpitHController::class, 'filterByNoChecklist']);
 
-          //CRUD Checklist Solar 
-          Route::resource('checklistsolars', ChecklistSolarHController::class);
-          Route::get('/checklist-filter-solar', [ChecklistSolarHController::class, 'filterByNoChecklist']);
+        //CRUD Checklist GroundRoof 
+        Route::resource('checklistgroundroofs', ChecklistGroundRoofHController::class);
+        Route::get('/checklist-filter-groundroof', [ChecklistGroundRoofHController::class, 'filterByNoChecklist']);
 
-          //CRUD Checklist Temperatur 
-          Route::resource('checklisttemperaturs', ChecklistTemperaturHController::class);
-          Route::get('/checklist-filter-temperatur', [ChecklistTemperaturHController::class, 'filterByNoChecklist']);
+        //CRUD Checklist Gas 
+        Route::resource('checklistgases', ChecklistGasHController::class);
+        Route::get('/checklist-filter-gas', [ChecklistGasHController::class, 'filterByNoChecklist']);
 
-          //CRUD Checklist Toilet 
-          Route::resource('checklisttoilets', ChecklistToiletHController::class);
-          Route::get('/checklist-filter-toilet', [ChecklistToiletHController::class, 'filterByNoChecklist']);
+        //CRUD Checklist Genset 
+        Route::resource('checklistgensets', ChecklistGensetHController::class);
+        Route::get('/checklist-filter-genset', [ChecklistGensetHController::class, 'filterByNoChecklist']);
 
-          //CRUD Checklist Office Management 
-          Route::resource('checklistoffices', ChecklistOfficeManagementHController::class);
-          Route::get('/checklist-filter-office_management', [ChecklistOfficeManagementHController::class, 'filterByNoChecklist']);
+        //CRUD Checklist Pemadam 
+        Route::resource('checklistpemadams', ChecklistPemadamHController::class);
+        Route::get('/checklist-filter-pemadam', [ChecklistPemadamHController::class, 'filterByNoChecklist']);
 
-          //CRUD Checklist Lift 
-          Route::resource('checklistlifts', ChecklistLiftHController::class);
-          Route::get('/checklist-filter-lift', [ChecklistLiftHController::class, 'filterByNoChecklist']);
+        //CRUD Checklist PUTR 
+        Route::resource('checklistputrs', ChecklistPutrHController::class);
+        Route::get('/checklist-filter-putr', [ChecklistPutrHController::class, 'filterByNoChecklist']);
 
-          //CRUD Checklist Floor 
-          Route::resource('checklistfloors', ChecklistFloorHController::class);
-          Route::get('/checklist-filter-floor', [ChecklistFloorHController::class, 'filterByNoChecklist']);
+        //CRUD Checklist Solar 
+        Route::resource('checklistsolars', ChecklistSolarHController::class);
+        Route::get('/checklist-filter-solar', [ChecklistSolarHController::class, 'filterByNoChecklist']);
 
-          //CRUD Checklist Tangga Darurat 
-          Route::resource('checklisttanggadarurats', ChecklistTanggaDaruratHController::class);
-          Route::get('/checklist-filter-tangga_darurat', [ChecklistTanggaDaruratHController::class, 'filterByNoChecklist']);
+        //CRUD Checklist Temperatur 
+        Route::resource('checklisttemperaturs', ChecklistTemperaturHController::class);
+        Route::get('/checklist-filter-temperatur', [ChecklistTemperaturHController::class, 'filterByNoChecklist']);
 
-          //CRUD Checklist Koridor 
-          Route::resource('checklistkoridors', ChecklistKoridorHController::class);
-          Route::get('/checklist-filter-koridor', [ChecklistKoridorHController::class, 'filterByNoChecklist']);
- 
+        //CRUD Checklist Toilet 
+        Route::resource('checklisttoilets', ChecklistToiletHController::class);
+        Route::get('/checklist-filter-toilet', [ChecklistToiletHController::class, 'filterByNoChecklist']);
+
+        //CRUD Checklist Office Management 
+        Route::resource('checklistoffices', ChecklistOfficeManagementHController::class);
+        Route::get('/checklist-filter-office_management', [ChecklistOfficeManagementHController::class, 'filterByNoChecklist']);
+
+        //CRUD Checklist Lift 
+        Route::resource('checklistlifts', ChecklistLiftHController::class);
+        Route::get('/checklist-filter-lift', [ChecklistLiftHController::class, 'filterByNoChecklist']);
+
+        //CRUD Checklist Floor 
+        Route::resource('checklistfloors', ChecklistFloorHController::class);
+        Route::get('/checklist-filter-floor', [ChecklistFloorHController::class, 'filterByNoChecklist']);
+
+        //CRUD Checklist Tangga Darurat 
+        Route::resource('checklisttanggadarurats', ChecklistTanggaDaruratHController::class);
+        Route::get('/checklist-filter-tangga_darurat', [ChecklistTanggaDaruratHController::class, 'filterByNoChecklist']);
+
+        //CRUD Checklist Koridor 
+        Route::resource('checklistkoridors', ChecklistKoridorHController::class);
+        Route::get('/checklist-filter-koridor', [ChecklistKoridorHController::class, 'filterByNoChecklist']);
+
         // Akses form for user
         Route::get('/akses-form-user/{id}', [RoleController::class, 'aksesForm'])->name('akses-form');
         Route::post('/akses-form-user/{id}', [RoleController::class, 'storeAksesForm'])->name('akses-form');
 
+        //CRUD OffBoarding Tenant Unit 
+        Route::resource('offtenantunits', OffBoardingTenantUnitController::class);
+
+        //CRUD OffBoarding Kepemilikan Unit 
+        Route::resource('offkepemilkanunits', OffBoardingKepemilikanUnitController::class);
+
+        Route::get('/get-jatuh-tempo', [OffBoardingTenantUnitController::class, 'jatuhtempo']);
+
         Route::get('/get-nav/{id}', [RoleController::class, 'getNavByRole'])->name('getNav');
+
+        // CRUD PerubahanUnit
+        Route::resource('perubahanunits', PerubahanUnitController::class);
+        Route::get('/get/perpanjangunits-edit/{id}', [PerubahanUnitController::class, 'edit'])->name('edittenantunit');
+        Route::get('/get/kepemilikanunits-edit/{id}', [PerubahanUnitController::class, 'editKU'])->name('editkepemilikanunit');
+        Route::get('/get/tidakperpanjangunits-edit/{id}', [PerubahanUnitController::class, 'editTPU'])->name('edittidakperpanjang');
+        Route::get('/get/perubahanunits-edit/{id}', [PerubahanUnitController::class, 'editPerubahan'])->name('editperubahanunit');
+
+        Route::get('/tenantunits-show/{id}', [PerubahanUnitController::class, 'show'])->name('tenant_units');
+        Route::get('/kepemilikanunits-show/{id}', [PerubahanUnitController::class, 'showKU'])->name('kepemilikans');
+        Route::get('/tidakperpanjangunit-show/{id}', [PerubahanUnitController::class, 'showTPU'])->name('tidakperpanjang');
+        Route::get('/perubahantenantunits-show/{id}', [PerubahanUnitController::class, 'showPerubahan'])->name('perubahanunit');
+
+        Route::post('/update/tenantunits-perpanjangan/{id}', [PerubahanUnitController::class, 'updateTenantUnit'])->name('updateTenantUnit');
+        Route::post('/update/kepemilikanunits-pindah/{id}', [PerubahanUnitController::class, 'updateKU'])->name('updateKU');
+        Route::post('/update/tenantunits-perubahan/{id}', [PerubahanUnitController::class, 'updatePerubahanUnit'])->name('updatePerubahanUnit');
     });
 });
 

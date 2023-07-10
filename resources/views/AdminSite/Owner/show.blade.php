@@ -17,13 +17,13 @@
                             <input type="text" value="Park Royale" class="form-control" readonly>
                         </div>
                        <div class="col-6">
-                           <label class="form-label">ID User</label>
+                           <label class="form-label">User</label>
                            @foreach ($idusers as $iduser)
                            <input type="text" value="{{ $iduser->name}}" class="form-control" readonly>
                            @endforeach
                        </div>
                         <div class="col-6">
-                            <label class="form-label">ID Card Pemilik</label>
+                            <label class="form-label">Card Pemilik</label>
                             <input type="text" value="{{ $owners->IdCard->card_id_name }}" class="form-control" readonly>
                         </div>
                         <div class="col-6">
@@ -48,10 +48,9 @@
                             <label class="form-label">Kewarganegaraan</label>
                             <input type="text"  value="{{$owners->kewarganegaraan}}" class="form-control" readonly>
                         </div>
-         
                         <div class="col-6">
                             <label class="form-label">Masa Berlaku ID</label>
-                            <input type="text" value="{{$owners->masa_berlaku_id}}" class="form-control" readonly>
+                            <input type="text" value="{{\Carbon\Carbon::parse($owners->masa_berlaku_id)->format('d-M-Y')}}" class="form-control" readonly>
                         </div>
                         <div class="col-6">
                             <label class="form-label">Alamat KTP Pemilik</label>
@@ -75,15 +74,13 @@
                             <label class="form-label">No Telp Pemilik </label>
                             <input type="text" value="{{$owners->no_telp_pemilik}}" class="form-control" readonly>
                         </div>
-      
-                        
                         <div class="col-6">
                             <label class="form-label">Tanggal Masuk</label>
-                            <input type="text" value="{{$owners->tgl_masuk}}" class="form-control" readonly>
+                            <input type="text" value="{{\Carbon\Carbon::parse($owners->tgl_masuk)->format('d-M-Y')}}" class="form-control" readonly>
                         </div>
                         <div class="col-6">
                             <label class="form-label">Tanggal Keluar</label>
-                            <input type="text" value="{{$owners->tgl_keluar}}" class="form-control" readonly>
+                            <input type="text" value="{{\Carbon\Carbon::parse($owners->tgl_keluar)->format('d-M-Y')}}" class="form-control" readonly>
                         </div>
              
                     
@@ -98,20 +95,20 @@
                         </div>
                         <div class="col-6">
                             <label class="form-label">Tanggal Lahir</label>
-                            <input type="text" value="{{$owners->tgl_lahir}}" class="form-control" readonly>
+                            <input type="text" value="{{\Carbon\Carbon::parse($owners->tgl_lahir)->format('d-M-Y')}}" class="form-control" readonly>
                         </div>
                         
                         <div class="col-6">
-                            <label class="form-label">ID Jenis Kelamin</label>
+                            <label class="form-label">Jenis Kelamin</label>
                             <input type="text" value="{{ $owners->jeniskelamin->jenis_kelamin }}" class="form-control" readonly>
                         </div>
                         <div class="col-6">
-                            <label class="form-label">ID Agama</label>
+                            <label class="form-label">Agama</label>
                             <input type="text" value="{{ $owners->agama->nama_agama }}" class="form-control" readonly>
                         </div>
                         
                         <div class="col-6">
-                            <label class="form-label">ID Status Kawin</label>
+                            <label class="form-label">Status Kawin</label>
                             <input type="text" value="{{$owners->statuskawin->status_kawin }}" class="form-control" readonly>
                         </div>
                         <div class="col-6">
@@ -185,12 +182,7 @@
 
             {{-- </form> --}}
                         <a href="{{ route('owners.edit', $owners->id_pemilik) }}" class="btn btn-sm btn-warning">Edit</a>
-                            <form class="d-inline" action="{{ route('owners.destroy', $owners->id_pemilik) }}" method="post">
-                                @method('DELETE')
-                                @csrf
-                                <button type="submit" class="btn btn-danger btn-sm"
-                                    onclick="return confirm('are you sure?')">Hapus</button>
-                            </form>
+                        <a class="btn btn-sm btn-danger" href="{{ route('owners.index')}}">Back</a>
         </div>
     </div>
 @endsection

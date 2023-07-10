@@ -7,6 +7,7 @@ use App\Models\ChecklistChillerH;
 use App\Helpers\ConnectionDB;
 use App\Models\ChecklistChillerDetail;
 use App\Models\EngChiller;
+use App\Models\Login;
 use App\Models\Room;
 use Carbon\Carbon;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -23,9 +24,11 @@ class ChecklistChillerHController extends Controller
     public function index(Request $request)
     {
         $conn = ConnectionDB::setConnection(new ChecklistChillerH());
+        $user_id = $request->user()->id;
         
         $data ['checklistchillers'] = $conn->get();
-        
+        $data ['idusers'] = Login::where('id', $user_id)->get();
+
         return view('AdminSite.ChecklistChillerH.index', $data);
 
     }
@@ -34,8 +37,16 @@ class ChecklistChillerHController extends Controller
     {
         $conn = ConnectionDB::setConnection(new ChecklistChillerH());
 
-        $data = $conn->where('no_checklist_chiller', $request->no_checklist_chiller)->get();
-        $data = $conn->where('tgl_checklist', $request->tgl_checklist)->get();
+        if ($request->date_to == null) {
+            $data = $conn->where('tgl_checklist', $request->date_from);
+        } else {     
+            $data = $conn->whereBetween('tgl_checklist', [$request->date_from, $request->date_to]);
+        }
+
+        if ($request->no_checklist_chiller) {
+            $data = $data->where('no_checklist_chiller', $request->no_checklist_chiller);
+        }
+        $data = $data->get();
 
         return response()->json(['checklists' => $data]);
     }
@@ -128,13 +139,15 @@ class ChecklistChillerHController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request,$id)
     {
         $conn = ConnectionDB::setConnection(new ChecklistChillerH());
         $conndetail = ConnectionDB::setConnection(new ChecklistChillerDetail());
+        $user_id = $request->user()->id;
 
         $data['checklistchiller'] = $conn->where('no_checklist_chiller', $id)->first();
         $data['chillerdetail'] = $conndetail->where('no_checklist_chiller', $id)->first();
+        $data['idusers'] = Login::where('id', $user_id)->get();
         
         return view('AdminSite.ChecklistChillerH.show',$data);
     }

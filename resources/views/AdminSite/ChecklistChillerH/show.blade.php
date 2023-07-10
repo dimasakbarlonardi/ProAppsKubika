@@ -28,6 +28,11 @@
                 <div class=" col-6 mb-3">
                     <label class="form-label"><b>Time Checklist </b> : {{$checklistchiller->time_checklist}}</label>
                 </div>
+                <div class=" col-6 mb-3">
+                    @foreach ($idusers as $iduser)
+                    <label class="form-label"><b>User </b> : {{ $iduser->name}}</label>
+                    @endforeach
+                </div>
 
                 <div class="mt-3" id="biaya">
                     <h6><b>DETAIL CHECKLIS Chiller</b></h6>
@@ -49,7 +54,7 @@
                               <tr>
                                 <td class="no_checklist_ahu">{{ $chillerdetail->no_checklist_chiller }}</td>
                                 <td class="in_out">{{ $chillerdetail->in_out}}</td>
-                                <td class="check_point">{{ $chillerdetail->checkpoint }}</td>
+                                <td class="check_point">{{ $chillerdetail->check_point }}</td>
                                 <td class="keterangan">{{ $chillerdetail->keterangan }}</td>
                               </tr>
                             </tbody>

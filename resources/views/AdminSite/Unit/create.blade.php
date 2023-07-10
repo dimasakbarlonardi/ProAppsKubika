@@ -27,10 +27,6 @@
                                 @endforeach
                             </select>
                         </div>
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <div class="row">
                         <div class="col-6">
                             <label class="form-label">Lantai</label>
                             <select class="form-control" name="id_lantai" required>
@@ -49,14 +45,10 @@
                                 @endforeach
                             </select>
                         </div>
-                    </div>
-                </div>
                 <div class="mb-3">
                     <label class="form-label">Nama Unit</label>
                     <input type="text" name="nama_unit" class="form-control" required>
                 </div>
-                <div class="mb-3">
-                    <div class="row">
                         <div class="col-6">
                             <label class="form-label">Luas Unit</label>
                             <input type="text" name="luas_unit" class="form-control" required>
@@ -65,10 +57,6 @@
                             <label class="form-label">Barcode Unit</label>
                             <input type="text" name="barcode_unit" class="form-control" required>
                         </div>
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <div class="row">
                         <div class="col-6">
                             <label class="form-label">Barcode Meter Air</label>
                             <input type="text" name="barcode_meter_air" class="form-control" required>
@@ -77,10 +65,6 @@
                             <label class="form-label">Barcode Meter Listrik</label>
                             <input type="text" name="barcode_meter_listrik" class="form-control" required>
                         </div>
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <div class="row">
                         <div class="col-6">
                             <label class="form-label">Barcode Meter Gas</label>
                             <input type="text" name="barcode_meter_gas" class="form-control" required>
@@ -89,10 +73,7 @@
                             <label class="form-label">No Meter Air</label>
                             <input type="text" name="no_meter_air" class="form-control" required>
                         </div>
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <div class="row">
+               
                         <div class="col-6">
                             <label class="form-label">No Meter Listrik</label>
                             <input type="text" name="no_meter_listrik" class="form-control" required>
@@ -101,10 +82,6 @@
                             <label class="form-label">No Meter Gas</label>
                             <input type="text" name="no_meter_gas" class="form-control" required>
                         </div>
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <div class="row">
                         <div class="col-6">
                             <label class="form-label">Meter Air Awal</label>
                             <input type="text" name="meter_air_awal" class="form-control" required>
@@ -113,10 +90,6 @@
                             <label class="form-label">Meter Air Akhir</label>
                             <input type="text" name="meter_air_akhir" class="form-control" required>
                         </div>
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <div class="row">
                         <div class="col-6">
                             <label class="form-label">Meter Listrik Awal</label>
                             <input type="text" name="meter_listrik_awal" class="form-control" required>
@@ -125,10 +98,6 @@
                             <label class="form-label">Meter Listrik Akhir</label>
                             <input type="text" name="meter_listrik_akhir" class="form-control" required>
                         </div>
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <div class="row">
                         <div class="col-6">
                             <label class="form-label">Meter Gas Awal</label>
                             <input type="text" name="meter_gas_awal" class="form-control" required>
@@ -137,14 +106,14 @@
                             <label class="form-label">Meter Gas Akhir</label>
                             <input type="text" name="meter_gas_akhir" class="form-control" required>
                         </div>
-                    </div>
-                </div>
-                <div class="mb-3">
+                 <div class="col-6">
                     <label class="form-label">Keterangan</label>
                     <input type="text" name="keterangan" class="form-control">
                 </div>
                 <div class="text-end mt-5">
                     <button type="submit" class="btn btn-primary">Submit</button>
+                </div>
+                    </div>
                 </div>
             </form>
         </div>

@@ -1,0 +1,74 @@
+<div class="table-responsive scrollbar">
+    <table class="table" id="table-tidakperpanjang">
+        <thead>
+            <tr>
+                <th scope="col">dimas</th>
+                <th scope="col">akbar</th>
+                <th scope="col">lonardi</th>
+                <th scope="col">Periode Sewa</th>
+                <th scope="col">Sewa Ke</th>
+                <th scope="col">Jatuh Tempo IPL</th>
+                <th scope="col">Jatuh Tempo UTIL</th>
+                <th class="text-end" scope="col">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($tenant_units as $key => $tu)
+                <tr>
+                    <td>{{ $tu->unit->nama_unit }}</td>
+                    <td>{{ $tu->Owner->nama_pemilik }}</td>
+                    <td>{{ $tu->tenant->nama_tenant}}</td>
+                    <td>
+                        {{ \Carbon\Carbon::parse($tu->tgl_masuk)->format(' d-M-Y') }} -
+                        {{ \Carbon\Carbon::parse($tu->tgl_keluar)->format(' d-M-Y') }}
+                    </td>
+                    <td>{{ $tu->sewa_ke}}</td>
+                    <td>
+                        {{ \Carbon\Carbon::parse($tu->tgl_jatuh_tempo_ipl)->format(' d-M-Y') }}
+                    </td>
+                    <td>
+                        {{ \Carbon\Carbon::parse($tu->tgl_jatuh_tempo_util)->format(' d-M-Y') }}
+                    </td>
+                    <td class="text-center">
+                        <div>
+                            <a class="btn btn-sm btn-warning" href="{{ route('tidakperpanjang', $tu->id_tenant_unit)}}">Detail</a>
+                        </div>
+                    </td>
+                </tr>
+                @endforeach
+        </tbody>
+    </table>
+</div>
+
+<div class="modal fade" id="edit-unit" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 800px">
+        <div class="modal-content position-relative">
+            <div class="position-absolute top-0 end-0 mt-2 me-2 z-index-1">
+                <button class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base"
+                    data-bs-dismiss="modal" aria-label="Close">
+                </button>
+            </div>
+
+            <div class="modal-body-unit-edit p-0">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+@section('script')
+    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+    <script>
+        let table = new DataTable('#table-tidakperpanjang');
+
+        function editUnitModal(id) {
+            $.ajax({
+                url: '/admin/get/tenantunits-edit/' + id,
+                type: 'GET',
+                success: function(data) {
+                    $(".modal-body-unit-edit").html(data);
+                }
+            })
+        }
+    </script>
+@endsection

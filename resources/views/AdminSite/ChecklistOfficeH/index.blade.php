@@ -125,23 +125,24 @@
                                 <div class="mb-3 mt-n2">
                                     <label class="mb-1">Nomer Checklist Office Management</label>
                                     <select class="form-select form-select-sm" name="no_checklist_office_management" required id="no_checklist_office_management">
+                                        <option type="reset" value=""> All </option>
                                         @foreach ($checklistoffices as $checklistoffice)
                                             <option value="{{ $checklistoffice->no_checklist_office_management }}"> {{ $checklistoffice->no_checklist_office_management }}</option>
                                         @endforeach
                                     </select>
                                 </div>     
                                 <div class="mb-3 mt-n2">
-                                    <label class="mb-1">Nomer Checklist Office Management</label>
+                                    <label class="mb-1">User Checklist Office Management</label>
                                     <select class="form-select form-select-sm" name="no_checklist_office_management" required id="no_checklist_office_management">
                                         @foreach ($idusers as $iduser)
                                             <option value="{{ $iduser->id }}"> {{ $iduser->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>                        
+                                <div class="card-footer border-top border-200 py-x1">
+                                    <button type="reset" class="btn btn-primary w-100">Reset</button>
+                                </div>
                             </form>
-                        </div>
-                        <div class="card-footer border-top border-200 py-x1">
-                            <button class="btn btn-primary w-100">Update</button>
                         </div>
                     </div>
                 </div>

@@ -76,10 +76,10 @@
                                                 <div class="col-auto me-2">
                                                     <h6 class="client mb-2">
                                                         <a class="text-800 d-flex align-items-center gap-1"
-                                                            href="../../app/support-desk/contact-details.html"><span
-                                                                class="fas fa-user"
-                                                                data-fa-transform="shrink-3 up-1"></span><span>Peter
-                                                                Gill</span></a>
+                                                            href="../../app/support-desk/contact-details.html">
+                                                            @foreach ($idusers as $iduser)
+                                                            <span class="fas fa-user" data-fa-transform="shrink-3 up-1"></span><span>{{$iduser->name}} </span></a>
+                                                            @endforeach
                                                     </h6>
                                                 </div>
 
@@ -89,10 +89,7 @@
                                     <div class="row">
                                         <hr>
                                         <button class="btn btn-outline-primary mb-2" href={{ route('kepemilikans.index') }} type="button">
-                                                <a class="text-black" href={{ route('kepemilikans.index') }}>Kepemilikan Unit</a></button>
-
-                                            <button class="btn btn-outline-success mb-2" type="button">
-                                            <a class="text-black" href="{{ route('owners.show', $owner->id_pemilik) }}"> Detail</a></button>
+                                                <a class="text-black" href={{ route('kepemilikans.index', $owner->id_pemilik) }}>Kepemilikan Unit</a></button>
                                     </div>
                                 </div>
                             </div>

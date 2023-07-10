@@ -1,5 +1,9 @@
 @extends('layouts.master')
 
+@section('css')
+    <link rel="stylesheet" href="{{ asset('assets/vendors/flatpickr/flatpickr.min.css') }}">
+@endsection
+
 @section('content')
     <div class="content">
         <div class="row gx-3">
@@ -60,7 +64,7 @@
                                 @foreach ($checklistahus as $key => $checklistahu)
                                     <tr>
                                         <th scope="row">{{ $key + 1 }}</th>
-                                        <td>{{ $checklistahu->tgl_checklist }}</td>
+                                        <td>{{\Carbon\Carbon::parse($checklistahu->tgl_checklist)->format(' d-M-Y') }}</td>
                                         <td>{{ $checklistahu->no_checklist_ahu }}</td>
                                         <td>
                                             <div class="dropdown font-sans-serif position-static"><button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal" type="button" id="order-dropdown-0" data-bs-toggle="dropdown" data-boundary="viewport" aria-haspopup="true" aria-expanded="false"><span class="fas fa-ellipsis-h fs--1"></span></button>
@@ -119,26 +123,31 @@
                         </div>
                         <div class="card-body">
                             <form>
-                                {{-- <div class="mb-3 mt-n2">
-                                    <label class="mb-1">Tanggal Checklist AHU</label>
-                                    <select class="form-select form-select-sm" name="tgl_checklist" required id="tgl_checklist">
-                                        @foreach ($checklistahus as $checklistahu)
-                                            <option value="{{ $checklistahu->tgl_checklist }}"> {{ $checklistahu->tgl_checklist }}</option>
-                                        @endforeach
-                                    </select>
-                                </div> --}}
+                                <div class="mb-3 mt-n2">
+                                    <label class="form-label" for="timepicker2">Tanggal Checklist AHU</label>
+                                    <input id="tgl_checklist" class="form-control datetimepicker" id="timepicker2" type="text" placeholder="d/m/y to d/m/y" data-options='{"mode":"range","dateFormat":"Y-m-d","disableMobile":true}' />
+                                </div>
                                 <div class="mb-3 mt-n2">
                                     <label class="mb-1">Nomer Checklist AHU</label>
                                     <select class="form-select form-select-sm" name="no_checklist_ahu" required id="no_checklist_ahu">
+                                        <option type="reset" value=""> All </option>
                                         @foreach ($checklistahus as $checklistahu)
-                                            <option value="{{ $checklistahu->no_checklist_ahu }}"> {{ $checklistahu->no_checklist_ahu }}</option>
+                                            <option value="{{ $checklistahu->no_checklist_ahu }}"> {{ $checklistahu->no_checklist_ahu }} </option>
+                                            @endforeach
+                                    </select>
+                                </div>     
+                                <div class="mb-3 mt-n2">
+                                    <label class="mb-1">User Checklist AHU</label>
+                                    <select class="form-select form-select-sm" name="user" required id="user">
+                                        @foreach ($idusers as $iduser)
+                                            <option value="{{ $iduser->id }}"> {{ $iduser->name }}</option>
                                         @endforeach
                                     </select>
+                                </div>   
+                                <div class="card-footer border-top border-200 py-x1">
+                                    <button type="reset" class="btn btn-primary w-100">Reset</button>
                                 </div>
                             </form>
-                        </div>
-                        <div class="card-footer border-top border-200 py-x1">
-                            <button class="btn btn-primary w-100">Update</button>
                         </div>
                     </div>
                 </div>
@@ -149,29 +158,42 @@
 @endsection
 
 @section('script')
+    <script src="{{ asset('assets/js/flatpickr.js') }}"></script>
     <script>
         $('document').ready(function() {
-            var no_checklist_ahu = $('#no_checklist_ahu').val()
 
+            $('#tgl_checklist').on('change', function() {
+                var no_checklist_ahu = $('#no_checklist_ahu').val()
+                var tgl_checklist = $('#tgl_checklist').val()
+                var date_from = tgl_checklist.substr(0, 10)
+                var date_to = tgl_checklist.substr(14, 23)
+
+                console.log("date from : ", date_from)
+                console.log("date to : ", date_to)
+
+                index(no_checklist_ahu, date_from, date_to)
+            })
             $('#no_checklist_ahu').on('change', function() {
                 var no_checklist_ahu = $('#no_checklist_ahu').val()
+                var tgl_checklist = $('#tgl_checklist').val()
+                var date_from = tgl_checklist.substr(0, 10)
+                var date_to = tgl_checklist.substr(14, 23)
 
-                console.log(no_checklist_ahu)
-
-                index(no_checklist_ahu)
+                index(no_checklist_ahu, date_from, date_to)
             })
         })
 
-        function index(no_checklist_ahu) {
+        function index(no_checklist_ahu, date_from, date_to) {
             $.ajax({
                 url: '/admin/checklist-filter-ahu',
                 type: 'GET',
                 data: {
-                    no_checklist_ahu
+                    no_checklist_ahu,
+                    date_from,
+                    date_to,
                 },
                 success: function(data) {
                     $('#checklist_body').html("")
-                    console.log(data.checklists)
                     data.checklists.map((item, i) => {
                         $('#checklist_body').append(`
                             <tr>
@@ -182,18 +204,13 @@
                                     <div class="dropdown font-sans-serif position-static"><button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal" type="button" id="order-dropdown-0" data-bs-toggle="dropdown" data-boundary="viewport" aria-haspopup="true" aria-expanded="false"><span class="fas fa-ellipsis-h fs--1"></span></button>
                                         <div class="dropdown-menu dropdown-menu-end border py-0" aria-labelledby="order-dropdown-0">
                                             <a class="dropdown-item text" href="/admin/checklistahus/${item.no_checklist_ahu}">Detail ahu Checklist</a>
-                                            <div class="dropdown-divider"></div> <form class="d-inline" action="{{ route('checklistahus.destroy', $checklistahu->no_checklist_ahu) }}" method="post">
-                                                @method('DELETE')
-                                                @   srf
-                                                <button type="submit" class="dropdown-item text-danger"
-                                            onclick="return confirm('are you sure?')">Hapus</button>
-                                            </form>
                                         </div>
                                     </div>                        
                                 </td>
                             </tr>
                         `)
                     })
+                    
                 }
             })
         }

@@ -117,14 +117,6 @@
                         </div>
                         <div class="card-body">
                             <form>
-                                {{-- <div class="mb-3 mt-n2">
-                                    <label class="mb-1">Tanggal Checklist Toilet</label>
-                                    <select class="form-select form-select-sm" name="tgl_checklist" required id="tgl_checklist">
-                                        @foreach ($checklisttoilets as $checklisttoilet)
-                                            <option value="{{ $checklisttoilet->tgl_checklist }}"> {{ $checklisttoilet->tgl_checklist }}</option>
-                                        @endforeach
-                                    </select>
-                                </div> --}}
                                 <div class="mb-3 mt-n2">
                                     <label class="form-label" for="timepicker2">Tanggal Checklist Toilet</label>
                                     <input id="tgl_checklist" class="form-control datetimepicker" id="timepicker2" type="text" placeholder="d/m/y to d/m/y" data-options='{"mode":"range","dateFormat":"Y-m-d","disableMobile":true}' />
@@ -132,23 +124,24 @@
                                 <div class="mb-3 mt-n2">
                                     <label class="mb-1">Nomer Checklist Toilet</label>
                                     <select class="form-select form-select-sm" name="no_checklist_toilet" required id="no_checklist_toilet">
+                                            <option type="reset" value="">All</option>
                                         @foreach ($checklisttoilets as $checklisttoilet)
                                             <option value="{{ $checklisttoilet->no_checklist_toilet }}"> {{ $checklisttoilet->no_checklist_toilet }}</option>
                                         @endforeach
                                     </select>
                                 </div>     
                                 <div class="mb-3 mt-n2">
-                                    <label class="mb-1">Nomer Checklist Toilet</label>
+                                    <label class="mb-1">User Checklist Toilet</label>
                                     <select class="form-select form-select-sm" name="no_checklist_toilet" required id="no_checklist_toilet">
                                         @foreach ($idusers as $iduser)
                                             <option value="{{ $iduser->id }}"> {{ $iduser->name }}</option>
                                         @endforeach
                                     </select>
                                 </div>                        
+                                <div class="card-footer border-top border-200 py-x1">
+                                    <button type="reset" class="btn btn-primary w-100">Reset</button>
+                                </div>
                             </form>
-                        </div>
-                        <div class="card-footer border-top border-200 py-x1">
-                            <button class="btn btn-primary w-100">Update</button>
                         </div>
                     </div>
                 </div>

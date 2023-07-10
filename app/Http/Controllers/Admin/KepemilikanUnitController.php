@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Admin;
 use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
 use App\Models\KepemilikanUnit;
+use App\Models\KepemilikanUnitOff;
 use App\Models\Login;
 use App\Models\OwnerH;
 use App\Models\StatusHunianTenant;
 use App\Models\Unit;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Http\Request;
@@ -21,8 +23,8 @@ class KepemilikanUnitController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request)
-    {   
-        $connKepemilikan = ConnectionDB::setConnection(new OwnerH());
+    {
+        $connKepemilikan = ConnectionDB::setConnection(new KepemilikanUnit());
         $data['kepemilikans'] = $connKepemilikan->get();
 
         return view('AdminSite.KepemilikanUnit.index', $data);
@@ -63,6 +65,9 @@ class KepemilikanUnitController extends Controller
                 'id_pemilik' => $request->id_pemilik,
                 'id_unit' => $request->id_unit,
                 'id_status_hunian' => $request->id_status_hunian,
+                'tgl_mulai' => $request->tgl_mulai,
+                'no_bukti_milik' => $request->no_bukti_milik,
+                'keterangan' => $request->keterangan,
             ]);
 
             $unit = $connUnit->find($request->id_unit);
@@ -90,7 +95,16 @@ class KepemilikanUnitController extends Controller
      */
     public function show($id)
     {
-        //
+        $conn = ConnectionDB::setConnection(new KepemilikanUnit());
+        $connowner = ConnectionDB::setConnection(new OwnerH());
+        $connunit = ConnectionDB::setConnection(new Unit());
+
+        $data['kepemilikans'] = $conn->where('id_pemilik', $id)->first();
+        $data['owners'] = $connowner->get();
+        $data['units'] = $connunit->get();
+
+
+        return view('AdminSite.KepemilikanUnit.show', $data);
     }
 
     /**
@@ -142,10 +156,29 @@ class KepemilikanUnitController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        $connKepemilikan = ConnectionDB::setConnection(new KepemilikanUnit());
-        $connKepemilikan->find($id)->delete();
+        $conn = ConnectionDB::setConnection(new KepemilikanUnit());
+        $conKUOFF = ConnectionDB::setConnection(new KepemilikanUnitOff());
+
+        $nowDate = Carbon::now();
+
+        $conn = $conn->where('id', $id)->first();
+        $conn->unit->isempty = 0;
+        $conn->unit->save();
+        $conn->delete();
+
+        $conKUOFF->create([
+            'id_pemilik' => $conn->id_pemilik,
+            'id_unit' => $conn->id_unit,
+            'id_status_hunian' => $conn->id_status_hunian,
+            'tgl_masuk' => $conn->created_at,
+            'tgl_keluar' => $nowDate,
+            'tgl_sys' => $nowDate,
+            'no_bukti_milik' => $conn->no_bukti_milik,
+            'keterangan' => $request->keterangan,
+        ]);
+        DB::commit();
 
         Alert::success('Berhasil', 'Berhasil menghapus kepemilikan unit');
 
@@ -154,7 +187,6 @@ class KepemilikanUnitController extends Controller
 
     public function notKepemilikanUnit($id)
     {
-
         $connKepemilikanUnit = ConnectionDB::setConnection(new KepemilikanUnit());
         $connUnit = ConnectionDB::setConnection(new Unit());
 
@@ -177,5 +209,17 @@ class KepemilikanUnitController extends Controller
         $unit = $connUnit->find($id);
 
         return response()->json(['unit' => $unit]);
+    }
+
+    public function unitdetail(Request $request, $id)
+    {
+        $connUnit = ConnectionDB::setConnection(new Unit());
+
+        if ($request->no_checklist_toilet) {
+            $data = $connUnit->where('id_unit', $request->id_unit);
+        }
+        $data = $data->get();
+
+        return response()->json(['unit' => $data]);
     }
 }

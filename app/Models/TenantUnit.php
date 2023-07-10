@@ -20,6 +20,7 @@ class TenantUnit extends Model
         'id_unit',
         'id_pemilik',
         'id_periode_sewa',
+        'sewa_ke',
         'tgl_masuk',
         'tgl_keluar',
         'tgl_jatuh_tempo_ipl',
@@ -33,9 +34,14 @@ class TenantUnit extends Model
         return $this->hasOne(Unit::class, 'id_unit', 'id_unit');
     }
 
-    public function pemilik()
+    public function Owner()
     {
         return $this->hasOne(OwnerH::class, 'id_pemilik', 'id_pemilik');
+    }
+
+    public function tenant()
+    {
+        return $this->hasOne(Tenant::class, 'id_tenant', 'id_tenant');
     }
 
 }

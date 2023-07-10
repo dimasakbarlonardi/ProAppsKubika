@@ -14,10 +14,12 @@ use App\Models\OwnerH;
 use App\Models\PeriodeSewa;
 use App\Models\StatusTinggal;
 use App\Models\Tenant;
-use App\Models\Tower;    
+use App\Models\TenantUnitOFF;
+use App\Models\Tower;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Models\Unit;
+use Carbon\Carbon;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 class TenantUnitController extends Controller
@@ -44,13 +46,22 @@ class TenantUnitController extends Controller
         return $tu_id;
     }
 
-    public function index(Request $request)
+    public function index($id)
     {
-        $conn = $this->setConnection(new TenantUnit());
+        $conn = ConnectionDB::setConnection(new TenantUnit());
 
         $data['tenantunits'] = $conn->get();
 
         return view('AdminSite.TenantUnit.index', $data);
+    }
+
+    public function show($id)
+    {
+        $conn = ConnectionDB::setConnection(new TenantUnit());
+
+        $data['tenantunits'] = $conn->where('id_tenant_unit', $id)->first();
+
+        return view('AdminSite.TenantUnit.Unit.show', $data);
     }
 
     public function getUnitIDFromTU()
@@ -111,6 +122,7 @@ class TenantUnitController extends Controller
     public function storeTenantUnit(Request $request)
     {
         $connTenantUnit = $this->setConnection(new TenantUnit());
+       
 
         $id_tenant_unit = $this->generateTenantUnitID($connTenantUnit);
 
@@ -124,6 +136,7 @@ class TenantUnitController extends Controller
             'tgl_keluar' => $request->tgl_keluar,
             'tgl_jatuh_tempo_ipl' => $request->tgl_jatuh_tempo_ipl,
             'tgl_jatuh_tempo_util' => $request->tgl_jatuh_tempo_util,
+            'sewa_ke' => 1
         ]);
 
         Alert::success('Berhasil', 'Berhasil Menambah Tenant Unit');
@@ -131,25 +144,7 @@ class TenantUnitController extends Controller
         return redirect()->back();
     }
 
-    public function updateTenantUnit(Request $request, $id)
-    {
-        $connTenantUnit = $this->setConnection(new TenantUnit());
-        $connTenantUnit = $connTenantUnit->where('id_tenant_unit', $id)->first();
-
-        $connTenantUnit->update([
-            'id_unit' => $request->id_unit,
-            'id_pemilik' => $request->id_pemilik,
-            'id_periode_sewa' => $request->id_periode_sewa,
-            'tgl_masuk' => $request->tgl_masuk,
-            'tgl_keluar' => $request->tgl_keluar,
-            'tgl_jatuh_tempo_ipl' => $request->tgl_jatuh_tempo_ipl,
-            'tgl_jatuh_tempo_util' => $request->tgl_jatuh_tempo_util,
-        ]);
-
-        Alert::success('Berhasil', 'Berhasil Mengubah Tenant Unit');
-
-        return redirect()->back();
-    }
+    
 
     public function storeTenantMember(Request $request)
     {
@@ -187,23 +182,6 @@ class TenantUnitController extends Controller
 
             return redirect()->back();
         }
-    }
-
-    public function editTenantUnit($id)
-    {
-        $connTenantUnit = $this->setConnection(new TenantUnit());
-        $connUnit = $this->setConnection(new Unit());
-        $periodeSewa = $this->setConnection(new PeriodeSewa());
-        $connOwner = $this->setConnection(new OwnerH());
-
-        $data['id_tenant'] = $id;
-        $data['units'] = $connUnit->get();
-        $data['owners'] = $connOwner->get();
-        $data['periodeSewa'] = $periodeSewa->get();
-        $data['tenantunit'] = $connTenantUnit->where('id_tenant_unit', $id)->first();
-        $data['getCreateUnits'] = $this->getUnitIDFromTU();
-
-        return view('AdminSite.TenantUnit.Unit.edit', $data)->render();
     }
 
     public function editTenantMember($id)
@@ -275,13 +253,13 @@ class TenantUnitController extends Controller
         }
     }
 
-    public function editTenantKendaraan($id)
+    public function editTenantKendaraan($id)        
     {
 
         $connTenantKendaraan = $this->setConnection(new KendaraanTenant());
         $connUnit = $this->setConnection(new Unit());
         $connJenisKendaraan = $this->setConnection(new JenisKendaraan());
-        
+
         // $periodeSewa = $this->setConnection(new PeriodeSewa());
         // $data['id_tenant'] = $id;
         $data['units'] = $connUnit->get();
@@ -304,16 +282,35 @@ class TenantUnitController extends Controller
         return redirect()->back();
     }
 
-    public function deleteTenantUnit($id)
+    public function deleteTenantUnit(Request $request,$id)
     {
         $conn = $this->setConnection(new TenantUnit());
+        $connTUOFF = ConnectionDB::setConnection(new TenantUnitOFF());
+        $conntenant = ConnectionDB::setConnection(new TenantUnit());
+
+        $nowDate = Carbon::now();
 
         $conn = $conn->where('id_tenant_unit', $id)->first();
+        $conn->unit->isempty = 0;
+        $conn->unit->save();
         $conn->delete();
 
-        Alert::success('Berhasil', 'Berhasil menghapus tenant unit');
+        $connTUOFF->create([
+            'id_tenant' => $conn->id_tenant,
+            'id_unit' => $conn->id_unit,
+            'id_pemilik' => $conn->id_pemilik,
+            'id_periode_sewa' => $conn->id_periode_sewa,
+            'tgl_masuk' => $conn->tgl_masuk,
+            'tgl_keluar' => $conn->tgl_keluar,
+            'tgl_sys' => $nowDate,
+            'keterangan' => $request->keterangan,
+            'sewa_ke' => $conn->sewa_ke,
+        ]);
+        DB::commit();
 
-        return redirect()->back();
+        Alert::success('Berhasil', 'Berhasil OffBoarding tenant unit');
+
+        return redirect()->route('getTenantUnit', $conntenant->id_tenant);
     }
 
     public function deleteTenantMember($id)

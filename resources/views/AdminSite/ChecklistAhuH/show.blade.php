@@ -23,10 +23,15 @@
                     <label class="form-label"><b>Room </b> : {{ $checklistahu->room->nama_room }}</label>
                 </div>
                 <div class=" col-6 mb-3">
-                    <label class="form-label"><b>Tanggal Checklist </b> : {{$checklistahu->tgl_checklist}}</label>
+                    <label class="form-label"><b>Tanggal Checklist </b> : {{\Carbon\Carbon::parse($checklistahu->tgl_checklist)->format(' d-M-Y') }}</label>
                 </div>
                 <div class=" col-6 mb-3">
                     <label class="form-label"><b>Time Checklist </b> : {{$checklistahu->time_checklist}}</label>
+                </div>
+                <div class=" col-6 mb-3">
+                    @foreach ($idusers as $iduser)
+                    <label class="form-label"><b>User </b> : {{ $iduser->name}}</label>
+                    @endforeach
                 </div>
 
                 <div class="mt-3" id="biaya">

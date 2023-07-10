@@ -40,8 +40,9 @@ class UnitController extends Controller
     {
         $connUnit = ConnectionDB::setConnection(new Unit());
 
-        $data['units'] = $connUnit->where('id_lantai', $request->id_floor)
-        ->where('id_tower', $request->id_tower)
+        $data['units'] = $connUnit
+        ->where('id_lantai', $request->id_floor)
+        ->where('id_tower', $request->id_tower) 
         ->get();
 
         return response()->json([
@@ -88,13 +89,13 @@ class UnitController extends Controller
             $site = $login->site->id_site;
             $tower = $tower->where('id_site', $site)->first();
 
-            $floor = ConnectionDB::setConnection(new Floor());Fget
+            $floor = ConnectionDB::setConnection(new Floor());
 
             $count = $conn->count();
             $count += 1;
             if ($count < 10) {
                 $count = '0' . $count;
-            }
+            };
 
             $id_unit = $site . $tower->id_tower . $floor->id_lantai . $count;
 
@@ -142,9 +143,15 @@ class UnitController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
-        //
+        $conn = ConnectionDB::setConnection(new Unit());
+        // $id_site = $request->site()->id;
+
+        $data['units'] = $conn->where('id_unit', $id)->first();
+        // $data['sites'] = Login::where('id_site', $id_site )->get();
+
+        return view('AdminSite.Unit.show', $data);
     }
 
     /**
@@ -155,9 +162,16 @@ class UnitController extends Controller
      */
     public function edit(Request $request, $id)
     {
-        $conn = $this->setConnection($request);
+        $conn = ConnectionDB::setConnection(new Unit());
+        $connTower = ConnectionDB::setConnection(new Tower());
+        $connFloor = ConnectionDB::setConnection(new Floor());
+        $connHunias = ConnectionDB::setConnection(new Hunian());
 
         $data['unit'] = $conn->where('id_unit',$id)->first();
+        $data['towers'] = $connTower->get();
+        $data['floors'] = $connFloor->get();
+        $data['hunians'] = $connHunias->get();
+
 
         return view('AdminSite.Unit.edit', $data);
     }
@@ -171,7 +185,7 @@ class UnitController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $conn = $this->setConnection($request);
+        $conn = ConnectionDB::setConnection(new Unit());
 
         $unit = $conn->find($id);
         $unit->update($request->all());

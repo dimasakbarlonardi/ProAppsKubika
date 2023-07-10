@@ -14,7 +14,7 @@
                 @csrf
                 <div class="mb-5">
                     <div class="row">
-                        <div class="col-4">
+                        <div class="col-6 mb-3">
                             <label class="form-label">ID Pemilik</label>
                             <select class="form-control" name="id_pemilik" id="id_pemilik" required>
                                 <option selected disabled>-- Pilih ID Pemilik --</option>
@@ -23,7 +23,7 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-4">
+                        <div class="col-6 mb-3">
                             <label class="form-label">ID Unit</label>
                             <select class="form-control" name="id_unit" id="id_unit" required>
                                 <option selected disabled>-- Pilih ID Unit --</option>
@@ -32,7 +32,7 @@
                                 @endforeach --}}
                             </select>
                         </div>
-                        <div class="col-4">
+                        <div class="col-6 mb-3">
                             <label class="form-label">ID Status Hunian</label>
                             <select class="form-control" name="id_status_hunian" required>
                                 <option selected disabled>-- Pilih Status Hunian --</option>
@@ -41,6 +41,18 @@
                                         {{ $statushunian->status_hunian_tenant }}</option>
                                 @endforeach
                             </select>
+                        </div>
+                        <div class="col-6 mb-3 ">
+                            <label class="form-label">Tanggal Mulai</label>
+                            <input type="text" name="tgl_mulai" class="form-control" required>
+                        </div>
+                        <div class="col-6 mb-3 ">
+                            <label class="form-label">No Bukti Milik</label>
+                            <input type="text" name="no_bukti_milik" class="form-control" required>
+                        </div>
+                        <div class="col-6 mb-3 ">
+                            <label class="form-label">Keterangan</label>
+                            <input type="text" name="keterangan" class="form-control" required>
                         </div>
                     </div>
                 </div>
@@ -127,7 +139,9 @@
                         </table>
                     </div>
                 </div>
+
                 <div class="mt-5">
+                    <a class="btn btn-sm btn-warning" href="{{ route('kepemilikans.index')}}">Back</a>
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
             </form>
@@ -151,7 +165,7 @@
                                 '>' + value.nama_unit + '</option>');
                         });
                     }
-                })
+                }) 
 
             })
 

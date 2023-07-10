@@ -21,7 +21,7 @@
                     <label class="form-label">Eng Floor</label>
                     <select class="form-control" name="id_eng_floor" required>
                         <option selected disabled>-- Pilih HK Floor --</option>
-                        @foreach ($engfloors as $engfloor)
+                        @foreach ($engfloor as $engfloor)
                         <option value="{{ $engfloor->id_hk_floor }}">{{ $engfloor->nama_hk_floor }} : {{$engfloor->subject}} </option>
                         @endforeach
                     </select>
@@ -35,6 +35,10 @@
                         <option value="{{ $room->id_room }}">{{ $room->nama_room }} </option>
                         @endforeach
                     </select>
+                </div>
+                <div class="col-6 mb-3">
+                    <label class="form-label">Periode</label>
+                    <input type="text" name="periode" class="form-control" required>
                 </div>
                 
                 <div class="row mt-4">

@@ -11,17 +11,21 @@ class KepemilikanUnit extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = 'tb_pemilik_d';
-    protected $primaryKey = 'id_kepemilikan_unit';
+    protected $primaryKey = 'id';
+    
     protected $fillable = ([
         'id_kepemilikan_unit',
         'id_pemilik',
         'id_unit',
         'id_status_hunian',
+        'tgl_mulai',
+        'no_bukti_milik',
+        'keterangan',
     ]);
 
     protected $dates = ['deleted_at'];
 
-    public function Owner()
+    public function Pemilik()
     {
         return $this->hasOne(OwnerH::class, 'id_pemilik', 'id_pemilik');
     }

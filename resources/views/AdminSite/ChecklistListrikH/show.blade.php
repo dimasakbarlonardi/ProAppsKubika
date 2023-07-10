@@ -10,23 +10,23 @@
             </div>
         </div>
         <div class="p-5">
-            <form method="post" action="{{ route('checklistsolars.store') }}">
+            <form method="post" action="{{ route('checklistlistriks.store') }}">
                 @csrf
                 <div class="row">
                 <div class="col-6 mb-3">
-                    <label class="form-label"><b>Barcode Room </b> : {{$checklistsolar->barcode_room}}</label>
+                    <label class="form-label"><b>Barcode Room </b> : {{$checklistlistrik->barcode_room}}</label>
                 </div>
                 <div class=" col-6 mb-3">
-                    <label class="form-label"><b>Nomer Checklist Solar </b> : {{$checklistsolar->no_checklist_solar}}</label>
+                    <label class="form-label"><b>Nomer Checklist Solar </b> : {{$checklistlistrik->no_checklist_listrik}}</label>
                 </div>
                 <div class="col-6 mb-3">
-                    <label class="form-label"><b>Room </b> : {{ $checklistsolar->room->nama_room }}</label>
+                    <label class="form-label"><b>Room </b> : {{ $checklistlistrik->room->nama_room }}</label>
                 </div>
                 <div class=" col-6 mb-3">
-                    <label class="form-label"><b>Tanggal Checklist </b> : {{$checklistsolar->tgl_checklist}}</label>
+                    <label class="form-label"><b>Tanggal Checklist </b> : {{$checklistlistrik->tgl_checklist}}</label>
                 </div>
                 <div class=" col-6 mb-3">
-                    <label class="form-label"><b>Time Checklist </b> : {{$checklistsolar->time_checklist}}</label>
+                    <label class="form-label"><b>Time Checklist </b> : {{$checklistlistrik->time_checklist}}</label>
                 </div>
                 <div class=" col-6 mb-3">
                     @foreach ($idusers as $iduser)
@@ -44,7 +44,7 @@
                           <table class="table table-bordered table-striped fs--1 mb-0">
                             <thead class="bg-200 text-900">
                               <tr>
-                                <th class="sort" data-sort="no_checklist_solar">Nomer Checklist Solar</th>
+                                <th class="sort" data-sort="no_checklist_listrik">Nomer Checklist Solar</th>
                                 <th class="sort" data-sort="nilai">Nilai</th>
                                 <th class="sort" data-sort="hasil">Hasil</th>
                                 <th class="sort" data-sort="keterangan">Keterangan</th>
@@ -52,10 +52,10 @@
                             </thead>
                             <tbody class="list">
                               <tr>
-                                <td class="no_checklist_solar">{{ $solardetail->no_checklist_solar }}</td>
-                                <td class="nilai">{{ $solardetail->nilai}}</td>
-                                <td class="hasil">{{ $solardetail->hasil }}</td>
-                                <td class="keterangan">{{ $solardetail->keterangan }}</td>
+                                <td class="no_checklist_listrik">{{ $listrikdetail->no_checklist_listrik }}</td>
+                                <td class="nilai">{{ $listrikdetail->nilai}}</td>
+                                <td class="hasil">{{ $listrikdetail->hasil }}</td>
+                                <td class="keterangan">{{ $listrikdetail->keterangan }}</td>
                               </tr>
                             </tbody>
                           </table>
@@ -63,7 +63,7 @@
                        
                       </div>
                 <div class="mt-5">
-                    <button type="button" class="btn btn-danger"><a class="text-white" href="{{ route('checklistsolars.index')}}">Back</a></button>
+                    <button type="button" class="btn btn-danger"><a class="text-white" href="{{ route('checklistlistriks.index')}}">Back</a></button>
                 </div>
                  </div>
                 </div>

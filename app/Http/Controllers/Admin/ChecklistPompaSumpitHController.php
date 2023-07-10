@@ -21,11 +21,13 @@ class ChecklistPompaSumpitHController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $conn = ConnectionDB::setConnection(new ChecklistPompaSumpitH());
+        $user_id = $request->user()->id;
         
         $data ['checklistpompasumpits'] = $conn->get();
+        $data['idusers'] = Login::where('id', $user_id)->get();
         
         return view('AdminSite.ChecklistPompaSumpitH.index', $data);
     }
@@ -34,9 +36,17 @@ class ChecklistPompaSumpitHController extends Controller
     {
         $conn = ConnectionDB::setConnection(new ChecklistPompaSumpitH());
 
-        $data = $conn->where('no_checklist_pompa_sumpit', $request->no_checklist_pompa_sumpit)
-        ->whereBetween('tgl_checklist', [$request->date_from, $request->date_to])
-        ->get();
+       
+        if ($request->date_to == null) {
+            $data = $conn->where('tgl_checklist', $request->date_from);
+        } else {     
+            $data = $conn->whereBetween('tgl_checklist', [$request->date_from, $request->date_to]);
+        }
+
+        if ($request->no_checklist_pompa_sumpit) {
+            $data = $data->where('no_checklist_pompa_sumpit', $request->no_checklist_pompa_sumpit);
+        }
+        $data = $data->get();
 
         return response()->json(['checklists' => $data]);
     }

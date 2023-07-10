@@ -17,18 +17,6 @@
                     <label class="form-label">Barcode Room</label>
                     <input type="text" name="barcode_room" class="form-control" required>
                 </div>
-                {{-- <div class=" col-6 mb-3">
-                    <label class="form-label">Nomer Checklist AHU</label>
-                    <input type="text" name="no_checklist_ahu" class="form-control" required>
-                </div> --}}
-                {{-- <div class=" col-6 mb-3">
-                    <label class="form-label">Tanggal Checklist</label>
-                    <input type="date" name="tgl_checklist" class="form-control" required>
-                </div>
-                <div class=" col-6 mb-3">
-                    <label class="form-label">Time Checklist</label>
-                    <input type="time" name="time_checklist" class="form-control" required>
-                </div> --}}
                 <div class="col-6 mb-3">
                     <label class="form-label">Eng Chiller</label>
                     <select class="form-control" name="id_barcode_ahu" required>
