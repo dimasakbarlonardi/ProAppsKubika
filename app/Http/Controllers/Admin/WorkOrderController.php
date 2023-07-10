@@ -426,8 +426,9 @@ class WorkOrderController extends Controller
             $createTransaction->sub_total = $wo->jumlah_bayar_wo;
             $createTransaction->total = $total;
             $createTransaction->id_user = $wo->Ticket->Tenant->User->id_user;
-            $midtrans = new CreateSnapTokenService($createTransaction, $items, $admin_fee);
             $createTransaction->status = 'PENDING';
+            $createTransaction->save();
+            $midtrans = new CreateSnapTokenService($createTransaction, $items, $admin_fee);
             $createTransaction->snap_token = $midtrans->getSnapToken();
             $createTransaction->save();
 
