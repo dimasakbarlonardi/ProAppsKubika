@@ -276,7 +276,11 @@ class WorkOrderController extends Controller
 
         $user = $request->session()->get('user');
         $wo = $connWO->find($id);
-        $getUser = $wo->WorkRequest->Ticket->Tenant->User;
+
+        $createNotif = $this->createNotif($connNotif, $id, $user, $wo);
+        $createNotif->notif_message = 'Work Order sudah dikerjakan, mohon periksa kembali pekerjaan kami';
+        $createNotif->receiver = $wo->Ticket->Tenant->User->id_user;
+        $createNotif->save();
 
         $wo->status_wo = 'WORK DONE';
         $wo->save();
@@ -452,7 +456,6 @@ class WorkOrderController extends Controller
 
             $createTransaction = $connTransaction;
             $createTransaction->no_invoice = $no_invoice;
-            $createTransaction->transaction_type = 'WorkOrder';
             $createTransaction->no_transaction = $wo->no_work_order;
             $createTransaction->admin_fee = $admin_fee;
             $createTransaction->sub_total = $wo->jumlah_bayar_wo;
@@ -476,8 +479,9 @@ class WorkOrderController extends Controller
 
             DB::commit();
         } catch (Throwable $e) {
-            DB::rollBack();
             dd($e);
+            DB::rollBack();
+
             return redirect()->back();
         }
 

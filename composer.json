@@ -37,6 +37,10 @@
             "files\\": "app/Helpers/Persenan.php/"
         },
         "files": [
+            "app/Helpers/DateTime.php",
+            "app/helpers.php"
+        ],
+        "files": [
             "app/Helpers/Rupiah.php",
             "app/Helpers/Persenan.php"
         ]

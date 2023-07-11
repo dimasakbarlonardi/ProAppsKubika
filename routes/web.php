@@ -72,6 +72,8 @@ use App\Http\Controllers\Admin\WorkOrderController;
 use App\Http\Controllers\Admin\WorkPermitController;
 use App\Http\Controllers\Admin\WorkPriorityController;
 use App\Http\Controllers\Admin\WorkRelationController;
+use App\Http\Controllers\Admin\WorkRequestController;
+use App\Http\Controllers\PaymentController;
 use App\Models\ChecklistGensetH;
 use App\Models\ChecklistGroundRoofH;
 use App\Models\ChecklistListrikH;
@@ -151,7 +153,6 @@ Route::prefix('admin')->group(function () {
         Route::get('/tenantunits/{id}', [TenantUnitController::class, 'show'])->name('tenantunits.show');
         Route::post('/store/tenantunits', [TenantUnitController::class, 'storeTenantUnit'])->name('storeTenantUnit');
         Route::post('/update/tenantunits/{id}', [TenantUnitController::class, 'updateTenantUnit'])->name('updateTenantUnit');
-        Route::post('/store/tenantunit', [TenantUnitController::class, 'storeTenantUnit'])->name('storeTenantUnit');
         Route::post('/delete/tenantunit/{id}', [TenantUnitController::class, 'deleteTenantUnit'])->name('deleteTenantUnit');
 
         Route::get('/get/tenantmember-edit/{id}', [TenantUnitController::class, 'editTenantMember']);
@@ -306,31 +307,24 @@ Route::prefix('admin')->group(function () {
 
         Route::get('/get-nav/{id}', [RoleController::class, 'getNavByRole'])->name('getNav');
 
-        // CRUD PerubahanUnit
-        Route::resource('perubahanunits', PerubahanUnitController::class);
-        Route::get('/get/perpanjangunits-edit/{id}', [PerubahanUnitController::class, 'edit'])->name('edittenantunit');
-        Route::get('/get/kepemilikanunits-edit/{id}', [PerubahanUnitController::class, 'editKU'])->name('editkepemilikanunit');
-        Route::get('/get/tidakperpanjangunits-edit/{id}', [PerubahanUnitController::class, 'editTPU'])->name('edittidakperpanjang');
-        Route::get('/get/perubahanunits-edit/{id}', [PerubahanUnitController::class, 'editPerubahan'])->name('editperubahanunit');
+        // CRUD Open Ticket
+        Route::resource('/open-tickets', OpenTicketController::class);
+        Route::post('/open-ticket/update-response/{id}', [OpenTicketController::class, 'updateRequestTicket'])->name('updateRequestTicket');
+        Route::post('/open-ticket/approve1/{id}', [OpenTicketController::class, 'ticketApprove1'])->name('ticketApprove1');
+        Route::post('/open-ticket/approve2/{id}', [OpenTicketController::class, 'ticketApprove2'])->name('ticketApprove2');
 
-        Route::get('/tenantunits-show/{id}', [PerubahanUnitController::class, 'show'])->name('tenant_units');
-        Route::get('/kepemilikanunits-show/{id}', [PerubahanUnitController::class, 'showKU'])->name('kepemilikans');
-        Route::get('/tidakperpanjangunit-show/{id}', [PerubahanUnitController::class, 'showTPU'])->name('tidakperpanjang');
-        Route::get('/perubahantenantunits-show/{id}', [PerubahanUnitController::class, 'showPerubahan'])->name('perubahanunit');
+        // CRUD Work Request
+        Route::resource('/work-requests', WorkRequestController::class);
+        Route::post('/done/work-request/{id}', [WorkRequestController::class, 'done'])->name('doneWR'); // done wo from tenant
+        Route::post('/complete/work-request/{id}', [WorkRequestController::class, 'complete'])->name('completeWR'); // done wo from tenant
 
-        Route::post('/update/tenantunits-perpanjangan/{id}', [PerubahanUnitController::class, 'updateTenantUnit'])->name('updateTenantUnit');
-        Route::post('/update/kepemilikanunits-pindah/{id}', [PerubahanUnitController::class, 'updateKU'])->name('updateKU');
-        Route::post('/update/tenantunits-perubahan/{id}', [PerubahanUnitController::class, 'updatePerubahanUnit'])->name('updatePerubahanUnit');
         // CRUD Work Order
         Route::resource('/work-orders', WorkOrderController::class);
         Route::get('/work-order/no-wo', [WorkOrderController::class, 'showByNoWO']);
         Route::post('/accept/work-order/{id}', [WorkOrderController::class, 'acceptWO'])->name('acceptWO'); // accept wo from tenant
-        Route::post('/approve-2/work-order/{id}', [WorkOrderController::class, 'approve2'])->name('approve2'); // approve wo from engineering
-        Route::post('/approve-3/work-order/{id}', [WorkOrderController::class, 'approve3'])->name('approve3'); // approve wo from engineering
+        Route::post('/approve2/work-order/{id}', [WorkOrderController::class, 'approve2WO'])->name('approve2WO'); // update wo from approve 2
+        Route::post('/approve3/work-order/{id}', [WorkOrderController::class, 'approve3WO'])->name('approve3WO'); // update wo from approve 3
         Route::post('/work-done/work-order/{id}', [WorkOrderController::class, 'workDone'])->name('workDone'); // update wo from engineering
-        Route::post('/complete/work-order/{id}', [WorkOrderController::class, 'complete'])->name('completeWO'); // update wo to complete from finance
-        Route::post('/approve-tr/work-order/{id}', [WorkOrderController::class, 'approveTR'])->name('approveTR'); // approve work done from engineering
-        Route::post('/approve-spv/work-order/{id}', [WorkOrderController::class, 'approveSPV'])->name('approveSPV'); // approve work done from engineering SPV
         Route::post('/done/work-order/{id}', [WorkOrderController::class, 'done'])->name('doneWO'); // done wo from tenant
         Route::post('/complete/work-order/{id}', [WorkOrderController::class, 'completeWO'])->name('completeWO'); // complete wo from finance
 
@@ -380,24 +374,32 @@ Route::prefix('admin')->group(function () {
         Route::get('/get-notifications', [DashboardController::class, 'getNotifications'])->name('getNotifications');  // Get all notifications by user_id
         Route::get('/notification/{id}', [DashboardController::class, 'showNotification'])->name('showNotification'); // Show all notification by user_id
 
-        // CRUD Open Ticket
-        Route::resource('/open-tickets', OpenTicketController::class);
-        Route::post('/open-ticket/update-response/{id}', [OpenTicketController::class, 'updateRequestTicket'])->name('updateRequestTicket');
-        Route::post('/open-ticket/approve1/{id}', [OpenTicketController::class, 'ticketApprove1'])->name('ticketApprove1');
-        Route::post('/open-ticket/approve2/{id}', [OpenTicketController::class, 'ticketApprove2'])->name('ticketApprove2');
 
-        // CRUD Work Request
-        Route::resource('/work-requests', WorkRequestController::class);
-        Route::post('/done/work-request/{id}', [WorkRequestController::class, 'done'])->name('doneWR'); // done wo from tenant
-        Route::post('/complete/work-request/{id}', [WorkRequestController::class, 'complete'])->name('completeWR'); // done wo from tenant
+        // CRUD PerubahanUnit
+        Route::resource('perubahanunits', PerubahanUnitController::class);
+        Route::get('/get/perpanjangunits-edit/{id}', [PerubahanUnitController::class, 'edit'])->name('edittenantunit');
+        Route::get('/get/kepemilikanunits-edit/{id}', [PerubahanUnitController::class, 'editKU'])->name('editkepemilikanunit');
+        Route::get('/get/tidakperpanjangunits-edit/{id}', [PerubahanUnitController::class, 'editTPU'])->name('edittidakperpanjang');
+        Route::get('/get/perubahanunits-edit/{id}', [PerubahanUnitController::class, 'editPerubahan'])->name('editperubahanunit');
 
+        Route::get('/tenantunits-show/{id}', [PerubahanUnitController::class, 'show'])->name('tenant_units');
+        Route::get('/kepemilikanunits-show/{id}', [PerubahanUnitController::class, 'showKU'])->name('kepemilikans');
+        Route::get('/tidakperpanjangunit-show/{id}', [PerubahanUnitController::class, 'showTPU'])->name('tidakperpanjang');
+        Route::get('/perubahantenantunits-show/{id}', [PerubahanUnitController::class, 'showPerubahan'])->name('perubahanunit');
+
+        Route::post('/update/tenantunits-perpanjangan/{id}', [PerubahanUnitController::class, 'updateTenantUnit'])->name('updateTenantUnit');
+        Route::post('/update/kepemilikanunits-pindah/{id}', [PerubahanUnitController::class, 'updateKU'])->name('updateKU');
+        Route::post('/update/tenantunits-perubahan/{id}', [PerubahanUnitController::class, 'updatePerubahanUnit'])->name('updatePerubahanUnit');
         // CRUD Work Order
         Route::resource('/work-orders', WorkOrderController::class);
         Route::get('/work-order/no-wo', [WorkOrderController::class, 'showByNoWO']);
         Route::post('/accept/work-order/{id}', [WorkOrderController::class, 'acceptWO'])->name('acceptWO'); // accept wo from tenant
-        Route::post('/approve2/work-order/{id}', [WorkOrderController::class, 'approve2WO'])->name('approve2WO'); // update wo from approve 2
-        Route::post('/approve3/work-order/{id}', [WorkOrderController::class, 'approve3WO'])->name('approve3WO'); // update wo from approve 3
+        Route::post('/approve-2/work-order/{id}', [WorkOrderController::class, 'approve2'])->name('approve2'); // approve wo from engineering
+        Route::post('/approve-3/work-order/{id}', [WorkOrderController::class, 'approve3'])->name('approve3'); // approve wo from engineering
         Route::post('/work-done/work-order/{id}', [WorkOrderController::class, 'workDone'])->name('workDone'); // update wo from engineering
+        Route::post('/complete/work-order/{id}', [WorkOrderController::class, 'complete'])->name('completeWO'); // update wo to complete from finance
+        Route::post('/approve-tr/work-order/{id}', [WorkOrderController::class, 'approveTR'])->name('approveTR'); // approve work done from engineering
+        Route::post('/approve-spv/work-order/{id}', [WorkOrderController::class, 'approveSPV'])->name('approveSPV'); // approve work done from engineering SPV
         Route::post('/done/work-order/{id}', [WorkOrderController::class, 'done'])->name('doneWO'); // done wo from tenant
         Route::post('/complete/work-order/{id}', [WorkOrderController::class, 'completeWO'])->name('completeWO'); // complete wo from finance
 

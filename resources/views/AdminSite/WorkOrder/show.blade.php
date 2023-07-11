@@ -240,11 +240,75 @@
                             'Berhasil!',
                             'Berhasil mengupdate Work Order!',
                             'success'
+                        ).then(() => window.location.reload())
+                    }
+                }
+            })
+        }
+
+        function approve2(id) {
+            $.ajax({
+                url: `/admin/approve2/work-order/${id}`,
+                type: 'POST',
+                success: function(data) {
+                    if (data.status === 'ok') {
+                        Swal.fire(
+                            'Berhasil!',
+                            'Berhasil mengupdate Work Order!',
+                            'success'
+                        ).then(() => window.location.reload())
+                    }
+                }
+            })
+        }
+
+        function completeWO(id) {
+            console.log(id);
+            $.ajax({
+                url: `/admin/complete/work-order/${id}`,
+                type: 'POST',
+                success: function(data) {
+                    if (data.status === 'ok') {
+                        Swal.fire(
+                            'Berhasil!',
+                            'Berhasil mengupdate Work Order!',
+                            'success'
+                        ).then(() => window.location.reload())
+                    }
+                }
+            })
+        }
+        function approve2(id) {
+            $.ajax({
+                url: `/admin/approve-2/work-order/${id}`,
+                type: 'POST',
+                success: function(data) {
+                    if (data.status === 'ok') {
+                        Swal.fire(
+                            'Berhasil!',
+                            'Berhasil mengupdate Work Order!',
+                            'success'
                         ).then(() =>  window.location.reload())
                     }
                 }
             })
         }
+        function complete(id) {
+            $.ajax({
+                url: `/admin/complete/work-order/${id}`,
+                type: 'POST',
+                success: function(data) {
+                    if (data.status === 'ok') {
+                        Swal.fire(
+                            'Berhasil!',
+                            'Berhasil mengupdate Work Order!',
+                            'success'
+                        ).then(() => window.location.reload())
+                    }
+                }
+            })
+        }
+
         function approve2(id) {
             $.ajax({
                 url: `/admin/approve2/work-order/${id}`,
