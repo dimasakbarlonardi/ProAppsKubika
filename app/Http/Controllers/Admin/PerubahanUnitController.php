@@ -51,6 +51,16 @@ class PerubahanUnitController extends Controller
         return $units;
     }
 
+    public function unitBy($id)
+    {
+        $connUnit = ConnectionDB::setConnection(new TenantUnit());
+        // 0042120101
+        $tenantunit = $connUnit->where('id_unit', '0042120103')->get();
+        dd($tenantunit);
+        return response()->json(['tenantunit' => $tenantunit]);
+    }
+
+
     /**
      * Display a listing of the resource.
      *
@@ -91,6 +101,19 @@ class PerubahanUnitController extends Controller
         $connTUOFF = ConnectionDB::setConnection(new TenantUnitOFF());
 
 
+        $checkTGL = $connTenantUnit->where('tgl_masuk', $request->tgl_masuk)->first();
+        $checTGLOUT = $connTenantUnit->where('tgl_keluar', $request->tgl_keluar)->first();
+
+        if (isset($checkTGL)) {
+            Alert::error('Maaf', 'Tanggal sewa sama');
+            return redirect()->back()->withInput();
+        }
+
+        if (isset($checTGLOUT)) {
+            Alert::error('Maaf', 'Tanggal sewa sama');
+            return redirect()->back()->withInput();
+        }
+
         $tu = $connTenantUnit->where('id_tenant_unit', $id)->first();
 
         $createOff = $connTUOFF;
@@ -123,7 +146,6 @@ class PerubahanUnitController extends Controller
         $connTenantUnit = $this->setConnection(new TenantUnit());
         $connTUOFF = ConnectionDB::setConnection(new TenantUnitOFF());
 
-
         $tu = $connTenantUnit->where('id_tenant_unit', $id)->first();
 
         $createOff = $connTUOFF;
@@ -134,16 +156,19 @@ class PerubahanUnitController extends Controller
         $createOff->tgl_masuk = $tu->tgl_masuk;
         $createOff->tgl_keluar = $tu->tgl_keluar;
         $createOff->sewa_ke = $tu->sewa_ke;
-        $createOff->keterangan = 'perubahan unit';
+        $createOff->keterangan = $request->keterangan;
         $createOff->save();
 
         $tu->id_unit = $request->id_unit;
-        // $tu->id_periode_sewa = $tu->id_periode_sewa;
-        // $tu->tgl_keluar = $request->tgl_keluar;
-        // $tu->sewa_ke = $tu->sewa_ke + $countOff;
-
+        $tu->id_pemilik = $request->id_pemilik;
+        $tu->id_periode_sewa = $request->id_periode_sewa;
+        $tu->tgl_masuk = $request->tgl_masuk;
+        $tu->tgl_keluar = $request->tgl_keluar;
+        $tu->tgl_jatuh_tempo_ipl = $request->tgl_jatuh_tempo_ipl;
+        $tu->tgl_jatuh_tempo_util = $request->tgl_jatuh_tempo_util;
+        $tu->sewa_ke = $tu->sewa_ke;
         $tu->save();
-        dd($tu);
+
         DB::commit();
 
         Alert::success('Berhasil', 'Berhasil Perubahan Unit');
@@ -166,21 +191,50 @@ class PerubahanUnitController extends Controller
         $createOff->tgl_masuk = $tu->created_at;
         $createOff->tgl_keluar = $tu->updated_at;
         $createOff->no_bukti_milik = $tu->no_bukti_milik;
-        $createOff->keterangan = 'Perpindahan Kepemilikan unit';
+        $createOff->keterangan = $request->keterangan;
         $createOff->save();
 
-        $tu->id_pemilik = $request->id_pemilik;
         $tu->id_unit = $request->id_unit;
+        $tu->id_pemilik = $request->id_pemilik;
         $tu->id_status_hunian = $request->id_status_hunian;
-        $tu->tgl_mulai = $tu->tgl_mulai;
-        $tu->no_bukti_milik = $tu->no_bukti_milik;
-        $tu->keterangan = $tu->keterangan;
-
+        $tu->tgl_mulai = $request->tgl_mulai;
+        $tu->no_bukti_milik = $request->no_bukti_milik;
+        $tu->keterangan = $request->keterangan;
         $tu->save();
 
         DB::commit();
 
         Alert::success('Berhasil', 'Berhasil Pindah Kepemilikan Unit');
+
+        return redirect()->route('perubahanunits.index');
+    }
+
+    public function deleteTenantUnit(Request $request, $id)
+    {
+        $conn = $this->setConnection(new TenantUnit());
+        $connTUOFF = ConnectionDB::setConnection(new TenantUnitOFF());
+
+        $nowDate = Carbon::now();
+
+        $conn = $conn->where('id_tenant_unit', $id)->first();
+        $conn->unit->isempty = 0;
+        $conn->unit->save();
+        $conn->delete();
+
+        $connTUOFF->create([
+            'id_tenant' => $conn->id_tenant,
+            'id_unit' => $conn->id_unit,
+            'id_pemilik' => $conn->id_pemilik,
+            'id_periode_sewa' => $conn->id_periode_sewa,
+            'tgl_masuk' => $conn->tgl_masuk,
+            'tgl_keluar' => $conn->tgl_keluar,
+            'tgl_sys' => $nowDate,
+            'keterangan' => $request->keterangan,
+            'sewa_ke' => $conn->sewa_ke,
+        ]);
+        DB::commit();
+
+        Alert::success('Berhasil', 'Berhasil tidak perpanjang unit');
 
         return redirect()->route('perubahanunits.index');
     }

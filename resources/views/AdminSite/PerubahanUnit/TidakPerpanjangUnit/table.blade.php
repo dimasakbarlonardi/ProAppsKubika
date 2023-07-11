@@ -12,10 +12,10 @@
         <div class="p-5">
             <div class="mb-3">
                 <div class="row">
-                    {{-- <div class="col-6 mb-3">
-                        <label class="form-label">Unit</label>
-                        <input type="text" value="{{ $tenantunits->unit->nama_unit}}" class="form-control" readonly>
-                    </div> --}}
+                    <div class="col-4 mb-3">
+                        <label class="form-label">Tenant</label>
+                        <input type="text" value="{{ $tenantunits->tenant->nama_tenant}}" class="form-control" readonly>
+                    </div>
                     <div class="col-4 mb-3">
                         <label class="form-label">Unit</label>
                         <select class="form-control" name="id_unit" id="id_unit" @readonly(true) readonly>
@@ -125,10 +125,10 @@
                     </table>
                 </div>
                 {{-- <a href="{{ route('tenantunits.edit', $tenantunits->id_tenant_unit) }}" class="btn btn-sm btn-primary">Edit</a> --}}
-                <a class="btn btn-sm btn-warning" href="{{ route('perubahanunits.index')}}">Back</a>
+                {{-- <a class="btn btn-sm btn-warning" href="{{ route('perubahanunits.index')}}">Back</a> --}}
                 <div class="mb-3">
                     <div class=" my-3">
-                <button class="btn btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#error-modal">OffBoarding</button>
+                <button class="btn btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#error-modal">Tidak Perpanjang Unit</button>
                 <div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-hidden="true">
                   <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 500px">
                     <div class="modal-content position-relative">
@@ -140,11 +140,15 @@
                     </div>
                     <div class="modal-body p-0">
                         <div class="rounded-top-lg py-3 ps-4 pe-6 bg-light">
-                          <h4 class="mb-1" id="modalExampleDemoLabel">Alasan Off Tenant Unit</h4>
+                          <h4 class="mb-1" id="modalExampleDemoLabel">Alasan Tidak Perpanjang Unit</h4>
                         </div>
                         <div class="p-4 pb-0">
                             <form method="post" action="{{ route('offtenantunits.store') }}">
                             @csrf
+                            <div class="mb-3">
+                                <label class="col-form-label" for="message-text">Tanggal Keluar :</label>
+                                <input type="date" class="form-control" name="tgl_keluar" id="message-text">
+                            </div>
                             <div class="mb-3">
                                 <label class="col-form-label" for="message-text">Keterangan :</label>
                                 <textarea class="form-control" name="keterangan" id="message-text"></textarea>

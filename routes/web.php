@@ -251,7 +251,7 @@ Route::prefix('admin')->group(function () {
         Route::get('unit-by-id/{id}', [KepemilikanUnitController::class, 'unitByID'])->name('unit-by-id');
         Route::get('/unit-filter', [KepemilikanUnitController::class, 'unitdetail']);
         Route::post('kepemilikans', [KepemilikanUnitController::class, 'destroy'])->name('destroy');
-        
+
 
         // CRUD Karyawan
         Route::resource('karyawans', KaryawanController::class);
@@ -466,6 +466,8 @@ Route::prefix('admin')->group(function () {
 
         // CRUD PerubahanUnit
         Route::resource('perubahanunits', PerubahanUnitController::class);
+        Route::get('tenantunit-by-id/{id}', [PerubahanUnitController::class, 'unitBy'])->name('unit-by');
+
         Route::get('/get/perpanjangunits-edit/{id}', [PerubahanUnitController::class, 'edit'])->name('edittenantunit');
         Route::get('/get/kepemilikanunits-edit/{id}', [PerubahanUnitController::class, 'editKU'])->name('editkepemilikanunit');
         Route::get('/get/tidakperpanjangunits-edit/{id}', [PerubahanUnitController::class, 'editTPU'])->name('edittidakperpanjang');
@@ -479,6 +481,7 @@ Route::prefix('admin')->group(function () {
         Route::post('/update/tenantunits-perpanjangan/{id}', [PerubahanUnitController::class, 'updateTenantUnit'])->name('updateTenantUnit');
         Route::post('/update/kepemilikanunits-pindah/{id}', [PerubahanUnitController::class, 'updateKU'])->name('updateKU');
         Route::post('/update/tenantunits-perubahan/{id}', [PerubahanUnitController::class, 'updatePerubahanUnit'])->name('updatePerubahanUnit');
+        Route::post('/update/tenantunits-tidakperpanjang/{id}', [PerubahanUnitController::class, 'deleteTenantUnit'])->name('deleteTenantUnit');
     });
 });
 

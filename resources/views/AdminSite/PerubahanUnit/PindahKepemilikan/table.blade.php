@@ -34,7 +34,7 @@
                           </div> --}}
 
                         <div class="col-4 mb-3">
-                            <label class="form-label">ID Unit</label>
+                            <label class="form-label">Unit</label>
                             <select class="form-control" name="id_unit" id="id_unit" @readonly(true) readonly>
                                     <option value="{{ $kepemilikans->id_unit }}">{{ $kepemilikans->unit->nama_unit }}</option>
                             </select>

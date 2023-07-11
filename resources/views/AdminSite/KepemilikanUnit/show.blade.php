@@ -34,7 +34,7 @@
                           </div> --}}
 
                         <div class="col-4 mb-3">
-                            <label class="form-label">ID Unit</label>
+                            <label class="form-label">Unit</label>
                             <select class="form-control" name="id_unit" id="id_unit" @readonly(true) readonly>
                                     <option value="{{ $kepemilikans->id_unit }}">{{ $kepemilikans->unit->nama_unit }}</option>
                             </select>
@@ -151,7 +151,7 @@
                                 onclick="return confirm('are you sure?')"><span class="fas fa-trash-alt fs--2 me-1"></span>OffBoarding</button>
                         </form> --}}
 
-                        <div class="mb-3">
+                        {{-- <div class="mb-3">
                             <div class=" my-3">
                         <button class="btn btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#error-modal">OffBoarding</button>
                         <div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-hidden="true">
@@ -186,7 +186,7 @@
                           </div>
                         </div>
                             </div>
-                        </div>
+                        </div> --}}
 
         </div>
     </div>

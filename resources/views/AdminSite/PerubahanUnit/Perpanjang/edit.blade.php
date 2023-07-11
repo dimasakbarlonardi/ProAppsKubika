@@ -34,7 +34,7 @@
                     </div>
                     <div class="col-6 mb-3">
                         <label class="form-label">Sewa Ke</label>
-                        <input type="text" value="{{ $tenantunit->sewa_ke }} " class="form-control" readonly>
+                        <input type="text" value="{{ $tenantunit->sewa_ke + 1}} " class="form-control" readonly>
                     </div>
                 </div>
                 <div class="row">

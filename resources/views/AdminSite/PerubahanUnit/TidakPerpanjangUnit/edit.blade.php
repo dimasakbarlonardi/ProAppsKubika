@@ -14,7 +14,7 @@
             </div>
         </div>
         <div class="p-5">
-            <form action="{{ route('updateTenantUnit', $tenantunit->id_tenant_unit) }}" method="post">
+            <form action="{{ route('deleteTenantUnit', $tenantunit->id_tenant_unit) }}" method="post">
                 @method('POST')
                 @csrf
                 <div class="row">

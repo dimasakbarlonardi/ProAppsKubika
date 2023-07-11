@@ -14,28 +14,28 @@
                 @csrf
                 <div class="mb-5">
                     <div class="row">
+                        
+                        {{-- <div class="col-4 mb-3">
+                            <label class="form-label">Unit</label>
+                            <select class="form-control" name="id_unit" id="id_unit" @readonly(true) readonly>
+                                <option value="{{ $kepemilikans->id_unit }}">{{ $kepemilikans->unit->nama_unit }}</option>
+                            </select>
+                        </div> --}}
                         <div class="col-6 mb-3">
                             <label class="form-label">Pemilik</label>
                             <select class="form-control" name="id_pemilik" id="id_pemilik" required>
                                 <option selected disabled>-- Pilih ID Pemilik --</option>
                                 @foreach ($owners as $owner)
-                                    <option value="{{ $owner->id_pemilik }}" {{ $owner->id_pemilik == $kepemilikans->id_pemilik ? 'selected' : ''}}>{{ $owner->nama_pemilik }}</option>
+                                    <option value="{{ $owner->id_pemilik }}">{{ $owner->nama_pemilik }}</option>
                                 @endforeach
                             </select>
                         </div>
-                        
-                        {{-- <div class="col-4 mb-3">
-                            <label class="form-label">Unit</label>
-                            <select class="form-control" name="id_unit" id="id_unit" @readonly(true) readonly>
-                                    <option value="{{ $kepemilikans->id_unit }}">{{ $kepemilikans->unit->nama_unit }}</option>
-                            </select>
-                        </div> --}}
                         <div class="col-6 mb-3">
                             <label class="form-label">Unit</label>
                             <select class="form-control" name="id_unit" id="id_unit" required>
                                 <option selected disabled>-- Pilih Unit --</option>
                                 @foreach ($units as $unit)
-                                    <option value="{{ $unit->id_unit }}"  {{ $unit->id_unit == $kepemilikans->id_unit ? 'selected' : ''}}>
+                                    <option value="{{ $unit->id_unit }}">
                                         {{ $unit->nama_unit }}</option>
                                 @endforeach
                             </select>
@@ -45,13 +45,13 @@
                             <select class="form-control" name="id_status_hunian" required>
                                 <option selected disabled>-- Pilih Status Hunian --</option>
                                 @foreach ($statushunians as $statushunian)
-                                    <option value="{{ $statushunian->id_statushunian_tenant }}"  {{ $statushunian->id_statushunian_tenant == $kepemilikans->id_statushunian_tenant ? 'selected' : ''}}>
+                                    <option value="{{ $statushunian->id_statushunian_tenant }}">
                                         {{ $statushunian->status_hunian_tenant }}</option>
                                 @endforeach
                             </select>
                         </div>
                         <div class="col-6 mb-3 ">
-                            <label class="form-label">Tanggal Mulai</label>
+                            <label class="form-label">Tanggal Perpindahan</label>
                             <input type="date" name="tgl_mulai" class="form-control" >
                         </div>
                         <div class="col-6 mb-3 ">
@@ -60,7 +60,7 @@
                         </div>
                         <div class="col-6 mb-3 ">
                             <label class="form-label">Keterangan</label>
-                            <input type="text" name="keterangan" class="form-control" >
+                            <input type="text" name="keterangan" class="form-control" required>
                         </div>
                     </div>
                 </div>
