@@ -42,12 +42,6 @@
             "app/Helpers/Rupiah.php",
             "app/Helpers/Persenan.php"
         ]
-            "Database\\Seeders\\": "database/seeders/"
-        },
-        "files": [
-            "app/Helpers/DateTime.php",
-            "app/helpers.php"
-        ]
     },
     "autoload-dev": {
         "psr-4": {

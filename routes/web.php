@@ -84,8 +84,6 @@ use App\Models\ChecklistOfficeManagementH;
 use App\Models\ChecklistPemadamH;
 use App\Models\ChecklistPutrH;
 use App\Models\MonthlyArTenant;
-use App\Http\Controllers\Admin\WorkRequestController;
-use App\Http\Controllers\PaymentController;
 
 /*
 |--------------------------------------------------------------------------
