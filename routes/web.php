@@ -41,6 +41,7 @@ use App\Http\Controllers\Admin\KaryawanController;
 use App\Http\Controllers\Admin\KendaraanTenantController;
 use App\Http\Controllers\Admin\KepemilikanUnitController;
 use App\Http\Controllers\Admin\LiftController;
+use App\Http\Controllers\Admin\MainFormController;
 use App\Http\Controllers\Admin\MemberTenantController;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\OffBoardingKepemilikanUnitController;
@@ -81,8 +82,6 @@ use App\Models\ChecklistOfficeManagementH;
 use App\Models\ChecklistPemadamH;
 use App\Models\ChecklistPutrH;
 use App\Models\MonthlyArTenant;
-use App\Http\Controllers\Admin\WorkRequestController;
-use App\Http\Controllers\PaymentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -112,6 +111,9 @@ Route::prefix('admin')->group(function () {
         Route::get('/dashboard', function () {
             return view('dashboard');
         })->middleware(['auth'])->name('dashboard');
+
+        // Tracking ticket
+        Route::get('tracking-tickets', [MainFormController::class, 'index'])->name('trackingTickets');
 
         // CRUD Groups
         Route::resource('groups', GroupController::class);
@@ -150,7 +152,7 @@ Route::prefix('admin')->group(function () {
         Route::get('get-vehicle/by-unit/{id}', [TenantUnitController::class, 'getVehicleUnit']);
         Route::get('get-vehicle/by-unit/{id}', [TenantUnitController::class, 'getVehicleUnit']);
 
-        Route::get('/tenantunits/{id}', [TenantUnitController::class, 'show'])->name('tenantunits.show');
+        Route::get('/tenantunits/{id}', [TenantUnitController::class, 'show'])->name('tenantunitsShow');
         Route::post('/store/tenantunits', [TenantUnitController::class, 'storeTenantUnit'])->name('storeTenantUnit');
         Route::post('/update/tenantunits/{id}', [TenantUnitController::class, 'updateTenantUnit'])->name('updateTenantUnit');
         Route::post('/delete/tenantunit/{id}', [TenantUnitController::class, 'deleteTenantUnit'])->name('deleteTenantUnit');
@@ -387,7 +389,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/tidakperpanjangunit-show/{id}', [PerubahanUnitController::class, 'showTPU'])->name('tidakperpanjang');
         Route::get('/perubahantenantunits-show/{id}', [PerubahanUnitController::class, 'showPerubahan'])->name('perubahanunit');
 
-        Route::post('/update/tenantunits-perpanjangan/{id}', [PerubahanUnitController::class, 'updateTenantUnit'])->name('updateTenantUnit');
+        Route::post('/update/tenantunits-perpanjangan/{id}', [PerubahanUnitController::class, 'updateTenantUnit'])->name('updateTenantUnit2');
         Route::post('/update/kepemilikanunits-pindah/{id}', [PerubahanUnitController::class, 'updateKU'])->name('updateKU');
         Route::post('/update/tenantunits-perubahan/{id}', [PerubahanUnitController::class, 'updatePerubahanUnit'])->name('updatePerubahanUnit');
         // CRUD Work Order
