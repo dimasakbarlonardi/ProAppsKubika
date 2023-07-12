@@ -22,6 +22,30 @@ use Illuminate\Support\Facades\App;
 
 class DashboardController extends Controller
 {
+    public function index()
+    {
+        $connTicket = ConnectionDB::setConnection(new OpenTicket());
+        $connWR = ConnectionDB::setConnection(new WorkRequest());
+        $connWO = ConnectionDB::setConnection(new WorkOrder());
+        $connBAPP = ConnectionDB::setConnection(new BAPP());
+        $connGIGO = ConnectionDB::setConnection(new RequestGIGO());
+        $connRSV = ConnectionDB::setConnection(new Reservation());
+
+        $data['entry_ticket'] = $connTicket->count();
+        $data['wr'] = $connWR->count();
+        $data['wo'] = $connWO->count();
+        $data['bapp'] = $connBAPP->count();
+        $data['gigo'] = $connGIGO->count();
+        $data['rsv'] = $connRSV->count();
+
+        $data['complete_ticket'] = $connTicket->where('status_request', 'complete')->count();
+        $data['progress_ticket'] = $connTicket->where('status_request', 'proses')
+        ->orWhere('status_request', 'on work')
+        ->count();
+
+        return view('dashboard', $data);
+    }
+
     public function notifications(Request $request)
     {
         $user = $request->session()->get('user');

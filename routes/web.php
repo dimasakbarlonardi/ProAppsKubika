@@ -108,12 +108,11 @@ Route::get('/check-role-id', [RoleController::class, 'checkRoleID']);
 Route::prefix('admin')->group(function () {
     Route::middleware(['auth'])->group(function () {
 
-        Route::get('/dashboard', function () {
-            return view('dashboard');
-        })->middleware(['auth'])->name('dashboard');
+        Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
         // Tracking ticket
         Route::get('tracking-tickets', [MainFormController::class, 'index'])->name('trackingTickets');
+        Route::get('tracking-ticket/{id}', [MainFormController::class, 'show'])->name('trackingTicketShow');
 
         // CRUD Groups
         Route::resource('groups', GroupController::class);
