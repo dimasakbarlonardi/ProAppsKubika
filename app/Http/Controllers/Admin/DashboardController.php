@@ -7,13 +7,18 @@ use App\Http\Controllers\Controller;
 use App\Models\Approve;
 use App\Models\ApproveRequest;
 use App\Models\BAPP;
+use App\Models\Karyawan;
 use App\Models\Notifikasi;
 use App\Models\OpenTicket;
+use App\Models\OwnerH;
 use App\Models\RequestGIGO;
 use App\Models\RequestPermit;
 use App\Models\Reservation;
+use App\Models\Tenant;
+use App\Models\Tower;
 use App\Models\Transaction;
 use App\Models\TransactionCenter;
+use App\Models\Unit;
 use App\Models\WorkOrder;
 use App\Models\WorkPermit;
 use App\Models\WorkRequest;
@@ -30,6 +35,11 @@ class DashboardController extends Controller
         $connBAPP = ConnectionDB::setConnection(new BAPP());
         $connGIGO = ConnectionDB::setConnection(new RequestGIGO());
         $connRSV = ConnectionDB::setConnection(new Reservation());
+        $connTower = ConnectionDB::setConnection(new Tower());
+        $connEmployee = ConnectionDB::setConnection(new Karyawan());
+        $connUnit = ConnectionDB::setConnection(new Unit());
+        $connOwner = ConnectionDB::setConnection(new OwnerH());
+        $connTenant = ConnectionDB::setConnection(new Tenant());
 
         $data['entry_ticket'] = $connTicket->count();
         $data['wr'] = $connWR->count();
@@ -37,6 +47,11 @@ class DashboardController extends Controller
         $data['bapp'] = $connBAPP->count();
         $data['gigo'] = $connGIGO->count();
         $data['rsv'] = $connRSV->count();
+        $data['tower'] = $connTower->count();
+        $data['karyawan'] = $connEmployee->count();
+        $data['unit'] = $connUnit->count();
+        $data['owner'] = $connOwner->count();
+        $data['tenant'] = $connTenant->count();
 
         $data['complete_ticket'] = $connTicket->where('status_request', 'complete')->count();
         $data['progress_ticket'] = $connTicket->where('status_request', 'proses')
