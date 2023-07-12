@@ -7,6 +7,262 @@
                 <div class="card-header">
                     <div class="row flex-between-center">
                         <div class="col-auto">
+                            <h5 class="mb-0 text-light">Ticket Peformance (Volume)</h5>
+                        </div>
+                        <div class="col-auto d-flex">
+                            <div class="row">
+                                <div class="col">
+                                    <label class="label-form" for="">Showing data from</label>
+                                    <input type="date" class="form-control" name="" id="">
+                                </div>
+                                <div class="col">
+                                    <label class="label-form" for="">To</label>
+                                    <input type="date" class="form-control" name="" id="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body h-100 pe-0">
+                    <div class="row g-3 mb-3">
+                        <div class="col-xxl-9">
+                            <div class="row g-3 mb-3">
+                                <div class="col-sm-6 col-md-4">
+                                    <div class="card overflow-hidden" style="min-width: 12rem">
+                                        <div class="bg-holder bg-card"
+                                            style="background-image:url(../assets/img/icons/spot-illustrations/corner-1.png);">
+                                        </div>
+                                        <!--/.bg-holder-->
+                                        <div class="card-body position-relative">
+                                            <h6>Entry Ticket</h6>
+                                            <div class="display-4 fs-4 mb-2 fw-normal font-sans-serif text-warning">
+                                                {{ $entry_ticket }}</div>
+                                            <a class="fw-semi-bold fs--1 text-nowrap"
+                                                href="../app/e-commerce/customers.html">See all
+                                                <span class="fas fa-angle-right ms-1" data-fa-transform="down-1"></span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-md-4">
+                                    <div class="card overflow-hidden" style="min-width: 12rem">
+                                        <div class="bg-holder bg-card"
+                                            style="background-image:url(../assets/img/icons/spot-illustrations/corner-2.png);">
+                                        </div>
+                                        <!--/.bg-holder-->
+                                        <div class="card-body position-relative">
+                                            <h6>Work Request</h6>
+                                            <div class="display-4 fs-4 mb-2 fw-normal font-sans-serif text-info">
+                                                {{ $wr }}</div>
+                                            <a class="fw-semi-bold fs--1 text-nowrap"
+                                                href="../app/e-commerce/customers.html">See all
+                                                <span class="fas fa-angle-right ms-1" data-fa-transform="down-1"></span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card overflow-hidden" style="min-width: 12rem">
+                                        <div class="bg-holder bg-card"
+                                            style="background-image:url(../assets/img/icons/spot-illustrations/corner-3.png);">
+                                        </div>
+                                        <!--/.bg-holder-->
+                                        <div class="card-body position-relative">
+                                            <h6>Work Order</h6>
+                                            <div class="display-4 fs-4 mb-2 fw-normal font-sans-serif">{{ $wo }}
+                                            </div>
+                                            <a class="fw-semi-bold fs--1 text-nowrap"
+                                                href="../app/e-commerce/customers.html">See all
+                                                <span class="fas fa-angle-right ms-1" data-fa-transform="down-1"></span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row g-3 mb-3">
+                        <div class="col-xxl-9">
+                            <div class="row g-3 mb-3">
+                                <div class="col-sm-6 col-md-4">
+                                    <div class="card overflow-hidden" style="min-width: 12rem">
+                                        <div class="bg-holder bg-card"
+                                            style="background-image:url(../assets/img/icons/spot-illustrations/corner-2.png);">
+                                        </div>
+                                        <!--/.bg-holder-->
+                                        <div class="card-body position-relative">
+                                            <h6>BAPP</h6>
+                                            <div class="display-4 fs-4 mb-2 fw-normal font-sans-serif text-warning">
+                                                {{ $bapp }}</div>
+                                            <a class="fw-semi-bold fs--1 text-nowrap"
+                                                href="../app/e-commerce/customers.html">See all
+                                                <span class="fas fa-angle-right ms-1" data-fa-transform="down-1"></span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-sm-6 col-md-4">
+                                    <div class="card overflow-hidden" style="min-width: 12rem">
+                                        <div class="bg-holder bg-card"
+                                            style="background-image:url(../assets/img/icons/spot-illustrations/corner-3.png);">
+                                        </div>
+                                        <!--/.bg-holder-->
+                                        <div class="card-body position-relative">
+                                            <h6>GIGO</h6>
+                                            <div class="display-4 fs-4 mb-2 fw-normal font-sans-serif text-info">
+                                                {{ $gigo }}</div>
+                                            <a class="fw-semi-bold fs--1 text-nowrap"
+                                                href="../app/e-commerce/customers.html">See all
+                                                <span class="fas fa-angle-right ms-1" data-fa-transform="down-1"></span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="card overflow-hidden" style="min-width: 12rem">
+                                        <div class="bg-holder bg-card"
+                                            style="background-image:url(../assets/img/icons/spot-illustrations/corner-1.png);">
+                                        </div>
+                                        <!--/.bg-holder-->
+                                        <div class="card-body position-relative">
+                                            <h6>Reservation</h6>
+                                            <div class="display-4 fs-4 mb-2 fw-normal font-sans-serif">{{ $rsv }}
+                                            </div>
+                                            <a class="fw-semi-bold fs--1 text-nowrap"
+                                                href="../app/e-commerce/customers.html">See all
+                                                <span class="fas fa-angle-right ms-1" data-fa-transform="down-1"></span>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row g-0 my-4">
+        <div class="col-lg-12 ps-lg-2 mb-3">
+            <div class="card h-lg-100">
+                <div class="card-header">
+                    <div class="row flex-between-center">
+                        <div class="col-auto">
+                            <h5 class="mb-0 text-light">Ticket Peformance (Quality)</h5>
+                        </div>
+                        <div class="col-auto d-flex">
+                            <div class="row">
+                                <div class="col">
+                                    <label class="label-form" for="">Showing data from</label>
+                                    <input type="date" class="form-control" name="" id="">
+                                </div>
+                                <div class="col">
+                                    <label class="label-form" for="">To</label>
+                                    <input type="date" class="form-control" name="" id="">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-body h-100 pe-0 p-4">
+                    <div class="col">
+                        <div class="row g-3">
+                            <div class="col-md-3 col-xxl-12">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <div class="row flex-between-center g-0">
+                                            <div class="col-6 d-lg-block flex-between-center">
+                                                <h6 class="mb-2 text-900">Ticket Complete</h6>
+                                                <h4 class="fs-3 fw-normal text-700 mb-0">
+                                                    <span>{{ $complete_ticket }}</span>
+                                                    <span>/</span>
+                                                    <span>{{ $entry_ticket }}</span>
+                                                </h4>
+                                            </div>
+                                            <div class="col-auto h-100">
+                                                <img height="45"
+                                                    src="{{ asset('assets/img/icons/ticket_complete.png') }}"
+                                                    alt="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-xxl-12">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <div class="row flex-between-center g-0">
+                                            <div class="col-7 d-lg-block flex-between-center">
+                                                <h6 class="mb-2 text-900">Ticket on Progress</h6>
+                                                <h4 class="fs-3 fw-normal text-700 mb-0">
+                                                    <span>{{ $progress_ticket }}</span>
+                                                    <span>/</span>
+                                                    <span>{{ $entry_ticket }}</span>
+                                                </h4>
+                                            </div>
+                                            <div class="col-auto h-100">
+                                                <img height="45"
+                                                    src="{{ asset('assets/img/icons/ticket_on_progress.png') }}"
+                                                    alt="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-xxl-12">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <div class="row flex-between-center g-0">
+                                            <div class="col-6 d-lg-block flex-between-center">
+                                                <h6 class="mb-2 text-900">Ticket Hold</h6>
+                                                <h4 class="fs-3 fw-normal text-700 mb-0">
+                                                    <span>0</span>
+                                                    <span>/</span>
+                                                    <span>{{ $entry_ticket }}</span>
+                                                </h4>
+                                            </div>
+                                            <div class="col-auto h-100">
+                                                <img height="45" src="{{ asset('assets/img/icons/ticket_hold.png') }}"
+                                                    alt="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-xxl-12">
+                                <div class="card h-100">
+                                    <div class="card-body">
+                                        <div class="row flex-between-center g-0">
+                                            <div class="col-6 d-lg-block flex-between-center">
+                                                <h6 class="mb-2 text-900">Ticket Cancel</h6>
+                                                <h4 class="fs-3 fw-normal text-700 mb-0">
+                                                    <span>0</span>
+                                                    <span>/</span>
+                                                    <span>{{ $entry_ticket }}</span>
+                                                </h4>
+                                            </div>
+                                            <div class="col-auto h-100">
+                                                <img height="45"
+                                                    src="{{ asset('assets/img/icons/ticket_cancel.png') }}"
+                                                    alt="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row g-0">
+        <div class="col-lg-12 ps-lg-2 mb-3">
+            <div class="card h-lg-100">
+                <div class="card-header">
+                    <div class="row flex-between-center">
+                        <div class="col-auto">
                             <h6 class="mb-0 text-light">Total Sales</h6>
                         </div>
                         <div class="col-auto d-flex"><select class="form-select form-select-sm select-month me-2">
@@ -48,225 +304,9 @@
         </div>
     </div>
     <div class="row g-0">
-        <div class="col-lg-8 pe-lg-2 mb-3">
-            <div class="card h-lg-100 overflow-hidden">
-                <div class="card-header bg-light">
-                    <div class="row align-items-center">
-                        <div class="col">
-                            <h6 class="mb-0">Running Projects</h6>
-                        </div>
-                        <div class="col-auto text-center pe-x1"><select class="form-select form-select-sm">
-                                <option>Working Time</option>
-                                <option>Estimated Time</option>
-                                <option>Billable Time</option>
-                            </select></div>
-                    </div>
-                </div>
-                <div class="card-body p-0">
-                    <div class="row g-0 align-items-center py-2 position-relative border-bottom border-200">
-                        <div class="col ps-x1 py-1 position-static">
-                            <div class="d-flex align-items-center">
-                                <div class="avatar avatar-xl me-3">
-                                    <div class="avatar-name rounded-circle bg-primary-subtle text-dark">
-                                        <span class="fs-0 text-primary">F</span>
-                                    </div>
-                                </div>
-                                <div class="flex-1">
-                                    <h6 class="mb-0 d-flex align-items-center"><a class="text-800 stretched-link"
-                                            href="#!">Falcon</a><span
-                                            class="badge rounded-pill ms-2 bg-200 text-primary">38%</span>
-                                    </h6>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col py-1">
-                            <div class="row flex-end-center g-0">
-                                <div class="col-auto pe-2">
-                                    <div class="fs--1 fw-semi-bold">12:50:00</div>
-                                </div>
-                                <div class="col-5 pe-x1 ps-2">
-                                    <div class="progress bg-200 me-2" style="height: 5px;" role="progressbar"
-                                        aria-valuenow="38" aria-valuemin="0" aria-valuemax="100">
-                                        <div class="progress-bar rounded-pill" style="width: 38%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row g-0 align-items-center py-2 position-relative border-bottom border-200">
-                        <div class="col ps-x1 py-1 position-static">
-                            <div class="d-flex align-items-center">
-                                <div class="avatar avatar-xl me-3">
-                                    <div class="avatar-name rounded-circle bg-success-subtle text-dark">
-                                        <span class="fs-0 text-success">R</span>
-                                    </div>
-                                </div>
-                                <div class="flex-1">
-                                    <h6 class="mb-0 d-flex align-items-center"><a class="text-800 stretched-link"
-                                            href="#!">Reign</a><span
-                                            class="badge rounded-pill ms-2 bg-200 text-primary">79%</span>
-                                    </h6>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col py-1">
-                            <div class="row flex-end-center g-0">
-                                <div class="col-auto pe-2">
-                                    <div class="fs--1 fw-semi-bold">25:20:00</div>
-                                </div>
-                                <div class="col-5 pe-x1 ps-2">
-                                    <div class="progress bg-200 me-2" style="height: 5px;" role="progressbar"
-                                        aria-valuenow="79" aria-valuemin="0" aria-valuemax="100">
-                                        <div class="progress-bar rounded-pill" style="width: 79%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row g-0 align-items-center py-2 position-relative border-bottom border-200">
-                        <div class="col ps-x1 py-1 position-static">
-                            <div class="d-flex align-items-center">
-                                <div class="avatar avatar-xl me-3">
-                                    <div class="avatar-name rounded-circle bg-info-subtle text-dark"><span
-                                            class="fs-0 text-info">B</span></div>
-                                </div>
-                                <div class="flex-1">
-                                    <h6 class="mb-0 d-flex align-items-center"><a class="text-800 stretched-link"
-                                            href="#!">Boots4</a><span
-                                            class="badge rounded-pill ms-2 bg-200 text-primary">90%</span>
-                                    </h6>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col py-1">
-                            <div class="row flex-end-center g-0">
-                                <div class="col-auto pe-2">
-                                    <div class="fs--1 fw-semi-bold">58:20:00</div>
-                                </div>
-                                <div class="col-5 pe-x1 ps-2">
-                                    <div class="progress bg-200 me-2" style="height: 5px;" role="progressbar"
-                                        aria-valuenow="90" aria-valuemin="0" aria-valuemax="100">
-                                        <div class="progress-bar rounded-pill" style="width: 90%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row g-0 align-items-center py-2 position-relative border-bottom border-200">
-                        <div class="col ps-x1 py-1 position-static">
-                            <div class="d-flex align-items-center">
-                                <div class="avatar avatar-xl me-3">
-                                    <div class="avatar-name rounded-circle bg-warning-subtle text-dark">
-                                        <span class="fs-0 text-warning">R</span>
-                                    </div>
-                                </div>
-                                <div class="flex-1">
-                                    <h6 class="mb-0 d-flex align-items-center"><a class="text-800 stretched-link"
-                                            href="#!">Raven</a><span
-                                            class="badge rounded-pill ms-2 bg-200 text-primary">40%</span>
-                                    </h6>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col py-1">
-                            <div class="row flex-end-center g-0">
-                                <div class="col-auto pe-2">
-                                    <div class="fs--1 fw-semi-bold">21:20:00</div>
-                                </div>
-                                <div class="col-5 pe-x1 ps-2">
-                                    <div class="progress bg-200 me-2" style="height: 5px;" role="progressbar"
-                                        aria-valuenow="40" aria-valuemin="0" aria-valuemax="100">
-                                        <div class="progress-bar rounded-pill" style="width: 40%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="row g-0 align-items-center py-2 position-relative">
-                        <div class="col ps-x1 py-1 position-static">
-                            <div class="d-flex align-items-center">
-                                <div class="avatar avatar-xl me-3">
-                                    <div class="avatar-name rounded-circle bg-danger-subtle text-dark">
-                                        <span class="fs-0 text-danger">S</span>
-                                    </div>
-                                </div>
-                                <div class="flex-1">
-                                    <h6 class="mb-0 d-flex align-items-center"><a class="text-800 stretched-link"
-                                            href="#!">Slick</a><span
-                                            class="badge rounded-pill ms-2 bg-200 text-primary">70%</span>
-                                    </h6>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col py-1">
-                            <div class="row flex-end-center g-0">
-                                <div class="col-auto pe-2">
-                                    <div class="fs--1 fw-semi-bold">31:20:00</div>
-                                </div>
-                                <div class="col-5 pe-x1 ps-2">
-                                    <div class="progress bg-200 me-2" style="height: 5px;" role="progressbar"
-                                        aria-valuenow="70" aria-valuemin="0" aria-valuemax="100">
-                                        <div class="progress-bar rounded-pill" style="width: 70%"></div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="card-footer bg-light p-0"><a class="btn btn-sm btn-link d-block w-100 py-2"
-                        href="#!">Show all projects<span class="fas fa-chevron-right ms-1 fs--2"></span></a></div>
-            </div>
-        </div>
-        <div class="col-lg-5 col-xl-4 ps-lg-2 mb-3">
-            <div class="card">
-                <div class="card-header d-flex flex-between-center bg-light py-2">
-                    <h6 class="mb-0">Shared Files</h6>
-                    {{-- <a class="py-1 fs--1 font-sans-serif" href="#!">View All</a> --}}
-                    <a class="btn btn-link btn-sm me-2" href="#!">View Details</a>
-                </div>
-                <div class="card-body pb-0">
-                    <div class="d-flex mb-3 hover-actions-trigger align-items-center">
-                        <div class="file-thumbnail"><img class="border h-100 w-100 object-fit-cover rounded-2"
-                                src="/assets/img/products/5-thumb.png" alt="" /></div>
-                        <div class="ms-3 flex-shrink-1 flex-grow-1">
-                            <h6 class="mb-1"><a class="stretched-link text-900 fw-semi-bold"
-                                    href="#!">apple-smart-watch.png</a></h6>
-                            <div class="fs--1"><span class="fw-semi-bold">Antony</span><span
-                                    class="fw-medium text-600 ms-2">Just Now</span></div>
-                        </div>
-                    </div>
-                    <hr class="text-200" />
-                    <div class="d-flex mb-3 hover-actions-trigger align-items-center">
-                        <div class="file-thumbnail"><img class="border h-100 w-100 object-fit-cover rounded-2"
-                                src="/assets/img/products/3-thumb.png" alt="" /></div>
-                        <div class="ms-3 flex-shrink-1 flex-grow-1">
-                            <h6 class="mb-1"><a class="stretched-link text-900 fw-semi-bold"
-                                    href="#!">iphone.jpg</a></h6>
-                            <div class="fs--1"><span class="fw-semi-bold">Antony</span><span
-                                    class="fw-medium text-600 ms-2">Yesterday at 1:30 PM</span></div>
-                        </div>
-                    </div>
-
-                    <hr class="text-200" />
-                    <div class="d-flex mb-3 hover-actions-trigger align-items-center">
-                        <div class="file-thumbnail"><img class="border h-100 w-100 object-fit-cover rounded-2"
-                                src="/assets/img/products/2-thumb.png" alt="" /></div>
-                        <div class="ms-3 flex-shrink-1 flex-grow-1">
-                            <h6 class="mb-1"><a class="stretched-link text-900 fw-semi-bold"
-                                    href="#!">iMac.jpg</a></h6>
-                            <div class="fs--1"><span class="fw-semi-bold">Rowen</span><span
-                                    class="fw-medium text-600 ms-2">23 Sep at 6:10 PM</span></div>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row g-0">
         <div class="col-xxl-6 px-xxl-2">
             <div class="card h-100">
-                <div class="card-header bg-light py-2">
+                <div class="card-header py-2">
                     <div class="row flex-between-center">
                         <div class="col-auto">
                             <h6 class="mb-0">Top Products</h6>
