@@ -44,7 +44,7 @@
                                     </a>
                                     <div class="ms-1 ms-sm-3">
                                         <p class="fw-semi-bold mb-3 mb-sm-2">
-                                            <a href="{{ route('open-tickets.show', $ticket->id) }}" class="mr-5">Ticket
+                                            <a href="{{ route('trackingTicketShow', $ticket->id) }}" class="mr-5">Ticket
                                                 #{{ $ticket->no_tiket }}</a>
                                             <span class="badge bg-info ml-">
                                                 {{ $ticket->jenisRequest->jenis_request }}

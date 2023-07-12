@@ -25,4 +25,15 @@ class MainFormController extends Controller
             return view('AdminSite.TrackingTicket.index', $data);
         }
     }
+
+    public function show($id)
+    {
+        $connRequest = ConnectionDB::setConnection(new OpenTicket());
+
+        $ticket = $connRequest->where('id', $id)->with('Tenant')->first();
+
+        $data['ticket'] = $ticket;
+
+        return view('AdminSite.TrackingTicket.show', $data);
+    }
 }
