@@ -467,6 +467,7 @@ Route::prefix('admin')->group(function () {
         // CRUD PerubahanUnit
         Route::resource('perubahanunits', PerubahanUnitController::class);
         Route::get('tenantunit-by-id/{id}', [PerubahanUnitController::class, 'unitBy'])->name('unit-by');
+        Route::get('kepemilikanunit-by-id/{id}', [PerubahanUnitController::class, 'kepemilikanByID'])->name('kepemilikan-by-id');
 
         Route::get('/get/perpanjangunits-edit/{id}', [PerubahanUnitController::class, 'edit'])->name('edittenantunit');
         Route::get('/get/kepemilikanunits-edit/{id}', [PerubahanUnitController::class, 'editKU'])->name('editkepemilikanunit');

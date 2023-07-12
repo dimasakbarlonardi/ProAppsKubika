@@ -29,14 +29,16 @@
                                 @endforeach
                             </select>
                         </div>
-                    </div>
-                    <div class="row" id="detail_tenantunit">
-                        <td scope="col-6 mb-3" id="detail_tenantunit">
+                        <div class="col-6 mb-3" id="detail_tenantunit">
                             <label class="form-label">Pemilik</label>
-                            <input type="text" id="id_pemilik" name="id_pemilik"
-                                class="form-control" readonly>
-                        </td>
-                    </div>
+                            <select class="form-control" name="id_pemilik" id="id_pemilik" required>
+                                <option selected disabled>-- Pilih Pemilik --</option>
+                                @foreach ($owners as $owner)
+                                    <option value="{{ $owner->id_pemilik }}">{{ $owner->nama_pemilik }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                      
                         {{-- <div class="col-6 mb-3">
                         <label class="form-label">Unit</label>
                         <input type="text" value="{{ $tenantunit->unit->nama_unit}}" class="form-control" readonly>
@@ -102,7 +104,7 @@
                                 jatuh tempo utility:</label>
                             <input class="form-control" type="date" name="tgl_jatuh_tempo_util" required>
                         </div>
-                        <div class="col-6 mb-3">
+                        <div class="col-6 mb-5">
                             <label class="form-label">Keterangan</label>
                             <input type="text" name="keterangan" class="form-control" required>
                         </div>
@@ -239,6 +241,7 @@
                 url: '/admin/unit-by-id/' + id_unit,
                 type: 'GET',
                 success: function(data) {
+                    console.log(data.unit)
                     $('#luas_unit').val(data.unit.luas_unit)
                     $('#barcode_unit').val(data.unit.barcode_unit)
                     $('#barcode_meter_air').val(data.unit.barcode_meter_air)
@@ -260,24 +263,7 @@
     })
 </script>
 
-<script>
-    $('document').ready(function() {
 
-        $('#id_unit').on('change', function() {
-            var id_unit = $(this).val();
-            console.log(id_unit)
-
-            $('#detail_unit').css('display', 'inline');
-            $.ajax({
-                url: '/admin/tenantunit-by-id/' + id_unit,
-                type: 'GET',
-                success: function(data) {
-                    console.log(id_unit, data)
-                }
-            })
-        })
-    })
-</script>
 
     <script>
         function calcDate() {

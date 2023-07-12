@@ -24,9 +24,9 @@
                         <div class="col-6 mb-3">
                             <label class="form-label">Pemilik</label>
                             <select class="form-control" name="id_pemilik" id="id_pemilik" required>
-                                <option selected disabled>-- Pilih ID Pemilik --</option>
+                                <option selected disabled>-- Pilih Pemilik --</option>
                                 @foreach ($owners as $owner)
-                                    <option value="{{ $owner->id_pemilik }}">{{ $owner->nama_pemilik }}</option>
+                                    <option value="{{ $owner->id_pemilik }}" {{ $owner->id_pemilik == $kepemilikans->id_pemilik ? 'selected':''}}>{{ $owner->nama_pemilik }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -34,13 +34,48 @@
                             <label class="form-label">Unit</label>
                             <select class="form-control" name="id_unit" id="id_unit" required>
                                 <option selected disabled>-- Pilih Unit --</option>
-                                @foreach ($units as $unit)
+                                @foreach ($kepemilikanunits as $unit)
                                     <option value="{{ $unit->id_unit }}">
-                                        {{ $unit->nama_unit }}</option>
+                                        {{ $unit->Unit->nama_unit }}</option>
                                 @endforeach
                             </select>
                         </div>
-                        <div class="col-6 mb-3">
+                    </div>
+
+                    <div class="mb-3" id="detail_kepemilikan_unit" style="display: none">
+                        <div class="table-responsive scrollbar">
+                            <table class="table">
+                                <tr>
+                                    <th scope="col"><b> Information Kepemilikan Unit </b></th>
+                                </tr>
+                                <tr>
+                                    <th scope="col">Status Hunian</th>
+                                    <td scope="col">
+                                        <input type="text" maxlength="3" id="id_status_hunian" name="id_status_hunian" class="form-control" readonly>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="col">Tanggal Mulai</th>
+                                    <td scope="col">
+                                        <input type="text" id="tgl_mulai" name="tgl_mulai" class="form-control" readonly>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="col">No Bukti Milik</th>
+                                    <td scope="col">
+                                        <input type="text" maxlength="3" id="no_bukti_milik" name="no_bukti_milik" class="form-control" readonly>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="col">Keterangan</th>
+                                    <td scope="col">
+                                        <input type="text" id="keterangan" name="keterangan" class="form-control" readonly>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                        {{-- <div class="col-6 mb-3">
                             <label class="form-label">Status Hunian</label>
                             <select class="form-control" name="id_status_hunian" required>
                                 <option selected disabled>-- Pilih Status Hunian --</option>
@@ -51,7 +86,7 @@
                             </select>
                         </div>
                         <div class="col-6 mb-3 ">
-                            <label class="form-label">Tanggal Perpindahan</label>
+                            <label class="form-label">Tanggal Mulai</label>
                             <input type="date" name="tgl_mulai" class="form-control" >
                         </div>
                         <div class="col-6 mb-3 ">
@@ -59,6 +94,19 @@
                             <input type="text" name="no_bukti_milik" class="form-control" >
                         </div>
                         <div class="col-6 mb-3 ">
+                            <label class="form-label">Keterangan</label>
+                            <input type="text" name="keterangan" class="form-control" required>
+                        </div>
+                    </div> --}}
+                    <div class="row mt-3">
+                        <th scope="col"><b> keterangan pindah kepemilikan </b></th>'
+                    </div>
+                    <div class="row">
+                        <div class="col-6 mb-3 mt-2 ">
+                            <label class="form-label">Tanggal Perpindahan</label>
+                            <input type="date" name="tgl_keluar" class="form-control" >
+                        </div>
+                        <div class="col-6 mb-3 mt-2 ">
                             <label class="form-label">Keterangan</label>
                             <input type="text" name="keterangan" class="form-control" required>
                         </div>
@@ -160,23 +208,6 @@
 @section('script')
     <script>
         $('document').ready(function() {
-            $('#id_pemilik').on('change', function() {
-                var id_pemilik = $(this).val()
-                $.ajax({
-                    url: '/admin/kepemilikan-unit/' + id_pemilik,
-                    type: 'GET',
-                    success: function(data) {
-                        console.log(data.units)
-                        $.each(data.units, function(key, value) {
-                            console.log(key, value.id_unit)
-                            $("#id_unit").append('<option value=' + value.id_unit +
-                                '>' + value.nama_unit + '</option>');
-                        });
-                    }
-                }) 
-
-            })
-
             $('#id_unit').on('change', function() {
                 var id_unit = $(this).val();
 
@@ -206,4 +237,25 @@
             })
         })
     </script>
+
+<script>
+    $('document').ready(function() {
+        $('#id_unit').on('change', function() {
+            var id_unit = $(this).val();
+
+            $('#detail_kepemilikan_unit').css('display', 'inline');
+            $.ajax({
+                url: '/admin/kepemilikanunit-by-id/' + id_unit,
+                type: 'GET',
+                success: function(data) {
+                    console.log(data.unit)
+                    $('#id_status_hunian').val(data.unit.id_status_hunian)
+                    $('#tgl_mulai').val(data.unit.tgl_mulai)
+                    $('#no_bukti_milik').val(data.unit.no_bukti_milik)
+                    $('#keterangan').val(data.unit.keterangan)
+                }
+            })
+        })
+    })
+</script>
 @endsection

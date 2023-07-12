@@ -60,6 +60,15 @@ class PerubahanUnitController extends Controller
         return response()->json(['tenantunit' => $tenantunit]);
     }
 
+    public function kepemilikanByID($id)
+    {
+        $connkepemilikan = ConnectionDB::setConnection(new KepemilikanUnit());
+
+        $connkepemilikan = $connkepemilikan->where('id_unit', $id)->first();
+
+        return response()->json(['unit' => $connkepemilikan]);
+    }
+
 
     /**
      * Display a listing of the resource.
@@ -189,17 +198,17 @@ class PerubahanUnitController extends Controller
         $createOff->id_unit = $tu->id_unit;
         $createOff->id_status_hunian = $tu->id_status_hunian;
         $createOff->tgl_masuk = $tu->created_at;
-        $createOff->tgl_keluar = $tu->updated_at;
+        $createOff->tgl_keluar = $request->tgl_keluar;
         $createOff->no_bukti_milik = $tu->no_bukti_milik;
         $createOff->keterangan = $request->keterangan;
         $createOff->save();
 
         $tu->id_unit = $request->id_unit;
         $tu->id_pemilik = $request->id_pemilik;
-        $tu->id_status_hunian = $request->id_status_hunian;
-        $tu->tgl_mulai = $request->tgl_mulai;
-        $tu->no_bukti_milik = $request->no_bukti_milik;
-        $tu->keterangan = $request->keterangan;
+        $tu->id_status_hunian = $tu->id_status_hunian;
+        $tu->tgl_mulai = $tu->tgl_mulai;
+        $tu->no_bukti_milik = $tu->no_bukti_milik;
+        $tu->keterangan = $tu->keterangan;
         $tu->save();
 
         DB::commit();
@@ -340,11 +349,14 @@ class PerubahanUnitController extends Controller
         $connOwner = ConnectionDB::setConnection(new OwnerH());
         $connUnit = ConnectionDB::setConnection(new Unit());
         $connStatushunian = ConnectionDB::setConnection(new StatusHunianTenant());
+        $connTenantUnit = ConnectionDB::setConnection(new TenantUnit());
 
         $data['kepemilikans'] = $conn->where('id_pemilik', $id)->first();
+        $data['kepemilikanunits'] = $conn->where('id_pemilik', $id)->get();
         // $data['kepemilikans'] = $conn->find($id);
         $data['owners'] = $connOwner->get();
         $data['units'] = $connUnit->get();
+        // $data['tenant_units'] = $connTenantUnit->where('id_tenant', $id)->get();
         $data['statushunians'] = $connStatushunian->get();
 
         return view('AdminSite.PerubahanUnit.PindahKepemilikan.edit', $data);
