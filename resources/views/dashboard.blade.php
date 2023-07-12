@@ -355,18 +355,6 @@
                         <div class="col-auto">
                             <h5 class="mb-0 text-light">Ticket Peformance (Volume)</h5>
                         </div>
-                        <div class="col-auto d-flex">
-                            <div class="row">
-                                <div class="col">
-                                    <label class="label-form" for="">Showing data from</label>
-                                    <input type="date" class="form-control" name="" id="">
-                                </div>
-                                <div class="col">
-                                    <label class="label-form" for="">To</label>
-                                    <input type="date" class="form-control" name="" id="">
-                                </div>
-                            </div>
-                        </div>
                     </div>
                 </div>
                 <div class="card-body h-100 pe-0">
@@ -496,18 +484,6 @@
                     <div class="row flex-between-center">
                         <div class="col-auto">
                             <h5 class="mb-0 text-light">Ticket Peformance (Quality)</h5>
-                        </div>
-                        <div class="col-auto d-flex">
-                            <div class="row">
-                                <div class="col">
-                                    <label class="label-form" for="">Showing data from</label>
-                                    <input type="date" class="form-control" name="" id="">
-                                </div>
-                                <div class="col">
-                                    <label class="label-form" for="">To</label>
-                                    <input type="date" class="form-control" name="" id="">
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
