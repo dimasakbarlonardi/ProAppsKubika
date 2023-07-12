@@ -1,6 +1,120 @@
 @extends('layouts.master')
 
 @section('content')
+<div class="row g-0 my-4">
+    <div class="col-lg-12 ps-lg-2 mb-3">
+        <div class="card h-lg-100">
+            <div class="card-header">
+                <div class="row flex-between-center">
+                    <div class="col-auto">
+                        <h5 class="mb-0 text-light">Building Information</h5>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body h-100 pe-0 p-4">
+                <div class="col">
+                    <div class="row g-3">
+                        <div class="col-3 col-xxl-12">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <div class="row flex-between-center g-0">
+                                        <div class="col-auto h-100">
+                                            <img height="45"
+                                                src="{{ asset('assets/img/icons/tower_icon.png') }}"
+                                                alt="">
+                                        </div>
+                                        <div class="col-6 d-lg-block flex-between-center">
+                                            <h6 class="mb-2 text-900">Tower</h6>
+                                            <h4 class="fs-3 fw-normal text-700 mb-0">
+                                                <span>{{ $tower }}</span>
+                                            </h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3 col-xxl-12">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <div class="row flex-between-center g-0">
+                                        <div class="col-auto h-100">
+                                            <img height="45"
+                                                src="{{ asset('assets/img/icons/karyawan_icon.png') }}"
+                                                alt="">
+                                        </div>
+                                        <div class="col-6 d-lg-block flex-between-center">
+                                            <h6 class="mb-2 text-900">Employee</h6>
+                                            <h4 class="fs-3 fw-normal text-700 mb-0">
+                                                <span>{{ $karyawan }}</span>
+                                            </h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3 col-xxl-12">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <div class="row flex-between-center g-0">
+                                        <div class="col-auto h-100">
+                                            <img height="45"
+                                                src="{{ asset('assets/img/icons/unit_icon.png') }}"
+                                                alt="">
+                                        </div>
+                                        <div class="col-6 d-lg-block flex-between-center">
+                                            <h6 class="mb-2 text-900">Unit</h6>
+                                            <h4 class="fs-3 fw-normal text-700 mb-0">
+                                                <span>{{ $unit }}</span>
+                                            </h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3 col-xxl-12">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <div class="row flex-between-center g-0">
+                                        <div class="col-auto h-100">
+                                            <img height="45"
+                                                src="{{ asset('assets/img/icons/owner.png') }}"
+                                                alt="">
+                                        </div>
+                                        <div class="col-6 d-lg-block flex-between-center">
+                                            <h6 class="mb-2 text-900">Owner</h6>
+                                            <h4 class="fs-3 fw-normal text-700 mb-0">
+                                                <span>{{ $tower }}</span>
+                                            </h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-3 col-xxl-12">
+                            <div class="card h-100">
+                                <div class="card-body">
+                                    <div class="row flex-between-center g-0">
+                                        <div class="col-auto h-100">
+                                            <img height="45"
+                                                src="{{ asset('assets/img/icons/tenant_icon.png') }}"
+                                                alt="">
+                                        </div>
+                                        <div class="col-6 d-lg-block flex-between-center">
+                                            <h6 class="mb-2 text-900">Tenant</h6>
+                                            <h4 class="fs-3 fw-normal text-700 mb-0">
+                                                <span>{{ $tenant }}</span>
+                                            </h4>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
     <div class="row g-0">
         <div class="col-lg-12 ps-lg-2 mb-3">
             <div class="card h-lg-100">
@@ -8,18 +122,6 @@
                     <div class="row flex-between-center">
                         <div class="col-auto">
                             <h5 class="mb-0 text-light">Ticket Peformance (Volume)</h5>
-                        </div>
-                        <div class="col-auto d-flex">
-                            <div class="row">
-                                <div class="col">
-                                    <label class="label-form" for="">Showing data from</label>
-                                    <input type="date" class="form-control" name="" id="">
-                                </div>
-                                <div class="col">
-                                    <label class="label-form" for="">To</label>
-                                    <input type="date" class="form-control" name="" id="">
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -150,18 +252,6 @@
                     <div class="row flex-between-center">
                         <div class="col-auto">
                             <h5 class="mb-0 text-light">Ticket Peformance (Quality)</h5>
-                        </div>
-                        <div class="col-auto d-flex">
-                            <div class="row">
-                                <div class="col">
-                                    <label class="label-form" for="">Showing data from</label>
-                                    <input type="date" class="form-control" name="" id="">
-                                </div>
-                                <div class="col">
-                                    <label class="label-form" for="">To</label>
-                                    <input type="date" class="form-control" name="" id="">
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </div>
