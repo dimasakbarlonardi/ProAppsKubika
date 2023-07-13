@@ -169,10 +169,10 @@ class WorkOrderController extends Controller
                 ->where('is_read', 0)
                 ->where('id_data', $id)
                 ->first();
-
+            // dd($wo->WorkRequest->Ticket->Tenant);
             if (!$checkNotif) {
                 $connNotif->create([
-                    'receiver' => $getUser->id_user,
+                    'receiver' => '2023004',
                     'sender' => $user->id_user,
                     'is_read' => 0,
                     'models' => 'WorkOrder',
@@ -213,14 +213,39 @@ class WorkOrderController extends Controller
         return redirect()->back();
     }
 
-    public function approve2(Request $request, $id)
+    public function approve2WO(Request $request, $id)
     {
         $connWO = ConnectionDB::setConnection(new WorkOrder());
         $connNotif = ConnectionDB::setConnection(new Notifikasi());
         $user = $request->session()->get('user');
 
         $wo = $connWO->find($id);
-        $getUser = $wo->WorkRequest->Ticket->Tenant->User;
+        $createNotif = $this->createNotif($connNotif, $id, $user, $wo);
+        $createNotif->notif_message = 'Work Order sudah diapprove, menunggu persetujuan untuk pengerjaan';
+        $createNotif->receiver = $approve->approval_3;
+        $createNotif->save();
+
+        $wo->status_wo = 'APPROVED';
+        $wo->sign_approve_2 = 1;
+        $wo->save();
+
+        return response()->json(['status' => 'ok']);
+    }
+
+    public function approve3WO(Request $request, $id)
+    {
+        $connWO = ConnectionDB::setConnection(new WorkOrder());
+
+        $wo = $connWO->find($id);
+
+        $wo->status_wo = 'APPROVED';
+        $wo->sign_approve_3 = 1;
+        $wo->save();
+
+        Alert::success('Berhasil', 'Berhasil approve WO');
+
+        return redirect()->back();
+    }
 
         $notif = $connNotif->where('models', 'WorkOrder')
             ->where('is_read', 0)
@@ -355,7 +380,7 @@ class WorkOrderController extends Controller
             $ticket->save();
 
             $wr->status_request = 'COMPLETE';
-            $wr->save();          
+            $wr->save();
 
             DB::commit();
         } catch (Exception $e) {
@@ -394,7 +419,7 @@ class WorkOrderController extends Controller
             $createTransaction->admin_fee = $admin_fee;
             $createTransaction->sub_total = $wo->jumlah_bayar_wo;
             $createTransaction->total = $total;
-            $createTransaction->id_user = $wo->Ticket->Tenant->User->id_user;
+            $createTransaction->id_user = '2023004';
             $createTransaction->status = 'PENDING';
             $createTransaction->save();
 

@@ -107,6 +107,7 @@ class DashboardController extends Controller
         switch ($getNotif->models) {
             case ('WorkOrder'):
                 $data = $this->handleWO($connApprove, $getNotif);
+                $data['user'] = $user;
                 return view('Tenant.Notification.WorkOrder', $data);
                 break;
 
@@ -117,6 +118,7 @@ class DashboardController extends Controller
 
             case ('Transaction'):
                 $data = $this->handleTransaction($getNotif);
+                $data['user'] = $user;
                 return view('Tenant.Notification.Payment', $data);
                 break;
 
