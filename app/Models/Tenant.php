@@ -60,7 +60,7 @@ class Tenant extends Model
 
     public function User()
     {
-        return $this->hasOne(Login::class, 'id_user', 'id');
+        return $this->hasOne(User::class, 'id_user', 'id_user');
     }
 
     public function IdCard()
