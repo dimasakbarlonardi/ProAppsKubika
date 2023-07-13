@@ -211,7 +211,7 @@ class WorkOrderController extends Controller
         return redirect()->back();
     }
 
-    public function approve2WO(Request $request, $id)
+    public function approve2(Request $request, $id)
     {
         $connWO = ConnectionDB::setConnection(new WorkOrder());
         $connNotif = ConnectionDB::setConnection(new Notifikasi());
@@ -234,7 +234,7 @@ class WorkOrderController extends Controller
         return response()->json(['status' => 'ok']);
     }
 
-    public function approve3WO(Request $request, $id)
+    public function approve3(Request $request, $id)
     {
         $connWO = ConnectionDB::setConnection(new WorkOrder());
 
