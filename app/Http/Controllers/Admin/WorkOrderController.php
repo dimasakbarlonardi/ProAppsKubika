@@ -167,7 +167,7 @@ class WorkOrderController extends Controller
                 ->where('is_read', 0)
                 ->where('id_data', $id)
                 ->first();
-            // dd($wo->WorkRequest->Ticket->Tenant);
+
             if (!$checkNotif) {
                 $connNotif->create([
                     'receiver' => $wo->WorkRequest->Ticket->Tenant->User->id_user,
@@ -324,7 +324,19 @@ class WorkOrderController extends Controller
             $createTransaction = $this->createTransaction($wo);
             $createNotif->id_data = $createTransaction->id;
 
-            $createNotif->save();
+        try {
+            DB::beginTransaction();
+
+            $wo->status_wo = 'COMPLETE';
+            $wo->sign_approve_4 = 1;
+            $wo->date_approve_4 = Carbon::now();
+            $wo->save();
+
+            $ticket->status_request = 'COMPLETE';
+            $ticket->save();
+
+            $wr->status_request = 'COMPLETE';
+            $wr->save();
 
             DB::commit();
         } catch (Exception $e) {
@@ -333,9 +345,7 @@ class WorkOrderController extends Controller
             return redirect()->back();
         }
 
-        Alert::success('Berhasil', 'Berhasil menselesaikan WO');
-
-        return redirect()->back();
+        return response()->json(['status' => 'ok']);
     }
 
     public function completeWO(Request $request, $id)
@@ -458,13 +468,14 @@ class WorkOrderController extends Controller
             $items = $wo->WODetail;
 
             $createTransaction = $connTransaction;
+            $createTransaction->transaction_type = 'WorkOrder';
             $createTransaction->no_invoice = $no_invoice;
             $createTransaction->transaction_type = 'WorkOrder';
             $createTransaction->no_transaction = $wo->no_work_order;
             $createTransaction->admin_fee = $admin_fee;
             $createTransaction->sub_total = $wo->jumlah_bayar_wo;
             $createTransaction->total = $total;
-            $createTransaction->id_user = '2023004';
+            $createTransaction->id_user = $wo->WorkRequest->Ticket->Tenant->User->id_user;
             $createTransaction->status = 'PENDING';
             $createTransaction->save();
 
