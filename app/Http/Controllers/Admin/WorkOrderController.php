@@ -163,16 +163,14 @@ class WorkOrderController extends Controller
 
             $wo = $connWO->find($id);
 
-            $getUser = $wo->WorkRequest->Ticket->Tenant->User;
-
             $checkNotif = $connNotif->where('models', 'WorkOrder')
                 ->where('is_read', 0)
                 ->where('id_data', $id)
                 ->first();
-            // dd($wo->WorkRequest->Ticket->Tenant);
+
             if (!$checkNotif) {
                 $connNotif->create([
-                    'receiver' => '2023004',
+                    'receiver' => $wo->WorkRequest->Ticket->Tenant->User->id_user,
                     'sender' => $user->id_user,
                     'is_read' => 0,
                     'models' => 'WorkOrder',
@@ -227,6 +225,7 @@ class WorkOrderController extends Controller
 
         $wo->status_wo = 'APPROVED';
         $wo->sign_approve_2 = 1;
+        $wo->date_approve_2 = Carbon::now();
         $wo->save();
 
         return response()->json(['status' => 'ok']);
@@ -240,6 +239,7 @@ class WorkOrderController extends Controller
 
         $wo->status_wo = 'APPROVED';
         $wo->sign_approve_3 = 1;
+        $wo->date_approve_3 = Carbon::now();
         $wo->save();
 
         Alert::success('Berhasil', 'Berhasil approve WO');
@@ -413,13 +413,14 @@ class WorkOrderController extends Controller
             $items = $wo->WODetail;
 
             $createTransaction = $connTransaction;
+            $createTransaction->transaction_type = 'WorkOrder';
             $createTransaction->no_invoice = $no_invoice;
             $createTransaction->transaction_type = 'WorkOrder';
             $createTransaction->no_transaction = $wo->no_work_order;
             $createTransaction->admin_fee = $admin_fee;
             $createTransaction->sub_total = $wo->jumlah_bayar_wo;
             $createTransaction->total = $total;
-            $createTransaction->id_user = '2023004';
+            $createTransaction->id_user = $wo->WorkRequest->Ticket->Tenant->User->id_user;
             $createTransaction->status = 'PENDING';
             $createTransaction->save();
 
