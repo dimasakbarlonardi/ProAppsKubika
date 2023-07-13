@@ -167,7 +167,7 @@ class WorkOrderController extends Controller
                 ->where('is_read', 0)
                 ->where('id_data', $id)
                 ->first();
-
+            // dd($wo->WorkRequest->Ticket->Tenant);
             if (!$checkNotif) {
                 $connNotif->create([
                     'receiver' => $wo->WorkRequest->Ticket->Tenant->User->id_user,
@@ -292,7 +292,7 @@ class WorkOrderController extends Controller
         $wo = $connWO->find($id);
         $ticket = $connTicket->where('no_tiket', $wo->no_tiket)->first();
         $wr = $connWR->where('no_work_request', $wo->no_work_request)->first();
-        $getUser = $wo->Ticket->Tenant->User->id_user;
+        $getUser = '2023004';
 
         try {
             DB::beginTransaction();
@@ -464,7 +464,7 @@ class WorkOrderController extends Controller
             $createTransaction->admin_fee = $admin_fee;
             $createTransaction->sub_total = $wo->jumlah_bayar_wo;
             $createTransaction->total = $total;
-            $createTransaction->id_user = $wo->Ticket->Tenant->User->id_user;
+            $createTransaction->id_user = '2023004';
             $createTransaction->status = 'PENDING';
             $createTransaction->save();
 
