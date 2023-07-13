@@ -198,6 +198,11 @@
                         <button type="submit" class="btn btn-primary w-100" value="send">Update</button>
                     </div>
                 @endif
+                @if ($user->id_role_hdr == 8 && $wo->status_wo == 'WAITING APPROVE')
+                    <div class="card-footer border-top border-200 py-x1">
+                        <button type="submit" class="btn btn-primary w-100" value="send">Update</button>
+                    </div>
+                @endif
                 @if ($user->id_user == $approve->approval_4 && $wo->sign_approve_5 && !$wo->sign_approve_4)
                     <div class="card-footer border-top border-200 py-x1">
                         <button type="button" class="btn btn-primary w-100"
@@ -294,55 +299,6 @@
             })
         }
         function complete(id) {
-            $.ajax({
-                url: `/admin/complete/work-order/${id}`,
-                type: 'POST',
-                success: function(data) {
-                    if (data.status === 'ok') {
-                        Swal.fire(
-                            'Berhasil!',
-                            'Berhasil mengupdate Work Order!',
-                            'success'
-                        ).then(() => window.location.reload())
-                    }
-                }
-            })
-        }
-
-        function approve2(id) {
-            $.ajax({
-                url: `/admin/approve2/work-order/${id}`,
-                type: 'POST',
-                success: function(data) {
-                    if (data.status === 'ok') {
-                        Swal.fire(
-                            'Berhasil!',
-                            'Berhasil mengupdate Work Order!',
-                            'success'
-                        ).then(() => window.location.reload())
-                    }
-                }
-            })
-        }
-
-        function approve2(id) {
-            $.ajax({
-                url: `/admin/approve2/work-order/${id}`,
-                type: 'POST',
-                success: function(data) {
-                    if (data.status === 'ok') {
-                        Swal.fire(
-                            'Berhasil!',
-                            'Berhasil mengupdate Work Order!',
-                            'success'
-                        ).then(() => window.location.reload())
-                    }
-                }
-            })
-        }
-
-        function completeWO(id) {
-            console.log(id);
             $.ajax({
                 url: `/admin/complete/work-order/${id}`,
                 type: 'POST',

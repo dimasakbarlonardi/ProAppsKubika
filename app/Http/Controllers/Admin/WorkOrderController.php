@@ -163,16 +163,14 @@ class WorkOrderController extends Controller
 
             $wo = $connWO->find($id);
 
-            $getUser = $wo->WorkRequest->Ticket->Tenant->User;
-
             $checkNotif = $connNotif->where('models', 'WorkOrder')
                 ->where('is_read', 0)
                 ->where('id_data', $id)
                 ->first();
-            // dd($wo->WorkRequest->Ticket->Tenant);
+
             if (!$checkNotif) {
                 $connNotif->create([
-                    'receiver' => '2023004',
+                    'receiver' => $wo->WorkRequest->Ticket->Tenant->User->id_user,
                     'sender' => $user->id_user,
                     'is_read' => 0,
                     'models' => 'WorkOrder',
@@ -230,6 +228,7 @@ class WorkOrderController extends Controller
 
         $wo->status_wo = 'APPROVED';
         $wo->sign_approve_2 = 1;
+        $wo->date_approve_2 = Carbon::now();
         $wo->save();
 
         return response()->json(['status' => 'ok']);
@@ -243,6 +242,7 @@ class WorkOrderController extends Controller
 
         $wo->status_wo = 'APPROVED';
         $wo->sign_approve_3 = 1;
+        $wo->date_approve_3 = Carbon::now();
         $wo->save();
 
         Alert::success('Berhasil', 'Berhasil approve WO');
@@ -279,7 +279,7 @@ class WorkOrderController extends Controller
 
         $createNotif = $this->createNotif($connNotif, $id, $user, $wo);
         $createNotif->notif_message = 'Work Order sudah dikerjakan, mohon periksa kembali pekerjaan kami';
-        $createNotif->receiver = '2023004';
+        $createNotif->receiver = $wo->WorkRequest->Ticket->Tenant->User->id_user;
         $createNotif->save();
 
         $wo->status_wo = 'WORK DONE';
@@ -354,7 +354,6 @@ class WorkOrderController extends Controller
         $wo = $connWO->find($id);
         $ticket = $connTicket->where('no_tiket', $wo->no_tiket)->first();
         $wr = $connWR->where('no_work_request', $wo->no_work_request)->first();
-        $getUser = '2023004';
 
         try {
             DB::beginTransaction();
@@ -376,7 +375,7 @@ class WorkOrderController extends Controller
             if (!$notif) {
                 $createNotif = $connNotif;
                 $createNotif->sender = $sender;
-                $createNotif->receiver = $getUser;
+                $createNotif->receiver = $wo->WorkRequest->Ticket->Tenant->User->id_user;
                 $createNotif->is_read = 0;
                 $createNotif->notif_title = $wo->no_work_order;
                 $createNotif->notif_message = 'Harap melakukan pembayaran untuk menselesaikan transaksi';
@@ -455,12 +454,13 @@ class WorkOrderController extends Controller
             $items = $wo->WODetail;
 
             $createTransaction = $connTransaction;
+            $createTransaction->transaction_type = 'WorkOrder';
             $createTransaction->no_invoice = $no_invoice;
             $createTransaction->no_transaction = $wo->no_work_order;
             $createTransaction->admin_fee = $admin_fee;
             $createTransaction->sub_total = $wo->jumlah_bayar_wo;
             $createTransaction->total = $total;
-            $createTransaction->id_user = '2023004';
+            $createTransaction->id_user = $wo->WorkRequest->Ticket->Tenant->User->id_user;
             $createTransaction->status = 'PENDING';
             $createTransaction->save();
 
