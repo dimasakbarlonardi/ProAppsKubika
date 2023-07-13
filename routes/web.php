@@ -291,8 +291,8 @@ Route::prefix('admin')->group(function () {
         // CRUD Work Priority
         Route::resource('workprioritys', WorkPriorityController::class);
 
-        // CRUD BayarNon
-        Route::resource('bayarnons', BayarnonController::class);
+          // CRUD BayarNon
+          Route::resource('bayarnons', BayarnonController::class);
 
         // Akses form for user
         Route::get('/akses-form-user/{id}', [RoleController::class, 'aksesForm'])->name('get-akses-form');
@@ -388,7 +388,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/tidakperpanjangunit-show/{id}', [PerubahanUnitController::class, 'showTPU'])->name('tidakperpanjang');
         Route::get('/perubahantenantunits-show/{id}', [PerubahanUnitController::class, 'showPerubahan'])->name('perubahanunit');
 
-        Route::post('/update/tenantunits-perpanjangan/{id}', [PerubahanUnitController::class, 'updateTenantUnit'])->name('updateTenantUnit');
+        Route::post('/update/tenantunits-perpanjangan/{id}', [PerubahanUnitController::class, 'updateTenantUnit'])->name('updateTenantUnit2');
         Route::post('/update/kepemilikanunits-pindah/{id}', [PerubahanUnitController::class, 'updateKU'])->name('updateKU');
         Route::post('/update/tenantunits-perubahan/{id}', [PerubahanUnitController::class, 'updatePerubahanUnit'])->name('updatePerubahanUnit');
         // CRUD Work Order
