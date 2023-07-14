@@ -133,7 +133,7 @@
                     </div>
                     @if (!$wo->sign_approve_3 && $wo->sign_approve_2 && $approve->approval_3 == $user->id_user)
                         <div class="text-center">
-                            <form action="{{ route('approve3WO', $wo->id) }}" method="post">
+                            <form action="{{ route('approve3', $wo->id) }}" method="post">
                                 @csrf
                                 <button type="submit" class="btn btn-success btn-lg my-4" type="button">
                                     Approve
