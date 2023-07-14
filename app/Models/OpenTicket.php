@@ -54,4 +54,14 @@ class OpenTicket extends Model
     {
         return $this->hasOne(Unit::class, 'id_unit', 'id_unit');
     }
+
+    public function WorkRequest()
+    {
+        return $this->hasOne(WorkRequest::class, 'no_tiket', 'no_tiket');
+    }
+
+    public function WorkOrder()
+    {
+        return $this->hasOne(WorkOrder::class, 'no_tiket', 'no_tiket');
+    }
 }

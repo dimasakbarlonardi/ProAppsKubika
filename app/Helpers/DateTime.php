@@ -9,6 +9,13 @@ function HumanDate($date)
     return $date;
 }
 
+function HumanDateOnly($date)
+{
+    $date =  date('d F', strtotime($date));
+
+    return $date;
+}
+
 function HumanTime($time)
 {
     $time =  date('H:i A', strtotime($time));
@@ -19,6 +26,13 @@ function HumanTime($time)
 function HumanDateTime($time)
 {
     $time =  date('d M Y - H:i A', strtotime($time));
+
+    return $time;
+}
+
+function HumanYear($time)
+{
+    $time = date('Y', strtotime($time));
 
     return $time;
 }
