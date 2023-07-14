@@ -40,30 +40,37 @@
                                 <div class="row">
                                     <div class="col-lg-6 timeline-item-time">
                                         <div>
-                                            <h6 class="mb-0 text-700">2022</h6>
-                                            <p class="fs--2 text-500 font-sans-serif">25 September</p>
+                                            <h6 class="mb-0 text-700">{{ HumanYear($ticket->created_at) }}</h6>
+                                            <p class="fs--2 text-500 font-sans-serif">
+                                                {{ HumanDateOnly($ticket->created_at) }}</p>
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="timeline-item-content arrow-bg-white">
                                             <div class="timeline-item-card bg-white dark__bg-1100"><a
                                                     href="../../app/support-desk/tickets-preview.html">
-                                                    <h5 class="mb-2 hover-primary">Got a new television #377</h5>
+                                                    <h5 class="mb-2 hover-primary">{{ $ticket->judul_request }}</h5>
                                                 </a>
-                                                <p class="fs--1 border-bottom mb-3 pb-4 text-600">Thank you for replacing
-                                                    my broken television with a new one.</p>
+                                                <p class="fs--1 border-bottom mb-3 pb-3 text-600">
+                                                    Ticket #{{ $ticket->no_tiket }}
+                                                </p>
+                                                <p>
+                                                    {!! $ticket->deskripsi_request !!}
+                                                </p>
                                                 <div class="d-flex flex-wrap pt-2">
-                                                    <h6 class="mb-0 text-600 lh-base"><span
-                                                            class="far fa-clock me-1"></span>10:28 AM</h6>
+                                                    <h6 class="mb-0 text-600 lh-base">
+                                                        <span
+                                                            class="far fa-clock me-1"></span>{{ HumanTime($ticket->created_at) }}
+                                                    </h6>
                                                     <div
                                                         class="d-flex align-items-center ms-auto me-2 me-sm-x1 me-xl-2 me-xxl-x1">
-                                                        <div class="dot me-0 me-sm-2 me-xl-0 me-xxl-2 bg-danger"
+                                                        <div class="dot me-0 me-sm-2 me-xl-0 me-xxl-2 bg-success"
                                                             data-bs-toggle="tooltip" data-bs-placement="top"
-                                                            data-bs-title="Urgent"></div>
-                                                        <h6 class="mb-0 text-700 d-none d-sm-block d-xl-none d-xxl-block">
-                                                            Urgent</h6>
-                                                    </div><small
-                                                        class="badge rounded badge-subtle-success false">Recent</small>
+                                                            data-bs-title="Urgent">
+                                                        </div>
+                                                    </div>
+                                                    <small
+                                                        class="badge rounded badge-subtle-success false">{{ $ticket->status_request }}</small>
                                                 </div>
                                             </div>
                                         </div>
@@ -76,187 +83,220 @@
                                 <div class="row">
                                     <div class="col-lg-6 timeline-item-time">
                                         <div>
-                                            <h6 class="mb-0 text-700">2022</h6>
-                                            <p class="fs--2 text-500 font-sans-serif">23 September</p>
+                                            <h6 class="mb-0 text-700">{{ HumanYear($ticket->tgl_respon_tiket) }}</h6>
+                                            <p class="fs--2 text-500 font-sans-serif">
+                                                {{ HumanDateOnly($ticket->tgl_respon_tiket) }}</p>
                                         </div>
                                     </div>
                                     <div class="col-lg-6">
                                         <div class="timeline-item-content arrow-bg-white">
                                             <div class="timeline-item-card bg-white dark__bg-1100"><a
                                                     href="../../app/support-desk/tickets-preview.html">
-                                                    <h5 class="mb-2 hover-primary">Subscription Issue #362</h5>
+                                                    <h6 class="mb-2 hover-primary">Respond</h6>
                                                 </a>
-                                                <p class="fs--1 border-bottom mb-3 pb-4 text-600">On November 2, 2022, your
-                                                    membership at Falcon is going to expire. We really hope that you have
-                                                    benefited from your membership.</p>
+                                                <p class="fs--1 border-bottom mb-3 pb-3 text-600">
+                                                    Ticket #{{ $ticket->no_tiket }}
+                                                </p>
+                                                <p>
+                                                    {!! $ticket->deskripsi_respon !!}
+                                                </p>
                                                 <div class="d-flex flex-wrap pt-2">
-                                                    <h6 class="mb-0 text-600 lh-base"><span
-                                                            class="far fa-clock me-1"></span>09:26 PM</h6>
+                                                    <h6 class="mb-0 text-600 lh-base">
+                                                        <span class="far fa-clock me-1"></span>
+                                                        {{ HumanTime($ticket->jam_respon) }}
+                                                    </h6>
                                                     <div
                                                         class="d-flex align-items-center ms-auto me-2 me-sm-x1 me-xl-2 me-xxl-x1">
                                                         <div class="dot me-0 me-sm-2 me-xl-0 me-xxl-2 bg-info"
                                                             data-bs-toggle="tooltip" data-bs-placement="top"
-                                                            data-bs-title="Low"></div>
-                                                        <h6 class="mb-0 text-700 d-none d-sm-block d-xl-none d-xxl-block">
-                                                            Low</h6>
+                                                            data-bs-title="Low">
+                                                        </div>
                                                     </div><small
-                                                        class="badge rounded badge-subtle-secondary dark__bg-1000">Closed</small>
+                                                        class="badge rounded badge-subtle-info dark__bg-1000">Responded</small>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="timeline-item timeline-item-start mb-3">
-                                <div class="timeline-icon icon-item icon-item-lg text-primary border-300"><span
-                                        class="fs-1 fas fa-envelope"></span></div>
-                                <div class="row">
-                                    <div class="col-lg-6 timeline-item-time">
-                                        <div>
-                                            <h6 class="mb-0 text-700">2022</h6>
-                                            <p class="fs--2 text-500 font-sans-serif">20 September</p>
+
+                            @if ($ticket->WorkRequest)
+                                <div class="timeline-item timeline-item-start mb-3">
+                                    <div class="timeline-icon icon-item icon-item-lg text-primary border-300"><span
+                                            class="fs-1 fas fa-envelope"></span></div>
+                                    <div class="row">
+                                        <div class="col-lg-6 timeline-item-time">
+                                            <div>
+                                                <h6 class="mb-0 text-700">{{ HumanYear($ticket->WorkRequest->created_at) }}
+                                                </h6>
+                                                <p class="fs--2 text-500 font-sans-serif">
+                                                    {{ HumanDateOnly($ticket->WorkRequest->created_at) }}</p>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="timeline-item-content arrow-bg-white">
-                                            <div class="timeline-item-card bg-white dark__bg-1100"><a
-                                                    href="../../app/support-desk/tickets-preview.html">
-                                                    <h5 class="mb-2 hover-primary">Received a broken TV #345</h5>
-                                                </a>
-                                                <p class="fs--1 border-bottom mb-3 pb-4 text-600">My television from your
-                                                    website was delivered with a cracked screen. I need assistance getting a
-                                                    refund or a replacement.</p>
-                                                <div class="d-flex flex-wrap pt-2">
-                                                    <h6 class="mb-0 text-600 lh-base"><span
-                                                            class="far fa-clock me-1"></span>01:06 PM</h6>
-                                                    <div
-                                                        class="d-flex align-items-center ms-auto me-2 me-sm-x1 me-xl-2 me-xxl-x1">
-                                                        <div class="dot me-0 me-sm-2 me-xl-0 me-xxl-2 bg-danger"
-                                                            data-bs-toggle="tooltip" data-bs-placement="top"
-                                                            data-bs-title="Urgent"></div>
-                                                        <h6 class="mb-0 text-700 d-none d-sm-block d-xl-none d-xxl-block">
-                                                            Urgent</h6>
-                                                    </div><small
-                                                        class="badge rounded badge-subtle-success false">Recent</small>
+                                        <div class="col-lg-6">
+                                            <div class="timeline-item-content arrow-bg-white">
+                                                <div class="timeline-item-card bg-white dark__bg-1100">
+                                                    <h5 class="mb-2 hover-primary">
+                                                        Work Request
+                                                    </h5>
+                                                    <p class="fs--1 border-bottom mb-3 pb-3 text-600">
+                                                        {{ $ticket->WorkRequest->no_work_request }}
+                                                    </p>
+                                                    <div class="d-flex flex-wrap pt-2">
+                                                        <h6 class="mb-0 text-600 lh-base">
+                                                            <span class="far fa-clock me-1"></span>
+                                                            {{ HumanTime($ticket->WorkRequest->sign_approve_2) }}
+                                                        </h6>
+                                                        <div
+                                                            class="d-flex align-items-center ms-auto me-2 me-sm-x1 me-xl-2 me-xxl-x1">
+                                                            <div class="dot me-0 me-sm-2 me-xl-0 me-xxl-2 bg-info"
+                                                                data-bs-toggle="tooltip" data-bs-placement="top"
+                                                                data-bs-title="Urgent">
+                                                            </div>
+                                                        </div>
+                                                        <small class="badge rounded badge-subtle-success false">
+                                                            {{ $ticket->WorkRequest->status_request }}
+                                                        </small>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="timeline-item timeline-item-end mb-3">
-                                <div class="timeline-icon icon-item icon-item-lg text-primary border-300"><span
-                                        class="fs-1 fas fa-envelope"></span></div>
-                                <div class="row">
-                                    <div class="col-lg-6 timeline-item-time">
-                                        <div>
-                                            <h6 class="mb-0 text-700">2022</h6>
-                                            <p class="fs--2 text-500 font-sans-serif">03 September</p>
+
+                                <div class="timeline-item timeline-item-end mb-3">
+                                    <div class="timeline-icon icon-item icon-item-lg text-primary border-300"><span
+                                            class="fs-1 fas fa-envelope"></span></div>
+                                    <div class="row">
+                                        <div class="col-lg-6 timeline-item-time">
+                                            <div>
+                                                <h6 class="mb-0 text-700">{{ HumanYear($ticket->tgl_respon_tiket) }}</h6>
+                                                <p class="fs--2 text-500 font-sans-serif">
+                                                    {{ HumanDateOnly($ticket->tgl_respon_tiket) }}</p>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="timeline-item-content arrow-bg-white">
-                                            <div class="timeline-item-card bg-white dark__bg-1100"><a
-                                                    href="../../app/support-desk/tickets-preview.html">
-                                                    <h5 class="mb-2 hover-primary">Payment failed #324</h5>
-                                                </a>
-                                                <p class="fs--1 border-bottom mb-3 pb-4 text-600">Your payment failed while
-                                                    I tried to make a payment on your website, I was told. My card was,
-                                                    however, billed.</p>
-                                                <div class="d-flex flex-wrap pt-2">
-                                                    <h6 class="mb-0 text-600 lh-base"><span
-                                                            class="far fa-clock me-1"></span>11:06 PM</h6>
-                                                    <div
-                                                        class="d-flex align-items-center ms-auto me-2 me-sm-x1 me-xl-2 me-xxl-x1">
-                                                        <div class="dot me-0 me-sm-2 me-xl-0 me-xxl-2 bg-primary"
-                                                            data-bs-toggle="tooltip" data-bs-placement="top"
-                                                            data-bs-title="Medium"></div>
-                                                        <h6 class="mb-0 text-700 d-none d-sm-block d-xl-none d-xxl-block">
-                                                            Medium</h6>
-                                                    </div><small
-                                                        class="badge rounded badge-subtle-secondary dark__bg-1000">Closed</small>
+                                        <div class="col-lg-6">
+                                            <div class="timeline-item-content arrow-bg-white">
+                                                <div class="timeline-item-card bg-white dark__bg-1100">
+                                                    <h6 class="mb-2 hover-primary">Approved by
+                                                        {{ $ticket->WorkRequest->WorkRelation->work_relation }}
+                                                    </h6>
+                                                    <p class="fs--1 border-bottom mb-3 pb-3 text-600">
+                                                        Ticket #{{ $ticket->WorkRequest->no_work_request }}
+                                                    </p>
+                                                    <div class="d-flex flex-wrap pt-2">
+                                                        <h6 class="mb-0 text-600 lh-base">
+                                                            <span class="far fa-clock me-1"></span>
+                                                            {{ HumanTime($ticket->WorkRequest->date_approval_1) }}
+                                                        </h6>
+                                                        <div
+                                                            class="d-flex align-items-center ms-auto me-2 me-sm-x1 me-xl-2 me-xxl-x1">
+                                                            <div class="dot me-0 me-sm-2 me-xl-0 me-xxl-2 bg-info"
+                                                                data-bs-toggle="tooltip" data-bs-placement="top"
+                                                                data-bs-title="Low">
+                                                            </div>
+                                                        </div>
+                                                        @if ($ticket->WorkRequest->status_request == 'ON WORK' || $ticket->WorkRequest->status_request == 'WORK ORDER')
+                                                            <small class="badge rounded badge-subtle-info dark__bg-1000">
+                                                                On Work
+                                                            </small>
+                                                        @endif
+                                                        @if ($ticket->WorkRequest->status_request == 'COMPLETE')
+                                                            <small class="badge rounded badge-subtle-success dark__bg-1000">
+                                                                COMPLETE
+                                                            </small>
+                                                        @endif
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="timeline-item timeline-item-start mb-3">
-                                <div class="timeline-icon icon-item icon-item-lg text-primary border-300"><span
-                                        class="fs-1 fas fa-envelope"></span></div>
-                                <div class="row">
-                                    <div class="col-lg-6 timeline-item-time">
-                                        <div>
-                                            <h6 class="mb-0 text-700">2022</h6>
-                                            <p class="fs--2 text-500 font-sans-serif">24 August</p>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="timeline-item-content arrow-bg-white">
-                                            <div class="timeline-item-card bg-white dark__bg-1100"><a
-                                                    href="../../app/support-desk/tickets-preview.html">
-                                                    <h5 class="mb-2 hover-primary">Password change #234</h5>
-                                                </a>
-                                                <p class="fs--1 border-bottom mb-3 pb-4 text-600">I must modify my
-                                                    password. If I make a modification, will I lose access to my account? I
-                                                    have a lot of items in my cart and don't want to go looking for them
-                                                    again.</p>
-                                                <div class="d-flex flex-wrap pt-2">
-                                                    <h6 class="mb-0 text-600 lh-base"><span
-                                                            class="far fa-clock me-1"></span>10:08 AM</h6>
-                                                    <div
-                                                        class="d-flex align-items-center ms-auto me-2 me-sm-x1 me-xl-2 me-xxl-x1">
-                                                        <div class="dot me-0 me-sm-2 me-xl-0 me-xxl-2 bg-danger"
-                                                            data-bs-toggle="tooltip" data-bs-placement="top"
-                                                            data-bs-title="Urgent"></div>
-                                                        <h6 class="mb-0 text-700 d-none d-sm-block d-xl-none d-xxl-block">
-                                                            Urgent</h6>
-                                                    </div><small
-                                                        class="badge rounded badge-subtle-secondary dark__bg-1000">Closed</small>
+                                @if ($ticket->WorkOrder)
+                                    <div class="timeline-item timeline-item-start mb-3">
+                                        <div class="timeline-icon icon-item icon-item-lg text-primary border-300"><span
+                                                class="fs-1 fas fa-envelope"></span></div>
+                                        <div class="row">
+                                            <div class="col-lg-6 timeline-item-time">
+                                                <div>
+                                                    <h6 class="mb-0 text-700">2022</h6>
+                                                    <p class="fs--2 text-500 font-sans-serif">24 August</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="timeline-item-content arrow-bg-white">
+                                                    <div class="timeline-item-card bg-white dark__bg-1100"><a
+                                                            href="../../app/support-desk/tickets-preview.html">
+                                                            <h5 class="mb-2 hover-primary">Password change #234</h5>
+                                                        </a>
+                                                        <p class="fs--1 border-bottom mb-3 pb-4 text-600">I must modify my
+                                                            password. If I make a modification, will I lose access to my
+                                                            account? I
+                                                            have a lot of items in my cart and don't want to go looking for them
+                                                            again.</p>
+                                                        <div class="d-flex flex-wrap pt-2">
+                                                            <h6 class="mb-0 text-600 lh-base"><span
+                                                                    class="far fa-clock me-1"></span>10:08 AM</h6>
+                                                            <div
+                                                                class="d-flex align-items-center ms-auto me-2 me-sm-x1 me-xl-2 me-xxl-x1">
+                                                                <div class="dot me-0 me-sm-2 me-xl-0 me-xxl-2 bg-danger"
+                                                                    data-bs-toggle="tooltip" data-bs-placement="top"
+                                                                    data-bs-title="Urgent"></div>
+                                                                <h6
+                                                                    class="mb-0 text-700 d-none d-sm-block d-xl-none d-xxl-block">
+                                                                    Urgent</h6>
+                                                            </div><small
+                                                                class="badge rounded badge-subtle-secondary dark__bg-1000">Closed</small>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
-                            <div class="timeline-item timeline-item-end mb-0">
-                                <div class="timeline-icon icon-item icon-item-lg text-primary border-300"><span
-                                        class="fs-1 fas fa-envelope"></span></div>
-                                <div class="row">
-                                    <div class="col-lg-6 timeline-item-time">
-                                        <div>
-                                            <h6 class="mb-0 text-700">2022</h6>
-                                            <p class="fs--2 text-500 font-sans-serif">20 August</p>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="timeline-item-content arrow-bg-white">
-                                            <div class="timeline-item-card bg-white dark__bg-1100"><a
-                                                    href="../../app/support-desk/tickets-preview.html">
-                                                    <h5 class="mb-2 hover-primary">Email Address change #202</h5>
-                                                </a>
-                                                <p class="fs--1 border-bottom mb-3 pb-4 text-600">My email address needs to
-                                                    be updated. I'm curious if changing it will result in me losing access
-                                                    to my account. I've put a lot of items in my shopping basket and don't
-                                                    want to search for them again.</p>
-                                                <div class="d-flex flex-wrap pt-2">
-                                                    <h6 class="mb-0 text-600 lh-base"><span
-                                                            class="far fa-clock me-1"></span>12:26 PM</h6>
-                                                    <div
-                                                        class="d-flex align-items-center ms-auto me-2 me-sm-x1 me-xl-2 me-xxl-x1">
-                                                        <div class="dot me-0 me-sm-2 me-xl-0 me-xxl-2 bg-info"
-                                                            data-bs-toggle="tooltip" data-bs-placement="top"
-                                                            data-bs-title="Low"></div>
-                                                        <h6 class="mb-0 text-700 d-none d-sm-block d-xl-none d-xxl-block">
-                                                            Low</h6>
-                                                    </div><small
-                                                        class="badge rounded badge-subtle-secondary dark__bg-1000">Closed</small>
+                                    <div class="timeline-item timeline-item-end mb-0">
+                                        <div class="timeline-icon icon-item icon-item-lg text-primary border-300"><span
+                                                class="fs-1 fas fa-envelope"></span></div>
+                                        <div class="row">
+                                            <div class="col-lg-6 timeline-item-time">
+                                                <div>
+                                                    <h6 class="mb-0 text-700">2022</h6>
+                                                    <p class="fs--2 text-500 font-sans-serif">20 August</p>
+                                                </div>
+                                            </div>
+                                            <div class="col-lg-6">
+                                                <div class="timeline-item-content arrow-bg-white">
+                                                    <div class="timeline-item-card bg-white dark__bg-1100"><a
+                                                            href="../../app/support-desk/tickets-preview.html">
+                                                            <h5 class="mb-2 hover-primary">Email Address change #202</h5>
+                                                        </a>
+                                                        <p class="fs--1 border-bottom mb-3 pb-4 text-600">My email address
+                                                            needs to
+                                                            be updated. I'm curious if changing it will result in me losing
+                                                            access
+                                                            to my account. I've put a lot of items in my shopping basket and
+                                                            don't
+                                                            want to search for them again.</p>
+                                                        <div class="d-flex flex-wrap pt-2">
+                                                            <h6 class="mb-0 text-600 lh-base"><span
+                                                                    class="far fa-clock me-1"></span>12:26 PM</h6>
+                                                            <div
+                                                                class="d-flex align-items-center ms-auto me-2 me-sm-x1 me-xl-2 me-xxl-x1">
+                                                                <div class="dot me-0 me-sm-2 me-xl-0 me-xxl-2 bg-info"
+                                                                    data-bs-toggle="tooltip" data-bs-placement="top"
+                                                                    data-bs-title="Low"></div>
+                                                                <h6
+                                                                    class="mb-0 text-700 d-none d-sm-block d-xl-none d-xxl-block">
+                                                                    Low</h6>
+                                                            </div><small
+                                                                class="badge rounded badge-subtle-secondary dark__bg-1000">Closed</small>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
-                            </div>
+                                @endif
+                            @endif
                         </div>
                     </div>
                     <div class="card-body tab-pane p-0" id="tickets" role="tabpanel"
@@ -384,8 +424,8 @@
                             </div>
                             <div class="card-body">
                                 <div class="mb-2 mt-n2"><label class="mb-1">Jenis Request</label>
-                                    <input type="text" class="form-control" value="{{ $ticket->id_jenis_request }}"
-                                        disabled>
+                                    <input type="text" class="form-control"
+                                        value="{{ $ticket->JenisRequest->jenis_request }}" disabled>
                                 </div>
                                 @if (
                                     ($ticket->status_request != 'PENDING' || $ticket->status_request == 'RESPONDED') &&
