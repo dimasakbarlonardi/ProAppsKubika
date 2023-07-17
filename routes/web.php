@@ -459,6 +459,33 @@ Route::prefix('admin')->group(function () {
         Route::get('tenant-unit-by-id/{id}', [OffBoardingTenantController::class, 'tenantByID'])->name('owner-by-id');
         Route::get('penjamin-by-id/{id}', [OffBoardingTenantController::class, 'penjaminByID'])->name('penjamin-by-id');
         Route::post('/update/tenantunits-offtenant/{id}', [OffBoardingTenantController::class, 'offdeleteTenantUnit'])->name('offdeleteTenantUnit');
+
+        //CRUD OffBoarding Owner 
+        Route::resource('offowners', OffBoardingOwnerController::class);
+        Route::get('ownerunit-by-id/{id}', [OffBoardingOwnerController::class, 'ownerByID'])->name('owner-by-id');
+        Route::get('pic-by-id/{id}', [OffBoardingOwnerController::class, 'picByID'])->name('pic-by-id');
+
+        // CRUD PerubahanUnit
+        Route::resource('perubahanunits', PerubahanUnitController::class);
+        Route::get('tenantunit-by-id/{id}', [PerubahanUnitController::class, 'unitBy'])->name('unit-by');
+        Route::get('kepemilikanunit-by-id/{id}', [PerubahanUnitController::class, 'kepemilikanByID'])->name('kepemilikan-by-id');
+        Route::get('perubahannunit-by-id/{id}', [PerubahanUnitController::class, 'perubahanByID'])->name('perubahan-by-id');
+
+        Route::get('/get/perpanjangunits-edit/{id}', [PerubahanUnitController::class, 'edit'])->name('edittenantunit');
+        Route::get('/get/kepemilikanunits-edit/{id}', [PerubahanUnitController::class, 'editKU'])->name('editkepemilikanunit');
+        Route::get('/get/tidakperpanjangunits-edit/{id}', [PerubahanUnitController::class, 'editTPU'])->name('edittidakperpanjang');
+        Route::get('/get/perubahanunits-edit/{id}', [PerubahanUnitController::class, 'editPerubahan'])->name('editperubahanunit');
+
+        Route::get('/tenantunits-show/{id}', [PerubahanUnitController::class, 'show'])->name('tenant_units');
+        Route::get('/kepemilikanunits-show/{id}', [PerubahanUnitController::class, 'showKU'])->name('kepemilikans');
+        Route::get('/tidakperpanjangunit-show/{id}', [PerubahanUnitController::class, 'showTPU'])->name('tidakperpanjang');
+        Route::get('/perubahantenantunits-show/{id}', [PerubahanUnitController::class, 'showPerubahan'])->name('perubahanunit');
+
+        Route::post('/update/tenantunits-perpanjangan/{id}', [PerubahanUnitController::class, 'updateTenantUnit'])->name('updateTenantUnit');
+        // Route::post('/update/kepemilikanunits-pindah/{id}', [PerubahanUnitController::class, 'updateKU'])->name('updateKU');
+        Route::post('/update/tenantunits-pindahkepemilikan/{id}', [PerubahanUnitController::class, 'deleteKepemilikanUnit'])->name('deleteKepemilikanUnit');
+        Route::post('/update/tenantunits-perubahan/{id}', [PerubahanUnitController::class, 'updatePerubahanUnit'])->name('updatePerubahanUnit');
+        Route::post('/update/tenantunits-tidakperpanjang/{id}', [PerubahanUnitController::class, 'deleteTenantUnit'])->name('deleteTenantUnit');
     });
 });
 
