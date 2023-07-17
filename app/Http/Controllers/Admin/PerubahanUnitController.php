@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\KepemilikanUnit;
 use App\Models\KepemilikanUnitOff;
 use App\Models\Login;
+use App\Models\OpenTicket;
 use App\Models\OwnerH;
 use App\Models\PeriodeSewa;
 use App\Models\StatusHunianTenant;
@@ -14,6 +15,7 @@ use App\Models\Tenant;
 use App\Models\TenantUnit;
 use App\Models\TenantUnitOFF;
 use App\Models\Unit;
+use App\Models\WorkRequest;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -419,5 +421,42 @@ class PerubahanUnitController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function validationPerpanjang($id)
+    {
+        $connTicket = ConnectionDB::setConnection(new OpenTicket());
+
+        $tickets = $connTicket->where('id_tenant', $id)
+        ->where('status_request', '!=', 'COMPLETE')
+        ->get();
+        $errors = [];
+
+        foreach ($tickets as $ticket) {
+
+            $tiket['error_header'] = $ticket->no_tiket;
+            $tiket['error_status'] = $ticket->status_request;
+            $tiket['type'] = 'Tiket';
+
+            array_push($errors, $tiket);
+
+            if ($ticket->WorkRequest) {
+                $wr['error_header'] = $ticket->WorkRequest->no_work_request;
+                $wr['error_status'] = $ticket->WorkRequest->status_request;
+                $wr['type'] = 'Work Request';
+                array_push($errors, $wr);
+
+            }
+
+            if ($ticket->WorkOrder) {
+                $wo['error_header'] = $ticket->WorkOrder->no_work_order;
+                $wo['error_status'] = $ticket->WorkOrder->status_request;
+                $wo['type'] = 'Work Order';
+                array_push($errors, $wo);
+            }
+        }
+
+
+        return response()->json(['errors' => $errors]);
     }
 }
