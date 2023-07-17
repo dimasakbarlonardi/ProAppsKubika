@@ -470,6 +470,97 @@ Route::prefix('admin')->group(function () {
         Route::post('/update/tenantunits-pindahkepemilikan/{id}', [PerubahanUnitController::class, 'deleteKepemilikanUnit'])->name('deleteKepemilikanUnit');
         Route::post('/update/tenantunits-perubahan/{id}', [PerubahanUnitController::class, 'updatePerubahanUnit'])->name('updatePerubahanUnit');
         Route::post('/update/tenantunits-tidakperpanjang/{id}', [PerubahanUnitController::class, 'deleteTenantUnit'])->name('deleteTenantUnit');
+
+        // ---------Eng Parameter--------
+
+        //CRUD Room
+        Route::resource('rooms', RoomController::class);
+
+        //CRUD Checklist AHU H
+        Route::resource('checklistahus', ChecklistAhuHController::class);
+        Route::get('/checklist-filter-ahu', [ChecklistAhuHController::class, 'filterByNoChecklist']);
+
+        //CRUD Checklist AHU Detail
+        Route::resource('ahudetails', ChecklistAhuDetailController::class);
+
+        //CRUD Engeneering AHU 
+        Route::resource('engahus', EngAHUController::class);
+
+        //CRUD Engeneering Chiller 
+        Route::resource('engchillers', EngChillerController::class);
+
+        //CRUD Engeneering Listrik 
+        Route::resource('englistriks', EngListrikController::class);
+
+        //CRUD Engeneering PAM 
+        Route::resource('engpams', EngPamController::class);
+
+        //CRUD Engeneering DeepWheel 
+        Route::resource('engdeeps', EngDeepWheelController::class);
+
+        //CRUD Engeneering PompaSumpit 
+        Route::resource('engpompas', EngPompasumpitController::class);
+
+        //CRUD Engeneering GroundRoffTank 
+        Route::resource('enggrounds', EngGroundController::class);
+
+        //CRUD Engeneering Pemadam 
+        Route::resource('engpemadams', EngPemadamController::class);
+
+        //CRUD Engeneering Putr 
+        Route::resource('engputrs', EngPutrController::class);
+
+        //CRUD Engeneering Gas 
+        Route::resource('enggases', EngGasController::class);
+
+        // --------End Eng Parameter--------
+
+        // -------HK Parameter-------
+
+        //CRUD HK Toilet 
+        Route::resource('toilets', ToiletController::class);
+
+        //CRUD HK OfficeManagemet 
+        Route::resource('officemanagements', OfficeManagementController::class);
+
+        //CRUD HK Lift 
+        Route::resource('lifts', LiftController::class);
+
+        //CRUD HK Floor 
+        Route::resource('hkfloors', HKFloorController::class);
+
+        //CRUD HK Koridor 
+        Route::resource('hkkoridors', HKKoridorController::class);
+
+        //CRUD HK TanggaDarurat 
+        Route::resource('hktanggadarurats', HKTanggaDaruratController::class);
+
+        // -------End HK Parameter-------
+
+        // -------Fin Parameter--------
+
+        // CRUD IPLType
+        Route::resource('ipltypes', IPLTypeController::class);
+
+        // CRUD Utility
+        Route::resource('utilitys', UtilityController::class);
+
+        // CRUD JenisDenda
+        Route::resource('jenisdendas', JenisDendaController::class);
+
+        //CRUD Perhit Denda
+        Route::resource('perhitdendas', PerhitDendaController::class);
+
+        //CRUD Reminder Letter
+        Route::resource('reminders', ReminderLetterController::class);
+
+        //CRUD Notification
+        Route::resource('notifications', NotificationController::class);
+
+        // ----------End Fin Parameter---------
+
+
+
     });
 });
 
