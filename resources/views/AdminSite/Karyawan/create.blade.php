@@ -219,52 +219,6 @@
                                 <select class="form-control" name="id_status_kawin" id="id_status_kawin" required>
                                     <option selected disabled>-- Pilih Status Kawin --</option>
                                     @foreach ($statuskawins as $statuskawin)
-                                        <option value="{{ $statuskawin->id_status_kawin }}" @if(old('id_status_kawin') == $statuskawin->id_status_kawin) selected @endif>{{ $statuskawin->status_kawin }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <div class="row">
-                            <div class="col-6">
-                                <label class="form-label">Bisa Approve</label>
-                                <select class="form-control" name="is_can_approve" id="is_can_approve" required>
-                                    <option selected disabled>-- Pilih Status --</option>
-                                    <option value="1">Yes</option>
-                                    <option value="">No</option>
-                                </select>
-                            </div>
-                            <div class="col-6">
-                                <label class="form-label">Status Kawin</label>
-                                <select class="form-control" name="id_status_kawin" id="id_status_kawin" required>
-                                    <option selected disabled>-- Pilih Status Kawin --</option>
-                                    @foreach ($statuskawins as $statuskawin)
-                                        <option value="{{ $statuskawin->id_status_kawin }}"
-                                            @if (old('id_status_kawin') == $statuskawin->id_status_kawin) selected @endif>
-                                            {{ $statuskawin->status_kawin }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="mb-3">
-                        <div class="row">
-                            <div class="col-6">
-                                <label class="form-label">Bisa Approve</label>
-                                <select class="form-control" name="is_can_approve" id="is_can_approve" required>
-                                    <option selected disabled>-- Pilih Status --</option>
-                                    <option value="1">Yes</option>
-                                    <option value="">No</option>
-                                </select>
-                            </div>
-                            <div class="col-6">
-                                <label class="form-label">Status Kawin</label>
-                                <select class="form-control" name="id_status_kawin" id="id_status_kawin" required>
-                                    <option selected disabled>-- Pilih Status Kawin --</option>
-                                    @foreach ($statuskawins as $statuskawin)
                                         <option value="{{ $statuskawin->id_status_kawin }}"
                                             @if (old('id_status_kawin') == $statuskawin->id_status_kawin) selected @endif>
                                             {{ $statuskawin->status_kawin }}
@@ -321,6 +275,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="mt-5">
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
