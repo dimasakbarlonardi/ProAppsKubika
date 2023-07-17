@@ -143,8 +143,48 @@
                     </div>
                 </div>
                         {{-- <a href="{{ route('kepemilikans.edit', $kepemilikans->id_pemilik) }}" class="btn btn-sm btn-warnin g">Edit</a> --}}
-                        <a class="btn btn-sm btn-warning" href="{{ route('perubahanunits.index',)}}">Back</a>
-                        <a class="btn btn-sm btn-warning" href="{{ route('editkepemilikanunit', $kepemilikans->id_pemilik)}}">Pindah Kepemilikan</a>
+                        {{-- <a class="btn btn-sm btn-warning" href="{{ route('perubahanunits.index',)}}">Back</a> --}}
+                        <div class="mb-3">
+                            <div class=" my-3">
+                        <button class="btn btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#error-modal">Pindah Kepemilikan Unit</button>
+                        <div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 500px">
+                            <div class="modal-content position-relative">
+                              <div class="position-absolute top-0 end-0 mt-2 me-2 z-index-1">
+                                  <form action="{{ route('deleteKepemilikanUnit', $kepemilikans->id_pemilik) }}" method="post"
+                                    class="d-inline">
+                                    @csrf
+                                <button class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body p-0">
+                                <div class="rounded-top-lg py-3 ps-4 pe-6 bg-light">
+                                  <h4 class="mb-1" id="modalExampleDemoLabel">Alasan Pindah Kepemilikan Unit</h4>
+                                </div>
+                                <div class="p-4 pb-0">
+                                    <form method="post" action="{{ route('offkepemilkanunits.store') }}">
+                                    @csrf
+                                    <div class="mb-3">
+                                        <label class="col-form-label" for="message-text">Tanggal Keluar :</label>
+                                        <input type="date" class="form-control" name="tgl_keluar" id="message-text">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="col-form-label" for="message-text">Keterangan :</label>
+                                        <textarea class="form-control" name="keterangan" id="message-text"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
+                                <button type="submit" class="btn btn-primary">Submit</button>
+                            </div>
+                        </form>
+                        </form>
+                            </div>
+                          </div>
+                        </div>
+                            </div>
+                        </div>
+                        {{-- <a class="btn btn-sm btn-warning" href="{{ route('editkepemilikanunit', $kepemilikans->id_pemilik)}}">Pindah Kepemilikan</a> --}}
                         {{-- <form class="d-inline" action="{{ route('kepemilikans.destroy', $kepemilikans->id_pemilik) }}" method="post">
                             @method('DELETE')
                             @csrf

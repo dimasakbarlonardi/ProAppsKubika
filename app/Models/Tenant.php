@@ -72,4 +72,14 @@ class Tenant extends Model
     {
         return $this->hasOne(Site::class, 'id_site', 'id_site');
     }
+
+    public function Unit()
+    {
+        return $this->hasOne(Unit::class, 'id_unit', 'id_unit');
+    }
+
+    public function TenantUnit()
+    {
+        return $this->hasMany(TenantUnit::class, 'id_tenant', 'id_tenant');
+    }
 }

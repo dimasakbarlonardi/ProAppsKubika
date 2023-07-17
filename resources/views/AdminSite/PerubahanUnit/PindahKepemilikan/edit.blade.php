@@ -198,7 +198,7 @@
 
                 <div class="mt-5">
                     <button type="button" class="btn btn-danger"><a class="text-white" href="{{ route('perubahanunits.index')}}">Back</a></button>
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-primary">Pindah</button>
                 </div>
             </form>
         </div>
@@ -250,7 +250,7 @@
                 success: function(data) {
                     console.log(data.unit)
                     $('#id_status_hunian').val(data.unit.id_status_hunian)
-                    $('#tgl_mulai').val(data.unit.tgl_mulai)
+                    $('#tgl_mulai').val(new Date(data.unit.tgl_mulai).toDateString())
                     $('#no_bukti_milik').val(data.unit.no_bukti_milik)
                     $('#keterangan').val(data.unit.keterangan)
                 }

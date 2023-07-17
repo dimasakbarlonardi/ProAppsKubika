@@ -21,7 +21,7 @@
                     <td>
                         <div>
                             <a class="btn btn-sm btn-warning"
-                                href="{{ route('kepemilikans', $kepemilikan->id_pemilik) }}">Detail</a>
+                                href="{{ route('kepemilikans', $kepemilikan->id) }}">Detail</a>
                         </div>
                     </td>
                 </tr>

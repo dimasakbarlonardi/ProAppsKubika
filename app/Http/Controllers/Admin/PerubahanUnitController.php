@@ -69,6 +69,15 @@ class PerubahanUnitController extends Controller
         return response()->json(['unit' => $connkepemilikan]);
     }
 
+    public function perubahanByID($id)
+    {
+        $connperubahan = ConnectionDB::setConnection(new TenantUnit());
+
+        $connperubahan = $connperubahan->where('id_unit', $id)->first();
+
+        return response()->json(['unit' => $connperubahan]);
+    }
+
 
     /**
      * Display a listing of the resource.
@@ -248,6 +257,35 @@ class PerubahanUnitController extends Controller
         return redirect()->route('perubahanunits.index');
     }
 
+    public function deleteKepemilikanUnit(Request $request, $id)
+    {
+        $conn = ConnectionDB::setConnection(new KepemilikanUnit());
+        $connKUOFF = ConnectionDB::setConnection(new KepemilikanUnitOff());
+
+        $nowDate = Carbon::now();
+
+        $conn = $conn->where('id_pemilik_unit', $id)->first();
+        $conn->unit->isempty = 0;
+        $conn->unit->save();
+        $conn->delete();
+
+        $connKUOFF->create([
+            'id_pemilik' => $conn->id_pemilik,
+            'id_unit' => $conn->id_unit,
+            'id_status_hunian' => $conn->id_status_hunian,
+            'tgl_masuk' => $conn->tgl_masuk,
+            'tgl_keluar' => $request->tgl_keluar,
+            'tgl_sys' => $nowDate,
+            'no_bukti_milik' => $conn->no_bukti_milik,
+            'keterangan' => $request->keterangan,
+        ]);
+        DB::commit();
+
+        Alert::success('Berhasil', 'Berhasil perubahan kepemilikan unit');
+
+        return redirect()->route('perubahanunits.index');
+    }
+
     /**
      * Show the form for creating a new resource.
      *
@@ -387,7 +425,7 @@ class PerubahanUnitController extends Controller
         $periodeSewa = $this->setConnection(new PeriodeSewa());
         $connOwner = $this->setConnection(new OwnerH());
 
-        // $data['tenantunit'] = $connTenantUnit->where('id_tenant_unit', $id)->first();
+        $data['tenant_unit'] = $connTenantUnit->get();
         $data['tenantunit'] = $connTenantUnit->find($id);
         $data['id_tenant'] = $id;
         $data['units'] = $connUnit->get();

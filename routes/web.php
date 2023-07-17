@@ -68,6 +68,8 @@ use App\Http\Controllers\Admin\LiftController;
 use App\Http\Controllers\Admin\MemberTenantController;
 use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\OffBoardingKepemilikanUnitController;
+use App\Http\Controllers\Admin\OffBoardingOwnerController;
+use App\Http\Controllers\Admin\OffBoardingTenantController;
 use App\Http\Controllers\Admin\OffBoardingTenantUnitController;
 use App\Http\Controllers\Admin\OfficeManagementController;
 use App\Http\Controllers\Admin\OwnerHController;
@@ -456,18 +458,30 @@ Route::prefix('admin')->group(function () {
 
         //CRUD OffBoarding Tenant Unit 
         Route::resource('offtenantunits', OffBoardingTenantUnitController::class);
-
+        
         //CRUD OffBoarding Kepemilikan Unit 
         Route::resource('offkepemilkanunits', OffBoardingKepemilikanUnitController::class);
-
+        
         Route::get('/get-jatuh-tempo', [OffBoardingTenantUnitController::class, 'jatuhtempo']);
-
+        
         Route::get('/get-nav/{id}', [RoleController::class, 'getNavByRole'])->name('getNav');
+        
+        //CRUD OffBoarding Owner 
+        Route::resource('offowners', OffBoardingOwnerController::class);
+        Route::get('ownerunit-by-id/{id}', [OffBoardingOwnerController::class, 'ownerByID'])->name('owner-by-id');
+        Route::get('pic-by-id/{id}', [OffBoardingOwnerController::class, 'picByID'])->name('pic-by-id');
+        
+        //CRUD OffBoarding Tenant 
+        Route::resource('offtenants', OffBoardingTenantController::class);
+        Route::get('tenant-unit-by-id/{id}', [OffBoardingTenantController::class, 'tenantByID'])->name('owner-by-id');
+        Route::get('penjamin-by-id/{id}', [OffBoardingTenantController::class, 'penjaminByID'])->name('penjamin-by-id');
+        Route::post('/update/tenantunits-offtenant/{id}', [OffBoardingTenantController::class, 'offdeleteTenantUnit'])->name('offdeleteTenantUnit');
 
         // CRUD PerubahanUnit
         Route::resource('perubahanunits', PerubahanUnitController::class);
         Route::get('tenantunit-by-id/{id}', [PerubahanUnitController::class, 'unitBy'])->name('unit-by');
         Route::get('kepemilikanunit-by-id/{id}', [PerubahanUnitController::class, 'kepemilikanByID'])->name('kepemilikan-by-id');
+        Route::get('perubahannunit-by-id/{id}', [PerubahanUnitController::class, 'perubahanByID'])->name('perubahan-by-id');
 
         Route::get('/get/perpanjangunits-edit/{id}', [PerubahanUnitController::class, 'edit'])->name('edittenantunit');
         Route::get('/get/kepemilikanunits-edit/{id}', [PerubahanUnitController::class, 'editKU'])->name('editkepemilikanunit');
@@ -480,7 +494,8 @@ Route::prefix('admin')->group(function () {
         Route::get('/perubahantenantunits-show/{id}', [PerubahanUnitController::class, 'showPerubahan'])->name('perubahanunit');
 
         Route::post('/update/tenantunits-perpanjangan/{id}', [PerubahanUnitController::class, 'updateTenantUnit'])->name('updateTenantUnit');
-        Route::post('/update/kepemilikanunits-pindah/{id}', [PerubahanUnitController::class, 'updateKU'])->name('updateKU');
+        // Route::post('/update/kepemilikanunits-pindah/{id}', [PerubahanUnitController::class, 'updateKU'])->name('updateKU');
+        Route::post('/update/tenantunits-pindahkepemilikan/{id}', [PerubahanUnitController::class, 'deleteKepemilikanUnit'])->name('deleteKepemilikanUnit');
         Route::post('/update/tenantunits-perubahan/{id}', [PerubahanUnitController::class, 'updatePerubahanUnit'])->name('updatePerubahanUnit');
         Route::post('/update/tenantunits-tidakperpanjang/{id}', [PerubahanUnitController::class, 'deleteTenantUnit'])->name('deleteTenantUnit');
     });

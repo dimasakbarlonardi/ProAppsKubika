@@ -13,11 +13,11 @@
             <div class="mb-3">
                 <div class="row">
                     <div class="col-6 mb-3">
-                        <label class="form-label">ID Site</label>
+                        <label class="form-label">Site</label>
                         <input type="text" value="Park Royale" class="form-control" readonly>
                     </div>
                     <div class="col-6">
-                        <label class="form-label">ID User</label>
+                        <label class="form-label">User</label>
                         @foreach ($idusers as $iduser)
                         <input type="text" value="{{ $iduser->name}}" class="form-control" readonly>
                         @endforeach
@@ -27,7 +27,7 @@
                     <input type="text" value="{{$tenant->id_pemilik}}" class="form-control">
                 </div> --}} 
                     <div class="col-6 mb-3">
-                        <label class="form-label">ID Card Tenant</label>
+                        <label class="form-label">Card Tenant</label>
                         <input type="text" value="{{ $tenant->IdCard->card_id_name }}" class="form-control" readonly>
                     </div>
                     <div class="col-6 mb-3">
@@ -70,21 +70,27 @@
                         <label class="form-label">No Telp Tenant</label>
                         <input type="text" value="{{ $tenant->no_telp_tenant }}" class="form-control" readonly>
                     </div>
+
+                    <div class="penjamin mt-5" id="penjamin">
+                        <h5>Penjamin</h5>
+                        <hr>
+                    <div class="mb-3">
+                    <div class="row">
                     <div class="col-6 mb-3">
-                        <label class="form-label">NIK Pasangan Penjamin</label>
+                        <label class="form-label">NIK Penjamin</label>
                         <input type="text" value="{{ $tenant->nik_pasangan_penjamin }}" class="form-control" readonly>
                     </div>
                     <div class="col-6 mb-3">
-                        <label class="form-label">Nama Pasangan Penjamin</label>
+                        <label class="form-label">Nama Penjamin</label>
                         <input type="text" value="{{ $tenant->nama_pasangan_penjamin }}" class="form-control" readonly>
                     </div>
                     <div class="col-6 mb-3">
-                        <label class="form-label">Alamat KTP Pasangan Penjamin</label>
+                        <label class="form-label">Alamat KTP Penjamin</label>
                         <input type="text" value="{{ $tenant->alamat_ktp_pasangan_penjamin }}" class="form-control"
                             readonly>
                     </div>
                     <div class="col-6 mb-3">
-                        <label class="form-label">Alamat Tinggal Pasangan Penjamin</label>
+                        <label class="form-label">Alamat Tinggal Penjamin</label>
                         <input type="text" value="{{ $tenant->alamat_tinggal_pasangan_penjamin }}" class="form-control"
                             readonly>
                     </div>
@@ -96,8 +102,11 @@
                         <label class="form-label">No Telp Penjamin</label>
                         <input type="text" value="{{ $tenant->no_telp_penjamin }}" class="form-control" readonly>
                     </div>
+                    </div>
+                    </div>
                 </div>
             </div>
+                
             <a href="{{ route('tenants.edit', $tenant->id_tenant) }}" class="btn btn-sm btn-warning">Edit</a>
             <form class="d-inline" action="{{ route('tenants.destroy', $tenant->id_tenant) }}" method="post">
                 @method('DELETE')

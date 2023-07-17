@@ -109,7 +109,7 @@
                         
                         <div class="col-6">
                             <label class="form-label">Status Kawin</label>
-                            <input type="text" value="{{$owners->statuskawin->status_kawin }}" class="form-control" readonly>
+                            <input type="text" id="id_status_kawin" value="{{$owners->statuskawin->status_kawin }}" class="form-control" readonly>
                         </div>
                         <div class="col-6">
                             <label class="form-label">Pekerjaan</label>
@@ -143,26 +143,26 @@
                             <input type="text" value="{{$owners->hubungan_kontak_pic}}" class="form-control" readonly>
                         </div>
                         
-                        <div class="penjamin mt-5">
+                        <div class="penjamin mt-5" id="penjamin">
                             <h5>Penjamin</h5>
                             <hr>
                             <div class="mb-3">
                                 <div class="row">
                                     <div class="col-6">
-                                        <label class="form-label">Nik Pasangan Penjamin</label>
+                                        <label class="form-label">Nik Penjamin</label>
                                         <input type="text" value="{{$owners->nik_pasangan_penjamin}}" class="form-control" readonly>
                                     </div>
                                     <div class="col-6">
-                                        <label class="form-label">Nama Pasangan Penjamin</label>
+                                        <label class="form-label">Nama Penjamin</label>
                                         <input type="text" value="{{$owners->nama_pasangan_penjamin}}" class="form-control" readonly>
                                     </div>
                           
                                     <div class="col-6">
-                                        <label class="form-label">Alamat KTP Pasangan Penjamin</label>
+                                        <label class="form-label">Alamat KTP Penjamin</label>
                                         <input type="text" value="{{$owners->alamat_ktp_pasangan_penjamin}}" class="form-control" readonly>
                                     </div>
                                     <div class="col-6">
-                                        <label class="form-label">Alamat Tinggal Pasangan Penjamin</label>
+                                        <label class="form-label">Alamat Tinggal Penjamin</label>
                                         <input type="text" value="{{$owners->alamat_tinggal_pasangan_penjamin}}" class="form-control" readonly>
                                     </div>
                             
@@ -177,6 +177,42 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="penjamin mt-5" id="pasangan">
+                            <h5>Pasangan</h5>
+                            <hr>
+                            <div class="mb-3">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label class="form-label">Nik Pasangan</label>
+                                        <input type="text" value="{{$owners->nik_pasangan_penjamin}}" class="form-control" readonly>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label">Nama Pasangan</label>
+                                        <input type="text" value="{{$owners->nama_pasangan_penjamin}}" class="form-control" readonly>
+                                    </div>
+                          
+                                    <div class="col-6">
+                                        <label class="form-label">Alamat KTP Pasangan</label>
+                                        <input type="text" value="{{$owners->alamat_ktp_pasangan_penjamin}}" class="form-control" readonly>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label">Alamat Tinggal Pasangan</label>
+                                        <input type="text" value="{{$owners->alamat_tinggal_pasangan_penjamin}}" class="form-control" readonly>
+                                    </div>
+                            
+                                    <div class="col-6">
+                                        <label class="form-label">Hubungan Pasangan</label>
+                                        <input type="text" value="{{$owners->hubungan_penjamin}}" class="form-control" readonly>
+                                    </div>
+                                    <div class="col-6">
+                                        <label class="form-label">No Telp Pasangan</label>
+                                        <input type="text" value="{{$owners->no_telp_penjamin}}" class="form-control" readonly>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                 </div>
                 </div>
 
@@ -185,4 +221,32 @@
                         <a class="btn btn-sm btn-danger" href="{{ route('owners.index')}}">Back</a>
         </div>
     </div>
+@endsection
+
+@section('script')
+    <script>
+        $(document).ready(function() {
+            var status = $('#id_status_kawin').val();
+            console.log(status)
+            if (status == 1) {
+                $('#penjamin').css('display', 'block')
+                $('#pasangan').css('display', 'none')
+            } else {
+                $('#penjamin').css('display', 'none')
+                $('#pasangan').css('display', 'block')
+            }
+
+            $('#id_status_kawin').on('change', function() {
+                var status = $(this).val();
+
+                if (status == 1) {
+                    $('#penjamin').css('display', 'block')
+                    $('#pasangan').css('display', 'none')
+                } else {
+                    $('#penjamin').css('display', 'none')
+                    $('#pasangan').css('display', 'block')
+                }
+            })
+        })
+    </script>
 @endsection

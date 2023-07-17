@@ -123,29 +123,71 @@
                         </select>
                     </div>
                 </div>
+
                 <div class="penjamin mt-5" id="penjamin">
-                    <h5>Penjamin</h5>
-                    <hr>
+                    <h5>Pasangan</h5>
+                    <hr> 
                     <div class="row mb-3">
                         <div class="col-6">
-                            <label class="form-label">Nama Pasangan Penjamin</label>
+                            <label class="form-label">Nama Pasangan</label>
                             <input type="text" value="{{ old('nama_pasangan_penjamin') }}"
                                 name="nama_pasangan_penjamin" class="form-control">
                         </div>
                         <div class="col-6">
-                            <label class="form-label">Nik Pasangan Penjamin</label>
+                            <label class="form-label">Nik Pasangan</label>
                             <input type="text" value="{{ old('nik_pasangan_penjamin') }}" maxlength="16"
                                 name="nik_pasangan_penjamin" class="form-control">
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div class="col-6">
-                            <label class="form-label">Alamat KTP Pasangan Penjamin</label>
+                            <label class="form-label">Alamat KTP Pasangan</label>
                             <input type="text" value="{{ old('alamat_ktp_pasangan_penjamin') }}"
                                 name="alamat_ktp_pasangan_penjamin" class="form-control">
                         </div>
                         <div class="col-6">
-                            <label class="form-label">Alamat Tinggal Pasangan Penjamin</label>
+                            <label class="form-label">Alamat Tinggal Pasangan</label>
+                            <input type="text" value="{{ old('alamat_tinggal_pasangan_penjamin') }}"
+                                name="alamat_tinggal_pasangan_penjamin" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <label class="form-label">Hubungan Pasangan</label>
+                            <input type="text" value="{{ old('hubungan_penjamin') }}" name="hubungan_penjamin"
+                                class="form-control">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">No Telp Pasangan</label>
+                            <input type="text" value="{{ old('no_telp_penjamin') }}" name="no_telp_penjamin"
+                                class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="penjamin mt-5" id="pasangan">
+                    <h5>Penjamin</h5>
+                    <hr>
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <label class="form-label">Nama Penjamin</label>
+                            <input type="text" value="{{ old('nama_pasangan_penjamin') }}"
+                                name="nama_pasangan_penjamin" class="form-control">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">Nik Penjamin</label>
+                            <input type="text" value="{{ old('nik_pasangan_penjamin') }}" maxlength="16"
+                                name="nik_pasangan_penjamin" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <label class="form-label">Alamat KTP Penjamin</label>
+                            <input type="text" value="{{ old('alamat_ktp_pasangan_penjamin') }}"
+                                name="alamat_ktp_pasangan_penjamin" class="form-control">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">Alamat Tinggal Penjamin</label>
                             <input type="text" value="{{ old('alamat_tinggal_pasangan_penjamin') }}"
                                 name="alamat_tinggal_pasangan_penjamin" class="form-control">
                         </div>
@@ -163,6 +205,7 @@
                         </div>
                     </div>
                 </div>
+
                 <div class="mt-5">
                     <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
@@ -172,25 +215,29 @@
 @endsection
 
 @section('script')
-    <script>
-        $(document).ready(function() {
-            var status = $('#id_status_kawin').val();
-            console.log(status)
+<script>
+    $(document).ready(function() {
+        var status = $('#id_status_kawin').val();
+        console.log(status)
+        if (status == 1) {
+            $('#penjamin').css('display', 'none')
+            $('#pasangan').css('display', 'block')
+        } else {
+            $('#penjamin').css('display', 'block')
+            $('#pasangan').css('display', 'none')
+        }
+
+        $('#id_status_kawin').on('change', function() {
+            var status = $(this).val();
+
             if (status == 1) {
                 $('#penjamin').css('display', 'block')
+                $('#pasangan').css('display', 'none')
             } else {
                 $('#penjamin').css('display', 'none')
+                $('#pasangan').css('display', 'block')
             }
-
-            $('#id_status_kawin').on('change', function() {
-                var status = $(this).val();
-                console.log(status)
-                if (status == 1) {
-                    $('#penjamin').css('display', 'block')
-                } else {
-                    $('#penjamin').css('display', 'none')
-                }
-            })
         })
-    </script>
+    })
+</script>
 @endsection

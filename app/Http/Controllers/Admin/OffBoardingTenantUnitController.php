@@ -19,30 +19,31 @@ class OffBoardingTenantUnitController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function jatuhtempo()
-    {
-        $conn = ConnectionDB::setConnection(new TenantUnit());
-        $connTUOFF = ConnectionDB::setConnection(new TenantUnitOFF());
+    // public function jatuhtempo()
+    // {
+    //     $conn = ConnectionDB::setConnection(new TenantUnit());
+    //     $connTUOFF = ConnectionDB::setConnection(new TenantUnitOFF());
 
-        $nowDate = Carbon::now();
+    //     $nowDate = Carbon::now();
 
-        $getData = $conn->where('tgl_keluar', '<', $nowDate)->get();
+    //     $getData = $conn->where('tgl_keluar', '<', $nowDate)->get();
 
-        foreach($getData as $item) {
-            $connTUOFF->create([
-                'id_tenant' => $item->id_tenant,
-                'id_unit' => $item->id_unit,
-                'id_pemilik' => $item->id_pemilik,
-                'tgl_masuk' => $item->tgl_masuk,
-                'tgl_keluar' => $item->tgl_keluar,
-                'tgl_sys' => Carbon::now(),
-                'keterangan' => 'Unit ini sudah melebihi jatuh tempo',
-                'sewa_ke' => 2
-            ]);
-        }
+    //     foreach($getData as $item) {
+    //         $connTUOFF->create([
+    //             'id_tenant' => $item->id_tenant,
+    //             'id_unit' => $item->id_unit,
+    //             'id_pemilik' => $item->id_pemilik,
+    //             'tgl_masuk' => $item->tgl_masuk,
+    //             'tgl_keluar' => $item->tgl_keluar,
+    //             'tgl_sys' => Carbon::now(),
+    //             'keterangan' => 'Unit ini sudah melebihi jatuh tempo',
+    //             'sewa_ke' => 2
+    //         ]);
+    //     }
 
-        dd($getData);
-    }
+    //     dd($getData);
+    // }
+    
     public function index()
     {
         $conn = ConnectionDB::setConnection(new TenantUnitOFF());

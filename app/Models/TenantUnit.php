@@ -43,5 +43,6 @@ class TenantUnit extends Model
     {
         return $this->hasOne(Tenant::class, 'id_tenant', 'id_tenant');
     }
+    
 
 }
