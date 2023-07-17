@@ -293,8 +293,8 @@ Route::prefix('admin')->group(function () {
         // CRUD Work Priority
         Route::resource('workprioritys', WorkPriorityController::class);
 
-          // CRUD BayarNon
-          Route::resource('bayarnons', BayarnonController::class);
+        // CRUD BayarNon
+        Route::resource('bayarnons', BayarnonController::class);
 
         // Akses form for user
         Route::get('/akses-form-user/{id}', [RoleController::class, 'aksesForm'])->name('get-akses-form');
@@ -454,6 +454,11 @@ Route::prefix('admin')->group(function () {
         Route::get('/get-notifications', [DashboardController::class, 'getNotifications'])->name('getNotifications');  // Get all notifications by user_id
         Route::get('/notification/{id}', [DashboardController::class, 'showNotification'])->name('showNotification'); // Show all notification by user_id
 
+        //CRUD OffBoarding Tenant 
+        Route::resource('offtenants', OffBoardingTenantController::class);
+        Route::get('tenant-unit-by-id/{id}', [OffBoardingTenantController::class, 'tenantByID'])->name('owner-by-id');
+        Route::get('penjamin-by-id/{id}', [OffBoardingTenantController::class, 'penjaminByID'])->name('penjamin-by-id');
+        Route::post('/update/tenantunits-offtenant/{id}', [OffBoardingTenantController::class, 'offdeleteTenantUnit'])->name('offdeleteTenantUnit');
     });
 });
 
