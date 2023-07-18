@@ -120,14 +120,15 @@ class OffBoardingTenantController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function offdeleteTenantUnit(Request $request, $id)
+    public function offdeleteTenantUnit(Request $request)
     {
         $conn = ConnectionDB::setConnection(new Tenant());
         $connTUOFF = ConnectionDB::setConnection(new TenantOFF());
 
         $nowDate = Carbon::now();
 
-        $conn = $conn->where('id_tenant', $id)->first();
+        $conn = $conn->where('id_tenant', $request->id_tenant_modal)->first();
+        dd($conn);
         $conn->delete();
 
         $connTUOFF->create([

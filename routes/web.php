@@ -455,7 +455,7 @@ Route::prefix('admin')->group(function () {
         Route::resource('offtenants', OffBoardingTenantController::class);
         Route::get('tenant-unit-by-id/{id}', [OffBoardingTenantController::class, 'tenantByID'])->name('tenant-by-id');
         Route::get('penjamin-by-id/{id}', [OffBoardingTenantController::class, 'penjaminByID'])->name('penjamin-by-id');
-        Route::post('/update/tenantunits-offtenant/{id}', [OffBoardingTenantController::class, 'offdeleteTenantUnit'])->name('offdeleteTenantUnit');
+        Route::post('/update/tenantunits-offtenant', [OffBoardingTenantController::class, 'offdeleteTenantUnit'])->name('offdeleteTenantUnit');
 
         //CRUD OffBoarding Owner
         Route::resource('offowners', OffBoardingOwnerController::class);
