@@ -461,11 +461,12 @@ class PerubahanUnitController extends Controller
         //
     }
 
-    public function validationPerpanjang($id)
+    public function validationPerubahan(Request $request)
     {
         $connTicket = ConnectionDB::setConnection(new OpenTicket());
 
-        $tickets = $connTicket->where('id_tenant', $id)
+        $tickets = $connTicket->where('id_tenant', $request->id_tenant)
+        ->where('id_unit', $request->id_unit)
         ->where('status_request', '!=', 'COMPLETE')
         ->get();
         $errors = [];

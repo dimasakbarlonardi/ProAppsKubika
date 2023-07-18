@@ -484,6 +484,8 @@ Route::prefix('admin')->group(function () {
         Route::post('/update/tenantunits-perubahan/{id}', [PerubahanUnitController::class, 'updatePerubahanUnit'])->name('updatePerubahanUnit');
         Route::post('/update/tenantunits-tidakperpanjang/{id}', [PerubahanUnitController::class, 'deleteTenantUnit'])->name('deleteTenantUnit');
 
+        Route::get('/validation/perubahan', [PerubahanUnitController::class, 'validationPerubahan'])->name('validationPerubahan');
+
         // ---------Eng Parameter--------
 
         //CRUD Room

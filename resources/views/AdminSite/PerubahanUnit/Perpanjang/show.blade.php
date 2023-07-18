@@ -202,29 +202,40 @@
 @section('script')
     <script>
         $('#btnPerpanjangSewa').on('click', function() {
-            var id_tenant = '{{ $tenantunits->id_tenant }}'
+            var id_tenant = '{{ $tenantunits->id_tenant }}';
+            var id_unit = '{{ $tenantunits->id_unit }}';
+            var id_tenant_unit = '{{ $tenantunits->id_tenant_unit }}';
+
             $('#modalListErrors').html('');
             $.ajax({
-                url: `/admin/validation/${id_tenant}/perpanjang`,
+                url: `/admin/validation/perubahan`,
                 type: 'GET',
+                data: {
+                    'id_tenant': id_tenant,
+                    'id_unit':id_unit
+                },
                 success: function(resp) {
                     console.log(resp.errors)
-                    resp.errors.map((item) => {
-                        $('#modalListErrors').append(`
-                             <div class="row">
-                                <div class="d-flex">
-                                    <span class="fa-stack ms-n1">
-                                        <img src="{{ asset('assets/img/icons/cross_red.png') }}"
-                                            class="" height="25">
-                                    </span>
-                                    <div class="">
-                                        <p class="text-break fs--1 mt-1">${item.type} - ${item.error_header} masih berstatus ${item.error_status}</p>
+                    if (resp.errors.length > 0) {
+                        resp.errors.map((item) => {
+                            $('#modalListErrors').append(`
+                                 <div class="row">
+                                    <div class="d-flex">
+                                        <span class="fa-stack ms-n1">
+                                            <img src="{{ asset('assets/img/icons/cross_red.png') }}"
+                                                class="" height="25">
+                                        </span>
+                                        <div class="">
+                                            <p class="text-break fs--1 mt-1">${item.type} - ${item.error_header} masih berstatus ${item.error_status}</p>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        `);
-                    })
-                    $('#modalValidation').modal('show')
+                            `);
+                        })
+                        $('#modalValidation').modal('show')
+                    } else {
+                        window.location.replace(`/admin/get/perpanjangunits-edit/${id_tenant_unit}`)
+                    }
                 }
             })
         })
