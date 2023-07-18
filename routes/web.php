@@ -610,6 +610,36 @@ Route::prefix('admin')->group(function () {
         //CRUD Checklist Pemadam
         Route::resource('checklistpemadams', ChecklistPemadamHController::class);
         Route::get('/checklist-filter-pemadam', [ChecklistPemadamHController::class, 'filterByNoChecklist']);
+
+        // ------------End Checklist AHU----------------
+
+        // ------------Checklist HK--------------------
+
+        //CRUD Checklist Toilet 
+        Route::resource('checklisttoilets', ChecklistToiletHController::class);
+        Route::get('/checklist-filter-toilet', [ChecklistToiletHController::class, 'filterByNoChecklist']);
+
+        //CRUD Checklist Office Management 
+        Route::resource('checklistoffices', ChecklistOfficeManagementHController::class);
+        Route::get('/checklist-filter-office_management', [ChecklistOfficeManagementHController::class, 'filterByNoChecklist']);
+
+        //CRUD Checklist Lift 
+        Route::resource('checklistlifts', ChecklistLiftHController::class);
+        Route::get('/checklist-filter-lift', [ChecklistLiftHController::class, 'filterByNoChecklist']);
+
+        //CRUD Checklist Floor 
+        Route::resource('checklistfloors', ChecklistFloorHController::class);
+        Route::get('/checklist-filter-floor', [ChecklistFloorHController::class, 'filterByNoChecklist']);
+
+        //CRUD Checklist Tangga Darurat 
+        Route::resource('checklisttanggadarurats', ChecklistTanggaDaruratHController::class);
+        Route::get('/checklist-filter-tangga_darurat', [ChecklistTanggaDaruratHController::class, 'filterByNoChecklist']);
+
+        //CRUD Checklist Koridor 
+        Route::resource('checklistkoridors', ChecklistKoridorHController::class);
+        Route::get('/checklist-filter-koridor', [ChecklistKoridorHController::class, 'filterByNoChecklist']);
+
+        // ---------------End Checklist HK-----------------
     });
 });
 
