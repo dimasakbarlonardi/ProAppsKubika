@@ -1,111 +1,117 @@
 <?php
 
-use App\Http\Controllers\Admin\FloorController;
-use App\Http\Controllers\Admin\AgamaController;
-use App\Http\Controllers\Admin\BAPPController;
-use App\Http\Controllers\Admin\BayarnonController;
-use App\Http\Controllers\Admin\ChecklistAhuDetailController;
-use App\Http\Controllers\Admin\ChecklistAhuHController;
-use App\Http\Controllers\Admin\ChecklistChillerHController;
-use App\Http\Controllers\Admin\ChecklistGasHController;
-use App\Http\Controllers\Admin\ChecklistGensetHController;
-use App\Http\Controllers\Admin\ChecklistGroundRoofHController;
-use App\Http\Controllers\Admin\ChecklistListrikHController;
-use App\Http\Controllers\Admin\ChecklistPemadamHController;
-use App\Http\Controllers\Admin\ChecklistPompaSumpitHController;
-use App\Http\Controllers\Admin\ChecklistPutrHController;
-use App\Http\Controllers\Admin\ChecklistSolarHController;
-use App\Http\Controllers\Admin\ChecklistTemperaturHController;
-use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\DepartemenController;
-use App\Http\Controllers\Admin\DivisiController;
-use App\Http\Controllers\Admin\EngAHUController;
-use App\Http\Controllers\Admin\EngBAPPcontroller;
-use App\Http\Controllers\Admin\EngChillerController;
-use App\Http\Controllers\Admin\EngDeepWheelController;
-use App\Http\Controllers\Admin\EngGasController;
-use App\Http\Controllers\Admin\EngGroundController;
-use App\Http\Controllers\Admin\EngListrikController;
-use App\Http\Controllers\Admin\EngPamController;
-use App\Http\Controllers\Admin\EngPemadamController;
-use App\Http\Controllers\Admin\EngPompasumpitController;
-use App\Http\Controllers\Admin\EngPutrController;
-use App\Http\Controllers\Admin\GIGOController;
-use App\Http\Controllers\Admin\RoleController;
-use App\Http\Controllers\Admin\GroupController;
-use App\Http\Controllers\Admin\HKFloorController;
-use App\Http\Controllers\Admin\HKKoridorController;
-use App\Http\Controllers\Admin\HKTanggaDaruratController;
-use App\Http\Controllers\Admin\InboxCntroller;
-use App\Http\Controllers\Admin\LoginController;
-use App\Http\Controllers\Admin\MenuController;
-use App\Http\Controllers\Admin\MenuHeadingController;
-use App\Http\Controllers\Admin\SiteController;
-use App\Http\Controllers\Admin\UserController;
-use App\Http\Controllers\Admin\PengurusController;
-use App\Http\Controllers\Admin\SubMenu2Controller;
-use App\Http\Controllers\Admin\SubMenuController;
-use App\Http\Controllers\Admin\TenantController;
-use App\Http\Controllers\Admin\TenantUnitController;
-use App\Http\Controllers\Admin\TowerController;
-use App\Http\Controllers\Admin\UnitController;
-use App\Http\Controllers\Admin\HunianController;
-use App\Http\Controllers\Admin\IdcardController;
-use App\Http\Controllers\Admin\IPLTypeController;
-use App\Http\Controllers\Admin\JabatanController;
-use App\Http\Controllers\Admin\JenisAcaraController;
-use App\Http\Controllers\Admin\JenisDendaController;
-use App\Http\Controllers\Admin\JenisKelaminController;
-use App\Http\Controllers\Admin\JenisKendaraanController;
-use App\Http\Controllers\Admin\JenisPekerjaanController;
-use App\Http\Controllers\Admin\JenisRequestController;
-use App\Http\Controllers\Admin\KaryawanController;
-use App\Http\Controllers\Admin\KendaraanTenantController;
-use App\Http\Controllers\Admin\KepemilikanUnitController;
-use App\Http\Controllers\Admin\LiftController;
-use App\Http\Controllers\Admin\MainFormController;
-use App\Http\Controllers\Admin\MemberTenantController;
-use App\Http\Controllers\Admin\NotificationController;
-use App\Http\Controllers\Admin\OffBoardingKepemilikanUnitController;
-use App\Http\Controllers\Admin\OffBoardingOwnerController;
-use App\Http\Controllers\Admin\OffBoardingTenantController;
-use App\Http\Controllers\Admin\OffBoardingTenantUnitController;
-use App\Http\Controllers\Admin\OfficeManagementController;
-use App\Http\Controllers\Admin\OpenTicket;
-use App\Http\Controllers\Admin\OpenTicketController;
-use App\Http\Controllers\Admin\OwnerHController;
-use App\Http\Controllers\Admin\PenempatanController;
-use App\Http\Controllers\Admin\PerhitDendaController;
-use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\PeriodeSewaController;
-use App\Http\Controllers\Admin\RequestPermitController;
-use App\Http\Controllers\Admin\ReservationController;
-use App\Http\Controllers\Admin\PerubahanUnitController;
-use App\Http\Controllers\Admin\ReminderLetterController;
-use App\Http\Controllers\Admin\RoomController;
-use App\Http\Controllers\Admin\RuangReservationController;
-use App\Http\Controllers\Admin\StatusAktifKaryawanController;
-use App\Http\Controllers\Admin\StatusKaryawanController;
-use App\Http\Controllers\Admin\StatusKawinController;
-use App\Http\Controllers\Admin\StatusRequestController;
-use App\Http\Controllers\Admin\SystemSettingController;
-use App\Http\Controllers\Admin\StatusTinggalController;
-use App\Http\Controllers\Admin\ToiletController;
-use App\Http\Controllers\Admin\TypeReservationController;
-use App\Http\Controllers\Admin\UtilityController;
-use App\Http\Controllers\Admin\WorkOrderController;
-use App\Http\Controllers\Admin\WorkPermitController;
-use App\Http\Controllers\Admin\WorkPriorityController;
-use App\Http\Controllers\Admin\WorkRelationController;
-use App\Http\Controllers\Admin\WorkRequestController;
-use App\Http\Controllers\PaymentController;
-use App\Models\ChecklistGensetH;
-use App\Models\ChecklistGroundRoofH;
-use App\Models\ChecklistListrikH;
-use App\Models\ChecklistOfficeManagementH;
-use App\Models\ChecklistPemadamH;
 use App\Models\ChecklistPutrH;
 use App\Models\MonthlyArTenant;
+use App\Models\ChecklistGensetH;
+use App\Models\ChecklistListrikH;
+use App\Models\ChecklistPemadamH;
+use App\Models\ChecklistGroundRoofH;
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\OpenTicket;
+use App\Models\ChecklistOfficeManagementH;
+use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\Admin\BAPPController;
+use App\Http\Controllers\Admin\GIGOController;
+use App\Http\Controllers\Admin\InboxCntroller;
+use App\Http\Controllers\Admin\LiftController;
+use App\Http\Controllers\Admin\MenuController;
+use App\Http\Controllers\Admin\RoleController;
+use App\Http\Controllers\Admin\RoomController;
+use App\Http\Controllers\Admin\SiteController;
+use App\Http\Controllers\Admin\UnitController;
+use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\AgamaController;
+use App\Http\Controllers\Admin\FloorController;
+use App\Http\Controllers\Admin\GroupController;
+use App\Http\Controllers\Admin\LoginController;
+use App\Http\Controllers\Admin\TowerController;
+use App\Http\Controllers\Admin\DivisiController;
+use App\Http\Controllers\Admin\EngAHUController;
+use App\Http\Controllers\Admin\EngGasController;
+use App\Http\Controllers\Admin\EngPamController;
+use App\Http\Controllers\Admin\HunianController;
+use App\Http\Controllers\Admin\IdcardController;
+use App\Http\Controllers\Admin\OwnerHController;
+use App\Http\Controllers\Admin\TenantController;
+use App\Http\Controllers\Admin\ToiletController;
+use App\Http\Controllers\Admin\EngBAPPcontroller;
+use App\Http\Controllers\Admin\EngPutrController;
+use App\Http\Controllers\Admin\HKFloorController;
+use App\Http\Controllers\Admin\IPLTypeController;
+use App\Http\Controllers\Admin\JabatanController;
+use App\Http\Controllers\Admin\SubMenuController;
+use App\Http\Controllers\Admin\UtilityController;
+use App\Http\Controllers\Admin\BayarnonController;
+use App\Http\Controllers\Admin\KaryawanController;
+use App\Http\Controllers\Admin\MainFormController;
+use App\Http\Controllers\Admin\PengurusController;
+use App\Http\Controllers\Admin\SubMenu2Controller;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\EngGroundController;
+use App\Http\Controllers\Admin\HKKoridorController;
+use App\Http\Controllers\Admin\WorkOrderController;
+use App\Http\Controllers\Admin\DepartemenController;
+use App\Http\Controllers\Admin\EngChillerController;
+use App\Http\Controllers\Admin\EngListrikController;
+use App\Http\Controllers\Admin\EngPemadamController;
+use App\Http\Controllers\Admin\JenisAcaraController;
+use App\Http\Controllers\Admin\JenisDendaController;
+use App\Http\Controllers\Admin\OpenTicketController;
+use App\Http\Controllers\Admin\PenempatanController;
+use App\Http\Controllers\Admin\TenantUnitController;
+use App\Http\Controllers\Admin\WorkPermitController;
+use App\Http\Controllers\Admin\MenuHeadingController;
+use App\Http\Controllers\Admin\PerhitDendaController;
+use App\Http\Controllers\Admin\PeriodeSewaController;
+use App\Http\Controllers\Admin\ReservationController;
+use App\Http\Controllers\Admin\StatusKawinController;
+use App\Http\Controllers\Admin\WorkRequestController;
+use App\Http\Controllers\Admin\EngDeepWheelController;
+use App\Http\Controllers\Admin\JenisKelaminController;
+use App\Http\Controllers\Admin\JenisRequestController;
+use App\Http\Controllers\Admin\MemberTenantController;
+use App\Http\Controllers\Admin\NotificationController;
+use App\Http\Controllers\Admin\WorkPriorityController;
+use App\Http\Controllers\Admin\WorkRelationController;
+use App\Http\Controllers\Admin\ChecklistAhuHController;
+use App\Http\Controllers\Admin\ChecklistGasHController;
+use App\Http\Controllers\Admin\PerubahanUnitController;
+use App\Http\Controllers\Admin\RequestPermitController;
+use App\Http\Controllers\Admin\StatusRequestController;
+use App\Http\Controllers\Admin\StatusTinggalController;
+use App\Http\Controllers\Admin\SystemSettingController;
+use App\Http\Controllers\Admin\ChecklistLiftHController;
+use App\Http\Controllers\Admin\ChecklistPutrHController;
+use App\Http\Controllers\Admin\EngPompasumpitController;
+use App\Http\Controllers\Admin\JenisKendaraanController;
+use App\Http\Controllers\Admin\JenisPekerjaanController;
+use App\Http\Controllers\Admin\ReminderLetterController;
+use App\Http\Controllers\Admin\StatusKaryawanController;
+use App\Http\Controllers\Admin\ChecklistFloorHController;
+use App\Http\Controllers\Admin\ChecklistSolarHController;
+use App\Http\Controllers\Admin\HKTanggaDaruratController;
+use App\Http\Controllers\Admin\KendaraanTenantController;
+use App\Http\Controllers\Admin\KepemilikanUnitController;
+use App\Http\Controllers\Admin\TypeReservationController;
+use App\Http\Controllers\Admin\ChecklistGensetHController;
+use App\Http\Controllers\Admin\ChecklistToiletHController;
+use App\Http\Controllers\Admin\OffBoardingOwnerController;
+use App\Http\Controllers\Admin\OfficeManagementController;
+use App\Http\Controllers\Admin\RuangReservationController;
+use App\Http\Controllers\Admin\ChecklistChillerHController;
+use App\Http\Controllers\Admin\ChecklistKoridorHController;
+use App\Http\Controllers\Admin\ChecklistListrikHController;
+use App\Http\Controllers\Admin\ChecklistPemadamHController;
+use App\Http\Controllers\Admin\OffBoardingTenantController;
+use App\Http\Controllers\Admin\ChecklistAhuDetailController;
+use App\Http\Controllers\Admin\StatusAktifKaryawanController;
+use App\Http\Controllers\Admin\ChecklistGroundRoofHController;
+use App\Http\Controllers\Admin\ChecklistTemperaturHController;
+use App\Http\Controllers\Admin\ChecklistPompaSumpitHController;
+use App\Http\Controllers\Admin\OffBoardingTenantUnitController;
+use App\Http\Controllers\Admin\ChecklistTanggaDaruratHController;
+use App\Http\Controllers\Admin\ChecklistOfficeManagementHController;
+use App\Http\Controllers\Admin\OffBoardingKepemilikanUnitController;
 
 /*
 |--------------------------------------------------------------------------
@@ -615,27 +621,27 @@ Route::prefix('admin')->group(function () {
 
         // ------------Checklist HK--------------------
 
-        //CRUD Checklist Toilet 
+        //CRUD Checklist Toilet
         Route::resource('checklisttoilets', ChecklistToiletHController::class);
         Route::get('/checklist-filter-toilet', [ChecklistToiletHController::class, 'filterByNoChecklist']);
 
-        //CRUD Checklist Office Management 
+        //CRUD Checklist Office Management
         Route::resource('checklistoffices', ChecklistOfficeManagementHController::class);
         Route::get('/checklist-filter-office_management', [ChecklistOfficeManagementHController::class, 'filterByNoChecklist']);
 
-        //CRUD Checklist Lift 
+        //CRUD Checklist Lift
         Route::resource('checklistlifts', ChecklistLiftHController::class);
         Route::get('/checklist-filter-lift', [ChecklistLiftHController::class, 'filterByNoChecklist']);
 
-        //CRUD Checklist Floor 
+        //CRUD Checklist Floor
         Route::resource('checklistfloors', ChecklistFloorHController::class);
         Route::get('/checklist-filter-floor', [ChecklistFloorHController::class, 'filterByNoChecklist']);
 
-        //CRUD Checklist Tangga Darurat 
+        //CRUD Checklist Tangga Darurat
         Route::resource('checklisttanggadarurats', ChecklistTanggaDaruratHController::class);
         Route::get('/checklist-filter-tangga_darurat', [ChecklistTanggaDaruratHController::class, 'filterByNoChecklist']);
 
-        //CRUD Checklist Koridor 
+        //CRUD Checklist Koridor
         Route::resource('checklistkoridors', ChecklistKoridorHController::class);
         Route::get('/checklist-filter-koridor', [ChecklistKoridorHController::class, 'filterByNoChecklist']);
 
