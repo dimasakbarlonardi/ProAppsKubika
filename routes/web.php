@@ -559,6 +559,56 @@ Route::prefix('admin')->group(function () {
 
         // ----------End Fin Parameter---------
 
+        // ----------Checklist AHU-------------
+
+         //CRUD Checklist AHU Header
+         Route::resource('checklistahus', ChecklistAhuHController::class);
+         Route::get('/checklist-filter-ahu', [ChecklistAhuHController::class, 'filterByNoChecklist']);
+         //CRUD Checklist AHU Detail
+         Route::resource('ahudetails', ChecklistAhuDetailController::class);
+
+         //CRUD Checklist Chiller 
+        Route::resource('checklistchillers', ChecklistChillerHController::class);
+        Route::get('/checklist-filter-chiller ', [ChecklistChillerHController::class, 'filterByNoChecklist']);
+        //CRUD Checklist Chiller 
+        Route::resource('checklistchillers', ChecklistChillerHController::class);
+
+        //CRUD Checklist Listrik 
+        Route::resource('checklistlistriks', ChecklistListrikHController::class);
+        Route::get('/checklist-filter-listrik', [ChecklistListrikHController::class, 'filterByNoChecklist']);
+
+        //CRUD Checklist Pompa Sumpit 
+        Route::resource('checklistpompasumpits', ChecklistPompaSumpitHController::class);
+        Route::get('/checklist-filter-pompasumpit', [ChecklistPompaSumpitHController::class, 'filterByNoChecklist']);
+
+         //CRUD Checklist GroundRoof 
+         Route::resource('checklistgroundroofs', ChecklistGroundRoofHController::class);
+         Route::get('/checklist-filter-groundroof', [ChecklistGroundRoofHController::class, 'filterByNoChecklist']);
+
+          //CRUD Checklist Solar 
+        Route::resource('checklistsolars', ChecklistSolarHController::class);
+        Route::get('/checklist-filter-solar', [ChecklistSolarHController::class, 'filterByNoChecklist']);
+ 
+         //CRUD Checklist Gas 
+         Route::resource('checklistgases', ChecklistGasHController::class);
+         Route::get('/checklist-filter-gas', [ChecklistGasHController::class, 'filterByNoChecklist']);
+         
+         //CRUD Checklist PUTR 
+        Route::resource('checklistputrs', ChecklistPutrHController::class);
+        Route::get('/checklist-filter-putr', [ChecklistPutrHController::class, 'filterByNoChecklist']);
+
+        //CRUD Checklist Genset 
+        Route::resource('checklistgensets', ChecklistGensetHController::class);
+        Route::get('/checklist-filter-genset', [ChecklistGensetHController::class, 'filterByNoChecklist']);
+
+        //CRUD Checklist Temperatur 
+        Route::resource('checklisttemperaturs', ChecklistTemperaturHController::class);
+        Route::get('/checklist-filter-temperatur', [ChecklistTemperaturHController::class, 'filterByNoChecklist']);
+
+         //CRUD Checklist Pemadam 
+         Route::resource('checklistpemadams', ChecklistPemadamHController::class);
+         Route::get('/checklist-filter-pemadam', [ChecklistPemadamHController::class, 'filterByNoChecklist']);
+
 
 
     });
