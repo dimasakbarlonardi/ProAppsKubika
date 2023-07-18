@@ -62,8 +62,7 @@
                 </div>
                 <div class="mb-3">
                     <div class=" my-3">
-                        <button class="btn btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#error-modal"
-                            onclick="submitOffTenant()">Off Tenant
+                        <button class="btn btn-danger" type="button" onclick="submitOffTenant()">Off Tenant
                         </button>
                     </div>
                 </div>
@@ -72,7 +71,7 @@
     </div>
 
 
-    <div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal fade" id="off-modal-form" tabindex="-1" role="dialog" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 500px">
             <div class="modal-content position-relative">
                 <div class="position-absolute top-0 end-0 mt-2 me-2 z-index-1">
@@ -108,6 +107,42 @@
             </div>
         </div>
     </div>
+
+    <div class="modal fade" id="modalValidation" data-bs-keyboard="false" data-bs-backdrop="static" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md mt-6" role="document">
+            <div class="modal-content border-0">
+                <div class="position-absolute top-0 end-0 mt-3 me-3 z-1"><button
+                        class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base" data-bs-dismiss="modal"
+                        aria-label="Close"></button></div>
+                <div class="modal-body p-0">
+                    <div class="bg-light rounded-top-3 py-3 ps-4 pe-6 text-center">
+                        <img src="{{ asset('assets/img/icons/validation_error.png') }}" class="my-3" height="100">
+                        <h4 class="mb-1" id="staticBackdropLabel">
+                            Offboarding Failed!
+                        </h4>
+                    </div>
+                    <div class="p-4">
+                        <div id="modalListErrors">
+                            <div class="row">
+                                <div class="d-flex">
+                                    <span class="fa-stack ms-n1">
+                                        <img src="{{ asset('assets/img/icons/cross_red.png') }}" class=""
+                                            height="25">
+                                    </span>
+                                    <div class="">
+                                        <p class="text-break fs--1 mt-1">
+                                            Tenant masih memiliki unit
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 
@@ -115,12 +150,7 @@
     <script src="{{ url('assets/vendors/choices/choices.min.js') }}"></script>
 
     <script>
-        function submitOffTenant() {
-            id_tenant = $('#id_tenant').val();
-
-            $('#id_tenant_modal').val(id_tenant);
-        }
-
+        var units = 0;
         $('document').ready(function() {
             $('#id_tenant').on('change', function() {
                 var id_tenant = $(this).val();
@@ -130,6 +160,8 @@
                     url: '/admin/penjamin-by-id/' + id_tenant,
                     type: 'GET',
                     success: function(data) {
+                        units = data.nama_unit.length
+                        console.log(units)
                         $('#nama_pasangan_penjamin').val(data.tenant.nama_pasangan_penjamin)
                         $('#nik_pasangan_penjamin').val(data.tenant.nik_pasangan_penjamin)
                         $('#no_telp_penjamin').val(data.tenant.no_telp_penjamin)
@@ -148,5 +180,17 @@
                 })
             })
         })
+
+        function submitOffTenant() {
+            if (units === 0) {
+                $('#off-modal-form').modal('show')
+                id_tenant = $('#id_tenant').val();
+
+                $('#id_tenant_modal').val(id_tenant);
+            } else {
+                $('#modalValidation').modal('show')
+            }
+
+        }
     </script>
 @endsection
