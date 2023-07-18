@@ -7,7 +7,17 @@ use App\Http\Controllers\Admin\BayarnonController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\DepartemenController;
 use App\Http\Controllers\Admin\DivisiController;
+use App\Http\Controllers\Admin\EngAHUController;
 use App\Http\Controllers\Admin\EngBAPPcontroller;
+use App\Http\Controllers\Admin\EngChillerController;
+use App\Http\Controllers\Admin\EngDeepWheelController;
+use App\Http\Controllers\Admin\EngGasController;
+use App\Http\Controllers\Admin\EngGroundController;
+use App\Http\Controllers\Admin\EngListrikController;
+use App\Http\Controllers\Admin\EngPamController;
+use App\Http\Controllers\Admin\EngPemadamController;
+use App\Http\Controllers\Admin\EngPompasumpitController;
+use App\Http\Controllers\Admin\EngPutrController;
 use App\Http\Controllers\Admin\GIGOController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\GroupController;
@@ -318,16 +328,6 @@ Route::prefix('admin')->group(function () {
         Route::post('/done/work-request/{id}', [WorkRequestController::class, 'done'])->name('doneWR'); // done wo from tenant
         Route::post('/complete/work-request/{id}', [WorkRequestController::class, 'complete'])->name('completeWR'); // done wo from tenant
 
-        // CRUD Work Order
-        // Route::resource('/work-orders', WorkOrderController::class);
-        // Route::get('/work-order/no-wo', [WorkOrderController::class, 'showByNoWO']);
-        // Route::post('/accept/work-order/{id}', [WorkOrderController::class, 'acceptWO'])->name('acceptWO'); // accept wo from tenant
-        // Route::post('/approve-2/work-order/{id}', [WorkOrderController::class, 'approve2'])->name('approve2'); // approve wo from engineering
-        // Route::post('/approve-3/work-order/{id}', [WorkOrderController::class, 'approve3'])->name('approve3'); // approve wo from engineering
-        // Route::post('/work-done/work-order/{id}', [WorkOrderController::class, 'workDone'])->name('workDone'); // update wo from engineering
-        // Route::post('/done/work-order/{id}', [WorkOrderController::class, 'done'])->name('doneWO'); // done wo from tenant
-        // Route::post('/complete/work-order/{id}', [WorkOrderController::class, 'completeWO'])->name('completeWO'); // complete wo from finance
-
         // Request Permit
         Route::resource('/request-permits', RequestPermitController::class);
         Route::post('/request-permits/approve1/{id}', [RequestPermitController::class, 'approveRP1'])->name('approveRP1');
@@ -368,11 +368,6 @@ Route::prefix('admin')->group(function () {
         Route::post('rsvApprove3/{id}', [ReservationController::class, 'approve3'])->name('rsvApprove3');
         Route::post('rsvDone/{id}', [ReservationController::class, 'rsvDone'])->name('rsvDone');
         Route::post('rsvComplete/{id}', [ReservationController::class, 'rsvComplete'])->name('rsvComplete');
-
-        // Notification
-        Route::get('/notifications', [DashboardController::class, 'notifications'])->name('notifications');  // Get all notifications list
-        Route::get('/get-notifications', [DashboardController::class, 'getNotifications'])->name('getNotifications');  // Get all notifications by user_id
-        Route::get('/notification/{id}', [DashboardController::class, 'showNotification'])->name('showNotification'); // Show all notification by user_id
 
         // Notification
         Route::get('/notifications', [DashboardController::class, 'notifications'])->name('notifications');  // Get all notifications list
@@ -483,56 +478,56 @@ Route::prefix('admin')->group(function () {
         //CRUD Checklist AHU Detail
         Route::resource('ahudetails', ChecklistAhuDetailController::class);
 
-        //CRUD Engeneering AHU 
+        //CRUD Engeneering AHU
         Route::resource('engahus', EngAHUController::class);
 
-        //CRUD Engeneering Chiller 
+        //CRUD Engeneering Chiller
         Route::resource('engchillers', EngChillerController::class);
 
-        //CRUD Engeneering Listrik 
+        //CRUD Engeneering Listrik
         Route::resource('englistriks', EngListrikController::class);
 
-        //CRUD Engeneering PAM 
+        //CRUD Engeneering PAM
         Route::resource('engpams', EngPamController::class);
 
-        //CRUD Engeneering DeepWheel 
+        //CRUD Engeneering DeepWheel
         Route::resource('engdeeps', EngDeepWheelController::class);
 
-        //CRUD Engeneering PompaSumpit 
+        //CRUD Engeneering PompaSumpit
         Route::resource('engpompas', EngPompasumpitController::class);
 
-        //CRUD Engeneering GroundRoffTank 
+        //CRUD Engeneering GroundRoffTank
         Route::resource('enggrounds', EngGroundController::class);
 
-        //CRUD Engeneering Pemadam 
+        //CRUD Engeneering Pemadam
         Route::resource('engpemadams', EngPemadamController::class);
 
-        //CRUD Engeneering Putr 
+        //CRUD Engeneering Putr
         Route::resource('engputrs', EngPutrController::class);
 
-        //CRUD Engeneering Gas 
+        //CRUD Engeneering Gas
         Route::resource('enggases', EngGasController::class);
 
         // --------End Eng Parameter--------
 
         // -------HK Parameter-------
 
-        //CRUD HK Toilet 
+        //CRUD HK Toilet
         Route::resource('toilets', ToiletController::class);
 
-        //CRUD HK OfficeManagemet 
+        //CRUD HK OfficeManagemet
         Route::resource('officemanagements', OfficeManagementController::class);
 
-        //CRUD HK Lift 
+        //CRUD HK Lift
         Route::resource('lifts', LiftController::class);
 
-        //CRUD HK Floor 
+        //CRUD HK Floor
         Route::resource('hkfloors', HKFloorController::class);
 
-        //CRUD HK Koridor 
+        //CRUD HK Koridor
         Route::resource('hkkoridors', HKKoridorController::class);
 
-        //CRUD HK TanggaDarurat 
+        //CRUD HK TanggaDarurat
         Route::resource('hktanggadarurats', HKTanggaDaruratController::class);
 
         // -------End HK Parameter-------
@@ -553,9 +548,6 @@ Route::prefix('admin')->group(function () {
 
         //CRUD Reminder Letter
         Route::resource('reminders', ReminderLetterController::class);
-
-        //CRUD Notification
-        Route::resource('notifications', NotificationController::class);
 
         // ----------End Fin Parameter---------
 
