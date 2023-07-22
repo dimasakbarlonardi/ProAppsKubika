@@ -131,7 +131,12 @@
                             </div>
                         </div>
                     </div>
-                    @if (!$wo->sign_approve_3 && $wo->sign_approve_2 && $approve->approval_3 == $user->id_user)
+                    @if (
+                        $user->RoleH->WorkRelation->id_work_relation == $wo->WorkRequest->id_work_relation &&
+                        $wo->sign_approve_2 &&
+                        !$wo->sign_approve_3 &&
+                        $user->Karyawan->is_can_approve
+                    )
                         <div class="text-center">
                             <form action="{{ route('approve3', $wo->id) }}" method="post">
                                 @csrf
@@ -139,20 +144,27 @@
                                     Approve
                                 </button>
                             </form>
-                            <small class="d-block">For any technical issues faced, please contact
-                                <a href="#!">Customer Support</a>.</small>
                         </div>
                     @endif
                     @if (!$wo->sign_approve_1)
-                        <div class="text-center">
-                            <form action="{{ route('acceptWO', $wo->id) }}" method="post">
-                                @csrf
-                                <button type="submit" class="btn btn-success btn-lg my-4" type="button">
-                                    Setujui WO
-                                </button>
-                            </form>
-                            <small class="d-block">For any technical issues faced, please contact
-                                <a href="#!">Customer Support</a>.</small>
+                        <div class="">
+                            <div class="row">
+                                <div class="col-6 text-end">
+                                    <form action="{{ route('acceptWO', $wo->id) }}" method="post">
+                                        @csrf
+                                        <button type="submit" class="btn btn-success btn-lg my-4" type="button">
+                                            Setujui WO
+                                        </button>
+                                    </form>
+                                </div>
+                                <div class="col-6 text-start">
+                                    <form action="">
+                                        <button type="button" class="btn btn-danger btn-lg my-4">
+                                            Reject
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
                         </div>
                     @endif
                     @if ($wo->status_wo == 'WORK DONE' && $user->id_role_hdr == $approve->approval_1)
@@ -163,10 +175,10 @@
                                     Selesai
                                 </button>
                             </form>
-                            <small class="d-block">For any technical issues faced, please contact
-                                <a href="#!">Customer Support</a>.</small>
                         </div>
                     @endif
+                    <small class="d-block">For any technical issues faced, please contact
+                        <a href="#!">Customer Support</a>.</small>
                 </div>
             </div>
         </div>

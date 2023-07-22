@@ -152,14 +152,18 @@
                                                 <option disabled selected>--Pilih Status---</option>
                                                 <option {{ $ticket->status_request == 'PROSES KE WR' ? 'selected' : '' }}
                                                     value="PROSES KE WR">Proses ke WR</option>
-                                                <option {{ $ticket->status_request == 'PROSES KE PERMIT' ? 'selected' : '' }}
+                                                <option
+                                                    {{ $ticket->status_request == 'PROSES KE PERMIT' ? 'selected' : '' }}
                                                     value="PROSES KE PERMIT">Proses ke Permit</option>
-                                                <option {{ $ticket->status_request == 'PROSES KE RESERVASI' ? 'selected' : '' }}
+                                                <option
+                                                    {{ $ticket->status_request == 'PROSES KE RESERVASI' ? 'selected' : '' }}
                                                     value="PROSES KE RESERVASI">Proses ke Reservasi</option>
                                                 <option {{ $ticket->status_request == 'PROSES KE GIGO' ? 'selected' : '' }}
                                                     value="PROSES KE GIGO">Proses ke GIGO</option>
                                                 <option {{ $ticket->status_request == 'DONE' ? 'selected' : '' }}
                                                     value="DONE">DONE</option>
+                                                <option {{ $ticket->status_request == 'ON WORK' ? 'selected' : '' }}
+                                                    value="DONE">ON WORK</option>
                                             </select>
                                         </div>
                                     @elseif ($ticket->status_request == 'COMPLETE')

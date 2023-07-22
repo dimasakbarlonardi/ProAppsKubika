@@ -10,6 +10,7 @@ use App\Models\Login;
 use App\Models\Menu;
 use App\Models\MenuHeading;
 use App\Models\OwnerH;
+use App\Models\Site;
 use App\Models\Tenant;
 use App\Models\User;
 // use App\Models\Login;
@@ -54,6 +55,7 @@ class AuthenticatedSessionController extends Controller
 
         try {
             $credentials = request(['email', 'password']);
+            $this->setMidtrans($request);
             if (!Auth::attempt($credentials)) {
                 Alert::error('Gagal', 'Mohon periksa kembali email dan password');
 
@@ -173,19 +175,27 @@ class AuthenticatedSessionController extends Controller
         return redirect('/');
     }
 
-    public function setMidtrans()
+    public function setMidtrans($request)
     {
-        $data = [];
-        $data['midtrans']['MIDTRANS_IS_PRODUCTION'] = false;
-        $data['midtrans']['MIDTRANS_MERCHAT_ID'] = 'akmla';
-        $data['midtrans']['MIDTRANS_CLIENT_KEY'] = 'akmal';
-        $data['midtrans']['MIDTRANS_SERVER_KEY'] = 'akmal';
-
         $path = base_path('.env');
-        $test = file_get_contents($path);
-        // file_put_contents($path, str_replace('MIDTRANS_IS_PRODUCTION=', 'MIDTRANS_IS_PRODUCTION=' . $data['midtrans']['MIDTRANS_IS_PRODUCTION'], $test));
-        // file_put_contents($path, str_replace('MIDTRANS_MERCHAT_ID=', 'MIDTRANS_MERCHAT_ID=' . $data['midtrans']['MIDTRANS_MERCHAT_ID'], $test));
-        // file_put_contents($path, str_replace('MIDTRANS_SERVER_KEY=', 'MIDTRANS_SERVER_KEY=' . $data['midtrans']['MIDTRANS_SERVER_KEY'], $test));
-        // file_put_contents($path, str_replace('MIDTRANS_CLIENT_KEY=', 'MIDTRANS_CLIENT_KEY=' . $data['midtrans']['MIDTRANS_CLIENT_KEY'], $test));
+        $site = Site::find($request->id_site);
+
+        if (file_exists($path)) {
+            file_put_contents($path, str_replace(
+                'MIDTRANS_MERCHAT_ID=' . env('MIDTRANS_MERCHAT_ID'),
+                'MIDTRANS_MERCHAT_ID=' . $site->midtrans_merchant_id,
+                file_get_contents($path)
+            ));
+            file_put_contents($path, str_replace(
+                'MIDTRANS_CLIENT_KEY=' . env('MIDTRANS_CLIENT_KEY'),
+                'MIDTRANS_CLIENT_KEY=' . $site->midtrans_client_key,
+                file_get_contents($path)
+            ));
+            file_put_contents($path, str_replace(
+                'MIDTRANS_SERVER_KEY=' . env('MIDTRANS_SERVER_KEY'),
+                'MIDTRANS_SERVER_KEY=' . $site->midtrans_server_key,
+                file_get_contents($path)
+            ));
+        }
     }
 }

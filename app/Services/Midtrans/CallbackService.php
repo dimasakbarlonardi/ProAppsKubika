@@ -3,6 +3,8 @@
 namespace App\Services\Midtrans;
 
 use App\Helpers\ConnectionDB;
+use App\Models\CashReceipt;
+use App\Models\Site;
 use App\Models\Transaction;
 use App\Models\TransactionCenter;
 use App\Services\Midtrans\Midtrans;
@@ -70,10 +72,14 @@ class CallbackService extends Midtrans
     protected function _handleNotification()
     {
         $notification = new Notification();
-        $orderNumber = $notification->order_id;
-        $order = TransactionCenter::find($orderNumber);
-        $this->notification = $notification;
+        $siteID = substr($notification->order_id, 0, 6);
+        $orderID = substr($notification->order_id, 7, 26);
+        $site = Site::where('id_site', $siteID)->first();
+        $order = new CashReceipt();
+        $order = $order->setConnection($site->db_name);
+        $order = $order->where('no_draft_cr', $orderID)->first();
 
+        $this->notification = $notification;
         $this->order = $order;
     }
 }

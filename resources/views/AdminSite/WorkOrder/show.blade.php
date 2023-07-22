@@ -173,15 +173,20 @@
                 @endif
                 @if (
                     $wo->status_wo == 'APPROVED' &&
-                        $user->RoleH->WorkRelation->id_work_relation == $wo->WorkRequest->id_work_relation &&
+                        $approve->approval_2 == $user->id_user &&
                         !$wo->sign_approve_2 &&
-                        $user->Karyawan->is_can_approve)
+                        $wo->sign_approve_5)
                     <div class="card-footer border-top border-200 py-x1">
                         <button type="button" class="btn btn-primary w-100"
                             onclick="approve2({{ $wo->id }})">Approve</button>
                     </div>
                 @endif
-                @if ($wo->status_wo == 'APPROVED' && $approve->approval_3 == $user->id_user && !$wo->sign_approve_3)
+                @if (
+                    $wo->status_wo == 'APPROVED' &&
+                        $user->RoleH->WorkRelation->id_work_relation == $wo->WorkRequest->id_work_relation &&
+                        $wo->sign_approve_2 &&
+                        !$wo->sign_approve_3 &&
+                        $user->Karyawan->is_can_approve)
                     <div class="card-footer border-top border-200 py-x1">
                         <button type="button" class="btn btn-primary w-100"
                             onclick="approve3({{ $wo->id }})">Approve</button>
@@ -191,11 +196,6 @@
                     <div class="card-footer border-top border-200 py-x1">
                         <button type="button" class="btn btn-primary w-100"
                             onclick="workDone({{ $wo->id }})">PEKERJAAN SELESAI</button>
-                    </div>
-                @endif
-                @if ($user->id_role_hdr == 8 && $wo->status_wo == 'WAITING APPROVE')
-                    <div class="card-footer border-top border-200 py-x1">
-                        <button type="submit" class="btn btn-primary w-100" value="send">Update</button>
                     </div>
                 @endif
                 @if ($user->id_role_hdr == 8 && $wo->status_wo == 'WAITING APPROVE')
@@ -267,58 +267,9 @@
             })
         }
 
-        function completeWO(id) {
-            console.log(id);
+        function approve3(id) {
             $.ajax({
-                url: `/admin/complete/work-order/${id}`,
-                type: 'POST',
-                success: function(data) {
-                    if (data.status === 'ok') {
-                        Swal.fire(
-                            'Berhasil!',
-                            'Berhasil mengupdate Work Order!',
-                            'success'
-                        ).then(() => window.location.reload())
-                    }
-                }
-            })
-        }
-        function approve2(id) {
-            $.ajax({
-                url: `/admin/approve-2/work-order/${id}`,
-                type: 'POST',
-                success: function(data) {
-                    if (data.status === 'ok') {
-                        Swal.fire(
-                            'Berhasil!',
-                            'Berhasil mengupdate Work Order!',
-                            'success'
-                        ).then(() => window.location.reload())
-                    }
-                }
-            })
-        }
-
-        function completeWO(id) {
-            console.log(id);
-            $.ajax({
-                url: `/admin/complete/work-order/${id}`,
-                type: 'POST',
-                success: function(data) {
-                    if (data.status === 'ok') {
-                        Swal.fire(
-                            'Berhasil!',
-                            'Berhasil mengupdate Work Order!',
-                            'success'
-                        ).then(() => window.location.reload())
-                    }
-                }
-            })
-        }
-
-        function approve2(id) {
-            $.ajax({
-                url: `/admin/approve2/work-order/${id}`,
+                url: `/admin/approve3/work-order/${id}`,
                 type: 'POST',
                 success: function(data) {
                     if (data.status === 'ok') {

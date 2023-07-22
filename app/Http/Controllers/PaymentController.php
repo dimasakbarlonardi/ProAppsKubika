@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\ConnectionDB;
+use App\Models\CashReceipt;
+use App\Models\Site;
 use App\Models\Transaction;
 use App\Models\TransactionCenter;
 use App\Services\Midtrans\CallbackService;
@@ -16,45 +18,45 @@ class PaymentController extends Controller
         $callback = new CallbackService;
         if ($callback->isSignatureKeyVerified()) {
             $order = $callback->getOrder();
-            $ct = TransactionCenter::find($order->id);
-            $transaction = new Transaction();
-            $transaction = $transaction->setConnection($order->Site->db_name);
-            $transaction = $transaction->where('no_invoice', $ct->no_invoice)->first();
+            $site = Site::find($order->id_site);
+
+            $cr = new CashReceipt();
+            $cr = $cr->setConnection($site->db_name);
+            $cr = $cr->where('no_draft_cr', $order->no_draft_cr)->first();
 
             if ($callback->isSuccess()) {
-                $ct->status = 'PAYED';
-                $transaction->status = 'PAYED';
-                switch ($transaction->transaction_type) {
+                $cr->transaction_status = 'PAYED';
+
+                switch ($cr->transaction_type) {
                     case ('WorkOrder'):
-                        $transaction->WorkOrder->sign_approve_5 = 1;
-                        $transaction->WorkOrder->date_approve_5 = Carbon::now();
-                        $transaction->WorkOrder->save();
+                        $cr->WorkOrder->sign_approve_5 = 1;
+                        $cr->WorkOrder->date_approve_5 = Carbon::now();
+                        $cr->WorkOrder->save();
                         break;
 
                     case ('WorkPermit'):
-                        $transaction->WorkPermit->status_bayar = 'PAYED';
-                        $transaction->WorkPermit->sign_approval_5 = Carbon::now();
-                        $transaction->WorkPermit->save();
+                        $cr->WorkPermit->status_bayar = 'PAYED';
+                        $cr->WorkPermit->sign_approval_5 = Carbon::now();
+                        $cr->WorkPermit->save();
                         break;
 
                     case ('Reservation'):
-                        $transaction->Reservation->status_bayar = 'PAYED';
-                        $transaction->Reservation->sign_approval_5 = Carbon::now();
-                        $transaction->Reservation->save();
+                        $cr->Reservation->status_bayar = 'PAYED';
+                        $cr->Reservation->sign_approval_5 = Carbon::now();
+                        $cr->Reservation->save();
                         break;
                 }
             }
 
             if ($callback->isExpire()) {
-                $ct->status = 'EXPIRED';
+                $cr->transaction_status = 'EXPIRED';
             }
 
             if ($callback->isCancelled()) {
-                $ct->status = 'CANCELLED';
+                $cr->transaction_status = 'CANCELLED';
             }
 
-            $ct->save();
-            $transaction->save();
+            $cr->save();
 
             return response()
                 ->json([
