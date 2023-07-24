@@ -29,32 +29,50 @@ class UserController extends Controller
 
     public function login(Request $request)
     {
-        try {
-            $request->validate([
-                'email' => 'email|required',
-                'password' => 'required',
-                'id_site' => 'required'
-            ]);
+        $request->validate([
+            'email' => 'email|required',
+            'password' => 'required',
+            'id_site' => 'required'
+        ]);
 
-            $credentials = request(['email', 'password']);
+        try {
+            $login = Login::where('email', $request->email)
+                ->where('id_site', $request->id_site)
+                ->with('site')
+                ->first();
+
+            $credentials = [
+                'email' => $login->email,
+                'password' => $request->password
+            ];
+
+            $this->setMidtrans($request);
+
             if (!Auth::attempt($credentials)) {
                 return ResponseFormatter::error([
                     'message' => 'Unauthorized'
                 ], 'Authentication Failed', 500);
+            } else {
+                $currUser = new User();
+                $currUser = $currUser->setConnection($login->site->db_name);
+                $getUser = $currUser->where('login_user', $login->email)
+                    ->with(['RoleH.AksesForm', 'RoleH.WorkRelation'])
+                    ->first();
+
+                if (!Hash::check($request->password, $login->password, [])) {
+                    return ResponseFormatter::error([
+                        'message' => 'Password anda salah'
+                    ], 'Authentication Failed', 500);
+                }
+
+                $tokenResult = $login->createToken('authToken')->plainTextToken;
+
+                return ResponseFormatter::success([
+                    'access_token' => $tokenResult,
+                    'token_type' => 'Bearer',
+                    'user' => $getUser
+                ], 'Authenticated');
             }
-
-            $user = Login::where('email', $request->email)->first();
-            if (!Hash::check($request->password, $user->password, [])) {
-                throw new \Exception('Invalid Credentials');
-            }
-
-            $tokenResult = $user->createToken('authToken')->plainTextToken;
-
-            return ResponseFormatter::success([
-                'access_token' => $tokenResult,
-                'token_type' => 'Bearer',
-                'user' => $user
-            ], 'Authenticated');
         } catch (Exception $error) {
             return ResponseFormatter::error([
                 'message' => 'Something went wrong',
@@ -74,5 +92,29 @@ class UserController extends Controller
         $user = $user->where('login_user', $getUser->email)->first();
 
         return ResponseFormatter::success($user, 'Data profile user berhasil diambil');
+    }
+
+    public function setMidtrans($request)
+    {
+        $path = base_path('.env');
+        $site = Site::find($request->id_site);
+
+        if (file_exists($path)) {
+            file_put_contents($path, str_replace(
+                'MIDTRANS_MERCHAT_ID=' . env('MIDTRANS_MERCHAT_ID'),
+                'MIDTRANS_MERCHAT_ID=' . $site->midtrans_merchant_id,
+                file_get_contents($path)
+            ));
+            file_put_contents($path, str_replace(
+                'MIDTRANS_CLIENT_KEY=' . env('MIDTRANS_CLIENT_KEY'),
+                'MIDTRANS_CLIENT_KEY=' . $site->midtrans_client_key,
+                file_get_contents($path)
+            ));
+            file_put_contents($path, str_replace(
+                'MIDTRANS_SERVER_KEY=' . env('MIDTRANS_SERVER_KEY'),
+                'MIDTRANS_SERVER_KEY=' . $site->midtrans_server_key,
+                file_get_contents($path)
+            ));
+        }
     }
 }
