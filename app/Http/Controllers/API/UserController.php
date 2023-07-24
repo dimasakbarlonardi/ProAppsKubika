@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Helpers\ConnectionDB;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Models\Login;
@@ -64,11 +65,14 @@ class UserController extends Controller
 
     public function user(Request $request)
     {
-        $conn = $this->setConnection($request);
-        $unit = new Unit();
-        $unit->setConnection($conn);
-        $unit = $unit->find(1);
+        $getUser = $request->user();
+        $id_site = $getUser->id_site;
+        $site = Site::find($id_site);
 
-        return $unit;
+        $user = new User();
+        $user = $user->setConnection($site->db_name);
+        $user = $user->where('login_user', $getUser->email)->first();
+
+        return ResponseFormatter::success($user, 'Data profile user berhasil diambil');
     }
 }
