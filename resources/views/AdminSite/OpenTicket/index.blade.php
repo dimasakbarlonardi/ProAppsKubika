@@ -51,8 +51,8 @@
                                     <a class="d-none d-sm-block" href="">
                                         <div class="avatar avatar-xl avatar-3xl">
                                             <div class="avatar-name rounded-circle">
-                                                <img src="{{ $ticket->Tenant->profile_picture ? url($ticket->Tenant->profile_picture) : '/assets/img/icons/spot-illustrations/proapps.png' }}"
-                                                    alt="{{ $ticket->Tenant->profile_picture }}" class="avatar-image" />
+                                                {{-- <img src="{{ $ticket->Tenant->profile_picture ? url($ticket->Tenant->profile_picture) : '/assets/img/team/5.png' }}"
+                                                    alt="{{ $ticket->Tenant->profile_picture }}" class="avatar-image" /> --}}
                                             </div>
                                         </div>
                                     </a>
@@ -74,7 +74,7 @@
                                                 <h6 class="client mb-0">
                                                     <a class="text-800 d-flex align-items-center gap-1" href="">
                                                         <span class="fas fa-user" data-fa-transform="shrink-3 up-1"></span>
-                                                        <span>{{ $ticket->Tenant->nama_tenant }}</span>
+                                                        {{-- <span>{{ $ticket->Tenant->nama_tenant }}</span> --}}
                                                     </a>
                                                 </h6>
                                             </div>

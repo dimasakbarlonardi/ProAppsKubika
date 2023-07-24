@@ -495,7 +495,6 @@ class PerubahanUnitController extends Controller
             }
         }
 
-
         return response()->json(['errors' => $errors]);
     }
 }

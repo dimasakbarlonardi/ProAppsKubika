@@ -37,19 +37,19 @@
                     <div class="col-4 mb-3">
                         <label class="form-label">Tanggal Masuk - Tanggal Keluar</label>
                         <input type="text"
-                            value="{{ \Carbon\Carbon::parse($tenantunits->tgl_masuk)->format('d-M-Y') }} - {{ \Carbon\Carbon::parse($tenantunits->tgl_keluar)->format('d-M-Y') }} "
+                            value="{{ \Carbon\Carbon::parse($tenantunits->tgl_masuk)->format('d M Y') }} - {{ \Carbon\Carbon::parse($tenantunits->tgl_keluar)->format('d M Y') }} "
                             class="form-control" readonly>
                     </div>
                     <div class="col-4 mb-3">
                         <label class="form-label">Jatuh Tempo IPL</label>
                         <input type="text"
-                            value="{{ \Carbon\Carbon::parse($tenantunits->tgl_jatuh_tempo_ipl)->format('d-M-Y') }}"
+                            value="{{ \Carbon\Carbon::parse($tenantunits->tgl_jatuh_tempo_ipl)->format('d M     Y') }}"
                             class="form-control" readonly>
                     </div>
                     <div class="col-4 mb-3">
                         <label class="form-label">Jatuh Tempo UTIL</label>
                         <input type="text"
-                            value="{{ \Carbon\Carbon::parse($tenantunits->tgl_jatuh_tempo_util)->format('d-M-Y') }}"
+                            value="{{ \Carbon\Carbon::parse($tenantunits->tgl_jatuh_tempo_util)->format('d M Y') }}"
                             class="form-control" readonly>
                     </div>
 
@@ -193,18 +193,17 @@
                     </div>
                 </div>
             </div>
-
-
         </div>
     </div>
 @endsection
+
 
 @section('script')
     <script>
         $('#btnPerpanjangSewa').on('click', function() {
             var id_tenant = '{{ $tenantunits->id_tenant }}';
             var id_unit = '{{ $tenantunits->id_unit }}';
-            var id_tenant_unit = '{{ $tenantunits->id_tenant_unit }}';
+            var id_tenant_unit = '{{ $tenantunits->id_tenant_unit }}';i
 
             $('#modalListErrors').html('');
             $.ajax({

@@ -149,54 +149,52 @@
                         </div>
                         {{-- <a href="{{ route('tenantunits.edit', $tenantunits->id_tenant_unit) }}" class="btn btn-sm btn-primary">Edit</a> --}}
                         <a class="btn btn-sm btn-warning" href="{{ route('perubahanunits.index') }}">Back</a>
-                        <a class="btn btn-sm btn-warning"
-                            href="{{ route('editperubahanunit', $tenantunits->id_tenant_unit) }}">Perubahan Unit</a>
-                        {{-- <form action="{{ route('deleteTenantUnit', $tenantunits->id_tenant_unit) }}" method="post"
-                    class="d-inline">
-                    @csrf
-                    <button class="btn btn-link p-0 ms-2" type="submit" data-bs-toggle="tooltip"
-                        data-bs-placement="top" title="Delete"
-                        onClick="return confirm('Are you absolutely sure you want to delete?')"><span
-                            class="text-500 fas fa-trash-alt"></span>
-                    </button>
-                </form> --}}
-                        {{-- <div class="mb-3">
-                    <div class=" my-3">
-                <button class="btn btn-danger" type="button" data-bs-toggle="modal" data-bs-target="#error-modal">OffBoarding</button>
-                <div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-hidden="true">
-                  <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 500px">
-                    <div class="modal-content position-relative">
-                      <div class="position-absolute top-0 end-0 mt-2 me-2 z-index-1">
-                          <form action="{{ route('deleteTenantUnit', $tenantunits->id_tenant_unit) }}" method="post"
-                            class="d-inline">
-                            @csrf
-                        <button class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body p-0">
-                        <div class="rounded-top-lg py-3 ps-4 pe-6 bg-light">
-                          <h4 class="mb-1" id="modalExampleDemoLabel">Alasan Off Tenant Unit</h4>
-                        </div>
-                        <div class="p-4 pb-0">
-                            <form method="post" action="{{ route('offtenantunits.store') }}">
-                            @csrf
-                            <div class="mb-3">
-                                <label class="col-form-label" for="message-text">Keterangan :</label>
-                                <textarea class="form-control" name="keterangan" id="message-text"></textarea>
+                        {{-- <a class="btn btn-sm btn-warning"
+                            href="{{ route('editperubahanunit', $tenantunits->id_tenant_unit) }}">Perubahan Unit</a> --}}
+                        <button type="button" data-toggle="modal" data-target="#modalValidation"
+                        class="btn btn-sm btn-warning" id="btnPerpanjangSewa">Perubahan Unit</button>
+
+                        <div class="modal fade" id="modalValidation" data-bs-keyboard="false" data-bs-backdrop="static"
+                        tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-md mt-6" role="document">
+                            <div class="modal-content border-0">
+                                <div class="position-absolute top-0 end-0 mt-3 me-3 z-1"><button
+                                        class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base"
+                                        data-bs-dismiss="modal" aria-label="Close"></button></div>
+                                <div class="modal-body p-0">
+                                    <div class="bg-light rounded-top-3 py-3 ps-4 pe-6 text-center">
+                                        <img src="{{ asset('assets/img/icons/validation_error.png') }}"
+                                            class="my-3" height="100">
+                                        <h4 class="mb-1" id="staticBackdropLabel">
+                                            Offboarding Failed!
+                                        </h4>
+                                        <p class="fs--2 mb-0">
+                                            Still a process or payment that has not been completed or paid
+                                        </p>
+                                    </div>
+                                    <div class="p-4">
+                                        <div id="modalListErrors">
+                                            <div class="row">
+                                                <div class="d-flex">
+                                                    <span class="fa-stack ms-n1">
+                                                        <img src="{{ asset('assets/img/icons/cross_red.png') }}"
+                                                            class="" height="25">
+                                                    </span>
+                                                    <div class="">
+                                                        <p class="text-break fs--1 mt-1">The illustration must match to
+                                                            the
+                                                            contrast of the theme. </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
-                        <button type="submit" class="btn btn-primary">Submit</button>
-                    </div>
-                </form>
-                </form>
-                    </div>
-                  </div>
-                </div>
-                    </div>
-                </div> --}}
 
+                        
                     </div>
                 </div>
             </div>
@@ -208,8 +206,47 @@
 
 @section('script')
     <script>
-        $('document').ready(function() {
+        $('#btnPerpanjangSewa').on('click', function() {
+            var id_tenant = '{{ $tenantunits->id_tenant }}';
+            var id_unit = '{{ $tenantunits->id_unit }}';
+            var id_tenant_unit = '{{ $tenantunits->id_tenant_unit }}';
 
+            $('#modalListErrors').html('');
+            $.ajax({
+                url: `/admin/validation/perubahan`,
+                type: 'GET',
+                data: {
+                    'id_tenant': id_tenant,
+                    'id_unit':id_unit
+                },
+                success: function(resp) {
+                    console.log(resp.errors)
+                    if (resp.errors.length > 0) {
+                        resp.errors.map((item) => {
+                            $('#modalListErrors').append(`
+                                 <div class="row">
+                                    <div class="d-flex">
+                                        <span class="fa-stack ms-n1">
+                                            <img src="{{ asset('assets/img/icons/cross_red.png') }}"
+                                                class="" height="25">
+                                        </span>
+                                        <div class="">
+                                            <p class="text-break fs--1 mt-1">${item.type} - ${item.error_header} masih berstatus ${item.error_status}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            `);
+                        })
+                        $('#modalValidation').modal('show')
+                    } else {
+                        window.location.replace(`/admin/get/perpanjangunits-edit/${id_tenant_unit}`)
+                    }
+                }
+            })
+        })
+
+
+        $('document').ready(function() {
             var id_unit = $('#id_unit').val();
             $('#detail_unit').css('display', 'inline');
             $.ajax({
