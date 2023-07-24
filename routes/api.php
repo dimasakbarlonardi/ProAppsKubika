@@ -1,7 +1,7 @@
 <?php
 
 use App\Helpers\ResponseFormatter;
-use App\Http\Controllers\Api\UserController;
+use App\Http\Controllers\API\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
