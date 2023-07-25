@@ -34,7 +34,8 @@
             "Database\\Factories\\": "database/factories/",
             "Database\\Seeders\\": "database/seeders/",
             "files\\": "app/Helpers/Rupiah.php/",
-            "files\\": "app/Helpers/Persenan.php/"
+            "files\\": "app/Helpers/Persenan.php/",
+            "files\\": "app/Helpers/DateTime.php"
         },
         "files": [
             "app/Helpers/DateTime.php",

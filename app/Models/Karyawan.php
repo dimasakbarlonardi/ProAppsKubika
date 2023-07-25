@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+
 class Karyawan extends Model
 {
     use HasFactory, SoftDeletes;
@@ -54,57 +55,56 @@ class Karyawan extends Model
 
     public function IdCard()
     {
-        return $this->hasOne(IdCard::class, 'id_card_type', 'id_card_type' );
+        return $this->hasOne(IdCard::class, 'id_card_type', 'id_card_type');
     }
 
     public function site()
     {
-        return $this->hasOne(Site::class, 'id_site', 'id_site' );
+        return $this->hasOne(Site::class, 'id_site', 'id_site');
     }
 
     public function Agama()
     {
-        return $this->hasOne(Agama::class, 'id_agama', 'id_agama' );
+        return $this->hasOne(Agama::class, 'id_agama', 'id_agama');
     }
 
     public function JenisKelamin()
     {
-        return $this->hasOne(JenisKelamin::class, 'id_jenis_kelamin', 'id_jenis_kelamin' );
+        return $this->hasOne(JenisKelamin::class, 'id_jenis_kelamin', 'id_jenis_kelamin');
     }
 
     public function Jabatan()
     {
-        return $this->hasOne(Jabatan::class, 'id_jabatan', 'id_jabatan' );
+        return $this->hasOne(Jabatan::class, 'id_jabatan', 'id_jabatan');
     }
 
     public function Divisi()
     {
-        return $this->hasOne(Divisi::class, 'id_divisi', 'id_divisi' );
+        return $this->hasOne(Divisi::class, 'id_divisi', 'id_divisi');
     }
 
     public function Departemen()
     {
-        return $this->hasOne(Departemen::class, 'id_departemen', 'id_departemen' );
+        return $this->hasOne(Departemen::class, 'id_departemen', 'id_departemen');
     }
 
     public function Penempatan()
     {
-        return $this->hasOne(Penempatan::class, 'id_penempatan', 'id_penempatan' );
+        return $this->hasOne(Penempatan::class, 'id_penempatan', 'id_penempatan');
     }
 
     public function StatusKaryawan()
     {
-        return $this->hasOne(StatusKaryawan::class, 'id_status_karyawan', 'id_status_karyawan' );
+        return $this->hasOne(StatusKaryawan::class, 'id_status_karyawan', 'id_status_karyawan');
     }
 
     public function StatusAktifKaryawan()
     {
-        return $this->hasOne(StatusAktifKaryawan::class, 'id_status_aktif_karyawan', 'id_status_aktif_karyawan' );
+        return $this->hasOne(StatusAktifKaryawan::class, 'id_status_aktif_karyawan', 'id_status_aktif_karyawan');
     }
 
     public function StatusKawinKaryawan()
     {
-        return $this->hasOne(StatusKawin::class, 'id_status_kawin', 'id_status_kawin_karyawan' );
+        return $this->hasOne(StatusKawin::class, 'id_status_kawin', 'id_status_kawin_karyawan');
     }
-
 }
