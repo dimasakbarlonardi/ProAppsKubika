@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Approve;
 use App\Models\ApproveRequest;
 use App\Models\BAPP;
+use App\Models\CashReceipt;
 use App\Models\Karyawan;
 use App\Models\Notifikasi;
 use App\Models\OpenTicket;
@@ -131,14 +132,15 @@ class DashboardController extends Controller
                 return view('Tenant.Notification.WorkRequest', $data);
                 break;
 
-            case ('Transaction'):
-                $data = $this->handleTransaction($getNotif);
+            case ('CashReceipt'):
+                $data = $this->handleCashReceipt($getNotif);
                 $data['user'] = $user;
                 return view('Tenant.Notification.Payment', $data);
                 break;
 
             case ('OpenTicket'):
-                $data = $this->handleTransaction($connApprove, $getNotif);
+                $data = $this->handleRequest($connApprove, $getNotif);
+                $data['user'] = $user;
                 return view('Tenant.Notification.Ticket', $data);
                 break;
 
@@ -201,12 +203,12 @@ class DashboardController extends Controller
         return $data;
     }
 
-    public function handleTransaction($getNotif)
+    public function handleCashReceipt($getNotif)
     {
-        $model = new Transaction();
+        $model = new CashReceipt();
         $getData = ConnectionDB::setConnection($model);
         $getData = $getData->find($getNotif->id_data);
-        $data['transaction'] = TransactionCenter::where('no_invoice', $getData->no_invoice)->first();
+        $data['transaction'] = $getData->where('id', $getData->id)->first();
 
         return $data;
     }

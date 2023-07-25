@@ -41,7 +41,8 @@
             "app/Helpers/DateTime.php",
             "app/helpers.php",
             "app/Helpers/Rupiah.php",
-            "app/Helpers/Persenan.php"
+            "app/Helpers/Persenan.php",
+            "app/Helpers/Notifikasi.php"
         ]
     },
     "autoload-dev": {
