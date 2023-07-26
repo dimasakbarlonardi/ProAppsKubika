@@ -150,7 +150,11 @@ class AuthenticatedSessionController extends Controller
         if ($verified) {
             $request->session()->put('has_role', 'yes');
 
-            return redirect()->route('dashboard');
+            if ($request->role_id == 2) {
+                return redirect()->route('dashboard');
+            }
+
+            return redirect()->route('open-tickets.index');
         }
     }
 

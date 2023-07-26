@@ -78,46 +78,48 @@
                                 </div>
                             </div>
                             <div class="timeline-item timeline-item-end mb-3">
-                                <div class="timeline-icon icon-item icon-item-lg text-primary border-300"><span
-                                        class="fs-1 fas fa-envelope"></span></div>
-                                <div class="row">
-                                    <div class="col-lg-6 timeline-item-time">
-                                        <div>
-                                            <h6 class="mb-0 text-700">{{ HumanYear($ticket->tgl_respon_tiket) }}</h6>
-                                            <p class="fs--2 text-500 font-sans-serif">
-                                                {{ HumanDateOnly($ticket->tgl_respon_tiket) }}</p>
+                                @if ($ticket->status_respon)
+                                    <div class="timeline-icon icon-item icon-item-lg text-primary border-300"><span
+                                            class="fs-1 fas fa-envelope"></span></div>
+                                    <div class="row">
+                                        <div class="col-lg-6 timeline-item-time">
+                                            <div>
+                                                <h6 class="mb-0 text-700">{{ HumanYear($ticket->tgl_respon_tiket) }}</h6>
+                                                <p class="fs--2 text-500 font-sans-serif">
+                                                    {{ HumanDateOnly($ticket->tgl_respon_tiket) }}</p>
+                                            </div>
                                         </div>
-                                    </div>
-                                    <div class="col-lg-6">
-                                        <div class="timeline-item-content arrow-bg-white">
-                                            <div class="timeline-item-card bg-white dark__bg-1100"><a
-                                                    href="../../app/support-desk/tickets-preview.html">
-                                                    <h6 class="mb-2 hover-primary">Respond</h6>
-                                                </a>
-                                                <p class="fs--1 border-bottom mb-3 pb-3 text-600">
-                                                    Ticket #{{ $ticket->no_tiket }}
-                                                </p>
-                                                <p>
-                                                    {!! $ticket->deskripsi_respon !!}
-                                                </p>
-                                                <div class="d-flex flex-wrap pt-2">
-                                                    <h6 class="mb-0 text-600 lh-base">
-                                                        <span class="far fa-clock me-1"></span>
-                                                        {{ HumanTime($ticket->jam_respon) }}
-                                                    </h6>
-                                                    <div
-                                                        class="d-flex align-items-center ms-auto me-2 me-sm-x1 me-xl-2 me-xxl-x1">
-                                                        <div class="dot me-0 me-sm-2 me-xl-0 me-xxl-2 bg-info"
-                                                            data-bs-toggle="tooltip" data-bs-placement="top"
-                                                            data-bs-title="Low">
-                                                        </div>
-                                                    </div><small
-                                                        class="badge rounded badge-subtle-info dark__bg-1000">Responded</small>
+                                        <div class="col-lg-6">
+                                            <div class="timeline-item-content arrow-bg-white">
+                                                <div class="timeline-item-card bg-white dark__bg-1100"><a
+                                                        href="../../app/support-desk/tickets-preview.html">
+                                                        <h6 class="mb-2 hover-primary">Respond</h6>
+                                                    </a>
+                                                    <p class="fs--1 border-bottom mb-3 pb-3 text-600">
+                                                        Ticket #{{ $ticket->no_tiket }}
+                                                    </p>
+                                                    <p>
+                                                        {!! $ticket->deskripsi_respon !!}
+                                                    </p>
+                                                    <div class="d-flex flex-wrap pt-2">
+                                                        <h6 class="mb-0 text-600 lh-base">
+                                                            <span class="far fa-clock me-1"></span>
+                                                            {{ HumanTime($ticket->jam_respon) }}
+                                                        </h6>
+                                                        <div
+                                                            class="d-flex align-items-center ms-auto me-2 me-sm-x1 me-xl-2 me-xxl-x1">
+                                                            <div class="dot me-0 me-sm-2 me-xl-0 me-xxl-2 bg-info"
+                                                                data-bs-toggle="tooltip" data-bs-placement="top"
+                                                                data-bs-title="Low">
+                                                            </div>
+                                                        </div><small
+                                                            class="badge rounded badge-subtle-info dark__bg-1000">Responded</small>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                </div>
+                                @endif
                             </div>
 
                             @if ($ticket->WorkRequest)
@@ -202,7 +204,8 @@
                                                             </small>
                                                         @endif
                                                         @if ($ticket->WorkRequest->status_request == 'COMPLETE')
-                                                            <small class="badge rounded badge-subtle-success dark__bg-1000">
+                                                            <small
+                                                                class="badge rounded badge-subtle-success dark__bg-1000">
                                                                 COMPLETE
                                                             </small>
                                                         @endif
@@ -232,7 +235,8 @@
                                                         <p class="fs--1 border-bottom mb-3 pb-4 text-600">I must modify my
                                                             password. If I make a modification, will I lose access to my
                                                             account? I
-                                                            have a lot of items in my cart and don't want to go looking for them
+                                                            have a lot of items in my cart and don't want to go looking for
+                                                            them
                                                             again.</p>
                                                         <div class="d-flex flex-wrap pt-2">
                                                             <h6 class="mb-0 text-600 lh-base"><span
@@ -297,114 +301,102 @@
                                     </div>
                                 @endif
                             @endif
-                        </div>
-                    </div>
-                    <div class="card-body tab-pane p-0" id="tickets" role="tabpanel"
-                        aria-labelledby="contact-tickets-tab">
-                        <div class="bg-light d-flex flex-column gap-3 p-x1">
 
-                            <div class="card mt-3">
-                                <div class="card-header">
-                                    <h5 class="text-white">
-                                        <span class="fas fa-ticket-alt me-2"></span>
-                                        <span clas> {{ $ticket->no_tiket }}</span>
-                                    </h5>
-                                </div>
-                                <div class="card-body">
-                                    <div class="request">
-                                        <div
-                                            class="d-md-flex d-xl-inline-block d-xxl-flex align-items-center justify-content-between mb-x1">
-                                            <div class="d-flex align-items-center gap-2">
-                                                <div class="avatar avatar-2xl">
-                                                    <img class="rounded-circle"
-                                                        src="{{ url($ticket->Tenant->profile_picture) }}"
-                                                        alt="" />
-                                                </div>
-                                                <p class="mb-0"><a class="fw-semi-bold mb-0 text-800"
-                                                        href="../../app/support-desk/contact-details.html">{{ $ticket->Tenant->nama_tenant }}</a>
-                                                    <a class="mb-0 fs--1 d-block text-500"
-                                                        href="mailto:emma@watson.com">{{ $ticket->Tenant->email_tenant }}</a>
-                                                </p>
+                            @if ($ticket->RequestGIGO && $ticket->RequestGIGO->date_request_gigo)
+                                <div class="timeline-item timeline-item-start mb-3">
+                                    <div class="timeline-icon icon-item icon-item-lg text-primary border-300"><span
+                                            class="fs-1 fas fa-envelope"></span></div>
+                                    <div class="row">
+                                        <div class="col-lg-6 timeline-item-time">
+                                            <div>
+                                                <h6 class="mb-0 text-700">
+                                                    {{ HumanYear($ticket->RequestGIGO->created_at) }}
+                                                </h6>
+                                                <p class="fs--2 text-500 font-sans-serif">
+                                                    {{ HumanDateOnly($ticket->RequestGIGO->created_at) }}</p>
                                             </div>
-                                            <p class="mb-0 fs--2 fs-sm--1 fw-semi-bold mt-2 mt-md-0 mt-xl-2 mt-xxl-0 ms-5">
-                                                {{ HumanDate($ticket->created_at) }}
-                                                <span class="mx-1">|</span><span
-                                                    class="fst-italic">{{ HumanTime($ticket->created_at) }}
-                                                    ({{ TimeAgo($ticket->created_at) }})</span>
-                                            </p>
                                         </div>
-                                        <div>
-                                            <h6 class="mb-3 fw-semi-bold text-1000">{{ $ticket->judul_request }}</h6>
-                                            {!! $ticket->deskripsi_request !!}
-                                            @if ($ticket->upload_image)
-                                                <div class="px-x1 py-3 bg-light">
-                                                    <div class="d-inline-flex flex-column">
+                                        <div class="col-lg-6">
+                                            <div class="timeline-item-content arrow-bg-white">
+                                                <div class="timeline-item-card bg-white dark__bg-1100">
+                                                    <h5 class="mb-2 hover-primary">
+                                                        Request GIGO
+                                                    </h5>
+                                                    <p class="fs--1 border-bottom mb-3 pb-3 text-600">
+                                                        {{ $ticket->RequestGIGO->no_request_gigo }}
+                                                    </p>
+                                                    <div class="d-flex flex-wrap pt-2">
+                                                        <h6 class="mb-0 text-600 lh-base">
+                                                            <span class="far fa-clock me-1"></span>
+                                                            {{ HumanTime($ticket->RequestGIGO->sign_approve_2) }}
+                                                        </h6>
                                                         <div
-                                                            class="border p-2 rounded-3 d-flex bg-white dark__bg-1000 fs--1 mb-2">
-                                                            <a class="ms-auto text-decoration-none" target="_blank"
-                                                                href="/uploads/image/ticket/{{ $ticket->upload_image }}">
-                                                                <span class="fs-1 far fa-image"></span>
-                                                                <span class="ms-2 me-3">{{ $ticket->upload_image }}</span>
-                                                            </a>
+                                                            class="d-flex align-items-center ms-auto me-2 me-sm-x1 me-xl-2 me-xxl-x1">
+                                                            <div class="dot me-0 me-sm-2 me-xl-0 me-xxl-2 bg-info"
+                                                                data-bs-toggle="tooltip" data-bs-placement="top"
+                                                                data-bs-title="Urgent">
+                                                            </div>
                                                         </div>
+                                                        <small class="badge rounded badge-subtle-success false">
+                                                            {{ $ticket->RequestGIGO->status_request }}
+                                                        </small>
                                                     </div>
                                                 </div>
-                                            @endif
-                                        </div>
-                                    </div>
-                                    <div class="my-5 position-relative text-center">
-                                        <hr class="position-absolute top-50 border-300 w-100 my-0" />
-                                        <span class="position-relative bg-white dark__bg-card-dark px-3 z-index-1">
-                                            <button
-                                                class="btn btn-sm btn-outline-secondary rounded-pill border-300 px-lg-5">Reply</button>
-                                        </span>
-                                    </div>
-                                    <div
-                                        class="d-md-flex d-xl-inline-block d-xxl-flex align-items-center justify-content-between mb-x1">
-                                        <div class="d-flex align-items-center gap-2">
-                                            <div class="avatar avatar-2xl">
-                                                <img class="rounded-circle"
-                                                    src="{{ $ticket->TenantRelation->Karyawan->profile_picture }}"
-                                                    alt="" />
                                             </div>
-                                            <p class="mb-0"><a class="fw-semi-bold mb-0 text-800"
-                                                    href="../../app/support-desk/contact-details.html">{{ $ticket->TenantRelation->Karyawan->nama_karyawan }}</a>
-                                                <a class="mb-0 fs--1 d-block text-500"
-                                                    href="mailto:{{ $ticket->TenantRelation->Karyawan->email_karyawan }}">{{ $ticket->TenantRelation->Karyawan->email_karyawan }}</a>
-                                            </p>
-                                        </div>
-                                        <p class="mb-0 fs--2 fs-sm--1 fw-semi-bold mt-2 mt-md-0 mt-xl-2 mt-xxl-0 ms-5">
-                                            {{ HumanDate($ticket->tgl_respon_tiket) }}
-                                            <span class="mx-1">|</span>
-                                            <span class="fst-italic">{{ HumanTime($ticket->jam_respon) }}
-                                                ({{ TimeAgo($ticket->tgl_respon_tiket . ' ' . $ticket->jam_respon) }})</span>
-                                        </p>
-                                    </div>
-                                    <div>
-                                        <h6 class="mb-3 fw-semi-bold text-1000">{{ $ticket->judul_request }}</h6>
-                                        {!! $ticket->deskripsi_respon !!}
-                                    </div>
-
-                                    <div class="response" style="display: none" id="response">
-                                        <div class="my-5 position-relative text-center">
-                                            <hr class="position-absolute top-50 border-300 w-100 my-0" />
-                                            <span class="position-relative bg-white dark__bg-card-dark px-3 z-index-1">
-                                                <button
-                                                    class="btn btn-sm btn-outline-secondary rounded-pill border-300 px-lg-5">Reply</button>
-                                            </span>
-                                        </div>
-                                        <div class="border-bottom mb-5 pb-5 text-right">
-                                            <form action="{{ route('updateRequestTicket', $ticket->id) }}"
-                                                method="post">
-                                                @csrf
-                                                <textarea class="form-control" name="deskripsi_respon" id="myeditorinstance" cols="30" rows="10"></textarea>
-                                                <button type="submit" class="btn btn-success mt-5">Kirim</button>
-                                            </form>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
+                                <div class="timeline-item timeline-item-end mb-3">
+                                    <div class="timeline-icon icon-item icon-item-lg text-primary border-300"><span
+                                            class="fs-1 fas fa-envelope"></span></div>
+                                    <div class="row">
+                                        <div class="col-lg-6 timeline-item-time">
+                                            <div>
+                                                <h6 class="mb-0 text-700">
+                                                    {{ HumanYear($ticket->tgl_respon_tiket) }}
+                                                </h6>
+                                                <p class="fs--2 text-500 font-sans-serif">
+                                                    {{ HumanDateOnly($ticket->tgl_respon_tiket) }}
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <div class="timeline-item-content arrow-bg-white">
+                                                <div class="timeline-item-card bg-white dark__bg-1100">
+                                                    <p class="fs--1 border-bottom mb-3 pb-3 text-600">
+                                                        Ticket #{{ $ticket->RequestGIGO->no_work_request }}
+                                                    </p>
+                                                    <div class="d-flex flex-wrap pt-2">
+                                                        <h6 class="mb-0 text-600 lh-base">
+                                                            <span class="far fa-clock me-1"></span>
+                                                            {{ HumanTime($ticket->RequestGIGO->date_approval_1) }}
+                                                        </h6>
+                                                        <div
+                                                            class="d-flex align-items-center ms-auto me-2 me-sm-x1 me-xl-2 me-xxl-x1">
+                                                            <div class="dot me-0 me-sm-2 me-xl-0 me-xxl-2 bg-info"
+                                                                data-bs-toggle="tooltip" data-bs-placement="top"
+                                                                data-bs-title="Low">
+                                                            </div>
+                                                        </div>
+                                                        @if ($ticket->RequestGIGO->status_request == 'ON WORK' || $ticket->RequestGIGO->status_request == 'WORK ORDER')
+                                                            <small class="badge rounded badge-subtle-info dark__bg-1000">
+                                                                On Work
+                                                            </small>
+                                                        @endif
+                                                        @if ($ticket->RequestGIGO->status_request == 'COMPLETE')
+                                                            <small
+                                                                class="badge rounded badge-subtle-success dark__bg-1000">
+                                                                COMPLETE
+                                                            </small>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>
