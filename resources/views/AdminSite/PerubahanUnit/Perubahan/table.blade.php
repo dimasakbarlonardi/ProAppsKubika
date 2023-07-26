@@ -147,10 +147,7 @@
                                 </tr>
                             </table>
                         </div>
-                        {{-- <a href="{{ route('tenantunits.edit', $tenantunits->id_tenant_unit) }}" class="btn btn-sm btn-primary">Edit</a> --}}
                         <a class="btn btn-sm btn-warning" href="{{ route('perubahanunits.index') }}">Back</a>
-                        {{-- <a class="btn btn-sm btn-warning"
-                            href="{{ route('editperubahanunit', $tenantunits->id_tenant_unit) }}">Perubahan Unit</a> --}}
                         <button type="button" data-toggle="modal" data-target="#modalValidation"
                         class="btn btn-sm btn-warning" id="btnPerpanjangSewa">Perubahan Unit</button>
 
@@ -193,13 +190,9 @@
                             </div>
                         </div>
                     </div>
-
-                        
                     </div>
                 </div>
             </div>
-
-
         </div>
     </div>
 @endsection
@@ -239,7 +232,7 @@
                         })
                         $('#modalValidation').modal('show')
                     } else {
-                        window.location.replace(`/admin/get/perpanjangunits-edit/${id_tenant_unit}`)
+                        window.location.replace(`/admin/get/perubahanunits-edit/${id_tenant_unit}`)
                     }
                 }
             })

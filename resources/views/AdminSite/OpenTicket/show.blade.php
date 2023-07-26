@@ -77,7 +77,7 @@
                         </div>
                         <div
                             class="d-md-flex d-xl-inline-block d-xxl-flex align-items-center justify-content-between mb-x1">
-                            <div class="d-flex align-items-center gap-2">
+                            {{-- <div class="d-flex align-items-center gap-2">
                                 <div class="avatar avatar-2xl">
                                     <img class="rounded-circle"
                                         src="{{ $ticket->TenantRelation->Karyawan->profile_picture }}" alt="" />
@@ -87,7 +87,7 @@
                                     <a class="mb-0 fs--1 d-block text-500"
                                         href="mailto:{{ $ticket->TenantRelation->Karyawan->email_karyawan }}">{{ $ticket->TenantRelation->Karyawan->email_karyawan }}</a>
                                 </p>
-                            </div>
+                            </div> --}}
                             <p class="mb-0 fs--2 fs-sm--1 fw-semi-bold mt-2 mt-md-0 mt-xl-2 mt-xxl-0 ms-5">
                                 {{ HumanDate($ticket->tgl_respon_tiket) }}
                                 <span class="mx-1">|</span>
@@ -152,18 +152,14 @@
                                                 <option disabled selected>--Pilih Status---</option>
                                                 <option {{ $ticket->status_request == 'PROSES KE WR' ? 'selected' : '' }}
                                                     value="PROSES KE WR">Proses ke WR</option>
-                                                <option
-                                                    {{ $ticket->status_request == 'PROSES KE PERMIT' ? 'selected' : '' }}
+                                                <option {{ $ticket->status_request == 'PROSES KE PERMIT' ? 'selected' : '' }}
                                                     value="PROSES KE PERMIT">Proses ke Permit</option>
-                                                <option
-                                                    {{ $ticket->status_request == 'PROSES KE RESERVASI' ? 'selected' : '' }}
+                                                <option {{ $ticket->status_request == 'PROSES KE RESERVASI' ? 'selected' : '' }}
                                                     value="PROSES KE RESERVASI">Proses ke Reservasi</option>
                                                 <option {{ $ticket->status_request == 'PROSES KE GIGO' ? 'selected' : '' }}
                                                     value="PROSES KE GIGO">Proses ke GIGO</option>
                                                 <option {{ $ticket->status_request == 'DONE' ? 'selected' : '' }}
                                                     value="DONE">DONE</option>
-                                                <option {{ $ticket->status_request == 'ON WORK' ? 'selected' : '' }}
-                                                    value="DONE">ON WORK</option>
                                             </select>
                                         </div>
                                     @elseif ($ticket->status_request == 'COMPLETE')

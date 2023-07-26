@@ -143,9 +143,12 @@
                                 </tr>
                             </table>
                         </div>
-                        {{-- <a href="{{ route('tenantunits.edit', $tenantunits->id_tenant_unit) }}" class="btn btn-sm btn-primary">Edit</a> --}}
-                        {{-- <a class="btn btn-sm btn-warning" href="{{ route('perubahanunits.index')}}">Back</a> --}}
-                        <div class="mb-3">
+                        <div class="text-end">
+                        <button type="button" data-toggle="modal" data-target="#modalValidation"
+                        class="btn btn-sm btn-warning" id="btnPerpanjangSewa">Tidak Perpanjang Unit</button>
+                        </div>
+                        
+                        {{-- <div class="mb-3">
                             <div class=" my-3">
                                 <button class="btn btn-danger" type="button" data-bs-toggle="modal"
                                     data-target="#modalValidation" id="btnPerpanjangSewa">Tidak Perpanjang Unit</button>
@@ -195,7 +198,7 @@
                                     </div>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
 
                         <div class="modal fade" id="modalValidation" data-bs-keyboard="false" data-bs-backdrop="static"
                         tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
@@ -236,19 +239,54 @@
                             </div>
                         </div>
                     </div>
-
-
-                    </div>
                 </div>
             </div>
-
-
         </div>
     </div>
+ </div>
 @endsection
 
 @section('script')
-    <script>
+<script>
+$('#btnPerpanjangSewa').on('click', function() {
+            var id_tenant = '{{ $tenantunits->id_tenant }}';
+            var id_unit = '{{ $tenantunits->id_unit }}';
+            var id_tenant_unit = '{{ $tenantunits->id_tenant_unit }}';
+
+            $('#modalListErrors').html('');
+            $.ajax({
+                url: `/admin/validation/perubahan`,
+                type: 'GET',
+                data: {
+                    'id_tenant': id_tenant,
+                    'id_unit':id_unit
+                },
+                success: function(resp) {
+                    console.log(resp.errors)
+                    if (resp.errors.length > 0) {
+                        resp.errors.map((item) => {
+                            $('#modalListErrors').append(`
+                                 <div class="row">
+                                    <div class="d-flex">
+                                        <span class="fa-stack ms-n1">
+                                            <img src="{{ asset('assets/img/icons/cross_red.png') }}"
+                                                class="" height="25">
+                                        </span>
+                                        <div class="">
+                                            <p class="text-break fs--1 mt-1">${item.type} - ${item.error_header} masih berstatus ${item.error_status}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            `);
+                        })
+                        $('#modalValidation').modal('show')
+                    } else {
+                        window.location.replace(`/admin/get/tidakperpanjangunits-edit/${id_tenant_unit}`)
+                    }
+                }
+            })
+        })
+
         $('document').ready(function() {
             $('#id_pemilik').on('change', function() {
                 var id_pemilik = $(this).val()

@@ -7,44 +7,34 @@
                 <div class="col-auto">
                     <nav aria-label="breadcrumb">
                         <ol class="my-3 breadcrumb">
-                            <li class="breadcrumb-item active" aria-current="page">Perpanjang Sewa Unit</li>
+                            <li class="breadcrumb-item text-white"  aria-current="page">Alasan Tidak Perpanjang
+                                Unit</li>
                         </ol>
                     </nav>
                 </div>
             </div>
         </div>
         <div class="p-5">
-            <form action="{{ route('deleteTenantUnit', $tenantunit->id_tenant_unit) }}" method="post">
+            <form action="{{ route('offtenantunits.store') }}" method="post">
                 @method('POST')
                 @csrf
                 <div class="row">
-                    <div class="col-6">
-                        <label class="col-form-label">Periode
-                            Sewa:</label>
-                        <div class="input-group">
-                            <select class="form-control" name="id_periode_sewa" id="periode_edit">
-                                @foreach ($periodeSewa as $periode)
-                                    <option value="{{ $periode->id_periode_sewa }}">
-                                        {{ $periode->periode_sewa }}
-                                    </option>
-                                @endforeach
-                            </select>
-                            <span class="input-group-text">Bulan</span>
-                        </div>
-                    </div>
-                </div>
-                <div class="row">
-                    <div class="col-6">
+                    {{-- <div class="col-6">
                         <label class="col-form-label">Tanggal
                             masuk:</label>
                         <input class="form-control" type="date" name="tgl_masuk" value="{{ $tenantunit->tgl_masuk }}"
                             id="tgl_masuk_edit">
-                    </div>
+                    </div> --}}
                     <div class="col-6">
                         <label class="col-form-label">Tanggal
                             keluar:</label>
-                        <input class="form-control" type="date" name="tgl_keluar" value="{{ $tenantunit->tgl_keluar }}"
-                            id="tgl_keluar_edit" readonly>
+                        <input class="form-control" type="date" name="tgl_keluar" 
+                            required>
+                    </div>
+                    <div class="col-6">
+                        <label class="col-form-label">Keterangan:</label>
+                        <input class="form-control" type="date" name="keterangan" 
+                            required>
                     </div>
                     <div class="mt-5">
                         <button type="submit" class="btn btn-primary">Submit</button>
@@ -56,27 +46,3 @@
     </div>
 @endsection
 
-@section('script')
-    <script>
-        function calcDate() {
-            var periode = $('#periode_edit').find(':selected').text()
-            var selectedDate = $('#tgl_masuk_edit').val();
-            var date = new Date(selectedDate);
-            var addMonth = date.setMonth(date.getMonth() + parseInt(periode));
-            var parseDate = new Date(addMonth);
-            var newDate = parseDate.toISOString().split('T')[0]
-
-            return newDate;
-        }
-
-        $('#tgl_masuk_edit').on('change', function() {
-            var date = calcDate();
-            $('#tgl_keluar_edit').val(date)
-        })
-
-        $('#periode_edit').on('change', function() {
-            var date = calcDate();
-            $('#tgl_keluar_edit').val(date)
-        })
-    </script>
-@endsection

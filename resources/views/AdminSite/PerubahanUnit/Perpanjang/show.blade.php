@@ -12,10 +12,6 @@
         <div class="p-5">
             <div class="mb-3">
                 <div class="row">
-                    {{-- <div class="col-6 mb-3">
-                        <label class="form-label">Unit</label>
-                        <input type="text" value="{{ $tenantunits->unit->nama_unit}}" class="form-control" readonly>
-                    </div> --}}
                     <div class="col-4 mb-3">
                         <label class="form-label">Tenant</label>
                         <input type="text" value="{{ $tenantunits->tenant->nama_tenant }}" class="form-control" readonly>
@@ -203,7 +199,7 @@
         $('#btnPerpanjangSewa').on('click', function() {
             var id_tenant = '{{ $tenantunits->id_tenant }}';
             var id_unit = '{{ $tenantunits->id_unit }}';
-            var id_tenant_unit = '{{ $tenantunits->id_tenant_unit }}';i
+            var id_tenant_unit = '{{ $tenantunits->id_tenant_unit }}';
 
             $('#modalListErrors').html('');
             $.ajax({
