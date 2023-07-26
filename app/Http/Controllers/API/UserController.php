@@ -5,8 +5,11 @@ namespace App\Http\Controllers\API;
 use App\Helpers\ConnectionDB;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
+use App\Models\Karyawan;
 use App\Models\Login;
+use App\Models\OwnerH;
 use App\Models\Site;
+use App\Models\Tenant;
 use App\Models\Unit;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -46,8 +49,6 @@ class UserController extends Controller
                 'password' => $request->password
             ];
 
-            $this->setMidtrans($request);
-
             if (!Auth::attempt($credentials)) {
                 return ResponseFormatter::error([
                     'message' => 'Unauthorized'
@@ -81,6 +82,48 @@ class UserController extends Controller
         }
     }
 
+    public function selectRole(Request $request)
+    {
+        $role_id = $request->role_id;
+
+        $connUser = ConnectionDB::setConnection(new User);
+        $user = $connUser->where('login_user', $request->user()->email)->first();
+
+        $connKaryawan = ConnectionDB::setConnection(new Karyawan());
+        $connOwner = ConnectionDB::setConnection(new OwnerH());
+        $connTenant = ConnectionDB::setConnection(new Tenant());
+
+        $verified = false;
+        if ($role_id == 1) {
+            $owner = $connOwner->where('email_owner', $request->user()->email)->first();
+            if (isset($owner)) {
+                $verified = true;
+            }
+        }
+        if ($role_id == 2) {
+            $karyawan = $connKaryawan->where('email_karyawan', $request->user()->email)->first();
+
+            if (isset($karyawan)) {
+                $verified = true;
+            }
+        }
+        if ($role_id == 3) {
+            $tenant = $connTenant->where('email_tenant', $request->user()->email)->first();
+            if (isset($tenant)) {
+                $verified = true;
+            }
+        }
+        if ($verified) {
+            return ResponseFormatter::success([
+                'message' => 'OK'
+            ], 'Authenticated');
+        } else {
+            return ResponseFormatter::error([
+                'message' => 'Anda tidak terdaftar'
+            ],'Authentication Failed', 500);
+        }
+    }
+
     public function user(Request $request)
     {
         $getUser = $request->user();
@@ -94,27 +137,27 @@ class UserController extends Controller
         return ResponseFormatter::success($user, 'Data profile user berhasil diambil');
     }
 
-    public function setMidtrans($request)
-    {
-        $path = base_path('.env');
-        $site = Site::find($request->id_site);
+    // public function setMidtrans($request)
+    // {
+    //     $path = base_path('.env');
+    //     $site = Site::find($request->id_site);
 
-        if (file_exists($path)) {
-            file_put_contents($path, str_replace(
-                'MIDTRANS_MERCHAT_ID=' . env('MIDTRANS_MERCHAT_ID'),
-                'MIDTRANS_MERCHAT_ID=' . $site->midtrans_merchant_id,
-                file_get_contents($path)
-            ));
-            file_put_contents($path, str_replace(
-                'MIDTRANS_CLIENT_KEY=' . env('MIDTRANS_CLIENT_KEY'),
-                'MIDTRANS_CLIENT_KEY=' . $site->midtrans_client_key,
-                file_get_contents($path)
-            ));
-            file_put_contents($path, str_replace(
-                'MIDTRANS_SERVER_KEY=' . env('MIDTRANS_SERVER_KEY'),
-                'MIDTRANS_SERVER_KEY=' . $site->midtrans_server_key,
-                file_get_contents($path)
-            ));
-        }
-    }
+    //     if (file_exists($path)) {
+    //         file_put_contents($path, str_replace(
+    //             'MIDTRANS_MERCHAT_ID=' . env('MIDTRANS_MERCHAT_ID'),
+    //             'MIDTRANS_MERCHAT_ID=' . $site->midtrans_merchant_id,
+    //             file_get_contents($path)
+    //         ));
+    //         file_put_contents($path, str_replace(
+    //             'MIDTRANS_CLIENT_KEY=' . env('MIDTRANS_CLIENT_KEY'),
+    //             'MIDTRANS_CLIENT_KEY=' . $site->midtrans_client_key,
+    //             file_get_contents($path)
+    //         ));
+    //         file_put_contents($path, str_replace(
+    //             'MIDTRANS_SERVER_KEY=' . env('MIDTRANS_SERVER_KEY'),
+    //             'MIDTRANS_SERVER_KEY=' . $site->midtrans_server_key,
+    //             file_get_contents($path)
+    //         ));
+    //     }
+    // }
 }
