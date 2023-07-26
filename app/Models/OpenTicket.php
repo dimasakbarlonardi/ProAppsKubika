@@ -64,4 +64,9 @@ class OpenTicket extends Model
     {
         return $this->hasOne(WorkOrder::class, 'no_tiket', 'no_tiket');
     }
+
+    public function RequestGIGO()
+    {
+        return $this->hasOne(RequestGIGO::class, 'no_tiket', 'no_tiket');
+    }
 }

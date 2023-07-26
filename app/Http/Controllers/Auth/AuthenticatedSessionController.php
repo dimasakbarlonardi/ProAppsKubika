@@ -137,14 +137,12 @@ class AuthenticatedSessionController extends Controller
             }
             if ($request->role_id == 2) {
                 $karyawan = $connKaryawan->where('email_karyawan', $getUser->login_user)->first();
-
                 if (isset($karyawan)) {
                     $verified = true;
                 }
             }
             if ($request->role_id == 3) {
-                // $tenant = $connTenant->where('email_tenant', $getUser->login_user)->first();
-                $tenant = $connTenant->get();
+                $tenant = $connTenant->where('email_tenant', $getUser->login_user)->first();
                 if (isset($tenant)) {
                     $verified = true;
                 }
@@ -152,9 +150,13 @@ class AuthenticatedSessionController extends Controller
 
             if ($verified) {
                 $request->session()->put('has_role', 'yes');
-            }
 
-            return redirect()->route('dashboard');
+                if ($request->role_id == 2) {
+                    return redirect()->route('dashboard');
+                }
+
+                return redirect()->route('open-tickets.index');
+            }
         } catch (Exception $error) {
             dd($error);
             return redirect()->route('dashboard');
