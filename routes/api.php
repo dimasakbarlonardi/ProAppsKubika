@@ -26,6 +26,9 @@ Route::prefix('v1')->group(function() {
 
     Route::middleware('auth:sanctum')->group(function() {
         Route::get('/user', [UserController::class, 'user'])->name('user');
+
+        Route::post('/select-role', [UserController::class, 'selectRole']);
+
     });
 });
 

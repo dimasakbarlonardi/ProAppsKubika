@@ -23,4 +23,9 @@ class ConnectionDB {
 
         return $model;
     }
+
+    public function setConnectionAPI($id_site)
+    {
+        dd($id_site);
+    }
 }
