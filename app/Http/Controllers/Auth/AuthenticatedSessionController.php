@@ -18,6 +18,7 @@ use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use PhpParser\Node\Stmt\TryCatch;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class AuthenticatedSessionController extends Controller
@@ -108,53 +109,57 @@ class AuthenticatedSessionController extends Controller
 
     public function storeRole(Request $request)
     {
-        $email = Auth::user()->email;
-        $currUser = ConnectionDB::setConnection(new User());
-        $getUser = $currUser->where('login_user', $email)
-            ->where('user_category', $request->role_id)
-            ->with(['RoleH.AksesForm', 'RoleH.WorkRelation'])
-            ->first();
-        if (!isset($getUser)) {
-            Alert::error('Gagal', 'Anda tidak terdaftar');
+        try {
+            $email = Auth::user()->email;
+            $currUser = ConnectionDB::setConnection(new User());
+            $getUser = $currUser->where('login_user', $email)
+                ->where('user_category', $request->role_id)
+                ->with(['RoleH.AksesForm', 'RoleH.WorkRelation'])
+                ->first();
+            if (!isset($getUser)) {
+                Alert::error('Gagal', 'Anda tidak terdaftar');
 
-            return redirect()->back();
-        }
-        $request->session()->put('user', $getUser);
-        $request->session()->put('user_id', $getUser->id_user);
-
-        $connKaryawan = ConnectionDB::setConnection(new Karyawan());
-        $connOwner = ConnectionDB::setConnection(new OwnerH());
-        $connTenant = ConnectionDB::setConnection(new Tenant());
-
-        $verified = false;
-        if ($request->role_id == 1) {
-            $owner = $connOwner->where('email_owner', $getUser->login_user)->first();
-            if (isset($owner)) {
-                $verified = true;
+                return redirect()->back();
             }
-        }
-        if ($request->role_id == 2) {
-            $karyawan = $connKaryawan->where('email_karyawan', $getUser->login_user)->first();
+            $request->session()->put('user', $getUser);
+            $request->session()->put('user_id', $getUser->id_user);
 
-            if (isset($karyawan)) {
-                $verified = true;
+            $connKaryawan = ConnectionDB::setConnection(new Karyawan());
+            $connOwner = ConnectionDB::setConnection(new OwnerH());
+            $connTenant = ConnectionDB::setConnection(new Tenant());
+
+            $verified = false;
+            if ($request->role_id == 1) {
+                $owner = $connOwner->where('email_owner', $getUser->login_user)->first();
+                if (isset($owner)) {
+                    $verified = true;
+                }
             }
-        }
-        if ($request->role_id == 3) {
-            $tenant = $connTenant->where('email_tenant', $getUser->login_user)->first();
-            if (isset($tenant)) {
-                $verified = true;
-            }
-        }
-
-        if ($verified) {
-            $request->session()->put('has_role', 'yes');
-
             if ($request->role_id == 2) {
-                return redirect()->route('dashboard');
+                $karyawan = $connKaryawan->where('email_karyawan', $getUser->login_user)->first();
+                if (isset($karyawan)) {
+                    $verified = true;
+                }
+            }
+            if ($request->role_id == 3) {
+                $tenant = $connTenant->where('email_tenant', $getUser->login_user)->first();
+                if (isset($tenant)) {
+                    $verified = true;
+                }
             }
 
-            return redirect()->route('open-tickets.index');
+            if ($verified) {
+                $request->session()->put('has_role', 'yes');
+
+                if ($request->role_id == 2) {
+                    return redirect()->route('dashboard');
+                }
+
+                return redirect()->route('open-tickets.index');
+            }
+        } catch (Exception $error) {
+            dd($error);
+            return redirect()->route('dashboard');
         }
     }
 

@@ -10,10 +10,13 @@
                         <div class="col-auto pe-0">
                             <h6 class="mb-0 text-light">All Tenants</h6>
                         </div>
-                        <div class="col-auto pe-0">
-                            <span class="nav-link-icon">
-                                <span class="fas fa-users"></span>
-                            </span>
+                        <div class="col-auto">
+                            <form>
+                                <div class="input-group input-search-width"><input
+                                        class="form-control form-control-sm shadow-none search" type="search"
+                                        placeholder="Search by name" aria-label="search" />
+                                </div>
+                            </form>
                         </div>
                     </div>
                     <div class="border-bottom border-200 my-3"></div>
@@ -49,7 +52,6 @@
                         data-bulk-select='{"body":"card-ticket-body","actions":"table-ticket-actions","replacedElement":"table-ticket-replace-element"}' />
                 </div>
                 <div class="list bg-light p-x1 d-flex flex-column gap-3" id="card-ticket-body">
-
                     <div class="row">
                         @foreach ($tenants as $tenant)
                             <div class="col-3">
@@ -68,8 +70,8 @@
                                                     Tenant
                                                 </a>
                                             </p>
-                                            <p class="fw-semi-bold mb-3 mb-sm-2">
-                                                <a class="text-black" href="{{ route('tenants.show', $tenant->id_tenant) }}">
+                                            <p class="client fw-semi-bold mb-3 mb-sm-2">
+                                                <a class="client text-black" href="{{ route('tenants.show', $tenant->id_tenant) }}">
                                                     {{ $tenant->nama_tenant }}
                                                 </a>
                                             </p>
@@ -96,7 +98,7 @@
 
                 </div>
                 <div class="text-center d-none" id="tickets-card-fallback">
-                    <p class="fw-bold fs-1 mt-3">No ticket found</p>
+                    <p class="fw-bold fs-1 mt-3">Data Tidak Ditemukan</p>
                 </div>
             </div>
             <div class="card-footer">

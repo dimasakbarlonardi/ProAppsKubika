@@ -14,10 +14,10 @@
             </div>
         </div>
         <div class="p-5">
-            <label for="organizerSingle">tenant</label>
-            <select class="form-select js-choice" id="id_tenant" size="1" name="organizerSingle">
+            <label for="organizerSingle">tenant</label><select class="form-select js-choice" id="id_tenant" size="1" name="organizerSingle" data-options='{"removeItemButton":true,"placeholder":true}'>
+                <option selected disabled>-- Pilih Tenant --</option>
                 @foreach ($tenants as $item)
-                    <option value="{{ $item->id_tenant }}">{{ $item->nama_tenant }}</option>
+                <option value="{{$item->id_tenant}}">{{$item->nama_tenant}}</option>
                 @endforeach
             </select>
 

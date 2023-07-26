@@ -80,7 +80,7 @@
                             <div class="col-6">
                                 <label class="form-label">No Telp Karyawan</label>
                                 <input type="text" name="no_telp_karyawan" value="{{ $karyawan->no_telp_karyawan }}"
-                                class="form-control" readonly>
+                                    class="form-control" readonly>
                             </div>
                         </div>
                     </div>
@@ -90,7 +90,7 @@
                             <div class="col-6">
                                 <label class="form-label">Tanggal Masuk</label>
                                 <input type="date" name="tgl_masuk" value="{{ $karyawan->tgl_masuk }}"
-                                class="form-control" readonly>
+                                    class="form-control" readonly>
                             </div>
                         </div>
                     </div>
@@ -103,8 +103,8 @@
                             </div>
                             <div class="col-6">
                                 <label class="form-label">Departement</label>
-                                <input type="text" name="id_departemen" value="{{ $karyawan->Departemen->id_departemen }}"
-                                    class="form-control" readonly>
+                                <input type="text" name="id_departemen"
+                                    value="{{ $karyawan->Departemen->id_departemen }}" class="form-control" readonly>
                             </div>
                         </div>
                     </div>
@@ -132,7 +132,7 @@
                             <div class="col-6">
                                 <label class="form-label">Tanggal Lahir</label>
                                 <input type="date" name="tgl_lahir" value="{{ $karyawan->tgl_keluar }}"
-                                class="form-control" readonly>
+                                    class="form-control" readonly>
                             </div>
                         </div>
                     </div>
