@@ -409,8 +409,8 @@ class PerubahanUnitController extends Controller
         $periodeSewa = $this->setConnection(new PeriodeSewa());
         $connOwner = $this->setConnection(new OwnerH());
 
-        // $data['tenantunit'] = $connTenantUnit->where('id_tenant_unit', $id)->first();
-        $data['tenantunit'] = $connTenantUnit->find($id);
+        $data['tenantunit'] = $connTenantUnit->where('id_tenant_unit', $id)->first();
+        // $data['tenantunit'] = $connTenantUnit->find($id);
         $data['id_tenant'] = $id;
         $data['units'] = $connUnit->get();
         $data['owners'] = $connOwner->get();
@@ -495,7 +495,43 @@ class PerubahanUnitController extends Controller
             }
         }
 
-
         return response()->json(['errors' => $errors]);
     }
+
+    // public function validationPerubahanOwner(Request $request)
+    // {
+    //     $connTicket = ConnectionDB::setConnection(new OpenTicket());
+
+    //     $tickets = $connTicket->where('id_tenant', $request->id_tenant)
+    //     ->where('id_unit', $request->id_unit)
+    //     ->where('status_request', '!=', 'COMPLETE')
+    //     ->get();
+    //     $errors = [];
+
+    //     foreach ($tickets as $ticket) {
+
+    //         $tiket['error_header'] = $ticket->no_tiket;
+    //         $tiket['error_status'] = $ticket->status_request;
+    //         $tiket['type'] = 'Tiket';
+
+    //         array_push($errors, $tiket);
+
+    //         if ($ticket->WorkRequest) {
+    //             $wr['error_header'] = $ticket->WorkRequest->no_work_request;
+    //             $wr['error_status'] = $ticket->WorkRequest->status_request;
+    //             $wr['type'] = 'Work Request';
+    //             array_push($errors, $wr);
+
+    //         }
+
+    //         if ($ticket->WorkOrder) {
+    //             $wo['error_header'] = $ticket->WorkOrder->no_work_order;
+    //             $wo['error_status'] = $ticket->WorkOrder->status_request;
+    //             $wo['type'] = 'Work Order';
+    //             array_push($errors, $wo);
+    //         }
+    //     }
+
+    //     return response()->json(['errors' => $errors]);
+    // }
 }

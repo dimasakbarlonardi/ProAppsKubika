@@ -52,7 +52,7 @@
                     </div>
                     <div class="col-6 mb-3">
                         <label class="form-label">Keterangan</label>
-                        <input type="text" name="keterangan" class="form-control" required>
+                        <textarea type="text" name="keterangan" class="form-control" required></textarea>
                     </div>
                     <div class="mt-5">
                         <button type="submit" class="btn btn-primary">Submit</button>

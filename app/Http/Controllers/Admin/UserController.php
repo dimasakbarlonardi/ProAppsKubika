@@ -99,7 +99,6 @@ class UserController extends Controller
         $getKaryawan = $connKaryawan->where('email_karyawan', $request->email)->first();
         $getOwner = $connOwner->where('email_owner', $request->email)->first();
         $getTenant = $connTenant->where('email_tenant', $request->email)->first();
-
         if (isset($getKaryawan)) {
             $user = $getKaryawan;
             $nama = $getKaryawan->nama_karyawan;

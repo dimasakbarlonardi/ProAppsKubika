@@ -11,15 +11,15 @@
                             <div class="col-auto pe-0">
                                 <h6 class="mb-0">Work Requests</h6>
                             </div>
-                            <div class="col-auto">
-                                <form>
-                                    <div class="input-group input-search-width"><input
-                                            class="form-control form-control-sm shadow-none search" type="search"
-                                            placeholder="Search by name" aria-label="search" />
+                                <div class="col-auto">
+                                    <form>
+                                        <div class="input-group input-search-width"><input
+                                                class="form-control form-control-sm shadow-none search" type="search"
+                                                placeholder="Search by name" aria-label="search" />
 
-                                    </div>
-                                </form>
-                            </div>
+                                        </div>
+                                    </form>
+                                </div>
                         </div>
                         <div class="border-bottom border-200 my-3"></div>
                         <div class="d-flex align-items-center justify-content-between justify-content-lg-end px-x1">

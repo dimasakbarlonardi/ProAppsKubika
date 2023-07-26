@@ -12,10 +12,6 @@
         <div class="p-5">
             <div class="mb-3">
                 <div class="row">
-                    {{-- <div class="col-6 mb-3">
-                        <label class="form-label">Unit</label>
-                        <input type="text" value="{{ $tenantunits->unit->nama_unit}}" class="form-control" readonly>
-                    </div> --}}
                     <div class="col-4 mb-3">
                         <label class="form-label">Tenant</label>
                         <input type="text" value="{{ $tenantunits->tenant->nama_tenant }}" class="form-control" readonly>
@@ -37,19 +33,19 @@
                     <div class="col-4 mb-3">
                         <label class="form-label">Tanggal Masuk - Tanggal Keluar</label>
                         <input type="text"
-                            value="{{ \Carbon\Carbon::parse($tenantunits->tgl_masuk)->format('d-M-Y') }} - {{ \Carbon\Carbon::parse($tenantunits->tgl_keluar)->format('d-M-Y') }} "
+                            value="{{ \Carbon\Carbon::parse($tenantunits->tgl_masuk)->format('d M Y') }} - {{ \Carbon\Carbon::parse($tenantunits->tgl_keluar)->format('d M Y') }} "
                             class="form-control" readonly>
                     </div>
                     <div class="col-4 mb-3">
                         <label class="form-label">Jatuh Tempo IPL</label>
                         <input type="text"
-                            value="{{ \Carbon\Carbon::parse($tenantunits->tgl_jatuh_tempo_ipl)->format('d-M-Y') }}"
+                            value="{{ \Carbon\Carbon::parse($tenantunits->tgl_jatuh_tempo_ipl)->format('d M     Y') }}"
                             class="form-control" readonly>
                     </div>
                     <div class="col-4 mb-3">
                         <label class="form-label">Jatuh Tempo UTIL</label>
                         <input type="text"
-                            value="{{ \Carbon\Carbon::parse($tenantunits->tgl_jatuh_tempo_util)->format('d-M-Y') }}"
+                            value="{{ \Carbon\Carbon::parse($tenantunits->tgl_jatuh_tempo_util)->format('d M Y') }}"
                             class="form-control" readonly>
                     </div>
 
@@ -193,11 +189,10 @@
                     </div>
                 </div>
             </div>
-
-
         </div>
     </div>
 @endsection
+
 
 @section('script')
     <script>
