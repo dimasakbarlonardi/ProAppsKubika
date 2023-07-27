@@ -29,5 +29,10 @@ class ElectricUUS extends Model
         return $this->hasOne(Unit::class, 'id_unit', 'id_unit');
     }
 
+    public function CR()
+    {
+        return $this->hasOne(CashReceipt::class, 'no_reff', 'no_refrensi');
+    }
+
     protected $dates = ['deleted_at'];
 }

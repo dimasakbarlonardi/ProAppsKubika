@@ -41,6 +41,11 @@
                                     <a href="" class="btn btn-info btn-sm">
                                         Invoice
                                     </a>
+                                    @if ($item->CR->transaction_status == 'PAYED')
+                                        <span class="badge bg-success">Payed</span>
+                                    @else
+                                        <span class="badge bg-danger">Not Payed</span>
+                                    @endif
                                 @else
                                     <form class="d-inline" action="{{ route('approve-usr-electric', $item->id) }}"
                                         method="post">
