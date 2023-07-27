@@ -41,7 +41,7 @@ class OpenTicketController extends Controller
         if ($user->user_category == 3) {
             $tenant = $connTenant->where('id_user', $login)->first();
 
-            $data['tickets'] = $connRequest->where('id_tenant', $tenant->id_tenant)->latest()->get();
+            $data['tickets'] = $connRequest->where('id_user', $tenant->id_tenant)->latest()->get();
         } else {
             $data['tickets'] = $connRequest->latest()->get();
         }

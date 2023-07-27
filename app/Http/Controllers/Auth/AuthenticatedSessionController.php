@@ -56,7 +56,7 @@ class AuthenticatedSessionController extends Controller
 
         try {
             $credentials = request(['email', 'password']);
-            $this->setMidtrans($request);
+
             if (!Auth::attempt($credentials)) {
                 Alert::error('Gagal', 'Mohon periksa kembali email dan password');
 
@@ -182,29 +182,5 @@ class AuthenticatedSessionController extends Controller
         $request->session()->regenerateToken();
 
         return redirect('/');
-    }
-
-    public function setMidtrans($request)
-    {
-        $path = base_path('.env');
-        $site = Site::find($request->id_site);
-
-        if (file_exists($path)) {
-            file_put_contents($path, str_replace(
-                'MIDTRANS_MERCHAT_ID=' . env('MIDTRANS_MERCHAT_ID'),
-                'MIDTRANS_MERCHAT_ID=' . $site->midtrans_merchant_id,
-                file_get_contents($path)
-            ));
-            file_put_contents($path, str_replace(
-                'MIDTRANS_CLIENT_KEY=' . env('MIDTRANS_CLIENT_KEY'),
-                'MIDTRANS_CLIENT_KEY=' . $site->midtrans_client_key,
-                file_get_contents($path)
-            ));
-            file_put_contents($path, str_replace(
-                'MIDTRANS_SERVER_KEY=' . env('MIDTRANS_SERVER_KEY'),
-                'MIDTRANS_SERVER_KEY=' . $site->midtrans_server_key,
-                file_get_contents($path)
-            ));
-        }
     }
 }

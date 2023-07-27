@@ -111,6 +111,7 @@ use App\Http\Controllers\Admin\ChecklistPompaSumpitHController;
 use App\Http\Controllers\Admin\OffBoardingTenantUnitController;
 use App\Http\Controllers\Admin\ChecklistTanggaDaruratHController;
 use App\Http\Controllers\Admin\ChecklistOfficeManagementHController;
+use App\Http\Controllers\Admin\ElectricUUSController;
 use App\Http\Controllers\Admin\OffBoardingKepemilikanUnitController;
 
 /*
@@ -648,6 +649,14 @@ Route::prefix('admin')->group(function () {
         Route::get('/checklist-filter-koridor', [ChecklistKoridorHController::class, 'filterByNoChecklist']);
 
         // ---------------End Checklist HK-----------------
+
+
+        // ---------------Start USR Electric ----------------
+        Route::get('uus-electric', [ElectricUUSController::class, 'index'])->name('usr-electric');
+        Route::get('create/usr-electric', [ElectricUUSController::class, 'create'])->name('create-usr-electric');
+        Route::post('store/usr-electric/{id}', [ElectricUUSController::class, 'store'])->name('store-usr-electric');
+        Route::post('approve/usr-electric/{id}', [ElectricUUSController::class, 'approve'])->name('approve-usr-electric');
+        // ---------------End USR Electric-----------------
     });
 });
 
