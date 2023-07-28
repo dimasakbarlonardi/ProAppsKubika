@@ -2,6 +2,7 @@
 
 namespace App\Services\Midtrans;
 
+use App\Models\Site;
 use Midtrans\Config;
 
 class Midtrans {
@@ -22,7 +23,15 @@ class Midtrans {
 
     public function _configureMidtrans()
     {
-        Config::$serverKey = $this->serverKey;
+        $request = Request();
+        $user = $request->session()->get('user');
+        if ($user) {
+            $site = Site::find($user->id_site);
+        } else {
+            $siteID = substr($request->order_id, 0, 6);
+            $site = Site::find($siteID);
+        }
+        Config::$serverKey = $site->midtrans_server_key;
         Config::$isProduction = $this->isProduction;
         Config::$isSanitized = $this->isSanitized;
         Config::$is3ds = $this->is3ds;

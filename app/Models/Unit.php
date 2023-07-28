@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -64,5 +65,20 @@ class Unit extends Model
     public function TenantUnit()
     {
         return $this->hasOne(TenantUnit::class, 'id_unit', 'id_unit');
+    }
+
+    public function electricUUS()
+    {
+        return $this->hasMany(ElectricUUS::class, 'id_unit', 'id_unit')->latest();
+    }
+
+    public function allElectricUUS()
+    {
+        return $this->hasMany(ElectricUUS::class, 'id_unit', 'id_unit');
+    }
+
+    public function allElectricUUSbyYear()
+    {
+        return $this->hasMany(ElectricUUS::class, 'id_unit', 'id_unit')->where('periode_tahun', Carbon::now()->format('Y'));
     }
 }

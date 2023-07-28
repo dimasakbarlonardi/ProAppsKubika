@@ -71,49 +71,4 @@ class PaymentController extends Controller
                 ], 403);
         }
     }
-
-    public function delete(Request $request)
-    {
-        $client = new \GuzzleHttp\Client();
-        $order_id = $request->id;
-        $server_key = "Basic " . base64_encode(config('midtrans.server_key') . ':');
-        $response = $client->request('DELETE', 'https://api.sandbox.midtrans.com/v1/payment-links/' . $order_id, [
-            'headers' => [
-                'Content-Type' => 'application/json',
-                'Accept' => 'application/json',
-                'Authorization' => $server_key,
-            ],
-        ]);
-
-        // $order_id = $request->id;
-        // $apiURL = "https://api.sandbox.midtrans.com/v2/" . $order_id . "/status";
-        // $server_key = "Basic " . base64_encode(config('midtrans.server_key') . ':');
-
-        // $ch = curl_init();
-        // curl_setopt($ch, CURLOPT_URL, $apiURL);
-        // curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-        //     'Accept: application/json',
-        //     'Content-Type: application/json',
-        //     'Authorization: ' . $server_key
-        // ));
-        // curl_exec($ch);
-
-        echo $response->getBody();
-    }
-
-    public function check(Request $request)
-    {
-        $order_id = $request->id;
-        $apiURL = "https://api.sandbox.midtrans.com/v2/" . $order_id . "/status";
-        $server_key = "Basic " . base64_encode(config('midtrans.server_key') . ':');
-
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $apiURL);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            'Accept: application/json',
-            'Content-Type: application/json',
-            'Authorization: ' . $server_key
-        ));
-        curl_exec($ch);
-    }
 }
