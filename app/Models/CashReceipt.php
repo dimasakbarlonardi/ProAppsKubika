@@ -15,6 +15,7 @@ class CashReceipt extends Model
         'order_id',
         'id_site',
         'no_reff',
+        'no_invoice',
         'no_draft_cr',
         'ket_pembayaran',
         'transaction_status',
@@ -55,5 +56,10 @@ class CashReceipt extends Model
     public function Reservation()
     {
         return $this->hasOne(Reservation::class, 'no_request_reservation', 'no_reff');
+    }
+
+    public function ElectricUSS()
+    {
+        return $this->hasOne(ElectricUUS::class, 'no_refrensi', 'no_reff');
     }
 }

@@ -71,4 +71,17 @@ class PaymentController extends Controller
                 ], 403);
         }
     }
+
+    public function invoice($id)
+    {
+        $request = Request();
+        $site = Site::find($request->user()->id_site);
+        $connCR = new CashReceipt();
+        $connCR = $connCR->setConnection($site->db_name);
+        $cr = $connCR->find($id);
+
+        $data['cr'] = $cr;
+
+        return view('Tenant.invoice', $data);
+    }
 }
