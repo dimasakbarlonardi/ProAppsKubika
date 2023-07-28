@@ -41,7 +41,7 @@ class OpenTicketController extends Controller
         if ($user->user_category == 3) {
             $tenant = $connTenant->where('id_user', $login)->first();
 
-            $data['tickets'] = $connRequest->where('id_tenant', $tenant->id_tenant)->latest()->get();
+            $data['tickets'] = $connRequest->where('id_user', $tenant->id_user)->latest()->get();
         } else {
             $data['tickets'] = $connRequest->latest()->get();
         }
@@ -64,7 +64,7 @@ class OpenTicketController extends Controller
             $data['tenants'] = $connTenant->get();
         } else {
             $getTenant = $connTenant->where('email_tenant', $user->login_user)->first();
-            $data['units'] = $connTU->where('id_tenant', $getTenant->id_tenant)->get();
+            $data['units'] = $connTU->where('id_user', $getTenant->id_user)->get();
         }
 
         $data['user'] = $user;
@@ -98,7 +98,7 @@ class OpenTicketController extends Controller
             $createTicket->id_tower = $unit->id_tower;
             $createTicket->id_unit = $request->id_unit;
             $createTicket->id_lantai = $unit->id_lantai;
-            $createTicket->id_tenant = $unit->TenantUnit->id_tenant;
+            $createTicket->id_user = $unit->TenantUnit->id_tenant;
             $createTicket->no_tiket = $no_tiket;
             $createTicket->status_request = 'PENDING';
 

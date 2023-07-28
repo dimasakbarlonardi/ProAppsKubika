@@ -51,7 +51,7 @@
                                     <a class="d-none d-sm-block" href="">
                                         <div class="avatar avatar-xl avatar-3xl">
                                             <div class="avatar-name rounded-circle">
-                                                <img src="{{ $ticket->Tenant->profile_picture ? url($ticket->Tenant->profile_picture) : '/assets/img/icons/spot-illustrations/proapps.png' }}"
+                                                <img src="{{ $ticket->Tenant->profile_picture ? url($ticket->Tenant->profile_picture) : '/assets/img/team/3-thumb.png' }}"
                                                     alt="{{ $ticket->Tenant->profile_picture }}" class="avatar-image" />
                                             </div>
                                         </div>
@@ -94,6 +94,7 @@
                                                         <small
                                                             class="badge rounded bg-info dark__bg-1000">{{ $ticket->status_request }}</small>
                                                     @break
+
                                                     @case('PROSES KE WR' || 'PROSES KE PERMIT')
                                                         <small
                                                             class="badge rounded bg-info dark__bg-1000">{{ $ticket->status_request }}</small>
