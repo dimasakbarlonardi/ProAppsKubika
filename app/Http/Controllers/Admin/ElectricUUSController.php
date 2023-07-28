@@ -6,6 +6,7 @@ use App\Helpers\ConnectionDB;
 use App\Helpers\HelpNotifikasi;
 use App\Http\Controllers\Controller;
 use App\Models\CashReceipt;
+use App\Models\CashReceiptDetail;
 use App\Models\ElectricUUS;
 use App\Models\Site;
 use App\Models\System;
@@ -136,6 +137,7 @@ class ElectricUUSController extends Controller
             $createTransaction->order_id = $order_id;
             $createTransaction->id_site = $user->id_site;
             $createTransaction->no_reff = $no_inv;
+            $createTransaction->no_invoice = $no_inv;
             $createTransaction->no_draft_cr = $no_cr;
             $createTransaction->ket_pembayaran = 'INV/' . $user->id_user . '/' . $elecUSS->Unit->nama_unit;
             $createTransaction->admin_fee = $admin_fee;
@@ -149,6 +151,13 @@ class ElectricUUSController extends Controller
 
             $createTransaction->snap_token = $midtrans->getSnapToken();
             $createTransaction->save();
+
+            $connCRd = ConnectionDB::setConnection(new CashReceiptDetail());
+            $connCRd->create([
+                'no_draft_cr' => $no_cr,
+                'ket_transaksi' => 'Pembayaran listrik bulan ' . $elecUSS->periode_bulan,
+                'tx_amount' => $subtotal + $admin_fee
+            ]);
 
             $system->sequence_no_cash_receiptment = $countCR;
             $system->sequence_no_invoice = $countINV;

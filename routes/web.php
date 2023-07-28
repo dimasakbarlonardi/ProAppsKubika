@@ -136,6 +136,8 @@ Route::get('/check/midtrans', [PaymentController::class, 'check']);
 // Check role id
 Route::get('/check-role-id', [RoleController::class, 'checkRoleID']);
 
+Route::get('/invoice/{id}', [PaymentController::class, 'invoice'])->name('invoice');
+
 Route::prefix('admin')->group(function () {
     Route::middleware(['auth'])->group(function () {
 
