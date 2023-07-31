@@ -30,7 +30,6 @@
                     @foreach ($elecUSS as $key => $item)
                         <tr>
                             <th scope="row">{{ $key + 1 }}</th>
-
                             <td>{{ $item->Unit->nama_unit }}</td>
                             <td>{{ $item->nomor_listrik_awal }}</td>
                             <td>{{ $item->nomor_listrik_akhir }}</td>
@@ -38,9 +37,14 @@
                             <td>{{ $item->periode_bulan }} - {{ $item->periode_tahun }}</td>
                             <td>
                                 @if ($item->no_refrensi)
-                                    <a href="" class="btn btn-info btn-sm">
+                                    <a target="_blank" href="{{ route('invoice', $item->CR->id) }}" class="btn btn-info btn-sm">
                                         Invoice
                                     </a>
+                                    @if ($item->CR->transaction_status == 'PAYED')
+                                        <span class="badge bg-success">Payed</span>
+                                    @else
+                                        <span class="badge bg-danger">Not Payed</span>
+                                    @endif
                                 @else
                                     <form class="d-inline" action="{{ route('approve-usr-electric', $item->id) }}"
                                         method="post">
