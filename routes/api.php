@@ -1,8 +1,11 @@
 <?php
 
 use App\Helpers\ResponseFormatter;
+use App\Http\Controllers\API\OpenTicketController;
 use App\Http\Controllers\API\SiteController;
+use App\Http\Controllers\API\UnitController;
 use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\PaymentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -17,18 +20,26 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::prefix('v1')->group(function() {
-    Route::get('/', function() {
+Route::prefix('v1')->group(function () {
+    Route::get('/', function () {
         return ResponseFormatter::success('PRO APPS API V1');
     });
     Route::get('sites', [SiteController::class, 'sites']);
     Route::post('login', [UserController::class, 'login'])->name('api-login');
 
-    Route::middleware('auth:sanctum')->group(function() {
+    // Open Ticket
+
+
+    Route::middleware('auth:sanctum')->group(function () {
         Route::get('/user', [UserController::class, 'user'])->name('user');
 
         Route::post('/select-role', [UserController::class, 'selectRole']);
 
+        Route::get('/invoice/{id}', [PaymentController::class, 'invoiceAPI']);
+
+        // Open Ticket
+        Route::get('/jenis-request', [OpenTicketController::class, 'jenisRequest']);
+        Route::get('/tenant-unit', [UnitController::class, 'tenantUnit']);
+        Route::post('/open-ticket', [OpenTicketController::class, 'store']);
     });
 });
-
