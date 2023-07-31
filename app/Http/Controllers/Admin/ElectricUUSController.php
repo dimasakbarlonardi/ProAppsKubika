@@ -84,7 +84,9 @@ class ElectricUUSController extends Controller
             $elecUSS->is_approve = '1';
             $elecUSS->save();
 
-            Alert::success('Berhasil', 'Berhasil approve tagihan');
+            HelpNotifikasi::paymentElecUSS($elecUSS, $transaction);
+
+            Alert::success('Berhasil', 'Berhasil approve WO');
 
             return redirect()->back();
             DB::commit();
@@ -96,37 +98,11 @@ class ElectricUUSController extends Controller
         }
     }
 
-    // public function generateInvoice($id)
-    // {
-    //     $connElecUUS = ConnectionDB::setConnection(new ElectricUUS());
-    //     $elecUSS = $connElecUUS->find($id);
-
-    //     try {
-    //         DB::beginTransaction();
-    //         $transaction = $this->createTransaction($elecUSS);
-
-    //         $elecUSS->no_refrensi = $transaction->no_reff;
-    //         $elecUSS->save();
-
-    //         HelpNotifikasi::paymentElecUSS($elecUSS, $transaction);
-
-    //         Alert::success('Berhasil', 'Berhasil approve WO');
-
-    //         return redirect()->back();
-    //         DB::commit();
-    //     } catch (Throwable $e) {
-    //         DB::rollBack();
-    //         dd($e);
-    //         Alert::error('Gagal', $e);
-    //         return redirect()->back();
-    //     }
-    // }
-
-    // public function createTransaction($elecUSS)
-    // {
-    //     $connSystem = ConnectionDB::setConnection(new System());
-    //     $connTransaction = ConnectionDB::setConnection(new CashReceipt());
-    //     $system = $connSystem->find(1);
+    public function createTransaction($elecUSS)
+    {
+        $connSystem = ConnectionDB::setConnection(new System());
+        $connTransaction = ConnectionDB::setConnection(new CashReceipt());
+        $system = $connSystem->find(1);
 
     //     $user = $elecUSS->Unit->TenantUnit->Tenant->User;
 
@@ -148,30 +124,30 @@ class ElectricUUSController extends Controller
     //     try {
     //         DB::beginTransaction();
 
-    //         $subtotal = $elecUSS->nomor_listrik_akhir - $elecUSS->nomor_listrik_awal;
-    //         $items = [];
-    //         $item = new stdClass();
-    //         $item->id = 1;
-    //         $item->quantity = 1;
-    //         $item->detil_pekerjaan = 'Pembayaran tagihan listrik bulan ' . $elecUSS->periode_bulan;
-    //         $item->detil_biaya_alat = $subtotal;
-    //         array_push($items, $item);
+            $subtotal = $elecUSS->nomor_listrik_akhir - $elecUSS->nomor_listrik_awal;
+            $items = [];
+            $item = new stdClass();
+            $item->id = 1;
+            $item->quantity = 1;
+            $item->detil_pekerjaan = 'Pembayaran tagihan listrik bulan ' . $elecUSS->periode_bulan;
+            $item->detil_biaya_alat = $subtotal;
+            array_push($items, $item);
 
-    //         $createTransaction = $connTransaction;
-    //         $createTransaction->order_id = $order_id;
-    //         $createTransaction->id_site = $user->id_site;
-    //         $createTransaction->no_reff = $no_inv;
-    //         $createTransaction->no_invoice = $no_inv;
-    //         $createTransaction->no_draft_cr = $no_cr;
-    //         $createTransaction->ket_pembayaran = 'INV/' . $user->id_user . '/' . $elecUSS->Unit->nama_unit;
-    //         $createTransaction->admin_fee = $admin_fee;
-    //         $createTransaction->sub_total = $subtotal;
-    //         $createTransaction->gross_amount = $subtotal + $admin_fee;
-    //         $createTransaction->transaction_status = 'PENDING';
-    //         $createTransaction->id_user = $user->id_user;
-    //         $createTransaction->transaction_type = 'ElectricUSS';
+            $createTransaction = $connTransaction;
+            $createTransaction->order_id = $order_id;
+            $createTransaction->id_site = $user->id_site;
+            $createTransaction->no_reff = $no_inv;
+            $createTransaction->no_invoice = $no_inv;
+            $createTransaction->no_draft_cr = $no_cr;
+            $createTransaction->ket_pembayaran = 'INV/' . $user->id_user . '/' . $elecUSS->Unit->nama_unit;
+            $createTransaction->admin_fee = $admin_fee;
+            $createTransaction->sub_total = $subtotal;
+            $createTransaction->gross_amount = $subtotal + $admin_fee;
+            $createTransaction->transaction_status = 'PENDING';
+            $createTransaction->id_user = $user->id_user;
+            $createTransaction->transaction_type = 'ElectricUSS';
 
-    //         $midtrans = new CreateSnapTokenService($createTransaction, $items);
+            $midtrans = new CreateSnapTokenService($createTransaction, $items);
 
     //         $createTransaction->snap_token = $midtrans->getSnapToken();
     //         $createTransaction->save();
@@ -188,14 +164,14 @@ class ElectricUUSController extends Controller
     //         $system->save();
 
 
-    //         DB::commit();
-    //     } catch (Throwable $e) {
-    //         dd($e);
-    //         DB::rollBack();
+            DB::commit();
+        } catch (Throwable $e) {
+            dd($e);
+            DB::rollBack();
 
-    //         return redirect()->back();
-    //     }
+            return redirect()->back();
+        }
 
-    //     return $createTransaction;
-    // }
+        return $createTransaction;
+    }
 }

@@ -77,6 +77,8 @@
                                     @endif
                                 @endif
 
+                                {{ $item->Unit->WaterUUS[0]->periode_bulan == $item->periode_bulan &&
+                                    $item->Unit->WaterUUS[0]->periode_tahun == $item->periode_tahun }}
                             </td>
                         </tr>
                     @endforeach
