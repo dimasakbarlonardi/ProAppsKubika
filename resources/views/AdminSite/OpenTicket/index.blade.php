@@ -51,11 +51,12 @@
                                     <a class="d-none d-sm-block" href="">
                                         <div class="avatar avatar-xl avatar-3xl">
                                             <div class="avatar-name rounded-circle">
-                                                <img src="{{ $ticket->Tenant->profile_picture ? url($ticket->Tenant->profile_picture) : '/assets/img/icons/spot-illustrations/proapps.png' }}"
-                                                    alt="{{ $ticket->Tenant->profile_picture }}" class="avatar-image" />
+                                                <img src="{{ $ticket->User->profile_picture ? url($ticket->User->profile_picture) : '/assets/img/team/3-thumb.png' }}"
+                                                    alt="{{ $ticket->User->profile_picture }}" class="avatar-image" />
                                             </div>
                                         </div>
                                     </a>
+
                                     <div class="ms-1 ms-sm-3">
                                         <p class="fw-semi-bold mb-3 mb-sm-2">
                                             <a href="{{ route('open-tickets.show', $ticket->id) }}" class="mr-5">Ticket
@@ -74,7 +75,7 @@
                                                 <h6 class="client mb-0">
                                                     <a class="text-800 d-flex align-items-center gap-1" href="">
                                                         <span class="fas fa-user" data-fa-transform="shrink-3 up-1"></span>
-                                                        <span>{{ $ticket->Tenant->nama_tenant }}</span>
+                                                        <span>{{ $ticket->User->nama_user }}</span>
                                                     </a>
                                                 </h6>
                                             </div>
@@ -94,6 +95,7 @@
                                                         <small
                                                             class="badge rounded bg-info dark__bg-1000">{{ $ticket->status_request }}</small>
                                                     @break
+
                                                     @case('PROSES KE WR' || 'PROSES KE PERMIT')
                                                         <small
                                                             class="badge rounded bg-info dark__bg-1000">{{ $ticket->status_request }}</small>

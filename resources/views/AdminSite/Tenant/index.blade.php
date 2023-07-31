@@ -60,7 +60,7 @@
                                     <div class="d-flex align-items-start align-items-sm-center">
                                         <a class="d-none d-sm-block" href="../../app/support-desk/contact-details.html">
                                             <div class="avatar avatar-xl avatar-3xl">
-                                                <img src="{{ $tenant->profile_picture ? '/' . $tenant->profile_picture : '/assets/img/team/3-thumb.png' }}" alt="akmal"
+                                                <img src="{{ $tenant->profile_picture ? '/' . $tenant->profile_picture : '/assets/img/team/3-thumb.png' }}" 
                                                     class="avatar-image" />
                                             </div>
                                         </a>

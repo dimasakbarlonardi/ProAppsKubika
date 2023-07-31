@@ -16,7 +16,7 @@ class OpenTicket extends Model
         'id_tower',
         'id_unit',
         'id_lantai',
-        'id_tenant',
+        'id_user',
         'no_tiket',
         'status_request',
         'id_jenis_request',
@@ -69,4 +69,5 @@ class OpenTicket extends Model
     {
         return $this->hasOne(RequestGIGO::class, 'no_tiket', 'no_tiket');
     }
+
 }

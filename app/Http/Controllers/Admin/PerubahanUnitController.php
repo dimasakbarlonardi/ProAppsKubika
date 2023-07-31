@@ -315,10 +315,11 @@ class PerubahanUnitController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request,$id)
     {
         $conn = ConnectionDB::setConnection(new TenantUnit());
         $connTenantUnit = $this->setConnection(new TenantUnit());
+        $connTicket = ConnectionDB::setConnection(new OpenTicket());
 
         $data['tenantunits'] = $conn->where('id_tenant_unit', $id)->first();
         $data['editTenantUnit'] = $connTenantUnit->where('id_tenant_unit', $id)->first();
@@ -412,7 +413,7 @@ class PerubahanUnitController extends Controller
         $data['tenantunit'] = $connTenantUnit->where('id_tenant_unit', $id)->first();
         // $data['tenantunit'] = $connTenantUnit->find($id);
         $data['id_tenant'] = $id;
-        $data['units'] = $connUnit->get();
+        $data['units'] = $connUnit->get();   
         $data['owners'] = $connOwner->get();
         $data['periodeSewa'] = $periodeSewa->get();
         $data['getCreateUnits'] = $this->getUnitIDFromTU();
@@ -465,7 +466,7 @@ class PerubahanUnitController extends Controller
     {
         $connTicket = ConnectionDB::setConnection(new OpenTicket());
 
-        $tickets = $connTicket->where('id_tenant', $request->id_tenant)
+        $tickets = $connTicket->where('id_user', $request->id_user)
         ->where('id_unit', $request->id_unit)
         ->where('status_request', '!=', 'COMPLETE')
         ->get();

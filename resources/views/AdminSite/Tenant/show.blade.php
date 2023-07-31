@@ -108,12 +108,12 @@
             </div>
                 
             <a href="{{ route('tenants.edit', $tenant->id_tenant) }}" class="btn btn-sm btn-warning">Edit</a>
-            <form class="d-inline" action="{{ route('tenants.destroy', $tenant->id_tenant) }}" method="post">
+            {{-- <form class="d-inline" action="{{ route('tenants.destroy', $tenant->id_tenant) }}" method="post">
                 @method('DELETE')
                 @csrf
                 <button type="submit" class="btn btn-danger btn-sm"
-                    onclick="return confirm('are you sure?')">Hapus</button>
-            </form>
+                onclick="return confirm('are you sure?')">Hapus</button>
+            </form> --}}
 
         </div>
     </div>

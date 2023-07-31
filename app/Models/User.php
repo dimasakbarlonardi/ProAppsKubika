@@ -39,4 +39,9 @@ class User extends Model
     {
         return $this->hasOne(Tenant::class, 'email_tenant', 'login_user');
     }
+
+    public function TenantUnit()
+    {
+        return $this->hasOne(TenantUnit::class, 'id_tenant', 'id_user');
+    }
 }
