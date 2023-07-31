@@ -84,4 +84,19 @@ class PaymentController extends Controller
 
         return view('Tenant.invoice', $data);
     }
+
+    public function invoiceAPI($id)
+    {
+        $request = Request();
+        $site = Site::find($request->user()->id_site);
+        $connCR = new CashReceipt();
+        $connCR = $connCR->setConnection($site->db_name);
+        $cr = $connCR->find($id);
+
+        $data['cr'] = $cr;
+
+        return response()->json([
+            'invoice' => view('Tenant.invoice', $data)->render()
+        ]);
+    }
 }
