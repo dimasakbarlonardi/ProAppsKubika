@@ -79,6 +79,29 @@ class ElectricUUSController extends Controller
 
         try {
             DB::beginTransaction();
+
+            $elecUSS->is_approve = '1';
+            $elecUSS->save();
+
+            Alert::success('Berhasil', 'Berhasil approve WO');
+
+            return redirect()->back();
+            DB::commit();
+        } catch (Throwable $e) {
+            DB::rollBack();
+            dd($e);
+            Alert::error('Gagal', $e);
+            return redirect()->back();
+        }
+    }
+
+    public function generateInvoice($id)
+    {
+        $connElecUUS = ConnectionDB::setConnection(new ElectricUUS());
+        $elecUSS = $connElecUUS->find($id);
+
+        try {
+            DB::beginTransaction();
             $transaction = $this->createTransaction($elecUSS);
 
             $elecUSS->no_refrensi = $transaction->no_reff;

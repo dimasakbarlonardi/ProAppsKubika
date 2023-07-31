@@ -37,7 +37,8 @@
                             <td>{{ $item->periode_bulan }} - {{ $item->periode_tahun }}</td>
                             <td>
                                 @if ($item->no_refrensi)
-                                    <a target="_blank" href="{{ route('invoice', $item->CR->id) }}" class="btn btn-info btn-sm">
+                                    <a target="_blank" href="{{ route('invoice', $item->CR->id) }}"
+                                        class="btn btn-info btn-sm">
                                         Invoice
                                     </a>
                                     @if ($item->CR->transaction_status == 'PAYED')
@@ -45,7 +46,7 @@
                                     @else
                                         <span class="badge bg-danger">Not Payed</span>
                                     @endif
-                                @else
+                                @elseif (!$item->is_approve)
                                     <form class="d-inline" action="{{ route('approve-usr-electric', $item->id) }}"
                                         method="post">
                                         @csrf
@@ -55,8 +56,15 @@
                                             Approve
                                         </button>
                                     </form>
+                                @elseif($item->is_approve)
+                                    <span class="badge bg-success">Approved</span> <br>
+                                    <small>
+                                        *Menunggu tagihan air untuk di approve
+                                    </small>
                                 @endif
 
+                                {{ $item->Unit->WaterUUS[0]->periode_bulan == $item->periode_bulan &&
+                                    $item->Unit->WaterUUS[0]->periode_tahun == $item->periode_tahun }}
                             </td>
                         </tr>
                     @endforeach
