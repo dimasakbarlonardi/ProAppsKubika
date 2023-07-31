@@ -113,6 +113,7 @@ use App\Http\Controllers\Admin\ChecklistTanggaDaruratHController;
 use App\Http\Controllers\Admin\ChecklistOfficeManagementHController;
 use App\Http\Controllers\Admin\ElectricUUSController;
 use App\Http\Controllers\Admin\OffBoardingKepemilikanUnitController;
+use App\Http\Controllers\Admin\WaterUUSController;
 
 /*
 |--------------------------------------------------------------------------
@@ -654,12 +655,18 @@ Route::prefix('admin')->group(function () {
         // ---------------End Checklist HK-----------------
 
 
-        // ---------------Start USR Electric ----------------
+        // ---------------Start UUS Electric ----------------
         Route::get('uus-electric', [ElectricUUSController::class, 'index'])->name('usr-electric');
         Route::get('create/usr-electric', [ElectricUUSController::class, 'create'])->name('create-usr-electric');
         Route::post('store/usr-electric/{id}', [ElectricUUSController::class, 'store'])->name('store-usr-electric');
         Route::post('approve/usr-electric/{id}', [ElectricUUSController::class, 'approve'])->name('approve-usr-electric');
-        // ---------------End USR Electric-----------------
+        // ---------------End UUS Electric-----------------
+
+        // ---------------Start UUS Water -------------------
+        Route::get('uus-water', [WaterUUSController::class, 'index'])->name('uus-water');
+        Route::get('create/usr-water', [WaterUUSController::class, 'create'])->name('create-usr-water');
+        Route::post('store/usr-water/{id}', [WaterUUSController::class, 'store'])->name('store-usr-water');
+        // ---------------End UUS Water -------------------
     });
 });
 

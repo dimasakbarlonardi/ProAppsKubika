@@ -1,58 +1,67 @@
 @extends('layouts.master')
 
 @section('content')
-<div class="card">
-    <div class="card-header py-2">
-        <div class="row flex-between-center">
-            <div class="my-3 col-auto">
-                <h6 class="mb-0 text-white">List Utility</h6>
-            </div>
-            <div class="col-auto d-flex ">
-                <a class="btn btn-falcon-default btn-sm dropdown-toggle ms-2 dropdown-caret-none" href="{{ route('utilitys.create') }}"><span class="fas fa-plus fs--2 me-1"></span>Tambah Utility</a>
+    <div class="card">
+        <div class="card-header py-2">
+            <div class="row flex-between-center">
+                <div class="my-3 col-auto">
+                    <h6 class="mb-0 text-white">List Utility</h6>
+                </div>
+                <div class="col-auto d-flex ">
+                    <a class="btn btn-falcon-default btn-sm dropdown-toggle ms-2 dropdown-caret-none"
+                        href="{{ route('create-usr-water') }}"><span class="fas fa-plus fs--2 me-1"></span>Tambah Data</a>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="p-5">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th class="sort" data-sort="">No</th>
-                    <th class="sort" data-sort="nama_utility">Nama Utility</th>
-                    <th class="sort" data-sort="biaya_admin">Biaya Admin</th>
-                    <th class="sort" data-sort="biaya_abodemen">Biaya Abodemen</th>
-                    <th class="sort" data-sort="biaya_tetap">Biaya Tetap</th>
-                    <th class="sort" data-sort="biaya_m3">Biaya M3</th>
-                    <th class="sort" data-sort="biaya_pju">Biaya PJU</th>
-                    <th class="sort" data-sort="biaya_ppj">Biaya PPJ</th>
-                    <th class="sort">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                {{-- @foreach ($utilitys as $key => $utility)
+        <div class="p-5">
+            <table class="table">
+                <thead>
                     <tr>
-                        <th scope="row">{{ $key + 1 }}</th>
-
-                        <td>{{ $utility->nama_utility }}</td>
-                        <td>{{ rupiah($utility->biaya_admin) }}</td>
-                        <td>{{ rupiah($utility->biaya_abodemen)}}</td>
-                        <td>{{ rupiah($utility->biaya_tetap)}}</td>
-                        <td>{{ rupiah($utility->biaya_m3)}}</td>
-                        <td>{{ rupiah($utility->biaya_pju)}}</td>
-                        <td>{{ rupiah($utility->biaya_ppj)}}</td>
-                        <td>
-                            <a href="{{ route('utilitys.edit', $utility->id_utility) }}" class="btn btn-sm btn-warning"><span class="fas fa-pencil-alt fs--2 me-1"></span>Edit</a>
-                            <form class="d-inline" action="{{ route('utilitys.destroy', $utility->id_utility) }}" method="post">
-                                @method('DELETE')
-                                @csrf
-                                <button type="submit" class="btn btn-danger btn-sm"
-                                    onclick="return confirm('are you sure?')"><span class="fas fa-trash-alt fs--2 me-1"></span>Hapus</button>
-                            </form>
-                        </td>
+                        <th>No</th>
+                        <th>Unit</th>
+                        <th>Previous</th>
+                        <th>Current</th>
+                        <th>Usage</th>
+                        <th>Period</th>
+                        <th>Action</th>
                     </tr>
-                @endforeach --}}
-            </tbody>
-        </table>
-    </div>
-</div>
-@endsection
+                </thead>
+                <tbody>
+                    @foreach ($waterUSS as $key => $item)
+                        <tr>
+                            <th scope="row">{{ $key + 1 }}</th>
+                            <td>{{ $item->Unit->nama_unit }}</td>
+                            <td>{{ $item->nomor_air_awal }}</td>
+                            <td>{{ $item->nomor_air_akhir }}</td>
+                            <td>{{ $item->nomor_air_akhir - $item->nomor_air_awal }}</td>
+                            <td>{{ $item->periode_bulan }} - {{ $item->periode_tahun }}</td>
+                            <td>
+                                @if ($item->no_refrensi)
+                                    <a target="_blank" href="{{ route('invoice', $item->CR->id) }}" class="btn btn-info btn-sm">
+                                        Invoice
+                                    </a>
+                                    @if ($item->CR->transaction_status == 'PAYED')
+                                        <span class="badge bg-success">Payed</span>
+                                    @else
+                                        <span class="badge bg-danger">Not Payed</span>
+                                    @endif
+                                @else
+                                    <form class="d-inline" action="{{ route('approve-usr-electric', $item->id) }}"
+                                        method="post">
+                                        @csrf
+                                        <button type="submit" class="btn btn-warning btn-sm"
+                                            onclick="return confirm('are you sure?')">
+                                            <span class="fas fa-check fs--2 me-1"></span>
+                                            Approve
+                                        </button>
+                                    </form>
+                                @endif
 
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+    </div>
+@endsection
