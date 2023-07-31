@@ -197,16 +197,16 @@
 @section('script')
     <script>
         $('#btnPerpanjangSewa').on('click', function() {
-            var id_tenant = '{{ $tenantunits->id_tenant }}';
-            var id_unit = '{{ $tenantunits->id_unit }}';
-            var id_tenant_unit = '{{ $tenantunits->id_tenant_unit }}';
+            var id_tenant = '{{ $tenantunits->Tenant->User->id_user}}';
+            var id_unit = '{{ $tenantunits->id_unit}}';
+            var id_tenant_unit = '{{ $tenantunits->id_tenant_unit}}';
 
             $('#modalListErrors').html('');
             $.ajax({
                 url: `/admin/validation/perubahan`,
                 type: 'GET',
                 data: {
-                    'id_tenant': id_tenant,
+                    'id_user': id_tenant,
                     'id_unit':id_unit
                 },
                 success: function(resp) {
@@ -224,7 +224,7 @@
                                             <p class="text-break fs--1 mt-1">${item.type} - ${item.error_header} masih berstatus ${item.error_status}</p>
                                         </div>
                                     </div>
-                                </div>
+                                </div>  
                             `);
                         })
                         $('#modalValidation').modal('show')

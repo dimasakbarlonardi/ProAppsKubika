@@ -2,9 +2,9 @@
     <table class="table" id="table-perpanjang">
         <thead>
             <tr>
-                <th scope="col">Unit</th>
-                <th scope="col">Pemilik</th>
                 <th scope="col">Tenant</th>
+                <th scope="col">Pemilik</th>
+                <th scope="col">Unit</th>
                 <th scope="col">Periode Sewa</th>
                 <th scope="col">Sewa Ke</th>
                 <th scope="col">Jatuh Tempo IPL</th>
@@ -15,9 +15,9 @@
         <tbody>
             @foreach ($tenant_units as $key => $tu)
                 <tr>
-                    <td>{{ $tu->unit->nama_unit }}</td>
-                    <td>{{ $tu->Owner->nama_pemilik }}</td>
                     <td>{{ $tu->tenant->nama_tenant }}</td>
+                    <td>{{ $tu->Owner->nama_pemilik }}</td>
+                    <td>{{ $tu->unit->nama_unit }}</td>
                     <td>
                         {{ \Carbon\Carbon::parse($tu->tgl_masuk)->format(' d-M-Y') }} -
                         {{ \Carbon\Carbon::parse($tu->tgl_keluar)->format(' d-M-Y') }}

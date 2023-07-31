@@ -200,7 +200,7 @@
 @section('script')
     <script>
         $('#btnPerpanjangSewa').on('click', function() {
-            var id_tenant = '{{ $tenantunits->id_tenant }}';
+            var id_tenant = '{{ $tenantunits->Tenant->User->id_user }}';
             var id_unit = '{{ $tenantunits->id_unit }}';
             var id_tenant_unit = '{{ $tenantunits->id_tenant_unit }}';
 
@@ -209,7 +209,7 @@
                 url: `/admin/validation/perubahan`,
                 type: 'GET',
                 data: {
-                    'id_tenant': id_tenant,
+                    'id_user': id_tenant,
                     'id_unit':id_unit
                 },
                 success: function(resp) {

@@ -69,4 +69,5 @@ class OpenTicket extends Model
     {
         return $this->hasOne(RequestGIGO::class, 'no_tiket', 'no_tiket');
     }
+
 }

@@ -123,7 +123,6 @@ class TenantUnitController extends Controller
     {
         $connTenantUnit = $this->setConnection(new TenantUnit());
 
-
         $id_tenant_unit = $this->generateTenantUnitID($connTenantUnit);
 
         $connTenantUnit->create([
@@ -143,8 +142,6 @@ class TenantUnitController extends Controller
 
         return redirect()->back();
     }
-
-
 
     public function storeTenantMember(Request $request)
     {
