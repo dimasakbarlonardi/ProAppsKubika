@@ -81,4 +81,19 @@ class Unit extends Model
     {
         return $this->hasMany(ElectricUUS::class, 'id_unit', 'id_unit')->where('periode_tahun', Carbon::now()->format('Y'));
     }
+
+    public function waterUUS()
+    {
+        return $this->hasMany(WaterUUS::class, 'id_unit', 'id_unit')->latest();
+    }
+
+    public function allWaterUUS()
+    {
+        return $this->hasMany(WaterUUS::class, 'id_unit', 'id_unit');
+    }
+
+    public function allWaterUUSbyYear()
+    {
+        return $this->hasMany(WaterUUS::class, 'id_unit', 'id_unit')->where('periode_tahun', Carbon::now()->format('Y'));
+    }
 }
