@@ -25,7 +25,7 @@
                 </div>
                 <div class="col-6">
                     <label class="form-label">Durasi Reminder Letter</label>
-                    <div class="input-group mb-3"><input class="form-control" type="text" name="reminder_letter" value="{{$reminder->durasi_reminder_letter}}" aria-describedby="basic-addon2" required><span class="input-group-text text-primary" id="basic-addon2">/Hari</span></div>
+                    <div class="input-group mb-3"><input class="form-control" type="text" name="durasi_reminder_letter" value="{{$reminder->durasi_reminder_letter}}" aria-describedby="basic-addon2" required><span class="input-group-text text-primary" id="basic-addon2">/Hari</span></div>
                 </div>
                 </div>
                 <div class="mt-5">
