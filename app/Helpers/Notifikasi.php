@@ -36,7 +36,7 @@ class HelpNotifikasi
         }
     }
 
-    public function paymentElecUSS($dataElec, $transaction)
+    public function paymentMonthlyTenant($dataElec, $transaction)
     {
         $connNotif = ConnectionDB::setConnection(new Notifikasi());
         $request = Request();
@@ -53,7 +53,7 @@ class HelpNotifikasi
             $createNotif->is_read = 0;
             $createNotif->id_data = $transaction->id;
             $createNotif->notif_title = $dataElec->no_refrensi;
-            $createNotif->notif_message = 'Harap melakukan pembayaran tagihan listrik anda';
+            $createNotif->notif_message = 'Harap melakukan pembayaran tagihan bulanan anda';
             $createNotif->models = 'CashReceipt';
             $createNotif->save();
         }

@@ -10,6 +10,8 @@ use App\Models\User;
 use App\Models\WaterUUS;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class WaterUUSController extends Controller
 {
@@ -57,9 +59,33 @@ class WaterUUSController extends Controller
             'id_unit' => $id_unit,
             'nomor_air_awal' => $request->previous,
             'nomor_air_akhir' => $request->current,
+            'usage' => $request->current - $request->previous,
             'id_user' => $user->id_user
         ]);
 
         return response()->json(['status' => 'OK']);
+    }
+
+    public function approve($id)
+    {
+        $connWaterUUS = ConnectionDB::setConnection(new WaterUUS());
+        $waterUSS = $connWaterUUS->find($id);
+
+        try {
+            DB::beginTransaction();
+
+            $waterUSS->is_approve = '1';
+            $waterUSS->save();
+
+            Alert::success('Berhasil', 'Berhasil approve tagihan');
+
+            return redirect()->back();
+            DB::commit();
+        } catch (Throwable $e) {
+            DB::rollBack();
+            dd($e);
+            Alert::error('Gagal', $e);
+            return redirect()->back();
+        }
     }
 }

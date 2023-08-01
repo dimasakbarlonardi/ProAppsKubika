@@ -17,6 +17,7 @@ class WaterUUS extends Model
         'id_unit',
         'nomor_air_awal',
         'nomor_air_akhir',
+        'usage',
         'id_user',
         'no_refrensi',
         'catatan',
@@ -26,6 +27,18 @@ class WaterUUS extends Model
     public function Unit()
     {
         return $this->hasOne(Unit::class, 'id_unit', 'id_unit');
+    }
+
+    public function dataByMonthYear($month, $year)
+    {
+        return $this->hasOne(ElectricUUS::class, 'id_unit', 'id_unit')
+        ->where('periode_bulan', $month)
+        ->where('periode_tahun', $year)->first();
+    }
+
+    public function CR()
+    {
+        return $this->hasOne(CashReceipt::class, 'no_reff', 'no_refrensi');
     }
 
     protected $dates = ['deleted_at'];

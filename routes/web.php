@@ -42,6 +42,7 @@ use App\Http\Controllers\Admin\JabatanController;
 use App\Http\Controllers\Admin\SubMenuController;
 use App\Http\Controllers\Admin\UtilityController;
 use App\Http\Controllers\Admin\BayarnonController;
+use App\Http\Controllers\Admin\BillingController;
 use App\Http\Controllers\Admin\KaryawanController;
 use App\Http\Controllers\Admin\MainFormController;
 use App\Http\Controllers\Admin\PengurusController;
@@ -670,7 +671,11 @@ Route::prefix('admin')->group(function () {
         Route::get('uus-water', [WaterUUSController::class, 'index'])->name('uus-water');
         Route::get('create/usr-water', [WaterUUSController::class, 'create'])->name('create-usr-water');
         Route::post('store/usr-water/{id}', [WaterUUSController::class, 'store'])->name('store-usr-water');
+        Route::post('approve/usr-water/{id}', [WaterUUSController::class, 'approve'])->name('approve-usr-water');
         // ---------------End UUS Water -------------------
+
+        // Generate monthly invoice IPL & Service charge
+        Route::post('generate-invoice', [BillingController::class, 'generateMonthlyInvoice'])->name('generateMonthlyInvoice');
     });
 });
 
