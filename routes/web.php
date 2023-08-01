@@ -113,6 +113,7 @@ use App\Http\Controllers\Admin\ChecklistTanggaDaruratHController;
 use App\Http\Controllers\Admin\ChecklistOfficeManagementHController;
 use App\Http\Controllers\Admin\ElectricUUSController;
 use App\Http\Controllers\Admin\OffBoardingKepemilikanUnitController;
+use App\Http\Controllers\Admin\PPNController;
 
 /*
 |--------------------------------------------------------------------------
@@ -572,6 +573,9 @@ Route::prefix('admin')->group(function () {
 
         //CRUD Reminder Letter
         Route::resource('reminders', ReminderLetterController::class);
+
+        //CRUD PPN
+        Route::resource('ppns', PPNController::class);
 
         // ----------End Fin Parameter---------
 
