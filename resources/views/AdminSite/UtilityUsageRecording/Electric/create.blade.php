@@ -67,22 +67,22 @@
                         <div class="card-body p-4 p-sm-5">
                             @php
                                 $months = [
-                                    ['name' => 'January', 'isDisabled' => false],
-                                    ['name' => 'February', 'isDisabled' => false],
-                                    ['name' => 'March', 'isDisabled' => false],
-                                    ['name' => 'April', 'isDisabled' => false],
-                                    ['name' => 'May', 'isDisabled' => false],
-                                    ['name' => 'June', 'isDisabled' => false],
-                                    ['name' => 'July', 'isDisabled' => false],
-                                    ['name' => 'August', 'isDisabled' => false],
-                                    ['name' => 'September', 'isDisabled' => false],
-                                    ['name' => 'Oktober', 'isDisabled' => false],
-                                    ['name' => 'November', 'isDisabled' => false],
-                                    ['name' => 'December', 'isDisabled' => false],
+                                    ['value' => '01', 'name' => 'January', 'isDisabled' => false],
+                                    ['value' => '02', 'name' => 'February', 'isDisabled' => false],
+                                    ['value' => '03', 'name' => 'March', 'isDisabled' => false],
+                                    ['value' => '04', 'name' => 'April', 'isDisabled' => false],
+                                    ['value' => '05', 'name' => 'May', 'isDisabled' => false],
+                                    ['value' => '06', 'name' => 'June', 'isDisabled' => false],
+                                    ['value' => '07', 'name' => 'July', 'isDisabled' => false],
+                                    ['value' => '08', 'name' => 'August', 'isDisabled' => false],
+                                    ['value' => '09', 'name' => 'September', 'isDisabled' => false],
+                                    ['value' => '10', 'name' => 'Oktober', 'isDisabled' => false],
+                                    ['value' => '11', 'name' => 'November', 'isDisabled' => false],
+                                    ['value' => '12', 'name' => 'December', 'isDisabled' => false],
                                 ];
                                 foreach ($unit->allElectricUUSbyYear as $uus) {
                                     foreach ($months as $key => $month) {
-                                        if($month['name'] == $uus->periode_bulan) {
+                                        if($month['value'] == $uus->periode_bulan) {
                                             $months[$key]['isDisabled'] = true;
                                         }
                                     }
@@ -97,12 +97,11 @@
                                             <input class="form-control" value="{{ $unit->nama_unit }}" type="text"
                                                 readonly />
                                         </div>
-                                        {{-- {{ dd($months) }} --}}
                                         <div class="col-6">
                                             <label class="form-label">Period</label>
                                             <select class="form-control" name="periode_bulan">
                                                 @foreach ($months as $month)
-                                                    <option id="pb-January" value="{{ $month['name'] }}"
+                                                    <option id="pb-January" value="{{ $month['value'] }}"
                                                         {{ $month['isDisabled'] ? 'disabled' : '' }}>
                                                         {{ $month['name'] }}
                                                     </option>

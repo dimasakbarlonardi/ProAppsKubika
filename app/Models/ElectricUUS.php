@@ -18,6 +18,7 @@ class ElectricUUS extends Model
         'id_unit',
         'nomor_listrik_awal',
         'nomor_listrik_akhir',
+        'usage',
         'id_user',
         'no_refrensi',
         'catatan',
@@ -32,6 +33,13 @@ class ElectricUUS extends Model
     public function CR()
     {
         return $this->hasOne(CashReceipt::class, 'no_reff', 'no_refrensi');
+    }
+
+    public function dataByMonthYear($month, $year)
+    {
+        return $this->hasOne(WaterUUS::class, 'id_unit', 'id_unit')
+        ->where('periode_bulan', $month)
+        ->where('periode_tahun', $year)->first();
     }
 
     protected $dates = ['deleted_at'];
