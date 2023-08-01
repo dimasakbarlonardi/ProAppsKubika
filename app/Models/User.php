@@ -14,6 +14,8 @@ class User extends Model
     protected $primaryKey = 'id_user';
     public $incrementing = false;
 
+    protected $hidden = ['password_user'];
+
     protected $fillable = [
         'id_user',
         'id_site',
