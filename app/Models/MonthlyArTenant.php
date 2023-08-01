@@ -14,7 +14,6 @@ class MonthlyArTenant extends Model
     protected $primaryKey = 'id_monthly_ar_tenant';
 
     protected $fillable = [
-        'id_monthly_ar_tenant',
         'id_site',
         'id_tower',
         'id_unit',
@@ -29,6 +28,11 @@ class MonthlyArTenant extends Model
         'tgl_jt_invoice',
         'tgl_bayar_invoice'
     ];
+
+    public function Unit()
+    {
+        return $this->hasOne(Unit::class, 'id_unit', 'id_unit');
+    }
 
     protected $dates = ['deleted_at'];
 }
