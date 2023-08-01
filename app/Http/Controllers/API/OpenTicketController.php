@@ -9,12 +9,25 @@ use App\Models\JenisRequest;
 use App\Models\OpenTicket;
 use App\Models\System;
 use App\Models\Unit;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class OpenTicketController extends Controller
 {
+    public function listTickets(Request $request)
+    {
+        $connOpenTicket = ConnectionDB::setConnection(new OpenTicket());
+        $connUser = ConnectionDB::setConnection(new User());
+
+        $user = $connUser->where('login_user', $request->user()->email)->first();
+        $tickets = $connOpenTicket->where('id_user', $user->id_user)->get();
+
+        return ResponseFormatter::success([
+            $tickets
+        ], 'Berhasil mengambil semua tickets');
+    }
     public function jenisRequest(Request $request)
     {
         $connJenisReq = ConnectionDB::setConnection(new JenisRequest());
