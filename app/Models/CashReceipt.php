@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -58,8 +59,8 @@ class CashReceipt extends Model
         return $this->hasOne(Reservation::class, 'no_request_reservation', 'no_reff');
     }
 
-    public function ElectricUSS()
+    public function MonthlyARTenant()
     {
-        return $this->hasOne(ElectricUUS::class, 'no_refrensi', 'no_reff');
+        return $this->hasOne(MonthlyArTenant::class, 'no_monthly_invoice', 'no_reff');
     }
 }
