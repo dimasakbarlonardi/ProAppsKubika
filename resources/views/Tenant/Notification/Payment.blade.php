@@ -1,155 +1,23 @@
 @extends('layouts.master')
 
 @section('content')
-{{ dd($transaction) }}
-    <div class="card mb-3">
-        <div class="card-body">
-            <div class="row justify-content-between align-items-center">
-                <div class="col-md">
-                    <h5 class="mb-2 mb-md-0">Order #AD20294</h5>
-                </div>
-                <div class="col-auto"><button class="btn btn-falcon-default btn-sm me-1 mb-2 mb-sm-0" type="button"><span
-                            class="fas fa-arrow-down me-1"> </span>Download (.pdf)</button><button
-                        class="btn btn-falcon-default btn-sm me-1 mb-2 mb-sm-0" type="button"><span
-                            class="fas fa-print me-1"> </span>Print</button><button
-                        class="btn btn-falcon-success btn-sm mb-2 mb-sm-0" type="button"><span
-                            class="fas fa-dollar-sign me-1"></span>Receive Payment</button></div>
-            </div>
-        </div>
-    </div>
-    <div class="card mb-3">
-        <div class="card-body">
-            <div class="row align-items-center text-center mb-3">
-                <div class="col-sm-6 text-sm-start"><img src="/assets/img/icons/spot-illustrations/proapps.png"
-                        alt="invoice" width="150" /></div>
-                <div class="col text-sm-end mt-3 mt-sm-0">
-                    <h2 class="mb-3">Invoice</h2>
-                    <h5>Falcon Design Studio</h5>
-                    <p class="fs--1 mb-0">156 University Ave, Toronto<br />On, Canada, M5H 2H7</p>
-                </div>
-                <div class="col-12">
-                    <hr />
-                </div>
-            </div>
-            <div class="row align-items-center">
-                <div class="col">
-                    <h6 class="text-500">Invoice to</h6>
-                    <h5>Antonio Banderas</h5>
-                    <p class="fs--1">1954 Bloor Street West<br />Torronto ON, M6P 3K9<br />Canada</p>
-                    <p class="fs--1"><a href="mailto:example@gmail.com">example@gmail.com</a><br /><a
-                            href="tel:444466667777">+4444-6666-7777</a></p>
-                </div>
-                <div class="col-sm-auto ms-auto">
-                    <div class="table-responsive">
-                        <table class="table table-sm table-borderless fs--1">
-                            <tbody>
-                                <tr>
-                                    <th class="text-sm-end">Invoice No:</th>
-                                    <td>14</td>
-                                </tr>
-                                <tr>
-                                    <th class="text-sm-end">Order Number:</th>
-                                    <td>AD20294</td>
-                                </tr>
-                                <tr>
-                                    <th class="text-sm-end">Invoice Date:</th>
-                                    <td>2018-09-25</td>
-                                </tr>
-                                <tr>
-                                    <th class="text-sm-end">Payment Due:</th>
-                                    <td>Upon receipt</td>
-                                </tr>
-                                <tr class="alert alert-success fw-bold">
-                                    <th class="text-sm-end">Amount Due:</th>
-                                    <td>$19688.40</td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div class="table-responsive scrollbar mt-4 fs--1">
-                <table class="table table-striped border-bottom">
-                    <thead data-bs-theme="light">
-                        <tr class="bg-primary text-white dark__bg-1000">
-                            <th class="border-0">Products</th>
-                            <th class="border-0 text-center">Quantity</th>
-                            <th class="border-0 text-end">Rate</th>
-                            <th class="border-0 text-end">Amount</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td class="align-middle">
-                                <h6 class="mb-0 text-nowrap">Platinum web hosting package</h6>
-                                <p class="mb-0">Down 35mb, Up 100mb</p>
-                            </td>
-                            <td class="align-middle text-center">2</td>
-                            <td class="align-middle text-end">$65.00</td>
-                            <td class="align-middle text-end">$130.00</td>
-                        </tr>
-                        <tr>
-                            <td class="align-middle">
-                                <h6 class="mb-0 text-nowrap">2 Page website design</h6>
-                                <p class="mb-0">Includes basic wireframes and responsive templates</p>
-                            </td>
-                            <td class="align-middle text-center">1</td>
-                            <td class="align-middle text-end">$2,100.00</td>
-                            <td class="align-middle text-end">$2,100.00</td>
-                        </tr>
-                        <tr>
-                            <td class="align-middle">
-                                <h6 class="mb-0 text-nowrap">Mobile App Development</h6>
-                                <p class="mb-0">Includes responsive navigation</p>
-                            </td>
-                            <td class="align-middle text-center">8</td>
-                            <td class="align-middle text-end">$5,00.00</td>
-                            <td class="align-middle text-end">$4,000.00</td>
-                        </tr>
-                        <tr>
-                            <td class="align-middle">
-                                <h6 class="mb-0 text-nowrap">Web App Development</h6>
-                                <p class="mb-0">Includes react spa</p>
-                            </td>
-                            <td class="align-middle text-center">6</td>
-                            <td class="align-middle text-end">$2,000.00</td>
-                            <td class="align-middle text-end">$12,000.00</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="row justify-content-end">
-                <div class="col-auto">
-                    <table class="table table-sm table-borderless fs--1 text-end">
-                        <tr>
-                            <th class="text-900">Subtotal:</th>
-                            <td class="fw-semi-bold">$18,230.00 </td>
-                        </tr>
-                        <tr>
-                            <th class="text-900">Tax 8%:</th>
-                            <td class="fw-semi-bold">$1458.40</td>
-                        </tr>
-                        <tr class="border-top">
-                            <th class="text-900">Total:</th>
-                            <td class="fw-semi-bold">$19688.40</td>
-                        </tr>
-                        <tr class="border-top border-top-2 fw-bolder text-900">
-                            <th>Amount Due:</th>
-                            <td>$19688.40</td>
-                        </tr>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div class="text-center">
-            <button type="submit" class="btn btn-success btn-lg my-4" type="button" id="pay-button">
-                Bayar
+    @if ($transaction->MonthlyARTenant)
+        @include('Tenant.Notification.Invoice.monthlyARTenant')
+    @endif
+    <div class="text-center">
+        @if ($transaction->MonthlyARTenant && $transaction->MonthlyARTenant->denda_bulan_sebelumnya != 0)
+            <button class="btn btn-success btn-lg my-4" type="button" id="advance-pay-button">
+                Bayar 1
             </button>
-        </div>
-        <div class="card-footer bg-light">
-            <p class="fs--1 mb-0"><strong>Notes: </strong>We really appreciate your business and if there’s anything else we
-                can do, please let us know!</p>
-        </div>
+        @else
+            <button class="btn btn-success btn-lg my-4" type="button" id="pay-button">
+                Bayar 2
+            </button>
+        @endif
+    </div>
+    <div class="card-footer bg-light">
+        <p class="fs--1 mb-0"><strong>Notes: </strong>We really appreciate your business and if there’s anything else we
+            can do, please let us know!</p>
     </div>
 @endsection
 
@@ -157,30 +25,89 @@
     <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('midtrans.client_key') }}">
     </script>
     <script>
-        const payButton = document.querySelector('#pay-button');
-        payButton.addEventListener('click', function(e) {
-            e.preventDefault();
+        $('document').ready(function() {
+            var token = '{{ $transaction->snap_token }}'
+            $('#pay-button').on('click', function(e) {
+                e.preventDefault();
+                snap.pay(token, {
+                    // Optional
+                    onSuccess: function(result) {
+                        /* You may add your own js here, this is just example */
+                        // document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
+                        // console.log(result)
+                    },
+                    // Optional
+                    onPending: function(result) {
+                        /* You may add your own js here, this is just example */
+                        // document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
+                        // console.log(result)
+                    },
+                    // Optional
+                    onError: function(result) {
+                        /* You may add your own js here, this is just example */
+                        // document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
+                        // console.log(result)
+                    }
+                });
+            })
 
-            snap.pay('{{ $transaction->snap_token }}', {
-                // Optional
-                onSuccess: function(result) {
-                    /* You may add your own js here, this is just example */
-                    // document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
-                    console.log(result)
+            $('#advance-pay-button').on('click', function(e) {
+                e.preventDefault();
+                $.ajax({
+                    url: '/admin/regenerate-snap-token',
+                    type: 'POST',
+                    data: {
+                        token,
+                    },
+                    success: function(data) {
+                        if (data.status === 'ok') {
+                            snap.pay(token, {
+                                // Optional
+                                onClose: function() {
+                                    /* You may add your own implementation here */
+                                    window.location.reload();
+                                },
+                                onSuccess: function(result) {
+                                    /* You may add your own js here, this is just example */
+                                    // document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
+                                    // console.log(result)
+                                },
+                                // Optional
+                                onPending: function(result) {
+                                    /* You may add your own js here, this is just example */
+                                    // document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
+                                    // console.log(result)
+                                },
+                                // Optional
+                                onError: function(result) {
+                                    /* You may add your own js here, this is just example */
+                                    // document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
+                                    // console.log(result)
+                                }
+                            });
+                        } else {
+                            Swal.fire(
+                                'Gagal!',
+                                'Gagal mengambil data!',
+                                'failed'
+                            )
+                        }
+                    }
+                })
+            })
+
+            $.ajax({
+                url: '/admin/get-montly-ar',
+                type: 'POST',
+                data: {
+                    token
                 },
-                // Optional
-                onPending: function(result) {
-                    /* You may add your own js here, this is just example */
-                    // document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
-                    console.log(result)
-                },
-                // Optional
-                onError: function(result) {
-                    /* You may add your own js here, this is just example */
-                    // document.getElementById('result-json').innerHTML += JSON.stringify(result, null, 2);
-                    console.log(result)
+                success: function(resp) {
+                    $('#periode_bulan').html(`Bulan ${resp[0].periode_bulan}, ${resp[0].periode_tahun}`);
+                    $('#jml_hari').html(`${resp[0].jml_hari_jt} Hari`);
+                    console.log(resp[0].periode_bulan);
                 }
-            });
-        });
+            })
+        })
     </script>
 @endsection

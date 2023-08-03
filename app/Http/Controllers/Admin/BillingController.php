@@ -45,19 +45,25 @@ class BillingController extends Controller
 
             $createIPLbill = $this->createIPLbill($elecUSS, $request);
             $createUtilityBill = $this->createUtilityBill($elecUSS, $waterUSS, $createIPLbill);
-            $createMonthlyTenant = $this->createMonthlyTenant($createUtilityBill, $createIPLbill);
+            $createMonthlyTenant = $this->createMonthlyTenant($createUtilityBill, $createIPLbill, $elecUSS, $waterUSS);
+
             $transaction = $this->createTransaction($createMonthlyTenant);
 
-            $createMonthlyTenant->no_monthly_invoice = $transaction->no_invoice;
-            $createMonthlyTenant->save();
             $createIPLbill->no_monthly_invoice = $transaction->no_invoice;
             $createIPLbill->save();
+
             $createUtilityBill->no_monthly_invoice = $transaction->no_invoice;
             $createUtilityBill->save();
+
             $transaction->save();
+
+            $createMonthlyTenant->no_monthly_invoice = $transaction->no_invoice;
+            $createMonthlyTenant->id_monthly_ipl = $createIPLbill->id;
+            $createMonthlyTenant->save();
 
             $elecUSS->no_refrensi = $transaction->no_invoice;
             $elecUSS->save();
+
             $waterUSS->no_refrensi = $transaction->no_invoice;
             $waterUSS->save();
 
@@ -75,11 +81,17 @@ class BillingController extends Controller
         }
     }
 
-    public function createMonthlyTenant($createUtilityBill, $createIPLbill)
+    public function createMonthlyTenant($createUtilityBill, $createIPLbill, $elecUSS, $waterUSS)
     {
-        dd($createUtilityBill, $createIPLbill);
         $connMonthlyTenant = ConnectionDB::setConnection(new MonthlyArTenant());
         $connReminder = ConnectionDB::setConnection(new ReminderLetter());
+
+        $previousMonth = (int) $createUtilityBill->periode_bulan - 1;
+        $previousMonth = '0' . $previousMonth;
+
+        $previousBill = $connMonthlyTenant->where('periode_bulan', $previousMonth)
+            ->where('periode_tahun', Carbon::now()
+                ->format('Y'))->first();
 
         $jatuh_tempo_1 = $connReminder->find(1)->durasi_reminder_letter;
         $jatuh_tempo_1 = Carbon::now()->addDays($jatuh_tempo_1);
@@ -93,7 +105,9 @@ class BillingController extends Controller
         $connMonthlyTenant->total_tagihan_ipl = $createIPLbill->total_tagihan_ipl;
         $connMonthlyTenant->total_tagihan_utility = $createUtilityBill->total_tagihan_utility;
         $connMonthlyTenant->tgl_jt_invoice = $jatuh_tempo_1;
-
+        $connMonthlyTenant->denda_bulan_sebelumnya = $previousBill ? $previousBill->total_denda : 0;
+        $connMonthlyTenant->id_eng_listrik = $elecUSS->id;
+        $connMonthlyTenant->id_eng_air = $waterUSS->id;
 
         return $connMonthlyTenant;
     }
@@ -180,7 +194,7 @@ class BillingController extends Controller
         try {
             DB::beginTransaction();
 
-            $subtotal = $createMonthlyTenant->total_tagihan_utility + $createMonthlyTenant->total_tagihan_ipl;
+            $subtotal = $createMonthlyTenant->total_tagihan_utility + $createMonthlyTenant->total_tagihan_ipl + $createMonthlyTenant->denda_bulan_sebelumnya;
 
             $items = [];
 
@@ -212,10 +226,10 @@ class BillingController extends Controller
             $createTransaction->id_user = $user->id_user;
             $createTransaction->transaction_type = 'MonthlyTenant';
 
-            // $midtrans = new CreateSnapTokenService($createTransaction, $items);
+            $midtrans = new CreateSnapTokenService($createTransaction, $items);
 
-            // $createTransaction->snap_token = $midtrans->getSnapToken();
-            // $createTransaction->save();
+            $createTransaction->snap_token = $midtrans->getSnapToken();
+            $createTransaction->save();
 
             $connCRd = ConnectionDB::setConnection(new CashReceiptDetail());
             $connCRd->create([
@@ -238,5 +252,66 @@ class BillingController extends Controller
         }
 
         return $createTransaction;
+    }
+
+    public function getOverdueARTenant(Request $request)
+    {
+        $connARTenant = ConnectionDB::setConnection(new MonthlyArTenant());
+        $connCR = ConnectionDB::setConnection(new CashReceipt());
+
+        $cr = $connCR->where('snap_token', $request->token)->first();
+
+        $prevMonth = (int) $cr->MonthlyARTenant->periode_bulan - 1;
+        $prevMonth = '0' . $prevMonth;
+
+        $data = $connARTenant->where('periode_tahun', Carbon::now()->format('Y'))
+            ->where('periode_bulan', $prevMonth)
+            ->first(['periode_bulan', 'periode_tahun', 'jml_hari_jt', 'total_denda']);
+
+        return response()->json([
+            $data
+        ]);
+    }
+
+    public function regenerateSnapToken(Request $request)
+    {
+        $connCR = ConnectionDB::setConnection(new CashReceipt());
+
+        $cr = $connCR->where('snap_token', $request->token)->first();
+
+        $prevMonth = (int) $cr->MonthlyARTenant->periode_bulan - 1;
+        $prevMonth = '0' . $prevMonth;
+
+        $items = [];
+
+        $ipl = new stdClass();
+        $ipl->id = 1;
+        $ipl->quantity = 1;
+        $ipl->detil_pekerjaan = 'Tagihan IPL bulan ' . $cr->MonthlyARTenant->periode_bulan;
+        $ipl->detil_biaya_alat = $cr->MonthlyARTenant->total_tagihan_ipl;
+        array_push($items, $ipl);
+
+        $sc = new stdClass();
+        $sc->id = 2;
+        $sc->quantity = 1;
+        $sc->detil_pekerjaan = 'Tagihan Service Charge bulan ' . $cr->MonthlyARTenant->periode_bulan;
+        $sc->detil_biaya_alat = $cr->MonthlyARTenant->total_tagihan_utility;
+        array_push($items, $sc);
+
+        $sc = new stdClass();
+        $sc->id = 3;
+        $sc->quantity = 1;
+        $sc->detil_pekerjaan = 'Denda keterlambatan pembayaran bulan ' . $prevMonth;
+        $sc->detil_biaya_alat = $cr->MonthlyARTenant->denda_bulan_sebelumnya;
+        array_push($items, $sc);
+
+        $midtrans = new CreateSnapTokenService($cr, $items);
+
+        $cr->snap_token = $midtrans->getSnapToken();
+        $cr->save();
+
+        return response()->json([
+            'status' => 'ok'
+        ]);
     }
 }

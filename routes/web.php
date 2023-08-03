@@ -676,6 +676,11 @@ Route::prefix('admin')->group(function () {
 
         // Generate monthly invoice IPL & Service charge
         Route::post('generate-invoice', [BillingController::class, 'generateMonthlyInvoice'])->name('generateMonthlyInvoice');
+
+        // regenerate snap token
+        Route::post('regenerate-snap-token', [BillingController::class, 'regenerateSnapToken'])->name('regenerateSnapToken');
+
+        Route::post('get-montly-ar', [BillingController::class, 'getOverdueARTenant']);
     });
 });
 
