@@ -265,8 +265,9 @@ class BillingController extends Controller
         $prevMonth = '0' . $prevMonth;
 
         $data = $connARTenant->where('periode_tahun', Carbon::now()->format('Y'))
-            ->where('periode_bulan', $prevMonth)
-            ->first(['periode_bulan', 'periode_tahun', 'jml_hari_jt', 'total_denda']);
+            ->where('tgl_jt_invoice', '<', Carbon::now()->format('Y-m-d'))
+            ->orderBy('periode_bulan', 'asc')
+            ->get(['periode_bulan', 'periode_tahun', 'jml_hari_jt', 'total_denda']);
 
         return response()->json([
             $data
@@ -279,34 +280,40 @@ class BillingController extends Controller
 
         $cr = $connCR->where('snap_token', $request->token)->first();
 
-        $prevMonth = (int) $cr->MonthlyARTenant->periode_bulan - 1;
-        $prevMonth = '0' . $prevMonth;
+        $connMonthlyTenant = ConnectionDB::setConnection(new MonthlyArTenant());
+        $monthlyTenant = $connMonthlyTenant->where('tgl_bayar_invoice', null)->get();
 
         $items = [];
+        foreach ($monthlyTenant as $key => $item) {
+            $prevMonth = (int) $item->periode_bulan - 1;
+            $prevMonth = '0' . $prevMonth;
 
-        $ipl = new stdClass();
-        $ipl->id = 1;
-        $ipl->quantity = 1;
-        $ipl->detil_pekerjaan = 'Tagihan IPL bulan ' . $cr->MonthlyARTenant->periode_bulan;
-        $ipl->detil_biaya_alat = $cr->MonthlyARTenant->total_tagihan_ipl;
-        array_push($items, $ipl);
+            $ipl = new stdClass();
+            $ipl->id = $key + 1;
+            $ipl->quantity = 1;
+            $ipl->detil_pekerjaan = 'Tagihan IPL bulan ' . $item->periode_bulan;
+            $ipl->detil_biaya_alat = $item->total_tagihan_ipl;
+            array_push($items, $ipl);
 
-        $sc = new stdClass();
-        $sc->id = 2;
-        $sc->quantity = 1;
-        $sc->detil_pekerjaan = 'Tagihan Service Charge bulan ' . $cr->MonthlyARTenant->periode_bulan;
-        $sc->detil_biaya_alat = $cr->MonthlyARTenant->total_tagihan_utility;
-        array_push($items, $sc);
+            $sc = new stdClass();
+            $sc->id = $key + 1;
+            $sc->quantity = 1;
+            $sc->detil_pekerjaan = 'Tagihan Utility bulan ' . $item->periode_bulan;
+            $sc->detil_biaya_alat = $item->total_tagihan_utility;
+            array_push($items, $sc);
 
-        $sc = new stdClass();
-        $sc->id = 3;
-        $sc->quantity = 1;
-        $sc->detil_pekerjaan = 'Denda keterlambatan pembayaran bulan ' . $prevMonth;
-        $sc->detil_biaya_alat = $cr->MonthlyARTenant->denda_bulan_sebelumnya;
-        array_push($items, $sc);
+            if ($item->denda_bulan_sebelumnya != 0) {
+                $sc = new stdClass();
+                $sc->id = $key + 1;
+                $sc->quantity = 1;
+                $sc->detil_pekerjaan = 'Denda keterlambatan bulan ' . $prevMonth;
+                $sc->detil_biaya_alat = $item->denda_bulan_sebelumnya;
+                array_push($items, $sc);
+            }
+        }
 
+        // dd($cr);
         $midtrans = new CreateSnapTokenService($cr, $items);
-
         $cr->snap_token = $midtrans->getSnapToken();
         $cr->save();
 

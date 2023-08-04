@@ -41,11 +41,11 @@ class OpenTicketController extends Controller
         if ($user->user_category == 3) {
             $tenant = $connTenant->where('id_user', $login)->first();
             $data['tickets'] = $connRequest->where('id_user', $tenant->id_user)->latest()->get();
-            
+
         } else {
             $data['tickets'] = $connRequest->latest()->get();
 
-        }   
+        }
 
         $data['user'] = $user;
 
@@ -66,7 +66,7 @@ class OpenTicketController extends Controller
             $getTenant = $connTenant->where('email_tenant', $user->login_user)->first();
             $data['units'] = $connTU->where('id_unit', $getTenant->id_user)->get();
         }
-
+        dd($data['units'], $getTenant->id_user);
         $data['user'] = $user;
         $data['jenis_requests'] = $connJenisReq->get();
 
