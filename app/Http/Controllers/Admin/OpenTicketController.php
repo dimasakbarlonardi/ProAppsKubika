@@ -69,7 +69,7 @@ class OpenTicketController extends Controller
             // $getTenant = $connTenant->where('email_tenant', $user->login_user)->first();
             // $data['units'] = $connTU->where('id_unit', $getTenant->id_user)->get();
         }
-        dd($data['units'], $getTenant->id_user);
+        // dd($data['units'], $getTenant->id_user);
         $data['user'] = $user;
         $data['jenis_requests'] = $connJenisReq->get();
 
