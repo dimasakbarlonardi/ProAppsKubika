@@ -91,4 +91,17 @@ class OpenTicketController extends Controller
             ], 'Gagal membuat ticket');
         }
     }
+
+    public function show($id, Request $request)
+    {
+        $connRequest = ConnectionDB::setConnection(new OpenTicket());
+
+        $ticket = $connRequest->where('id', $id)->with('User')->first();
+        $ticket->deskripsi_request = strip_tags($ticket->deskripsi_request);
+        $ticket->deskripsi_respon = strip_tags($ticket->deskripsi_respon);
+
+        return ResponseFormatter::success([
+            $ticket
+        ], 'Berhasil mengambil request');
+    }
 }
