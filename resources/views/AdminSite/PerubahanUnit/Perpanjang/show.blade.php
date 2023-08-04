@@ -143,10 +143,12 @@
                                 </tr>
                             </table>
                         </div>
+                        <div class="text-end">
                         <a class="btn btn-sm btn-warning" href="{{ route('perubahanunits.index') }}">Back</a>
                         <button type="button" data-toggle="modal" data-target="#modalValidation"
                             class="btn btn-sm btn-warning" id="btnPerpanjangSewa">Perpanjang Sewa</button>
-
+                        </div>
+                        
                         <div class="modal fade" id="modalValidation" data-bs-keyboard="false" data-bs-backdrop="static"
                             tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                             <div class="modal-dialog modal-md mt-6" role="document">

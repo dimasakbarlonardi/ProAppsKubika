@@ -7,9 +7,9 @@
             <div class="my-3 col-auto">
                 <h6 class="mb-0">List Reminder Letter</h6>
             </div>
-            <div class="col-auto d-flex">
+            {{-- <div class="col-auto d-flex">
                 <a class="btn btn-falcon-default btn-sm text-600" href="{{ route('reminders.create') }}"><span class="fas fa-plus fs--2 me-1"></span>Tambah Reminder Letter</a>
-            </div>
+            </div> --}}
         </div>
     </div>
     <div class="p-5">

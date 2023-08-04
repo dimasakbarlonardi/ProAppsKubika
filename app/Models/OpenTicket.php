@@ -45,6 +45,16 @@ class OpenTicket extends Model
         return $this->hasOne(User::class, 'id_user', 'id_user');
     }
 
+    public function Owner()
+    {
+        return $this->hasOne(OwnerH::class, 'id_user', 'id_user');
+    }
+
+    public function Tenant()
+    {
+        return $this->hasOne(Tenant::class, 'id_user', 'id_user');
+    }
+
     public function TenantRelation()
     {
         return $this->hasOne(User::class, 'id_user', 'id_user_resp_request');
