@@ -33,19 +33,19 @@ class OpenTicketController extends Controller
 {
     public function index(Request $request)
     {
-        $login = Auth::user()->id;
+        // $login = Auth::user()->id;
         $user = $request->session()->get('user');
 
         $connRequest = ConnectionDB::setConnection(new OpenTicket());
         $connUser = ConnectionDB::setConnection(new User());
-
+        
         if ($user->user_category == 3) {
-            $user = $connUser->where('id_user', $login)->first();
-            $data['tickets'] = $connRequest->where('id_user', $user->id_user)->latest()->get();
+            $iduser = $user->where('id_user',$user)->first();
+            $data['tickets'] = $connRequest->where('id_user', $user)->get();
+            // dd($data); 
         } else {
             $data['tickets'] = $connRequest->latest()->get();
         }
-
         $data['user'] = $user;
 
         return view('AdminSite.OpenTicket.index', $data);
@@ -58,12 +58,16 @@ class OpenTicketController extends Controller
         $connTU = ConnectionDB::setConnection(new TenantUnit());
         $connJenisReq = ConnectionDB::setConnection(new JenisRequest());
 
-        if ($user->user_category == 2) {
+        if ($user->user_category == 3) {
             $data['units'] = $connTU->get();
             $data['tenants'] = $connTenant->get();
         } else {
-            $getTenant = $connTenant->where('email_tenant', $user->login_user)->first();
-            $data['units'] = $connTU->where('id_unit', $getTenant->id_user)->get();
+
+            $data['units'] = $connTU->get();
+            $data['tenants'] = $connTenant->get();
+
+            // $getTenant = $connTenant->where('email_tenant', $user->login_user)->first();
+            // $data['units'] = $connTU->where('id_unit', $getTenant->id_user)->get();
         }
 
         $data['user'] = $user;
@@ -77,6 +81,7 @@ class OpenTicketController extends Controller
         $connOpenTicket = ConnectionDB::setConnection(new OpenTicket());
         $connSystem = ConnectionDB::setConnection(new System());
         $connUnit = ConnectionDB::setConnection(new Unit());
+        $user = $request->session()->get('user');
 
         $system = $connSystem->find(1);
         $count = $system->sequence_notiket + 1;
@@ -97,7 +102,7 @@ class OpenTicketController extends Controller
             $createTicket->id_tower = $unit->id_tower;
             $createTicket->id_unit = $request->id_unit;
             $createTicket->id_lantai = $unit->id_lantai;
-            $createTicket->id_user = $unit->TenantUnit->id_tenant;
+            $createTicket->id_user = $user->id_user;
             $createTicket->no_tiket = $no_tiket;
             $createTicket->status_request = 'PENDING';
 
@@ -142,6 +147,7 @@ class OpenTicketController extends Controller
         $data['user'] = $user;
         $data['Tenant'] = $connTenant->get();
         $data['Owner'] = $connOwner->get();
+
         if ($request->data_type == 'json') {
             return response()->json(['data' => $ticket]);
         } else {

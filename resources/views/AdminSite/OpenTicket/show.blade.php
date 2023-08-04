@@ -206,8 +206,8 @@
                                             </div>
                                             <div class="col-md-auto mb-4 mb-md-0 mb-xl-4">
                                                 <h6 class="mb-1">Phone Number</h6><a class="fs--1"
-                                                    href="tel:+6(855)747677"> {{ $ticket->User->Owner->no_telp_pemilik ? $ticket->User->Owner->no_telp_pemilik : $ticket->User->Tenant->no_telp_tenant }}</a>
-                                                </div>
+                                                    href="tel:+6(855)747677"> {{ $ticket->no_hp}}
+                                            </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-auto mb-4 mb-md-0 mb-xl-4">

@@ -12,7 +12,7 @@ class KepemilikanUnit extends Model
 
     protected $table = 'tb_pemilik_d';
     protected $primaryKey = 'id';
-    
+
     protected $fillable = ([
         'id_kepemilikan_unit',
         'id_pemilik',
@@ -38,5 +38,15 @@ class KepemilikanUnit extends Model
     public function Unit()
     {
         return $this->hasOne(Unit::class, 'id_unit', 'id_unit');
+    }
+
+    public function User()
+    {
+        return $this->hasOne(User::class, 'id_user', 'id_pemilik');
+    }
+
+    public function Owner()
+    {
+        return $this->hasOne(OwnerH::class, 'id_pemilik', 'id_pemilik');
     }
 }

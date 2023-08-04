@@ -82,4 +82,9 @@ class Tenant extends Model
     {
         return $this->hasMany(TenantUnit::class, 'id_tenant', 'id_tenant');
     }
+
+    public function Tenant()
+    {
+        return $this->hasMany(OpenTicket::class, 'id_user', 'id_user');
+    }
 }

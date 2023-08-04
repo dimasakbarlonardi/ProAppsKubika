@@ -60,7 +60,7 @@
                                                 <h6 class="client mb-0">
                                                     <a class="text-800 d-flex align-items-center gap-1" href="">
                                                         <span class="fas fa-user" data-fa-transform="shrink-3 up-1"></span>
-                                                        <span>{{ $ticket->User->nama_tenant }}</span>
+                                                        <span>{{ $ticket->User->nama_user }}</span>
                                                     </a>
                                                 </h6>
                                             </div>
