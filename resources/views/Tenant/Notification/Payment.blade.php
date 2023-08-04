@@ -3,18 +3,16 @@
 @section('content')
     @if ($transaction->MonthlyARTenant)
         @include('Tenant.Notification.Invoice.monthlyARTenant')
+        <div class="text-center">
+            @if ($transaction->transaction_status == 'PENDING')
+                @if ($transaction->MonthlyARTenant->denda_bulan_sebelumnya != 0 && !$transaction->MonthlyARTenant->NextMonthBill())
+                    <button class="btn btn-success btn-lg my-4" type="button" id="advance-pay-button">
+                        Bayar 1
+                    </button>
+                @endif
+            @endif
+        </div>
     @endif
-    <div class="text-center">
-        @if ($transaction->MonthlyARTenant && $transaction->MonthlyARTenant->denda_bulan_sebelumnya != 0)
-            <button class="btn btn-success btn-lg my-4" type="button" id="advance-pay-button">
-                Bayar 1
-            </button>
-        @else
-            <button class="btn btn-success btn-lg my-4" type="button" id="pay-button">
-                Bayar 2
-            </button>
-        @endif
-    </div>
     <div class="card-footer bg-light">
         <p class="fs--1 mb-0"><strong>Notes: </strong>We really appreciate your business and if there’s anything else we
             can do, please let us know!</p>
@@ -94,19 +92,6 @@
                         }
                     }
                 })
-            })
-
-            $.ajax({
-                url: '/admin/get-montly-ar',
-                type: 'POST',
-                data: {
-                    token
-                },
-                success: function(resp) {
-                    $('#periode_bulan').html(`Bulan ${resp[0].periode_bulan}, ${resp[0].periode_tahun}`);
-                    $('#jml_hari').html(`${resp[0].jml_hari_jt} Hari`);
-                    console.log(resp[0].periode_bulan);
-                }
             })
         })
     </script>

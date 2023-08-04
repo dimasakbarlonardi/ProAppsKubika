@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\ConnectionDB;
 use App\Models\CashReceipt;
+use App\Models\MonthlyArTenant;
 use App\Models\Site;
 use App\Models\Transaction;
 use App\Models\TransactionCenter;
@@ -29,21 +30,38 @@ class PaymentController extends Controller
 
                 switch ($cr->transaction_type) {
                     case ('WorkOrder'):
+                        dd($cr);
                         $cr->WorkOrder->sign_approve_5 = 1;
                         $cr->WorkOrder->date_approve_5 = Carbon::now();
                         $cr->WorkOrder->save();
                         break;
 
                     case ('WorkPermit'):
+                        dd($cr);
+
                         $cr->WorkPermit->status_bayar = 'PAYED';
                         $cr->WorkPermit->sign_approval_5 = Carbon::now();
                         $cr->WorkPermit->save();
                         break;
 
                     case ('Reservation'):
+                        dd($cr);
+
                         $cr->Reservation->status_bayar = 'PAYED';
                         $cr->Reservation->sign_approval_5 = Carbon::now();
                         $cr->Reservation->save();
+                        break;
+
+                    case ('MonthlyTenant'):
+                        $bills = new MonthlyArTenant();
+                        $bills = $bills->setConnection($site->db_name);
+                        $bills = $bills->where('id_unit', $cr->MonthlyARTenant->id_unit)->get();
+
+                        foreach($bills as $bill) {
+                            $bill->tgl_bayar_invoice = Carbon::now();
+                            $bill->save();
+                        }
+
                         break;
                 }
             }

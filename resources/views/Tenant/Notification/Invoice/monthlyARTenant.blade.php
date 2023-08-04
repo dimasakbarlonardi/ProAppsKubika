@@ -77,6 +77,62 @@
                     </tr>
                 </thead>
                 <tbody>
+                    @if ($transaction->MonthlyARTenant->PreviousMonthBill())
+                        @foreach ($transaction->MonthlyARTenant->PreviousMonthBill() as $prevBill)
+                            <tr class="alert alert-info my-3">
+                                <td class="align-middle">
+                                    <h6 class="mb-0 text-nowrap">Tagihan bulan {{ $prevBill->periode_bulan }},
+                                        {{ $prevBill->periode_tahun }}</h6>
+                                </td>
+                                <td class="align-middle text-center">
+                                </td>
+                                <td class="align-middle text-end"></td>
+                                <td class="align-middle text-end"></td>
+                            </tr>
+                            <tr>
+                                <td class="align-middle">
+                                    <h6 class="mb-0 text-nowrap">Tagihan Utility</h6>
+                                    <p class="mb-0">Listrik</p>
+                                    <p class="mb-0">Air</p>
+                                </td>
+                                <td class="align-middle text-center">
+                                    <br>
+                                    <span>Usage : {{ $prevBill->ElectricUSS->usage }}</span> <br>
+                                    <span>Usage : {{ $prevBill->WaterUSS->usage }}</span>
+                                </td>
+                                <td class="align-middle text-end"></td>
+                                <td class="align-middle text-end">
+                                    {{ rupiah($prevBill->total_tagihan_utility) }}</td>
+                            </tr>
+                            <tr>
+                                <td class="align-middle">
+                                    <h6 class="mb-0 text-nowrap">Tagihan IPL</h6>
+                                    <p class="mb-0">Service Charge</p>
+                                    <p class="mb-0">Sink Fund</p>
+                                </td>
+                                <td class="align-middle text-center">
+                                    <br>
+                                    <span>{{ rupiah($prevBill->MonthlyIPL->ipl_service_charge) }}</span>
+                                    <br>
+                                    <span>{{ rupiah($prevBill->MonthlyIPL->ipl_sink_fund) }}</span>
+                                </td>
+                                <td class="align-middle text-end"></td>
+                                <td class="align-middle text-end">
+                                    {{ rupiah($prevBill->MonthlyIPL->total_tagihan_ipl) }}</td>
+                            </tr>
+                        @endforeach
+                    @endif
+                    <tr class="alert alert-info my-3">
+                        <td class="align-middle">
+                            <h6 class="mb-0 text-nowrap">Tagihan bulan
+                                {{ $transaction->MonthlyARTenant->periode_bulan }},
+                                {{ $transaction->MonthlyARTenant->periode_tahun }}</h6>
+                        </td>
+                        <td class="align-middle text-center">
+                        </td>
+                        <td class="align-middle text-end"></td>
+                        <td class="align-middle text-end"></td>
+                    </tr>
                     <tr>
                         <td class="align-middle">
                             <h6 class="mb-0 text-nowrap">Tagihan Utility</h6>
@@ -109,7 +165,7 @@
                             {{ rupiah($transaction->MonthlyARTenant->MonthlyIPL->total_tagihan_ipl) }}</td>
                     </tr>
                     @if ($transaction->MonthlyARTenant->denda_bulan_sebelumnya != 0)
-                        <tr class="alert alert-danger">
+                        <tr class="alert alert-success">
                             <td class="align-middle">
                                 <h6 class="mb-0 text-nowrap">Denda keterlambatan</h6>
                             </td>
@@ -119,19 +175,8 @@
                             <td class="align-middle text-end"></td>
                             <td class="align-middle text-end"></td>
                         </tr>
-                        <tr class="alert alert-danger">
-                            <td class="align-middle text-nowrap">
-                                <span id="periode_bulan"></span>
-                            </td>
-                            <td class="align-middle text-center">
-                                <span id="jml_hari"></span>
-                            </td>
-                            <td class="align-middle text-center">
-                            </td>
-                            <td class="align-middle text-end">
-                                {{ rupiah($transaction->MonthlyARTenant->denda_bulan_sebelumnya) }}
-                            </td>
-                        </tr>
+                        <tbody id="exampleid">
+                        </tbody>
                     @endif
                 </tbody>
             </table>
@@ -160,3 +205,54 @@
         </div>
     </div>
 </div>
+
+<script>
+    $.ajaxSetup({
+        headers: {
+            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+        }
+    });
+    var token = '{{ $transaction->snap_token }}'
+    var periode_bulan = "{{ $transaction->MonthlyARTenant->periode_bulan }}"
+    var periode_tahun = '{{ $transaction->MonthlyARTenant->periode_tahun }}'
+    // console.log(periode_bulan, periode_tahun);
+    $.ajax({
+        url: '/admin/get-montly-ar',
+        type: 'POST',
+        data: {
+            token
+        },
+        success: function(resp) {
+            resp[0].map((item) => {
+                if (periode_bulan != item.periode_bulan) {
+                    $('#exampleid').append(`<tr>
+                        <td class="align-middle text-nowrap">Periode bulan ${item.periode_bulan}, ${item.periode_tahun}</td>
+                        <td class="text-center">${item.jml_hari_jt} Hari</td>
+                        <td></td>
+                        <td class="text-end">Rp ${formatRupiah(item.total_denda)}</td>
+                        </tr>`);
+                }
+            })
+        }
+    })
+
+    /* Fungsi formatRupiah */
+    function formatRupiah(angka, prefix) {
+        var angka = angka.substring(0, angka.length - 3);
+
+        var number_string = angka.replace(/[^,\d]/g, '').toString(),
+            split = number_string.split(','),
+            sisa = split[0].length % 3,
+            rupiah = split[0].substr(0, sisa),
+            ribuan = split[0].substr(sisa).match(/\d{3}/gi);
+
+        // tambahkan titik jika yang di input sudah menjadi angka ribuan
+        if (ribuan) {
+            separator = sisa ? '.' : '';
+            rupiah += separator + ribuan.join('.');
+        }
+
+        rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
+        return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
+    }
+</script>

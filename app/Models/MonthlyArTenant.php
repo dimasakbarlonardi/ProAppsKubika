@@ -6,6 +6,8 @@ use App\Helpers\ConnectionDB;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
+use Symfony\Component\VarDumper\Server\Connection;
 
 class MonthlyArTenant extends Model
 {
@@ -63,6 +65,31 @@ class MonthlyArTenant extends Model
     public function MonthlyIPL()
     {
         return $this->hasOne(MonthlyIPL::class, 'id', 'id_monthly_ipl');
+    }
+
+    public function NextMonthBill()
+    {
+        $currentMonth = $this->MonthlyIPL()->first();
+
+        $nextMonth = (int) $currentMonth->periode_bulan + 1;
+        $nextMonth = '0' . $nextMonth;
+
+        $connNextMonth = ConnectionDB::setConnection(new MonthlyArTenant());
+        $nextMonthBill = $connNextMonth->where('periode_bulan', $nextMonth)->first();
+
+        return $nextMonthBill;
+    }
+
+    public function PreviousMonthBill()
+    {
+        $currentMonth = $this->MonthlyIPL()->first();
+
+        $connNextMonth = ConnectionDB::setConnection(new MonthlyArTenant());
+        $prevMonthBill = $connNextMonth->where('periode_bulan', '<', $currentMonth->periode_bulan)
+        ->where('periode_tahun', Carbon::now()->format('Y'))
+        ->get();
+
+        return $prevMonthBill;
     }
 
     protected $dates = ['deleted_at'];
