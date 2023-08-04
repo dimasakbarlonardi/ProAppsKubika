@@ -334,7 +334,6 @@ class PerubahanUnitController extends Controller
 
         $data['kepemilikans'] = $conn->where('id', $id)->first();
         $data['editkepemilikanunit'] = $connKepemilikanUnit->where('id_pemilik', $id)->first();
-
         return view('AdminSite.PerubahanUnit.PindahKepemilikan.table', $data);
     }
 
@@ -393,11 +392,9 @@ class PerubahanUnitController extends Controller
         $connTenantUnit = ConnectionDB::setConnection(new TenantUnit());
 
         $data['kepemilikans'] = $conn->where('id_pemilik', $id)->first();
-        $data['kepemilikanunits'] = $conn->where('id_pemilik', $id)->get();
-        // $data['kepemilikans'] = $conn->find($id);
+        $data['id_pemilik'] = $id;
         $data['owners'] = $connOwner->get();
         $data['units'] = $connUnit->get();
-        // $data['tenant_units'] = $connTenantUnit->where('id_tenant', $id)->get();
         $data['statushunians'] = $connStatushunian->get();
 
         return view('AdminSite.PerubahanUnit.PindahKepemilikan.edit', $data);

@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 
 class OwnerH extends Model
 {
-    use HasFactory, SoftDeletes ;
+    use HasFactory, SoftDeletes;
 
     public function getAllOwners($db)
     {
@@ -23,7 +23,7 @@ class OwnerH extends Model
 
     protected $table = 'tb_pemilik_h';
 
-    protected $fillable =[
+    protected $fillable = [
         'id_pemilik',
         'email_owner',
         'id_site',
@@ -70,6 +70,11 @@ class OwnerH extends Model
         return $this->hasOne(Login::class, 'id', 'id');
     }
 
+    public function User()
+    {
+        return $this->hasOne(User::class, 'id_user', 'id_user');
+    }
+
     public function IdCard()
     {
         return $this->hasOne(IdCard::class, 'id_card_type', 'id_card_type');
@@ -98,5 +103,10 @@ class OwnerH extends Model
     public function Kepemilikan()
     {
         return $this->hasMany(KepemilikanUnit::class, 'id_pemilik', 'id_pemilik');
+    }
+
+    public function Owner()
+    {
+        return $this->hasMany(OpenTicket::class, 'id_user', 'id_user');
     }
 }

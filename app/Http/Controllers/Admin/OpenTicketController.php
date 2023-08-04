@@ -15,6 +15,7 @@ use App\Models\RequestGIGO;
 use App\Models\Site;
 use App\Models\System;
 use App\Models\Tenant;
+use App\Models\OwnerH;
 use App\Models\TenantUnit;
 use App\Models\Unit;
 use App\Models\User;
@@ -32,21 +33,19 @@ class OpenTicketController extends Controller
 {
     public function index(Request $request)
     {
-        $login = Auth::user()->id;
+        // $login = Auth::user()->id;
         $user = $request->session()->get('user');
 
         $connRequest = ConnectionDB::setConnection(new OpenTicket());
-        $connTenant = ConnectionDB::setConnection(new Tenant());
+        $connUser = ConnectionDB::setConnection(new User());
 
         if ($user->user_category == 3) {
-            $tenant = $connTenant->where('id_user', $login)->first();
-            $data['tickets'] = $connRequest->where('id_user', $user->id_user)->latest()->get();
-
+            $iduser = $user->where('id_user',$user)->first();
+            $data['tickets'] = $connRequest->where('id_user', $user)->get();
+            // dd($data);
         } else {
             $data['tickets'] = $connRequest->latest()->get();
-
         }
-
         $data['user'] = $user;
 
         return view('AdminSite.OpenTicket.index', $data);
@@ -59,12 +58,16 @@ class OpenTicketController extends Controller
         $connTU = ConnectionDB::setConnection(new TenantUnit());
         $connJenisReq = ConnectionDB::setConnection(new JenisRequest());
 
-        if ($user->user_category == 2) {
+        if ($user->user_category == 3) {
             $data['units'] = $connTU->get();
             $data['tenants'] = $connTenant->get();
         } else {
-            $getTenant = $connTenant->where('email_tenant', $user->login_user)->first();
+
             $data['units'] = $connTU->get();
+            $data['tenants'] = $connTenant->get();
+
+            // $getTenant = $connTenant->where('email_tenant', $user->login_user)->first();
+            // $data['units'] = $connTU->where('id_unit', $getTenant->id_user)->get();
         }
         // dd($data['units'], $getTenant->id_user);
         $data['user'] = $user;
@@ -78,6 +81,7 @@ class OpenTicketController extends Controller
         $connOpenTicket = ConnectionDB::setConnection(new OpenTicket());
         $connSystem = ConnectionDB::setConnection(new System());
         $connUnit = ConnectionDB::setConnection(new Unit());
+        $user = $request->session()->get('user');
 
         $system = $connSystem->find(1);
         $count = $system->sequence_notiket + 1;
@@ -98,7 +102,7 @@ class OpenTicketController extends Controller
             $createTicket->id_tower = $unit->id_tower;
             $createTicket->id_unit = $request->id_unit;
             $createTicket->id_lantai = $unit->id_lantai;
-            $createTicket->id_user = $unit->TenantUnit->id_tenant;
+            $createTicket->id_user = $user->id_user;
             $createTicket->no_tiket = $no_tiket;
             $createTicket->status_request = 'PENDING';
 
@@ -132,6 +136,8 @@ class OpenTicketController extends Controller
     {
         $connRequest = ConnectionDB::setConnection(new OpenTicket());
         $connJenisReq = ConnectionDB::setConnection(new JenisRequest());
+        $connTenant = ConnectionDB::setConnection(new Tenant());
+        $connOwner = ConnectionDB::setConnection(new OwnerH());
 
         $ticket = $connRequest->where('id', $id)->with('User')->first();
         $user = $request->session()->get('user');
@@ -139,6 +145,8 @@ class OpenTicketController extends Controller
         $data['jenis_requests'] = $connJenisReq->get();
         $data['ticket'] = $ticket;
         $data['user'] = $user;
+        $data['Tenant'] = $connTenant->get();
+        $data['Owner'] = $connOwner->get();
 
         if ($request->data_type == 'json') {
             return response()->json(['data' => $ticket]);
@@ -175,7 +183,7 @@ class OpenTicketController extends Controller
                     $createNotif->notif_message = 'Keluhan sudah dikerjakan, mohon periksa kembali pekerjaan kami';
                     $createNotif->save();
                 }
-            } elseif($request->status_request == 'PROSES KE GIGO') {
+            } elseif ($request->status_request == 'PROSES KE GIGO') {
                 $this->createGIGO($connNotif, $user, $ticket);
             } elseif (!$request->status_request) {
                 $ticket->status_request = 'RESPONDED';
@@ -204,9 +212,9 @@ class OpenTicketController extends Controller
         $count = $system->sequence_no_gigo + 1;
 
         $no_gigo = $system->kode_unik_perusahaan . '/' .
-                $system->kode_unik_gigo . '/' .
-                Carbon::now()->format('m') . $nowDate->year . '/' .
-                sprintf("%06d", $count);
+            $system->kode_unik_gigo . '/' .
+            Carbon::now()->format('m') . $nowDate->year . '/' .
+            sprintf("%06d", $count);
 
         $createRG = ConnectionDB::setConnection(new RequestGIGO());
         $createRG->no_tiket = $ticket->no_tiket;
