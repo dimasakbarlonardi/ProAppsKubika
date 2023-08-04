@@ -165,7 +165,7 @@
                             {{ rupiah($transaction->MonthlyARTenant->MonthlyIPL->total_tagihan_ipl) }}</td>
                     </tr>
                     @if ($transaction->MonthlyARTenant->denda_bulan_sebelumnya != 0)
-                        <tr class="alert alert-success">
+                        <tr class="alert alert-info">
                             <td class="align-middle">
                                 <h6 class="mb-0 text-nowrap">Denda keterlambatan</h6>
                             </td>

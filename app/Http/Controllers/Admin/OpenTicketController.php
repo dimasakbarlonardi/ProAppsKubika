@@ -40,7 +40,7 @@ class OpenTicketController extends Controller
 
         if ($user->user_category == 3) {
             $tenant = $connTenant->where('id_user', $login)->first();
-            $data['tickets'] = $connRequest->where('id_user', $tenant->id_user)->latest()->get();
+            $data['tickets'] = $connRequest->where('id_user', $user->id_user)->latest()->get();
 
         } else {
             $data['tickets'] = $connRequest->latest()->get();
@@ -64,9 +64,9 @@ class OpenTicketController extends Controller
             $data['tenants'] = $connTenant->get();
         } else {
             $getTenant = $connTenant->where('email_tenant', $user->login_user)->first();
-            $data['units'] = $connTU->where('id_unit', $getTenant->id_user)->get();
+            $data['units'] = $connTU->get();
         }
-        dd($data['units'], $getTenant->id_user);
+        // dd($data['units'], $getTenant->id_user);
         $data['user'] = $user;
         $data['jenis_requests'] = $connJenisReq->get();
 
@@ -133,7 +133,7 @@ class OpenTicketController extends Controller
         $connRequest = ConnectionDB::setConnection(new OpenTicket());
         $connJenisReq = ConnectionDB::setConnection(new JenisRequest());
 
-        $ticket = $connRequest->where('id', $id)->with('Tenant')->first();
+        $ticket = $connRequest->where('id', $id)->with('User')->first();
         $user = $request->session()->get('user');
 
         $data['jenis_requests'] = $connJenisReq->get();
