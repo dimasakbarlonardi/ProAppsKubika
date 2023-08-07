@@ -5,12 +5,12 @@
     <div class="card-header py-2">
         <div class="row flex-between-center">
             <div class="my-3 col-auto">
-                <h6 class="mb-0">List Checklist AHU Detail</h6>
+                <h6 class="mb-0">List Inspection AHU Detail</h6>
             </div>
             <div class="col-auto d-flex">
-                <a class="btn btn-falcon-default btn-sm text-600" href="{{ route('checklistahus.index') }}"><span class=""></span><< Back Check list AHU</a>
+                <a class="btn btn-falcon-default btn-sm text-600" href="{{ route('checklistahus.index') }}"><span class=""></span><< Back Inspection AHU</a>
                 <a class="btn btn-sm "></a>
-                <a class="btn btn-falcon-default btn-sm text-600" href="{{ route('ahudetails.create') }}"><span class="fas fa-plus fs--2 me-1"></span>Create Check list AHU Detail</a>
+                <a class="btn btn-falcon-default btn-sm text-600" href="{{ route('ahudetails.create') }}"><span class="fas fa-plus fs--2 me-1"></span>Create Inspection AHU Detail</a>
             </div>
         </div>
     </div>
@@ -19,7 +19,7 @@
             <thead>
                 <tr>
                     <th class="sort" data-sort="">No</th>
-                    <th class="sort" data-sort="no_checklist_ahu">Nomer Check list AHU</th>
+                    <th class="sort" data-sort="no_checklist_ahu">Nomer Inspection AHU</th>
                     <th class="sort" data-sort="in_out">IN / OUT</th>
                     <th class="sort" data-sort="check_point">Checkout Point</th>
                     <th class="sort" data-sort="keterangan">Keterangan</th>

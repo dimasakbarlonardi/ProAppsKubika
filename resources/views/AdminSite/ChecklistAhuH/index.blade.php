@@ -51,12 +51,12 @@
                             <thead>
                                 <tr>
                                     <th class="sort" data-sort="">No</th>
-                                    {{-- <th class="sort" data-sort="barcode_room">Barcode Room</th> --}}
-                                    {{-- <th class="sort" data-sort="id_room">Room</th> --}}
-                                    <th class="sort" data-sort="tgl_checklist">Tanggal Checklist</th>
+                                    <th class="sort" data-sort="barcode_room">Equiqment</th>
+                                    <th class="sort" data-sort="no_checklist_ahu">Nomer Inspection AHU</th>
+                                    <th class="sort" data-sort="id_room">Lokasi</th>
+                                    <th class="sort" data-sort="tgl_checklist">Schedule</th>
                                     {{-- <th class="sort" data-sort="time_checklist">Time Checklist</th> --}}
                                     {{-- <th class="sort" data-sort="id_user">User</th> --}}
-                                    <th class="sort" data-sort="no_checklist_ahu">Nomer Check list AHU</th>
                                     <th class="sort">Action</th>
                                 </tr>
                             </thead>
@@ -64,8 +64,10 @@
                                 @foreach ($checklistahus as $key => $checklistahu)
                                     <tr>
                                         <th scope="row">{{ $key + 1 }}</th>
-                                        <td>{{\Carbon\Carbon::parse($checklistahu->tgl_checklist)->format(' d-M-Y') }}</td>
+                                        <td></td>
                                         <td>{{ $checklistahu->no_checklist_ahu }}</td>
+                                        <td>{{ $checklistahu->room->nama_room }}</td>
+                                        <td>{{\Carbon\Carbon::parse($checklistahu->tgl_checklist)->format(' d-M-Y') }}</td>
                                         <td>
                                             <div class="dropdown font-sans-serif position-static"><button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal" type="button" id="order-dropdown-0" data-bs-toggle="dropdown" data-boundary="viewport" aria-haspopup="true" aria-expanded="false"><span class="fas fa-ellipsis-h fs--1"></span></button>
                                                 <div class="dropdown-menu dropdown-menu-end border py-0" aria-labelledby="order-dropdown-0">
