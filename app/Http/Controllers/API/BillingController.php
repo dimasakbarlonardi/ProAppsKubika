@@ -18,7 +18,7 @@ class BillingController extends Controller
         $tokenable = PersonalAccessToken::findToken($getToken);
 
         if ($tokenable) {
-            $user = $token->tokenable;
+            $user = $tokenable->tokenable;
             $site = Site::find($user->id_site);
 
             $connUnit = new Unit();
