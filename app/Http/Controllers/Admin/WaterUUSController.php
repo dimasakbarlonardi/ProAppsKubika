@@ -3,32 +3,25 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Helpers\ConnectionDB;
-use App\Helpers\HelpNotifikasi;
 use App\Http\Controllers\Controller;
-use App\Models\CashReceipt;
-use App\Models\CashReceiptDetail;
-use App\Models\ElectricUUS;
 use App\Models\Site;
-use App\Models\System;
 use App\Models\Unit;
 use App\Models\User;
-use App\Services\Midtrans\CreateSnapTokenService;
+use App\Models\WaterUUS;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
-use stdClass;
-use Throwable;
 
-class ElectricUUSController extends Controller
+class WaterUUSController extends Controller
 {
     public function index()
     {
-        $connElecUUS = ConnectionDB::setConnection(new ElectricUUS());
+        $connWatercUUS = ConnectionDB::setConnection(new WaterUUS());
 
-        $data['elecUSS'] = $connElecUUS->get();
+        $data['waterUSS'] = $connWatercUUS->get();
 
-        return view('AdminSite.UtilityUsageRecording.Electric.index', $data);
+        return view('AdminSite.UtilityUsageRecording.Water.index', $data);
     }
 
     public function create()
@@ -38,9 +31,9 @@ class ElectricUUSController extends Controller
         $connUnit = ConnectionDB::setConnection(new Unit());
         $unit = $connUnit->where('id_unit', $id_unit)->first();
 
-        if ($unit->allElectricUUSbyYear) {
+        if ($unit->allWaterUUSbyYear) {
             $monthUUS = [];
-            foreach ($unit->allElectricUUSbyYear as $uus) {
+            foreach ($unit->allWaterUUSbyYear as $uus) {
                 $monthUUS[] = $uus->periode_bulan;
             }
         }
@@ -48,7 +41,7 @@ class ElectricUUSController extends Controller
         $data['unit'] = $unit;
         $data['monthUUS'] = $monthUUS;
 
-        return view('AdminSite.UtilityUsageRecording.Electric.create', $data);
+        return view('AdminSite.UtilityUsageRecording.Water.create', $data);
     }
 
     public function store($id_unit, Request $request)
@@ -58,14 +51,14 @@ class ElectricUUSController extends Controller
         $user = $user->setConnection($site->db_name);
         $user = $user->where('login_user', $request->user()->email)->first();
 
-        $connElecUUS = ConnectionDB::setConnection(new ElectricUUS());
+        $connWaterUUS = ConnectionDB::setConnection(new WaterUUS());
 
-        $connElecUUS->create([
+        $connWaterUUS->create([
             'periode_bulan' => $request->periode_bulan,
             'periode_tahun' => Carbon::now()->format('Y'),
             'id_unit' => $id_unit,
-            'nomor_listrik_awal' => $request->previous,
-            'nomor_listrik_akhir' => $request->current,
+            'nomor_air_awal' => $request->previous,
+            'nomor_air_akhir' => $request->current,
             'usage' => $request->current - $request->previous,
             'id_user' => $user->id_user
         ]);
@@ -75,16 +68,14 @@ class ElectricUUSController extends Controller
 
     public function approve($id)
     {
-        $connElecUUS = ConnectionDB::setConnection(new ElectricUUS());
-        $elecUSS = $connElecUUS->find($id);
+        $connWaterUUS = ConnectionDB::setConnection(new WaterUUS());
+        $waterUSS = $connWaterUUS->find($id);
 
         try {
             DB::beginTransaction();
 
-            $elecUSS->is_approve = '1';
-            $elecUSS->save();
-
-            // HelpNotifikasi::paymentElecUSS($elecUSS, $transaction);
+            $waterUSS->is_approve = '1';
+            $waterUSS->save();
 
             Alert::success('Berhasil', 'Berhasil approve tagihan');
 

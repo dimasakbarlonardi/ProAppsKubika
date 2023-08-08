@@ -80,7 +80,7 @@
                                     ['value' => '11', 'name' => 'November', 'isDisabled' => false],
                                     ['value' => '12', 'name' => 'December', 'isDisabled' => false],
                                 ];
-                                foreach ($unit->allElectricUUSbyYear as $uus) {
+                                foreach ($unit->allWaterUUSbyYear as $uus) {
                                     foreach ($months as $key => $month) {
                                         if($month['value'] == $uus->periode_bulan) {
                                             $months[$key]['isDisabled'] = true;
@@ -88,7 +88,7 @@
                                     }
                                 }
                             @endphp
-                            <form method="post" action="{{ route('store-usr-electric', $unit->id_unit) }}">
+                            <form method="post" action="{{ route('store-usr-water', $unit->id_unit) }}">
                                 @csrf
                                 <div class="mb-3">
                                     <div class="row">
@@ -115,13 +115,13 @@
                                         <div class="col-6">
                                             <label class="form-label">Previous</label>
                                             <input class="form-control" name="previous" type="number"
-                                                value="{{ count($unit->electricUUS) > 0 ? $unit->electricUUS[0]->nomor_listrik_akhir : 0 }}"
-                                                {{ count($unit->electricUUS) > 0 ? 'readonly' : '' }} />
+                                                value="{{ count($unit->waterUUS) > 0 ? $unit->waterUUS[0]->nomor_air_akhir : 0 }}"
+                                                {{ count($unit->waterUUS) > 0 ? 'readonly' : '' }} />
                                         </div>
                                         <div class="col-6">
                                             <label class="form-label">Current</label>
                                             <input class="form-control"
-                                                min="{{ count($unit->electricUUS) > 0 ? $unit->electricUUS[0]->nomor_listrik_akhir : 0 }}"
+                                                min="{{ count($unit->waterUUS) > 0 ? $unit->waterUUS[0]->nomor_air_akhir : 0 }}"
                                                 name="current" type="number" placeholder="111" />
                                         </div>
                                     </div>

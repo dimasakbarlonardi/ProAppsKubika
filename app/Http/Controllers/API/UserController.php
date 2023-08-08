@@ -132,7 +132,9 @@ class UserController extends Controller
 
         $user = new User();
         $user = $user->setConnection($site->db_name);
-        $user = $user->where('login_user', $getUser->email)->first();
+        $user = $user->where('login_user', $getUser->email)
+        ->with('RoleH')
+        ->first();
 
         return ResponseFormatter::success($user, 'Data profile user berhasil diambil');
     }

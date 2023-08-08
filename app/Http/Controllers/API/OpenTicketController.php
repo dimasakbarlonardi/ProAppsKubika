@@ -9,6 +9,7 @@ use App\Models\JenisRequest;
 use App\Models\OpenTicket;
 use App\Models\System;
 use App\Models\Unit;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -16,6 +17,18 @@ use Throwable;
 
 class OpenTicketController extends Controller
 {
+    public function listTickets(Request $request)
+    {
+        $connOpenTicket = ConnectionDB::setConnection(new OpenTicket());
+        $connUser = ConnectionDB::setConnection(new User());
+
+        $user = $connUser->where('login_user', $request->user()->email)->first();
+        $tickets = $connOpenTicket->where('id_user', $user->id_user)->get();
+
+        return ResponseFormatter::success([
+            $tickets
+        ], 'Berhasil mengambil semua tickets');
+    }
     public function jenisRequest(Request $request)
     {
         $connJenisReq = ConnectionDB::setConnection(new JenisRequest());
@@ -77,5 +90,18 @@ class OpenTicketController extends Controller
                 'error' => $e,
             ], 'Gagal membuat ticket');
         }
+    }
+
+    public function show($id, Request $request)
+    {
+        $connRequest = ConnectionDB::setConnection(new OpenTicket());
+
+        $ticket = $connRequest->where('id', $id)->with('User')->first();
+        $ticket->deskripsi_request = strip_tags($ticket->deskripsi_request);
+        $ticket->deskripsi_respon = strip_tags($ticket->deskripsi_respon);
+
+        return ResponseFormatter::success([
+            $ticket
+        ], 'Berhasil mengambil request');
     }
 }

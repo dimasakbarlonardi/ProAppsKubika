@@ -38,8 +38,10 @@ Route::prefix('v1')->group(function () {
         Route::get('/invoice/{id}', [PaymentController::class, 'invoiceAPI']);
 
         // Open Ticket
+        Route::get('/tickets', [OpenTicketController::class, 'listTickets']);
         Route::get('/jenis-request', [OpenTicketController::class, 'jenisRequest']);
         Route::get('/tenant-unit', [UnitController::class, 'tenantUnit']);
         Route::post('/open-ticket', [OpenTicketController::class, 'store']);
+        Route::get('/open-ticket/{id}', [OpenTicketController::class, 'show']);
     });
 });

@@ -42,6 +42,7 @@ use App\Http\Controllers\Admin\JabatanController;
 use App\Http\Controllers\Admin\SubMenuController;
 use App\Http\Controllers\Admin\UtilityController;
 use App\Http\Controllers\Admin\BayarnonController;
+use App\Http\Controllers\Admin\BillingController;
 use App\Http\Controllers\Admin\KaryawanController;
 use App\Http\Controllers\Admin\MainFormController;
 use App\Http\Controllers\Admin\PengurusController;
@@ -114,6 +115,7 @@ use App\Http\Controllers\Admin\ChecklistOfficeManagementHController;
 use App\Http\Controllers\Admin\ElectricUUSController;
 use App\Http\Controllers\Admin\OffBoardingKepemilikanUnitController;
 use App\Http\Controllers\Admin\PPNController;
+use App\Http\Controllers\Admin\WaterUUSController;
 
 /*
 |--------------------------------------------------------------------------
@@ -658,12 +660,28 @@ Route::prefix('admin')->group(function () {
         // ---------------End Checklist HK-----------------
 
 
-        // ---------------Start USR Electric ----------------
+        // ---------------Start UUS Electric ----------------
         Route::get('uus-electric', [ElectricUUSController::class, 'index'])->name('usr-electric');
         Route::get('create/usr-electric', [ElectricUUSController::class, 'create'])->name('create-usr-electric');
         Route::post('store/usr-electric/{id}', [ElectricUUSController::class, 'store'])->name('store-usr-electric');
         Route::post('approve/usr-electric/{id}', [ElectricUUSController::class, 'approve'])->name('approve-usr-electric');
-        // ---------------End USR Electric-----------------
+        // ---------------End UUS Electric-----------------
+
+        // ---------------Start UUS Water -------------------
+        Route::get('uus-water', [WaterUUSController::class, 'index'])->name('uus-water');
+        Route::get('create/usr-water', [WaterUUSController::class, 'create'])->name('create-usr-water');
+        Route::post('store/usr-water/{id}', [WaterUUSController::class, 'store'])->name('store-usr-water');
+        Route::post('approve/usr-water/{id}', [WaterUUSController::class, 'approve'])->name('approve-usr-water');
+        // ---------------End UUS Water -------------------
+
+        // Generate monthly invoice IPL & Service charge
+        Route::post('generate-invoice', [BillingController::class, 'generateMonthlyInvoice'])->name('generateMonthlyInvoice');
+
+        // Blast invoice
+        Route::post('blast-invoice/{id}', [BillingController::class, 'blastMonthlyInvoice'])->name('blastMonthlyInvoice');
+
+
+        Route::post('get-montly-ar', [BillingController::class, 'getOverdueARTenant']);
     });
 });
 
