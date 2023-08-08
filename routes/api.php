@@ -1,6 +1,7 @@
 <?php
 
 use App\Helpers\ResponseFormatter;
+use App\Http\Controllers\API\BillingController;
 use App\Http\Controllers\API\OpenTicketController;
 use App\Http\Controllers\API\SiteController;
 use App\Http\Controllers\API\UnitController;
@@ -43,5 +44,8 @@ Route::prefix('v1')->group(function () {
         Route::get('/tenant-unit', [UnitController::class, 'tenantUnit']);
         Route::post('/open-ticket', [OpenTicketController::class, 'store']);
         Route::get('/open-ticket/{id}', [OpenTicketController::class, 'show']);
+
+        // Inspection
+        Route::get('/insert-electric/{id}', [BillingController::class, 'insertElectricMeter']);
     });
 });
