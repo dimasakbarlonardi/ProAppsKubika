@@ -26,7 +26,7 @@ Route::prefix('v1')->group(function () {
         return ResponseFormatter::success('PRO APPS API V1');
     });
     Route::get('sites', [SiteController::class, 'sites']);
-    Route::post('login', [UserController::class, 'login'])->name('api-login');
+    Route::post('/login', [UserController::class, 'login'])->name('api-login');
 
     // Open Ticket
 
