@@ -30,6 +30,8 @@ Route::prefix('v1')->group(function () {
 
    // Inspection
    Route::get('/insert-electric/{unitID}/{token}', [BillingController::class, 'insertElectricMeter']);
+   Route::get('store/insert-electric/{unitID}/{token}', [BillingController::class, 'storeElectricMeter'])->name('store-usr-electric');
+
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/user', [UserController::class, 'user'])->name('user');

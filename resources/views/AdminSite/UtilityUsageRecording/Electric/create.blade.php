@@ -66,8 +66,7 @@
                                     }
                                 }
                             @endphp
-                            <form method="post" action="{{ route('store-usr-electric', $unit->id_unit) }}">
-                                @csrf
+                            <form action="{{ route('store-usr-electric', [$unit->id_unit, $token]) }}">
                                 <div class="mb-3">
                                     <div class="row">
                                         <div class="col-6">
@@ -104,7 +103,6 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="mb-3 mt-5">
                                     <button class="btn btn-primary d-block w-100 mt-3" type="submit">
                                         Submit
