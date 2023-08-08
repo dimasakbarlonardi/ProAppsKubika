@@ -12,6 +12,7 @@ use App\Models\IPLType;
 use App\Models\MonthlyArTenant;
 use App\Models\MonthlyIPL;
 use App\Models\MonthlyUtility;
+use App\Models\PerhitDenda;
 use App\Models\ReminderLetter;
 use App\Models\System;
 use App\Models\Unit;
@@ -19,11 +20,13 @@ use App\Models\Utility;
 use App\Models\WaterUUS;
 use App\Services\Midtrans\CreateSnapTokenService;
 use Carbon\Carbon;
+use DateTime;
 use Dflydev\DotAccessData\Util;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 use stdClass;
+use Throwable;
 
 class BillingController extends Controller
 {
@@ -47,29 +50,20 @@ class BillingController extends Controller
             $createUtilityBill = $this->createUtilityBill($elecUSS, $waterUSS, $createIPLbill);
             $createMonthlyTenant = $this->createMonthlyTenant($createUtilityBill, $createIPLbill, $elecUSS, $waterUSS);
 
-            $transaction = $this->createTransaction($createMonthlyTenant);
-
-            $createIPLbill->no_monthly_invoice = $transaction->no_invoice;
             $createIPLbill->save();
-
-            $createUtilityBill->no_monthly_invoice = $transaction->no_invoice;
             $createUtilityBill->save();
 
-            $transaction->save();
+            $elecUSS->no_refrensi = $createUtilityBill->id;
+            $elecUSS->save();
+            $waterUSS->no_refrensi = $createUtilityBill->id;
+            $waterUSS->save();
 
-            $createMonthlyTenant->no_monthly_invoice = $transaction->no_invoice;
+            $createMonthlyTenant->id_monthly_utility = $createUtilityBill->id;
+            $createMonthlyTenant->save();
             $createMonthlyTenant->id_monthly_ipl = $createIPLbill->id;
             $createMonthlyTenant->save();
 
-            $elecUSS->no_refrensi = $transaction->no_invoice;
-            $elecUSS->save();
-
-            $waterUSS->no_refrensi = $transaction->no_invoice;
-            $waterUSS->save();
-
-            HelpNotifikasi::paymentMonthlyTenant($elecUSS, $transaction);
-
-            Alert::success('Berhasil', 'Berhasil generate invoice');
+            Alert::success('Berhasil', 'Berhasil calculate invoice');
 
             return redirect()->back();
             DB::commit();
@@ -84,17 +78,32 @@ class BillingController extends Controller
     public function createMonthlyTenant($createUtilityBill, $createIPLbill, $elecUSS, $waterUSS)
     {
         $connMonthlyTenant = ConnectionDB::setConnection(new MonthlyArTenant());
-        $connReminder = ConnectionDB::setConnection(new ReminderLetter());
+        $perhitDenda = ConnectionDB::setConnection(new PerhitDenda());
 
-        $previousMonth = (int) $createUtilityBill->periode_bulan - 1;
-        $previousMonth = '0' . $previousMonth;
+        $perhitDenda = $perhitDenda->find(3);
+        $perhitDenda = $perhitDenda->denda_flat_procetage ? $perhitDenda->denda_flat_procetage : $perhitDenda->denda_flat_amount;
 
-        $previousBill = $connMonthlyTenant->where('periode_bulan', $previousMonth)
-            ->where('periode_tahun', Carbon::now()
-                ->format('Y'))->first();
+        $previousBills = $connMonthlyTenant->where('tgl_jt_invoice', '<', Carbon::now()->format('Y-m-d'))
+            ->where('periode_tahun', Carbon::now()->format('Y'))
+            ->get();
 
-        $jatuh_tempo_1 = $connReminder->find(1)->durasi_reminder_letter;
-        $jatuh_tempo_1 = Carbon::now()->addDays($jatuh_tempo_1);
+        $total_denda = 0;
+
+        foreach ($previousBills as $prevBill) {
+            $jt = new DateTime($prevBill->tgl_jt_invoice);
+            $now = Carbon::now();
+            $jml_hari_jt = $now->diff($jt)->format("%a");
+
+            $denda_bulan_sebelumnya = $jml_hari_jt * $perhitDenda;
+
+            $prevBill->jml_hari_jt = $jml_hari_jt;
+            $prevBill->total_denda = $denda_bulan_sebelumnya;
+            $prevBill->save();
+
+            $total_denda += $prevBill->total_denda;
+
+            $connMonthlyTenant->denda_bulan_sebelumnya = $total_denda;
+        }
 
         $connMonthlyTenant->id_site = $createUtilityBill->id_site;
         $connMonthlyTenant->id_tower = $createUtilityBill->id_tower;
@@ -104,10 +113,6 @@ class BillingController extends Controller
         $connMonthlyTenant->periode_tahun = $createUtilityBill->periode_tahun;
         $connMonthlyTenant->total_tagihan_ipl = $createIPLbill->total_tagihan_ipl;
         $connMonthlyTenant->total_tagihan_utility = $createUtilityBill->total_tagihan_utility;
-        $connMonthlyTenant->tgl_jt_invoice = $jatuh_tempo_1;
-        $connMonthlyTenant->denda_bulan_sebelumnya = $previousBill ? $previousBill->total_denda : 0;
-        $connMonthlyTenant->id_eng_listrik = $elecUSS->id;
-        $connMonthlyTenant->id_eng_air = $waterUSS->id;
 
         return $connMonthlyTenant;
     }
@@ -128,9 +133,7 @@ class BillingController extends Controller
         $total_tagihan_ipl = $ipl_service_charge + $ipl_sink_fund;
 
         $connIPL->id_site = $unit->id_site;
-        $connIPL->id_tower = $unit->id_tower;
         $connIPL->id_unit = $unit->id_unit;
-        $connIPL->id_tenant = $unit->TenantUnit->id_tenant;
         $connIPL->periode_bulan = $request->periode_bulan;
         $connIPL->periode_tahun = $request->periode_tahun;
         $connIPL->ipl_service_charge = $ipl_service_charge;
@@ -156,25 +159,23 @@ class BillingController extends Controller
         $total_tagihan = $water_bill + $elec_bill;
 
         $connMonthlyUtility->id_site = $createIPLbill->id_site;
-        $connMonthlyUtility->id_tower = $createIPLbill->id_tower;
         $connMonthlyUtility->id_unit = $createIPLbill->id_unit;
-        $connMonthlyUtility->id_tenant = $createIPLbill->id_tenant;
+        $connMonthlyUtility->id_eng_listrik = $elecUSS->id;
+        $connMonthlyUtility->id_eng_air = $waterUSS->id;
         $connMonthlyUtility->periode_bulan = $createIPLbill->periode_bulan;
         $connMonthlyUtility->periode_tahun = $createIPLbill->periode_tahun;
-        $connMonthlyUtility->meter_air = $waterUSS->usage;
-        $connMonthlyUtility->meter_listrik = $elecUSS->usage;
         $connMonthlyUtility->total_tagihan_utility = $total_tagihan;
 
         return $connMonthlyUtility;
     }
 
-    public function createTransaction($createMonthlyTenant)
+    public function createTransaction($mt)
     {
         $connSystem = ConnectionDB::setConnection(new System());
         $connTransaction = ConnectionDB::setConnection(new CashReceipt());
         $system = $connSystem->find(1);
 
-        $user = $createMonthlyTenant->Unit->TenantUnit->Tenant->User;
+        $user = $mt->Unit->TenantUnit->Tenant->User;
 
         $countCR = $system->sequence_no_cash_receiptment + 1;
         $no_cr = $system->kode_unik_perusahaan . '/' .
@@ -194,23 +195,65 @@ class BillingController extends Controller
         try {
             DB::beginTransaction();
 
-            $subtotal = $createMonthlyTenant->total_tagihan_utility + $createMonthlyTenant->total_tagihan_ipl + $createMonthlyTenant->denda_bulan_sebelumnya;
-
             $items = [];
+            $index = 0;
+            $subtotal = $mt->total_tagihan_utility + $mt->total_tagihan_ipl + $mt->denda_bulan_sebelumnya;
+            $prevSubTotal = 0;
+            $total_denda = 0;
+
+            if ($mt->PreviousMonthBill()) {
+                foreach ($mt->PreviousMonthBill() as $key => $prevBill) {
+                    $prevSubTotal += $prevBill->total_tagihan_utility + $prevBill->total_tagihan_ipl + $prevBill->denda_bulan_sebelumnya;
+                    $total_denda += $prevBill->total_denda;
+
+                    $sc = new stdClass();
+                    $sc->id = $key + 1;
+                    $sc->quantity = 1;
+                    $sc->detil_pekerjaan = 'Tagihan Utility bulan ' . $prevBill->periode_bulan;
+                    $sc->detil_biaya_alat = $prevBill->total_tagihan_utility;
+                    array_push($items, $sc);
+
+                    $index += $index;
+                    $ipl = new stdClass();
+                    $ipl->id = $index;
+                    $ipl->quantity = 1;
+                    $ipl->detil_pekerjaan = 'Tagihan IPL bulan ' . $prevBill->periode_bulan;
+                    $ipl->detil_biaya_alat = $prevBill->total_tagihan_ipl;
+                    array_push($items, $ipl);
+
+                    if ($mt->denda_bulan_sebelumnya != 0 || $mt->denda_bulan_sebelumnya != null) {
+                        $sc = new stdClass();
+                        $sc->id = $index + 1;
+                        $sc->quantity = 1;
+                        $sc->detil_pekerjaan = 'Denda tagihan bulan ' . $prevBill->periode_bulan;
+                        $sc->detil_biaya_alat = $total_denda;
+                        array_push($items, $sc);
+                    }
+
+                    $connCRd = ConnectionDB::setConnection(new CashReceiptDetail());
+                    $connCRd->create([
+                        'no_draft_cr' => $no_cr,
+                        'ket_transaksi' => 'Pembayaran bulan IPL dan Utility ' . $prevBill->periode_bulan,
+                        'tx_amount' => $prevSubTotal
+                    ]);
+                }
+            }
 
             $ipl = new stdClass();
-            $ipl->id = 1;
+            $ipl->id = $index + 1;
             $ipl->quantity = 1;
-            $ipl->detil_pekerjaan = 'Pembayaran tagihan IPL bulan ' . $createMonthlyTenant->periode_bulan;
-            $ipl->detil_biaya_alat = $createMonthlyTenant->total_tagihan_ipl;
+            $ipl->detil_pekerjaan = 'Tagihan IPL bulan ' . $mt->periode_bulan;
+            $ipl->detil_biaya_alat = $mt->total_tagihan_ipl;
             array_push($items, $ipl);
 
             $sc = new stdClass();
-            $sc->id = 2;
+            $sc->id = $index + 1;
             $sc->quantity = 1;
-            $sc->detil_pekerjaan = 'Pembayaran tagihan Service Charge bulan ' . $createMonthlyTenant->periode_bulan;
-            $sc->detil_biaya_alat = $createMonthlyTenant->total_tagihan_utility;
+            $sc->detil_pekerjaan = 'Tagihan Utility bulan ' . $mt->periode_bulan;
+            $sc->detil_biaya_alat = $mt->total_tagihan_utility;
             array_push($items, $sc);
+
+            $subtotal = $subtotal + $prevSubTotal;
 
             $createTransaction = $connTransaction;
             $createTransaction->order_id = $order_id;
@@ -218,7 +261,7 @@ class BillingController extends Controller
             $createTransaction->no_reff = $no_inv;
             $createTransaction->no_invoice = $no_inv;
             $createTransaction->no_draft_cr = $no_cr;
-            $createTransaction->ket_pembayaran = 'INV/' . $user->id_user . '/' . $createMonthlyTenant->Unit->nama_unit;
+            $createTransaction->ket_pembayaran = 'INV/' . $user->id_user . '/' . $mt->Unit->nama_unit;
             $createTransaction->admin_fee = $admin_fee;
             $createTransaction->sub_total = $subtotal;
             $createTransaction->gross_amount = $subtotal + $admin_fee;
@@ -231,17 +274,9 @@ class BillingController extends Controller
             $createTransaction->snap_token = $midtrans->getSnapToken();
             $createTransaction->save();
 
-            $connCRd = ConnectionDB::setConnection(new CashReceiptDetail());
-            $connCRd->create([
-                'no_draft_cr' => $no_cr,
-                'ket_transaksi' => 'Pembayaran bulan IPL dan Utility' . $createMonthlyTenant->periode_bulan,
-                'tx_amount' => $subtotal + $admin_fee
-            ]);
-
             $system->sequence_no_cash_receiptment = $countCR;
             $system->sequence_no_invoice = $countINV;
             $system->save();
-
 
             DB::commit();
         } catch (Throwable $e) {
@@ -274,51 +309,39 @@ class BillingController extends Controller
         ]);
     }
 
-    public function regenerateSnapToken(Request $request)
+    public function blastMonthlyInvoice($id)
     {
-        $connCR = ConnectionDB::setConnection(new CashReceipt());
-
-        $cr = $connCR->where('snap_token', $request->token)->first();
-
         $connMonthlyTenant = ConnectionDB::setConnection(new MonthlyArTenant());
-        $monthlyTenant = $connMonthlyTenant->where('tgl_bayar_invoice', null)->get();
+        $connReminder = ConnectionDB::setConnection(new ReminderLetter());
 
-        $items = [];
-        foreach ($monthlyTenant as $key => $item) {
-            $prevMonth = (int) $item->periode_bulan - 1;
-            $prevMonth = '0' . $prevMonth;
+        try {
+            DB::beginTransaction();
 
-            $ipl = new stdClass();
-            $ipl->id = $key + 1;
-            $ipl->quantity = 1;
-            $ipl->detil_pekerjaan = 'Tagihan IPL bulan ' . $item->periode_bulan;
-            $ipl->detil_biaya_alat = $item->total_tagihan_ipl;
-            array_push($items, $ipl);
+            $mt = $connMonthlyTenant->find($id);
+            $transaction = $this->createTransaction($mt);
 
-            $sc = new stdClass();
-            $sc->id = $key + 1;
-            $sc->quantity = 1;
-            $sc->detil_pekerjaan = 'Tagihan Utility bulan ' . $item->periode_bulan;
-            $sc->detil_biaya_alat = $item->total_tagihan_utility;
-            array_push($items, $sc);
+            $jatuh_tempo_1 = $connReminder->find(1)->durasi_reminder_letter;
+            $jatuh_tempo_1 = Carbon::now()->addDays($jatuh_tempo_1);
 
-            if ($item->denda_bulan_sebelumnya != 0) {
-                $sc = new stdClass();
-                $sc->id = $key + 1;
-                $sc->quantity = 1;
-                $sc->detil_pekerjaan = 'Denda keterlambatan bulan ' . $prevMonth;
-                $sc->detil_biaya_alat = $item->denda_bulan_sebelumnya;
-                array_push($items, $sc);
-            }
+            $mt->tgl_jt_invoice = $jatuh_tempo_1;
+            $mt->no_monthly_invoice = $transaction->no_invoice;
+
+            $mt->save();
+            $transaction->save();
+
+            HelpNotifikasi::paymentMonthlyTenant($mt, $transaction);
+
+            Alert::success('Berhasil', 'Berhasil mengirim invoice');
+
+            return redirect()->back();
+
+            DB::commit();
+        } catch (Throwable $e) {
+            DB::rollBack();
+            dd($e);
+            Alert::error('Gagal', 'Gagal mengirim invoice');
+
+            return redirect()->back();
         }
-
-        // dd($cr);
-        $midtrans = new CreateSnapTokenService($cr, $items);
-        $cr->snap_token = $midtrans->getSnapToken();
-        $cr->save();
-
-        return response()->json([
-            'status' => 'ok'
-        ]);
     }
 }

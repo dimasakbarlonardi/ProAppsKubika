@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\ConnectionDB;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -30,16 +31,17 @@ class ElectricUUS extends Model
         return $this->hasOne(Unit::class, 'id_unit', 'id_unit');
     }
 
-    public function CR()
+    public function WaterUUSrelation()
     {
-        return $this->hasOne(CashReceipt::class, 'no_reff', 'no_refrensi');
+        return ConnectionDB::setConnection(new WaterUUS())
+        ->where('periode_bulan', $this->periode_bulan)
+        ->where('periode_tahun', $this->periode_tahun)
+        ->first();
     }
 
-    public function dataByMonthYear($month, $year)
+    public function MonthlyUtility()
     {
-        return $this->hasOne(WaterUUS::class, 'id_unit', 'id_unit')
-        ->where('periode_bulan', $month)
-        ->where('periode_tahun', $year)->first();
+        return $this->hasOne(MonthlyUtility::class, 'id_eng_listrik', 'id');
     }
 
     protected $dates = ['deleted_at'];

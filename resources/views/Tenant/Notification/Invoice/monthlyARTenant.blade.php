@@ -30,7 +30,7 @@
         <div class="row align-items-center">
             <div class="col">
                 <h6 class="text-500">Invoice to</h6>
-                <h5>{{ $transaction->monthlyARTenant->Tenant->nama_tenant }}</h5>
+                <h5>{{ $transaction->monthlyARTenant->Unit->TenantUnit->Tenant->nama_tenant }}</h5>
                 <p class="fs--1">
                     {{ Auth::user()->Site->nama_site }},
                     {{ $transaction->monthlyARTenant->Unit->Tower->nama_tower }}
@@ -38,8 +38,8 @@
                     {{ Auth::user()->Site->provinsi }}, {{ Auth::user()->Site->kode_pos }}
                 </p>
                 <p class="fs--1"><a
-                        href="mailto:{{ $transaction->monthlyARTenant->Tenant->email_tenant }}">{{ $transaction->monthlyARTenant->Tenant->email_tenant }}</a><br /><a
-                        href="tel:444466667777">{{ $transaction->monthlyARTenant->Tenant->no_telp_tenant }}</a></p>
+                        href="mailto:{{ $transaction->monthlyARTenant->Unit->TenantUnit->Tenant->email_tenant }}">{{ $transaction->monthlyARTenant->Unit->TenantUnit->Tenant->email_tenant }}</a><br /><a
+                        href="tel:444466667777">{{ $transaction->monthlyARTenant->Unit->TenantUnit->Tenant->no_telp_tenant }}</a></p>
             </div>
             <div class="col-sm-auto ms-auto">
                 <div class="table-responsive">
@@ -67,7 +67,7 @@
             </div>
         </div>
         <div class="table-responsive scrollbar mt-4 fs--1">
-            <table class="table table-striped border-bottom">
+            <table class="table border-bottom">
                 <thead data-bs-theme="light">
                     <tr class="bg-primary text-white dark__bg-1000">
                         <th class="border-0">Products</th>
@@ -89,6 +89,7 @@
                                 <td class="align-middle text-end"></td>
                                 <td class="align-middle text-end"></td>
                             </tr>
+                            <tr></tr>
                             <tr>
                                 <td class="align-middle">
                                     <h6 class="mb-0 text-nowrap">Tagihan Utility</h6>
@@ -97,13 +98,14 @@
                                 </td>
                                 <td class="align-middle text-center">
                                     <br>
-                                    <span>Usage : {{ $prevBill->ElectricUSS->usage }}</span> <br>
-                                    <span>Usage : {{ $prevBill->WaterUSS->usage }}</span>
+                                    <span>Usage : {{ $prevBill->MonthlyUtility->ElectricUUS->usage }}</span> <br>
+                                    <span>Usage : {{ $prevBill->MonthlyUtility->WaterUUS->usage }}</span>
                                 </td>
                                 <td class="align-middle text-end"></td>
                                 <td class="align-middle text-end">
                                     {{ rupiah($prevBill->total_tagihan_utility) }}</td>
                             </tr>
+                            <tr></tr>
                             <tr>
                                 <td class="align-middle">
                                     <h6 class="mb-0 text-nowrap">Tagihan IPL</h6>
@@ -141,8 +143,8 @@
                         </td>
                         <td class="align-middle text-center">
                             <br>
-                            <span>Usage : {{ $transaction->MonthlyARTenant->ElectricUSS->usage }}</span> <br>
-                            <span>Usage : {{ $transaction->MonthlyARTenant->WaterUSS->usage }}</span>
+                            <span>Usage : {{ $transaction->MonthlyARTenant->MonthlyUtility->ElectricUUS->usage }}</span> <br>
+                            <span>Usage : {{ $transaction->MonthlyARTenant->MonthlyUtility->WaterUUS->usage }}</span>
                         </td>
                         <td class="align-middle text-end"></td>
                         <td class="align-middle text-end">

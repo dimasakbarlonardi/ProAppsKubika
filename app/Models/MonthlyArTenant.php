@@ -19,9 +19,7 @@ class MonthlyArTenant extends Model
 
     protected $fillable = [
         'id_site',
-        'id_tower',
         'id_unit',
-        'id_tenant',
         'no_monthly_invoice',
         'periode_bulan',
         'periode_tahun',
@@ -30,10 +28,10 @@ class MonthlyArTenant extends Model
         'jml_hari_jt',
         'total_denda',
         'biaya_lain',
+        'total',
         'tgl_jt_invoice',
         'tgl_bayar_invoice',
-        'id_eng_listrik',
-        'id_eng_air',
+        'id_monthly_utility',
         'id_monthly_ipl',
     ];
 
@@ -42,29 +40,19 @@ class MonthlyArTenant extends Model
         return $this->hasOne(Unit::class, 'id_unit', 'id_unit');
     }
 
-    public function Tenant()
-    {
-        return $this->hasOne(Tenant::class, 'id_tenant', 'id_tenant');
-    }
-
     public function CashReceipt()
     {
         return $this->hasOne(CashReceipt::class, 'no_reff', 'no_monthly_invoice');
     }
 
-    public function ElectricUSS()
-    {
-        return $this->hasOne(ElectricUUS::class, 'id', 'id_eng_listrik');
-    }
-
-    public function WaterUSS()
-    {
-        return $this->hasOne(WaterUUS::class, 'id', 'id_eng_air');
-    }
-
     public function MonthlyIPL()
     {
         return $this->hasOne(MonthlyIPL::class, 'id', 'id_monthly_ipl');
+    }
+
+    public function MonthlyUtility()
+    {
+        return $this->hasOne(MonthlyUtility::class, 'id', 'id_monthly_utility');
     }
 
     public function NextMonthBill()
@@ -82,11 +70,8 @@ class MonthlyArTenant extends Model
 
     public function PreviousMonthBill()
     {
-        $currentMonth = $this->MonthlyIPL()->first();
-
-        $connNextMonth = ConnectionDB::setConnection(new MonthlyArTenant());
-        $prevMonthBill = $connNextMonth->where('periode_bulan', '<', $currentMonth->periode_bulan)
-        ->where('periode_tahun', Carbon::now()->format('Y'))
+        $prevMonthBill = ConnectionDB::setConnection(new MonthlyArTenant())->where('periode_bulan', '<', $this->periode_bulan)
+        ->where('periode_tahun', $this->periode_tahun)
         ->get();
 
         return $prevMonthBill;

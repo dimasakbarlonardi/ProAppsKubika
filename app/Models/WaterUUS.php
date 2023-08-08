@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\ConnectionDB;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -29,16 +30,17 @@ class WaterUUS extends Model
         return $this->hasOne(Unit::class, 'id_unit', 'id_unit');
     }
 
-    public function dataByMonthYear($month, $year)
+    public function ElecUUSrelation()
     {
-        return $this->hasOne(ElectricUUS::class, 'id_unit', 'id_unit')
-        ->where('periode_bulan', $month)
-        ->where('periode_tahun', $year)->first();
+        return ConnectionDB::setConnection(new ElectricUUS())
+        ->where('periode_bulan', $this->periode_bulan)
+        ->where('periode_tahun', $this->periode_tahun)
+        ->first();
     }
 
-    public function CR()
+    public function MonthlyUtility()
     {
-        return $this->hasOne(CashReceipt::class, 'no_reff', 'no_refrensi');
+        return $this->hasOne(MonthlyUtility::class, 'id_eng_air', 'id');
     }
 
     protected $dates = ['deleted_at'];
