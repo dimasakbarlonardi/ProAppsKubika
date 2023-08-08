@@ -14,34 +14,14 @@
                         <div class="d-lg-flex justify-content-between">
                             <div class="row flex-between-center gy-2 px-x1 text-light">
                                 <div class="col-auto pe-0">
-                                    <h6 class="mb-0 text-light">List Check list Chiller</h6>
+                                    <h6 class="mb-0 text-light">List Inspection Chiller</h6>
                                 </div>
                             </div>
 
                             <div class="border-bottom border-200 my-3"></div>
                             <div class="d-flex align-items-center justify-content-between justify-content-lg-end px-x1">
-                                <button class="btn btn-sm btn-falcon-default d-xl-none" type="button"
-                                    data-bs-toggle="offcanvas" data-bs-target="#ticketOffcanvas"
-                                    aria-controls="ticketOffcanvas">
-                                    <span class="fas fa-filter" data-fa-transform="shrink-4 down-1"></span><span
-                                        class="ms-1 d-none d-sm-inline-block">Filter</span>
-                                </button>
-                                <div class="bg-300 mx-3 d-none d-lg-block d-xl-none" style="width: 1px; height: 29px">
-                                </div>
-                                <div class="d-none" id="table-ticket-actions">
-                                    <div class="d-flex">
-                                        <select class="form-select form-select-sm" aria-label="Bulk actions">
-                                            <option selected="">Bulk actions</option>
-                                            <option value="Refund">Refund</option>
-                                            <option value="Delete">Delete</option>
-                                            <option value="Archive">Archive</option>
-                                        </select><button class="btn btn-falcon-default btn-sm ms-2" type="button">
-                                            Apply
-                                        </button>
-                                    </div>
-                                </div>
                                 <div class="col-auto d-flex">
-                                    <a class="btn btn-falcon-default btn-sm text-600" href="{{ route('checklistchillers.create') }}"><span class="fas fa-plus fs--2 me-1"></span>Create Check list Chiller</a>
+                                    <a class="btn btn-falcon-default btn-sm text-600" href="{{ route('checklistchillers.create') }}"><span class="fas fa-plus fs--2 me-1"></span>Create Inspection Chiller</a>
                                 </div>
                             </div>
                         </div>
@@ -51,12 +31,10 @@
                             <thead>
                                 <tr>
                                     <th class="sort" data-sort="">No</th>
-                                    {{-- <th class="sort" data-sort="barcode_room">Barcode Room</th> --}}
-                                    {{-- <th class="sort" data-sort="id_room">Room</th> --}}
-                                    <th class="sort" data-sort="tgl_checklist">Tanggal Checklist</th>
-                                    {{-- <th class="sort" data-sort="time_checklist">Time Checklist</th> --}}
-                                    {{-- <th class="sort" data-sort="id_user">User</th> --}}
-                                    <th class="sort" data-sort="no_checklist_chiller">Nomer Check list Chiller</th>
+                                    <th class="sort" data-sort="equiqment">Equiqment</th>
+                                    <th class="sort" data-sort="no_checklist_chiller">Nomer Inspection Chiller</th>
+                                    <th class="sort" data-sort="id_room">Lokasi</th>
+                                    <th class="sort" data-sort="time_checklist">Schedule</th>
                                     <th class="sort">Action</th>
                                 </tr>
                             </thead>
@@ -64,12 +42,14 @@
                                 @foreach ($checklistchillers as $key => $checklistchiller)
                                     <tr>
                                         <th scope="row">{{ $key + 1 }}</th>
-                                        <td>{{ $checklistchiller->tgl_checklist }}</td>
+                                        <td>{{ $checklistchiller->equiqment}}
                                         <td>{{ $checklistchiller->no_checklist_chiller }}</td>
+                                        <td>{{ $checklistchiller->room->nama_room }}</td>
+                                        <td>{{ $checklistchiller->tgl_checklist }}</td>
                                         <td>
                                             <div class="dropdown font-sans-serif position-static"><button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal" type="button" id="order-dropdown-0" data-bs-toggle="dropdown" data-boundary="viewport" aria-haspopup="true" aria-expanded="false"><span class="fas fa-ellipsis-h fs--1"></span></button>
                                                 <div class="dropdown-menu dropdown-menu-end border py-0" aria-labelledby="order-dropdown-0">
-                                                  <div class="py-2"><a class="dropdown-item text" href="{{ route('checklistchillers.show', $checklistchiller->no_checklist_chiller) }}">Detail Chiller Checklist</a>
+                                                  <div class="py-2"><a class="dropdown-item text" href="{{ route('checklistchillers.show', $checklistchiller->no_checklist_chiller) }}">Detail Chiller Inspection</a>
                                                 </div>
                                             </div>
                                         </div>
@@ -118,11 +98,11 @@
                         <div class="card-body">
                             <form>
                                 <div class="mb-3 mt-n2">
-                                    <label class="form-label" for="timepicker2">Tanggal Checklist chiller</label>
+                                    <label class="form-label" for="timepicker2">Tanggal Inspection chiller</label>
                                     <input id="tgl_checklist" class="form-control datetimepicker" id="timepicker2" type="text" placeholder="d/m/y to d/m/y" data-options='{"mode":"range","dateFormat":"Y-m-d","disableMobile":true}' />
                                 </div>
                                 <div class="mb-3 mt-n2">
-                                    <label class="mb-1">Nomer Checklist chiller</label>
+                                    <label class="mb-1">Nomer Inspection chiller</label>
                                     <select class="form-select form-select-sm" name="no_checklist_chiller" required id="no_checklist_chiller">
                                         <option type="reset" value=""> All </option>
                                         @foreach ($checklistchillers as $checklistchiller)
@@ -131,7 +111,7 @@
                                     </select>
                                 </div>     
                                 <div class="mb-3 mt-n2">
-                                    <label class="mb-1">User Checklist chiller</label>
+                                    <label class="mb-1">User Inspection chiller</label>
                                     <select class="form-select form-select-sm" name="no_checklist_chiller" required id="no_checklist_chiller">
                                         @foreach ($idusers as $iduser)
                                             <option value="{{ $iduser->id }}"> {{ $iduser->name }}</option>
@@ -200,7 +180,7 @@
                                 <td>
                                     <div class="dropdown font-sans-serif position-static"><button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal" type="button" id="order-dropdown-0" data-bs-toggle="dropdown" data-boundary="viewport" aria-haspopup="true" aria-expanded="false"><span class="fas fa-ellipsis-h fs--1"></span></button>
                                         <div class="dropdown-menu dropdown-menu-end border py-0" aria-labelledby="order-dropdown-0">
-                                            <a class="dropdown-item text" href="/admin/checklistchillers/${item.no_checklist_chiller}">Detail chiller Checklist</a>
+                                            <a class="dropdown-item text" href="/admin/checklistchillers/${item.no_checklist_chiller}">Detail chiller Inspection</a>
                                         </div>
                                     </div>                        
                                 </td>

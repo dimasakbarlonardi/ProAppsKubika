@@ -14,7 +14,7 @@
                         <div class="d-lg-flex justify-content-between">
                             <div class="row flex-between-center gy-2 px-x1 text-light">
                                 <div class="col-auto pe-0">
-                                    <h6 class="mb-0 text-light">List Check list AHU</h6>
+                                    <h6 class="mb-0 text-light">List Inspection AHU</h6>
                                 </div>
                             </div>
 
@@ -41,7 +41,7 @@
                                     </div>
                                 </div>
                                 <div class="col-auto d-flex">
-                                    <a class="btn btn-falcon-default btn-sm text-600" href="{{ route('checklistahus.create') }}"><span class="fas fa-plus fs--2 me-1"></span>Create Check list AHU</a>
+                                    <a class="btn btn-falcon-default btn-sm text-600" href="{{ route('checklistahus.create') }}"><span class="fas fa-plus fs--2 me-1"></span>Create Inspection AHU</a>
                                 </div>
                             </div>
                         </div>
@@ -55,8 +55,6 @@
                                     <th class="sort" data-sort="no_checklist_ahu">Nomer Inspection AHU</th>
                                     <th class="sort" data-sort="id_room">Lokasi</th>
                                     <th class="sort" data-sort="tgl_checklist">Schedule</th>
-                                    {{-- <th class="sort" data-sort="time_checklist">Time Checklist</th> --}}
-                                    {{-- <th class="sort" data-sort="id_user">User</th> --}}
                                     <th class="sort">Action</th>
                                 </tr>
                             </thead>
@@ -64,14 +62,14 @@
                                 @foreach ($checklistahus as $key => $checklistahu)
                                     <tr>
                                         <th scope="row">{{ $key + 1 }}</th>
-                                        <td></td>
+                                        <td>{{ $checklistahu->engahu->nama_eng_ahu}}</td>
                                         <td>{{ $checklistahu->no_checklist_ahu }}</td>
                                         <td>{{ $checklistahu->room->nama_room }}</td>
                                         <td>{{\Carbon\Carbon::parse($checklistahu->tgl_checklist)->format(' d-M-Y') }}</td>
                                         <td>
                                             <div class="dropdown font-sans-serif position-static"><button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal" type="button" id="order-dropdown-0" data-bs-toggle="dropdown" data-boundary="viewport" aria-haspopup="true" aria-expanded="false"><span class="fas fa-ellipsis-h fs--1"></span></button>
                                                 <div class="dropdown-menu dropdown-menu-end border py-0" aria-labelledby="order-dropdown-0">
-                                                  <div class="py-2"><a class="dropdown-item text" href="{{ route('checklistahus.show', $checklistahu->no_checklist_ahu) }}">Detail AHU Checklist</a>
+                                                  <div class="py-2"><a class="dropdown-item text" href="{{ route('checklistahus.show', $checklistahu->no_checklist_ahu) }}">Detail AHU Inspection</a>
                                                     <div class="dropdown-divider"></div> <form class="d-inline" action="{{ route('checklistahus.destroy', $checklistahu->no_checklist_ahu) }}" method="post">
                                                         @method('DELETE')
                                                         @csrf
@@ -126,11 +124,11 @@
                         <div class="card-body">
                             <form>
                                 <div class="mb-3 mt-n2">
-                                    <label class="form-label" for="timepicker2">Tanggal Checklist AHU</label>
+                                    <label class="form-label" for="timepicker2">Tanggal Inspection AHU</label>
                                     <input id="tgl_checklist" class="form-control datetimepicker" id="timepicker2" type="text" placeholder="d/m/y to d/m/y" data-options='{"mode":"range","dateFormat":"Y-m-d","disableMobile":true}' />
                                 </div>
                                 <div class="mb-3 mt-n2">
-                                    <label class="mb-1">Nomer Checklist AHU</label>
+                                    <label class="mb-1">Nomer Inspection AHU</label>
                                     <select class="form-select form-select-sm" name="no_checklist_ahu" required id="no_checklist_ahu">
                                         <option type="reset" value=""> All </option>
                                         @foreach ($checklistahus as $checklistahu)
@@ -139,7 +137,7 @@
                                     </select>
                                 </div>     
                                 <div class="mb-3 mt-n2">
-                                    <label class="mb-1">User Checklist AHU</label>
+                                    <label class="mb-1">User Inspection AHU</label>
                                     <select class="form-select form-select-sm" name="user" required id="user">
                                         @foreach ($idusers as $iduser)
                                             <option value="{{ $iduser->id }}"> {{ $iduser->name }}</option>
@@ -205,7 +203,7 @@
                                 <td>
                                     <div class="dropdown font-sans-serif position-static"><button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal" type="button" id="order-dropdown-0" data-bs-toggle="dropdown" data-boundary="viewport" aria-haspopup="true" aria-expanded="false"><span class="fas fa-ellipsis-h fs--1"></span></button>
                                         <div class="dropdown-menu dropdown-menu-end border py-0" aria-labelledby="order-dropdown-0">
-                                            <a class="dropdown-item text" href="/admin/checklistahus/${item.no_checklist_ahu}">Detail ahu Checklist</a>
+                                            <a class="dropdown-item text" href="/admin/checklistahus/${item.no_checklist_ahu}">Detail ahu Inspection</a>
                                         </div>
                                     </div>                        
                                 </td>

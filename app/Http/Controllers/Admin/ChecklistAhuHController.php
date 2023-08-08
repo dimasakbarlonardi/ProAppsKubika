@@ -13,7 +13,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Http\Request;
-
+   
 class ChecklistAhuHController extends Controller
 {
     /**

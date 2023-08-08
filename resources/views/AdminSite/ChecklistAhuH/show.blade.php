@@ -16,7 +16,6 @@
                 @csrf
                 <div class="row">
                     <body>
-
                         <table>
                             <tr>
                                 <th><b>Barcode Room </b></th>
@@ -26,23 +25,20 @@
                             </tr>
                             <tr>
                                 <th><b>Tanggal Checklist </b></th>
-                                <td>: {{$checklistahu->tgl_checklist}}</td>
+                                <td>: {{\Carbon\Carbon::parse($checklistahu->tgl_checklist)->format(' d M Y') }}</td>
                                 <th><b>Room </b></th>
                                 <td>: {{ $checklistahu->room->nama_room }}</td>
                             </tr>
                             <tr>
                                 <th><b>Time Inspection </b></th>
-                                <td>: {{$checklistahu->time_checklist}}</td>
+                                <td>: {{\Carbon\Carbon::createFromFormat('H:i:s',$checklistahu->time_checklist)->format('h:i')}}</td>
                               <th><b>User </b></th>
                               @foreach ($idusers as $iduser)
                                 <td>: {{ $iduser->name}}</td>
                                 @endforeach
                             </tr>
                         </table>
-                        
-                        </body>
-
-
+                      </body>
                 <div class="mt-5" id="biaya" >
                     <h6><b>DETAIL Inspection AHU</b></h6>
                     <hr>
@@ -54,16 +50,14 @@
                             <thead class="bg-200 text-900">
                               <tr>
                                 <th class="sort" data-sort="no_checklist_ahu">Nomer Inspection AHU</th>
-                                <th class="sort" data-sort="in_out">In / Out</th>
-                                <th class="sort" data-sort="check_point">Checkpoint</th>
+                                <th class="sort" data-sort="in_out">Equiqment</th>
                                 <th class="sort" data-sort="keterangan">Keterangan</th>
                               </tr>
                             </thead>
                             <tbody class="list">
                               <tr>
                                 <td class="no_checklist_ahu">{{ $ahudetail->no_checklist_ahu }}</td>
-                                <td class="in_out">{{ $ahudetail->in_out}}</td>
-                                <td class="check_point">{{ $ahudetail->check_point }}</td>
+                                <td class="check_point">{{ $ahudetail->engahu->nama_eng_ahu }}</td>
                                 <td class="keterangan">{{ $ahudetail->keterangan }}</td>
                               </tr>
                             </tbody>

@@ -13,28 +13,32 @@
             <form method="post" action="{{ route('checklistchillers.store') }}">
                 @csrf
                 <div class="row">
-                <div class="col-6 mb-3">
-                    <label class="form-label"><b>Barcode Room </b> : {{$checklistchiller->barcode_room}}</label>
-                </div>
-                <div class=" col-6 mb-3">
-                    <label class="form-label"><b>Nomer Checklist Chiller </b> : {{$checklistchiller->no_checklist_chiller}}</label>
-                </div>
-                <div class="col-6 mb-3">
-                    <label class="form-label"><b>Room </b> : {{ $checklistchiller->room->nama_room }}</label>
-                </div>
-                <div class=" col-6 mb-3">
-                    <label class="form-label">   : {{$checklistchiller->tgl_checklist}}</label>
-                </div>
-                <div class=" col-6 mb-3">
-                    <label class="form-label"><b>Time Checklist </b> : {{$checklistchiller->time_checklist}}</label>
-                </div>
-                <div class=" col-6 mb-3">
-                    @foreach ($idusers as $iduser)
-                    <label class="form-label"><b>User </b> : {{ $iduser->name}}</label>
-                    @endforeach
-                </div>
+                    <body>
+                        <table>
+                            <tr>
+                                <th><b>Barcode Room </b></th>
+                                <td>: {{$checklistchiller->barcode_room}}</td>
+                                <th><b>Nomer Inspection AHU </b></th>
+                              <td>: {{$checklistchiller->no_checklist_chiller}}</td>
+                            </tr>
+                            <tr>
+                                <th><b>Tanggal Checklist </b></th>
+                                <td>: {{\Carbon\Carbon::parse($checklistchiller->tgl_checklist)->format(' d M Y') }}</td>
+                                <th><b>Room </b></th>
+                                <td>: {{ $checklistchiller->room->nama_room }}</td>
+                            </tr>
+                            <tr>
+                                <th><b>Time Inspection </b></th>
+                                <td>: {{\Carbon\Carbon::createFromFormat('H:i:s',$checklistchiller->time_checklist)->format('h:i')}}</td>
+                              <th><b>User </b></th>
+                              @foreach ($idusers as $iduser)
+                                <td>: {{ $iduser->name}}</td>
+                                @endforeach
+                            </tr>
+                        </table>
+                      </body>
 
-                <div class="mt-3" id="biaya">
+                <div class="mt-5" id="biaya">
                     <h6><b>DETAIL CHECKLIS Chiller</b></h6>
                     <hr>
                  <div class="row mb-3">
@@ -45,16 +49,14 @@
                             <thead class="bg-200 text-900">
                               <tr>
                                 <th class="sort" data-sort="no_checklist_ahu">Nomer Checklist AHU</th>
-                                <th class="sort" data-sort="in_out">In / Out</th>
-                                <th class="sort" data-sort="check_point">Checkpoint</th>
+                                <th class="sort" data-sort="check_point">Equiqment</th>
                                 <th class="sort" data-sort="keterangan">Keterangan</th>
                               </tr>
                             </thead>
                             <tbody class="list">
                               <tr>
                                 <td class="no_checklist_ahu">{{ $chillerdetail->no_checklist_chiller }}</td>
-                                <td class="in_out">{{ $chillerdetail->in_out}}</td>
-                                <td class="check_point">{{ $chillerdetail->check_point }}</td>
+                                <td class="check_point">{{ $chillerdetail->equiqment }}</td>
                                 <td class="keterangan">{{ $chillerdetail->keterangan }}</td>
                               </tr>
                             </tbody>

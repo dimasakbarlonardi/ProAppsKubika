@@ -16,6 +16,7 @@ class ChecklistAhuH extends Model
     protected $fillable = [
         'id_checklist_ahu_h',
         'barcode_room',
+        'id_eng_ahu',
         'id_room',
         'tgl_checklist',
         'time_checklist',
