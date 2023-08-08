@@ -2,19 +2,38 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Helpers\ConnectionDB;
-use App\Http\Controllers\Controller;
+use App\Models\Site;
 use App\Models\Unit;
 use Illuminate\Http\Request;
+use App\Helpers\ConnectionDB;
+use App\Helpers\ResponseFormatter;
+use App\Http\Controllers\Controller;
+use Laravel\Sanctum\PersonalAccessToken;
 
 class BillingController extends Controller
 {
-    public function insertElectricMeter(Request $request, $id)
+    public function insertElectricMeter($unitID, $token)
     {
-        $connUnit = ConnectionDB::setConnection(new Unit());
+        $getToken = str_replace("RA164-","|",$token);
+        $tokenable = PersonalAccessToken::findToken($getToken);
 
-        $data['unit'] = $connUnit->find('0042120104');
+        if ($tokenable) {
+            dd($token, $getToken, $tokenable);
+            $user = $token->tokenable;
+            $site = Site::find($user->id_site);
 
-        return view('AdminSite.UtilityUsageRecording.Electric.create', $data);
+            $connUnit = new Unit();
+            $connUnit = $connUnit->setConnection($site->db_name);
+            $unit = $connUnit->find($unitID);
+
+            $data['unit'] = $connUnit->where('id_unit', $unitID)->first();
+
+            return view('AdminSite.UtilityUsageRecording.Electric.create', $data);
+        } else {
+            return ResponseFormatter::error([
+                'message' => 'Unauthorized'
+            ], 'Authentication Failed', 401);
+        }
+        dd($token);
     }
 }

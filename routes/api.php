@@ -28,8 +28,8 @@ Route::prefix('v1')->group(function () {
     Route::get('sites', [SiteController::class, 'sites']);
     Route::post('/login', [UserController::class, 'login'])->name('api-login');
 
-    // Open Ticket
-
+   // Inspection
+   Route::get('/insert-electric/{unitID}/{token}', [BillingController::class, 'insertElectricMeter']);
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::get('/user', [UserController::class, 'user'])->name('user');
@@ -44,8 +44,5 @@ Route::prefix('v1')->group(function () {
         Route::get('/tenant-unit', [UnitController::class, 'tenantUnit']);
         Route::post('/open-ticket', [OpenTicketController::class, 'store']);
         Route::get('/open-ticket/{id}', [OpenTicketController::class, 'show']);
-
-        // Inspection
-        Route::get('/insert-electric/{id}', [BillingController::class, 'insertElectricMeter']);
     });
 });
