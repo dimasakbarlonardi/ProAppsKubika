@@ -6,6 +6,9 @@ use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Symfony\Component\HttpFoundation\Request;
 
 class Unit extends Model
 {
@@ -41,6 +44,27 @@ class Unit extends Model
     ];
 
     protected $dates = ['deleted_at'];
+
+    public function BarcodeNoListrik()
+    {
+        $image = QrCode::format('png')
+            ->merge(public_path('assets/img/logos/proapps.png'), 0.6, true)
+            ->size(500)
+            ->color(0, 0, 0)
+            ->eyeColor(0, 39, 178, 155, 0, 0, 0)
+            ->eyeColor(1, 39, 178, 155, 0, 0, 0)
+            ->eyeColor(2, 39, 178, 155, 0, 0, 0)
+            ->errorCorrection('H')
+            ->generate(url('') . '/api/v1/' . $this->id_site);
+
+        $output_file = '/public/' . $this->id_site . '/img/qr-core/meter-listrik/' . $this->id_unit . '-barcode_meter_listrik.png';
+        $path = '/storage/' . $this->id_site . '/img/qr-core/meter-listrik/' . $this->id_unit . '-barcode_meter_listrik.png';
+
+        Storage::disk('local')->put($output_file, $image);
+
+        $this->barcode_meter_listrik = $path;
+        $this->save();
+    }
 
     public function site()
     {
