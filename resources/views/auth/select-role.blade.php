@@ -12,7 +12,7 @@
                 @csrf
                 <div class="mb-3">
                     <div class="d-flex justify-content-between">
-                        <label class="form-label" for="card-password">Select Site</label>
+                        <label class="form-label" for="card-password">Select Role</label>
                     </div>
                     <select name="role_id" id="" class="form-control">
                         <option value="1">Owner</option>

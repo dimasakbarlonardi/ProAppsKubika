@@ -12,7 +12,7 @@
         <div class="p-5">
             <div class="mb-3">
                 <div class="row">
-                    {{-- <div class="col-6 mb-3"> 
+                    {{-- <div class="col-6 mb-3">
                         <label class="form-label">ID Site</label>
                         @foreach ($sites as $site)
                         <input type="text" value="{{$site->nama_site}}" class="form-control" readonly>
@@ -21,7 +21,7 @@
                 <div class="col-6 mb-3">
                     <label class="form-label">Tower</label>
                     <input type="text" value="{{$units->tower->nama_tower}}" class="form-control" readonly>
-                </div> 
+                </div>
                     <div class="col-6 mb-3">
                         <label class="form-label">Lantai</label>
                         <input type="text" value="{{ $units->floor->nama_lantai }}" class="form-control" readonly>
@@ -37,14 +37,16 @@
                     <div class="col-6 mb-3">
                         <label class="form-label">Luas Unit</label>
                         <input type="text" value="{{ $units->luas_unit }}" class="form-control" readonly>
-                    </div>  
+                    </div>
                     <div class="col-6 mb-3">
                         <label class="form-label">Barcode Meter Air</label>
                         <input type="text" value="{{ $units->barcode_meter_air }}" class="form-control" readonly>
                     </div>
-                    <div class="col-6">
+                    <div class="col-6 text-center">
                         <label class="form-label">Barcode Meter Listrik</label>
-                        <input type="text" value="{{ $units->barcode_meter_listrik}}" class="form-control" required>
+                        <div class="">
+                            <img src="{{ url($units->barcode_meter_listrik) }}" alt="barcode" width="250" class="">
+                        </div>
                     </div>
                     <div class="col-6">
                         <label class="form-label">Barcode Meter Gas</label>
@@ -54,7 +56,7 @@
                         <label class="form-label">No Meter Air</label>
                         <input type="text" value="{{ $units->no_meter_air}}" class="form-control" required>
                     </div>
-           
+
                     <div class="col-6">
                         <label class="form-label">No Meter Listrik</label>
                         <input type="text" value="{{ $units->no_meter_listrik}}" class="form-control" required>
@@ -97,12 +99,6 @@
                 <a  class="btn btn-sm btn-warning" href="{{ route('units.edit', $units->id_unit) }}">Edit</a>
                 <a class="btn btn-sm btn-danger" href="{{ route('units.index')}}">Back</a>
             </div>
-            {{-- <form class="d-inline" action="{{ route('units.destroy', $units->id_unit) }}" method="post">
-                @method('DELETE')
-                @csrf
-                <button type="submit" class="btn btn-danger btn-sm"
-                    onclick="return confirm('are you sure?')">Hapus</button>
-            </form> --}}
 
         </div>
     </div>

@@ -15,6 +15,9 @@ use App\Models\Unit;
 use App\Models\Floor;
 use App\Models\Hunian;
 use App\Models\TenantUnit;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\URL;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class UnitController extends Controller
 {
@@ -41,9 +44,9 @@ class UnitController extends Controller
         $connUnit = ConnectionDB::setConnection(new Unit());
 
         $data['units'] = $connUnit
-        ->where('id_lantai', $request->id_floor)
-        ->where('id_tower', $request->id_tower) 
-        ->get();
+            ->where('id_lantai', $request->id_floor)
+            ->where('id_tower', $request->id_tower)
+            ->get();
 
         return response()->json([
             'html' => view('AdminSite.Unit.card', $data)->render(),
@@ -67,7 +70,7 @@ class UnitController extends Controller
         $data['units'] = $conn->get();
         $data['hunians'] = $connHunias->get();
 
-        return view ('AdminSite.Unit.create', $data);
+        return view('AdminSite.Unit.create', $data);
     }
 
     /**
@@ -146,10 +149,9 @@ class UnitController extends Controller
     public function show(Request $request, $id)
     {
         $conn = ConnectionDB::setConnection(new Unit());
-        // $id_site = $request->site()->id;
 
-        $data['units'] = $conn->where('id_unit', $id)->first();
-        // $data['sites'] = Login::where('id_site', $id_site )->get();
+        $unit = $conn->where('id_unit', $id)->first();
+        $data['units'] = $unit;
 
         return view('AdminSite.Unit.show', $data);
     }
@@ -167,7 +169,7 @@ class UnitController extends Controller
         $connFloor = ConnectionDB::setConnection(new Floor());
         $connHunias = ConnectionDB::setConnection(new Hunian());
 
-        $data['unit'] = $conn->where('id_unit',$id)->first();
+        $data['unit'] = $conn->where('id_unit', $id)->first();
         $data['towers'] = $connTower->get();
         $data['floors'] = $connFloor->get();
         $data['hunians'] = $connHunias->get();
@@ -188,6 +190,7 @@ class UnitController extends Controller
         $conn = ConnectionDB::setConnection(new Unit());
 
         $unit = $conn->find($id);
+        $unit->BarcodeNoListrik();
         $unit->update($request->all());
 
         Alert::success('Berhasil', 'Berhasil mengupdate unit');
@@ -216,8 +219,8 @@ class UnitController extends Controller
         $connTenantUnit = ConnectionDB::setConnection(new TenantUnit());
 
         $tenantUnit = $connTenantUnit->where('id_tenant', $id)
-        ->with(['unit'])
-        ->get();
+            ->with(['unit'])
+            ->get();
 
         return response()->json(['data' => $tenantUnit]);
     }
