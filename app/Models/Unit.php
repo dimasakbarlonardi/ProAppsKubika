@@ -48,12 +48,7 @@ class Unit extends Model
     public function BarcodeNoListrik()
     {
         $image = QrCode::format('png')
-            ->merge(public_path('assets/img/logos/proapps.png'), 0.6, true)
             ->size(500)
-            ->color(0, 0, 0)
-            ->eyeColor(0, 39, 178, 155, 0, 0, 0)
-            ->eyeColor(1, 39, 178, 155, 0, 0, 0)
-            ->eyeColor(2, 39, 178, 155, 0, 0, 0)
             ->errorCorrection('H')
             ->generate(url('') . '/api/v1/' . $this->id_site);
 
