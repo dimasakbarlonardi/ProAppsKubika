@@ -57,7 +57,7 @@
                                                 <span class="fas fa-check fs--2 me-1"></span>
                                                 Payed
                                             </button>
-                                        @else
+                                        @elseif ($item->MonthlyUtility->MonthlyTenant->tgl_jt_invoice)
                                             <button class="btn btn-danger btn-sm mt-3">
                                                 <span class="fas fa-check fs--2 me-1"></span>
                                                 Not Payed

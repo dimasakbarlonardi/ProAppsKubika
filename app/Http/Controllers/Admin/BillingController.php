@@ -85,6 +85,7 @@ class BillingController extends Controller
 
         $previousBills = $connMonthlyTenant->where('tgl_jt_invoice', '<', Carbon::now()->format('Y-m-d'))
             ->where('periode_tahun', Carbon::now()->format('Y'))
+            ->where('tgl_bayar_invoice', null)
             ->get();
 
         $total_denda = 0;
