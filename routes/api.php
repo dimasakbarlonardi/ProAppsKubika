@@ -50,5 +50,8 @@ Route::prefix('v1')->group(function () {
         Route::get('/tenant-unit', [UnitController::class, 'tenantUnit']);
         Route::post('/open-ticket', [OpenTicketController::class, 'store']);
         Route::get('/open-ticket/{id}', [OpenTicketController::class, 'show']);
+
+        // Billing
+        Route::get('/list-billings', [BillingController::class, 'listBillings']);
     });
 });
