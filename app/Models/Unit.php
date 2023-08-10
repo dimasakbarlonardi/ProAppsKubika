@@ -55,7 +55,7 @@ class Unit extends Model
             ->eyeColor(1, 39, 178, 155, 0, 0, 0)
             ->eyeColor(2, 39, 178, 155, 0, 0, 0)
             ->errorCorrection('H')
-            ->generate(url('') . '/api/v1/' . $this->id_site);
+            ->generate(url('') . '/api/v1/insert-electric/' . $this->id_unit);
 
         $output_file = '/public/' . $this->id_site . '/img/qr-core/meter-listrik/' . $this->id_unit . '-barcode_meter_listrik.png';
         $path = '/storage/' . $this->id_site . '/img/qr-core/meter-listrik/' . $this->id_unit . '-barcode_meter_listrik.png';
