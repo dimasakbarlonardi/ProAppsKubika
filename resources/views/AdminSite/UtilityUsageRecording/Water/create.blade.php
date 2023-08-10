@@ -66,7 +66,7 @@
                                     }
                                 }
                             @endphp
-                            <form action="{{ route('store-usr-water', ['0042120104', '22RA164-XS5XElwZTU94KDdZtzveE1uiEOYbajibgf9JAIxx']) }}">
+                            <form action="{{ route('store-usr-water', [$unit->id_unit, $token]) }}">
                                 <div class="mb-3">
                                     <div class="row">
                                         <div class="col-6">
