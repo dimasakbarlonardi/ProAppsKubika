@@ -9,6 +9,7 @@ use App\Helpers\ConnectionDB;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Models\ElectricUUS;
+use App\Models\MonthlyArTenant;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\WaterUUS;
@@ -19,6 +20,22 @@ use Throwable;
 
 class BillingController extends Controller
 {
+    public function listBillings(Request $request)
+    {
+        $dbName = ConnectionDB::getDBname();
+
+        $connARTenant = DB::connection($dbName)
+        ->table('tb_fin_monthly_ar_tenant as arm')
+        ->where('arm.id_unit', $request->id_unit)
+        ->orderBy('periode_bulan', 'desc')
+        ->get();
+
+        return ResponseFormatter::success([
+            'bills' => $connARTenant
+        ], 'Authenticated');
+
+    }
+
     public function insertElectricMeter($unitID, $token)
     {
         $getToken = str_replace("RA164-", "|", $token);

@@ -26,7 +26,7 @@ class UnitController extends Controller
             ->get();
 
             return ResponseFormatter::success([
-                $units
+                'units' => $units
             ], 'Berhasil mengambil units');
         } catch(Throwable $e) {
             return ResponseFormatter::error([
