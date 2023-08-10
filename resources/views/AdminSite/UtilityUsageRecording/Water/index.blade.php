@@ -9,7 +9,8 @@
                 </div>
                 <div class="col-auto d-flex ">
                     <a class="btn btn-falcon-default btn-sm dropdown-toggle ms-2 dropdown-caret-none"
-                        href="{{ route('create-usr-water', ['0042120104', '22RA164-XS5XElwZTU94KDdZtzveE1uiEOYbajibgf9JAIxx']) }}"><span class="fas fa-plus fs--2 me-1"></span>Tambah Data</a>
+                        href="{{ route('create-usr-water', ['0042120104', '22RA164-XS5XElwZTU94KDdZtzveE1uiEOYbajibgf9JAIxx']) }}"><span
+                            class="fas fa-plus fs--2 me-1"></span>Tambah Data</a>
                 </div>
             </div>
         </div>
@@ -56,16 +57,18 @@
                                             <span class="fas fa-check fs--2 me-1"></span>
                                             Invoice
                                         </a>
-                                        <form class="d-inline"
-                                            action="{{ route('blastMonthlyInvoice', $item->MonthlyUtility->MonthlyTenant->id_monthly_ar_tenant) }}"
-                                            method="post">
-                                            @csrf
-                                            <button type="submit" class="btn btn-info btn-sm mt-3"
-                                                onclick="return confirm('are you sure?')">
-                                                <span class="fas fa-check fs--2 me-1"></span>
-                                                Kirim Invoice
-                                            </button>
-                                        </form>
+                                        @if ($item->MonthlyUtility->MonthlyTenant ? !$item->MonthlyUtility->MonthlyTenant->tgl_jt_invoice : false)
+                                            <form class="d-inline"
+                                                action="{{ route('blastMonthlyInvoice', $item->MonthlyUtility->MonthlyTenant->id_monthly_ar_tenant) }}"
+                                                method="post">
+                                                @csrf
+                                                <button type="submit" class="btn btn-info btn-sm mt-3"
+                                                    onclick="return confirm('are you sure?')">
+                                                    <span class="fas fa-check fs--2 me-1"></span>
+                                                    Kirim Invoice
+                                                </button>
+                                            </form>
+                                        @endif
                                     @endif
                                 @elseif (!$item->is_approve)
                                     <form class="d-inline" action="{{ route('approve-usr-water', $item->id) }}"
