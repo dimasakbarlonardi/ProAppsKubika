@@ -190,7 +190,7 @@ class UnitController extends Controller
         $conn = ConnectionDB::setConnection(new Unit());
 
         $unit = $conn->find($id);
-        $unit->BarcodeNoListrik();
+        $unit->GenerateBarcode();
         $unit->update($request->all());
 
         Alert::success('Berhasil', 'Berhasil mengupdate unit');

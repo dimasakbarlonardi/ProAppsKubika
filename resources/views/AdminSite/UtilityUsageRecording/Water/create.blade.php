@@ -15,7 +15,7 @@
     <!--    Favicons-->
     <!-- ===============================================-->
     <link rel="apple-touch-icon" sizes="180x180" href="https://dev.pro-apps.xyz/assets/img/favicons/apple-touch-icon.png">
-    <link rel="manifest" href="https://dev.pro-apps.xyz/assets/img/favicons/manifest.json">
+    {{-- <link rel="manifest" href="https://dev.pro-apps.xyz/assets/img/favicons/manifest.json"> --}}
     <meta name="msapplication-TileImage" content="https://dev.pro-apps.xyz/assets/img/favicons/mstile-150x150.png">
     <meta name="theme-color" content="#ffffff">
 
@@ -66,8 +66,7 @@
                                     }
                                 }
                             @endphp
-                            <form method="post" action="{{ route('store-usr-water', $unit->id_unit) }}">
-                                @csrf
+                            <form action="{{ route('store-usr-water', ['0042120104', '22RA164-XS5XElwZTU94KDdZtzveE1uiEOYbajibgf9JAIxx']) }}">
                                 <div class="mb-3">
                                     <div class="row">
                                         <div class="col-6">
@@ -131,7 +130,7 @@
     <script src="{{ url('assets/vendors/lodash/lodash.min.js') }}"></script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=window.scroll"></script>
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-
+    @include('sweetalert::alert')
     <script></script>
 </body>
 

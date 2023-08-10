@@ -130,7 +130,7 @@
     <script src="{{ url('assets/vendors/lodash/lodash.min.js') }}"></script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=window.scroll"></script>
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
-
+    @include('sweetalert::alert')
     <script></script>
 </body>
 

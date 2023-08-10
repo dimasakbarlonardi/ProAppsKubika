@@ -669,7 +669,6 @@ Route::prefix('admin')->group(function () {
         // ---------------Start UUS Water -------------------
         Route::get('uus-water', [WaterUUSController::class, 'index'])->name('uus-water');
         Route::get('create/usr-water', [WaterUUSController::class, 'create'])->name('create-usr-water');
-        Route::post('store/usr-water/{id}', [WaterUUSController::class, 'store'])->name('store-usr-water');
         Route::post('approve/usr-water/{id}', [WaterUUSController::class, 'approve'])->name('approve-usr-water');
         // ---------------End UUS Water -------------------
 

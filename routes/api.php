@@ -34,6 +34,7 @@ Route::prefix('v1')->group(function () {
 
    // Insert water meter
    Route::get('/insert-water/{unitID}/{token}', [BillingController::class, 'insertWaterMeter']);
+   Route::get('/store/insert-water/{unitID}/{token}', [BillingController::class, 'storeWaterMeter'])->name('store-usr-water');
 
 
     Route::middleware('auth:sanctum')->group(function () {

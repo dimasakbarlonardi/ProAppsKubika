@@ -63,7 +63,9 @@ class WaterUUSController extends Controller
             'id_user' => $user->id_user
         ]);
 
-        return response()->json(['status' => 'OK']);
+        Alert::success('Berhasil', 'Berhasil menambahkan data');
+
+        return redirect()->back();
     }
 
     public function approve($id)
