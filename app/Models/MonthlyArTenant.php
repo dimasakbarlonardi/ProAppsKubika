@@ -70,8 +70,10 @@ class MonthlyArTenant extends Model
 
     public function PreviousMonthBill()
     {
-        $prevMonthBill = ConnectionDB::setConnection(new MonthlyArTenant())->where('periode_bulan', '<', $this->periode_bulan)
+        $prevMonthBill = ConnectionDB::setConnection(new MonthlyArTenant())
+        ->where('periode_bulan', '<', $this->periode_bulan)
         ->where('periode_tahun', $this->periode_tahun)
+        ->where('tgl_bayar_invoice', null)
         ->get();
 
         return $prevMonthBill;
