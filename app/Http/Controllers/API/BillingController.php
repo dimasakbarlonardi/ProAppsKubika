@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use App\Models\ElectricUUS;
 use Carbon\Carbon;
 use App\Models\User;
+use RealRashid\SweetAlert\Facades\Alert;
 use Laravel\Sanctum\PersonalAccessToken;
 
 class BillingController extends Controller
@@ -68,8 +69,11 @@ class BillingController extends Controller
                 'usage' => $request->current - $request->previous,
                 'id_user' => $user->id_user
             ]);
-    
-            return response()->json(['status' => 'OK']);                    
+            
+            Alert::success('Berhasil', 'Berhasil menambahkan data');
+
+            return redirect()->back();
+
         } else {
             return ResponseFormatter::error([
                 'message' => 'Unauthorized'
