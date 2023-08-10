@@ -35,8 +35,7 @@
                                 @if ($item->is_approve && $item->WaterUUSrelation()->is_approve)
                                     <span class="badge bg-success">Approved</span> <br>
                                     @if (!$item->MonthlyUtility)
-                                        <form class="d-inline" action="{{ route('generateMonthlyInvoice') }}"
-                                            method="post">
+                                        <form class="d-inline" action="{{ route('generateMonthlyInvoice') }}" method="post">
                                             @csrf
                                             <input type="hidden" name="periode_bulan" value="{{ $item->periode_bulan }}">
                                             <input type="hidden" name="periode_tahun" value="{{ $item->periode_tahun }}">
@@ -52,6 +51,18 @@
                                             <span class="fas fa-check fs--2 me-1"></span>
                                             Invoice
                                         </a>
+                                        @if ($item->MonthlyUtility->MonthlyTenant->tgl_bayar_invoice)
+                                            <button class="btn btn-success btn-sm mt-3"
+                                                onclick="return confirm('are you sure?')">
+                                                <span class="fas fa-check fs--2 me-1"></span>
+                                                Payed
+                                            </button>
+                                        @else
+                                            <button class="btn btn-danger btn-sm mt-3">
+                                                <span class="fas fa-check fs--2 me-1"></span>
+                                                Not Payed
+                                            </button>
+                                        @endif
                                         @if ($item->MonthlyUtility->MonthlyTenant ? !$item->MonthlyUtility->MonthlyTenant->tgl_jt_invoice : false)
                                             <form class="d-inline"
                                                 action="{{ route('blastMonthlyInvoice', $item->MonthlyUtility->MonthlyTenant->id_monthly_ar_tenant) }}"

@@ -57,6 +57,17 @@
                                             <span class="fas fa-check fs--2 me-1"></span>
                                             Invoice
                                         </a>
+                                        @if ($item->MonthlyUtility->MonthlyTenant->tgl_bayar_invoice)
+                                            <button class="btn btn-success btn-sm mt-3">
+                                                <span class="fas fa-check fs--2 me-1"></span>
+                                                Payed
+                                            </button>
+                                        @else
+                                            <button class="btn btn-success btn-sm mt-3">
+                                                <span class="fas fa-check fs--2 me-1"></span>
+                                                Not Payed
+                                            </button>
+                                        @endif
                                         @if ($item->MonthlyUtility->MonthlyTenant ? !$item->MonthlyUtility->MonthlyTenant->tgl_jt_invoice : false)
                                             <form class="d-inline"
                                                 action="{{ route('blastMonthlyInvoice', $item->MonthlyUtility->MonthlyTenant->id_monthly_ar_tenant) }}"
