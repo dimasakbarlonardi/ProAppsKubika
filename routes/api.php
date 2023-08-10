@@ -28,9 +28,12 @@ Route::prefix('v1')->group(function () {
     Route::get('sites', [SiteController::class, 'sites']);
     Route::post('/login', [UserController::class, 'login'])->name('api-login');
 
-   // Inspection
+   // Insert electric meter
    Route::get('/insert-electric/{unitID}/{token}', [BillingController::class, 'insertElectricMeter']);
    Route::get('store/insert-electric/{unitID}/{token}', [BillingController::class, 'storeElectricMeter'])->name('store-usr-electric');
+
+   // Insert water meter
+   Route::get('/insert-water/{unitID}/{token}', [BillingController::class, 'insertWaterMeter']);
 
 
     Route::middleware('auth:sanctum')->group(function () {

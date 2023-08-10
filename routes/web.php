@@ -662,7 +662,7 @@ Route::prefix('admin')->group(function () {
 
         // ---------------Start UUS Electric ----------------
         Route::get('uus-electric', [ElectricUUSController::class, 'index'])->name('usr-electric');
-        Route::get('create/usr-electric', [ElectricUUSController::class, 'create'])->name('create-usr-electric');
+        // Route::get('create/usr-electric', [ElectricUUSController::class, 'create'])->name('create-usr-electric');
         Route::post('approve/usr-electric/{id}', [ElectricUUSController::class, 'approve'])->name('approve-usr-electric');
         // ---------------End UUS Electric-----------------
 

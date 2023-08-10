@@ -45,7 +45,7 @@ class Unit extends Model
 
     protected $dates = ['deleted_at'];
 
-    public function BarcodeNoListrik()
+    public function GenerateBarcode()
     {
         $image = QrCode::format('png')
             ->merge(public_path('assets/img/logos/proapps.png'), 0.6, true)
