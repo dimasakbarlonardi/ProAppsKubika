@@ -29,7 +29,7 @@ class BillingController extends Controller
             $connUnit = $connUnit->setConnection($site->db_name);
             $unit = $connUnit->find($unitID);
 
-            $data['unit'] = $connUnit->where('id_unit', $unitID)->first();
+            $data['unit'] = $unit;
             $data['token'] = $token;
 
             return view('AdminSite.UtilityUsageRecording.Electric.create', $data);
@@ -56,10 +56,10 @@ class BillingController extends Controller
             $user = new User();
             $user = $user->setConnection($site->db_name);
             $user = $user->where('login_user', $login->email)->first();
-    
+
             $connElecUUS = new ElectricUUS();
             $connElecUUS = $connElecUUS->setConnection($site->db_name);
-    
+
             $connElecUUS->create([
                 'periode_bulan' => $request->periode_bulan,
                 'periode_tahun' => Carbon::now()->format('Y'),
@@ -69,11 +69,34 @@ class BillingController extends Controller
                 'usage' => $request->current - $request->previous,
                 'id_user' => $user->id_user
             ]);
-            
+
             Alert::success('Berhasil', 'Berhasil menambahkan data');
 
             return redirect()->back();
 
+        } else {
+            return ResponseFormatter::error([
+                'message' => 'Unauthorized'
+            ], 'Authentication Failed', 401);
+        }
+    }
+
+    public function insertWaterMeter($unitID, $token)
+    {
+        $getToken = str_replace("RA164-","|",$token);
+        $tokenable = PersonalAccessToken::findToken($getToken);
+
+        if ($tokenable) {
+            $user = $tokenable->tokenable;
+            $site = Site::find($user->id_site);
+            $connUnit = new Unit();
+            $connUnit = $connUnit->setConnection($site->db_name);
+            $unit = $connUnit->find($unitID);
+
+            $data['unit'] = $unit;
+            $data['token'] = $token;
+
+            return view('AdminSite.UtilityUsageRecording.Water.create', $data);
         } else {
             return ResponseFormatter::error([
                 'message' => 'Unauthorized'

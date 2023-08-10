@@ -9,17 +9,14 @@
     <!-- ===============================================-->
     <!--    Document Title-->
     <!-- ===============================================-->
-    <title>Proapps | Utility Usage Recording - Electric</title>
+    <title>Proapps | Utility Usage Recording - Water</title>
 
     <!-- ===============================================-->
     <!--    Favicons-->
     <!-- ===============================================-->
-    <link rel="apple-touch-icon" sizes="180x180" href="../../../assets/img/favicons/apple-touch-icon.png">
-    <link rel="icon" type="image/png" sizes="32x32" href="../../../assets/img/favicons/favicon-32x32.png">
-    <link rel="icon" type="image/png" sizes="16x16" href="../../../assets/img/favicons/favicon-16x16.png">
-    <link rel="shortcut icon" type="image/x-icon" href="../../../assets/img/favicons/favicon.ico">
-    <link rel="manifest" href="../../../assets/img/favicons/manifest.json">
-    <meta name="msapplication-TileImage" content="../../../assets/img/favicons/mstile-150x150.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://dev.pro-apps.xyz/assets/img/favicons/apple-touch-icon.png">
+    <link rel="manifest" href="https://dev.pro-apps.xyz/assets/img/favicons/manifest.json">
+    <meta name="msapplication-TileImage" content="https://dev.pro-apps.xyz/assets/img/favicons/mstile-150x150.png">
     <meta name="theme-color" content="#ffffff">
 
     <!-- ===============================================-->
@@ -29,26 +26,7 @@
     <link
         href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700%7cPoppins:300,400,500,600,700,800,900&amp;display=swap"
         rel="stylesheet">
-    <link href="../../../vendors/simplebar/simplebar.min.css" rel="stylesheet">
-    <link href="../../../assets/css/theme-rtl.min.css" rel="stylesheet" id="style-rtl">
-    <link href="../../../assets/css/theme.min.css" rel="stylesheet" id="style-default">
-    <link href="../../../assets/css/user-rtl.min.css" rel="stylesheet" id="user-style-rtl">
-    <link href="../../../assets/css/user.min.css" rel="stylesheet" id="user-style-default">
-    <script>
-        var isRTL = JSON.parse(localStorage.getItem('isRTL'));
-        if (isRTL) {
-            var linkDefault = document.getElementById('style-default');
-            var userLinkDefault = document.getElementById('user-style-default');
-            linkDefault.setAttribute('disabled', true);
-            userLinkDefault.setAttribute('disabled', true);
-            document.querySelector('html').setAttribute('dir', 'rtl');
-        } else {
-            var linkRTL = document.getElementById('style-rtl');
-            var userLinkRTL = document.getElementById('user-style-rtl');
-            linkRTL.setAttribute('disabled', true);
-            userLinkRTL.setAttribute('disabled', true);
-        }
-    </script>
+    <link href="https://dev.pro-apps.xyz/assets/css/theme.min.css" rel="stylesheet" id="user-style-default">
 </head>
 
 <body>
@@ -61,7 +39,7 @@
                 <div class="col-sm-12 col-md-10 col-lg-8 col-xl-10 col-xxl-4 mb-5">
                     <div class="mb-5">
                         <span class="font-sans-serif fw-bolder fs-5 d-inline-block text-primary">Utility Usage Recording
-                            - Electric</span>
+                            - Water</span>
                     </div>
                     <div class="card">
                         <div class="card-body p-4 p-sm-5">
