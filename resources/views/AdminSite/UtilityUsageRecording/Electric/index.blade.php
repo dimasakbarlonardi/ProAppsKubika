@@ -7,10 +7,6 @@
                 <div class="my-3 col-auto">
                     <h6 class="mb-0 text-white">List Utility Usage Recording Electric</h6>
                 </div>
-                <div class="col-auto d-flex ">
-                    <a class="btn btn-falcon-default btn-sm dropdown-toggle ms-2 dropdown-caret-none"
-                        href="{{ route('create-usr-electric') }}"><span class="fas fa-plus fs--2 me-1"></span>Tambah Data</a>
-                </div>
             </div>
         </div>
         <div class="p-5">

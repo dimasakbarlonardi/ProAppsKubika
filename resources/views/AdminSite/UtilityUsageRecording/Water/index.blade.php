@@ -9,7 +9,7 @@
                 </div>
                 <div class="col-auto d-flex ">
                     <a class="btn btn-falcon-default btn-sm dropdown-toggle ms-2 dropdown-caret-none"
-                        href="{{ route('create-usr-water') }}"><span class="fas fa-plus fs--2 me-1"></span>Tambah Data</a>
+                        href="{{ route('create-usr-water', ['0042120104', '22RA164-XS5XElwZTU94KDdZtzveE1uiEOYbajibgf9JAIxx']) }}"><span class="fas fa-plus fs--2 me-1"></span>Tambah Data</a>
                 </div>
             </div>
         </div>

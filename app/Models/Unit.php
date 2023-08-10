@@ -47,7 +47,7 @@ class Unit extends Model
 
     public function GenerateBarcode()
     {
-        $image = QrCode::format('png')
+        $barcodeListrik = QrCode::format('png')
             ->merge(public_path('assets/img/logos/proapps.png'), 0.6, true)
             ->size(500)
             ->color(0, 0, 0)
@@ -57,12 +57,27 @@ class Unit extends Model
             ->errorCorrection('H')
             ->generate(url('') . '/api/v1/insert-electric/' . $this->id_unit);
 
-        $output_file = '/public/' . $this->id_site . '/img/qr-core/meter-listrik/' . $this->id_unit . '-barcode_meter_listrik.png';
-        $path = '/storage/' . $this->id_site . '/img/qr-core/meter-listrik/' . $this->id_unit . '-barcode_meter_listrik.png';
+        $barcodeAir = QrCode::format('png')
+            ->merge(public_path('assets/img/logos/proapps.png'), 0.6, true)
+            ->size(500)
+            ->color(0, 0, 0)
+            ->eyeColor(0, 39, 178, 155, 0, 0, 0)
+            ->eyeColor(1, 39, 178, 155, 0, 0, 0)
+            ->eyeColor(2, 39, 178, 155, 0, 0, 0)
+            ->errorCorrection('H')
+            ->generate(url('') . '/api/v1/insert-water/' . $this->id_unit);
 
-        Storage::disk('local')->put($output_file, $image);
+        $outputListrik = '/public/' . $this->id_site . '/img/qr-core/meter-listrik/' . $this->id_unit . '-barcode_meter_listrik.png';
+        $listrik = '/storage/' . $this->id_site . '/img/qr-core/meter-listrik/' . $this->id_unit . '-barcode_meter_listrik.png';
 
-        $this->barcode_meter_listrik = $path;
+        $outputAir = '/public/' . $this->id_site . '/img/qr-core/meter-air/' . $this->id_unit . '-barcode_meter_air.png';
+        $air = '/storage/' . $this->id_site . '/img/qr-core/meter-air/' . $this->id_unit . '-barcode_meter_air.png';
+
+        Storage::disk('local')->put($outputListrik, $barcodeListrik);
+        Storage::disk('local')->put($outputAir, $barcodeAir);
+
+        $this->barcode_meter_listrik = $listrik;
+        $this->barcode_meter_air = $air;
         $this->save();
     }
 
