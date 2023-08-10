@@ -3,7 +3,6 @@
 @section('content')
     @if ($transaction->MonthlyARTenant)
         @include('Tenant.Notification.Invoice.monthlyARTenant')
-        <!-- {{ dd($transaction->MonthlyARTenant->NextMonthBill()) }} -->
         @if (!$transaction->MonthlyARTenant->NextMonthBill())
             <div class="text-center">
                 <button class="btn btn-success btn-lg my-4" type="button" id="pay-button">
