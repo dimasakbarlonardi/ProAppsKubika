@@ -27,9 +27,13 @@
                             <th scope="row">{{ $key + 1 }}</th>
                             <td>{{ $item->Unit->nama_unit }}</td>
                             <td>
-                                Previous - <b>{{ $item->WaterUUSrelation()->nomor_air_awal }}</b> <br>
-                                Current - <b>{{ $item->WaterUUSrelation()->nomor_air_akhir }}</b> <br>
-                                Usage - <b>{{ $item->WaterUUSrelation()->usage }}</b> <br>
+                                @if ($item->WaterUUSrelation())
+                                    Previous - <b>{{ $item->WaterUUSrelation()->nomor_air_awal }}</b> <br>
+                                    Current - <b>{{ $item->WaterUUSrelation()->nomor_air_akhir }}</b> <br>
+                                    Usage - <b>{{ $item->WaterUUSrelation()->usage }}</b> <br>
+                                @else
+                                    <span class="badge bg-danger">Belum ada data</span>
+                                @endif
                             </td>
                             <td>
                                 Previous - <b>{{ $item->nomor_listrik_awal }}</b> <br>
