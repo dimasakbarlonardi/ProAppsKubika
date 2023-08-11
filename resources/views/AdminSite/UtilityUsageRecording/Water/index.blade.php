@@ -45,6 +45,7 @@
                                 Current - <b>{{ $item->nomor_air_akhir }}</b> <br>
                                 Usage - <b>{{ $item->usage }}</b> <br>
                             </td>
+                            <td>{{ $item->periode_bulan }} - {{ $item->periode_tahun }}</td></td>
                             <td>
                                 @if ($item->is_approve && $item->ElecUUSrelation()->is_approve)
                                     <span class="badge bg-success">Approved</span> <br>
