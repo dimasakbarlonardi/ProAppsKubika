@@ -15,9 +15,8 @@
                     <tr>
                         <th>No</th>
                         <th>Unit</th>
-                        <th>Previous</th>
-                        <th>Current</th>
-                        <th>Usage</th>
+                        <th>Water</th>
+                        <th>Listrik</th>
                         <th>Period</th>
                         <th>Action</th>
                     </tr>
@@ -27,10 +26,17 @@
                         <tr>
                             <th scope="row">{{ $key + 1 }}</th>
                             <td>{{ $item->Unit->nama_unit }}</td>
-                            <td>{{ $item->nomor_listrik_awal }}</td>
-                            <td>{{ $item->nomor_listrik_akhir }}</td>
-                            <td>{{ $item->nomor_listrik_akhir - $item->nomor_listrik_awal }}</td>
-                            <td>{{ $item->periode_bulan }} - {{ $item->periode_tahun }}</td>
+                            <td>
+                                Previous - <b>{{ $item->WaterUUSrelation()->nomor_air_awal }}</b> <br>
+                                Current - <b>{{ $item->WaterUUSrelation()->nomor_air_akhir }}</b> <br>
+                                Usage - <b>{{ $item->WaterUUSrelation()->usage }}</b> <br>
+                            </td>
+                            <td>
+                                Previous - <b>{{ $item->nomor_listrik_awal }}</b> <br>
+                                Current - <b>{{ $item->nomor_listrik_akhir }}</b> <br>
+                                Usage - <b>{{ $item->usage }}</b> <br>
+                            </td>
+                            <td>{{ $item->periode_bulan }} - {{ $item->periode_tahun }}</td></td>
                             <td>
                                 @if ($item->is_approve && $item->WaterUUSrelation()->is_approve)
                                     <span class="badge bg-success">Approved</span> <br>
