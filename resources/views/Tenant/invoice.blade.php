@@ -1,37 +1,6 @@
-<!DOCTYPE html>
-<html data-bs-theme="light" lang="en-US" dir="ltr">
+@extends('Tenant.stand-alone-index')
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <!-- ===============================================-->
-    <!--    Document Title-->
-    <!-- ===============================================-->
-    <title>Proapps | Invoice</title>
-
-    <meta name="theme-color" content="#ffffff">
-    <script src="../../assets/js/config.js"></script>
-    <script src="../../vendors/simplebar/simplebar.min.js"></script>
-
-    <!-- ===============================================-->
-    <!--    Stylesheets-->
-    <!-- ===============================================-->
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link
-        href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700%7cPoppins:300,400,500,600,700,800,900&amp;display=swap"
-        rel="stylesheet">
-    <link href="../../vendors/simplebar/simplebar.min.css" rel="stylesheet">
-    <link href="../../assets/css/theme-rtl.min.css" rel="stylesheet" id="style-rtl">
-    <link href="../../assets/css/theme.min.css" rel="stylesheet" id="style-default">
-    <link href="../../assets/css/user-rtl.min.css" rel="stylesheet" id="user-style-rtl">
-</head>
-
-<body>
-    <!-- ===============================================-->
-    <!--    Main Content-->
-    <!-- ===============================================-->
+@section('content')
     <main class="main" id="top">
         <div class="container" data-layout="container">
             <div class="content mt-3">
@@ -125,7 +94,8 @@
                                     <tr>
                                         <td class="align-middle">
                                             <h6 class="mb-0 text-nowrap">Tagihan Listrik</h6>
-                                            <p class="mb-0">Tagihan listrik bulan {{ $cr->ElectricUSS->periode_bulan }}</p>
+                                            <p class="mb-0">Tagihan listrik bulan {{ $cr->ElectricUSS->periode_bulan }}
+                                            </p>
                                         </td>
                                         <td class="align-middle text-center"></td>
                                         <td class="align-middle text-end"></td>
@@ -155,11 +125,12 @@
                                     </tr>
                                     <tr class="border-top">
                                         <th class="text-900">Total:</th>
-                                        <td class="fw-semi-bold">{{ rupiah(($cr->gross_amount * 0.11) + $cr->gross_amount) }}</td>
+                                        <td class="fw-semi-bold">
+                                            {{ rupiah($cr->gross_amount * 0.11 + $cr->gross_amount) }}</td>
                                     </tr>
                                     <tr class="border-top border-top-2 fw-bolder text-900">
                                         <th>Amount Due:</th>
-                                        <td>{{ rupiah(($cr->gross_amount * 0.11) + $cr->gross_amount) }}</td>
+                                        <td>{{ rupiah($cr->gross_amount * 0.11 + $cr->gross_amount) }}</td>
                                     </tr>
                                 </table>
                             </div>
@@ -177,23 +148,5 @@
                 </footer>
             </div>
         </div>
-    </main><!-- ===============================================-->
-    <!--    End of Main Content-->
-    <!-- ===============================================-->
-
-
-    <!-- ===============================================-->
-    <!--    JavaScripts-->
-    <!-- ===============================================-->
-    <script src="../../vendors/popper/popper.min.js"></script>
-    <script src="../../vendors/bootstrap/bootstrap.min.js"></script>
-    <script src="../../vendors/anchorjs/anchor.min.js"></script>
-    <script src="../../vendors/is/is.min.js"></script>
-    <script src="../../vendors/fontawesome/all.min.js"></script>
-    <script src="../../vendors/lodash/lodash.min.js"></script>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=window.scroll"></script>
-    <script src="../../vendors/list.js/list.min.js"></script>
-    <script src="../../assets/js/theme.js"></script>
-</body>
-
-</html>
+    </main>
+@endsection

@@ -9,6 +9,7 @@ use App\Models\ApproveRequest;
 use App\Models\BAPP;
 use App\Models\CashReceipt;
 use App\Models\Karyawan;
+use App\Models\MonthlyArTenant;
 use App\Models\Notifikasi;
 use App\Models\OpenTicket;
 use App\Models\OwnerH;
@@ -56,8 +57,8 @@ class DashboardController extends Controller
 
         $data['complete_ticket'] = $connTicket->where('status_request', 'complete')->count();
         $data['progress_ticket'] = $connTicket->where('status_request', 'proses')
-        ->orWhere('status_request', 'on work')
-        ->count();
+            ->orWhere('status_request', 'on work')
+            ->count();
 
         return view('dashboard', $data);
     }
@@ -132,8 +133,8 @@ class DashboardController extends Controller
                 return view('Tenant.Notification.WorkRequest', $data);
                 break;
 
-            case ('CashReceipt'):
-                $data = $this->handleCashReceipt($getNotif);
+            case ('MonthlyTenant'):
+                $data = $this->handleMonthlyTenant($getNotif);
                 $data['user'] = $user;
                 return view('Tenant.Notification.Payment', $data);
                 break;
@@ -203,12 +204,12 @@ class DashboardController extends Controller
         return $data;
     }
 
-    public function handleCashReceipt($getNotif)
+    public function handleMonthlyTenant($getNotif)
     {
-        $model = new CashReceipt();
+        $model = new MonthlyArTenant();
         $getData = ConnectionDB::setConnection($model);
         $getData = $getData->find($getNotif->id_data);
-        $data['transaction'] = $getData->where('id', $getData->id)->first();
+        $data['transaction'] = $getData->where('id_monthly_ar_tenant', $getData->id_monthly_ar_tenant)->first();
 
         return $data;
     }

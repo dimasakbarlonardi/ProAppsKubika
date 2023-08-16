@@ -7,11 +7,6 @@
                 <div class="my-3 col-auto">
                     <h6 class="mb-0 text-white">List Usage Recording Water</h6>
                 </div>
-                <div class="col-auto d-flex ">
-                    <a class="btn btn-falcon-default btn-sm dropdown-toggle ms-2 dropdown-caret-none"
-                        href="{{ route('create-usr-water', ['0042120104', '22RA164-XS5XElwZTU94KDdZtzveE1uiEOYbajibgf9JAIxx']) }}"><span
-                            class="fas fa-plus fs--2 me-1"></span>Tambah Data</a>
-                </div>
             </div>
         </div>
         <div class="p-5">
@@ -46,6 +41,9 @@
                                 Usage - <b>{{ $item->usage }}</b> <br>
                             </td>
                             <td>{{ $item->periode_bulan }} - {{ $item->periode_tahun }}</td></td>
+                            {{ $item->is_approve }}
+                            @if ($item->is_approve == null)
+                            @endif
                             <td>
                                 @if ($item->is_approve && $item->ElecUUSrelation()->is_approve)
                                     <span class="badge bg-success">Approved</span> <br>
@@ -62,8 +60,7 @@
                                             </button>
                                         </form>
                                     @else
-                                        <a href="#" class="btn btn-info btn-sm mt-3"
-                                            onclick="return confirm('are you sure?')">
+                                        <a href="{{ route('viewInvoice', $item->MonthlyUtility->MonthlyTenant->id_monthly_ar_tenant) }}" class="btn btn-info btn-sm mt-3">
                                             <span class="fas fa-check fs--2 me-1"></span>
                                             Invoice
                                         </a>
@@ -72,13 +69,13 @@
                                                 <span class="fas fa-check fs--2 me-1"></span>
                                                 Payed
                                             </button>
-                                        @elseif ($item->MonthlyUtility->MonthlyTenant->tgl_jt_invoice)
+                                        @elseif (!$item->MonthlyUtility->MonthlyTenant->tgl_bayar_invoice && $item->MonthlyUtility->sign_approval_2)
                                             <button class="btn btn-danger btn-sm mt-3">
                                                 <span class="fas fa-check fs--2 me-1"></span>
                                                 Not Payed
                                             </button>
                                         @endif
-                                        @if ($item->MonthlyUtility->MonthlyTenant ? !$item->MonthlyUtility->MonthlyTenant->tgl_jt_invoice : false)
+                                        @if (!$item->MonthlyUtility->sign_approval_2)
                                             <form class="d-inline"
                                                 action="{{ route('blastMonthlyInvoice', $item->MonthlyUtility->MonthlyTenant->id_monthly_ar_tenant) }}"
                                                 method="post">

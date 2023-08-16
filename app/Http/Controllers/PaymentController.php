@@ -21,6 +21,7 @@ class PaymentController extends Controller
             $order = $callback->getOrder();
             $site = Site::find($order->id_site);
 
+
             $cr = new CashReceipt();
             $cr = $cr->setConnection($site->db_name);
             $cr = $cr->where('no_draft_cr', $order->no_draft_cr)->first();

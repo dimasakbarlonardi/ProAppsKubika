@@ -688,11 +688,18 @@ Route::prefix('admin')->group(function () {
         // Generate monthly invoice IPL & Service charge
         Route::post('generate-invoice', [BillingController::class, 'generateMonthlyInvoice'])->name('generateMonthlyInvoice');
 
+        // View invoice
+        Route::get('view-invoice/{id}', [BillingController::class, 'viewInvoice'])->name('viewInvoice');
+
         // Blast invoice
         Route::post('blast-invoice/{id}', [BillingController::class, 'blastMonthlyInvoice'])->name('blastMonthlyInvoice');
 
+        Route::post('payment-monthly-page/{id}', [BillingController::class, 'generatePaymentMonthly'])->name('generatePaymentMonthly');
+        Route::get('payment-monthly-page/{mt}/{id}', [BillingController::class, 'paymentMonthly'])->name('paymentMonthly');
 
         Route::post('get-montly-ar', [BillingController::class, 'getOverdueARTenant']);
+
+        Route::post('get/cc-token', [BillingController::class, 'getTokenCC']);
     });
 });
 

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Helpers\ConnectionDB;
 use App\Helpers\HelpNotifikasi;
+use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Models\CashReceipt;
 use App\Models\CashReceiptDetail;
@@ -14,6 +15,7 @@ use App\Models\MonthlyIPL;
 use App\Models\MonthlyUtility;
 use App\Models\PerhitDenda;
 use App\Models\ReminderLetter;
+use App\Models\Site;
 use App\Models\System;
 use App\Models\Unit;
 use App\Models\Utility;
@@ -22,8 +24,12 @@ use App\Services\Midtrans\CreateSnapTokenService;
 use Carbon\Carbon;
 use DateTime;
 use Dflydev\DotAccessData\Util;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Midtrans\CoreApi;
 use RealRashid\SweetAlert\Facades\Alert;
 use stdClass;
 use Throwable;
@@ -196,8 +202,6 @@ class BillingController extends Controller
         try {
             DB::beginTransaction();
 
-            $items = [];
-            $index = 0;
             $subtotal = $mt->total_tagihan_utility + $mt->total_tagihan_ipl + $mt->denda_bulan_sebelumnya;
             $prevSubTotal = 0;
             $total_denda = 0;
@@ -207,30 +211,6 @@ class BillingController extends Controller
                     $prevSubTotal += $prevBill->total_tagihan_utility + $prevBill->total_tagihan_ipl + $prevBill->denda_bulan_sebelumnya;
                     $total_denda += $prevBill->total_denda;
 
-                    $sc = new stdClass();
-                    $sc->id = $key + 1;
-                    $sc->quantity = 1;
-                    $sc->detil_pekerjaan = 'Tagihan Utility bulan ' . $prevBill->periode_bulan;
-                    $sc->detil_biaya_alat = $prevBill->total_tagihan_utility;
-                    array_push($items, $sc);
-
-                    $index += $index;
-                    $ipl = new stdClass();
-                    $ipl->id = $index;
-                    $ipl->quantity = 1;
-                    $ipl->detil_pekerjaan = 'Tagihan IPL bulan ' . $prevBill->periode_bulan;
-                    $ipl->detil_biaya_alat = $prevBill->total_tagihan_ipl;
-                    array_push($items, $ipl);
-
-                    if ($mt->denda_bulan_sebelumnya != 0 || $mt->denda_bulan_sebelumnya != null) {
-                        $sc = new stdClass();
-                        $sc->id = $index + 1;
-                        $sc->quantity = 1;
-                        $sc->detil_pekerjaan = 'Denda tagihan bulan ' . $prevBill->periode_bulan;
-                        $sc->detil_biaya_alat = $total_denda;
-                        array_push($items, $sc);
-                    }
-
                     $connCRd = ConnectionDB::setConnection(new CashReceiptDetail());
                     $connCRd->create([
                         'no_draft_cr' => $no_cr,
@@ -239,20 +219,6 @@ class BillingController extends Controller
                     ]);
                 }
             }
-
-            $ipl = new stdClass();
-            $ipl->id = $index + 1;
-            $ipl->quantity = 1;
-            $ipl->detil_pekerjaan = 'Tagihan IPL bulan ' . $mt->periode_bulan;
-            $ipl->detil_biaya_alat = $mt->total_tagihan_ipl;
-            array_push($items, $ipl);
-
-            $sc = new stdClass();
-            $sc->id = $index + 1;
-            $sc->quantity = 1;
-            $sc->detil_pekerjaan = 'Tagihan Utility bulan ' . $mt->periode_bulan;
-            $sc->detil_biaya_alat = $mt->total_tagihan_utility;
-            array_push($items, $sc);
 
             $subtotal = $subtotal + $prevSubTotal;
 
@@ -265,15 +231,9 @@ class BillingController extends Controller
             $createTransaction->ket_pembayaran = 'INV/' . $user->id_user . '/' . $mt->Unit->nama_unit;
             $createTransaction->admin_fee = $admin_fee;
             $createTransaction->sub_total = $subtotal;
-            $createTransaction->gross_amount = $subtotal + $admin_fee;
             $createTransaction->transaction_status = 'PENDING';
             $createTransaction->id_user = $user->id_user;
             $createTransaction->transaction_type = 'MonthlyTenant';
-
-            $midtrans = new CreateSnapTokenService($createTransaction, $items);
-
-            $createTransaction->snap_token = $midtrans->getSnapToken();
-            $createTransaction->save();
 
             $system->sequence_no_cash_receiptment = $countCR;
             $system->sequence_no_invoice = $countINV;
@@ -319,18 +279,18 @@ class BillingController extends Controller
             DB::beginTransaction();
 
             $mt = $connMonthlyTenant->find($id);
-            $transaction = $this->createTransaction($mt);
 
             $jatuh_tempo_1 = $connReminder->find(1)->durasi_reminder_letter;
             $jatuh_tempo_1 = Carbon::now()->addDays($jatuh_tempo_1);
 
             $mt->tgl_jt_invoice = $jatuh_tempo_1;
-            $mt->no_monthly_invoice = $transaction->no_invoice;
-
+            $mt->MonthlyIPL->sign_approval_2 = Carbon::now();
+            $mt->MonthlyIPL->save();
+            $mt->MonthlyUtility->sign_approval_2 = Carbon::now();
+            $mt->MonthlyUtility->save();
             $mt->save();
-            $transaction->save();
 
-            HelpNotifikasi::paymentMonthlyTenant($mt, $transaction);
+            HelpNotifikasi::paymentMonthlyTenant($mt);
 
             Alert::success('Berhasil', 'Berhasil mengirim invoice');
 
@@ -344,5 +304,160 @@ class BillingController extends Controller
 
             return redirect()->back();
         }
+    }
+
+    public function viewInvoice($id)
+    {
+        $connMonthlyTenant = ConnectionDB::setConnection(new MonthlyArTenant());
+
+
+        $data['transaction'] = $connMonthlyTenant->find($id);
+
+        return view('Tenant.Notification.Invoice.index', $data);
+    }
+
+    public function generatePaymentMonthly(Request $request, $id)
+    {
+        $connMonthlyTenant = ConnectionDB::setConnection(new MonthlyArTenant());
+        $mt = $connMonthlyTenant->find($id);
+
+        $client = new Client();
+        $billing = explode(',', $request->billing);
+        $admin_fee = $request->admin_fee;
+
+        if (!$mt->CashReceipt) {
+            $transaction = $this->createTransaction($mt);
+            if ($billing[0] == 'bank_transfer') {
+                $transaction->gross_amount = $transaction->sub_total + $admin_fee;
+                $transaction->payment_type = 'bank_transfer';
+                $transaction->bank = Str::upper($billing[1]);
+                $payment = [];
+
+                $payment['payment_type'] = $billing[0];
+                $payment['transaction_details']['order_id'] = $transaction->order_id;
+                $payment['transaction_details']['gross_amount'] = $transaction->gross_amount;
+                $payment['bank_transfer']['bank'] = $billing[1];
+
+                $response = $client->request('POST', 'https://api.sandbox.midtrans.com/v2/charge', [
+                    'body' => json_encode($payment),
+                    'headers' => [
+                        'accept' => 'application/json',
+                        'authorization' => 'Basic U0ItTWlkLXNlcnZlci1VQkJEOVpMcUdRRFBPd2VpekdkSGFnTFo6',
+                        'content-type' => 'application/json',
+                    ],
+                    "custom_expiry" => [
+                        "order_time" => Carbon::now(),
+                        "expiry_duration" => 1,
+                        "unit" => "day"
+                    ]
+                ]);
+                $response = json_decode($response->getBody());
+
+                $transaction->va_number = $response->va_numbers[0]->va_number;
+                $transaction->expiry_time = $response->expiry_time;
+                $mt->no_monthly_invoice = $transaction->no_invoice;
+
+                $transaction->admin_fee = $admin_fee;
+                $transaction->save();
+                $mt->save();
+
+                return redirect()->route('paymentMonthly', [$mt->id_monthly_ar_tenant, $transaction->id]);
+            } elseif ($request->billing == 'credit_card') {
+                $transaction->payment_type = 'credit_card';
+                $transaction->admin_fee = $admin_fee;
+                $transaction->gross_amount = round($transaction->sub_total + $admin_fee);
+
+                $getTokenCC = $this->TransactionCC($request);
+                $chargeCC = $this->ChargeTransactionCC($getTokenCC->token_id, $transaction);
+
+                $mt->no_monthly_invoice = $transaction->no_invoice;
+                $mt->save();
+
+                $transaction->save();
+
+                return redirect($chargeCC->redirect_url);
+            }
+        } else {
+            return redirect()->back();
+        }
+    }
+
+    public function ChargeTransactionCC($token, $transaction)
+    {
+        $login = Auth::user();
+        $site = Site::find($login->id_site);
+        $server_key = $site->midtrans_server_key;
+
+        try {
+            $credit_card = array(
+                'token_id' => $token,
+                'authentication' => true,
+                'bank' => 'bni'
+            );
+
+            $transactionData = array(
+                "payment_type" => "credit_card",
+                "transaction_details" => [
+                    "gross_amount" => $transaction->gross_amount,
+                    "order_id" => $transaction->order_id
+                ],
+            );
+
+            $transactionData["credit_card"] = $credit_card;
+            $result = CoreApi::charge($transactionData, $server_key);
+
+            return $result;
+        } catch (Throwable $e) {
+            dd($e);
+        }
+    }
+
+    public function TransactionCC($request)
+    {
+        $expDate = explode('/', $request->expDate);
+        $card_exp_month = $expDate[0];
+        $card_exp_year = $expDate[1];
+
+        $login = Auth::user();
+        $site = Site::find($login->id_site);
+
+        try {
+            $token = CoreApi::cardToken(
+                $request->card_number,
+                $card_exp_month,
+                $card_exp_year,
+                $request->card_cvv,
+                $site->midtrans_client_key
+            );
+
+            if ($token->status_code != 200) {
+                return ResponseFormatter::error([
+                    'message' => 'Unauthorized'
+                ], 'Authentication Failed', 401);
+            }
+
+            return $token;
+        } catch (\Throwable $e) {
+            dd($e);
+            return ResponseFormatter::error([
+                'message' => 'Internar Error'
+            ], 'Something went wrong', 500);
+        }
+
+        return response()->json(['token' => $token]);
+    }
+
+    public function paymentMonthly($mt, $id)
+    {
+        $connTransaction = ConnectionDB::setConnection(new CashReceipt());
+        $connMonthlyTenant = ConnectionDB::setConnection(new MonthlyArTenant());
+
+        $mt = $connMonthlyTenant->find($mt);
+        $transaction = $connTransaction->find($id);
+
+        $data['mt'] = $mt;
+        $data['transaction'] = $transaction;
+
+        return view('Tenant.Notification.Invoice.payment-monthly', $data);
     }
 }
