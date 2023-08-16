@@ -36,14 +36,14 @@ class HelpNotifikasi
         }
     }
 
-    public function paymentMonthlyTenant($mt, $transaction)
+    public function paymentMonthlyTenant($mt)
     {
         $connNotif = ConnectionDB::setConnection(new Notifikasi());
         $request = Request();
 
-        $notif = $connNotif->where('models', 'CashReceipt')
+        $notif = $connNotif->where('models', 'MonthlyTenant')
             ->where('is_read', 0)
-            ->where('id_data', $transaction->id)
+            ->where('id_data', $mt->id_monthly_ar_tenant)
             ->first();
 
         if (!$notif) {
@@ -51,10 +51,10 @@ class HelpNotifikasi
             $createNotif->sender = $request->session()->get('user')->id_user;
             $createNotif->receiver = $mt->Unit->TenantUnit->Tenant->User->id_user;
             $createNotif->is_read = 0;
-            $createNotif->id_data = $transaction->id;
-            $createNotif->notif_title = $mt->no_monthly_invoice;
+            $createNotif->id_data = $mt->id_monthly_ar_tenant;
+            $createNotif->notif_title = 'Invoice Bulanan';
             $createNotif->notif_message = 'Harap melakukan pembayaran tagihan bulanan anda';
-            $createNotif->models = 'CashReceipt';
+            $createNotif->models = 'MonthlyTenant';
             $createNotif->save();
         }
     }

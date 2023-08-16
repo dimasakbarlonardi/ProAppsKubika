@@ -79,5 +79,22 @@ class MonthlyArTenant extends Model
         return $prevMonthBill;
     }
 
+    public function SubTotal()
+    {
+        $prevMonthBill = ConnectionDB::setConnection(new MonthlyArTenant())
+        ->where('periode_bulan', '<=', $this->periode_bulan)
+        ->where('periode_tahun', $this->periode_tahun)
+        ->where('tgl_bayar_invoice', null)
+        ->get();
+
+        $total_denda = $prevMonthBill->sum('total_denda');
+        $total_tagihan_ipl = $prevMonthBill->sum('total_tagihan_ipl');
+        $total_tagihan_utility = $prevMonthBill->sum('total_tagihan_utility');
+
+        $subtotal = $total_denda + $total_tagihan_ipl + $total_tagihan_utility;
+
+        return $subtotal;
+    }
+
     protected $dates = ['deleted_at'];
 }

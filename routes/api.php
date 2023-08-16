@@ -37,7 +37,9 @@ Route::prefix('v1')->group(function () {
    Route::get('/store/insert-water/{unitID}/{token}', [BillingController::class, 'storeWaterMeter'])->name('store-usr-water');
 
 
-    Route::middleware('auth:sanctum')->group(function () {
+   Route::middleware('auth:sanctum')->group(function () {
+        Route::post('get/cc-token', [BillingController::class, 'getTokenCC']);
+
         Route::get('/user', [UserController::class, 'user'])->name('user');
 
         Route::post('/select-role', [UserController::class, 'selectRole']);

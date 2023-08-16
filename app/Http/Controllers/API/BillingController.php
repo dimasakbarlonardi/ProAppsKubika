@@ -13,9 +13,11 @@ use App\Models\MonthlyArTenant;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\WaterUUS;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 use Laravel\Sanctum\PersonalAccessToken;
+use Midtrans\CoreApi;
 use Throwable;
 
 class BillingController extends Controller
@@ -25,15 +27,14 @@ class BillingController extends Controller
         $dbName = ConnectionDB::getDBname();
 
         $connARTenant = DB::connection($dbName)
-        ->table('tb_fin_monthly_ar_tenant as arm')
-        ->where('arm.id_unit', $request->id_unit)
-        ->orderBy('periode_bulan', 'desc')
-        ->get();
+            ->table('tb_fin_monthly_ar_tenant as arm')
+            ->where('arm.id_unit', $request->id_unit)
+            ->orderBy('periode_bulan', 'desc')
+            ->get();
 
         return ResponseFormatter::success([
             'bills' => $connARTenant
         ], 'Authenticated');
-
     }
 
     public function insertElectricMeter($unitID, $token)
@@ -172,5 +173,38 @@ class BillingController extends Controller
                 'message' => 'Unauthorized'
             ], 'Authentication Failed', 401);
         }
+    }
+
+    public function getTokenCC(Request $req)
+    {
+        $login = $req->user();
+        $site = Site::find($login->id_site);
+
+        try {
+            $token = CoreApi::cardToken(
+                $req->card_number,
+                $req->card_exp_month,
+                $req->card_exp_year,
+                $req->card_cvv,
+                $site->midtrans_client_key
+            );
+
+            if ($token->status_code != 200) {
+                return ResponseFormatter::error([
+                    'message' => 'Unauthorized'
+                ], 'Authentication Failed', 401);
+            }
+
+            return ResponseFormatter::success([
+                $token
+            ], 'Authenticated');
+        } catch (\Throwable $e) {
+            dd($e);
+            return ResponseFormatter::error([
+                'message' => 'Internar Error'
+            ], 'Something went wrong', 500);
+        }
+
+        return response()->json(['token' => $token]);
     }
 }
