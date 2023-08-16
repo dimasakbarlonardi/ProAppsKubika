@@ -14,7 +14,7 @@
                         <div class="d-lg-flex justify-content-between">
                             <div class="row flex-between-center gy-2 px-x1 text-light">
                                 <div class="col-auto pe-0">
-                                    <h6 class="mb-0 text-light">List Check list Toilet</h6>
+                                    <h6 class="mb-0 text-light">List Inspection Toilet</h6>
                                 </div>
                             </div>
 
@@ -51,31 +51,33 @@
                             <thead>
                                 <tr>
                                     <th class="sort" data-sort="">No</th>
-                                    {{-- <th class="sort" data-sort="barcode_room">Barcode Room</th>
-                                    <th class="sort" data-sort="id_room">Room</th> --}}
-                                    <th class="sort" data-sort="tgl_checklist">Tanggal Checklist</th> 
-                                    {{-- <th class="sort" data-sort="time_checklist">Time Checklist</th>
-                                    <th class="sort" data-sort="id_user">User</th>  --}}
-                                    <th class="sort" data-sort="no_checklist_toilet">Nomer Check list Toilet</th>
+                                    <th class="sort" data-sort="no_equiqment">No Equiqment</th>
+                                    <th class="sort" data-sort="equiqment">Equiqment</th>
+                                    <th class="sort" data-sort="role">PIC</th>
+                                    <th class="sort" data-sort="id_room">Lokasi</th>
                                     <th class="sort">Action</th>
                                 </tr>
                             </thead>
                             <tbody id="checklist_body">
-                                @foreach ($checklisttoilets as $key => $checklisttoilet)
-                                    <tr>
-                                        <th scope="row">{{$key + 1 }}</th>                           
-                                        <td>{{ $checklisttoilet->tgl_checklist }}</td>                            
-                                        <td>{{ $checklisttoilet->no_checklist_toilet }}</td>
-                                        <td>
-                                            <div class="dropdown font-sans-serif position-static"><button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal" type="button" id="order-dropdown-0" data-bs-toggle="dropdown" data-boundary="viewport" aria-haspopup="true" aria-expanded="false"><span class="fas fa-ellipsis-h fs--1"></span></button>
-                                                <div class="dropdown-menu dropdown-menu-end border py-0" aria-labelledby="order-dropdown-0">
-                                                    <div class="py-2"><a class="dropdown-item text" href="{{ route('checklisttoilets.show', $checklisttoilet->no_checklist_toilet) }}">Detail Toilet Checklist</a>
-                                                </div>
-                                            </div>  
-                                         </div>                      
-                                        </td>
-                                    </tr>   
-                                @endforeach
+                                @foreach ($equiqments as $key => $equiqment)
+                                <tr>
+                                    <th scope="row">{{ $key + 1 }}</th>
+                                    <td>{{ $equiqment->no_equiqment }}</td>
+                                    <td>{{ $equiqment->equiqment}}</td>
+                                    <td>{{ $equiqment->role->nama_role }}</td>
+                                    <td>{{ $equiqment->room->nama_room }}</td>
+                                    <td>
+                                        <div class="dropdown font-sans-serif position-static"><button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal" type="button" id="order-dropdown-0" data-bs-toggle="dropdown" data-boundary="viewport" aria-haspopup="true" aria-expanded="false"><span class="fas fa-ellipsis-h fs--1"></span></button>
+                                            <div class="dropdown-menu dropdown-menu-end border py-0" aria-labelledby="order-dropdown-0">
+                                              <div class="py-2"><a class="dropdown-item text" href="{{ route('fronttoilet', $equiqmenttoilets->id_equiqment_toilet) }}">List Inspection Equiqment</a>
+                                                <div class="dropdown-divider"></div>
+                                                <a class="dropdown-item text" href="{{ route('checklist', $equiqmenttoilets->id_equiqment_toilet) }}">Inspection Parameter</a>
+                                        </div>
+                                        </div>
+                                    </div>
+                                </td>
+                            </tr>
+                            @endforeach
                             </tbody>
                         </table>
                     </div>

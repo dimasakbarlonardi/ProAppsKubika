@@ -116,6 +116,7 @@ use App\Http\Controllers\Admin\ElectricUUSController;
 use App\Http\Controllers\Admin\OffBoardingKepemilikanUnitController;
 use App\Http\Controllers\Admin\PPNController;
 use App\Http\Controllers\Admin\WaterUUSController;
+use App\Models\ChecklistAhuH;
 
 /*
 |--------------------------------------------------------------------------
@@ -501,6 +502,11 @@ Route::prefix('admin')->group(function () {
         //CRUD Checklist AHU H
         Route::resource('checklistahus', ChecklistAhuHController::class);
         Route::get('/checklist-filter-ahu', [ChecklistAhuHController::class, 'filterByNoChecklist']);
+        Route::get('/inspection-engineering/{id}', [ChecklistAhuHController::class, 'front'])->name('front');
+        Route::get('/inspection-enginerring', [ChecklistAhuHController::class, 'add'])->name('add');
+        Route::get('/inspection-parameter/{id}', [ChecklistAhuHController::class, 'checklist'])->name('checklist');
+        Route::post('/checklist-parameter/{id}', [ChecklistAhuHController::class, 'checklistParameter'])->name('checklistParameter');
+        Route::post('/inspection-enginerring', [ChecklistAhuHController::class, 'inspectionStore'])->name('inspectionStore');
 
         //CRUD Checklist AHU Detail
         Route::resource('ahudetails', ChecklistAhuDetailController::class);
@@ -592,6 +598,7 @@ Route::prefix('admin')->group(function () {
         //CRUD Checklist Chiller
         Route::resource('checklistchillers', ChecklistChillerHController::class);
         Route::get('/checklist-filter-chiller ', [ChecklistChillerHController::class, 'filterByNoChecklist']);
+        Route::get('/inspection-chiller/{id}', [ChecklistChillerHController::class, 'frontchiller'])->name('frontchiller');
 
         //CRUD Checklist Listrik
         Route::resource('checklistlistriks', ChecklistListrikHController::class);
@@ -636,6 +643,8 @@ Route::prefix('admin')->group(function () {
         //CRUD Checklist Toilet
         Route::resource('checklisttoilets', ChecklistToiletHController::class);
         Route::get('/checklist-filter-toilet', [ChecklistToiletHController::class, 'filterByNoChecklist']);
+        Route::get('/inspection-toilet/{id}', [ChecklistToiletHController::class, 'fronttoilet'])->name('fronttoilet');
+        Route::get('/inspection-parameter/{id}', [ChecklistToiletHController::class, 'checklist'])->name('checklist');
 
         //CRUD Checklist Office Management
         Route::resource('checklistoffices', ChecklistOfficeManagementHController::class);

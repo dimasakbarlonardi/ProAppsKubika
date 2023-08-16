@@ -1,53 +1,90 @@
 @extends('layouts.master')
 
 @section('content')
-<div class="card">
-    <div class="card-header py-2">
-        <div class="row flex-between-center">
-            <div class="my-3 col-auto">
-                <h6 class="mb-0">List Inspection AHU Detail</h6>
-            </div>
-            <div class="col-auto d-flex">
-                <a class="btn btn-falcon-default btn-sm text-600" href="{{ route('checklistahus.index') }}"><span class=""></span><< Back Inspection AHU</a>
-                <a class="btn btn-sm "></a>
-                <a class="btn btn-falcon-default btn-sm text-600" href="{{ route('ahudetails.create') }}"><span class="fas fa-plus fs--2 me-1"></span>Create Inspection AHU Detail</a>
+    <div class="card">
+        <div class="card-header py-2">
+            <div class="row flex-between-center">
+                <div class="my-3 col-auto">
+                    <h6 class="my-3 text-light">Inspection AHU</h6>
+                </div>
             </div>
         </div>
-    </div>
-    <div class="p-5">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th class="sort" data-sort="">No</th>
-                    <th class="sort" data-sort="no_checklist_ahu">Nomer Inspection AHU</th>
-                    <th class="sort" data-sort="in_out">IN / OUT</th>
-                    <th class="sort" data-sort="check_point">Checkout Point</th>
-                    <th class="sort" data-sort="keterangan">Keterangan</th>
-                    <th class="sort">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($ahudetails as $key => $ahudetail)
-                    <tr>
-                        <th scope="row">{{ $key + 1 }}</th>
-                        <td>{{ $ahudetail->no_checklist_ahu }}</td>
-                        <td>{{ $ahudetail->in_out }}</td>
-                        <td>{{ $ahudetail->check_point }}</td>
-                        <td>{{ $ahudetail->keterangan }}</td>
-                        <td>
-                            <a href="{{ route('ahudetails.edit', $ahudetail->id_ahu) }}" class="btn btn-sm btn-warning"><span class="fas fa-pencil-alt fs--2 me-1"></span>Edit</a>
-                            <form class="d-inline" action="{{ route('ahudetails.destroy', $ahudetail->id_ahu) }}" method="post">
-                                @method('DELETE')
-                                @csrf
-                                <button type="submit" class="btn btn-danger btn-sm"
-                                    onclick="return confirm('are you sure?')"><span class="fas fa-trash-alt fs--2 me-1"></span>Hapus</button>
-                            </form>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-    </div>
-</div>
-@endsection
+        <div class="p-5">
+            <form method="post" action="{{ route('checklistahus.store') }}">
+                @csrf
+                <div class="row">
 
+                    <body>
+                        <table>
+                            <tr>
+                                <th><b>Barcode Room </b></th>
+                                <td>: {{ $checklistahu->barcode_room }}</td>
+                                <th><b>Nomer Inspection AHU </b></th>
+                                {{-- <td>: {{ $equiqmentdetails->no_checklist }}</td> --}}
+                            </tr>
+                            <tr>
+                                <th><b>Tanggal & Time Inspection </b></th>
+                                {{-- <td>: {{ \Carbon\Carbon::parse($equiqmentdetails->tgl_checklist)->format(' d M Y') }} -
+                                    {{ \Carbon\Carbon::createFromFormat('H:i:s', $equiqmentdetails->time_checklist)->format('h:i') }} --}}
+                                </td>
+                                <th><b>Room </b></th>
+                                <td>: {{ $checklistahu->room->nama_room }}</td>
+                            </tr>
+                            <tr>
+                                <th><b>Equiqment </b></th>
+                                <td>: {{ $checklistahu->equiqment }}</td>
+                                <th><b>PIC </b></th>
+                                <td>: {{ $checklistahu->role->nama_role }}</td>
+                            </tr>
+                        </table>
+                    </body>
+                    <div class="mt-5" id="biaya">
+                        <h6><b>DETAIL Inspection AHU</b></h6>
+                        <hr>
+                        <div class="row mb-3">
+
+                            <div id="tableExample2"
+                                data-list='{"valueNames":["no_checklist_ahu","in_out","check_point","keterangan"],"page":5,"pagination":true}'>
+                                <div class="table-responsive scrollbar">
+                                    <table class="table table-bordered table-striped fs--1 mb-0">
+                                        <thead class="bg-200 text-900">
+                                            <tr>
+                                                <th class="sort" data-sort="">No</th>
+                                                <th class="sort" data-sort="no_checklist">Nomer Inspection AHU</th>
+                                                <th class="sort" data-sort="usage_return">Usage/Return</th>
+                                                <th class="sort" data-sort="id_checklist_equiqment_parameter">Inspection
+                                                </th>
+                                                <th class="sort" data-sort="keterangan">Keterangan</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="list">
+                                            @foreach ($equiqmentdetails as $key => $detail)
+                                                <tr>
+                                                    <th scope="row">{{ $key + 1 }}</th>
+                                                    <td>{{ $detail->no_checklist }}</td>
+                                                    <td>
+                                                        {{ \Carbon\Carbon::parse($detail->usage_return)->format(' d M Y') }}
+                                                    </td>
+                                                    <td class="row">
+                                                        @foreach ($parameters as $parameter->$detail->id_equiqment )
+                                                            {{ $detail->checklist }}
+                                                        @endforeach
+                                                    </td>
+                                                    <td>{{ $detail->keterangan }}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                            <div class="mt-5">
+                                <button type="button" class="btn btn-danger"><a class="text-white"
+                                        href="{{ route('checklistahus.index') }}">Back</a></button>
+                            </div>
+                        </div>
+                    </div>
+            </form>
+        </div>
+    </div>
+@endsection

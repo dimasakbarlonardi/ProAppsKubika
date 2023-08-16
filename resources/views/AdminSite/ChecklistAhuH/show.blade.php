@@ -21,21 +21,19 @@
                                 <th><b>Barcode Room </b></th>
                                 <td>: {{$checklistahu->barcode_room}}</td>
                                 <th><b>Nomer Inspection AHU </b></th>
-                              <td>: {{$checklistahu->no_checklist_ahu}}</td>
+                              <td>: {{$equiqmentdetail->no_checklist}}</td>
                             </tr>
-                            <tr>
-                                <th><b>Tanggal Checklist </b></th>
-                                <td>: {{\Carbon\Carbon::parse($checklistahu->tgl_checklist)->format(' d M Y') }}</td>
+                            <tr> 
+                                <th><b>Tanggal & Time Inspection </b></th>
+                                <td>: {{\Carbon\Carbon::parse($equiqmentdetail->tgl_checklist)->format(' d M Y') }} - {{\Carbon\Carbon::createFromFormat('H:i:s',$equiqmentdetail->time_checklist)->format('h:i')}}</td>
                                 <th><b>Room </b></th>
                                 <td>: {{ $checklistahu->room->nama_room }}</td>
                             </tr>
                             <tr>
-                                <th><b>Time Inspection </b></th>
-                                <td>: {{\Carbon\Carbon::createFromFormat('H:i:s',$checklistahu->time_checklist)->format('h:i')}}</td>
-                              <th><b>User </b></th>
-                              @foreach ($idusers as $iduser)
-                                <td>: {{ $iduser->name}}</td>
-                                @endforeach
+                                <th><b>Equiqment </b></th>
+                                <td>: {{$checklistahu->equiqment}}</td>
+                              <th><b>PIC </b></th>
+                                <td>: {{ $checklistahu->role->nama_role}}</td>
                             </tr>
                         </table>
                       </body>
@@ -49,16 +47,20 @@
                           <table class="table table-bordered table-striped fs--1 mb-0">
                             <thead class="bg-200 text-900">
                               <tr>
-                                <th class="sort" data-sort="no_checklist_ahu">Nomer Inspection AHU</th>
-                                <th class="sort" data-sort="in_out">Equiqment</th>
+                                <th class="sort" data-sort="no_checklist">Nomer Inspection AHU</th>
+                                <th class="sort" data-sort="usage_return">Usage/Return</th>
+                                <th class="sort" data-sort="id_checklist_equiqment_parameter">Inspection</th>
                                 <th class="sort" data-sort="keterangan">Keterangan</th>
                               </tr>
                             </thead>
                             <tbody class="list">
-                              <tr>
-                                <td class="no_checklist_ahu">{{ $ahudetail->no_checklist_ahu }}</td>
-                                <td class="check_point">{{ $ahudetail->engahu->nama_eng_ahu }}</td>
-                                <td class="keterangan">{{ $ahudetail->keterangan }}</td>
+                              <tr value="{{$equiqmentdetail->id_equiqment}}">
+                                <td class="no_checklist_ahu">{{ $equiqmentdetail->no_checklist }}</td>
+                                <td class="usage_return">{{\Carbon\Carbon::parse($equiqmentdetail->usage_return)->format(' d M Y') }}</td>
+                                @foreach ($parameters as $parameter)
+                                <td  class="row"> {{ $parameter->id_equiqment}}</td>
+                                @endforeach
+                                <td class="keterangan">{{ $equiqmentdetail->keterangan }}</td>
                               </tr>
                             </tbody>
                           </table>

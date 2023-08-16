@@ -7,7 +7,9 @@ use App\Models\ChecklistChillerH;
 use App\Helpers\ConnectionDB;
 use App\Models\ChecklistChillerDetail;
 use App\Models\EngChiller;
+use App\Models\EquiqmentChiller;
 use App\Models\Login;
+use App\Models\Role;
 use App\Models\Room;
 use Carbon\Carbon;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -24,9 +26,14 @@ class ChecklistChillerHController extends Controller
     public function index(Request $request)
     {
         $conn = ConnectionDB::setConnection(new ChecklistChillerH());
+        $equiqment = ConnectionDB::setConnection(new EquiqmentChiller());
+        $conndetail = ConnectionDB::setConnection(new ChecklistChillerDetail());
         $user_id = $request->user()->id;
         
+        $data ['equiqments'] = $equiqment->get();
+        $data ['equiqmentchillers'] = $equiqment->first();
         $data ['checklistchillers'] = $conn->get();
+        $data ['chillerdetail'] = $conndetail->first();
         $data ['idusers'] = Login::where('id', $user_id)->get();
 
         return view('AdminSite.ChecklistChillerH.index', $data);
@@ -60,14 +67,31 @@ class ChecklistChillerHController extends Controller
     {
         $connroom = ConnectionDB::setConnection(new Room());
         $connahu = ConnectionDB::setConnection(new EngChiller());
+        $role = ConnectionDB::setConnection(new Role());
         $user_id = $request->user()->id;
 
         
         $data ['rooms'] = $connroom->get();
         $data ['engchillers'] = $connahu->get();
+        $data['role'] = $role->get();
         // $data['idusers'] = Login::where('id', $user_id)->get();
 
         return view('AdminSite.ChecklistChillerH.create', $data);
+    }
+
+    public function frontchiller(Request $request)
+    {
+        $conn = ConnectionDB::setConnection(new ChecklistChillerH());
+        $connchillerdetail = ConnectionDB::setConnection(new ChecklistChillerDetail());
+        $equiqment = ConnectionDB::setConnection(new EquiqmentChiller());
+        $user_id = $request->user()->id;
+
+        $data['checklistchillers'] = $conn->get();
+        $data['chillerdetails'] = $connchillerdetail->first();
+        $data['equiqments'] = $equiqment->get();
+        $data['idusers'] = Login::where('id', $user_id)->get();
+
+        return view('AdminSite.ChecklistChillerH.front', $data);
     }
 
     /**
@@ -87,6 +111,8 @@ class ChecklistChillerHController extends Controller
 
             $ahu = ConnectionDB::setConnection(new EngChiller());
 
+            $equiqmentChiller = ConnectionDB::setConnection(new EquiqmentChiller());
+
             $id_chiller = $ahu->first('id_eng_chiller');
 
             $today = Carbon::now()->format('dmY');
@@ -100,24 +126,42 @@ class ChecklistChillerHController extends Controller
             $no_checklist_chiller = $id_chiller->id_eng_chiller . $today . $current;
 
             
-            $conn->create([
-                'id_eng_checklist_chiller' => $request->id_eng_checklist_chiller,
-                'barcode_room' => $request->barcode_room,
-                'id_room' => $request->id_room,
-                'tgl_checklist' => $tgl,
-                'time_checklist' => $time,
-                // 'id_user' => $request->id_user,
-                'no_checklist_chiller' => $no_checklist_chiller
-            ]);
+            // $conn->create([
+            //     'id_eng_checklist_chiller' => $request->id_eng_checklist_chiller,
+            //     'barcode_room' => $request->barcode_room,
+            //     'id_room' => $request->id_room,
+            //     'tgl_checklist' => $tgl,
+            //     'time_checklist' => $time,
+            //     // 'id_user' => $request->id_user,
+            //     'no_checklist_chiller' => $no_checklist_chiller
+            // ]);
 
-            $conndetail->create([
-                'id_eng_chiller' => $request->id_eng_chiller,
-                'no_checklist_chiller' => $no_checklist_chiller,
-                'in_out' => $request->in_out,
-                'check_point' => $request->check_point,
-                'keterangan' => $request->keterangan,
-            ]);
+            // $conndetail->create([
+            //     'id_eng_chiller' => $request->id_eng_chiller,
+            //     'no_checklist_chiller' => $no_checklist_chiller,
+            //     'in_out' => $request->in_out,
+            //     'check_point' => $request->check_point,
+            //     'keterangan' => $request->keterangan,
+            // ]);
            
+            $equiqmentChiller->create([
+                'no_equiqment' => $request->no_equiqment,
+                'equiqment' => $request->equiqment,
+                'id_role' => $request->id_role,
+                'id_room' => $request->id_room,
+                'januari' => $request->januari,
+                'febuari' => $request->febuari,
+                'maret' => $request->maret,
+                'april' => $request->april,
+                'mei' => $request->mei,
+                'juni' => $request->juni,
+                'juli' => $request->juli,
+                'agustus' => $request->agustus,
+                'september' => $request->september,
+                'oktober' => $request->oktober,
+                'november' => $request->november,
+                'december' => $request->december
+            ]);
             
             DB::commit();
 

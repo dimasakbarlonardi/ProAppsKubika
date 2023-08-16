@@ -16,14 +16,15 @@ class ChecklistAhuDetail extends Model
     protected $fillable = [
         'id_ahu',
         'no_checklist_ahu',
-        'equiqment',
+        'id_equiqment',
+        'usage_return',
         'keterangan',
     ];
     protected $dates = ['deleted_at'];
 
-    public function engahu()
-    {
-        return $this->hasOne(EngAhu::class, 'id_eng_ahu', 'id_eng_ahu');
-    }
+    // public function checklist()
+    // {
+    //     return $this->hasMany(ChecklistParameterEquiqment::class, 'id_equiqment', 'id_equiqment');
+    // }
 
 }

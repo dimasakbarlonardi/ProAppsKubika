@@ -79,8 +79,6 @@ class ToiletController extends Controller
             $conn->create([
                 'id_hk_toilet' => $request->id_hk_toilet,
                 'nama_hk_toilet' => $request->nama_hk_toilet,
-                'subject' => $request->subject,
-                'dsg' => $request->dsg,
             ]);
 
             DB::commit();

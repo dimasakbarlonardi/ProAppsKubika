@@ -5,6 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\ChecklistAhuDetail;
 use App\Helpers\ConnectionDB;
+use App\Models\ChecklistParameterEquiqment;
+use App\Models\EngAhu;
+use App\Models\EquiqmentAhu;
+use App\Models\EquiqmentEngineeringDetail;
+use App\Models\Login;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Http\Request;
@@ -16,12 +21,21 @@ class ChecklistAhuDetailController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $conn = ConnectionDB::setConnection(new ChecklistAhuDetail());
+        $conn = ConnectionDB::setConnection(new EquiqmentAhu());
+        $equiqmentDetail = ConnectionDB::setConnection(new EquiqmentEngineeringDetail());
 
-        $data ['ahudetails'] = $conn->get();
+        $checklist = ConnectionDB::setConnection(new ChecklistParameterEquiqment());
+        $conndetail = ConnectionDB::setConnection(new ChecklistAhuDetail());
+        $parameter = ConnectionDB::setConnection(new EngAhu());
+        $user_id = $request->user()->id;
+        
+        $data['equiqmentdetails'] = $equiqmentDetail->get();
+        $data['checklistahu'] = $conn->first();
+        $data['parameters'] = $checklist->get();
 
+        $data['idusers'] = Login::where('id', $user_id)->get();
         return view('AdminSite.ChecklistAhuDetail.index', $data);
     }
 

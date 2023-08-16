@@ -16,13 +16,14 @@ class ChecklistAhuH extends Model
     protected $fillable = [
         'id_checklist_ahu_h',
         'barcode_room',
-        'id_eng_ahu',
+        'id_equiqment_ahu',
         'id_room',
         'tgl_checklist',
         'time_checklist',
-        'id_user',
+        'id_role',
         'no_checklist_ahu',
     ];
+
     protected $dates = ['deleted_at'];
 
     public function room()
@@ -35,9 +36,15 @@ class ChecklistAhuH extends Model
         return $this->hasOne(ChecklistAhuDetail::class, 'id_ahu', 'id_ahu');
     }
 
-    public function engahu()
+    public function equiqment()
     {
-        return $this->hasOne(EngAhu::class, 'id_eng_ahu', 'id_eng_ahu');
+        return $this->hasOne(EquiqmentAhu::class, 'id_equiqment_ahu', 'id_equiqment_ahu');
     }
 
+    public function role()
+    {
+        return $this->hasOne(Role::class, 'id', 'id_role');
+    }
+
+    
 }
