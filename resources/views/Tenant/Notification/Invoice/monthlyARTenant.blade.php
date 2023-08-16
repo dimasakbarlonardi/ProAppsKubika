@@ -249,7 +249,7 @@
                                                 </label>
                                                 <input class="form-control" name="card_number"
                                                     placeholder="XXXX XXXX XXXX XXXX" type="text" maxlength="16"
-                                                    pattern="[0-9]{16}" required />
+                                                    pattern="[0-9]{16}" />
                                             </div>
                                             <div class="row gx-3">
                                                 <div class="col-6 col-sm-3">
@@ -258,7 +258,7 @@
                                                         for="expDate">Exp Date
                                                     </label>
                                                     <input class="form-control" id="expDate" placeholder="15/2024"
-                                                        type="text" name="expDate" required />
+                                                        type="text" name="expDate" />
                                                 </div>
                                                 <div class="col-6 col-sm-3">
                                                     <label
@@ -271,7 +271,7 @@
                                                     </label>
                                                     <input class="form-control" id="cvv" placeholder="123"
                                                         maxlength="3" pattern="[0-9]{3}" name="card_cvv"
-                                                        type="text" required />
+                                                        type="text" />
                                                 </div>
                                             </div>
                                         </div>
