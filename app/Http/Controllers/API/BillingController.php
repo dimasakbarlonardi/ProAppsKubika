@@ -32,9 +32,97 @@ class BillingController extends Controller
             ->orderBy('periode_bulan', 'desc')
             ->get();
 
-        return ResponseFormatter::success([
-            'bills' => $connARTenant
-        ], 'Authenticated');
+        return ResponseFormatter::success(
+            $connARTenant,
+            'Authenticated'
+        );
+    }
+
+    public function showBilling($id)
+    {
+        $connARTenant = ConnectionDB::setConnection(new MonthlyArTenant());
+        $ar = $connARTenant->where('id_monthly_ar_tenant', $id);
+
+        $data = $ar->with(['Unit.TenantUnit.Tenant', 'CashReceipt'])
+            ->first();
+
+        $previousBills = $ar->first()->PreviousMonthBill();
+
+        return ResponseFormatter::success(
+            [
+                'current_bill' => $data,
+                'previous_bills' => $previousBills
+            ],
+            'Authenticated'
+        );
+    }
+
+    public function createTransaction($id)
+    {
+        $request = Request();
+        dd($request, $id);
+        $connMonthlyTenant = ConnectionDB::setConnection(new MonthlyArTenant());
+        $mt = $connMonthlyTenant->find($id);
+
+        $client = new Client();
+        $billing = explode(',', $request->billing);
+        $admin_fee = $request->admin_fee;
+
+        if (!$mt->CashReceipt) {
+            $transaction = $this->createTransaction($mt);
+            if ($billing[0] == 'bank_transfer') {
+                $transaction->gross_amount = $transaction->sub_total + $admin_fee;
+                $transaction->payment_type = 'bank_transfer';
+                $transaction->bank = Str::upper($billing[1]);
+                $payment = [];
+
+                $payment['payment_type'] = $billing[0];
+                $payment['transaction_details']['order_id'] = $transaction->order_id;
+                $payment['transaction_details']['gross_amount'] = $transaction->gross_amount;
+                $payment['bank_transfer']['bank'] = $billing[1];
+
+                $response = $client->request('POST', 'https://api.sandbox.midtrans.com/v2/charge', [
+                    'body' => json_encode($payment),
+                    'headers' => [
+                        'accept' => 'application/json',
+                        'authorization' => 'Basic U0ItTWlkLXNlcnZlci1VQkJEOVpMcUdRRFBPd2VpekdkSGFnTFo6',
+                        'content-type' => 'application/json',
+                    ],
+                    "custom_expiry" => [
+                        "order_time" => Carbon::now(),
+                        "expiry_duration" => 1,
+                        "unit" => "day"
+                    ]
+                ]);
+                $response = json_decode($response->getBody());
+
+                $transaction->va_number = $response->va_numbers[0]->va_number;
+                $transaction->expiry_time = $response->expiry_time;
+                $mt->no_monthly_invoice = $transaction->no_invoice;
+
+                $transaction->admin_fee = $admin_fee;
+                $transaction->save();
+                $mt->save();
+
+                return redirect()->route('paymentMonthly', [$mt->id_monthly_ar_tenant, $transaction->id]);
+            } elseif ($request->billing == 'credit_card') {
+                $transaction->payment_type = 'credit_card';
+                $transaction->admin_fee = $admin_fee;
+                $transaction->gross_amount = round($transaction->sub_total + $admin_fee);
+
+                $getTokenCC = $this->TransactionCC($request);
+                $chargeCC = $this->ChargeTransactionCC($getTokenCC->token_id, $transaction);
+
+                $mt->no_monthly_invoice = $transaction->no_invoice;
+                $mt->save();
+
+                $transaction->save();
+
+                return redirect($chargeCC->redirect_url);
+            }
+        } else {
+            return redirect()->back();
+        }
     }
 
     public function insertElectricMeter($unitID, $token)
