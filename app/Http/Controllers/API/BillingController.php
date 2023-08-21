@@ -8,13 +8,18 @@ use Illuminate\Http\Request;
 use App\Helpers\ConnectionDB;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
+use App\Models\CashReceipt;
+use App\Models\CashReceiptDetail;
 use App\Models\ElectricUUS;
 use App\Models\MonthlyArTenant;
+use App\Models\System;
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\WaterUUS;
+use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use RealRashid\SweetAlert\Facades\Alert;
 use Laravel\Sanctum\PersonalAccessToken;
 use Midtrans\CoreApi;
@@ -57,35 +62,36 @@ class BillingController extends Controller
         );
     }
 
-    public function createTransaction($id)
+    public function generateTransaction($id)
     {
         $request = Request();
-        dd($request, $id);
         $connMonthlyTenant = ConnectionDB::setConnection(new MonthlyArTenant());
         $mt = $connMonthlyTenant->find($id);
+        $site = Site::find($mt->id_site);
 
         $client = new Client();
-        $billing = explode(',', $request->billing);
-        $admin_fee = $request->admin_fee;
+        $admin_fee = (int) $request->admin_fee;
+        $type = $request->type;
+        $bank = $request->bank;
 
         if (!$mt->CashReceipt) {
             $transaction = $this->createTransaction($mt);
-            if ($billing[0] == 'bank_transfer') {
+            if ($type == 'bank_transfer') {
                 $transaction->gross_amount = $transaction->sub_total + $admin_fee;
                 $transaction->payment_type = 'bank_transfer';
-                $transaction->bank = Str::upper($billing[1]);
+                $transaction->bank = Str::upper($bank);
                 $payment = [];
 
-                $payment['payment_type'] = $billing[0];
+                $payment['payment_type'] = $type;
                 $payment['transaction_details']['order_id'] = $transaction->order_id;
                 $payment['transaction_details']['gross_amount'] = $transaction->gross_amount;
-                $payment['bank_transfer']['bank'] = $billing[1];
+                $payment['bank_transfer']['bank'] = $bank;
 
                 $response = $client->request('POST', 'https://api.sandbox.midtrans.com/v2/charge', [
                     'body' => json_encode($payment),
                     'headers' => [
                         'accept' => 'application/json',
-                        'authorization' => 'Basic U0ItTWlkLXNlcnZlci1VQkJEOVpMcUdRRFBPd2VpekdkSGFnTFo6',
+                        'authorization' => 'Basic ' . base64_encode($site->midtrans_server_key),
                         'content-type' => 'application/json',
                     ],
                     "custom_expiry" => [
@@ -104,7 +110,10 @@ class BillingController extends Controller
                 $transaction->save();
                 $mt->save();
 
-                return redirect()->route('paymentMonthly', [$mt->id_monthly_ar_tenant, $transaction->id]);
+                return ResponseFormatter::success(
+                    $response,
+                    'Authenticated'
+                );
             } elseif ($request->billing == 'credit_card') {
                 $transaction->payment_type = 'credit_card';
                 $transaction->admin_fee = $admin_fee;
@@ -123,6 +132,80 @@ class BillingController extends Controller
         } else {
             return redirect()->back();
         }
+    }
+
+    public function createTransaction($mt)
+    {
+        $connSystem = ConnectionDB::setConnection(new System());
+        $connTransaction = ConnectionDB::setConnection(new CashReceipt());
+        $system = $connSystem->find(1);
+
+        $user = $mt->Unit->TenantUnit->Tenant->User;
+
+        $countCR = $system->sequence_no_cash_receiptment + 1;
+        $no_cr = $system->kode_unik_perusahaan . '/' .
+            $system->kode_unik_cash_receipt . '/' .
+            Carbon::now()->format('m') . Carbon::now()->format('Y') . '/' .
+            sprintf("%06d", $countCR);
+        $countINV = $system->sequence_no_invoice + 1;
+        $no_inv = $system->kode_unik_perusahaan . '/' .
+            $system->kode_unik_invoice . '/' .
+            Carbon::now()->format('m') . Carbon::now()->format('Y') . '/' .
+            sprintf("%06d", $countINV);
+
+        $order_id = $user->id_site . '-' . $no_cr;
+
+        $admin_fee = 5000;
+
+        try {
+            DB::beginTransaction();
+
+            $subtotal = $mt->total_tagihan_utility + $mt->total_tagihan_ipl + $mt->denda_bulan_sebelumnya;
+            $prevSubTotal = 0;
+            $total_denda = 0;
+
+            if ($mt->PreviousMonthBill()) {
+                foreach ($mt->PreviousMonthBill() as $key => $prevBill) {
+                    $prevSubTotal += $prevBill->total_tagihan_utility + $prevBill->total_tagihan_ipl + $prevBill->denda_bulan_sebelumnya;
+                    $total_denda += $prevBill->total_denda;
+
+                    $connCRd = ConnectionDB::setConnection(new CashReceiptDetail());
+                    $connCRd->create([
+                        'no_draft_cr' => $no_cr,
+                        'ket_transaksi' => 'Pembayaran bulan IPL dan Utility ' . $prevBill->periode_bulan,
+                        'tx_amount' => $prevSubTotal
+                    ]);
+                }
+            }
+
+            $subtotal = $subtotal + $prevSubTotal;
+
+            $createTransaction = $connTransaction;
+            $createTransaction->order_id = $order_id;
+            $createTransaction->id_site = $user->id_site;
+            $createTransaction->no_reff = $no_inv;
+            $createTransaction->no_invoice = $no_inv;
+            $createTransaction->no_draft_cr = $no_cr;
+            $createTransaction->ket_pembayaran = 'INV/' . $user->id_user . '/' . $mt->Unit->nama_unit;
+            $createTransaction->admin_fee = $admin_fee;
+            $createTransaction->sub_total = $subtotal;
+            $createTransaction->transaction_status = 'PENDING';
+            $createTransaction->id_user = $user->id_user;
+            $createTransaction->transaction_type = 'MonthlyTenant';
+
+            $system->sequence_no_cash_receiptment = $countCR;
+            $system->sequence_no_invoice = $countINV;
+            // $system->save();
+
+            DB::commit();
+        } catch (Throwable $e) {
+            dd($e);
+            DB::rollBack();
+
+            return redirect()->back();
+        }
+
+        return $createTransaction;
     }
 
     public function insertElectricMeter($unitID, $token)
