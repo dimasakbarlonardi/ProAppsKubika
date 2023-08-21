@@ -13,27 +13,28 @@
             <form method="post" action="{{ route('checklisttoilets.store') }}">
                 @csrf
                 <div class="row">
-                <div class="col-6 mb-3">
-                    <label class="form-label"><b>Barcode Room </b> : {{$checklisttoilet->barcode_room}}</label>
-                </div>
-                <div class=" col-6 mb-3">
-                    <label class="form-label"><b>Nomer Checklist Toilet </b> : {{$checklisttoilet->no_checklist_toilet}}</label>
-                </div>
-                <div class="col-6 mb-3">
-                    <label class="form-label"><b>Room </b> : {{ $checklisttoilet->room->nama_room }}</label>
-                </div>
-                <div class=" col-6 mb-3">
-                    <label class="form-label"><b>Tanggal Checklist </b> : {{$checklisttoilet->tgl_checklist}}</label>
-                </div>
-                <div class=" col-6 mb-3">
-                    <label class="form-label"><b>Time Checklist </b> : {{$checklisttoilet->time_checklist}}</label>
-                </div>
-                <div class=" col-6 mb-3">
-                    @foreach ($idusers as $iduser)
-                    <label class="form-label"><b>User </b> : {{ $iduser->name}}</label>
-                    @endforeach
-                </div>
-
+                    <body>
+                        <table>
+                            <tr>
+                                <th><b>Barcode Room </b></th>
+                                <td>: {{$checklisttoilet->barcode_room}}</td>
+                                <th><b>Nomer Inspection Toilet </b></th>
+                              <td>: {{$checklisttoilet->no_checklist_toilet}}</td>
+                            </tr>
+                            <tr>
+                                <th><b>Tanggal & Time Inspection </b></th>
+                                <td>: {{\Carbon\Carbon::parse($checklisttoilet->tgl_checklist)->format(' d M Y') }} - {{\Carbon\Carbon::createFromFormat('H:i:s',$checklisttoilet->time_checklist)->format('h:i')}}</td>
+                                <th><b>Room </b></th>
+                                <td>: {{ $checklisttoilet->room->nama_room }}</td>
+                            </tr>
+                            <tr>
+                                <th><b>Equiqment </b></th>
+                                <td>: {{$checklisttoilet->equiqment->equiqment}}</td>
+                              <th><b>PIC </b></th>
+                                <td>: {{ $checklisttoilet->role->nama_role}}</td>
+                            </tr>
+                        </table>
+                      </body>
                 <div class="mt-3" id="biaya">
                     <h6><b>DETAIL CHECKLIS TOILET</b></h6>
                     <hr>
@@ -44,15 +45,17 @@
                           <table class="table table-bordered table-striped fs--1 mb-0">
                             <thead class="bg-200 text-900">
                               <tr>
-                                <th class="sort" data-sort="no_checklist_toilet">Nomer Checklist Toilet</th>
-                                <th class="sort" data-sort="check_point1">CheckPoint</th>
+                                <th class="sort" data-sort="no_checklist_toilet">Nomer Inspection Toilet</th>
+                                <th class="sort" data-sort="id_checklist_equiqment_parameter">Inspection</th>
                                 <th class="sort" data-sort="keterangan">Keterangan</th>
                               </tr>
                             </thead>
                             <tbody class="list">
                               <tr>
                                 <td class="no_checklist_toilet">{{ $toiletdetail->no_checklist_toilet }}</td>
-                                <td class="check_point">{{ $toiletdetail->check_point }}</td>
+                                @foreach ($parameters as $item)
+                                <td class="row" value="{{ $toiletdetail->id_equiqment}}">{{ $item->checklisttoilet }}</td>
+                                @endforeach
                                 <td class="keterangan">{{ $toiletdetail->keterangan }}</td>
                               </tr>
                             </tbody>

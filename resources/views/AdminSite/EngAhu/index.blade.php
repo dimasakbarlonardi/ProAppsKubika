@@ -18,18 +18,14 @@
                 <tr>
                     <th class="sort" data-sort="">No</th>
                     <th class="sort" data-sort="nama_eng_ahu">Nama Engeneering AHU</th>
-                    <th class="sort" data-sort="subject">Subject</th>
-                    <th class="sort" data-sort="dsg">DSG</th>
                     <th class="sort">Action</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach ($engahus as $key => $engahu)
                     <tr>
-                        <th scope="row">{{ $key + 1 }}</th>
+                        <th scope="row">{{ $engahus->firstItem() + $key }}</th>
                         <td>{{ $engahu->nama_eng_ahu }}</td>
-                        <td>{{ $engahu->subject }}</td>
-                        <td>{{ $engahu->dsg }}</td>
                         <td>
                             <a href="{{ route('engahus.edit', $engahu->id_eng_ahu) }}" class="btn btn-sm btn-warning"><span class="fas fa-pencil-alt fs--2 me-1"></span>Edit</a>
                             <form class="d-inline" action="{{ route('engahus.destroy', $engahu->id_eng_ahu) }}" method="post">
@@ -43,8 +39,9 @@
                     @endforeach
                 </tbody>
             </table>
-         
+            <div class="d-flex justify-content-center">
+              {{ $engahus->links('pagination::bootstrap-4') }}
+            </div>
     </div>
 </div>
 @endsection
-

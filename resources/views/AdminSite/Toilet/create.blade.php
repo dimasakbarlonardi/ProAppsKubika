@@ -22,14 +22,6 @@
                     <label class="form-label">Nama Toilet</label>
                     <input type="text" name="nama_hk_toilet" class="form-control" required>
                 </div>
-                <div class="col-6 mb-3 ">
-                    <label class="form-label">Subject</label>
-                    <input type="text" name="subject" class="form-control" required>
-                </div>
-                <div class="col-6 mb-3 ">
-                    <label class="form-label">DSG</label>
-                    <input type="text" name="dsg" class="form-control" required>
-                </div>
               </div>
             <div class="mt-5">
                 <button type="submit" class="btn btn-primary">Submit</button>

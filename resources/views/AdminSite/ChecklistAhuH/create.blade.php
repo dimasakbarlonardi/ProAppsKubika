@@ -16,25 +16,20 @@
                 <div class="col-6 mb-3">
                     <label class="form-label">No. Equiqment</label>
                     <input type="text" name="no_equiqment" class="form-control" required>
-                </div>
+                </div>  
                 <div class=" col-6 mb-3">
                     <label class="form-label">Nama Equiqment</label>
-                    <input type="text" name="nama_equiqment" class="form-control" required>
+                    <input type="text" name="equiqment" class="form-control" required>
                 </div>
-                <div class=" col-6 mb-3">
+                <div class="col-6 mb-3">
                     <label class="form-label">PIC</label>
-                    <input type="date" name="tgl_checklist" class="form-control" required>
-                </div>
-                {{-- <div class="col-6 mb-3">
-                    <label class="form-label">Eng AHU</label>
-                    <select class="form-control" name="id_barcode_ahu" required>
-                        <option selected disabled>-- Pilih Enggeneering AHU --</option>
-                        @foreach ($engahus as $engahu)
-                        <option value="{{ $engahu->id_eng_ahu }}">{{ $engahu->nama_eng_ahu }} </option>
+                    <select class="form-control" name="id_role" required>
+                        <option selected disabled>-- Pilih PIC --</option>
+                        @foreach ($role as $role)
+                        <option value="{{ $role->id }}">{{ $role->nama_role }} </option>
                         @endforeach
                     </select>
-                </div> --}}
-
+                </div>
                 <div class="col-6 mb-3">
                     <label class="form-label">Lokasi</label>
                     <select class="form-control" name="id_room" required>
@@ -43,6 +38,58 @@
                         <option value="{{ $room->id_room }}">{{ $room->nama_room }} </option>
                         @endforeach
                     </select>
+                </div>
+
+                <div class="row mt-3">
+                    <h6> Tanggal<hr></h6>
+                    <div class=" col-6 mb-3">
+                        <label class="form-label">Januari</label>
+                        <input type="date" name="januari" class="form-control">
+                    </div>
+                    <div class=" col-6 mb-3">
+                        <label class="form-label">Febuari</label>
+                        <input type="date" name="febuari" class="form-control">
+                    </div>
+                    <div class=" col-6 mb-3">
+                        <label class="form-label">Maret</label>
+                        <input type="date" name="maret" class="form-control">
+                    </div>
+                    <div class=" col-6 mb-3">
+                        <label class="form-label">April</label>
+                        <input type="date" name="april" class="form-control">
+                    </div>
+                    <div class=" col-6 mb-3">
+                        <label class="form-label">Mei</label>
+                        <input type="date" name="mei" class="form-control">
+                    </div>
+                    <div class=" col-6 mb-3">
+                        <label class="form-label">Juni</label>
+                        <input type="date" name="juni" class="form-control">
+                    </div>
+                    <div class=" col-6 mb-3">
+                        <label class="form-label">Juli</label>
+                        <input type="date" name="juli" class="form-control">
+                    </div>
+                    <div class=" col-6 mb-3">
+                        <label class="form-label">Agustus</label>
+                        <input type="date" name="agustus" class="form-control">
+                    </div>
+                    <div class=" col-6 mb-3">
+                        <label class="form-label">September</label>
+                        <input type="date" name="september" class="form-control">
+                    </div>
+                    <div class=" col-6 mb-3">
+                        <label class="form-label">Oktober</label>
+                        <input type="date" name="oktober" class="form-control">
+                    </div>
+                    <div class=" col-6 mb-3">
+                        <label class="form-label">November</label>
+                        <input type="date" name="november" class="form-control">
+                    </div>
+                    <div class=" col-6 mb-3">
+                        <label class="form-label">December</label>
+                        <input type="date" name="december" class="form-control">
+                    </div>
                 </div>
                 <div class="mt-5">
                     <button type="submit" class="btn btn-primary">Submit</button>

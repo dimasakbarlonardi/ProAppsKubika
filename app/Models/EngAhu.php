@@ -16,8 +16,11 @@ class EngAhu extends Model
     protected $fillable = [
         'id_eng_ahu',
         'nama_eng_ahu',
-        'subject',
-        'dsg',
     ];
     protected $dates = ['deleted_at'];
+
+    public function checklist()
+    {
+        return $this->hasOne(ChecklistParameterEquiqment::class, 'id_checklist', 'id_eng_ahu');
+    }
 }

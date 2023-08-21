@@ -16,8 +16,12 @@ class Toilet extends Model
     protected $fillable = [
         'id_hk_toilet',
         'nama_hk_toilet',
-        'subject',
-        'dsg',
     ];
     protected $dates = ['deleted_at'];
+
+    public function checklisttoilet()
+    {
+        return $this->hasMany(ChecklistParameterEquiqment::class, 'id_checklist', 'id_hk_toilet');
+    }
+
 }

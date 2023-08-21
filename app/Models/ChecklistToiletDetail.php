@@ -16,8 +16,13 @@ class ChecklistToiletDetail extends Model
     protected $fillable = [
         'id_eng_toilet',
         'no_checklist_toilet',
-        'check_point',
+        'id_equiqment',
         'keterangan',
     ];
     protected $dates = ['deleted_at'];
+
+    public function checklisttoilet()
+    {
+        return $this->hasOne(ChecklistParameterEquiqment::class, 'id_equiqment', 'id_equiqment');
+    }
 }

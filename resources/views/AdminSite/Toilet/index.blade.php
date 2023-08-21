@@ -18,8 +18,6 @@
                 <tr>
                     <th class="sort" data-sort="">No</th>
                     <th class="sort" data-sort="nama_hk_toilet">Nama Toilet</th>
-                    <th class="sort" data-sort="subject">subject</th>
-                    <th class="sort" data-sort="dsg">DSG</th>
                     <th class="sort">Action</th>
                 </tr>
             </thead>
@@ -28,8 +26,6 @@
                     <tr>
                         <th scope="row">{{ $key + 1 }}</th>
                         <td>{{ $toilet->nama_hk_toilet }}</td>
-                        <td>{{ $toilet->subject }}</td>
-                        <td>{{ $toilet->dsg }}</td>
                         <td>
                             <a href="{{ route('toilets.edit', $toilet->id_hk_toilet) }}" class="btn btn-sm btn-warning"><span class="fas fa-pencil-alt fs--2 me-1"></span>Edit</a>
                             <form class="d-inline" action="{{ route('toilets.destroy', $toilet->id_hk_toilet) }}" method="post">

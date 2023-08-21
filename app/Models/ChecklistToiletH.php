@@ -16,10 +16,11 @@ class ChecklistToiletH extends Model
     protected $fillable = [
         'id_eng_checklist_toilet',
         'barcode_room',
+        'id_equiqment_toilet',
         'id_room',
         'tgl_checklist',
         'time_checklist',
-        'id_user',
+        'id_role',
         'no_checklist_toilet',
     ];
     protected $dates = ['deleted_at'];
@@ -27,5 +28,15 @@ class ChecklistToiletH extends Model
     public function room()
     {
         return $this->hasOne(Room::class, 'id_room','id_room');
+    }
+
+    public function equiqment()
+    {
+        return $this->hasOne(EquiqmentToilet::class, 'id_equiqment_toilet', 'id_equiqment_toilet');
+    }
+
+    public function role()
+    {
+        return $this->hasOne(Role::class, 'id', 'id_role');
     }
 }

@@ -20,16 +20,8 @@
                 @csrf
                 <div class="row">
                     <div class="col-6 mt-3">
-                        <label class="form-label">No Engeneering AHU</label>
+                        <label class="form-label">Inspection Engeneering AHU</label>
                         <input type="text" name="nama_eng_ahu" value="{{ $engahu->nama_eng_ahu}}" class="form-control" required>
-                    </div>
-                    <div class="col-6 mt-3">
-                        <label class="form-label">Subject</label>
-                        <input type="text" name="subject" value="{{ $engahu->subject}}" class="form-control" required>
-                    </div>
-                    <div class="col-6 mt-3">
-                        <label class="form-label">DSG</label>
-                        <input type="text" name="dsg" value="{{ $engahu->dsg}}" class="form-control" required>
                     </div>
                 <div class="mt-5">
                     <button type="submit" class="btn btn-primary">Submit</button>
