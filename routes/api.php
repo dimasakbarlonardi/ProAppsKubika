@@ -56,7 +56,7 @@ Route::prefix('v1')->group(function () {
         // Billing
         Route::get('/list-billings/{id}', [BillingController::class, 'listBillings']);
         Route::get('/get-billing/{id}', [BillingController::class, 'showBilling']);
-        Route::post('/create-transaction/{id}', [BillingController::class, 'createTransaction']);
+        Route::post('/create-transaction/{id}', [BillingController::class, 'generateTransaction']);
 
     });
 });
