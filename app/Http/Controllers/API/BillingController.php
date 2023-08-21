@@ -22,13 +22,13 @@ use Throwable;
 
 class BillingController extends Controller
 {
-    public function listBillings(Request $request)
+    public function listBillings($id)
     {
         $dbName = ConnectionDB::getDBname();
 
         $connARTenant = DB::connection($dbName)
             ->table('tb_fin_monthly_ar_tenant as arm')
-            ->where('arm.id_unit', $request->id_unit)
+            ->where('arm.id_unit', $id)
             ->orderBy('periode_bulan', 'desc')
             ->get();
 
