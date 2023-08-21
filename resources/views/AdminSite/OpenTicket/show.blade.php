@@ -48,9 +48,9 @@
                                     <div class="d-inline-flex flex-column">
                                         <div class="border p-2 rounded-3 d-flex bg-white dark__bg-1000 fs--1 mb-2">
                                             <a class="ms-auto text-decoration-none" target="_blank"
-                                                href="/uploads/image/ticket/{{ $ticket->upload_image }}">
+                                                href="{{ url($ticket->upload_image) }}">
                                                 <span class="fs-1 far fa-image"></span>
-                                                <span class="ms-2 me-3">{{ $ticket->upload_image }}</span>
+                                                <span class="ms-2 me-3">Image</span>
                                             </a>
                                         </div>
                                     </div>

@@ -11,8 +11,11 @@ use App\Models\System;
 use App\Models\Unit;
 use App\Models\User;
 use Carbon\Carbon;
+use File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use Validator;
 use Throwable;
 
 class OpenTicketController extends Controller
@@ -42,6 +45,22 @@ class OpenTicketController extends Controller
 
     public function store(Request $request)
     {
+        $rules = [
+            'id_jenis_request' => 'required',
+        ];
+
+        $message = [
+            'required' => 'The :attribute field is required.'
+        ];
+        $validator = Validator::make($request->all(), $rules, $message);
+
+        if ($validator->fails()) {
+            dd($validator);
+            return ResponseFormatter::error(
+                null,
+                'Gagal membuat ticket, harap mengisi semua form'
+            );
+        }
         $connOpenTicket = ConnectionDB::setConnection(new OpenTicket());
         $connSystem = ConnectionDB::setConnection(new System());
         $connUnit = ConnectionDB::setConnection(new Unit());
@@ -60,6 +79,8 @@ class OpenTicketController extends Controller
                 sprintf("%06d", $count);
 
             $createTicket = $connOpenTicket->create($request->all());
+            $createTicket->id_jenis_request = $request->id_jenis_request;
+            $createTicket->judul_request = $request->judul_request;
             $createTicket->id_site = $unit->id_site;
             $createTicket->id_tower = $unit->id_tower;
             $createTicket->id_unit = $request->id_unit;
@@ -67,12 +88,19 @@ class OpenTicketController extends Controller
             $createTicket->id_user = $unit->TenantUnit->Tenant->User->id_user;
             $createTicket->no_tiket = $no_tiket;
             $createTicket->status_request = 'PENDING';
+            $createTicket->deskripsi_request = $request->deskripsi_request;
+            $createTicket->no_hp = $request->no_hp;
 
             $file = $request->file('upload_image');
+
             if ($file) {
                 $fileName = $createTicket->id . '-' .   $file->getClientOriginalName();
-                $file->move('uploads/image/ticket', $fileName);
-                $createTicket->upload_image = $fileName;
+                $outputTicketImage = '/public/' . $unit->id_site . '/img/ticket/' . $fileName;
+                $ticketImage = '/storage/' . $unit->id_site . '/img/ticket/' . $fileName;
+
+                Storage::disk('local')->put($outputTicketImage, File::get($file));
+
+                $createTicket->upload_image = $ticketImage;
             }
 
             $createTicket->save();
@@ -86,6 +114,7 @@ class OpenTicketController extends Controller
             ], 'Berhasil membuat ticket');
         } catch (Throwable $e) {
             DB::rollBack();
+            dd($e);
             return ResponseFormatter::error([
                 'error' => $e,
             ], 'Gagal membuat ticket');
