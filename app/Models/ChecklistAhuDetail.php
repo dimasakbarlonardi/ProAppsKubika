@@ -22,6 +22,11 @@ class ChecklistAhuDetail extends Model
     ];
     protected $dates = ['deleted_at'];
 
+    public function room()
+    {
+        return $this->hasOne(Room::class, 'id_room', 'id_room');
+    }
+    
     // public function checklist()
     // {
     //     return $this->hasMany(ChecklistParameterEquiqment::class, 'id_equiqment', 'id_equiqment');

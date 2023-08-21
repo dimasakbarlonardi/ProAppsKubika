@@ -27,8 +27,6 @@ class ChecklistAhuDetailController extends Controller
         $equiqmentDetail = ConnectionDB::setConnection(new EquiqmentEngineeringDetail());
 
         $checklist = ConnectionDB::setConnection(new ChecklistParameterEquiqment());
-        $conndetail = ConnectionDB::setConnection(new ChecklistAhuDetail());
-        $parameter = ConnectionDB::setConnection(new EngAhu());
         $user_id = $request->user()->id;
         
         $data['equiqmentdetails'] = $equiqmentDetail->get();

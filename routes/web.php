@@ -112,11 +112,11 @@ use App\Http\Controllers\Admin\ChecklistPompaSumpitHController;
 use App\Http\Controllers\Admin\OffBoardingTenantUnitController;
 use App\Http\Controllers\Admin\ChecklistTanggaDaruratHController;
 use App\Http\Controllers\Admin\ChecklistOfficeManagementHController;
+use App\Http\Controllers\Admin\ChecklistToiletDetailController;
 use App\Http\Controllers\Admin\ElectricUUSController;
 use App\Http\Controllers\Admin\OffBoardingKepemilikanUnitController;
 use App\Http\Controllers\Admin\PPNController;
 use App\Http\Controllers\Admin\WaterUUSController;
-use App\Models\ChecklistAhuH;
 
 /*
 |--------------------------------------------------------------------------
@@ -589,11 +589,11 @@ Route::prefix('admin')->group(function () {
 
         // ----------Checklist AHU-------------
 
-        //CRUD Checklist AHU Header
-        Route::resource('checklistahus', ChecklistAhuHController::class);
-        Route::get('/checklist-filter-ahu', [ChecklistAhuHController::class, 'filterByNoChecklist']);
-        //CRUD Checklist AHU Detail
-        Route::resource('ahudetails', ChecklistAhuDetailController::class);
+        // //CRUD Checklist AHU Header
+        // Route::resource('checklistahus', ChecklistAhuHController::class);
+        // Route::get('/checklist-filter-ahu', [ChecklistAhuHController::class, 'filterByNoChecklist']);
+        // //CRUD Checklist AHU Detail
+        // Route::resource('ahudetails', ChecklistAhuDetailController::class);
 
         //CRUD Checklist Chiller
         Route::resource('checklistchillers', ChecklistChillerHController::class);
@@ -636,7 +636,7 @@ Route::prefix('admin')->group(function () {
         Route::resource('checklistpemadams', ChecklistPemadamHController::class);
         Route::get('/checklist-filter-pemadam', [ChecklistPemadamHController::class, 'filterByNoChecklist']);
 
-        // ------------End Checklist AHU----------------
+        // ------------End Checklist AHU---------------
 
         // ------------Checklist HK--------------------
 
@@ -644,9 +644,13 @@ Route::prefix('admin')->group(function () {
         Route::resource('checklisttoilets', ChecklistToiletHController::class);
         Route::get('/checklist-filter-toilet', [ChecklistToiletHController::class, 'filterByNoChecklist']);
         Route::get('/inspection-toilet/{id}', [ChecklistToiletHController::class, 'fronttoilet'])->name('fronttoilet');
+        Route::post('/checklist-parameter/{id}', [ChecklistToiletHController::class, 'checklistParameter'])->name('checklistParameter');
         Route::get('/inspection-parameter/{id}', [ChecklistToiletHController::class, 'checklist'])->name('checklist');
 
-        //CRUD Checklist Office Management
+        //CRUD Checklist Toilet Detail
+        Route::resource('toiletdetails', ChecklistToiletDetailController::class);
+
+        //CRUD Checklist Office Management 
         Route::resource('checklistoffices', ChecklistOfficeManagementHController::class);
         Route::get('/checklist-filter-office_management', [ChecklistOfficeManagementHController::class, 'filterByNoChecklist']);
 

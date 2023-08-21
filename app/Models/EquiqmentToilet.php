@@ -11,13 +11,15 @@ class EquiqmentToilet extends Model
     use HasFactory;
     use SoftDeletes;
 
-    protected $table = 'tb_equiqment_toilet';
-    protected $primaryKey = 'id_equiqment_toilet';
+    protected $table = 'tb_equipment_toilet';
+    protected $primaryKey = 'id_equipment_housekeeping';
 
     protected $fillable =[
-        'id_equiqment_toilet',
-        'no_equiqment',
-        'equiqment',    
+        'id_equipment_housekeeping',
+        'id_inspection_housekeeping',
+        'barcode_room',
+        'no_equipment',
+        'equipment',    
         'id_role',
         'id_room',
         'senin',

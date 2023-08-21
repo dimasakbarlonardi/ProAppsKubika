@@ -18,6 +18,7 @@
                         </div>
                         </div>
                     <div class="p-5">
+                        <a href="{{ route('ahudetails.index') }}" class="btn btn-primary float-right mb-4">History Inspection</a>
                         <table class="table" id="table-engineering">
                             <thead>
                                 <tr>
@@ -25,7 +26,7 @@
                                     <th class="sort" data-sort="barcode_room">Equiqment</th>
                                     <th class="sort" data-sort="id_room">Lokasi</th>
                                     <th class="sort" data-sort="tgl_checklist">Schedule</th>
-                                    <th class="sort">Action</th>
+                                    <th class="sort">Status</th>
                                 </tr>
                             </thead>
                             <tbody id="checklist_body">

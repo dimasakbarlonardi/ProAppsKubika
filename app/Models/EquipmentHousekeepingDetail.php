@@ -6,33 +6,31 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class EquiqmentEngineeringDetail extends Model
+class EquipmentHousekeepingDetail extends Model
 {
     use HasFactory;
     use SoftDeletes;
 
-    protected $table = 'tb_equiqment_engineering_detail';
+    protected $table = 'tb_equipment_housekeeping_detail';
 
-    protected $primaryKey = 'id_equiqment_engineering_detail';
+    protected $primaryKey = 'id_equipment_housekeeping_detail';
 
-    protected $fillabel = [
-        'id_equiqment_engineering_detail',
-        'id_equiqment_engineering',
+    protected $fillable = [
+        'id_equipment_housekeeping_detail',
+        'id_equipment_housekeeping',
         'image',
         'id_room',
         'status',
-        'id_equiqment',
+        'id_equipment',
         'id_role',
         'tgl_checklist',
         'time_checklist',
         'keterangan'
     ];
 
-    protected $dates = ['deleted_at'];
-
     public function equipment()
     {
-        return $this->hasOne(EquiqmentAhu::class, 'id_equiqment_engineering', 'id_equiqment_engineering');
+        return $this->hasOne(EquiqmentToilet::class, 'id_equipment_housekeeping', 'id_equipment_housekeeping');
     }
 
     public function room()

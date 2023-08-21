@@ -207,8 +207,6 @@ class ChecklistAhuHController extends Controller
 
             $no_checklist_ahu = $id_ahu->id_eng_ahu . $today . $current;
 
-            dd($idInspection);
-
             // $conn->create([
             //     'id_checklist_ahu_h' => $request->id_checklist_ahu_h,
             //     'barcode_room' => $request->barcode_room,
