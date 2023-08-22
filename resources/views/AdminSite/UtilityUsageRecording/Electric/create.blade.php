@@ -27,6 +27,7 @@
         href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700%7cPoppins:300,400,500,600,700,800,900&amp;display=swap"
         rel="stylesheet">
     <link href="https://dev.pro-apps.xyz/assets/css/theme.min.css" rel="stylesheet" id="style-default">
+    <link href="{{ asset('assets/vendors/dropzone/dropzone.min.css') }}" rel="stylesheet" />
 </head>
 
 <body>
@@ -44,23 +45,10 @@
                     <div class="card">
                         <div class="card-body p-4 p-sm-5">
                             @php
-                                $months = [
-                                    ['value' => '01', 'name' => 'January', 'isDisabled' => false],
-                                    ['value' => '02', 'name' => 'February', 'isDisabled' => false],
-                                    ['value' => '03', 'name' => 'March', 'isDisabled' => false],
-                                    ['value' => '04', 'name' => 'April', 'isDisabled' => false],
-                                    ['value' => '05', 'name' => 'May', 'isDisabled' => false],
-                                    ['value' => '06', 'name' => 'June', 'isDisabled' => false],
-                                    ['value' => '07', 'name' => 'July', 'isDisabled' => false],
-                                    ['value' => '08', 'name' => 'August', 'isDisabled' => false],
-                                    ['value' => '09', 'name' => 'September', 'isDisabled' => false],
-                                    ['value' => '10', 'name' => 'Oktober', 'isDisabled' => false],
-                                    ['value' => '11', 'name' => 'November', 'isDisabled' => false],
-                                    ['value' => '12', 'name' => 'December', 'isDisabled' => false],
-                                ];
+                                $months = [['value' => '01', 'name' => 'January', 'isDisabled' => false], ['value' => '02', 'name' => 'February', 'isDisabled' => false], ['value' => '03', 'name' => 'March', 'isDisabled' => false], ['value' => '04', 'name' => 'April', 'isDisabled' => false], ['value' => '05', 'name' => 'May', 'isDisabled' => false], ['value' => '06', 'name' => 'June', 'isDisabled' => false], ['value' => '07', 'name' => 'July', 'isDisabled' => false], ['value' => '08', 'name' => 'August', 'isDisabled' => false], ['value' => '09', 'name' => 'September', 'isDisabled' => false], ['value' => '10', 'name' => 'Oktober', 'isDisabled' => false], ['value' => '11', 'name' => 'November', 'isDisabled' => false], ['value' => '12', 'name' => 'December', 'isDisabled' => false]];
                                 foreach ($unit->allElectricUUSbyYear as $uus) {
                                     foreach ($months as $key => $month) {
-                                        if($month['value'] == $uus->periode_bulan) {
+                                        if ($month['value'] == $uus->periode_bulan) {
                                             $months[$key]['isDisabled'] = true;
                                         }
                                     }
@@ -103,6 +91,11 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="mb-5">
+                                    <label class="form-label">Upload Image</label>
+                                    <input type='file' onchange="readURL(this);" />
+                                    <img id="blah" width="250" src="http://placehold.it/180" alt="your image" />
+                                </div>
                                 <div class="mb-3 mt-5">
                                     <button class="btn btn-primary d-block w-100 mt-3" type="submit">
                                         Submit
@@ -130,6 +123,20 @@
     <script src="{{ url('assets/vendors/lodash/lodash.min.js') }}"></script>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=window.scroll"></script>
     <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+    <script>
+        function readURL(input) {
+            if (input.files && input.files[0]) {
+                var reader = new FileReader();
+
+                reader.onload = function(e) {
+                    $('#blah')
+                        .attr('src', e.target.result);
+                };
+
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
+    </script>
     @include('sweetalert::alert')
     <script></script>
 </body>

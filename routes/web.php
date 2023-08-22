@@ -650,7 +650,7 @@ Route::prefix('admin')->group(function () {
         //CRUD Checklist Toilet Detail
         Route::resource('toiletdetails', ChecklistToiletDetailController::class);
 
-        //CRUD Checklist Office Management 
+        //CRUD Checklist Office Management
         Route::resource('checklistoffices', ChecklistOfficeManagementHController::class);
         Route::get('/checklist-filter-office_management', [ChecklistOfficeManagementHController::class, 'filterByNoChecklist']);
 
@@ -675,7 +675,8 @@ Route::prefix('admin')->group(function () {
 
         // ---------------Start UUS Electric ----------------
         Route::get('uus-electric', [ElectricUUSController::class, 'index'])->name('usr-electric');
-        // Route::get('create/usr-electric', [ElectricUUSController::class, 'create'])->name('create-usr-electric');
+        Route::get('/get/uss-electric', [ElectricUUSController::class, 'getRecords']);
+        Route::get('/create/usr-electric', [ElectricUUSController::class, 'create'])->name('create-usr-electric');
         Route::post('approve/usr-electric/{id}', [ElectricUUSController::class, 'approve'])->name('approve-usr-electric');
         // ---------------End UUS Electric-----------------
 

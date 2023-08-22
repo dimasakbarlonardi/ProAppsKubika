@@ -25,10 +25,29 @@ class ElectricUUSController extends Controller
     public function index()
     {
         $connElecUUS = ConnectionDB::setConnection(new ElectricUUS());
+        $connUnit = ConnectionDB::setConnection(new Unit());
 
+        $data['units'] = $connUnit->get();
         $data['elecUSS'] = $connElecUUS->get();
 
         return view('AdminSite.UtilityUsageRecording.Electric.index', $data);
+    }
+
+    public function getRecords(Request $request)
+    {
+        $connElecUUS = ConnectionDB::setConnection(new ElectricUUS());
+
+        if ($request->status == 'PENDING') {
+            $record = $connElecUUS->where('is_approve', "");
+        } else {
+            $record = $connElecUUS;
+        }
+
+        $data['elecUSS'] = $record->get();
+
+        return response()->json([
+            'table' => view('AdminSite.UtilityUsageRecording.Electric.table', $data)->render()
+        ]);
     }
 
     public function create()
