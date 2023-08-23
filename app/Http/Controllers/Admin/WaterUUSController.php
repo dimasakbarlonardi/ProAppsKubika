@@ -22,17 +22,17 @@ class WaterUUSController extends Controller
 
         switch ($request->status) {
             case ('PENDING'):
-                $record = $connWatercUUS->where('is_approve', "")
+                $record = $connWatercUUS->where('is_approve', null)
                     ->where('id_unit', $request->id_unit);
                 break;
             case ('APPROVED'):
                 $record = $connWatercUUS->where('is_approve', "1")
-                    ->where('no_refrensi', "")
+                    ->where('no_refrensi', null)
                     ->where('id_unit', $request->id_unit);
                 break;
             case ('WAITING'):
                 $record = $connWatercUUS->where('is_approve', "1")
-                    ->where('no_refrensi', '!=', "")
+                    ->where('no_refrensi', '!=', null)
                     ->where('id_unit', $request->id_unit)
                     ->whereHas('MonthlyUtility.MonthlyTenant', function ($query) {
                         $query->where('tgl_jt_invoice', null);
