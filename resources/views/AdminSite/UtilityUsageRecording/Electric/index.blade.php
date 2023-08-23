@@ -198,7 +198,8 @@
                 url: url,
                 type: 'POST',
                 data: {
-                    'IDs': $IDs
+                    'IDs': $IDs,
+                    'type': 'electric'
                 },
                 success: function(resp) {
                     if (resp.status === 'ok') {
