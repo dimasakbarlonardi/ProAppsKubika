@@ -198,7 +198,8 @@
                 url: url,
                 type: 'POST',
                 data: {
-                    'IDs': $IDs
+                    'IDs': $IDs,
+                    'type': 'water'
                 },
                 success: function(resp) {
                     console.log(resp)

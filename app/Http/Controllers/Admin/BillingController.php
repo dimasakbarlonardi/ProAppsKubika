@@ -42,8 +42,18 @@ class BillingController extends Controller
         $connWaterUUS = ConnectionDB::setConnection(new WaterUUS());
 
         foreach ($request->IDs as $id) {
-            $elecUSS = $connElecUUS->find($id);
-
+            if ($request->type == 'electric') {
+                $elecUSS = $connElecUUS->find($id);
+                $waterUSS = $connWaterUUS->where('periode_bulan', $elecUSS->periode_bulan)
+                    ->where('periode_tahun', $elecUSS->periode_tahun)
+                    ->first();
+            } else {
+                $waterUUS = $connWaterUUS->find($id);
+                $electricUUS = $connElecUUS->where('periode_bulan', $waterUUS->periode_bulan)
+                    ->where('periode_tahun', $waterUUS->periode_tahun)
+                    ->first();
+            }
+            dd($waterUUS, $electricUUS);
             $waterUSS = $connWaterUUS->where('periode_bulan', $elecUSS->periode_bulan)
                 ->where('periode_tahun', $elecUSS->periode_tahun)
                 ->first();
@@ -274,7 +284,7 @@ class BillingController extends Controller
         $connReminder = ConnectionDB::setConnection(new ReminderLetter());
         $connElec = ConnectionDB::setConnection(new ElectricUUS());
 
-        foreach($request->IDs as $id) {
+        foreach ($request->IDs as $id) {
             try {
                 DB::beginTransaction();
                 $elec = $connElec->find($id);
