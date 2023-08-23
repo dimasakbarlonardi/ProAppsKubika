@@ -22,32 +22,55 @@ use Throwable;
 
 class ElectricUUSController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $connElecUUS = ConnectionDB::setConnection(new ElectricUUS());
         $connUnit = ConnectionDB::setConnection(new Unit());
 
-        $data['units'] = $connUnit->get();
-        $data['elecUSS'] = $connElecUUS->get();
+        switch ($request->status) {
+            case ('PENDING'):
+                $record = $connElecUUS->where('is_approve', "")
+                    ->where('id_unit', $request->id_unit);
+                break;
+            case ('APPROVED'):
+                $record = $connElecUUS->where('is_approve', "1")
+                    ->where('no_refrensi', "")
+                    ->where('id_unit', $request->id_unit);
+                break;
+            case ('WAITING'):
+                $record = $connElecUUS->where('is_approve', "1")
+                    ->where('no_refrensi', '!=', "")
+                    ->where('id_unit', $request->id_unit)
+                    ->whereHas('MonthlyUtility.MonthlyTenant', function ($query) {
+                        $query->where('tgl_jt_invoice', null);
+                    })
+                    ->with('MonthlyUtility.MonthlyTenant');
+                break;
+            case ('PAYED'):
+                $record = $connElecUUS->where('id_unit', $request->id_unit)
+                    ->whereHas('MonthlyUtility.MonthlyTenant', function ($query) {
+                        $query->where('tgl_bayar_invoice', '!=', '');
+                    })
+                    ->with('MonthlyUtility.MonthlyTenant');
+                break;
 
-        return view('AdminSite.UtilityUsageRecording.Electric.index', $data);
-    }
-
-    public function getRecords(Request $request)
-    {
-        $connElecUUS = ConnectionDB::setConnection(new ElectricUUS());
-
-        if ($request->status == 'PENDING') {
-            $record = $connElecUUS->where('is_approve', "");
-        } else {
-            $record = $connElecUUS;
+            case ('UNPAID'):
+                $record = $connElecUUS->where('id_unit', $request->id_unit)
+                    ->whereHas('MonthlyUtility.MonthlyTenant', function ($query) {
+                        $query->where('tgl_bayar_invoice', null);
+                        $query->where('tgl_jt_invoice', '!=', null);
+                    })
+                    ->with('MonthlyUtility.MonthlyTenant');
+                break;
+            default:
+                $record = $connElecUUS;
+                break;
         }
 
+        $data['units'] = $connUnit->get();
         $data['elecUSS'] = $record->get();
 
-        return response()->json([
-            'table' => view('AdminSite.UtilityUsageRecording.Electric.table', $data)->render()
-        ]);
+        return view('AdminSite.UtilityUsageRecording.Electric.index', $data);
     }
 
     public function create()
@@ -92,28 +115,24 @@ class ElectricUUSController extends Controller
         return response()->json(['status' => 'OK']);
     }
 
-    public function approve($id)
+    public function approve(Request $request)
     {
         $connElecUUS = ConnectionDB::setConnection(new ElectricUUS());
-        $elecUSS = $connElecUUS->find($id);
+        foreach ($request->IDs as $id) {
+            try {
+                DB::beginTransaction();
+                $elecUSS = $connElecUUS->find($id);
 
-        try {
-            DB::beginTransaction();
+                $elecUSS->is_approve = '1';
+                $elecUSS->save();
 
-            $elecUSS->is_approve = '1';
-            $elecUSS->save();
+                DB::commit();
+            } catch (Throwable $e) {
+                DB::rollBack();
 
-            // HelpNotifikasi::paymentElecUSS($elecUSS, $transaction);
-
-            Alert::success('Berhasil', 'Berhasil approve tagihan');
-
-            return redirect()->back();
-            DB::commit();
-        } catch (Throwable $e) {
-            DB::rollBack();
-            dd($e);
-            Alert::error('Gagal', $e);
-            return redirect()->back();
+                return response()->json(['status' => 'failed']);
+            }
         }
+        return response()->json(['status' => 'ok']);
     }
 }

@@ -15,11 +15,53 @@ use RealRashid\SweetAlert\Facades\Alert;
 
 class WaterUUSController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $connWatercUUS = ConnectionDB::setConnection(new WaterUUS());
+        $connUnit = ConnectionDB::setConnection(new Unit());
 
-        $data['waterUSS'] = $connWatercUUS->get();
+        switch ($request->status) {
+            case ('PENDING'):
+                $record = $connWatercUUS->where('is_approve', "")
+                    ->where('id_unit', $request->id_unit);
+                break;
+            case ('APPROVED'):
+                $record = $connWatercUUS->where('is_approve', "1")
+                    ->where('no_refrensi', "")
+                    ->where('id_unit', $request->id_unit);
+                break;
+            case ('WAITING'):
+                $record = $connWatercUUS->where('is_approve', "1")
+                    ->where('no_refrensi', '!=', "")
+                    ->where('id_unit', $request->id_unit)
+                    ->whereHas('MonthlyUtility.MonthlyTenant', function ($query) {
+                        $query->where('tgl_jt_invoice', null);
+                    })
+                    ->with('MonthlyUtility.MonthlyTenant');
+                break;
+            case ('PAYED'):
+                $record = $connWatercUUS->where('id_unit', $request->id_unit)
+                    ->whereHas('MonthlyUtility.MonthlyTenant', function ($query) {
+                        $query->where('tgl_bayar_invoice', '!=', '');
+                    })
+                    ->with('MonthlyUtility.MonthlyTenant');
+                break;
+
+            case ('UNPAID'):
+                $record = $connWatercUUS->where('id_unit', $request->id_unit)
+                    ->whereHas('MonthlyUtility.MonthlyTenant', function ($query) {
+                        $query->where('tgl_bayar_invoice', null);
+                        $query->where('tgl_jt_invoice', '!=', null);
+                    })
+                    ->with('MonthlyUtility.MonthlyTenant');
+                break;
+            default:
+                $record = $connWatercUUS;
+                break;
+        }
+
+        $data['waterUSS'] = $record->get();
+        $data['units'] = $connUnit->get();
 
         return view('AdminSite.UtilityUsageRecording.Water.index', $data);
     }
@@ -68,26 +110,24 @@ class WaterUUSController extends Controller
         return redirect()->back();
     }
 
-    public function approve($id)
+    public function approve(Request $request)
     {
         $connWaterUUS = ConnectionDB::setConnection(new WaterUUS());
-        $waterUSS = $connWaterUUS->find($id);
+        foreach($request->IDs as $id) {
+            try {
+                DB::beginTransaction();
+                $waterUSS = $connWaterUUS->find($id);
 
-        try {
-            DB::beginTransaction();
+                $waterUSS->is_approve = '1';
+                $waterUSS->save();
 
-            $waterUSS->is_approve = '1';
-            $waterUSS->save();
-
-            Alert::success('Berhasil', 'Berhasil approve tagihan');
-
-            return redirect()->back();
-            DB::commit();
-        } catch (Throwable $e) {
-            DB::rollBack();
-            dd($e);
-            Alert::error('Gagal', $e);
-            return redirect()->back();
+                DB::commit();
+            } catch (Throwable $e) {
+                DB::rollBack();
+                dd($e);
+                return response()->json(['status' => 'failed']);
+            }
         }
+        return response()->json(['status' => 'ok']);
     }
 }

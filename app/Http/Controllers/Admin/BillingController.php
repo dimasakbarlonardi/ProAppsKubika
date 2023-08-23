@@ -41,44 +41,42 @@ class BillingController extends Controller
         $connElecUUS = ConnectionDB::setConnection(new ElectricUUS());
         $connWaterUUS = ConnectionDB::setConnection(new WaterUUS());
 
-        $elecUSS = $connElecUUS->where('periode_bulan', $request->periode_bulan)
-            ->where('periode_tahun', $request->periode_tahun)
-            ->first();
+        foreach ($request->IDs as $id) {
+            $elecUSS = $connElecUUS->find($id);
 
-        $waterUSS = $connWaterUUS->where('periode_bulan', $request->periode_bulan)
-            ->where('periode_tahun', $request->periode_tahun)
-            ->first();
+            $waterUSS = $connWaterUUS->where('periode_bulan', $elecUSS->periode_bulan)
+                ->where('periode_tahun', $elecUSS->periode_tahun)
+                ->first();
 
-        try {
-            DB::beginTransaction();
+            if ($waterUSS) {
+                try {
+                    DB::beginTransaction();
 
-            $createIPLbill = $this->createIPLbill($elecUSS, $request);
-            $createUtilityBill = $this->createUtilityBill($elecUSS, $waterUSS, $createIPLbill);
-            $createMonthlyTenant = $this->createMonthlyTenant($createUtilityBill, $createIPLbill, $elecUSS, $waterUSS);
+                    $createIPLbill = $this->createIPLbill($elecUSS);
+                    $createUtilityBill = $this->createUtilityBill($elecUSS, $waterUSS, $createIPLbill);
+                    $createMonthlyTenant = $this->createMonthlyTenant($createUtilityBill, $createIPLbill, $elecUSS, $waterUSS);
 
-            $createIPLbill->save();
-            $createUtilityBill->save();
+                    $createIPLbill->save();
+                    $createUtilityBill->save();
 
-            $elecUSS->no_refrensi = $createUtilityBill->id;
-            $elecUSS->save();
-            $waterUSS->no_refrensi = $createUtilityBill->id;
-            $waterUSS->save();
+                    $elecUSS->no_refrensi = $createUtilityBill->id;
+                    $elecUSS->save();
+                    $waterUSS->no_refrensi = $createUtilityBill->id;
+                    $waterUSS->save();
 
-            $createMonthlyTenant->id_monthly_utility = $createUtilityBill->id;
-            $createMonthlyTenant->save();
-            $createMonthlyTenant->id_monthly_ipl = $createIPLbill->id;
-            $createMonthlyTenant->save();
+                    $createMonthlyTenant->id_monthly_utility = $createUtilityBill->id;
+                    $createMonthlyTenant->save();
+                    $createMonthlyTenant->id_monthly_ipl = $createIPLbill->id;
+                    $createMonthlyTenant->save();
 
-            Alert::success('Berhasil', 'Berhasil calculate invoice');
-
-            return redirect()->back();
-            DB::commit();
-        } catch (Throwable $e) {
-            DB::rollBack();
-            dd($e);
-            Alert::error('Gagal', $e);
-            return redirect()->back();
+                    DB::commit();
+                } catch (Throwable $e) {
+                    DB::rollBack();
+                    return response()->json(['status' => 'failed']);
+                }
+            }
         }
+        return response()->json(['status' => 'ok']);
     }
 
     public function createMonthlyTenant($createUtilityBill, $createIPLbill, $elecUSS, $waterUSS)
@@ -124,7 +122,7 @@ class BillingController extends Controller
         return $connMonthlyTenant;
     }
 
-    public function createIPLbill($elecUSS, $request)
+    public function createIPLbill($elecUSS)
     {
         $connUnit = ConnectionDB::setConnection(new Unit());
         $connIPL = ConnectionDB::setConnection(new MonthlyIPL());
@@ -141,8 +139,8 @@ class BillingController extends Controller
 
         $connIPL->id_site = $unit->id_site;
         $connIPL->id_unit = $unit->id_unit;
-        $connIPL->periode_bulan = $request->periode_bulan;
-        $connIPL->periode_tahun = $request->periode_tahun;
+        $connIPL->periode_bulan = $elecUSS->periode_bulan;
+        $connIPL->periode_tahun = $elecUSS->periode_tahun;
         $connIPL->ipl_service_charge = $ipl_service_charge;
         $connIPL->ipl_sink_fund = $ipl_sink_fund;
         $connIPL->total_tagihan_ipl = $total_tagihan_ipl;
@@ -270,40 +268,41 @@ class BillingController extends Controller
         ]);
     }
 
-    public function blastMonthlyInvoice($id)
+    public function blastMonthlyInvoice(Request $request)
     {
         $connMonthlyTenant = ConnectionDB::setConnection(new MonthlyArTenant());
         $connReminder = ConnectionDB::setConnection(new ReminderLetter());
+        $connElec = ConnectionDB::setConnection(new ElectricUUS());
 
-        try {
-            DB::beginTransaction();
+        foreach($request->IDs as $id) {
+            try {
+                DB::beginTransaction();
+                $elec = $connElec->find($id);
 
-            $mt = $connMonthlyTenant->find($id);
+                if ($elec->MonthlyUtility) {
+                    $jatuh_tempo_1 = $connReminder->find(1)->durasi_reminder_letter;
+                    $jatuh_tempo_1 = Carbon::now()->addDays($jatuh_tempo_1);
 
-            $jatuh_tempo_1 = $connReminder->find(1)->durasi_reminder_letter;
-            $jatuh_tempo_1 = Carbon::now()->addDays($jatuh_tempo_1);
+                    $elec->MonthlyUtility->MonthlyTenant->tgl_jt_invoice = $jatuh_tempo_1;
+                    $elec->MonthlyUtility->MonthlyTenant->save();
 
-            $mt->tgl_jt_invoice = $jatuh_tempo_1;
-            $mt->MonthlyIPL->sign_approval_2 = Carbon::now();
-            $mt->MonthlyIPL->save();
-            $mt->MonthlyUtility->sign_approval_2 = Carbon::now();
-            $mt->MonthlyUtility->save();
-            $mt->save();
+                    $elec->MonthlyUtility->MonthlyTenant->MonthlyIPL->sign_approval_2 = Carbon::now();
+                    $elec->MonthlyUtility->MonthlyTenant->MonthlyIPL->save();
 
-            HelpNotifikasi::paymentMonthlyTenant($mt);
+                    $elec->MonthlyUtility->sign_approval_2 = Carbon::now();
+                    $elec->MonthlyUtility->save();
 
-            Alert::success('Berhasil', 'Berhasil mengirim invoice');
+                    HelpNotifikasi::paymentMonthlyTenant($elec->MonthlyUtility->MonthlyTenant);
 
-            return redirect()->back();
-
-            DB::commit();
-        } catch (Throwable $e) {
-            DB::rollBack();
-            dd($e);
-            Alert::error('Gagal', 'Gagal mengirim invoice');
-
-            return redirect()->back();
+                    DB::commit();
+                }
+            } catch (Throwable $e) {
+                DB::rollBack();
+                dd($e);
+                return response()->json(['status' => 'failed']);
+            }
         }
+        return response()->json(['status' => 'ok']);
     }
 
     public function viewInvoice($id)

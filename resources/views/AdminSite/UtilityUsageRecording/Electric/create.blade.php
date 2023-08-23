@@ -93,8 +93,8 @@
                                 </div>
                                 <div class="mb-5">
                                     <label class="form-label">Upload Image</label>
-                                    <input type='file' onchange="readURL(this);" />
-                                    <img id="blah" width="250" src="http://placehold.it/180" alt="your image" />
+                                    <input type="file"/>
+                                    {{-- <img id="blah" width="250" src="http://placehold.it/180" alt="your image" /> --}}
                                 </div>
                                 <div class="mb-3 mt-5">
                                     <button class="btn btn-primary d-block w-100 mt-3" type="submit">
