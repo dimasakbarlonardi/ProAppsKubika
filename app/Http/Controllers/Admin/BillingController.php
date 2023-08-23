@@ -47,16 +47,13 @@ class BillingController extends Controller
                 $waterUSS = $connWaterUUS->where('periode_bulan', $elecUSS->periode_bulan)
                     ->where('periode_tahun', $elecUSS->periode_tahun)
                     ->first();
-            } else {
+            } elseif ($request->type == 'water') {
                 $waterUUS = $connWaterUUS->find($id);
                 $electricUUS = $connElecUUS->where('periode_bulan', $waterUUS->periode_bulan)
                     ->where('periode_tahun', $waterUUS->periode_tahun)
                     ->first();
             }
             dd($waterUUS, $electricUUS);
-            $waterUSS = $connWaterUUS->where('periode_bulan', $elecUSS->periode_bulan)
-                ->where('periode_tahun', $elecUSS->periode_tahun)
-                ->first();
 
             if ($waterUSS) {
                 try {
