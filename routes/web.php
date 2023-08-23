@@ -686,13 +686,13 @@ Route::prefix('admin')->group(function () {
         Route::get('uus-electric', [ElectricUUSController::class, 'index'])->name('usr-electric');
         Route::get('/get/uss-electric', [ElectricUUSController::class, 'getRecords']);
         Route::get('/create/usr-electric', [ElectricUUSController::class, 'create'])->name('create-usr-electric');
-        Route::post('approve/usr-electric/{id}', [ElectricUUSController::class, 'approve'])->name('approve-usr-electric');
+        Route::post('approve/usr-electric', [ElectricUUSController::class, 'approve']);
         // ---------------End UUS Electric-----------------
 
         // ---------------Start UUS Water -------------------
         Route::get('uus-water', [WaterUUSController::class, 'index'])->name('uus-water');
         Route::get('create/usr-water', [WaterUUSController::class, 'create'])->name('create-usr-water');
-        Route::post('approve/usr-water/{id}', [WaterUUSController::class, 'approve'])->name('approve-usr-water');
+        Route::post('approve/usr-water', [WaterUUSController::class, 'approve'])->name('approve-usr-water');
         // ---------------End UUS Water -------------------
 
         // Generate monthly invoice IPL & Service charge
@@ -702,7 +702,7 @@ Route::prefix('admin')->group(function () {
         Route::get('view-invoice/{id}', [BillingController::class, 'viewInvoice'])->name('viewInvoice');
 
         // Blast invoice
-        Route::post('blast-invoice/{id}', [BillingController::class, 'blastMonthlyInvoice'])->name('blastMonthlyInvoice');
+        Route::post('blast-invoice', [BillingController::class, 'blastMonthlyInvoice'])->name('blastMonthlyInvoice');
 
         Route::post('payment-monthly-page/{id}', [BillingController::class, 'generatePaymentMonthly'])->name('generatePaymentMonthly');
         Route::get('payment-monthly-page/{mt}/{id}', [BillingController::class, 'paymentMonthly'])->name('paymentMonthly');

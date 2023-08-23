@@ -11,106 +11,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="p-5">
-                    {{-- <table class="table">
-                        <thead>
-                            <tr>
-                                <th>No</th>
-                                <th>Unit</th>
-                                <th>Water</th>
-                                <th>Listrik</th>
-                                <th>Period</th>
-                                <th>Action</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach ($elecUSS as $key => $item)
-                                <tr>
-                                    <th scope="row">{{ $key + 1 }}</th>
-                                    <td>{{ $item->Unit->nama_unit }}</td>
-                                    <td>
-                                        @if ($item->WaterUUSrelation())
-                                            Previous - <b>{{ $item->WaterUUSrelation()->nomor_air_awal }}</b> <br>
-                                            Current - <b>{{ $item->WaterUUSrelation()->nomor_air_akhir }}</b> <br>
-                                            Usage - <b>{{ $item->WaterUUSrelation()->usage }}</b> <br>
-                                        @else
-                                            <span class="badge bg-danger">Belum ada data</span>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        Previous - <b>{{ $item->nomor_listrik_awal }}</b> <br>
-                                        Current - <b>{{ $item->nomor_listrik_akhir }}</b> <br>
-                                        Usage - <b>{{ $item->usage }}</b> <br>
-                                    </td>
-                                    <td>{{ $item->periode_bulan }} - {{ $item->periode_tahun }}</td>
-                                    </td>
-                                    <td>
-                                        @if ($item->is_approve && $item->WaterUUSrelation()->is_approve)
-                                            <span class="badge bg-success">Approved</span> <br>
-                                            @if (!$item->MonthlyUtility)
-                                                <form class="d-inline" action="{{ route('generateMonthlyInvoice') }}"
-                                                    method="post">
-                                                    @csrf
-                                                    <input type="hidden" name="periode_bulan" value="{{ $item->periode_bulan }}">
-                                                    <input type="hidden" name="periode_tahun" value="{{ $item->periode_tahun }}">
-                                                    <button type="submit" class="btn btn-info btn-sm mt-3"
-                                                        onclick="return confirm('are you sure?')">
-                                                        <span class="fas fa-check fs--2 me-1"></span>
-                                                        Calculate Invoice
-                                                    </button>
-                                                </form>
-                                            @else
-                                                <a href="{{ route('viewInvoice', $item->MonthlyUtility->MonthlyTenant->id_monthly_ar_tenant) }}"
-                                                    class="btn btn-info btn-sm mt-3">
-                                                    <span class="fas fa-check fs--2 me-1"></span>
-                                                    Invoice
-                                                </a>
-                                                @if ($item->MonthlyUtility->MonthlyTenant->tgl_bayar_invoice)
-                                                    <button class="btn btn-success btn-sm mt-3"
-                                                        onclick="return confirm('are you sure?')">
-                                                        <span class="fas fa-check fs--2 me-1"></span>
-                                                        Payed
-                                                    </button>
-                                                @elseif (!$item->MonthlyUtility->MonthlyTenant->tgl_bayar_invoice && $item->MonthlyUtility->sign_approval_2)
-                                                    <button class="btn btn-danger btn-sm mt-3">
-                                                        <span class="fas fa-check fs--2 me-1"></span>
-                                                        Not Payed
-                                                    </button>
-                                                @endif
-                                                @if (!$item->MonthlyUtility->sign_approval_2)
-                                                    <form class="d-inline"
-                                                        action="{{ route('blastMonthlyInvoice', $item->MonthlyUtility->MonthlyTenant->id_monthly_ar_tenant) }}"
-                                                        method="post">
-                                                        @csrf
-                                                        <button type="submit" class="btn btn-info btn-sm mt-3"
-                                                            onclick="return confirm('are you sure?')">
-                                                            <span class="fas fa-check fs--2 me-1"></span>
-                                                            Kirim Invoice
-                                                        </button>
-                                                    </form>
-                                                @endif
-                                            @endif
-                                        @elseif (!$item->is_approve)
-                                            <form class="d-inline" action="{{ route('approve-usr-electric', $item->id) }}"
-                                                method="post">
-                                                @csrf
-                                                <button type="submit" class="btn btn-warning btn-sm"
-                                                    onclick="return confirm('are you sure?')">
-                                                    <span class="fas fa-check fs--2 me-1"></span>
-                                                    Approve
-                                                </button>
-                                            </form>
-                                        @else
-                                            <span class="badge bg-success">Approved</span> <br>
-                                            <small>
-                                                *Menunggu tagihan air untuk di approve
-                                            </small>
-                                        @endif
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table> --}}
+                <div class="p-3">
                     <div class="card shadow-none">
                         <div class="card-body p-0 pb-3">
                             <div class="d-flex row mb-4">
@@ -146,7 +47,6 @@
                                                         data-bulk-select='{"body":"bulk-select-body","actions":"bulk-select-actions","replacedElement":"bulk-select-replace-element"}' />
                                                 </div>
                                             </th>
-                                            <th class="align-middle"></th>
                                             <th class="align-middle">Unit</th>
                                             <th class="align-middle">Water </th>
                                             <th class="align-middle">Electric</th>
@@ -155,7 +55,71 @@
                                         </tr>
                                     </thead>
                                     <tbody id="bulk-select-body">
+                                        @foreach ($elecUSS as $key => $item)
+                                            <tr>
+                                                <th class="align-middle white-space-nowrap">
+                                                    <div class="form-check mb-0">
+                                                        <input class="form-check-input" name="bulk-elect" type="checkbox"
+                                                            id="{{ $item->id }}"
+                                                            data-bulk-select-row="data-bulk-select-row" />
+                                                    </div>
+                                                </th>
+                                                <th class="align-middle">{{ $item->Unit->nama_unit }}</th>
+                                                <th class="align-middle">
+                                                    @if ($item->WaterUUSrelation())
+                                                        Previous - <b>{{ $item->WaterUUSrelation()->nomor_air_awal }}</b>
+                                                        <br>
+                                                        Current - <b>{{ $item->WaterUUSrelation()->nomor_air_akhir }}</b>
+                                                        <br>
+                                                        Usage - <b>{{ $item->WaterUUSrelation()->usage }}</b> <br>
+                                                    @else
+                                                        <span class="badge bg-danger">Belum ada data</span>
+                                                    @endif
+                                                </th>
+                                                <th class="align-middle">
+                                                    Previous - <b>{{ $item->nomor_listrik_awal }}</b> <br>
+                                                    Current - <b>{{ $item->nomor_listrik_akhir }}</b> <br>
+                                                    Usage - <b>{{ $item->usage }}</b> <br>
+                                                </th>
+                                                <th>{{ $item->periode_bulan }} - {{ $item->periode_tahun }}</th>
+                                                <th class="align-middle">
+                                                    @if (!$item->is_approve)
+                                                        <span class="badge bg-warning">Pending</span>
+                                                    @endif
 
+                                                    @if ($item->is_approve && !$item->no_refrensi)
+                                                        <span class="badge bg-success">Approved</span> <br>
+                                                        @if ($item->WaterUUSrelation() ? !$item->WaterUUSrelation()->is_approve : false)
+                                                            <small>
+                                                                *Menunggu tagihan air untuk di approve
+                                                            </small>
+                                                        @endif
+                                                    @endif
+
+                                                    @if ($item->MonthlyUtility)
+                                                        @if ($item->MonthlyUtility->MonthlyTenant->tgl_bayar_invoice)
+                                                            <span class="badge bg-success"
+                                                                onclick="return confirm('are you sure?')">
+                                                                <span class="fas fa-check fs--2 me-1"></span>
+                                                                Payed
+                                                            </span>
+                                                        @elseif (!$item->MonthlyUtility->MonthlyTenant->tgl_bayar_invoice && $item->MonthlyUtility->sign_approval_2)
+                                                            <span class="badge bg-danger">
+                                                                <span class="fas fa-check fs--2 me-1"></span>
+                                                                Not Payed
+                                                            </span>
+                                                        @endif
+
+                                                        @if (!$item->MonthlyUtility->MonthlyTenant->tgl_jt_invoice)
+                                                            <span class="badge bg-info">
+                                                                <span class="fas fa-check fs--2 me-1"></span>
+                                                                Waiting to send
+                                                            </span>
+                                                        @endif
+                                                    @endif
+                                                </th>
+                                            </tr>
+                                        @endforeach
                                     </tbody>
                                 </table>
                             </div>
@@ -173,9 +137,10 @@
                     <div class="card-body">
                         <div class="mb-3">
                             <label class="mb-1">Unit</label>
-                            <select name="unit_id" class="form-control" id="">
+                            <select name="unit_id" class="form-control" id="id_unit">
                                 @foreach ($units as $unit)
-                                    <option value="{{ $unit->id_unit }}">{{ $unit->nama_unit }}</option>
+                                    <option {{ request()->get('id_unit') == $unit->id_unit ? 'selected' : '' }}
+                                        value="{{ $unit->id_unit }}">{{ $unit->nama_unit }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -183,10 +148,18 @@
                             <label class="mb-1">Status</label>
                             <select name="unit_id" class="form-control" id="select_status">
                                 <option value="">All</option>
-                                <option value="PENDING">PENDING</option>
-                                <option value="APPROVED">APPROVED</option>
-                                <option value="PAYED">PAYED</option>
-                                <option value="NOT PAYED">NOT PAYED</option>
+                                <option {{ request()->get('status') == 'PENDING' ? 'selected' : '' }} value="PENDING">
+                                    Pending</option>
+                                <option {{ request()->get('status') == 'APPROVED' ? 'selected' : '' }} value="APPROVED">
+                                    Approved</option>
+                                <option {{ request()->get('status') == 'WAITING' ? 'selected' : '' }} value="WAITING">
+                                    Waiting
+                                    to Send
+                                </option>
+                                <option {{ request()->get('status') == 'PAYED' ? 'selected' : '' }} value="PAYED">Paid
+                                </option>
+                                <option {{ request()->get('status') == 'UNPAID' ? 'selected' : '' }} value="UNPAID">
+                                    Unpaid</option>
                             </select>
                         </div>
                     </div>
@@ -200,12 +173,54 @@
 @section('script')
     <script>
         $('#applyBulk').on('click', function() {
+            var url = '';
+
             $IDs = $("#tableData input:checkbox:checked").map(function() {
                 return $(this).attr("id");
             }).get();
+
             var value = $('#valueAction').val();
-            alert(value);
+            console.log(value);
+
+            if (value === 'approve') {
+                url = '/admin/approve/usr-electric';
+            } else if (value === 'calculate') {
+                url = '/admin/generate-invoice';
+            } else if (value === 'send') {
+                url = '/admin/blast-invoice';
+            }
+
+            actionPost(url);
         })
+
+        function actionPost(url) {
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: {
+                    'IDs': $IDs
+                },
+                success: function(resp) {
+                    if (resp.status === 'ok') {
+                        Swal.fire(
+                            'Good job!',
+                            'You clicked the button!',
+                            'success'
+                        ).then(() => {
+                            window.location.reload();
+                        });
+                    } else {
+                        Swal.fire(
+                            'Failed!',
+                            'You clicked the button!',
+                            'error'
+                        ).then(() => {
+                            window.location.reload();
+                        });
+                    }
+                }
+            })
+        }
 
         $('.form-check-input').on('change', function() {
             $IDs = $("#tableData input:checkbox:checked").map(function() {
@@ -215,20 +230,17 @@
         })
 
         $('#select_status').on('change', function() {
-            $('#bulk-select-body').html("")
-            var value = $(this).val()
+            var value = $(this).val();
+            var id_unit = $('#id_unit').val();
 
-            console.log(value);
-            $.ajax({
-                url: '/admin/get/uss-electric',
-                type: 'GET',
-                data: {
-                    'status': value
-                },
-                success: function(data) {
-                    $('#bulk-select-body').html(data.table)
-                }
-            })
+            window.location.replace(`/admin/uus-electric?status=${value}&id_unit=${id_unit}`)
+        })
+
+        $('#id_unit').on('change', function() {
+            var value = $(this).val();
+            var status = $('#select_status').val();
+
+            window.location.replace(`/admin/uus-electric?status=${status}&id_unit=${value}`)
         })
     </script>
 @endsection

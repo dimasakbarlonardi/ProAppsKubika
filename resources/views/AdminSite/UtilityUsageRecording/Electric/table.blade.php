@@ -1,9 +1,17 @@
 @foreach ($elecUSS as $key => $item)
     <tr>
-        <th scope="row">{{ $key + 1 }}</th>
-        <th><img width="50" src="{{ asset('assets/img/icons/spot-illustrations/proapps.png') }}" alt=""></th>
-        <td>{{ $item->Unit->nama_unit }}</td>
-        <td>
+        <th class="align-middle white-space-nowrap">
+            <div class="form-check mb-0">
+                <input class="form-check-input" name="bulk-elect" type="checkbox"
+                    id="{{ $item->id }}"
+                    data-bulk-select-row="data-bulk-select-row" />
+            </div>
+        </th>
+        <th class="align-middle">
+            <img width="50" src="{{ asset('assets/img/icons/spot-illustrations/proapps.png') }}" alt="">
+        </th>
+        <th class="align-middle">{{ $item->Unit->nama_unit }}</th>
+        <th class="align-middle">
             @if ($item->WaterUUSrelation())
                 Previous - <b>{{ $item->WaterUUSrelation()->nomor_air_awal }}</b> <br>
                 Current - <b>{{ $item->WaterUUSrelation()->nomor_air_akhir }}</b> <br>
@@ -11,15 +19,15 @@
             @else
                 <span class="badge bg-danger">Belum ada data</span>
             @endif
-        </td>
-        <td>
+        </th>
+        <th class="align-middle">
             Previous - <b>{{ $item->nomor_listrik_awal }}</b> <br>
             Current - <b>{{ $item->nomor_listrik_akhir }}</b> <br>
             Usage - <b>{{ $item->usage }}</b> <br>
-        </td>
-        <td>{{ $item->periode_bulan }} - {{ $item->periode_tahun }}</td>
-        </td>
-        <td>
+        </th>
+        <th>{{ $item->periode_bulan }} - {{ $item->periode_tahun }}</th>
+        </th>
+        <th>
             @if ($item->is_approve && $item->WaterUUSrelation()->is_approve)
                 <span class="badge bg-success">Approved</span> <br>
                 @if ($item->MonthlyUtility)
@@ -71,6 +79,6 @@
                     *Menunggu tagihan air untuk di approve
                 </small>
             @endif
-        </td>
+        </th>
     </tr>
 @endforeach
