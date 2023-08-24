@@ -48,14 +48,13 @@ class BillingController extends Controller
                     ->where('periode_tahun', $elecUSS->periode_tahun)
                     ->first();
             } elseif ($request->type == 'water') {
-                $waterUUS = $connWaterUUS->find($id);
-                $electricUUS = $connElecUUS->where('periode_bulan', $waterUUS->periode_bulan)
-                    ->where('periode_tahun', $waterUUS->periode_tahun)
+                $waterUSS = $connWaterUUS->find($id);
+                $elecUSS = $connElecUUS->where('periode_bulan', $waterUSS->periode_bulan)
+                    ->where('periode_tahun', $waterUSS->periode_tahun)
                     ->first();
             }
-            dd($waterUUS, $electricUUS);
 
-            if ($waterUSS) {
+            if ($waterUSS && $elecUSS) {
                 try {
                     DB::beginTransaction();
 
@@ -79,6 +78,7 @@ class BillingController extends Controller
                     DB::commit();
                 } catch (Throwable $e) {
                     DB::rollBack();
+                    dd($e);
                     return response()->json(['status' => 'failed']);
                 }
             }
@@ -194,11 +194,11 @@ class BillingController extends Controller
             $system->kode_unik_cash_receipt . '/' .
             Carbon::now()->format('m') . Carbon::now()->format('Y') . '/' .
             sprintf("%06d", $countCR);
-        $countINV = $system->sequence_no_invoice + 1;
-        $no_inv = $system->kode_unik_perusahaan . '/' .
-            $system->kode_unik_invoice . '/' .
-            Carbon::now()->format('m') . Carbon::now()->format('Y') . '/' .
-            sprintf("%06d", $countINV);
+        // $countINV = $system->sequence_no_invoice + 1;
+        // $no_inv = $system->kode_unik_perusahaan . '/' .
+        //     $system->kode_unik_invoice . '/' .
+        //     Carbon::now()->format('m') . Carbon::now()->format('Y') . '/' .
+        //     sprintf("%06d", $countINV);
 
         $order_id = $user->id_site . '-' . $no_cr;
 
@@ -230,8 +230,8 @@ class BillingController extends Controller
             $createTransaction = $connTransaction;
             $createTransaction->order_id = $order_id;
             $createTransaction->id_site = $user->id_site;
-            $createTransaction->no_reff = $no_inv;
-            $createTransaction->no_invoice = $no_inv;
+            $createTransaction->no_reff = $mt->no_invoice;
+            $createTransaction->no_invoice = $mt->no_invoice;
             $createTransaction->no_draft_cr = $no_cr;
             $createTransaction->ket_pembayaran = 'INV/' . $user->id_user . '/' . $mt->Unit->nama_unit;
             $createTransaction->admin_fee = $admin_fee;
@@ -241,7 +241,7 @@ class BillingController extends Controller
             $createTransaction->transaction_type = 'MonthlyTenant';
 
             $system->sequence_no_cash_receiptment = $countCR;
-            $system->sequence_no_invoice = $countINV;
+            // $system->sequence_no_invoice = $countINV;
             $system->save();
 
             DB::commit();
@@ -277,29 +277,48 @@ class BillingController extends Controller
 
     public function blastMonthlyInvoice(Request $request)
     {
-        $connMonthlyTenant = ConnectionDB::setConnection(new MonthlyArTenant());
+        $connSystem = ConnectionDB::setConnection(new System());
+        // $connMonthlyTenant = ConnectionDB::setConnection(new MonthlyArTenant());
         $connReminder = ConnectionDB::setConnection(new ReminderLetter());
         $connElec = ConnectionDB::setConnection(new ElectricUUS());
+        $connWater = ConnectionDB::setConnection(new WaterUUS());
+
+        $system = $connSystem->find(1);
+        $countINV = $system->sequence_no_invoice + 1;
+
+        $no_inv = $system->kode_unik_perusahaan . '/' .
+            $system->kode_unik_invoice . '/' .
+            Carbon::now()->format('m') . Carbon::now()->format('Y') . '/' .
+            sprintf("%06d", $countINV);
 
         foreach ($request->IDs as $id) {
             try {
                 DB::beginTransaction();
-                $elec = $connElec->find($id);
 
-                if ($elec->MonthlyUtility) {
+                if ($request->type == 'electric') {
+                    $util = $connElec->find($id);
+                } elseif ($request->type == 'water') {
+                    $util = $connWater->find($id);
+                }
+
+                if ($util->MonthlyUtility) {
                     $jatuh_tempo_1 = $connReminder->find(1)->durasi_reminder_letter;
                     $jatuh_tempo_1 = Carbon::now()->addDays($jatuh_tempo_1);
 
-                    $elec->MonthlyUtility->MonthlyTenant->tgl_jt_invoice = $jatuh_tempo_1;
-                    $elec->MonthlyUtility->MonthlyTenant->save();
+                    $util->MonthlyUtility->MonthlyTenant->tgl_jt_invoice = $jatuh_tempo_1;
+                    $util->MonthlyUtility->MonthlyTenant->no_invoice = $no_inv;
+                    $util->MonthlyUtility->MonthlyTenant->save();
 
-                    $elec->MonthlyUtility->MonthlyTenant->MonthlyIPL->sign_approval_2 = Carbon::now();
-                    $elec->MonthlyUtility->MonthlyTenant->MonthlyIPL->save();
+                    $util->MonthlyUtility->MonthlyTenant->MonthlyIPL->sign_approval_2 = Carbon::now();
+                    $util->MonthlyUtility->MonthlyTenant->MonthlyIPL->save();
 
-                    $elec->MonthlyUtility->sign_approval_2 = Carbon::now();
-                    $elec->MonthlyUtility->save();
+                    $util->MonthlyUtility->sign_approval_2 = Carbon::now();
+                    $util->MonthlyUtility->save();
 
-                    HelpNotifikasi::paymentMonthlyTenant($elec->MonthlyUtility->MonthlyTenant);
+                    $system->sequence_no_invoice = $countINV;
+                    $system->save();
+
+                    HelpNotifikasi::paymentMonthlyTenant($util->MonthlyUtility->MonthlyTenant);
 
                     DB::commit();
                 }

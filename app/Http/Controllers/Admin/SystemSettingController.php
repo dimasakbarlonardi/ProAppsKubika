@@ -98,6 +98,9 @@ class SystemSettingController extends Controller
             case 8:
                 return view('AdminSite.Approve.gigo', $data);
                 break;
+            case 9:
+                return view('AdminSite.Approve.uur', $data);
+                break;
         }
     }
 
@@ -128,6 +131,9 @@ class SystemSettingController extends Controller
         }
         if ($id == 8) {
             $approve = $connApprove->find(8);
+        }
+        if ($id == 9) {
+            $approve = $connApprove->find(9);
         }
 
         $approve->update($request->all());
