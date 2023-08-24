@@ -125,6 +125,7 @@ class BillingController extends Controller
         $connMonthlyTenant->periode_tahun = $createUtilityBill->periode_tahun;
         $connMonthlyTenant->total_tagihan_ipl = $createIPLbill->total_tagihan_ipl;
         $connMonthlyTenant->total_tagihan_utility = $createUtilityBill->total_tagihan_utility;
+        $connMonthlyTenant->total = $createIPLbill->total_tagihan_ipl + $createUtilityBill->total_tagihan_utility + $connMonthlyTenant->denda_bulan_sebelumnya;
 
         return $connMonthlyTenant;
     }
