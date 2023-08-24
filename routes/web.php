@@ -693,6 +693,7 @@ Route::prefix('admin')->group(function () {
         Route::get('uus-water', [WaterUUSController::class, 'index'])->name('uus-water');
         Route::get('create/usr-water', [WaterUUSController::class, 'create'])->name('create-usr-water');
         Route::post('approve/usr-water', [WaterUUSController::class, 'approve'])->name('approve-usr-water');
+        Route::post('update/usr-water', [WaterUUSController::class, 'update'])->name('updateWater');
         // ---------------End UUS Water -------------------
 
         // Generate monthly invoice IPL & Service charge

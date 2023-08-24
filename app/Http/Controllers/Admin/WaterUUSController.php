@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
+use App\Models\Approve;
 use App\Models\Site;
 use App\Models\Unit;
 use App\Models\User;
@@ -19,6 +20,10 @@ class WaterUUSController extends Controller
     {
         $connWatercUUS = ConnectionDB::setConnection(new WaterUUS());
         $connUnit = ConnectionDB::setConnection(new Unit());
+        $connApprove = ConnectionDB::setConnection(new Approve());
+
+        $data['approve'] = $connApprove->find(9);
+        $data['user'] = $request->session()->get('user');
 
         switch ($request->status) {
             case ('PENDING'):
@@ -129,5 +134,10 @@ class WaterUUSController extends Controller
             }
         }
         return response()->json(['status' => 'ok']);
+    }
+
+    public function update(Request $request)
+    {
+        dd($request);
     }
 }

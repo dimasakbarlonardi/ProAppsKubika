@@ -20,15 +20,22 @@
                                         <h5>Total selected : <span id="totalSelected">0</span></h5>
                                     </div>
                                 </div>
-                                <div class="col-4">
+                                <div class="col-4" id="bulk-action-menu">
                                     <div class="justify-content-end my-3">
                                         <div class="d-none ms-3" id="bulk-select-actions">
                                             <div class="d-flex">
                                                 <select class="form-select form-select-sm" aria-label="Bulk actions"
                                                     id="valueAction">
-                                                    <option value="approve" selected="selected">Approve</option>
-                                                    <option value="calculate">Calculate Invoice</option>
-                                                    <option value="send">Send Invoice</option>
+                                                    @if ($user->id_role_hdr == $approve->approval_1 && $user->Karyawan->is_can_approve != null)
+                                                        <option class="can-select" value="approve" selected="selected">
+                                                            Approve</option>
+                                                    @elseif ($user->id_role_hdr == $approve->approval_2)
+                                                        <option class="can-select" value="calculate">Calculate Invoice
+                                                        </option>
+                                                        <option class="can-select" value="send">Send Invoice</option>
+                                                    @else
+                                                        <option disabled selected>No Action</option>
+                                                    @endif
                                                 </select>
                                                 <button class="btn btn-falcon-success btn-sm ms-2" type="button"
                                                     id="applyBulk">Apply</button>
@@ -52,6 +59,9 @@
                                             <th class="align-middle">Electric</th>
                                             <th class="align-middle">Period</th>
                                             <th class="align-middle">Status</th>
+                                            @if ($user->id_role_hdr == $approve->approval_1 && $user->Karyawan->is_can_approve != null)
+                                                <th class="align-middle">Action</th>
+                                            @endif
                                         </tr>
                                     </thead>
                                     <tbody id="bulk-select-body">
@@ -119,7 +129,69 @@
                                                         @endif
                                                     @endif
                                                 </th>
+                                                @if ($user->id_role_hdr == $approve->approval_1 && $user->Karyawan->is_can_approve != null)
+                                                    <td class="align-middle">
+                                                        <button class="btn btn-warning btn-sm" type="button"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#edit-modal{{ $item->id }}">Edit</button>
+                                                    </td>
+                                                @endif
                                             </tr>
+
+                                            <div class="modal fade" id="edit-modal{{ $item->id }}" tabindex="-1"
+                                                role="dialog" aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered" role="document"
+                                                    style="max-width: 500px">
+                                                    <div class="modal-content position-relative">
+                                                        <div class="position-absolute top-0 end-0 mt-2 me-2 z-1">
+                                                            <button
+                                                                class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base"
+                                                                data-bs-dismiss="modal" aria-label="Close"></button>
+                                                        </div>
+                                                        <div class="modal-body p-0">
+                                                            <div class="rounded-top-3 py-3 ps-4 pe-6 bg-light">
+                                                                <h4 class="mb-1" id="modalExampleDemoLabel">Edit Record
+                                                                </h4>
+                                                            </div>
+                                                            <div class="p-4 pb-0">
+                                                                <form method="post" action="{{ route('updateWater') }}">
+                                                                    @csrf
+                                                                    <div class="mb-3">
+                                                                        <div class="row">
+                                                                            <div class="col-6">
+                                                                                <label class="col-form-label"
+                                                                                    for="recipient-name">Previous:</label>
+                                                                                <input class="form-control"
+                                                                                    value="{{ $item->nomor_air_awal }}"
+                                                                                    type="integer" />
+                                                                            </div>
+                                                                            <div class="col-6">
+                                                                                <label class="col-form-label"
+                                                                                    for="recipient-name">Current:</label>
+                                                                                <input class="form-control"
+                                                                                    value="{{ $item->nomor_air_akhir }}"
+                                                                                    type="integer" />
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="mb-3">
+                                                                        <label class="col-form-label"
+                                                                            for="message-text">Notes:</label>
+                                                                        <textarea class="form-control" rows="8" id="message-text"></textarea>
+                                                                    </div>
+                                                                </form>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button class="btn btn-secondary" type="button"
+                                                                data-bs-dismiss="modal">Close</button>
+                                                            <button class="btn btn-primary" type="button"
+                                                                onclick="return confirm('are you sure?')">Edit
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         @endforeach
                                     </tbody>
                                 </table>
@@ -173,24 +245,33 @@
 
 @section('script')
     <script>
-        $('#applyBulk').on('click', function() {
-            var url = '';
-
-            $IDs = $("#tableData input:checkbox:checked").map(function() {
-                return $(this).attr("id");
-            }).get();
-
-            var value = $('#valueAction').val();
-
-            if (value === 'approve') {
-                url = '/admin/approve/usr-water';
-            } else if (value === 'calculate') {
-                url = '/admin/generate-invoice';
-            } else if (value === 'send') {
-                url = '/admin/blast-invoice';
+        $('document').ready(function() {
+            var optionMenu = $('option').hasClass('can-select');
+            if (optionMenu == false) {
+                $('#bulk-action-menu').css('display', 'none');
             }
+            console.log(optionMenu);
+        })
+        $('#applyBulk').on('click', function() {
+            if (confirm('Are you sure?')) {
+                var url = '';
 
-            actionPost(url);
+                $IDs = $("#tableData input:checkbox:checked").map(function() {
+                    return $(this).attr("id");
+                }).get();
+
+                var value = $('#valueAction').val();
+
+                if (value === 'approve') {
+                    url = '/admin/approve/usr-water';
+                } else if (value === 'calculate') {
+                    url = '/admin/generate-invoice';
+                } else if (value === 'send') {
+                    url = '/admin/blast-invoice';
+                }
+
+                actionPost(url);
+            }
         })
 
         function actionPost(url) {
@@ -205,8 +286,8 @@
                     console.log(resp)
                     if (resp.status === 'ok') {
                         Swal.fire(
-                            'Good job!',
-                            'You clicked the button!',
+                            'Success!',
+                            '',
                             'success'
                         ).then(() => {
                             window.location.reload();
@@ -214,7 +295,7 @@
                     } else {
                         Swal.fire(
                             'Failed!',
-                            'You clicked the button!',
+                            '',
                             'error'
                         ).then(() => {
                             window.location.reload();
