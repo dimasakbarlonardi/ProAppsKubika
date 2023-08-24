@@ -230,8 +230,8 @@ class BillingController extends Controller
             $createTransaction = $connTransaction;
             $createTransaction->order_id = $order_id;
             $createTransaction->id_site = $user->id_site;
-            $createTransaction->no_reff = $mt->no_invoice;
-            $createTransaction->no_invoice = $mt->no_invoice;
+            $createTransaction->no_reff = $mt->no_monthly_invoice;
+            $createTransaction->no_invoice = $mt->no_monthly_invoice;
             $createTransaction->no_draft_cr = $no_cr;
             $createTransaction->ket_pembayaran = 'INV/' . $user->id_user . '/' . $mt->Unit->nama_unit;
             $createTransaction->admin_fee = $admin_fee;
@@ -306,7 +306,7 @@ class BillingController extends Controller
                     $jatuh_tempo_1 = Carbon::now()->addDays($jatuh_tempo_1);
 
                     $util->MonthlyUtility->MonthlyTenant->tgl_jt_invoice = $jatuh_tempo_1;
-                    $util->MonthlyUtility->MonthlyTenant->no_invoice = $no_inv;
+                    $util->MonthlyUtility->MonthlyTenant->no_monthly_invoice = $no_inv;
                     $util->MonthlyUtility->MonthlyTenant->save();
 
                     $util->MonthlyUtility->MonthlyTenant->MonthlyIPL->sign_approval_2 = Carbon::now();
