@@ -34,6 +34,7 @@ class BillingController extends Controller
         $connARTenant = DB::connection($dbName)
             ->table('tb_fin_monthly_ar_tenant as arm')
             ->where('arm.id_unit', $id)
+            ->where('arm.tgl_jt_invoice', '!=', null)
             ->orderBy('periode_bulan', 'desc')
             ->get();
 
@@ -48,9 +49,23 @@ class BillingController extends Controller
         $connARTenant = ConnectionDB::setConnection(new MonthlyArTenant());
         $ar = $connARTenant->where('id_monthly_ar_tenant', $id);
 
-        $data = $ar->with(['Unit.TenantUnit.Tenant', 'CashReceipt'])
+        // $data = $ar->with([
+        //     'Unit.TenantUnit.Tenant',
+        //     'CashReceipt',
+        //     'MonthlyUtility',
+        //     'MonthlyUtility.ElectricUUS' => function($q) {
+        //         $q->select('id');
+        //     },
+        //     'MonthlyUtility.WaterUUS'
+        // ])
+        //     ->first(['periode_bulan', 'periode_tahun']);
+        $data = $ar->with([
+            'Unit.TenantUnit.Tenant',
+            'CashReceipt',
+            'MonthlyUtility.ElectricUUS',
+            'MonthlyUtility.WaterUUS'
+        ])
             ->first();
-
         $previousBills = $ar->first()->PreviousMonthBill();
 
         return ResponseFormatter::success(

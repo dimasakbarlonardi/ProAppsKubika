@@ -73,6 +73,7 @@ class MonthlyArTenant extends Model
         $prevMonthBill = ConnectionDB::setConnection(new MonthlyArTenant())
         ->where('periode_bulan', '<', $this->periode_bulan)
         ->where('periode_tahun', $this->periode_tahun)
+        ->with(['MonthlyUtility.ElectricUUS', 'MonthlyUtility.WaterUUS'])
         ->where('tgl_bayar_invoice', null)
         ->get();
 
