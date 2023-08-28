@@ -114,6 +114,7 @@ use App\Http\Controllers\Admin\ChecklistTanggaDaruratHController;
 use App\Http\Controllers\Admin\ChecklistOfficeManagementHController;
 use App\Http\Controllers\Admin\ChecklistToiletDetailController;
 use App\Http\Controllers\Admin\ElectricUUSController;
+use App\Http\Controllers\Admin\InvoiceController;
 use App\Http\Controllers\Admin\OffBoardingKepemilikanUnitController;
 use App\Http\Controllers\Admin\PPNController;
 use App\Http\Controllers\Admin\WaterUUSController;
@@ -693,8 +694,11 @@ Route::prefix('admin')->group(function () {
         // View invoice
         Route::get('view-invoice/{id}', [BillingController::class, 'viewInvoice'])->name('viewInvoice');
 
-        // Blast invoice
+        // ===================Invoice===================
+        // blast invoice
         Route::post('blast-invoice', [BillingController::class, 'blastMonthlyInvoice'])->name('blastMonthlyInvoice');
+        // Invoice index
+        Route::get('invoices', [InvoiceController::class, 'index'])->name('invoices');
 
         Route::post('payment-monthly-page/{id}', [BillingController::class, 'generatePaymentMonthly'])->name('generatePaymentMonthly');
         Route::get('payment-monthly-page/{mt}/{id}', [BillingController::class, 'paymentMonthly'])->name('paymentMonthly');

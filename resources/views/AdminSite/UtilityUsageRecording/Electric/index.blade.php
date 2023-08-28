@@ -26,9 +26,16 @@
                                             <div class="d-flex">
                                                 <select class="form-select form-select-sm" aria-label="Bulk actions"
                                                     id="valueAction">
-                                                    <option value="approve" selected="selected">Approve</option>
-                                                    <option value="calculate">Calculate Invoice</option>
-                                                    <option value="send">Send Invoice</option>
+                                                    @if ($user->id_role_hdr == $approve->approval_1 && $user->Karyawan->is_can_approve != null)
+                                                        <option class="can-select" value="approve" selected="selected">
+                                                            Approve</option>
+                                                    @elseif ($user->id_role_hdr == $approve->approval_2)
+                                                        <option class="can-select" value="calculate">Calculate Invoice
+                                                        </option>
+                                                        <option class="can-select" value="send">Send Invoice</option>
+                                                    @else
+                                                        <option disabled selected>No Action</option>
+                                                    @endif
                                                 </select>
                                                 <button class="btn btn-falcon-success btn-sm ms-2" type="button"
                                                     id="applyBulk">Apply</button>

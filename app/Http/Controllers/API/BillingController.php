@@ -393,4 +393,39 @@ class BillingController extends Controller
 
         return response()->json(['token' => $token]);
     }
+
+    public function adminFee(Request $request)
+    {
+        $connMonthlyTenant = ConnectionDB::setConnection(new MonthlyArTenant());
+
+        $mt = $connMonthlyTenant->find($request->transaction_id);
+        $subtotal = $mt->total;
+
+        if ($request->method == 'credit_card') {
+            $admin_fee = 2000 + (0.029 * $subtotal);
+            $tax_fee = 0.11 * $admin_fee;
+            $admin_fee_tax = $admin_fee + $tax_fee;
+            $grand_total = $subtotal + $admin_fee_tax;
+        } else {
+            $admin_fee = 4000;
+            $tax_fee = 0.11 * $admin_fee;
+            $admin_fee_tax = $admin_fee + $tax_fee;
+            $grand_total = $subtotal + $admin_fee_tax;
+        }
+
+        // 32957200 -> subtotal
+        // 957758,8 -> admin fee
+        // 105353,468 -> tax fee
+        // 1063112,268 -> admin fee after tax
+
+        // 34020312,268 -> grand total
+
+        return response()->json([
+            'sub_total' => round($subtotal),
+            'admin_fee' => round($admin_fee),
+            'tax_fee' => round($tax_fee),
+            'admin_fee_plus_tax' => round($admin_fee_tax),
+            'grand_total' => round($grand_total)
+        ]);
+    }
 }

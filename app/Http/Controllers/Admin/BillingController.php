@@ -54,7 +54,7 @@ class BillingController extends Controller
                     ->first();
             }
 
-            if ($waterUSS && $elecUSS) {
+            if ($waterUSS && $elecUSS && !$waterUSS->MonthlyUtility) {
                 try {
                     DB::beginTransaction();
 
@@ -195,11 +195,6 @@ class BillingController extends Controller
             $system->kode_unik_cash_receipt . '/' .
             Carbon::now()->format('m') . Carbon::now()->format('Y') . '/' .
             sprintf("%06d", $countCR);
-        // $countINV = $system->sequence_no_invoice + 1;
-        // $no_inv = $system->kode_unik_perusahaan . '/' .
-        //     $system->kode_unik_invoice . '/' .
-        //     Carbon::now()->format('m') . Carbon::now()->format('Y') . '/' .
-        //     sprintf("%06d", $countINV);
 
         $order_id = $user->id_site . '-' . $no_cr;
 
@@ -285,12 +280,6 @@ class BillingController extends Controller
         $connWater = ConnectionDB::setConnection(new WaterUUS());
 
         $system = $connSystem->find(1);
-        $countINV = $system->sequence_no_invoice + 1;
-
-        $no_inv = $system->kode_unik_perusahaan . '/' .
-            $system->kode_unik_invoice . '/' .
-            Carbon::now()->format('m') . Carbon::now()->format('Y') . '/' .
-            sprintf("%06d", $countINV);
 
         foreach ($request->IDs as $id) {
             try {
@@ -302,7 +291,17 @@ class BillingController extends Controller
                     $util = $connWater->find($id);
                 }
 
-                if ($util->MonthlyUtility) {
+                if (!$util->MonthlyUtility->MonthlyTenant->CashReceipt) {
+
+                    $countINV = $system->sequence_no_invoice + 1;
+
+                    $no_inv = $system->kode_unik_perusahaan . '/' .
+                        $system->kode_unik_invoice . '/' .
+                        Carbon::now()->format('m') . Carbon::now()->format('Y') . '/' .
+                        sprintf("%06d", $countINV);
+
+                    $transaction = $this->createTransaction($util->MonthlyUtility->MonthlyTenant);
+
                     $jatuh_tempo_1 = $connReminder->find(1)->durasi_reminder_letter;
                     $jatuh_tempo_1 = Carbon::now()->addDays($jatuh_tempo_1);
 
@@ -318,6 +317,9 @@ class BillingController extends Controller
 
                     $system->sequence_no_invoice = $countINV;
                     $system->save();
+
+                    $transaction->no_reff = $no_inv;
+                    $transaction->save();
 
                     HelpNotifikasi::paymentMonthlyTenant($util->MonthlyUtility->MonthlyTenant);
 
@@ -352,11 +354,11 @@ class BillingController extends Controller
         $admin_fee = $request->admin_fee;
 
         if (!$mt->CashReceipt) {
-            $transaction = $this->createTransaction($mt);
+            // $transaction = $this->createTransaction($mt);
             if ($billing[0] == 'bank_transfer') {
-                $transaction->gross_amount = $transaction->sub_total + $admin_fee;
-                $transaction->payment_type = 'bank_transfer';
-                $transaction->bank = Str::upper($billing[1]);
+                // $transaction->gross_amount = $transaction->sub_total + $admin_fee;
+                // $transaction->payment_type = 'bank_transfer';
+                // $transaction->bank = Str::upper($billing[1]);
                 $payment = [];
 
                 $payment['payment_type'] = $billing[0];
