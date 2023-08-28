@@ -28,16 +28,15 @@ Route::prefix('v1')->group(function () {
     Route::get('sites', [SiteController::class, 'sites']);
     Route::post('/login', [UserController::class, 'login'])->name('api-login');
 
-   // Insert electric meter
-   Route::get('/insert-electric/{unitID}/{token}', [BillingController::class, 'insertElectricMeter']);
-   Route::get('store/insert-electric/{unitID}/{token}', [BillingController::class, 'storeElectricMeter'])->name('store-usr-electric');
+    // Insert electric meter
+    Route::get('/insert-electric/{unitID}/{token}', [BillingController::class, 'insertElectricMeter']);
+    Route::get('store/insert-electric/{unitID}/{token}', [BillingController::class, 'storeElectricMeter'])->name('store-usr-electric');
 
-   // Insert water meter
-   Route::get('/insert-water/{unitID}/{token}', [BillingController::class, 'insertWaterMeter']);
-   Route::get('/store/insert-water/{unitID}/{token}', [BillingController::class, 'storeWaterMeter'])->name('store-usr-water');
+    // Insert water meter
+    Route::get('/insert-water/{unitID}/{token}', [BillingController::class, 'insertWaterMeter']);
+    Route::get('/store/insert-water/{unitID}/{token}', [BillingController::class, 'storeWaterMeter'])->name('store-usr-water');
 
-
-   Route::middleware('auth:sanctum')->group(function () {
+    Route::middleware('auth:sanctum')->group(function () {
         Route::post('get/cc-token', [BillingController::class, 'getTokenCC']);
 
         Route::get('/user', [UserController::class, 'user'])->name('user');
@@ -58,5 +57,6 @@ Route::prefix('v1')->group(function () {
         Route::get('/get-billing/{id}', [BillingController::class, 'showBilling']);
         Route::post('/create-transaction/{id}', [BillingController::class, 'generateTransaction']);
 
+        Route::post('get/admin-fee', [BillingController::class, 'adminFee']);
     });
 });

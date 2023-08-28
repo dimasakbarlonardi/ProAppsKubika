@@ -121,6 +121,7 @@ use App\Http\Controllers\Admin\IncidentalEngController;
 use App\Http\Controllers\Admin\IncidentalHKController;
 use App\Http\Controllers\Admin\InspectionSecurityController;
 use App\Http\Controllers\Admin\LeaveTypeHRController;
+use App\Http\Controllers\Admin\InvoiceController;
 use App\Http\Controllers\Admin\OffBoardingKepemilikanUnitController;
 use App\Http\Controllers\Admin\PermitHRController;
 use App\Http\Controllers\Admin\PPNController;
@@ -702,8 +703,11 @@ Route::prefix('admin')->group(function () {
         // View invoice
         Route::get('view-invoice/{id}', [BillingController::class, 'viewInvoice'])->name('viewInvoice');
 
-        // Blast invoice
+        // ===================Invoice===================
+        // blast invoice
         Route::post('blast-invoice', [BillingController::class, 'blastMonthlyInvoice'])->name('blastMonthlyInvoice');
+        // Invoice index
+        Route::get('invoices', [InvoiceController::class, 'index'])->name('invoices');
 
         Route::post('payment-monthly-page/{id}', [BillingController::class, 'generatePaymentMonthly'])->name('generatePaymentMonthly');
         Route::get('payment-monthly-page/{mt}/{id}', [BillingController::class, 'paymentMonthly'])->name('paymentMonthly');
@@ -730,7 +734,7 @@ Route::prefix('admin')->group(function () {
 
         // ---------------Inspection Security-----------------
         Route::resource('checklistsecurity', ChecklistSecurityController::class);
-        // -Schedule Security 
+        // -Schedule Security
         Route::resource('schedulesecurity', ScheduleSecurityController::class);
 
         // ---------------Incidental Report Engineering-----------------
@@ -746,7 +750,7 @@ Route::prefix('admin')->group(function () {
         Route::resource('permithr', PermitHRController::class);
         // -Leave Type
         Route::resource('leavetype', LeaveTypeHRController::class);
-        // -Forgot Type 
+        // -Forgot Type
         Route::resource('forgottype', ForgotAttendanceController::class);
 
     });

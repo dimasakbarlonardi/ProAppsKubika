@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Helpers\ConnectionDB;
 use App\Helpers\HelpNotifikasi;
 use App\Http\Controllers\Controller;
+use App\Models\Approve;
 use App\Models\CashReceipt;
 use App\Models\CashReceiptDetail;
 use App\Models\ElectricUUS;
@@ -26,6 +27,10 @@ class ElectricUUSController extends Controller
     {
         $connElecUUS = ConnectionDB::setConnection(new ElectricUUS());
         $connUnit = ConnectionDB::setConnection(new Unit());
+        $connApprove = ConnectionDB::setConnection(new Approve());
+
+        $data['approve'] = $connApprove->find(9);
+        $data['user'] = $request->session()->get('user');
 
         switch ($request->status) {
             case ('PENDING'):
