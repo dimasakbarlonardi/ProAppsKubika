@@ -700,8 +700,14 @@ Route::prefix('admin')->group(function () {
         // Invoice index
         Route::get('invoices', [InvoiceController::class, 'index'])->name('invoices');
 
+        // Payment monthly tenant
         Route::post('payment-monthly-page/{id}', [BillingController::class, 'generatePaymentMonthly'])->name('generatePaymentMonthly');
         Route::get('payment-monthly-page/{mt}/{id}', [BillingController::class, 'paymentMonthly'])->name('paymentMonthly');
+
+        // Payment WO
+        Route::post('payment-wo/{id}', [BillingController::class, 'generatePaymentWO'])->name('generatePaymentWO');
+        Route::get('payment-wo/{woID}/{id}', [BillingController::class, 'paymentWO'])->name('paymentWO');
+
 
         Route::post('get-montly-ar', [BillingController::class, 'getOverdueARTenant']);
 

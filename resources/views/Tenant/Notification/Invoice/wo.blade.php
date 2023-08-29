@@ -2,7 +2,7 @@
     <div class="card-body">
         <div class="row justify-content-between align-items-center">
             <div class="col-md">
-                <h5 class="mb-2 mb-md-0">Invoice #{{ $transaction->no_monthly_invoice }}</h5>
+                <h5 class="mb-2 mb-md-0">Work Order #{{ $transaction->WorkOrder->no_work_order }}</h5>
             </div>
             <div class="col-auto"><button class="btn btn-falcon-default btn-sm me-1 mb-2 mb-sm-0" type="button"><span
                         class="fas fa-arrow-down me-1"> </span>Download (.pdf)</button><button
@@ -30,7 +30,6 @@
         <div class="row align-items-center">
             <div class="col">
                 <h6 class="text-500">Invoice to</h6>
-                {{-- {{ dd($transaction->WorkOrder->Ticket->Unit->Tower) }} --}}
                 <h5>{{ $transaction->WorkOrder->Ticket->Tenant->nama_tenant }}</h5>
                 <p class="fs--1">
                     {{ Auth::user()->Site->nama_site }},
@@ -52,12 +51,6 @@
                                     {{ HumanDate($transaction->created_at) }}
                                 </td>
                             </tr>
-                            {{-- <tr>
-                                <th class="text-sm-end">Payment Due:</th>
-                                <td>
-                                    {{ HumanDate($transaction->tgl_jt_invoice) }}
-                                </td>
-                            </tr> --}}
                         </tbody>
                     </table>
                 </div>
@@ -74,53 +67,6 @@
                     </tr>
                 </thead>
                 <tbody>
-                    {{-- @if ($transaction->PreviousMonthBill())
-                        @foreach ($transaction->PreviousMonthBill() as $prevBill)
-                            <tr class="alert alert-success my-3">
-                                <td class="align-middle">
-                                    <h6 class="mb-0 text-nowrap">Tagihan bulan {{ $prevBill->periode_bulan }},
-                                        {{ $prevBill->periode_tahun }}</h6>
-                                </td>
-                                <td class="align-middle text-center">
-                                </td>
-                                <td class="align-middle text-end"></td>
-                                <td class="align-middle text-end"></td>
-                            </tr>
-                            <tr></tr>
-                            <tr>
-                                <td class="align-middle">
-                                    <h6 class="mb-0 text-nowrap">Tagihan Utility</h6>
-                                    <p class="mb-0">Listrik</p>
-                                    <p class="mb-0">Air</p>
-                                </td>
-                                <td class="align-middle text-center">
-                                    <br>
-                                    <span>Usage : {{ $prevBill->MonthlyUtility->ElectricUUS->usage }}</span> <br>
-                                    <span>Usage : {{ $prevBill->MonthlyUtility->WaterUUS->usage }}</span>
-                                </td>
-                                <td class="align-middle text-end"></td>
-                                <td class="align-middle text-end">
-                                    {{ rupiah($prevBill->total_tagihan_utility) }}</td>
-                            </tr>
-                            <tr></tr>
-                            <tr>
-                                <td class="align-middle">
-                                    <h6 class="mb-0 text-nowrap">Tagihan IPL</h6>
-                                    <p class="mb-0">Service Charge</p>
-                                    <p class="mb-0">Sink Fund</p>
-                                </td>
-                                <td class="align-middle text-center">
-                                    <br>
-                                    <span>{{ rupiah($prevBill->MonthlyIPL->ipl_service_charge) }}</span>
-                                    <br>
-                                    <span>{{ rupiah($prevBill->MonthlyIPL->ipl_sink_fund) }}</span>
-                                </td>
-                                <td class="align-middle text-end"></td>
-                                <td class="align-middle text-end">
-                                    {{ rupiah($prevBill->MonthlyIPL->total_tagihan_ipl) }}</td>
-                            </tr>
-                        @endforeach
-                    @endif --}}
                     <tr class="alert alert-success my-3">
                         <td class="align-middle">
                             <h6 class="mb-0 text-nowrap">Tagihan Work Order</h6>
@@ -130,7 +76,6 @@
                         <td class="align-middle text-end"></td>
                         <td class="align-middle text-end"></td>
                     </tr>
-                    {{-- {{ dd($transaction->WorkOrder->WODetail) }}     --}}
                     @foreach ($transaction->WorkOrder->WODetail as $wod)
                         <tr>
                             <td class="align-middle">
@@ -151,8 +96,8 @@
                 </tbody>
             </table>
         </div>
-        @if (!$transaction->CashReceipt)
-            <form action="" method="post">
+        @if ($transaction->transaction_status == 'PENDING')
+            <form action="{{ route('generatePaymentWO', $transaction->id) }}" method="post">
                 @csrf
                 <div class="row g-3 mb-3">
                     <div class="col-lg-8">
@@ -187,8 +132,8 @@
                                 </div>
                                 <p class="fs--1 mb-4">Pay with PayPal, Apple Pay, PayPal Credit and much more</p>
                                 <div class="form-check mb-0">
-                                    <input class="form-check-input" type="radio" value="credit_card"
-                                        id="credit-card" name="billing" />
+                                    <input class="form-check-input" type="radio" value="credit_card" id="credit-card"
+                                        name="billing" />
                                     <label class="form-check-label d-flex align-items-center mb-0" for="credit-card">
                                         <span class="fs-1 text-nowrap">Credit Card</span>
                                         <img class="d-none d-sm-inline-block ms-2 mt-lg-0"
@@ -278,6 +223,11 @@
                 </div>
                 <input type="hidden" id="val_admin_fee" name="admin_fee">
             </form>
+        @elseif ($transaction->transaction_status == 'VERIFYING')
+            <div class="text-center">
+                {{-- {{ dd($transaction->WorkOrder->id, $transaction->id) }} --}}
+                <a href="{{ route('paymentWO', [$transaction->WorkOrder->id, $transaction->id]) }}" class="btn btn-success">Lihat VA</a>
+            </div>
         @endif
     </div>
 </div>
