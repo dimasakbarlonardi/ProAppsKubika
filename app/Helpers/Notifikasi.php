@@ -18,7 +18,7 @@ class HelpNotifikasi
         $connApprove = ConnectionDB::setConnection(new Approve());
         $wo = $connWO->find($woID);
 
-        $notif = $connNotif->where('models', 'CashReceipt')
+        $notif = $connNotif->where('models', 'PaymentWO')
             ->where('is_read', 0)
             ->where('id_data', $transaction->id)
             ->first();
@@ -31,7 +31,7 @@ class HelpNotifikasi
             $createNotif->id_data = $transaction->id;
             $createNotif->notif_title = $wo->no_work_order;
             $createNotif->notif_message = 'Harap melakukan pembayaran untuk menselesaikan transaksi';
-            $createNotif->models = 'CashReceipt';
+            $createNotif->models = 'PaymentWO';
             $createNotif->save();
         }
     }

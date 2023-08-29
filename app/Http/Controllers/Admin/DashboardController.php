@@ -119,8 +119,6 @@ class DashboardController extends Controller
         $getNotif->is_read = 1;
         $getNotif->save();
 
-        $data['user'] = $user;
-
         switch ($getNotif->models) {
             case ('WorkOrder'):
                 $data = $this->handleWO($connApprove, $getNotif);
@@ -129,7 +127,8 @@ class DashboardController extends Controller
                 break;
 
             case ('WorkRequest'):
-                $data = $this->handleWO($connApprove, $getNotif);
+                $data = $this->handleWR($connApprove, $getNotif);
+                $data['user'] = $user;
                 return view('Tenant.Notification.WorkRequest', $data);
                 break;
 
@@ -171,6 +170,13 @@ class DashboardController extends Controller
                 $data = $this->handleGIGO($getNotif);
                 return view('Tenant.Notification.GIGO', $data);
                 break;
+
+            case ('PaymentWO'):
+                $data = $this->handlePaymentWO($getNotif);
+                $data['user'] = $user;
+
+                return view('Tenant.Notification.Payment', $data);
+                break;
         }
     }
 
@@ -210,6 +216,18 @@ class DashboardController extends Controller
         $getData = ConnectionDB::setConnection($model);
         $getData = $getData->find($getNotif->id_data);
         $data['transaction'] = $getData->where('id_monthly_ar_tenant', $getData->id_monthly_ar_tenant)->first();
+        $data['type'] = 'monthlyTenant';
+
+        return $data;
+    }
+
+    public function handlePaymentWO($getNotif)
+    {
+        $model = new CashReceipt();
+        $getData = ConnectionDB::setConnection($model);
+        $getData = $getData->find($getNotif->id_data);
+        $data['transaction'] = $getData->where('id', $getData->id)->first();
+        $data['type'] = 'wo';
 
         return $data;
     }

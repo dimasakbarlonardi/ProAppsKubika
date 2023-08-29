@@ -33,16 +33,15 @@ class OpenTicketController extends Controller
 {
     public function index(Request $request)
     {
-        // $login = Auth::user()->id;
         $user = $request->session()->get('user');
 
         $connRequest = ConnectionDB::setConnection(new OpenTicket());
-        $connUser = ConnectionDB::setConnection(new User());
+        $connTenant = ConnectionDB::setConnection(new Tenant());
+
+        $tenant = $connTenant->where('id_user', Auth::user()->id)->first();
 
         if ($user->user_category == 3) {
-            $iduser = $user->where('id_user',$user)->first();
-            $data['tickets'] = $connRequest->where('id_user', $user->id_user)->get();
-            // dd($data);
+            $data['tickets'] = $connRequest->where('id_tenant', $tenant->id_tenant)->get();
         } else {
             $data['tickets'] = $connRequest->latest()->get();
         }
@@ -65,11 +64,8 @@ class OpenTicketController extends Controller
 
             $data['units'] = $connTU->get();
             $data['tenants'] = $connTenant->get();
-
-            // $getTenant = $connTenant->where('email_tenant', $user->login_user)->first();
-            // $data['units'] = $connTU->where('id_unit', $getTenant->id_user)->get();
         }
-        // dd($data['units'], $getTenant->id_user);
+
         $data['user'] = $user;
         $data['jenis_requests'] = $connJenisReq->get();
 
@@ -81,6 +77,9 @@ class OpenTicketController extends Controller
         $connOpenTicket = ConnectionDB::setConnection(new OpenTicket());
         $connSystem = ConnectionDB::setConnection(new System());
         $connUnit = ConnectionDB::setConnection(new Unit());
+        $connTenant = ConnectionDB::setConnection(new Tenant());
+
+        $tenant = $connTenant->where('id_user', Auth::user()->id)->first();
         $user = $request->session()->get('user');
 
         $system = $connSystem->find(1);
@@ -102,7 +101,7 @@ class OpenTicketController extends Controller
             $createTicket->id_tower = $unit->id_tower;
             $createTicket->id_unit = $request->id_unit;
             $createTicket->id_lantai = $unit->id_lantai;
-            $createTicket->id_user = $user->id_user;
+            $createTicket->id_tenant = $tenant->id_tenant;
             $createTicket->no_tiket = $no_tiket;
             $createTicket->status_request = 'PENDING';
 
@@ -139,7 +138,7 @@ class OpenTicketController extends Controller
         $connTenant = ConnectionDB::setConnection(new Tenant());
         $connOwner = ConnectionDB::setConnection(new OwnerH());
 
-        $ticket = $connRequest->where('id', $id)->with('User')->first();
+        $ticket = $connRequest->where('id', $id)->with('Tenant')->first();
         $user = $request->session()->get('user');
 
         $data['jenis_requests'] = $connJenisReq->get();
@@ -232,7 +231,7 @@ class OpenTicketController extends Controller
         if (!$notif) {
             $createNotif = $connNotif;
             $createNotif->sender = $user->id_user;
-            $createNotif->receiver = $ticket->Tenant->User->id_user;
+            $createNotif->receiver = '2023003';
             $createNotif->is_read = 0;
             $createNotif->models = 'GIGO';
             $createNotif->id_data = $createRG->id;

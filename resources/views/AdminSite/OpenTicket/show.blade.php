@@ -25,13 +25,13 @@
                             class="d-md-flex d-xl-inline-block d-xxl-flex align-items-center justify-content-between mb-x1">
                             <div class="d-flex align-items-center gap-2">
                                 <div class="avatar avatar-2xl">
-                                    <img class="rounded-circle" src="{{ url($ticket->User->profile_picture) }}"
+                                    <img class="rounded-circle" src="{{ url($ticket->Tenant->User->profile_picture) }}"
                                         alt="" />
                                 </div>
                                 <p class="mb-0"><a class="fw-semi-bold mb-0 text-800"
-                                        href="../../app/support-desk/contact-details.html">{{ $ticket->User->nama_user }}</a>
+                                        href="../../app/support-desk/contact-details.html">{{ $ticket->Tenant->User->nama_user }}</a>
                                     <a class="mb-0 fs--1 d-block text-500"
-                                        href="mailto:emma@watson.com">{{ $ticket->User->login_user }}</a>
+                                        href="mailto:emma@watson.com">{{ $ticket->Tenant->User->login_user }}</a>
                                 </p>
                             </div>
                             <p class="mb-0 fs--2 fs-sm--1 fw-semi-bold mt-2 mt-md-0 mt-xl-2 mt-xxl-0 ms-5">
@@ -187,12 +187,12 @@
                                 <div class="row g-0 border-bottom pb-x1 mb-x1 align-items-sm-center align-items-xl-start">
                                     <div class="col-12 col-sm-auto col-xl-12 me-sm-3 me-xl-0">
                                         <div class="avatar avatar-3xl">
-                                            <img class="rounded-circle" src="{{ url($ticket->User->profile_picture) }}"
+                                            <img class="rounded-circle" src="{{ url($ticket->Tenant->User->profile_picture) }}"
                                                 alt="" />
                                         </div>
                                     </div>
                                     <div class="col-12 col-sm-auto col-xl-12">
-                                        <p class="fw-semi-bold text-800 mb-0">{{ $ticket->User->nama_user }}</p><a
+                                        <p class="fw-semi-bold text-800 mb-0">{{ $ticket->Tenant->User->nama_user }}</p><a
                                             class="btn btn-link btn-sm p-0 fe-medium fs--1" href="#">View more
                                             details</a>
                                     </div>
@@ -202,7 +202,7 @@
                                         <div class="row">
                                             <div class="col-md-auto mb-4 mb-md-0 mb-xl-4">
                                                 <h6 class="mb-1">Email</h6><a class="fs--1"
-                                                    href="mailto:mattrogers@gmail.com">{{ $ticket->User->login_user }}</a>
+                                                    href="mailto:mattrogers@gmail.com">{{ $ticket->Tenant->User->login_user }}</a>
                                             </div>
                                             <div class="col-md-auto mb-4 mb-md-0 mb-xl-4">
                                                 <h6 class="mb-1">Phone Number</h6><a class="fs--1"

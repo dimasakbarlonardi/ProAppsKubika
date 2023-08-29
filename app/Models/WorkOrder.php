@@ -43,7 +43,7 @@ class WorkOrder extends Model
 
     public function WorkRequest()
     {
-        return $this->belongsTo(WorkRequest::class, 'no_work_request', 'no_work_request');
+        return $this->hasOne(WorkRequest::class, 'no_work_request', 'no_work_request');
     }
 
     public function Ticket()
