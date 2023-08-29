@@ -16,7 +16,7 @@ class OpenTicket extends Model
         'id_tower',
         'id_unit',
         'id_lantai',
-        'id_user',
+        'id_tenant',
         'no_tiket',
         'status_request',
         'id_jenis_request',
@@ -40,19 +40,9 @@ class OpenTicket extends Model
         return $this->hasOne(JenisRequest::class, 'id_jenis_request', 'id_jenis_request');
     }
 
-    public function User()
-    {
-        return $this->hasOne(User::class, 'id_user', 'id_user');
-    }
-
-    public function Owner()
-    {
-        return $this->hasOne(OwnerH::class, 'id_user', 'id_user');
-    }
-
     public function Tenant()
     {
-        return $this->hasOne(Tenant::class, 'id_user', 'id_user');
+        return $this->hasOne(Tenant::class, 'id_tenant', 'id_tenant');
     }
 
     public function TenantRelation()
