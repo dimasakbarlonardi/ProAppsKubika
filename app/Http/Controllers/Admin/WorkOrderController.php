@@ -199,6 +199,8 @@ class WorkOrderController extends Controller
 
     public function acceptWO($id)
     {
+        $request = Request();
+
         $connWO = ConnectionDB::setConnection(new WorkOrder());
 
         $wo = $connWO->find($id);
@@ -395,8 +397,6 @@ class WorkOrderController extends Controller
             $createTransaction->id_user = $wo->Ticket->Tenant->User->id_user;
             $createTransaction->transaction_type = 'WorkOrder';
 
-            // $ct = $this->transactionCenter($createTransaction);
-
             $midtrans = new CreateSnapTokenService($createTransaction, $items);
 
             $createTransaction->snap_token = $midtrans->getSnapToken();
@@ -416,32 +416,4 @@ class WorkOrderController extends Controller
 
         return $createTransaction;
     }
-
-    // public function transactionCenter($transaction)
-    // {
-    //     $request = Request();
-    //     $user = $request->session()->get('user');
-
-    //     try {
-    //         DB::beginTransaction();
-    //         $ct = TransactionCenter::create([
-    //             'id_sites' => $user->id_site,
-    //             'no_invoice' => $transaction->no_invoice,
-    //             'transaction_type' => $transaction->transaction_type,
-    //             'no_transaction' => $transaction->no_transaction,
-    //             'admin_fee' => $transaction->admin_fee,
-    //             'sub_total' => $transaction->sub_total,
-    //             'total' => $transaction->total,
-    //             'id_user' => $transaction->id_user,
-    //             'status' => $transaction->status,
-    //         ]);
-    //         DB::commit();
-
-    //         return $ct;
-    //     } catch (Throwable $e) {
-    //         DB::rollBack();
-    //         dd($e);
-    //         return redirect()->back();
-    //     }
-    // }
 }

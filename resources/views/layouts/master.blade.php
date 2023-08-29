@@ -281,6 +281,7 @@
                                 is_notif += 1;
                             }
                             var current = new Date();
+                            console.log(item.sender);
                             $('#notification-lists').append(`
                                 <div class="list-group-item">
                                     <a class="notification notification-flush ${item.is_read == 1 ? 'notification' : 'notification-unread' }"
@@ -288,13 +289,13 @@
                                         <div class="notification-avatar">
                                             <div class="avatar avatar-2xl me-3">
                                                 <img class="rounded-circle"
-                                                    src="${item.sender.profile_picture}"
+                                                    src="${item.sender ? item.sender.profile_picture : ''}"
                                                     alt="" />
                                             </div>
                                         </div>
                                         <div class="notification-body">
                                             <p class="mb-1">
-                                                <strong>${item.sender.nama_user}</strong> Mengirim anda :
+                                                <strong>${item.sender ? item.sender.nama_user : ''}</strong> Mengirim anda :
                                                 ${item.notif_message} ${item.notif_title}
                                             </p>
                                             <span class="notification-time">

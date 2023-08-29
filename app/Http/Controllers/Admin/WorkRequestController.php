@@ -26,10 +26,10 @@ class WorkRequestController extends Controller
         $conn = ConnectionDB::setConnection(new WorkRequest());
 
         $user = $request->session()->get('user');
-
         if ($user->id_role_hdr != 8) {
             $role = $user->RoleH->WorkRelation->id_work_relation;
             $data['work_requests'] = $conn->where('id_work_relation', $role)->latest()->get();
+            // dd($user->id_role_hdr, $conn->latest()->get());
         } else {
             $data['work_requests'] = $conn->latest()->get();
         }
