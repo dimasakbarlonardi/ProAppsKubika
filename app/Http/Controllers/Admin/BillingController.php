@@ -40,20 +40,20 @@ class BillingController extends Controller
     {
         $connElecUUS = ConnectionDB::setConnection(new ElectricUUS());
         $connWaterUUS = ConnectionDB::setConnection(new WaterUUS());
-
+        
         foreach ($request->IDs as $id) {
             if ($request->type == 'electric') {
                 $elecUSS = $connElecUUS->find($id);
                 $waterUSS = $connWaterUUS->where('periode_bulan', $elecUSS->periode_bulan)
-                    ->where('periode_tahun', $elecUSS->periode_tahun)
-                    ->first();
+                ->where('periode_tahun', $elecUSS->periode_tahun)
+                ->first();
             } elseif ($request->type == 'water') {
                 $waterUSS = $connWaterUUS->find($id);
                 $elecUSS = $connElecUUS->where('periode_bulan', $waterUSS->periode_bulan)
-                    ->where('periode_tahun', $waterUSS->periode_tahun)
-                    ->first();
+                ->where('periode_tahun', $waterUSS->periode_tahun)
+                ->first();
             }
-
+                       
             if ($waterUSS && $elecUSS && !$waterUSS->MonthlyUtility) {
                 try {
                     DB::beginTransaction();

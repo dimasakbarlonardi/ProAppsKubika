@@ -83,20 +83,20 @@ class BillingController extends Controller
         $connMonthlyTenant = ConnectionDB::setConnection(new MonthlyArTenant());
         $mt = $connMonthlyTenant->find($id);
         $site = Site::find($mt->id_site);
-
+        
         $client = new Client();
         $admin_fee = (int) $request->admin_fee;
         $type = $request->type;
         $bank = $request->bank;
-
-        if (!$mt->CashReceipt) {
-            $transaction = $this->createTransaction($mt);
+        $transaction = $mt->CashReceipt;
+        
+        if ($transaction->transaction_status == 'PENDING') {          
             if ($type == 'bank_transfer') {
                 $transaction->gross_amount = $transaction->sub_total + $admin_fee;
                 $transaction->payment_type = 'bank_transfer';
                 $transaction->bank = Str::upper($bank);
                 $payment = [];
-
+                
                 $payment['payment_type'] = $type;
                 $payment['transaction_details']['order_id'] = $transaction->order_id;
                 $payment['transaction_details']['gross_amount'] = $transaction->gross_amount;
@@ -116,14 +116,13 @@ class BillingController extends Controller
                     ]
                 ]);
                 $response = json_decode($response->getBody());
-
+                
                 $transaction->va_number = $response->va_numbers[0]->va_number;
                 $transaction->expiry_time = $response->expiry_time;
-                $mt->no_monthly_invoice = $transaction->no_invoice;
-
+                $transaction->no_invoice = $mt->no_monthly_invoice;
                 $transaction->admin_fee = $admin_fee;
+                $transaction->transaction_status = 'VERIFYING';
                 $transaction->save();
-                $mt->save();
 
                 return ResponseFormatter::success(
                     $response,
@@ -133,19 +132,19 @@ class BillingController extends Controller
                 $transaction->payment_type = 'credit_card';
                 $transaction->admin_fee = $admin_fee;
                 $transaction->gross_amount = round($transaction->sub_total + $admin_fee);
+                $transaction->no_invoice = $mt->no_monthly_invoice;
 
                 $getTokenCC = $this->TransactionCC($request);
                 $chargeCC = $this->ChargeTransactionCC($getTokenCC->token_id, $transaction);
-
-                $mt->no_monthly_invoice = $transaction->no_invoice;
-                $mt->save();
 
                 $transaction->save();
 
                 return redirect($chargeCC->redirect_url);
             }
         } else {
-            return redirect()->back();
+            return ResponseFormatter::success(
+                'Transaction has created'
+            );
         }
     }
 
