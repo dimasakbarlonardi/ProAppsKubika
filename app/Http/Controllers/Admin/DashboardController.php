@@ -216,7 +216,7 @@ class DashboardController extends Controller
         $getData = ConnectionDB::setConnection($model);
         $getData = $getData->find($getNotif->id_data);
         $data['transaction'] = $getData->where('id_monthly_ar_tenant', $getData->id_monthly_ar_tenant)->first();
-        $data['type'] = 'monthlyTenant';
+        $data['type'] = 'MonthlyTenant';
 
         return $data;
     }
