@@ -196,7 +196,7 @@
                 </table>
             </div>
         @endif
-        @if (!$transaction->CashReceipt && !$transaction->NextMonthBill())
+        @if ($transaction->CashReceipt->transaction_status == 'PENDING' && !$transaction->NextMonthBill())
             <form action="{{ route('generatePaymentMonthly', $transaction->id_monthly_ar_tenant) }}" method="post">
                 @csrf
                 <div class="row g-3 mb-3">
@@ -323,6 +323,11 @@
                 </div>
                 <input type="hidden" id="val_admin_fee" name="admin_fee">
             </form>
+        @elseif($transaction->CashReceipt->transaction_status == 'VERIFYING')
+            <div class="text-center">
+                <a href="{{ route('paymentMonthly', [$transaction->id_monthly_ar_tenant, $transaction->CashReceipt->id]) }}"
+                    class="btn btn-success">Lihat VA</a>
+            </div>
         @endif
     </div>
 </div>
