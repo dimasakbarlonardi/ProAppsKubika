@@ -20,6 +20,8 @@ class ElectricUUS extends Model
         'nomor_listrik_awal',
         'nomor_listrik_akhir',
         'usage',
+        'ppj',
+        'total',
         'id_user',
         'no_refrensi',
         'catatan',

@@ -20,6 +20,8 @@ class WaterUUS extends Model
         'nomor_air_akhir',
         'usage',
         'id_user',
+        'abodemen',
+        'total',
         'no_refrensi',
         'catatan',
         'is_approve'

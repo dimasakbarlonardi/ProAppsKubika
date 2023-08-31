@@ -23,6 +23,7 @@ use Illuminate\Support\Str;
 use RealRashid\SweetAlert\Facades\Alert;
 use Laravel\Sanctum\PersonalAccessToken;
 use Midtrans\CoreApi;
+use App\Models\Utility;
 use Throwable;
 
 class BillingController extends Controller
@@ -250,6 +251,30 @@ class BillingController extends Controller
     {
         $getToken = str_replace("RA164-", "|", $token);
         $tokenable = PersonalAccessToken::findToken($getToken);
+        $user = $tokenable->tokenable;
+        $site = Site::find($user->id_site);
+
+        $connUnit = new Unit();
+        $connUtility = new Utility();
+
+        $connUnit = $connUnit->setConnection($site->db_name);
+        $connUtility = $connUtility->setConnection($site->db_name);
+
+        $unit = $connUnit->find($unitID);
+        $listrik = $connUtility->find(1);
+        $usage = $request->current - $request->previous;
+
+        $electric_capacity = $unit->electric_capacity;
+        $abodemen = (40 * $electric_capacity) / 1000;
+        if ($usage < $abodemen) {
+            $usage = $abodemen;
+        }
+
+        $get_ppj = $listrik->biaya_ppj / 100;
+        $biaya_tetap = $listrik->biaya_tetap;
+        $total_usage = $biaya_tetap * $usage;
+        $ppj = $get_ppj * $total_usage;
+        $total = $total_usage + $ppj;
 
         if ($tokenable) {
             $login = $tokenable->tokenable;
@@ -273,7 +298,9 @@ class BillingController extends Controller
                     'id_unit' => $unitID,
                     'nomor_listrik_awal' => $request->previous,
                     'nomor_listrik_akhir' => $request->current,
-                    'usage' => $request->current - $request->previous,
+                    'usage' => $usage,
+                    'ppj' => $ppj,
+                    'total' => $total,
                     'id_user' => $user->id_user
                 ]
             );
@@ -315,16 +342,27 @@ class BillingController extends Controller
     {
         $getToken = str_replace("RA164-", "|", $token);
         $tokenable = PersonalAccessToken::findToken($getToken);
+        $usage = $request->current - $request->previous;
+        $login = $tokenable->tokenable;
+        $site = Site::find($login->id_site);
+
+        $user = new User();
+        $user = $user->setConnection($site->db_name);
+        $user = $user->where('login_user', $login->email)->first();
+
+        $connUtility = new Utility();
+
+        $connUtility = $connUtility->setConnection($site->db_name);
+        
+        $water = $connUtility->find(2);
+
+        $total_usage = $water->biaya_tetap * $usage;
+        $total = $total_usage + $water->biaya_abodemen;
 
         if ($tokenable) {
             try {
                 DB::beginTransaction();
-                $login = $tokenable->tokenable;
-                $site = Site::find($login->id_site);
-
-                $user = new User();
-                $user = $user->setConnection($site->db_name);
-                $user = $user->where('login_user', $login->email)->first();
+                
 
                 $connWaterUUS = new WaterUUS();
                 $connWaterUUS = $connWaterUUS->setConnection($site->db_name);
@@ -337,8 +375,10 @@ class BillingController extends Controller
                     'periode_tahun' => Carbon::now()->format('Y'),
                     'id_unit' => $unitID,
                     'nomor_air_awal' => $request->previous,
+                    'abodemen' => $water->biaya_abodemen,
+                    'total' => $total,
                     'nomor_air_akhir' => $request->current,
-                    'usage' => $request->current - $request->previous,
+                    'usage' => $usage,
                     'id_user' => $user->id_user
                 ]);
 
