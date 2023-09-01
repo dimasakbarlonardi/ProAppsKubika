@@ -34,7 +34,6 @@ class BillingController extends Controller
 
         $connARTenant = DB::connection($dbName)
             ->table('tb_fin_monthly_ar_tenant as arm')
-            ->join('tb_draft_cash_receipt as cr', 'arm.no_monthly_invoice', 'cr.no_reff')
             ->where('arm.id_unit', $id)
             ->where('arm.tgl_jt_invoice', '!=', null)
             ->orderBy('periode_bulan', 'desc')
@@ -50,17 +49,11 @@ class BillingController extends Controller
     {
         $connARTenant = ConnectionDB::setConnection(new MonthlyArTenant());
         $ar = $connARTenant->where('id_monthly_ar_tenant', $id);
+        $connUtil = ConnectionDB::setConnection(new Utility());
 
-        // $data = $ar->with([
-        //     'Unit.TenantUnit.Tenant',
-        //     'CashReceipt',
-        //     'MonthlyUtility',
-        //     'MonthlyUtility.ElectricUUS' => function($q) {
-        //         $q->select('id');
-        //     },
-        //     'MonthlyUtility.WaterUUS'
-        // ])
-        //     ->first(['periode_bulan', 'periode_tahun']);
+        $water = $connUtil->find(2);
+        $electric = $connUtil->find(1);
+
         $data = $ar->with([
             'Unit.TenantUnit.Tenant',
             'CashReceipt',
@@ -72,6 +65,8 @@ class BillingController extends Controller
 
         return ResponseFormatter::success(
             [
+                'price_water' => $water->biaya_tetap,
+                'price_electric' => $electric->biaya_tetap,
                 'current_bill' => $data,
                 'previous_bills' => $previousBills
             ],
@@ -85,20 +80,20 @@ class BillingController extends Controller
         $connMonthlyTenant = ConnectionDB::setConnection(new MonthlyArTenant());
         $mt = $connMonthlyTenant->find($id);
         $site = Site::find($mt->id_site);
-
+        
         $client = new Client();
         $admin_fee = (int) $request->admin_fee;
         $type = $request->type;
         $bank = $request->bank;
         $transaction = $mt->CashReceipt;
-
-        if ($transaction->transaction_status == 'PENDING') {
+        
+        if ($transaction->transaction_status == 'PENDING') {          
             if ($type == 'bank_transfer') {
                 $transaction->gross_amount = $transaction->sub_total + $admin_fee;
                 $transaction->payment_type = 'bank_transfer';
                 $transaction->bank = Str::upper($bank);
                 $payment = [];
-
+                
                 $payment['payment_type'] = $type;
                 $payment['transaction_details']['order_id'] = $transaction->order_id;
                 $payment['transaction_details']['gross_amount'] = $transaction->gross_amount;
@@ -118,7 +113,7 @@ class BillingController extends Controller
                     ]
                 ]);
                 $response = json_decode($response->getBody());
-
+                
                 $transaction->va_number = $response->va_numbers[0]->va_number;
                 $transaction->expiry_time = $response->expiry_time;
                 $transaction->no_invoice = $mt->no_monthly_invoice;
