@@ -45,5 +45,10 @@ class WorkPermit extends Model
         return $this->hasOne(WorkRelation::class, 'id_work_relation', 'id_work_relation');
     }
 
+    public function CashReceipt()
+    {
+        return $this->hasOne(CashReceipt::class, 'no_reff', 'no_work_permit');
+    }
+
     protected $dates = ['deleted_at'];
 }

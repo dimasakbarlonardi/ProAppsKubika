@@ -54,8 +54,8 @@ class RequestPermitController extends Controller
         $connRP = ConnectionDB::setConnection(new RequestPermit());
         $connSystem = ConnectionDB::setConnection(new System());
         $connRPDetail = ConnectionDB::setConnection(new RequestPermitDetail());
-
         $tiket = $connTiket->find($request->no_tiket);
+
         $user = $request->session()->get('user');
         $system = $connSystem->find(1);
         $nowDate = Carbon::now();

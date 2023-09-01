@@ -43,7 +43,6 @@
                 </div>
                 <div class="card-body p-0">
                     @foreach ($permits as $permit)
-                    {{-- {{ dd($permit->Ticket->Tenant) }} --}}
                         <div class="list bg-light p-x1 d-flex flex-column gap-3" id="card-ticket-body">
                             <div
                                 class="d-md-flex d-xl-inline-block d-xxl-flex align-items-center p-x1 rounded-3 shadow-sm card-view-height">
