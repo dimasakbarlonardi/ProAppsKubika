@@ -9,6 +9,7 @@ use App\Models\BAPP;
 use App\Models\CashReceipt;
 use App\Models\Notifikasi;
 use App\Models\RequestPermit;
+use App\Models\Site;
 use App\Models\System;
 use App\Models\Transaction;
 use App\Models\TransactionCenter;
@@ -16,9 +17,11 @@ use App\Models\WorkPermit;
 use App\Models\WorkRelation;
 use App\Services\Midtrans\CreateSnapTokenService;
 use Carbon\Carbon;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
+use Illuminate\Support\Str;
 use stdClass;
 use Throwable;
 
@@ -191,7 +194,7 @@ class WorkPermitController extends Controller
         $createTransaction->no_reff = $wp->no_work_permit;
         $createTransaction->no_invoice = $no_invoice;
         $createTransaction->no_draft_cr = $no_cr;
-        $createTransaction->ket_pembayaran = 'INV/' . $user->id_user . '/' . $wp->Ticket->Unit->id_unit;
+        $createTransaction->ket_pembayaran = 'INV/' . $user->id_user . '/' . $wp->Ticket->Unit->nama_unit;
         $createTransaction->sub_total = $wp->jumlah_deposit;
         $createTransaction->transaction_status = 'PENDING';
         $createTransaction->id_user = $user->id_user;
@@ -294,8 +297,59 @@ class WorkPermitController extends Controller
         return response()->json(['status' => 'ok']);
     }
 
-    public function generatePaymentPO($cr)
+    public function generatePaymentPO(Request $request, $cr)
     {
-        dd($cr);
+        $connTransaction = ConnectionDB::setConnection(new CashReceipt());
+        $user = $request->session()->get('user');
+        $site = Site::find($user->id_site);
+
+        $transaction = $connTransaction->find($cr);
+
+        $client = new Client();
+        $billing = explode(',', $request->billing);
+        $admin_fee = $request->admin_fee;
+
+        $transaction->gross_amount = $transaction->sub_total + $admin_fee;
+        $transaction->payment_type = 'bank_transfer';
+        $transaction->bank = Str::upper($billing[1]);
+
+        $payment = [];
+
+        $payment['payment_type'] = $billing[0];
+        $payment['transaction_details']['order_id'] = $transaction->order_id;
+        $payment['transaction_details']['gross_amount'] = $transaction->gross_amount;
+        $payment['bank_transfer']['bank'] = $billing[1];
+
+        $response = $client->request('POST', 'https://api.sandbox.midtrans.com/v2/charge', [
+            'body' => json_encode($payment),
+            'headers' => [
+                'accept' => 'application/json',
+                'authorization' => 'Basic ' . base64_encode($site->midtrans_server_key),
+                'content-type' => 'application/json',
+            ],
+            "custom_expiry" => [
+                "order_time" => Carbon::now(),
+                "expiry_duration" => 1,
+                "unit" => "day"
+            ]
+        ]);
+        $response = json_decode($response->getBody());
+        $transaction->va_number = $response->va_numbers[0]->va_number;
+        $transaction->expiry_time = $response->expiry_time;
+        $transaction->admin_fee = $admin_fee;
+        $transaction->transaction_status = 'VERIFYING';
+
+        $transaction->save();
+
+        return redirect()->route('paymentMonthly', [$transaction->WorkPermit->id, $transaction->id]);
+    }
+
+    public function paymentPO($id)
+    {
+        $connTransaction = ConnectionDB::setConnection(new CashReceipt());
+
+        $data['transaction'] = $connTransaction->find($id);
+
+        return view('Tenant.Notification.Invoice.payment-monthly', $data);
     }
 }

@@ -11,6 +11,7 @@ use App\Http\Controllers\Controller;
 use App\Models\CashReceipt;
 use App\Models\CashReceiptDetail;
 use App\Models\ElectricUUS;
+use App\Models\IPLType;
 use App\Models\MonthlyArTenant;
 use App\Models\System;
 use Carbon\Carbon;
@@ -50,10 +51,15 @@ class BillingController extends Controller
         $connARTenant = ConnectionDB::setConnection(new MonthlyArTenant());
         $ar = $connARTenant->where('id_monthly_ar_tenant', $id);
         $connUtil = ConnectionDB::setConnection(new Utility());
+        $connIPLType = ConnectionDB::setConnection(new IPLType());
+
+        $sc = $connIPLType->find(6);
+        $sf = $connIPLType->find(7);
 
         $data = $ar->with([
             'Unit.TenantUnit.Tenant',
             'CashReceipt',
+            'MonthlyIPL',
             'MonthlyUtility.ElectricUUS',
             'MonthlyUtility.WaterUUS'
         ])
@@ -62,6 +68,8 @@ class BillingController extends Controller
 
         $data['price_water'] = $connUtil->find(2)->biaya_tetap;
         $data['price_electric'] = $connUtil->find(1)->biaya_tetap;
+        $data['service_charge_price'] = $sc->biaya_permeter;
+        $data['sinking_fund_price'] = $sf->biaya_permeter;
 
         return ResponseFormatter::success(
             [

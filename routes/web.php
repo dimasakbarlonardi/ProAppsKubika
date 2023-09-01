@@ -383,6 +383,7 @@ Route::prefix('admin')->group(function () {
         Route::post('/work-permit/approve4/{id}', [WorkPermitController::class, 'approveWP4'])->name('approveWP4');
         Route::post('/work-permit/workDoneWP/{id}', [WorkPermitController::class, 'workDoneWP'])->name('workDoneWP');
         Route::post('/work-permit/generate/{id}', [WorkPermitController::class, 'generatePaymentPO'])->name('generatePaymentPO');
+        Route::get('/work-permit/payment/{id}', [WorkPermitController::class, 'paymentPO'])->name('paymentPO');
 
         // BAPP
         Route::resource('/bapp', BAPPController::class);
