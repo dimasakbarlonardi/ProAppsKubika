@@ -215,7 +215,7 @@
             </div>
 
 
-            @if ($permit->CashReceipt->transaction_status == 'PENDING')
+            @if ($permit->CashReceipt ? $permit->CashReceipt->transaction_status == 'PENDING' : false)
                 <form class="mt-5" action="{{ route('generatePaymentPO', $permit->CashReceipt->id) }}" method="post">
                     @csrf
                     <div class="row g-3 mb-3">
@@ -343,9 +343,9 @@
                     </div>
                     <input type="hidden" id="val_admin_fee" name="admin_fee">
                 </form>
-            @elseif ($permit->CashReceipt->transaction_status == 'VERIFYING')
-                <div class="text-center">
-                    <a href="{{ route('paymentWO', [$permit->id, $permit->CashReceipt->id]) }}"
+            @elseif ($permit->CashReceipt ? $permit->CashReceipt->transaction_status == 'VERIFYING' : false)
+                <div class="text-center mt-5">
+                    <a href="{{ route('paymentPO', $permit->CashReceipt->id) }}"
                         class="btn btn-success">Lihat
                         VA</a>
                 </div>

@@ -189,18 +189,18 @@
                                 onclick="approve3({{ $wp->id }})">Approve</button>
                         </div>
                     @endif
-                    @if ($wp->sign_approval_4 && $wp->status_request != 'WORK DONE')
+                    @if ($wp->sign_approval_4 && $wp->status_request != 'WORK DONE' && $wp->status_request != 'DONE')
                         <div class="card-footer border-top border-200 py-x1">
                             <button type="button" class="btn btn-primary w-100"
                                 onclick="workDoneWP({{ $wp->id }})">Pekerjaan Selesai</button>
                         </div>
                     @endif
                     @if ($approve->approval_3 == $user->id_user && $wp->status_request == 'WORK DONE')
-                    <div class="card-footer border-top border-200 py-x1">
-                        <button type="button" class="btn btn-primary w-100"
-                            onclick="workDoneWP({{ $wp->id }})">Sudah Transfer Depo</button>
-                    </div>
-                @endif
+                        <div class="card-footer border-top border-200 py-x1">
+                            <button type="button" class="btn btn-primary w-100"
+                                onclick="workDoneWP({{ $wp->id }})">Sudah Transfer Depo</button>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

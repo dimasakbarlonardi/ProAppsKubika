@@ -40,7 +40,7 @@ class BillingController extends Controller
     {
         $connElecUUS = ConnectionDB::setConnection(new ElectricUUS());
         $connWaterUUS = ConnectionDB::setConnection(new WaterUUS());
-        
+
         foreach ($request->IDs as $id) {
             if ($request->type == 'electric') {
                 $elecUSS = $connElecUUS->find($id);
@@ -55,7 +55,7 @@ class BillingController extends Controller
                 ->where('periode_tahun', $waterUSS->periode_tahun)
                 ->first();
             }
-                       
+
             if ($waterUSS && $elecUSS && !$waterUSS->MonthlyUtility) {
                 try {
                     DB::beginTransaction();
@@ -143,7 +143,7 @@ class BillingController extends Controller
         $unit = $connUnit->find($elecUSS->id_unit);
 
         $ipl_service_charge = (int) $unit->luas_unit * $sc->biaya_permeter;
-        $ipl_sink_fund = $ipl_service_charge * ($sf->biaya_procentage / 100);
+        $ipl_sink_fund = (int) $unit->luas_unit * $sf->biaya_permeter;
 
         $total_tagihan_ipl = $ipl_service_charge + $ipl_sink_fund;
 
@@ -165,7 +165,7 @@ class BillingController extends Controller
 
         $listrik = $connUtility->find(1);
         $air = $connUtility->find(2);
-        
+
         $water_bill = $waterUSS->total;
         $elec_bill = $elecUSS->total;
 
@@ -354,11 +354,11 @@ class BillingController extends Controller
         $admin_fee = $request->admin_fee;
 
         if (!$mt->CashReceipt) {
-            // $transaction = $this->createTransaction($mt);
+            $transaction = $this->createTransaction($mt);
             if ($billing[0] == 'bank_transfer') {
-                // $transaction->gross_amount = $transaction->sub_total + $admin_fee;
-                // $transaction->payment_type = 'bank_transfer';
-                // $transaction->bank = Str::upper($billing[1]);
+                $transaction->gross_amount = $transaction->sub_total + $admin_fee;
+                $transaction->payment_type = 'bank_transfer';
+                $transaction->bank = Str::upper($billing[1]);
                 $payment = [];
 
                 $payment['payment_type'] = $billing[0];
