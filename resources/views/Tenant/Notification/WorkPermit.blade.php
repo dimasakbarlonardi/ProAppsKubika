@@ -30,7 +30,7 @@
         </div>
         <div class="card-body bg-light">
             <div class="row">
-                <div class="col-8">
+                <div class="col-9">
                     <div class="card" id="permit_detail">
                         <div class="card-header">
                             <h6 class="mb-0">Detail Work Permit</h6>
@@ -205,7 +205,8 @@
                             @endif
                             @if ($sysApprove->approval_4 == $user->id_user && $permit->sign_approval_3 && !$permit->sign_approval_4)
                                 <div class="card-footer border-top border-200 py-x1">
-                                    <button type="button" class="btn btn-primary w-100" onclick="approve4({{ $permit->id }})">Approve</button>
+                                    <button type="button" class="btn btn-primary w-100"
+                                        onclick="approve4({{ $permit->id }})">Approve</button>
                                 </div>
                             @endif
                         </div>
@@ -214,6 +215,141 @@
             </div>
 
 
+            @if ($permit->CashReceipt->transaction_status == 'PENDING')
+                <form class="mt-5" action="{{ route('generatePaymentPO', $permit->CashReceipt->id) }}" method="post">
+                    @csrf
+                    <div class="row g-3 mb-3">
+                        <div class="col-lg-8">
+                            <div class="card h-100">
+                                <div class="card-header">
+                                    <h6 class="mb-0">Payment Method</h6>
+                                </div>
+                                <div class="card-body bg-light">
+                                    <div class="form-check mb-4">
+                                        <input class="form-check-input" type="radio" name="billing"
+                                            value="bank_transfer,bca" />
+                                        <label class="form-check-label mb-0 d-block" for="paypal">
+                                            <img src="{{ asset('assets/img/icons/bca_logo.png') }}" height="20"
+                                                alt="" />
+                                        </label>
+                                    </div>
+                                    <div class="form-check mb-4">
+                                        <input class="form-check-input" type="radio" name="billing"
+                                            value="bank_transfer,mandiri" />
+                                        <label class="form-check-label mb-0 d-block" for="paypal">
+                                            <img src="{{ asset('assets/img/icons/mandiri_logo.png') }}" height="20"
+                                                alt="" />
+                                        </label>
+                                    </div>
+                                    <div class="form-check mb-3">
+                                        <input class="form-check-input" type="radio" name="billing"
+                                            value="bank_transfer,bni" />
+                                        <label class="form-check-label mb-0 d-block" for="paypal">
+                                            <img src="{{ asset('assets/img/icons/bni_logo.png') }}" height="20"
+                                                alt="" />
+                                        </label>
+                                    </div>
+                                    <p class="fs--1 mb-4">Pay with PayPal, Apple Pay, PayPal Credit and much more</p>
+                                    <div class="form-check mb-0">
+                                        <input class="form-check-input" type="radio" value="credit_card"
+                                            id="credit-card" name="billing" />
+                                        <label class="form-check-label d-flex align-items-center mb-0" for="credit-card">
+                                            <span class="fs-1 text-nowrap">Credit Card</span>
+                                            <img class="d-none d-sm-inline-block ms-2 mt-lg-0"
+                                                src="{{ asset('assets/img/icons/icon-payment-methods.png') }}"
+                                                height="20" alt="" />
+                                        </label>
+                                        <div class="row gx-3 mb-3">
+                                            <div id="cc_form">
+                                                <div class="col-6 my-3">
+                                                    <label
+                                                        class="form-label ls text-uppercase text-600 fw-semi-bold mb-0 fs--1"
+                                                        for="cardNumber">Card Number
+                                                    </label>
+                                                    <input class="form-control" name="card_number"
+                                                        placeholder="XXXX XXXX XXXX XXXX" type="text" maxlength="16"
+                                                        pattern="[0-9]{16}" />
+                                                </div>
+                                                <div class="row gx-3">
+                                                    <div class="col-6 col-sm-3">
+                                                        <label
+                                                            class="form-label ls text-uppercase text-600 fw-semi-bold mb-0 fs--1"
+                                                            for="expDate">Exp Date
+                                                        </label>
+                                                        <input class="form-control" id="expDate" placeholder="15/2024"
+                                                            type="text" name="expDate" />
+                                                    </div>
+                                                    <div class="col-6 col-sm-3">
+                                                        <label
+                                                            class="form-label ls text-uppercase text-600 fw-semi-bold mb-0 fs--1"
+                                                            for="cvv">CVV
+                                                            <span class="ms-1" data-bs-toggle="tooltip"
+                                                                data-bs-placement="top" title="Card verification value">
+                                                                <span class="fa fa-question-circle"></span>
+                                                            </span>
+                                                        </label>
+                                                        <input class="form-control" id="cvv" placeholder="123"
+                                                            maxlength="3" pattern="[0-9]{3}" name="card_cvv"
+                                                            type="text" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <p class="fs--1 mb-4">Safe money transfer using your bank accounts. Visa, maestro,
+                                        discover,
+                                        american express.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="card h-100">
+                                <div class="card-header">
+                                    <h6 class="mb-0">Payment</h6>
+                                </div>
+                                <div class="card-body bg-light">
+                                    <div class="d-flex justify-content-between fs--1 mb-1">
+                                        <p class="mb-0">Subtotal</p>
+                                        <span>{{ rupiah($permit->jumlah_deposit) }}</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between fs--1 mb-1 text-success">
+                                        <p class="mb-0">Tax</p><span>Rp 0</span>
+                                    </div>
+                                    <div class="d-flex justify-content-between fs--1 mb-1 text-success">
+                                        <p class="mb-0">Admin Fee</p><span id="admin_fee">Rp 0</span>
+                                    </div>
+                                    <hr />
+                                    <h5 class="d-flex justify-content-between"><span>Grand Total</span><span
+                                            id="grand_total">Rp
+                                            0</span>
+                                    </h5>
+                                    <p class="fs--1 text-600">Once you start your trial, you will have 30 days to use
+                                        Falcon
+                                        Premium for free. After 30 days you’ll be charged based on your selected plan.</p>
+                                    <button class="btn btn-primary d-block w-100" type="submit">
+                                        <span class="fa fa-lock me-2"></span>Continue Payment
+                                    </button>
+                                    <div class="text-center mt-2">
+                                        <small class="d-inline-block">By continuing, you are
+                                            agreeing to
+                                            our subscriber <a href="#!">terms</a> and will be charged at the end of
+                                            the
+                                            trial.
+                                        </small>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <input type="hidden" id="val_admin_fee" name="admin_fee">
+                </form>
+            @elseif ($permit->CashReceipt->transaction_status == 'VERIFYING')
+                <div class="text-center">
+                    <a href="{{ route('paymentWO', [$permit->id, $permit->CashReceipt->id]) }}"
+                        class="btn btn-success">Lihat
+                        VA</a>
+                </div>
+            @endif
         </div>
     </div>
 @endsection
@@ -246,5 +382,27 @@
                 }
             })
         }
+
+        $('document').ready(function() {
+            var admin_tax = 0.11;
+            var subtotal = parseInt('{{ $permit->jumlah_deposit }}')
+
+            $('#cc_form').css('display', 'none')
+            $('.form-check-input').on('change', function() {
+                if ($(this).is(':checked') && $(this).val() == 'credit_card') {
+                    var admin_fee = Math.round(2000 + (0.029 * subtotal));
+                    var admin_fee = admin_fee + (Math.round(admin_fee * 0.11));
+
+                    $('#cc_form').css('display', 'block')
+                } else {
+                    var admin_fee = 4000 + (4000 * admin_tax);
+                    $('#cc_form').css('display', 'none')
+                }
+                var grand_total = subtotal + admin_fee;
+                $('#val_admin_fee').val(admin_fee);
+                $('#admin_fee').html(`Rp ${formatRupiah(admin_fee.toString())}`)
+                $('#grand_total').html(`Rp ${formatRupiah(grand_total.toString())}`)
+            });
+        })
     </script>
 @endsection

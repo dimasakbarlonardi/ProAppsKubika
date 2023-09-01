@@ -58,11 +58,11 @@
                         <div class="row">
                             <div class="col-6">
                                 <label class="form-label">No KTP</label>
-                                <input type="text" class="form-control" id="no_ktp">
+                                <input type="text" class="form-control" id="no_ktp" maxlength="16">
                             </div>
                             <div class="col-6">
                                 <label class="form-label">No Telp</label>
-                                <input type="text" class="form-control" id="no_telp">
+                                <input type="text" class="form-control" id="no_telp" maxlength="13">
                             </div>
                         </div>
                     </div>

@@ -27,8 +27,6 @@ class TenantUnit extends Model
         'tgl_jatuh_tempo_util'
     ];
 
-    protected $date = ['deleted_at'];
-
     public function unit()
     {
         return $this->hasOne(Unit::class, 'id_unit', 'id_unit');
@@ -43,10 +41,11 @@ class TenantUnit extends Model
     {
         return $this->hasOne(Tenant::class, 'id_tenant', 'id_tenant');
     }
-    
+
     public function User()
     {
         return $this->hasOne(User::class, 'id_user', 'id_tenant');
     }
 
+    protected $date = ['deleted_at'];
 }

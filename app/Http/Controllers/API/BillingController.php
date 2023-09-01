@@ -51,9 +51,6 @@ class BillingController extends Controller
         $ar = $connARTenant->where('id_monthly_ar_tenant', $id);
         $connUtil = ConnectionDB::setConnection(new Utility());
 
-        $water = $connUtil->find(2);
-        $electric = $connUtil->find(1);
-
         $data = $ar->with([
             'Unit.TenantUnit.Tenant',
             'CashReceipt',
@@ -63,10 +60,11 @@ class BillingController extends Controller
             ->first();
         $previousBills = $ar->first()->PreviousMonthBill();
 
+        $data['price_water'] = $connUtil->find(2)->biaya_tetap;
+        $data['price_electric'] = $connUtil->find(1)->biaya_tetap;
+
         return ResponseFormatter::success(
             [
-                'price_water' => $water->biaya_tetap,
-                'price_electric' => $electric->biaya_tetap,
                 'current_bill' => $data,
                 'previous_bills' => $previousBills
             ],
@@ -80,20 +78,20 @@ class BillingController extends Controller
         $connMonthlyTenant = ConnectionDB::setConnection(new MonthlyArTenant());
         $mt = $connMonthlyTenant->find($id);
         $site = Site::find($mt->id_site);
-        
+
         $client = new Client();
         $admin_fee = (int) $request->admin_fee;
         $type = $request->type;
         $bank = $request->bank;
         $transaction = $mt->CashReceipt;
-        
-        if ($transaction->transaction_status == 'PENDING') {          
+
+        if ($transaction->transaction_status == 'PENDING') {
             if ($type == 'bank_transfer') {
                 $transaction->gross_amount = $transaction->sub_total + $admin_fee;
                 $transaction->payment_type = 'bank_transfer';
                 $transaction->bank = Str::upper($bank);
                 $payment = [];
-                
+
                 $payment['payment_type'] = $type;
                 $payment['transaction_details']['order_id'] = $transaction->order_id;
                 $payment['transaction_details']['gross_amount'] = $transaction->gross_amount;
@@ -113,7 +111,7 @@ class BillingController extends Controller
                     ]
                 ]);
                 $response = json_decode($response->getBody());
-                
+
                 $transaction->va_number = $response->va_numbers[0]->va_number;
                 $transaction->expiry_time = $response->expiry_time;
                 $transaction->no_invoice = $mt->no_monthly_invoice;
@@ -349,7 +347,7 @@ class BillingController extends Controller
         $connUtility = new Utility();
 
         $connUtility = $connUtility->setConnection($site->db_name);
-        
+
         $water = $connUtility->find(2);
 
         $total_usage = $water->biaya_tetap * $usage;
@@ -358,7 +356,7 @@ class BillingController extends Controller
         if ($tokenable) {
             try {
                 DB::beginTransaction();
-                
+
 
                 $connWaterUUS = new WaterUUS();
                 $connWaterUUS = $connWaterUUS->setConnection($site->db_name);

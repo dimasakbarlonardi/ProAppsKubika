@@ -6,6 +6,7 @@ use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
 use App\Models\Approve;
 use App\Models\BAPP;
+use App\Models\CashReceipt;
 use App\Models\Notifikasi;
 use App\Models\RequestPermit;
 use App\Models\System;
@@ -164,35 +165,37 @@ class WorkPermitController extends Controller
         $connSystem = ConnectionDB::setConnection(new System());
         $system = $connSystem->find(1);
         $connWP = ConnectionDB::setConnection(new WorkPermit());
-        $connTransaction = ConnectionDB::setConnection(new Transaction());
+        $connTransaction = ConnectionDB::setConnection(new CashReceipt());
         $user = $request->session()->get('user');
 
         $wp = $connWP->find($id);
         $wp->sign_approval_2 = Carbon::now();
-        $wp->save();
+
+        $countCR = $system->sequence_no_cash_receiptment + 1;
+        $no_cr = $system->kode_unik_perusahaan . '/' .
+            $system->kode_unik_cash_receipt . '/' .
+            Carbon::now()->format('m') . Carbon::now()->format('Y') . '/' .
+            sprintf("%06d", $countCR);
+
+        $order_id = $user->id_site . '-' . $no_cr;
 
         $count = $system->sequence_no_invoice + 1;
-
         $no_invoice = $system->kode_unik_perusahaan . '/' .
             $system->kode_unik_invoice . '/' .
             Carbon::now()->format('m') . Carbon::now()->format('Y') . '/' .
             sprintf("%06d", $count);
 
-        $admin_fee = 5000;
-        $total = $wp->jumlah_deposit + $admin_fee;
-
         $createTransaction = $connTransaction;
+        $createTransaction->order_id = $order_id;
+        $createTransaction->id_site = $user->id_site;
+        $createTransaction->no_reff = $wp->no_work_permit;
         $createTransaction->no_invoice = $no_invoice;
-        $createTransaction->transaction_type = 'WorkPermit';
-        $createTransaction->no_transaction = $wp->no_work_permit;
-        $createTransaction->admin_fee = $admin_fee;
+        $createTransaction->no_draft_cr = $no_cr;
+        $createTransaction->ket_pembayaran = 'INV/' . $user->id_user . '/' . $wp->Ticket->Unit->id_unit;
         $createTransaction->sub_total = $wp->jumlah_deposit;
-        $createTransaction->total = $total;
-        $createTransaction->id_user = $wp->Ticket->Tenant->User->id_user;
-        $createTransaction->status = 'PENDING';
-        $createTransaction->save();
-
-        $ct = $this->transactionCenter($createTransaction);
+        $createTransaction->transaction_status = 'PENDING';
+        $createTransaction->id_user = $user->id_user;
+        $createTransaction->transaction_type = 'WorkPermit';
 
         $items = [];
         $item = new stdClass();
@@ -202,18 +205,14 @@ class WorkPermitController extends Controller
         $item->detil_biaya_alat = $wp->jumlah_deposit;
         array_push($items, $item);
 
-        $midtrans = new CreateSnapTokenService($ct, $createTransaction, $items, $admin_fee);
-
-        $ct->snap_token = $midtrans->getSnapToken();
-        $ct->save();
-
         $createTransaction->save();
 
         $system->sequence_no_invoice = $count;
+        $system->sequence_no_cash_receiptment = $countCR;
         $system->save();
 
         $connNotif = ConnectionDB::setConnection(new Notifikasi());
-        $checkNotif = $connNotif->where('models', 'Transaction')
+        $checkNotif = $connNotif->where('models', 'WorkPermit')
             ->where('is_read', 0)
             ->where('id_data', $id)
             ->first();
@@ -223,42 +222,16 @@ class WorkPermitController extends Controller
                 'receiver' => $wp->Ticket->Tenant->User->id_user,
                 'sender' => $user->id_user,
                 'is_read' => 0,
-                'models' => 'Transaction',
-                'id_data' => $createTransaction->id,
-                'notif_title' => $createTransaction->no_invoice,
+                'models' => 'WorkPermit',
+                'id_data' => $wp->id,
+                'notif_title' => $wp->no_work_permit,
                 'notif_message' => 'Work Permit diterima, mohon lakukan pembayaran untuk memulai pekerjaan'
             ]);
         }
 
+        $wp->save();
+
         return response()->json(['status' => 'ok']);
-    }
-
-    public function transactionCenter($transaction)
-    {
-        $request = Request();
-        $user = $request->session()->get('user');
-
-        try {
-            DB::beginTransaction();
-            $ct = TransactionCenter::create([
-                'id_sites' => $user->id_site,
-                'no_invoice' => $transaction->no_invoice,
-                'transaction_type' => $transaction->transaction_type,
-                'no_transaction' => $transaction->no_transaction,
-                'admin_fee' => $transaction->admin_fee,
-                'sub_total' => $transaction->sub_total,
-                'total' => $transaction->total,
-                'id_user' => $transaction->id_user,
-                'status' => $transaction->status,
-            ]);
-            DB::commit();
-
-            return $ct;
-        } catch (Throwable $e) {
-            DB::rollBack();
-            dd($e);
-            return redirect()->back();
-        }
     }
 
     public function approveWP3(Request $request, $id)
@@ -319,5 +292,10 @@ class WorkPermitController extends Controller
         $wp->Ticket->save();
 
         return response()->json(['status' => 'ok']);
+    }
+
+    public function generatePaymentPO($cr)
+    {
+        dd($cr);
     }
 }
