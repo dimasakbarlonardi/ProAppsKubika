@@ -144,7 +144,9 @@ class BillingController extends Controller
 
                 $transaction->save();
 
-                return redirect($chargeCC->redirect_url);
+                return ResponseFormatter::success(
+                    $chargeCC
+                );
             }
         } else {
             return ResponseFormatter::success(
