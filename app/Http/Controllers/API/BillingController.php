@@ -52,32 +52,55 @@ class BillingController extends Controller
         $ar = $connARTenant->where('id_monthly_ar_tenant', $id);
         $connUtil = ConnectionDB::setConnection(new Utility());
         $connIPLType = ConnectionDB::setConnection(new IPLType());
+        $transaction = $ar->first()->CashReceipt;
+        $site = Site::find($ar->first()->id_site);
 
-        $sc = $connIPLType->find(6);
-        $sf = $connIPLType->find(7);
+        if ($transaction->transaction_status == 'VERIFYING') {
+            $client = new Client();
+            $response = $client->request('GET', 'https://api.sandbox.midtrans.com/v2/' . $transaction->transaction_id . '/status', [
+                'headers' => [
+                    'accept' => 'application/json',
+                    'authorization' => 'Basic ' . base64_encode($site->midtrans_server_key),
+                    'content-type' => 'application/json',
+                ],
+                "custom_expiry" => [
+                    "order_time" => Carbon::now(),
+                    "expiry_duration" => 1,
+                    "unit" => "day"
+                ]
+            ]);
+            $response = json_decode($response->getBody());
 
-        $data = $ar->with([
-            'Unit.TenantUnit.Tenant',
-            'CashReceipt',
-            'MonthlyIPL',
-            'MonthlyUtility.ElectricUUS',
-            'MonthlyUtility.WaterUUS'
-        ])
-            ->first();
-        $previousBills = $ar->first()->PreviousMonthBill();
+            return ResponseFormatter::success(
+                $response
+            );
+        } elseif ($transaction->transaction_status == 'PENDING') {
+            $sc = $connIPLType->find(6);
+            $sf = $connIPLType->find(7);
 
-        $data['price_water'] = $connUtil->find(2)->biaya_tetap;
-        $data['price_electric'] = $connUtil->find(1)->biaya_tetap;
-        $data['service_charge_price'] = $sc->biaya_permeter;
-        $data['sinking_fund_price'] = $sf->biaya_permeter;
+            $data = $ar->with([
+                'Unit.TenantUnit.Tenant',
+                'CashReceipt',
+                'MonthlyIPL',
+                'MonthlyUtility.ElectricUUS',
+                'MonthlyUtility.WaterUUS'
+            ])
+                ->first();
+            $previousBills = $ar->first()->PreviousMonthBill();
 
-        return ResponseFormatter::success(
-            [
-                'current_bill' => $data,
-                'previous_bills' => $previousBills
-            ],
-            'Authenticated'
-        );
+            $data['price_water'] = $connUtil->find(2)->biaya_tetap;
+            $data['price_electric'] = $connUtil->find(1)->biaya_tetap;
+            $data['service_charge_price'] = $sc->biaya_permeter;
+            $data['sinking_fund_price'] = $sf->biaya_permeter;
+
+            return ResponseFormatter::success(
+                [
+                    'current_bill' => $data,
+                    'previous_bills' => $previousBills
+                ],
+                'Authenticated'
+            );
+        }
     }
 
     public function generateTransaction($id)
@@ -121,6 +144,7 @@ class BillingController extends Controller
                 $response = json_decode($response->getBody());
 
                 $transaction->va_number = $response->va_numbers[0]->va_number;
+                $transaction->transaction_id = $response->transaction_id;
                 $transaction->expiry_time = $response->expiry_time;
                 $transaction->no_invoice = $mt->no_monthly_invoice;
                 $transaction->admin_fee = $admin_fee;
