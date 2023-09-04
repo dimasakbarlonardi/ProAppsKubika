@@ -166,6 +166,11 @@ class DashboardController extends Controller
                 return view('Tenant.Notification.Reservation', $data);
                 break;
 
+            case ('PaymentReservation'):
+                $data = $this->handlePaymentReservation($getNotif);
+                return view('Tenant.Notification.Payment', $data);
+                break;
+
             case ('GIGO'):
                 $data = $this->handleGIGO($getNotif);
                 return view('Tenant.Notification.GIGO', $data);
@@ -281,6 +286,16 @@ class DashboardController extends Controller
         $getData = ConnectionDB::setConnection($model);
         $bapp =  $getData->find($getNotif->id_data);
         $data['reservation'] = $bapp;
+
+        return $data;
+    }
+    public function handlePaymentReservation($getNotif)
+    {
+        $model = new Reservation();
+        $getData = ConnectionDB::setConnection($model);
+        $rsv =  $getData->find($getNotif->id_data);
+        $data['reservation'] = $rsv;
+        $data['type'] = 'Reservation';
 
         return $data;
     }

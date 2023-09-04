@@ -370,26 +370,6 @@ Route::prefix('admin')->group(function () {
         Route::post('/work-permit/generate/{id}', [WorkPermitController::class, 'generatePaymentPO'])->name('generatePaymentPO');
         Route::get('/work-permit/payment/{id}', [WorkPermitController::class, 'paymentPO'])->name('paymentPO');
 
-        // BAPP
-        Route::resource('/bapp', BAPPController::class);
-        Route::post('doneTF/{id}', [BAPPController::class, 'doneTF'])->name('doneTF');
-        Route::post('bappApprove1/{id}', [BAPPController::class, 'bappApprove1'])->name('bappApprove1');
-        Route::post('bappApprove2/{id}', [BAPPController::class, 'bappApprove2'])->name('bappApprove2');
-        Route::post('bappApprove3/{id}', [BAPPController::class, 'bappApprove3'])->name('bappApprove3');
-        Route::post('bappApprove4/{id}', [BAPPController::class, 'bappApprove4'])->name('bappApprove4');
-
-        // GIGO
-        Route::resource('gigo', GIGOController::class);
-        Route::post('gigo/add-good', [GIGOController::class, 'addGood']);
-        Route::post('gigo/remove-good', [GIGOController::class, 'removeGood']);
-        Route::post('gigo/approve1/{id}', [GIGOController::class, 'gigoApprove1'])->name('gigoApprove1');
-        Route::post('gigo/approve2/{id}', [GIGOController::class, 'gigoApprove2'])->name('gigoApprove2');
-        Route::post('gigo/done/{id}', [GIGOController::class, 'gigoDone'])->name('gigoDone');
-        Route::post('gigo/complete/{id}', [GIGOController::class, 'gigoComplete'])->name('gigoComplete');
-
-        // Eng BAPP
-        Route::resource('eng-bapp', EngBAPPcontroller::class);
-
         // Reservation
         Route::resource('request-reservations', ReservationController::class);
         Route::post('rsvApprove1/{id}', [ReservationController::class, 'approve1'])->name('rsvApprove1');
@@ -397,6 +377,8 @@ Route::prefix('admin')->group(function () {
         Route::post('rsvApprove3/{id}', [ReservationController::class, 'approve3'])->name('rsvApprove3');
         Route::post('rsvDone/{id}', [ReservationController::class, 'rsvDone'])->name('rsvDone');
         Route::post('rsvComplete/{id}', [ReservationController::class, 'rsvComplete'])->name('rsvComplete');
+        Route::post('payment-rsv/{id}', [ReservationController::class, 'generatePaymentRSV'])->name('generatePaymentRSV');
+        Route::get('payment-rsv/{rsv}/{id}', [ReservationController::class, 'paymentReservation'])->name('paymentReservation');
 
         // Notification
         Route::get('/notifications', [DashboardController::class, 'notifications'])->name('notifications');  // Get all notifications list
@@ -439,14 +421,6 @@ Route::prefix('admin')->group(function () {
 
         // Eng BAPP
         Route::resource('eng-bapp', EngBAPPcontroller::class);
-
-        // Reservation
-        Route::resource('request-reservations', ReservationController::class);
-        Route::post('rsvApprove1/{id}', [ReservationController::class, 'approve1'])->name('rsvApprove1');
-        Route::post('rsvApprove2/{id}', [ReservationController::class, 'approve2'])->name('rsvApprove2');
-        Route::post('rsvApprove3/{id}', [ReservationController::class, 'approve3'])->name('rsvApprove3');
-        Route::post('rsvDone/{id}', [ReservationController::class, 'rsvDone'])->name('rsvDone');
-        Route::post('rsvComplete/{id}', [ReservationController::class, 'rsvComplete'])->name('rsvComplete');
 
         // Notification
         Route::get('/notifications', [DashboardController::class, 'notifications'])->name('notifications');  // Get all notifications list

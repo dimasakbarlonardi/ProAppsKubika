@@ -53,5 +53,10 @@ class Reservation extends Model
         return $this->hasOne(JenisAcara::class, 'id_jenis_acara', 'id_jenis_acara');
     }
 
+    public function CashReceipt()
+    {
+        return $this->hasOne(CashReceipt::class, 'no_reff', 'no_request_reservation');
+    }
+
     protected $dates = ['deleted_at'];
 }
