@@ -5,19 +5,25 @@ namespace App\Http\Controllers\Admin;
 use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
 use App\Models\Approve;
+use App\Models\CashReceipt;
 use App\Models\JenisAcara;
 use App\Models\Notifikasi;
 use App\Models\OpenTicket;
 use App\Models\Reservation;
 use App\Models\RuangReservation;
+use App\Models\Site;
 use App\Models\System;
 use App\Models\Transaction;
 use App\Models\TransactionCenter;
 use App\Models\TypeReservation;
 use App\Services\Midtrans\CreateSnapTokenService;
 use Carbon\Carbon;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Midtrans\CoreApi;
 use RealRashid\SweetAlert\Facades\Alert;
 use stdClass;
 use Throwable;
@@ -102,7 +108,7 @@ class ReservationController extends Controller
                     'models' => 'Reservation',
                     'id_data' => $createRsv->id,
                     'notif_title' => $createRsv->no_request_reservation,
-                    'notif_message' => 'Request Reservation diterima, mohon mengisi form reservasi'
+                    'notif_message' => 'Request Reservation diterima, mohon approve reservasi'
                 ]);
             }
 
@@ -118,7 +124,6 @@ class ReservationController extends Controller
             DB::rollBack();
             return redirect()->back();
         }
-        dd($ticket);
     }
 
     public function approve1($id)
@@ -139,21 +144,27 @@ class ReservationController extends Controller
     {
         $connReservation = ConnectionDB::setConnection(new Reservation());
         $connSystem = ConnectionDB::setConnection(new System());
-        $connTransaction = ConnectionDB::setConnection(new Transaction());
+        $connTransaction = ConnectionDB::setConnection(new CashReceipt());
 
+        $rsv = $connReservation->find($id);
         $system = $connSystem->find(1);
         $count = $system->sequence_no_invoice + 1;
+
+        $user = $rsv->Ticket->Tenant->User;
 
         $no_invoice = $system->kode_unik_perusahaan . '/' .
             $system->kode_unik_invoice . '/' .
             Carbon::now()->format('m') . Carbon::now()->format('Y') . '/' .
             sprintf("%06d", $count);
 
-        $admin_fee = 5000;
+        $countCR = $system->sequence_no_cash_receiptment + 1;
+        $no_cr = $system->kode_unik_perusahaan . '/' .
+            $system->kode_unik_cash_receipt . '/' .
+            Carbon::now()->format('m') . Carbon::now()->format('Y') . '/' .
+            sprintf("%06d", $countCR);
 
-        $user = $request->session()->get('user');
-        $rsv = $connReservation->find($id);
-        $total = $rsv->jumlah_deposit + $admin_fee;
+        $order_id = $user->id_site . '-' . $no_cr;
+        $sender = $request->session()->get('user');
 
         try {
             DB::beginTransaction();
@@ -161,49 +172,35 @@ class ReservationController extends Controller
             $rsv->save();
 
             $createTransaction = $connTransaction;
+            $createTransaction->order_id = $order_id;
+            $createTransaction->id_site = $user->id_site;
+            $createTransaction->no_reff = $rsv->no_request_reservation;
             $createTransaction->no_invoice = $no_invoice;
-            $createTransaction->transaction_type = 'Reservation';
-            $createTransaction->no_transaction = $rsv->no_request_reservation;
-            $createTransaction->admin_fee = $admin_fee;
+            $createTransaction->no_draft_cr = $no_cr;
+            $createTransaction->ket_pembayaran = 'INV/' . $user->id_user . '/' . $rsv->Ticket->Unit->nama_unit;
             $createTransaction->sub_total = $rsv->jumlah_deposit;
-            $createTransaction->total = $total;
-            $createTransaction->id_user = $rsv->Ticket->Tenant->User->id_user;
-            $createTransaction->status = 'PENDING';
+            $createTransaction->transaction_status = 'PENDING';
+            $createTransaction->id_user = $user->id_user;
+            $createTransaction->transaction_type = 'Reservation';
             $createTransaction->save();
 
-            $ct = $this->transactionCenter($createTransaction);
-
-            $items = [];
-            $item = new stdClass();
-            $item->id = 1;
-            $item->quantity = 1;
-            $item->detil_pekerjaan = 'Deposit Reservasi';
-            $item->detil_biaya_alat = $rsv->jumlah_deposit;
-            array_push($items, $item);
-
-            $midtrans = new CreateSnapTokenService($ct, $createTransaction, $items, $admin_fee);
-
-            $ct->snap_token = $midtrans->getSnapToken();
-            $ct->save();
-
-            $createTransaction->save();
-
+            $system->sequence_no_cash_receiptment = $countCR;
             $system->sequence_no_invoice = $count;
             $system->save();
 
             $connNotif = ConnectionDB::setConnection(new Notifikasi());
-            $checkNotif = $connNotif->where('models', 'Transaction')
+            $checkNotif = $connNotif->where('models', 'PaymentReservation')
                 ->where('is_read', 0)
                 ->where('id_data', $id)
                 ->first();
 
             if (!$checkNotif) {
                 $connNotif->create([
-                    'receiver' => $rsv->Ticket->Tenant->User->id_user,
-                    'sender' => $user->id_user,
+                    'receiver' => $user->id_user,
+                    'sender' => $sender->id_user,
                     'is_read' => 0,
-                    'models' => 'Transaction',
-                    'id_data' => $createTransaction->id,
+                    'models' => 'PaymentReservation',
+                    'id_data' => $rsv->id,
                     'notif_title' => $createTransaction->no_invoice,
                     'notif_message' => 'Request Reservation diterima, mohon membayar deposit untuk melanjutkan proses reservasi'
                 ]);
@@ -221,34 +218,6 @@ class ReservationController extends Controller
         Alert::success('Berhasil', 'Berhasil approve reservasi');
 
         return redirect()->back();
-    }
-
-    public function transactionCenter($transaction)
-    {
-        $request = Request();
-        $user = $request->session()->get('user');
-
-        try {
-            DB::beginTransaction();
-            $ct = TransactionCenter::create([
-                'id_sites' => $user->id_site,
-                'no_invoice' => $transaction->no_invoice,
-                'transaction_type' => $transaction->transaction_type,
-                'no_transaction' => $transaction->no_transaction,
-                'admin_fee' => $transaction->admin_fee,
-                'sub_total' => $transaction->sub_total,
-                'total' => $transaction->total,
-                'id_user' => $transaction->id_user,
-                'status' => $transaction->status,
-            ]);
-            DB::commit();
-
-            return $ct;
-        } catch (Throwable $e) {
-            DB::rollBack();
-            dd($e);
-            return redirect()->back();
-        }
     }
 
     public function approve3($id)
@@ -293,5 +262,149 @@ class ReservationController extends Controller
         Alert::success('Berhasil', 'Berhasil update reservasi');
 
         return redirect()->back();
+    }
+
+    public function generatePaymentRSV(Request $request, $id)
+    {
+        $connReservation = ConnectionDB::setConnection(new Reservation());
+
+        $user = $request->session()->get('user');
+        $site = Site::find($user->id_site);
+
+        $rsv = $connReservation->find($id);
+        $transaction = $rsv->CashReceipt;
+
+        $client = new Client();
+        $billing = explode(',', $request->billing);
+        $admin_fee = $request->admin_fee;
+
+        if ($rsv->CashReceipt->transaction_status = 'PENDING') {
+            if ($billing[0] == 'bank_transfer') {
+                $transaction->gross_amount = $transaction->sub_total + $admin_fee;
+                $transaction->payment_type = 'bank_transfer';
+                $transaction->bank = Str::upper($billing[1]);
+                $payment = [];
+
+                $payment['payment_type'] = $billing[0];
+                $payment['transaction_details']['order_id'] = $transaction->order_id;
+                $payment['transaction_details']['gross_amount'] = $transaction->gross_amount;
+                $payment['bank_transfer']['bank'] = $billing[1];
+
+                $response = $client->request('POST', 'https://api.sandbox.midtrans.com/v2/charge', [
+                    'body' => json_encode($payment),
+                    'headers' => [
+                        'accept' => 'application/json',
+                        'authorization' => 'Basic ' . base64_encode($site->midtrans_server_key),
+                        'content-type' => 'application/json',
+                    ],
+                    "custom_expiry" => [
+                        "order_time" => Carbon::now(),
+                        "expiry_duration" => 1,
+                        "unit" => "day"
+                    ]
+                ]);
+                $response = json_decode($response->getBody());
+
+                $transaction->va_number = $response->va_numbers[0]->va_number;
+                $transaction->expiry_time = $response->expiry_time;
+                $transaction->status_bayar = 'VERIFYING';
+                $transaction->admin_fee = $admin_fee;
+                $transaction->save();
+
+                return redirect()->route('paymentReservation', [$rsv->id, $transaction->id]);
+            } elseif ($request->billing == 'credit_card') {
+                $transaction->payment_type = 'credit_card';
+                $transaction->admin_fee = $admin_fee;
+                $transaction->gross_amount = round($transaction->sub_total + $admin_fee);
+
+                $getTokenCC = $this->TransactionCC($request);
+                $chargeCC = $this->ChargeTransactionCC($getTokenCC->token_id, $transaction);
+
+                $transaction->save();
+
+                return redirect($chargeCC->redirect_url);
+            }
+        } else {
+            return redirect()->back();
+        }
+    }
+
+    public function TransactionCC($request)
+    {
+        $expDate = explode('/', $request->expDate);
+        $card_exp_month = $expDate[0];
+        $card_exp_year = $expDate[1];
+
+        $login = Auth::user();
+        $site = Site::find($login->id_site);
+
+        try {
+            $token = CoreApi::cardToken(
+                $request->card_number,
+                $card_exp_month,
+                $card_exp_year,
+                $request->card_cvv,
+                $site->midtrans_client_key
+            );
+
+            if ($token->status_code != 200) {
+                return ResponseFormatter::error([
+                    'message' => 'Unauthorized'
+                ], 'Authentication Failed', 401);
+            }
+
+            return $token;
+        } catch (\Throwable $e) {
+            dd($e);
+            return ResponseFormatter::error([
+                'message' => 'Internar Error'
+            ], 'Something went wrong', 500);
+        }
+
+        return response()->json(['token' => $token]);
+    }
+
+    public function ChargeTransactionCC($token, $transaction)
+    {
+        $login = Auth::user();
+        $site = Site::find($login->id_site);
+        $server_key = $site->midtrans_server_key;
+
+        try {
+            $credit_card = array(
+                'token_id' => $token,
+                'authentication' => true,
+                'bank' => 'bni'
+            );
+
+            $transactionData = array(
+                "payment_type" => "credit_card",
+                "transaction_details" => [
+                    "gross_amount" => $transaction->gross_amount,
+                    "order_id" => $transaction->order_id
+                ],
+            );
+
+            $transactionData["credit_card"] = $credit_card;
+            $result = CoreApi::charge($transactionData, $server_key);
+
+            return $result;
+        } catch (Throwable $e) {
+            dd($e);
+        }
+    }
+
+    public function paymentReservation($rsv, $id)
+    {
+        $connTransaction = ConnectionDB::setConnection(new CashReceipt());
+        $connRSV = ConnectionDB::setConnection(new Reservation());
+
+        $mt = $connRSV->find($rsv);
+        $transaction = $connTransaction->find($id);
+
+        $data['rsv'] = $rsv;
+        $data['transaction'] = $transaction;
+
+        return view('Tenant.Notification.Invoice.payment-reservation', $data);
     }
 }

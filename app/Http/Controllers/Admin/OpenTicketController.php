@@ -206,7 +206,6 @@ class OpenTicketController extends Controller
     {
         $connSystem = ConnectionDB::setConnection(new System());
         $nowDate = Carbon::now();
-
         $system = $connSystem->find(1);
         $count = $system->sequence_no_gigo + 1;
 
@@ -218,20 +217,20 @@ class OpenTicketController extends Controller
         $createRG = ConnectionDB::setConnection(new RequestGIGO());
         $createRG->no_tiket = $ticket->no_tiket;
         $createRG->no_request_gigo = $no_gigo;
-        $createRG->save();
 
         $system->sequence_no_gigo = $count;
-        $system->save();
 
         $notif = $connNotif->where('models', 'GIGO')
             ->where('is_read', 0)
             ->where('id_data', $createRG->id)
             ->first();
 
+        $createRG->save();
+
         if (!$notif) {
             $createNotif = $connNotif;
             $createNotif->sender = $user->id_user;
-            $createNotif->receiver = '2023003';
+            $createNotif->receiver = $ticket->Tenant->User->id_user;
             $createNotif->is_read = 0;
             $createNotif->models = 'GIGO';
             $createNotif->id_data = $createRG->id;
@@ -239,6 +238,8 @@ class OpenTicketController extends Controller
             $createNotif->notif_message = 'Request GIGO disetujui, mohon mengisi formulir GIGO';
             $createNotif->save();
         }
+
+        $system->save();
     }
 
     public function updateRequestTicket(Request $request, $id)
