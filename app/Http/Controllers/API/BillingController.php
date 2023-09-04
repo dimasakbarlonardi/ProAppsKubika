@@ -133,13 +133,13 @@ class BillingController extends Controller
                     $response,
                     'Authenticated'
                 );
-            } elseif ($request->billing == 'credit_card') {
+            } elseif ($type == 'credit_card') {
                 $transaction->payment_type = 'credit_card';
                 $transaction->admin_fee = $admin_fee;
                 $transaction->gross_amount = round($transaction->sub_total + $admin_fee);
                 $transaction->no_invoice = $mt->no_monthly_invoice;
 
-                $getTokenCC = $this->TransactionCC($request);
+                $getTokenCC = $this->TransactionCC($request);                
                 $chargeCC = $this->ChargeTransactionCC($getTokenCC->token_id, $transaction);
 
                 $transaction->save();
@@ -152,6 +152,69 @@ class BillingController extends Controller
             return ResponseFormatter::success(
                 'Transaction has created'
             );
+        }
+    }
+
+    public function TransactionCC($request)
+    {
+        $expDate = explode('/', $request->expDate);
+        $card_exp_month = $expDate[0];
+        $card_exp_year = $expDate[1];
+        $login = Auth::user();
+        $site = Site::find($login->id_site);
+        
+        try {
+            $token = CoreApi::cardToken(
+                $request->card_number,
+                $card_exp_month,
+                $card_exp_year,
+                $request->card_cvv,
+                $site->midtrans_client_key
+            );
+            if ($token->status_code != 200) {
+                return ResponseFormatter::error([
+                    'message' => 'Unauthorized'
+                ], 'Authentication Failed', 401);
+            }
+
+            return $token;
+        } catch (\Throwable $e) {
+            dd($e);
+            return ResponseFormatter::error([
+                'message' => 'Internar Error'
+            ], 'Something went wrong', 500);
+        }
+
+        return response()->json(['token' => $token]);
+    }
+
+    public function ChargeTransactionCC($token, $transaction)
+    {
+        $login = Auth::user();
+        $site = Site::find($login->id_site);
+        $server_key = $site->midtrans_server_key;
+
+        try {
+            $credit_card = array(
+                'token_id' => $token,
+                'authentication' => true,
+                'bank' => 'bni'
+            );
+
+            $transactionData = array(
+                "payment_type" => "credit_card",
+                "transaction_details" => [
+                    "gross_amount" => $transaction->gross_amount,
+                    "order_id" => $transaction->order_id
+                ],
+            );
+
+            $transactionData["credit_card"] = $credit_card;
+            $result = CoreApi::charge($transactionData, $server_key);
+
+            return $result;
+        } catch (Throwable $e) {
+            dd($e);
         }
     }
 
