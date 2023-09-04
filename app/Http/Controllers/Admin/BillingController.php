@@ -20,6 +20,7 @@ use App\Models\System;
 use App\Models\Unit;
 use App\Models\Utility;
 use App\Models\WaterUUS;
+use App\Models\WorkOrder;
 use App\Services\Midtrans\CreateSnapTokenService;
 use Carbon\Carbon;
 use DateTime;
@@ -348,13 +349,14 @@ class BillingController extends Controller
     {
         $connMonthlyTenant = ConnectionDB::setConnection(new MonthlyArTenant());
         $mt = $connMonthlyTenant->find($id);
+        $site = Site::find($mt->id_site);
 
         $client = new Client();
         $billing = explode(',', $request->billing);
         $admin_fee = $request->admin_fee;
+        $transaction = $mt->CashReceipt;
 
-        if (!$mt->CashReceipt) {
-            $transaction = $this->createTransaction($mt);
+        if ($transaction->transaction_status == 'PENDING') {
             if ($billing[0] == 'bank_transfer') {
                 $transaction->gross_amount = $transaction->sub_total + $admin_fee;
                 $transaction->payment_type = 'bank_transfer';
@@ -370,7 +372,7 @@ class BillingController extends Controller
                     'body' => json_encode($payment),
                     'headers' => [
                         'accept' => 'application/json',
-                        'authorization' => 'Basic U0ItTWlkLXNlcnZlci1VQkJEOVpMcUdRRFBPd2VpekdkSGFnTFo6',
+                        'authorization' => 'Basic ' . base64_encode($site->midtrans_server_key),
                         'content-type' => 'application/json',
                     ],
                     "custom_expiry" => [
@@ -383,9 +385,10 @@ class BillingController extends Controller
 
                 $transaction->va_number = $response->va_numbers[0]->va_number;
                 $transaction->expiry_time = $response->expiry_time;
-                $mt->no_monthly_invoice = $transaction->no_invoice;
-
+                $transaction->no_invoice = $mt->no_monthly_invoice;
                 $transaction->admin_fee = $admin_fee;
+                $transaction->transaction_status = 'VERIFYING';
+
                 $transaction->save();
                 $mt->save();
 
@@ -487,5 +490,98 @@ class BillingController extends Controller
         $data['transaction'] = $transaction;
 
         return view('Tenant.Notification.Invoice.payment-monthly', $data);
+    }
+
+    public function generatePaymentWO(Request $request, $id)
+    {
+        $connCR = ConnectionDB::setConnection(new CashReceipt());
+        $transaction = $connCR->find($id);
+
+        $client = new Client();
+        $billing = explode(',', $request->billing);
+        $admin_fee = $request->admin_fee;
+
+        if ($transaction->transaction_status == 'PENDING') {
+            if ($billing[0] == 'bank_transfer') {
+                $transaction->admin_fee = $admin_fee;
+                $transaction->gross_amount = $transaction->sub_total + $admin_fee;
+                $transaction->payment_type = 'bank_transfer';
+                $transaction->bank = Str::upper($billing[1]);
+
+                $payment = [];
+
+                $payment['payment_type'] = $billing[0];
+                $payment['transaction_details']['order_id'] = $transaction->order_id;
+                $payment['transaction_details']['gross_amount'] = $transaction->gross_amount;
+                $payment['bank_transfer']['bank'] = $billing[1];
+
+                $response = $client->request('POST', 'https://api.sandbox.midtrans.com/v2/charge', [
+                    'body' => json_encode($payment),
+                    'headers' => [
+                        'accept' => 'application/json',
+                        'authorization' => 'Basic U0ItTWlkLXNlcnZlci1VQkJEOVpMcUdRRFBPd2VpekdkSGFnTFo6',
+                        'content-type' => 'application/json',
+                    ],
+                    "custom_expiry" => [
+                        "order_time" => Carbon::now(),
+                        "expiry_duration" => 1,
+                        "unit" => "day"
+                    ]
+                ]);
+                $response = json_decode($response->getBody());
+
+                $connSystem = ConnectionDB::setConnection(new System());
+                $system = $connSystem->find(1);
+
+                $countINV = $system->sequence_no_invoice + 1;
+
+                $no_inv = $system->kode_unik_perusahaan . '/' .
+                    $system->kode_unik_invoice . '/' .
+                    Carbon::now()->format('m') . Carbon::now()->format('Y') . '/' .
+                    sprintf("%06d", $countINV);
+
+                $transaction->va_number = $response->va_numbers[0]->va_number;
+                $transaction->expiry_time = $response->expiry_time;
+                $transaction->no_invoice = $no_inv;
+                $transaction->transaction_status = 'VERIFYING';
+
+                $system->sequence_no_invoice = $countINV;
+
+                $system->save();
+                $transaction->save();
+
+                return redirect()->route('paymentWO', [$transaction->WorkOrder->id, $transaction->id]);
+            } elseif ($request->billing == 'credit_card') {
+                $transaction->payment_type = 'credit_card';
+                $transaction->admin_fee = $admin_fee;
+                $transaction->gross_amount = round($transaction->sub_total + $admin_fee);
+
+                $getTokenCC = $this->TransactionCC($request);
+                $chargeCC = $this->ChargeTransactionCC($getTokenCC->token_id, $transaction);
+
+                $mt->no_monthly_invoice = $transaction->no_invoice;
+                $mt->save();
+
+                $transaction->save();
+
+                return redirect($chargeCC->redirect_url);
+            }
+        } else {
+            return redirect()->back();
+        }
+    }
+
+    public function paymentWO($woID, $id)
+    {
+        $connTransaction = ConnectionDB::setConnection(new CashReceipt());
+        $connMonthlyTenant = ConnectionDB::setConnection(new WorkOrder());
+
+        $wo = $connMonthlyTenant->find($woID);
+        $transaction = $connTransaction->find($id);
+
+        $data['wo'] = $wo;
+        $data['transaction'] = $transaction;
+
+        return view('Tenant.Notification.Invoice.payment-wo', $data);
     }
 }

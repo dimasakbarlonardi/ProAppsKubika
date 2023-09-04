@@ -35,6 +35,7 @@ class BillingController extends Controller
 
         $connARTenant = DB::connection($dbName)
             ->table('tb_fin_monthly_ar_tenant as arm')
+            ->join('tb_draft_cash_receipt as cr', 'arm.no_monthly_invoice', 'cr.no_reff')
             ->where('arm.id_unit', $id)
             ->where('arm.tgl_jt_invoice', '!=', null)
             ->orderBy('periode_bulan', 'desc')

@@ -230,7 +230,7 @@ class OpenTicketController extends Controller
         if (!$notif) {
             $createNotif = $connNotif;
             $createNotif->sender = $user->id_user;
-            $createNotif->receiver = $ticket->Tenant->User->id_user;
+            $createNotif->receiver = '2023003';
             $createNotif->is_read = 0;
             $createNotif->models = 'GIGO';
             $createNotif->id_data = $createRG->id;
