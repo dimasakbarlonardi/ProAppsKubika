@@ -307,7 +307,7 @@ class ReservationController extends Controller
 
                 $transaction->va_number = $response->va_numbers[0]->va_number;
                 $transaction->expiry_time = $response->expiry_time;
-                $transaction->status_bayar = 'VERIFYING';
+                $transaction->transaction_status = 'VERIFYING';
                 $transaction->admin_fee = $admin_fee;
                 $transaction->save();
 
