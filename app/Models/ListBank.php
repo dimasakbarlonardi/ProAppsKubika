@@ -10,7 +10,7 @@ class ListBank extends Model
 {
     use HasFactory;
     use SoftDeletes;
-  
+
     protected $table = 'tb_list_bank';
 
     protected $primaryKey = 'id';
