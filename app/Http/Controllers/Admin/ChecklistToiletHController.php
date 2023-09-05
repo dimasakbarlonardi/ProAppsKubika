@@ -53,7 +53,7 @@ class ChecklistToiletHController extends Controller
         return view('AdminSite.ChecklistToiletH.front', $data);
     }
 
-    public function checklist($id)
+    public function checklisttoilet($id)
     {
         $connParameter = ConnectionDB::setConnection(new ChecklistParameterEquiqment());
         $inspectionParameter = ConnectionDB::setConnection(new Toilet());

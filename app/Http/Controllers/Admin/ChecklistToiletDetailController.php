@@ -23,12 +23,12 @@ class ChecklistToiletDetailController extends Controller
         $equiqmentDetail = ConnectionDB::setConnection(new EquipmentHousekeepingDetail());
 
         $checklist = ConnectionDB::setConnection(new ChecklistParameterEquiqment());
-        // // $user_id = $request->user()->id;
+        $user_id = $request->user()->id;
         
         $data['equiqmentdetails'] = $equiqmentDetail->get();
         $data['checklisttoilet'] = $conn->first();
         $data['parameters'] = $checklist->get();
-        // $data['idusers'] = Login::where('id', $user_id)->get();
+        $data['idusers'] = Login::where('id', $user_id)->get();
 
         return view('AdminSite.ChecklistToiletDetail.index',$data);
     }

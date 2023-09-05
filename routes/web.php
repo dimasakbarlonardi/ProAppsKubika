@@ -112,12 +112,27 @@ use App\Http\Controllers\Admin\ChecklistPompaSumpitHController;
 use App\Http\Controllers\Admin\OffBoardingTenantUnitController;
 use App\Http\Controllers\Admin\ChecklistTanggaDaruratHController;
 use App\Http\Controllers\Admin\ChecklistOfficeManagementHController;
+use App\Http\Controllers\Admin\ChecklistSecurityController;
 use App\Http\Controllers\Admin\ChecklistToiletDetailController;
 use App\Http\Controllers\Admin\ElectricUUSController;
+use App\Http\Controllers\Admin\ForgotAttendanceController;
+use App\Http\Controllers\Admin\ImportController;
+use App\Http\Controllers\Admin\IncidentalEngController;
+use App\Http\Controllers\Admin\IncidentalHKController;
+use App\Http\Controllers\Admin\InspectionSecurityController;
+use App\Http\Controllers\Admin\LeaveTypeHRController;
 use App\Http\Controllers\Admin\InvoiceController;
 use App\Http\Controllers\Admin\OffBoardingKepemilikanUnitController;
+use App\Http\Controllers\Admin\PermitHRController;
 use App\Http\Controllers\Admin\PPNController;
+use App\Http\Controllers\Admin\RequestAttendanceController;
+use App\Http\Controllers\Admin\ScheduleSecurityController;
+use App\Http\Controllers\Admin\ToolsEngController;
+use App\Http\Controllers\Admin\ToolsHKController;
 use App\Http\Controllers\Admin\WaterUUSController;
+use App\Models\ForgotAttendance;
+use App\Models\IncidentalReportHK;
+use App\Models\PermitHR;
 
 /*
 |--------------------------------------------------------------------------
@@ -467,19 +482,7 @@ Route::prefix('admin')->group(function () {
         //CRUD Room
         Route::resource('rooms', RoomController::class);
 
-        //CRUD Checklist AHU H
-        Route::resource('checklistahus', ChecklistAhuHController::class);
-        Route::get('/checklist-filter-ahu', [ChecklistAhuHController::class, 'filterByNoChecklist']);
-        Route::get('/inspection-engineering/{id}', [ChecklistAhuHController::class, 'front'])->name('front');
-        Route::get('/inspection-enginerring', [ChecklistAhuHController::class, 'add'])->name('add');
-        Route::get('/inspection-parameter/{id}', [ChecklistAhuHController::class, 'checklist'])->name('checklist');
-        Route::post('/checklist-parameter/{id}', [ChecklistAhuHController::class, 'checklistParameter'])->name('checklistParameter');
-        Route::post('/inspection-enginerring', [ChecklistAhuHController::class, 'inspectionStore'])->name('inspectionStore');
-
-        //CRUD Checklist AHU Detail
-        Route::resource('ahudetails', ChecklistAhuDetailController::class);
-
-        //CRUD Engeneering AHU
+        //CRUD Parameter Engineering
         Route::resource('engahus', EngAHUController::class);
 
         //CRUD Engeneering Chiller
@@ -557,11 +560,17 @@ Route::prefix('admin')->group(function () {
 
         // ----------Checklist AHU-------------
 
-        // //CRUD Checklist AHU Header
-        // Route::resource('checklistahus', ChecklistAhuHController::class);
-        // Route::get('/checklist-filter-ahu', [ChecklistAhuHController::class, 'filterByNoChecklist']);
-        // //CRUD Checklist AHU Detail
-        // Route::resource('ahudetails', ChecklistAhuDetailController::class);
+        //CRUD Checklist AHU H
+        Route::resource('checklistahus', ChecklistAhuHController::class);
+        Route::get('/checklist-filter-ahu', [ChecklistAhuHController::class, 'filterByNoChecklist']);
+        Route::get('/inspection-engineering/{id}', [ChecklistAhuHController::class, 'front'])->name('front');
+        Route::get('/inspection-enginerring', [ChecklistAhuHController::class, 'add'])->name('add');
+        Route::get('/inspection-parameter-engineering/{id}', [ChecklistAhuHController::class, 'checklist'])->name('checklistengineering');
+        Route::post('/checklist-parameter/{id}', [ChecklistAhuHController::class, 'checklistParameter'])->name('checklistParameter');
+        Route::post('/inspection-enginerring', [ChecklistAhuHController::class, 'inspectionStore'])->name('inspectionStore');
+
+        //CRUD Checklist AHU Detail
+        Route::resource('ahudetails', ChecklistAhuDetailController::class);
 
         //CRUD Checklist Chiller
         Route::resource('checklistchillers', ChecklistChillerHController::class);
@@ -612,8 +621,8 @@ Route::prefix('admin')->group(function () {
         Route::resource('checklisttoilets', ChecklistToiletHController::class);
         Route::get('/checklist-filter-toilet', [ChecklistToiletHController::class, 'filterByNoChecklist']);
         Route::get('/inspection-toilet/{id}', [ChecklistToiletHController::class, 'fronttoilet'])->name('fronttoilet');
+        Route::get('/inspection-parameter-toilet/{id}', [ChecklistToiletHController::class, 'checklisttoilet'])->name('checklisttoilet');
         Route::post('/checklist-parameter/{id}', [ChecklistToiletHController::class, 'checklistParameter'])->name('checklistParameter');
-        Route::get('/inspection-parameter/{id}', [ChecklistToiletHController::class, 'checklist'])->name('checklist');
 
         //CRUD Checklist Toilet Detail
         Route::resource('toiletdetails', ChecklistToiletDetailController::class);
@@ -679,6 +688,44 @@ Route::prefix('admin')->group(function () {
         Route::post('get-montly-ar', [BillingController::class, 'getOverdueARTenant']);
 
         Route::post('get/cc-token', [BillingController::class, 'getTokenCC']);
+
+        // ---------------Inspection Gartur Security-----------------
+        Route::resource('inspectionsecurity', InspectionSecurityController::class);
+
+        // ---------------Import exl Inspection Security-----------------
+        Route::post('import', [ImportController::class, 'import'])->name('import');
+
+        // ---------------Inspection Tools Engineering-----------------
+        Route::resource('toolsengineering', ToolsEngController::class);
+        Route::post('/tools/borrow/{id}', [ToolsEngController::class, 'borrowTool'])->name('borrow.tool');
+        Route::post('/tools/return/{id}', [ToolsEngController::class, 'returnTool'])->name('return.tool');
+
+        // ---------------Inspection Tools Engineering-----------------
+        Route::resource('toolshousekeeping', ToolsHKController::class);
+        Route::post('/tools/borrowHK/{id}', [ToolsHKController::class, 'borrowToolHK'])->name('borrowHK.tool');
+        Route::post('/tools/returnHK/{id}', [ToolsHKController::class, 'returnToolHK'])->name('returnHK.tool');
+
+        // ---------------Inspection Security-----------------
+        Route::resource('checklistsecurity', ChecklistSecurityController::class);
+        // -Schedule Security
+        Route::resource('schedulesecurity', ScheduleSecurityController::class);
+
+        // ---------------Incidental Report Engineering-----------------
+        Route::resource('incidentalreporteng', IncidentalEngController::class);
+
+        // ---------------Incidental Report HK-----------------
+        Route::resource('incidentalreporthk',  IncidentalHKController::class);
+
+        // ---------------Parameter Attendance------------------
+        // -Request Attendance
+        Route::resource('requestattendance', RequestAttendanceController::class);
+        // -Permit Type
+        Route::resource('permithr', PermitHRController::class);
+        // -Leave Type
+        Route::resource('leavetype', LeaveTypeHRController::class);
+        // -Forgot Type
+        Route::resource('forgottype', ForgotAttendanceController::class);
+
     });
 });
 

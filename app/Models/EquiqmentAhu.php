@@ -22,19 +22,8 @@ class EquiqmentAhu extends Model
         'equiqment',    
         'id_role',
         'id_room',
-        'januari',
-        'febuari',
-        'maret',
-        'april',
-        'mei',
-        'juni',
-        'juli',
-        'agustus',
-        'september',
-        'oktober',
-        'november',
-        'december'
-
+        'schedule',
+        'status_schedule',
     ];
 
     protected $dates = ['deleted_at'];

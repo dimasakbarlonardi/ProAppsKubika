@@ -5,7 +5,7 @@
     <div class="card-header py-2">
         <div class="row flex-between-center">
             <div class="my-3 col-auto">
-                <h6 class="mb-0 text-white">List Ruang Reservation</h6>
+                <h6 class="mb-0 text-white">List Room Reservation</h6>
             </div>
             <div class="col-auto d-flex">
                 <a class="btn btn-falcon-default text-600 btn-sm " href="{{ route('ruangreservations.create') }}"><span class="fas fa-plus fs--2 me-1"></span>Create Ruang Reservation</a>
@@ -17,7 +17,7 @@
             <thead>
                 <tr>
                     <th class="sort" data-sort="">No</th>
-                    <th class="sort" data-sort="ruang_reservation">Ruang Reservation</th>
+                    <th class="sort" data-sort="ruang_reservation">Room Reservation</th>
                     <th class="sort">Action</th>
                 </tr>
             </thead>

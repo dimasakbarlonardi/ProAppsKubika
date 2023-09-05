@@ -58,7 +58,6 @@
                             </tbody>
                           </table>
                         </div>
-                       
                       </div>
                 <div class="mt-5">
                     <button type="button" class="btn btn-danger"><a class="text-white" href="{{ route('checklistfloors.index')}}">Back</a></button>

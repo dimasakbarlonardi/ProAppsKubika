@@ -28,8 +28,19 @@ class ChecklistAhuDetailController extends Controller
 
         $checklist = ConnectionDB::setConnection(new ChecklistParameterEquiqment());
         $user_id = $request->user()->id;
-        
+
+        $eq = $equiqmentDetail->find(1);
+
+        $statuses = [
+            ['id_eq' => 'Freyon', 'status' => 'OK'],
+            ['id_eq' => 'Dingin', 'status' => 'NOT OK']
+        ];
+        $eq->update([
+            'status' => json_encode($statuses)
+        ]);
+
         $data['equiqmentdetails'] = $equiqmentDetail->get();
+        // $data['equiqmentdetails'] = $statuses;
         $data['checklistahu'] = $conn->first();
         $data['parameters'] = $checklist->get();
 
@@ -58,7 +69,7 @@ class ChecklistAhuDetailController extends Controller
         $conn = ConnectionDB::setConnection(new ChecklistAhuDetail());
 
         try {
-            
+
             DB::beginTransaction();
 
             $conn->create([
@@ -134,12 +145,12 @@ class ChecklistAhuDetailController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)                            
+    public function destroy($id)
     {
         $conn = ConnectionDB::setConnection(new ChecklistAhuDetail());
 
         $conn->find($id)->delete();
-        Alert::success('Berhasil','Berhasil Menghapus Checklist AHU Detail');
+        Alert::success('Berhasil', 'Berhasil Menghapus Checklist AHU Detail');
 
         return redirect()->route('ahudetails.index');
     }
