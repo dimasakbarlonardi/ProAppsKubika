@@ -18,4 +18,9 @@ class Floor extends Model
     ];
 
     protected $dates = ['deleted_at'];
+
+    public function floor()
+    {
+        return $this->hasOne(Room::class, 'id_lantai', 'id_lantai');
+    }
 }

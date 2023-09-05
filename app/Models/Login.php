@@ -52,4 +52,9 @@ class Login extends Authenticatable
     {
         return $this->hasOne(Site::class, 'id_site', 'id_site');
     }
+
+    public function User()
+    {
+        return $this->hasOne(ToolsEngineering::class, 'id', 'id');
+    }
 }

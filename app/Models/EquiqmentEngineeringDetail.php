@@ -15,7 +15,7 @@ class EquiqmentEngineeringDetail extends Model
 
     protected $primaryKey = 'id_equiqment_engineering_detail';
 
-    protected $fillabel = [
+    protected $fillable = [
         'id_equiqment_engineering_detail',
         'id_equiqment_engineering',
         'image',

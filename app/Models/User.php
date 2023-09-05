@@ -51,4 +51,9 @@ class User extends Model
     {
         return $this->hasOne(User::class, 'id_user', 'id_user');
     }
+
+    public function tools()
+    {
+        return $this->belongsTo(ToolsEngineering::class, 'id'); 
+    }
 }

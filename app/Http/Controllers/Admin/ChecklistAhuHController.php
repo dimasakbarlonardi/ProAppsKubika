@@ -91,24 +91,24 @@ class ChecklistAhuHController extends Controller
         return redirect()->route('checklistahus.index');
     }
 
-    public function filterByNoChecklist(Request $request)
-    {
-        $conn = ConnectionDB::setConnection(new ChecklistAhuH());
+    // public function filterByNoChecklist(Request $request)
+    // {
+    //     $conn = ConnectionDB::setConnection(new ChecklistAhuH());
 
 
-        if ($request->date_to == null) {
-            $data = $conn->where('tgl_checklist', $request->date_from);
-        } else {
-            $data = $conn->whereBetween('tgl_checklist', [$request->date_from, $request->date_to]);
-        }
+    //     if ($request->date_to == null) {
+    //         $data = $conn->where('tgl_checklist', $request->date_from);
+    //     } else {
+    //         $data = $conn->whereBetween('tgl_checklist', [$request->date_from, $request->date_to]);
+    //     }
 
-        if ($request->no_checklist_ahu) {
-            $data = $data->where('no_checklist_ahu', $request->no_checklist_ahu);
-        }
-        $data = $data->get();
+    //     if ($request->no_checklist_ahu) {
+    //         $data = $data->where('no_checklist_ahu', $request->no_checklist_ahu);
+    //     }
+    //     $data = $data->get();
 
-        return response()->json(['checklists' => $data]);
-    }
+    //     return response()->json(['checklists' => $data]);
+    // }
 
     /**
      * Show the form for creating a new resource.
@@ -182,68 +182,40 @@ class ChecklistAhuHController extends Controller
 
     public function store(Request $request)
     {
-        $conn = ConnectionDB::setConnection(new ChecklistAhuH());
-        $conndetail = ConnectionDB::setConnection(new ChecklistAhuDetail());
-
         try {
-
             DB::beginTransaction();
-
-            $ahu = ConnectionDB::setConnection(new EngAhu());
 
             $equiqmentAHU = ConnectionDB::setConnection(new EquiqmentAhu());
 
-            $idInspection = $equiqmentAHU->first('id_inspection_engineering');
-
-            $id_ahu = $ahu->first('id_eng_ahu');
-
-            $today = Carbon::now()->format('dmY');
-
-            $tgl = Carbon::now()->format('Y-m-d');
-
-            $current = Carbon::now()->format('hi');
-
-            $time = Carbon::now()->format('his');
-
-            $no_checklist_ahu = $id_ahu->id_eng_ahu . $today . $current;
-
-            // $conn->create([
-            //     'id_checklist_ahu_h' => $request->id_checklist_ahu_h,
-            //     'barcode_room' => $request->barcode_room,
-            //     'id_room' => $request->id_room,
-            //     'tgl_checklist' => $tgl,
-            //     'time_checklist' => $time,
-            //     // 'id_user' => $request->id_user,
-            //     'no_checklist_ahu' => $no_checklist_ahu,
-            // ]);
-
-            // $conndetail->create([
-            //     'id_ahu' => $request->id_ahu,
-            //     'no_checklist_ahu' => $no_checklist_ahu,
-            //     'in_out' => $request->in_out,
-            //     'check_point' => $request->check_point,
-            //     'keterangan' => $request->keterangan,
-            // ]);
-
-            $equiqmentAHU->create([
+            $equiqment = $equiqmentAHU->create([
                 'no_equiqment' => $request->no_equiqment,
                 'equiqment' => $request->equiqment,
-                'id_inspection_engineering' => $idInspection,
                 'id_role' => $request->id_role,
                 'id_room' => $request->id_room,
-                'januari' => $request->januari,
-                'febuari' => $request->febuari,
-                'maret' => $request->maret,
-                'april' => $request->april,
-                'mei' => $request->mei,
-                'juni' => $request->juni,
-                'juli' => $request->juli,
-                'agustus' => $request->agustus,
-                'september' => $request->september,
-                'oktober' => $request->oktober,
-                'november' => $request->november,
-                'december' => $request->december
+                'schedule' => $request->schedule,
+                'set_schedule' => $request->set_schedule,
             ]);
+
+            // Buat jadwal inspeksi berdasarkan set schedule yang dipilih
+            $selectedSetSchedule = $request->set_schedule;
+            $startDate = Carbon::parse($request->schedule);
+            $endDate = $startDate->copy()->endOfYear(); // Akhir tahun
+
+            $scheduleDates = [];
+            $interval = ($selectedSetSchedule === 'weekly') ? '1 week' : '1 month';
+
+            while ($startDate->lte($endDate)) {
+                $scheduleDates[] = $startDate->format('Y-m-d');
+                $startDate->add($interval);
+            }
+
+            // Simpan jadwal inspeksi ke dalam database
+            foreach ($scheduleDates as $date) {
+                $equiqment->inspections()->create([
+                    'schedule_date' => $date,
+                    'status_schedule' => 0, // Status awal
+                ]);
+            }
 
             DB::commit();
 
@@ -252,8 +224,7 @@ class ChecklistAhuHController extends Controller
             return redirect()->route('checklistahus.index');
         } catch (\Throwable $e) {
             DB::rollBack();
-            dd($e);
-            Alert::error('Gagal', 'Gagal menambahkan Checklis AHU');
+            Alert::success('Gagal', 'Gagal menambahkan Checklis AHU');
 
             return redirect()->route('checklistahus.index');
         }

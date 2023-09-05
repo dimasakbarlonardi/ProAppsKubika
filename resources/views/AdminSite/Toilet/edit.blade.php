@@ -23,14 +23,6 @@
                     <label class="form-label">Nama Toilet</label>
                     <input type="text" name="nama_hk_toilet" value="{{$toilet->nama_hk_toilet}}" class="form-control">
                 </div>
-                <div class="col-6 mb-3">
-                    <label class="form-label">Subject</label>
-                    <input type="text" name="subject" value="{{$toilet->subject}}" class="form-control">
-                </div>
-                <div class="col-6 mb-3">
-                    <label class="form-label">DSG</label>
-                    <input type="text" name="dsg" value="{{$toilet->dsg}}" class="form-control">
-                </div>
                 <div class="mt-5">
                     <button type="submit" class="btn btn-primary">Submit</button>
                     <button type="button" class="btn btn-danger"><a class="text-white" href="{{ route('toilets.index')}}">Cancel</a></button>

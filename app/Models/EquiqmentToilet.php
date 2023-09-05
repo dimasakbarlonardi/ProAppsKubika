@@ -22,14 +22,8 @@ class EquiqmentToilet extends Model
         'equipment',    
         'id_role',
         'id_room',
-        'senin',
-        'selasa',
-        'rabu',
-        'kamis',
-        'jumat',
-        'sabtu',
-        'minggu'
-
+        'schedule',
+        'status_schedule'
     ];
 
     protected $dates = ['deleted_at'];
