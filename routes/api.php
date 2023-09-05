@@ -56,6 +56,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/list-billings/{id}', [BillingController::class, 'listBillings']);
         Route::get('/get-billing/{id}', [BillingController::class, 'showBilling']);
         Route::post('/create-transaction/{id}', [BillingController::class, 'generateTransaction']);
+        Route::get('/list-banks', [BillingController::class, 'listBank']); // List all available bank
 
         Route::post('get/admin-fee', [BillingController::class, 'adminFee']);
     });
