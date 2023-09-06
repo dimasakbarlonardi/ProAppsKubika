@@ -37,11 +37,12 @@ class OpenTicketController extends Controller
         $connOpenTicket = ConnectionDB::setConnection(new OpenTicket());
 
         $tickets = $connOpenTicket->where('id_tenant', $user->Tenant->id_tenant)
-        ->get();
+            ->get();
 
-        return ResponseFormatter::success([
-            $tickets
-        ], 'Berhasil mengambil semua tickets');
+        return ResponseFormatter::success(
+            $tickets,
+            'Berhasil mengambil semua tickets'
+        );
     }
     public function jenisRequest(Request $request)
     {
@@ -150,8 +151,8 @@ class OpenTicketController extends Controller
         $connTicket = ConnectionDB::setConnection(new OpenTicket());
 
         $tickets = $connTicket->where('no_invoice', '!=', null)
-        ->with('CashReceipt')
-        ->get();
+            ->with('CashReceipt')
+            ->get();
 
         return ResponseFormatter::success([
             $tickets
