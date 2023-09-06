@@ -2,6 +2,7 @@
 
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\API\BillingController;
+use App\Http\Controllers\API\InboxController;
 use App\Http\Controllers\API\OpenTicketController;
 use App\Http\Controllers\API\SiteController;
 use App\Http\Controllers\API\UnitController;
@@ -60,5 +61,8 @@ Route::prefix('v1')->group(function () {
         Route::get('/list-banks', [BillingController::class, 'listBank']); // List all available bank
 
         Route::post('get/admin-fee', [BillingController::class, 'adminFee']);
+
+        // Inbox
+        Route::get('/inboxes', [InboxController::class, 'index']);
     });
 });
