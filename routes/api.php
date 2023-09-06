@@ -6,6 +6,7 @@ use App\Http\Controllers\API\OpenTicketController;
 use App\Http\Controllers\API\SiteController;
 use App\Http\Controllers\API\UnitController;
 use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\API\InspectionController;
 use App\Http\Controllers\PaymentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -58,5 +59,8 @@ Route::prefix('v1')->group(function () {
         Route::post('/create-transaction/{id}', [BillingController::class, 'generateTransaction']);
 
         Route::post('get/admin-fee', [BillingController::class, 'adminFee']);
+
+        // Inspection
+        Route::get('/inspectioneng', [InspectionController::class, 'checklistengineering']);
     });
 });

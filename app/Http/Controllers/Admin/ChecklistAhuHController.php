@@ -30,12 +30,12 @@ class ChecklistAhuHController extends Controller
      */
     public function index(Request $request)
     {
-        $connahudetail = ConnectionDB::setConnection(new ChecklistAhuDetail());
+        // $connahudetail = ConnectionDB::setConnection(new ChecklistAhuDetail());
         $equiqment = ConnectionDB::setConnection(new EquiqmentAhu());
         $user_id = $request->user()->id;
 
         $data['checklistahus'] = $equiqment->get();
-        $data['ahudetails'] = $connahudetail->first();
+        // $data['ahudetails'] = $connahudetail->first();
         $data['equiqments'] = $equiqment->get();
         $data['idusers'] = Login::where('id', $user_id)->get();
 
