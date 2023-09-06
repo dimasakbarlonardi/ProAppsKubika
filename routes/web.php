@@ -126,7 +126,9 @@ use App\Http\Controllers\Admin\OffBoardingKepemilikanUnitController;
 use App\Http\Controllers\Admin\PermitHRController;
 use App\Http\Controllers\Admin\PPNController;
 use App\Http\Controllers\Admin\RequestAttendanceController;
+use App\Http\Controllers\Admin\ScheduleMeetingController;
 use App\Http\Controllers\Admin\ScheduleSecurityController;
+use App\Http\Controllers\Admin\ShiftTypeController;
 use App\Http\Controllers\Admin\ToolsEngController;
 use App\Http\Controllers\Admin\ToolsHKController;
 use App\Http\Controllers\Admin\WaterUUSController;
@@ -718,9 +720,13 @@ Route::prefix('admin')->group(function () {
 
         // ---------------Incidental Report HK-----------------
         Route::resource('incidentalreporthk',  IncidentalHKController::class);
+        
+        // -------------------Attendance-----------------------
+        // -Schedule Meeting
+        Route::resource('schedulemeeting', ScheduleMeetingController::class);
 
         // ---------------Parameter Attendance------------------
-        // -Request Attendance
+        // -Request Attendance 
         Route::resource('requestattendance', RequestAttendanceController::class);
         // -Permit Type
         Route::resource('permithr', PermitHRController::class);
@@ -728,7 +734,8 @@ Route::prefix('admin')->group(function () {
         Route::resource('leavetype', LeaveTypeHRController::class);
         // -Forgot Type
         Route::resource('forgottype', ForgotAttendanceController::class);
-
+        // -Shift Type
+        Route::resource('shifttype', ShiftTypeController::class);
     });
 });
 

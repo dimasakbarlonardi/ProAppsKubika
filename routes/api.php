@@ -7,6 +7,7 @@ use App\Http\Controllers\API\OpenTicketController;
 use App\Http\Controllers\API\SiteController;
 use App\Http\Controllers\API\UnitController;
 use App\Http\Controllers\API\UserController;
+use App\Http\Controllers\API\InspectionController;
 use App\Http\Controllers\PaymentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -61,6 +62,9 @@ Route::prefix('v1')->group(function () {
         Route::get('/list-banks', [BillingController::class, 'listBank']); // List all available bank
 
         Route::post('get/admin-fee', [BillingController::class, 'adminFee']);
+
+        // Inspection
+        Route::get('/inspectioneng', [InspectionController::class, 'checklistengineering']);
 
         // Inbox
         Route::get('/inboxes', [InboxController::class, 'index']);
