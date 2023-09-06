@@ -2,6 +2,7 @@
 
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\API\BillingController;
+use App\Http\Controllers\API\InboxController;
 use App\Http\Controllers\API\OpenTicketController;
 use App\Http\Controllers\API\SiteController;
 use App\Http\Controllers\API\UnitController;
@@ -72,5 +73,8 @@ Route::prefix('v1')->group(function () {
         Route::get('/inspection-hk-schedule', [InspectionController::class, 'schedueinspectionhk']);
         Route::post('/inspection-housekeeping', [InspectionController::class, 'storeinspectionHK']);
         Route::get('/equipment-housekeeping/{id}', [InspectionController::class, 'showHousekeeping']);
+
+        // Inbox
+        Route::get('/inboxes', [InboxController::class, 'index']);
     });
 });
