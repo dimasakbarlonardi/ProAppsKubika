@@ -2,6 +2,7 @@
 
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\API\BillingController;
+use App\Http\Controllers\API\InboxController;
 use App\Http\Controllers\API\OpenTicketController;
 use App\Http\Controllers\API\SiteController;
 use App\Http\Controllers\API\UnitController;
@@ -64,5 +65,8 @@ Route::prefix('v1')->group(function () {
 
         // Inspection
         Route::get('/inspectioneng', [InspectionController::class, 'checklistengineering']);
+
+        // Inbox
+        Route::get('/inboxes', [InboxController::class, 'index']);
     });
 });
