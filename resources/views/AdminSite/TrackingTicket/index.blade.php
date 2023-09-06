@@ -37,8 +37,8 @@
                                     <a class="d-none d-sm-block" href="">
                                         <div class="avatar avatar-xl avatar-3xl">
                                             <div class="avatar-name rounded-circle">
-                                                <img src="{{ $ticket->User->profile_picture ? url($ticket->User->profile_picture) : '/assets/img/icons/spot-illustrations/proapps.png' }}"
-                                                    alt="{{ $ticket->User->profile_picture }}" class="avatar-image" />
+                                                <img src="{{ $ticket->Tenant->User->profile_picture ? url($ticket->Tenant->User->profile_picture) : '/assets/img/icons/spot-illustrations/proapps.png' }}"
+                                                    alt="{{ $ticket->Tenant->User->profile_picture }}" class="avatar-image" />
                                             </div>
                                         </div>
                                     </a>
@@ -60,7 +60,7 @@
                                                 <h6 class="client mb-0">
                                                     <a class="text-800 d-flex align-items-center gap-1" href="">
                                                         <span class="fas fa-user" data-fa-transform="shrink-3 up-1"></span>
-                                                        <span>{{ $ticket->User->nama_user }}</span>
+                                                        <span>{{ $ticket->Tenant->User->nama_user }}</span>
                                                     </a>
                                                 </h6>
                                             </div>

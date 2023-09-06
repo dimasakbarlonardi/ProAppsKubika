@@ -541,10 +541,14 @@ class BillingController extends Controller
 
                 $transaction->va_number = $response->va_numbers[0]->va_number;
                 $transaction->expiry_time = $response->expiry_time;
+                $transaction->transaction_id = $response->transaction_id;
                 $transaction->no_invoice = $no_inv;
                 $transaction->transaction_status = 'VERIFYING';
 
                 $system->sequence_no_invoice = $countINV;
+
+                $transaction->WorkOrder->Ticket->no_invoice = $no_inv;
+                $transaction->WorkOrder->Ticket->save();
 
                 $system->save();
                 $transaction->save();
