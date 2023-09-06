@@ -46,15 +46,15 @@ class BillingController extends Controller
             if ($request->type == 'electric') {
                 $elecUSS = $connElecUUS->find($id);
                 $waterUSS = $connWaterUUS->where('periode_bulan', $elecUSS->periode_bulan)
-                ->where('is_approve', '1')
-                ->where('periode_tahun', $elecUSS->periode_tahun)
-                ->first();
+                    ->where('is_approve', '1')
+                    ->where('periode_tahun', $elecUSS->periode_tahun)
+                    ->first();
             } elseif ($request->type == 'water') {
                 $waterUSS = $connWaterUUS->find($id);
                 $elecUSS = $connElecUUS->where('periode_bulan', $waterUSS->periode_bulan)
-                ->where('is_approve', '1')
-                ->where('periode_tahun', $waterUSS->periode_tahun)
-                ->first();
+                    ->where('is_approve', '1')
+                    ->where('periode_tahun', $waterUSS->periode_tahun)
+                    ->first();
             }
 
             if ($waterUSS && $elecUSS && !$waterUSS->MonthlyUtility) {
@@ -89,7 +89,7 @@ class BillingController extends Controller
         return response()->json(['status' => 'ok']);
     }
 
-    public function createMonthlyTenant($createUtilityBill, $createIPLbill, $elecUSS, $waterUSS)
+    public function createMonthlyTenant($createUtilityBill, $createIPLbill)
     {
         $connMonthlyTenant = ConnectionDB::setConnection(new MonthlyArTenant());
         $perhitDenda = ConnectionDB::setConnection(new PerhitDenda());
@@ -162,10 +162,6 @@ class BillingController extends Controller
     public function createUtilityBill($elecUSS, $waterUSS, $createIPLbill)
     {
         $connMonthlyUtility = ConnectionDB::setConnection(new MonthlyUtility());
-        $connUtility = ConnectionDB::setConnection(new Utility());
-
-        $listrik = $connUtility->find(1);
-        $air = $connUtility->find(2);
 
         $water_bill = $waterUSS->total;
         $elec_bill = $elecUSS->total;
@@ -275,7 +271,6 @@ class BillingController extends Controller
     public function blastMonthlyInvoice(Request $request)
     {
         $connSystem = ConnectionDB::setConnection(new System());
-        // $connMonthlyTenant = ConnectionDB::setConnection(new MonthlyArTenant());
         $connReminder = ConnectionDB::setConnection(new ReminderLetter());
         $connElec = ConnectionDB::setConnection(new ElectricUUS());
         $connWater = ConnectionDB::setConnection(new WaterUUS());
@@ -287,9 +282,13 @@ class BillingController extends Controller
                 DB::beginTransaction();
 
                 if ($request->type == 'electric') {
-                    $util = $connElec->find($id);
+                    $util = $connElec->where('id', $id)
+                        ->where('is_approve', '1')
+                        ->first();
                 } elseif ($request->type == 'water') {
-                    $util = $connWater->find($id);
+                    $util = $connWater->where('id', $id)
+                        ->where('is_approve', '1')
+                        ->first();
                 }
 
                 if (!$util->MonthlyUtility->MonthlyTenant->CashReceipt) {

@@ -126,12 +126,16 @@ class ElectricUUSController extends Controller
         foreach ($request->IDs as $id) {
             try {
                 DB::beginTransaction();
-                $elecUSS = $connElecUUS->find($id);
+                $elecUSS = $connElecUUS->where('id', $id)
+                ->where('is_updated', null)
+                ->first();
 
-                $elecUSS->is_approve = '1';
-                $elecUSS->save();
+                if ($elecUSS) {
+                    $elecUSS->is_approve = '1';
+                    $elecUSS->save();
 
-                DB::commit();
+                    DB::commit();
+                }
             } catch (Throwable $e) {
                 DB::rollBack();
 
@@ -139,5 +143,40 @@ class ElectricUUSController extends Controller
             }
         }
         return response()->json(['status' => 'ok']);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $connElectric = ConnectionDB::setConnection(new ElectricUUS());
+
+        $elec = $connElectric->find($id);
+
+        $elec->is_updated = '1';
+        $elec->catatan = $request->catatan;
+        $elec->old_nomor_listrik_awal = $elec->nomor_listrik_awal;
+        $elec->old_nomor_listrik_akhir = $elec->nomor_listrik_akhir;
+        $elec->old_usage = $elec->usage;
+        $elec->nomor_listrik_awal = $request->nomor_listrik_awal;
+        $elec->nomor_listrik_akhir = $request->nomor_listrik_akhir;
+        $elec->usage = $request->nomor_listrik_akhir - $request->nomor_listrik_awal;
+        $elec->save();
+
+        Alert::success('Success', 'Success update data');
+
+        return redirect()->back();
+    }
+
+    public function approveUpdate($id)
+    {
+        $connElectric = ConnectionDB::setConnection(new ElectricUUS());
+
+        $elec = $connElectric->find($id);
+
+        $elec->is_updated = null;
+        $elec->save();
+
+        Alert::success('Success', 'Success update data');
+
+        return redirect()->back();
     }
 }
