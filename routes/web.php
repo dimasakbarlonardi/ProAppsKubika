@@ -655,13 +655,16 @@ Route::prefix('admin')->group(function () {
         Route::get('/get/uss-electric', [ElectricUUSController::class, 'getRecords']);
         Route::get('/create/usr-electric', [ElectricUUSController::class, 'create'])->name('create-usr-electric');
         Route::post('approve/usr-electric', [ElectricUUSController::class, 'approve']);
+        Route::post('update/usr-electric/{id}', [ElectricUUSController::class, 'update'])->name('updateElectric');
+        Route::post('approve/update/usr-electric/{id}', [ElectricUUSController::class, 'approveUpdate'])->name('approveUpdateElectric');
         // ---------------End UUS Electric-----------------
 
         // ---------------Start UUS Water -------------------
         Route::get('uus-water', [WaterUUSController::class, 'index'])->name('uus-water');
         Route::get('create/usr-water', [WaterUUSController::class, 'create'])->name('create-usr-water');
         Route::post('approve/usr-water', [WaterUUSController::class, 'approve'])->name('approve-usr-water');
-        Route::post('update/usr-water', [WaterUUSController::class, 'update'])->name('updateWater');
+        Route::post('update/usr-water/{id}', [WaterUUSController::class, 'update'])->name('updateWater');
+        Route::post('approve/update/usr-water/{id}', [WaterUUSController::class, 'approveUpdate'])->name('approveUpdateWater');
         // ---------------End UUS Water -------------------
 
         // Generate monthly invoice IPL & Service charge
