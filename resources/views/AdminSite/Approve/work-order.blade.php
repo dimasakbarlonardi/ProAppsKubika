@@ -16,21 +16,11 @@
                     <div class="row">
                         <div class="col-6">
                             <label class="form-label">Approve 1</label>
-                            <select name="approval_1" class="form-control">
-                                @foreach ($roles as $role)
-                                    <option {{ $role->id == $approve->approval_1 ? 'selected' : '' }}
-                                        value="{{ $role->id }}">{{ $role->nama_role }}</option>
-                                @endforeach
-                            </select>
+                            <input type="text" class="form-control" disabled value="Tenant">
                         </div>
                         <div class="col-6">
                             <label class="form-label">Approve 2</label>
-                            <select name="approval_2" class="form-control">
-                                @foreach ($karyawans as $karyawan)
-                                <option {{ $karyawan->User->id_user == $approve->approval_2 ? 'selected' : '' }}
-                                    value="{{ $karyawan->User->id_user }}">{{ $karyawan->nama_karyawan }}</option>
-                            @endforeach
-                            </select>
+                            <input type="text" class="form-control" disabled value="Selected Division">
                         </div>
                     </div>
                 </div>

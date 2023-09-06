@@ -18,6 +18,7 @@ class OpenTicket extends Model
         'id_lantai',
         'id_tenant',
         'no_tiket',
+        'no_invoice',
         'status_request',
         'id_jenis_request',
         'judul_request',
@@ -70,4 +71,8 @@ class OpenTicket extends Model
         return $this->hasOne(RequestGIGO::class, 'no_tiket', 'no_tiket');
     }
 
+    public function CashReceipt()
+    {
+        return $this->hasOne(CashReceipt::class, 'no_invoice', 'no_invoice');
+    }
 }
