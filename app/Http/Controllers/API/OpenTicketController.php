@@ -57,6 +57,8 @@ class OpenTicketController extends Controller
 
     public function store(Request $request)
     {
+        $tenant = $this->user()->Tenant->id_tenant;
+
         $rules = [
             'id_jenis_request' => 'required',
         ];
@@ -92,10 +94,10 @@ class OpenTicketController extends Controller
             $createTicket->id_jenis_request = $request->id_jenis_request;
             $createTicket->judul_request = $request->judul_request;
             $createTicket->id_site = $unit->id_site;
+            $createTicket->id_tenant = $tenant;
             $createTicket->id_tower = $unit->id_tower;
             $createTicket->id_unit = $request->id_unit;
             $createTicket->id_lantai = $unit->id_lantai;
-            $createTicket->id_user = $unit->TenantUnit->Tenant->User->id_user;
             $createTicket->no_tiket = $no_tiket;
             $createTicket->status_request = 'PENDING';
             $createTicket->deskripsi_request = $request->deskripsi_request;
@@ -112,7 +114,7 @@ class OpenTicketController extends Controller
 
                 $createTicket->upload_image = $ticketImage;
             }
-
+            
             $createTicket->save();
             $system->sequence_notiket = $count;
             $system->save();
