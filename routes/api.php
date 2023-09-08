@@ -60,7 +60,15 @@ Route::prefix('v1')->group(function () {
 
         Route::post('get/admin-fee', [BillingController::class, 'adminFee']);
 
-        // Inspection
+        // Inspection Eng
         Route::get('/inspectioneng', [InspectionController::class, 'checklistengineering']);
+        Route::get('/inspectioneng-schedule', [InspectionController::class, 'schedueinspection']);
+        Route::post('/inspection-engineering', [InspectionController::class, 'storeinspectionEng']);
+        Route::get('/equipment-engineering/{id}', [InspectionController::class, 'showEngineering']);
+        // Inspection HK
+        Route::get('/inspection-hk', [InspectionController::class, 'checklisthousekeeping']);
+        Route::get('/inspection-hk-schedule', [InspectionController::class, 'schedueinspectionhk']);
+        Route::post('/inspection-housekeeping', [InspectionController::class, 'storeinspectionHK']);
+        Route::get('/equipment-housekeeping/{id}', [InspectionController::class, 'showHousekeeping']);
     });
 });

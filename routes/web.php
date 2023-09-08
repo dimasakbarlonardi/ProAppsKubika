@@ -568,7 +568,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/inspection-engineering/{id}', [ChecklistAhuHController::class, 'front'])->name('front');
         Route::get('/inspection-enginerring', [ChecklistAhuHController::class, 'add'])->name('add');
         Route::get('/inspection-parameter-engineering/{id}', [ChecklistAhuHController::class, 'checklist'])->name('checklistengineering');
-        Route::post('/checklist-parameter/{id}', [ChecklistAhuHController::class, 'checklistParameter'])->name('checklistParameter');
+        Route::post('/checklist-parameter-engineering/{id}', [ChecklistAhuHController::class, 'checklistParameter'])->name('checklistParameter');
         Route::post('/inspection-enginerring', [ChecklistAhuHController::class, 'inspectionStore'])->name('inspectionStore');
 
         //CRUD Checklist AHU Detail
@@ -624,7 +624,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/checklist-filter-toilet', [ChecklistToiletHController::class, 'filterByNoChecklist']);
         Route::get('/inspection-toilet/{id}', [ChecklistToiletHController::class, 'fronttoilet'])->name('fronttoilet');
         Route::get('/inspection-parameter-toilet/{id}', [ChecklistToiletHController::class, 'checklisttoilet'])->name('checklisttoilet');
-        Route::post('/checklist-parameter/{id}', [ChecklistToiletHController::class, 'checklistParameter'])->name('checklistParameter');
+        Route::post('/checklist-parameter-toilet/{id}', [ChecklistToiletHController::class, 'checklistParameterHK'])->name('checklistParameterHK');
 
         //CRUD Checklist Toilet Detail
         Route::resource('toiletdetails', ChecklistToiletDetailController::class);
@@ -717,7 +717,7 @@ Route::prefix('admin')->group(function () {
 
         // ---------------Incidental Report HK-----------------
         Route::resource('incidentalreporthk',  IncidentalHKController::class);
-        
+
         // -------------------Attendance-----------------------
         // -Schedule Meeting
         Route::resource('schedulemeeting', ScheduleMeetingController::class);

@@ -16,7 +16,7 @@ class EquiqmentToilet extends Model
 
     protected $fillable =[
         'id_equipment_housekeeping',
-        'id_inspection_housekeeping',
+        'id_equiqment',
         'barcode_room',
         'no_equipment',
         'equipment',    

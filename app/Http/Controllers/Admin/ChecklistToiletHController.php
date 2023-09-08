@@ -67,19 +67,20 @@ class ChecklistToiletHController extends Controller
         return view('AdminSite.ChecklistToiletH.checklist', $data);
     }
 
-    public function checklistParameter(Request $request, $id)
+    public function checklistParameterHK(Request $request, $id)
     {
     $parameter = $request->to;
     $checklistParameter = ConnectionDB::setConnection(new ChecklistParameterEquiqment());
-    $idhktoilet = ConnectionDB::setConnection(new ChecklistToiletDetail());
+    $checklistahu = ConnectionDB::setConnection(new EquiqmentToilet());
+    $equipment = $checklistahu->where('id_equipment_housekeeping', $id)->first();
 
     if (isset($parameter)) {
         foreach ($parameter as $form) {
             $checklistParameter->create([
                 'id_equiqment'=>$id,
-                'id_checklist'=>$form
+                'id_checklist'=>$form,
+                'id_item'=>$equipment->id_equipment_housekeeping
             ]);
-            dd($id,$form);
             DB::commit();
 
             Alert::success('Berhasil', 'Berhasil Menambahkan Inspection Toilet');
@@ -90,23 +91,23 @@ class ChecklistToiletHController extends Controller
     return redirect()->route('checklisttoilets.index');
     }
 
-    public function filterByNoChecklist(Request $request)
-    {
-        $conn = ConnectionDB::setConnection(new ChecklistToiletH());
+    // public function filterByNoChecklist(Request $request)
+    // {
+    //     $conn = ConnectionDB::setConnection(new ChecklistToiletH());
 
-        if ($request->date_to == null) {
-            $data = $conn->where('tgl_checklist', $request->date_from);
-        } else {
-            $data = $conn->whereBetween('tgl_checklist', [$request->date_from, $request->date_to]);
-        }
+    //     if ($request->date_to == null) {
+    //         $data = $conn->where('tgl_checklist', $request->date_from);
+    //     } else {
+    //         $data = $conn->whereBetween('tgl_checklist', [$request->date_from, $request->date_to]);
+    //     }
 
-        if ($request->no_checklist_toilet) {
-            $data = $data->where('no_checklist_toilet', $request->no_checklist_toilet);
-        }
-        $data = $data->get();
+    //     if ($request->no_checklist_toilet) {
+    //         $data = $data->where('no_checklist_toilet', $request->no_checklist_toilet);
+    //     }
+    //     $data = $data->get();
 
-        return response()->json(['checklists' => $data]);
-    }
+    //     return response()->json(['checklists' => $data]);
+    // }
 
     /**
      * Show the form for creating a new resource.
@@ -134,73 +135,52 @@ class ChecklistToiletHController extends Controller
      */
     public function store(Request $request)
     {
-        $conn = ConnectionDB::setConnection(new ChecklistToiletH());
-        $conndetail = ConnectionDB::setConnection(new ChecklistToiletDetail());
-
         try {
-
             DB::beginTransaction();
 
-            $id_user = $request->user()->id;
-            $login = Login::where('id', $id_user)->with('site')->first();
+            $equiqmentHK = ConnectionDB::setConnection(new EquiqmentToilet());
 
-            $toilet = ConnectionDB::setConnection(new Toilet());
+            $id_equiqment = 2;
 
-            $equiqmentTOILET = ConnectionDB::setConnection(new EquiqmentToilet());
-
-            $id_toilet = $toilet->first('id_hk_toilet');
-
-            $today = Carbon::now()->format('dmY');
-
-            $tgl = Carbon::now()->format('y-m-d');
-
-            $current = Carbon::now()->format('hi');
-
-            $time = Carbon::now()->format('his');
-
-            $no_checklist_toilet = $id_toilet->id_hk_toilet . $today . $current;
-
-
-            // $conn->create([
-            //     'id_eng_checklist_toilet' => $request->id_eng_checklist_toilet,
-            //     'barcode_room' => $request->barcode_room,
-            //     'id_room' => $request->id_room,
-            //     'tgl_checklist' => $tgl,
-            //     'time_checklist' => $time,
-            //     'id_user' => $id_user,
-            //     'no_checklist_toilet' => $no_checklist_toilet
-            // ]);
-
-            // $conndetail->create([
-            //     'id_eng_toilet' => $request->count,
-            //     'no_checklist_toilet' => $no_checklist_toilet,
-            //     'check_point' => $request->check_point,
-            //     'keterangan' => $request->keterangan,
-            // ]);
-
-            $equiqmentTOILET->create([
-                'no_equiqment' => $request->no_equiqment,
-                'equiqment' => $request->equiqment,
+            $equiqment = $equiqmentHK->create([
+                'no_equipment' => $request->no_equipment,
+                'id_equiqment' => $id_equiqment,
+                'equipment' => $request->equipment,
                 'id_role' => $request->id_role,
                 'id_room' => $request->id_room,
-                'senin' => $request->senin,
-                'selasa' => $request->selasa,
-                'rabu' => $request->rabu,
-                'kamis' => $request->kamis,
-                'jumat' => $request->jumat,
-                'sabtu' => $request->sabtu,
-                'minggu' => $request->minggu,
+                'schedule' => $request->schedule,
+                'set_schedule' => $request->set_schedule,
             ]);
+
+            // Buat jadwal inspeksi berdasarkan set schedule yang dipilih
+            $selectedSetSchedule = $request->set_schedule;
+            $startDate = Carbon::parse($request->schedule);
+            $endDate = $startDate->copy()->endOfYear(); // Akhir tahun
+
+            $scheduleDates = [];
+            $interval = ($selectedSetSchedule === 'weekly') ? '1 week' : '1 month';
+
+            while ($startDate->lte($endDate)) {
+                $scheduleDates[] = $startDate->format('Y-m-d');
+                $startDate->add($interval);
+            }
+
+            // Simpan jadwal inspeksi ke dalam database
+            foreach ($scheduleDates as $date) {
+                $equiqment->inspections()->create([
+                    'schedule_date' => $date,
+                    'status_schedule' => 0, // Status awal
+                ]);
+            }
 
             DB::commit();
 
-            Alert::success('Berhasil', 'Berhasil menambahkan Checklis toilet');
+            Alert::success('Berhasil', 'Berhasil menambahkan Inspection HK');
 
             return redirect()->route('checklisttoilets.index');
         } catch (\Throwable $e) {
             DB::rollBack();
-            dd($e);
-            Alert::error('Gagal', 'Gagal menambahkan Checklis toilet');
+            Alert::error('Gagal', 'Gagal menambahkan Inspection HK');
 
             return redirect()->route('checklisttoilets.index');
         }

@@ -48,12 +48,10 @@ class OpenTicketController extends Controller
         $rules = [
             'id_jenis_request' => 'required',
         ];
-
         $message = [
             'required' => 'The :attribute field is required.'
         ];
         $validator = Validator::make($request->all(), $rules, $message);
-
         if ($validator->fails()) {
             dd($validator);
             return ResponseFormatter::error(
@@ -130,7 +128,7 @@ class OpenTicketController extends Controller
         $ticket->deskripsi_respon = strip_tags($ticket->deskripsi_respon);
 
         return ResponseFormatter::success([
-            $ticket
+              $ticket
         ], 'Berhasil mengambil request');
     }
 }

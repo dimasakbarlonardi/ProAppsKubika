@@ -16,7 +16,7 @@ class EquiqmentAhu extends Model
 
     protected $fillable =[
         'id_equiqment_engineering',
-        'id_inspection_engineering',
+        'id_equiqment',
         'barcode_room',
         'no_equiqment',
         'equiqment',    
@@ -25,7 +25,7 @@ class EquiqmentAhu extends Model
         'schedule',
         'status_schedule',
     ];
-
+  
     protected $dates = ['deleted_at'];
 
     public function equiqment()
@@ -41,5 +41,10 @@ class EquiqmentAhu extends Model
     public function role()
     {
         return $this->hasOne(Role::class, 'id', 'id_role');
+    }
+
+    public function Inspection()
+    {
+         return $this->hasMany(ChecklistParameterEquiqment::class, 'id_equiqment', 'id_equiqment');
     }
 }

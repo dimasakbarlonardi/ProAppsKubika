@@ -135,7 +135,6 @@ class UserController extends Controller
         $user = $user->where('login_user', $getUser->email)
         ->with('RoleH')
         ->first();
-
         return ResponseFormatter::success($user, 'Data profile user berhasil diambil');
     }
 }
