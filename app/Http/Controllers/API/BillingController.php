@@ -505,10 +505,11 @@ class BillingController extends Controller
 
     public function adminFee(Request $request)
     {
+        $connCR = ConnectionDB::setConnection(new CashReceipt());
         $connMonthlyTenant = ConnectionDB::setConnection(new MonthlyArTenant());
 
-        $mt = $connMonthlyTenant->find($request->transaction_id);
-        $subtotal = $mt->total;
+        $cr = $connCR->find($request->transaction_id);
+        $subtotal = $cr->sub_total;
 
         if ($request->method == 'credit_card') {
             $admin_fee = 2000 + (0.029 * $subtotal);
@@ -521,13 +522,6 @@ class BillingController extends Controller
             $admin_fee_tax = $admin_fee + $tax_fee;
             $grand_total = $subtotal + $admin_fee_tax;
         }
-
-        // 32957200 -> subtotal
-        // 957758,8 -> admin fee
-        // 105353,468 -> tax fee
-        // 1063112,268 -> admin fee after tax
-
-        // 34020312,268 -> grand total
 
         return response()->json([
             'sub_total' => round($subtotal),
