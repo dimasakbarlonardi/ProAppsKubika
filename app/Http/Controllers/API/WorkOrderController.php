@@ -3,14 +3,18 @@
 namespace App\Http\Controllers\API;
 
 use Carbon\Carbon;
+use App\Models\Site;
+use Midtrans\CoreApi;
 use App\Models\System;
+use GuzzleHttp\Client;
 use App\Models\WorkOrder;
 use App\Models\CashReceipt;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use App\Helpers\ConnectionDB;
 use App\Helpers\HelpNotifikasi;
-use Illuminate\Support\Facades\DB;
 use App\Helpers\ResponseFormatter;
+use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
 
 
@@ -21,7 +25,7 @@ class WorkOrderController extends Controller
         $connWorkOrder = ConnectionDB::setConnection(new WorkOrder());
 
         $wo = $connWorkOrder->where('id', $id)
-        ->with(['Ticket', 'WODetail'])
+        ->with(['Ticket', 'WODetail', 'Ticket.CashReceipt'])
         ->first();
 
         return ResponseFormatter::success(
@@ -108,5 +112,138 @@ class WorkOrderController extends Controller
         }
 
         return $createTransaction;
+    }
+
+    public function generatePaymentWO(Request $request, $id)
+    {
+        $connWO = ConnectionDB::setConnection(new WorkOrder());
+        $client = new Client();
+
+        $wo = $connWO->find($id);
+        $transaction = $wo->Ticket->CashReceipt;
+        $site = Site::find($wo->Ticket->id_site);
+
+        $client = new Client();
+        $admin_fee = (int) $request->admin_fee;
+        $type = $request->type;
+        $bank = $request->bank;
+        $transaction = $wo->Ticket->CashReceipt;
+
+        if ($transaction->transaction_status == 'PENDING') {
+            if ($type == 'bank_transfer') {
+                $transaction->gross_amount = $transaction->sub_total + $admin_fee;
+                $transaction->payment_type = 'bank_transfer';
+                $transaction->bank = Str::upper($bank);
+                $payment = [];
+                $payment['payment_type'] = $type;
+                $payment['transaction_details']['order_id'] = $transaction->order_id;
+                $payment['transaction_details']['gross_amount'] = $transaction->gross_amount;
+                $payment['bank_transfer']['bank'] = $bank;
+
+                $response = $client->request('POST', 'https://api.sandbox.midtrans.com/v2/charge', [
+                    'body' => json_encode($payment),
+                    'headers' => [
+                        'accept' => 'application/json',
+                        'authorization' => 'Basic ' . base64_encode($site->midtrans_server_key),
+                        'content-type' => 'application/json',
+                    ],
+                    "custom_expiry" => [
+                        "order_time" => Carbon::now(),
+                        "expiry_duration" => 1,
+                        "unit" => "day"
+                    ]
+                ]);
+                $response = json_decode($response->getBody());
+
+                $transaction->va_number = $response->va_numbers[0]->va_number;
+                $transaction->transaction_id = $response->transaction_id;
+                $transaction->expiry_time = $response->expiry_time;
+                $transaction->admin_fee = $admin_fee;
+                $transaction->transaction_status = 'VERIFYING';
+                $transaction->save();
+
+                return ResponseFormatter::success(
+                    $response,
+                    'Authenticated'
+                );
+            } elseif ($type == 'credit_card') {
+                $transaction->payment_type = 'credit_card';
+                $transaction->admin_fee = $admin_fee;
+                $transaction->gross_amount = round($transaction->sub_total + $admin_fee);
+                $transaction->transaction_status = 'VERIFYING';
+
+                $getTokenCC = $this->TransactionCC($request, $site);
+                $chargeCC = $this->ChargeTransactionCC($getTokenCC->token_id, $transaction, $site);
+
+                $transaction->save();
+
+                return ResponseFormatter::success(
+                    $chargeCC
+                );
+            }
+        } else {
+            return ResponseFormatter::success(
+                'Transaction has created'
+            );
+        }
+    }
+
+    public function TransactionCC($request, $site)
+    {
+        $expDate = explode('/', $request->expDate);
+        $card_exp_month = $expDate[0];
+        $card_exp_year = $expDate[1];
+
+        try {
+            $token = CoreApi::cardToken(
+                $request->card_number,
+                $card_exp_month,
+                $card_exp_year,
+                $request->card_cvv,
+                $site->midtrans_client_key
+            );
+            if ($token->status_code != 200) {
+                return ResponseFormatter::error([
+                    'message' => 'Unauthorized'
+                ], 'Authentication Failed', 401);
+            }
+
+            return $token;
+        } catch (\Throwable $e) {
+            dd($e);
+            return ResponseFormatter::error([
+                'message' => 'Internar Error'
+            ], 'Something went wrong', 500);
+        }
+
+        return response()->json(['token' => $token]);
+    }
+
+    public function ChargeTransactionCC($token, $transaction, $site)
+    {
+        $server_key = $site->midtrans_server_key;
+
+        try {
+            $credit_card = array(
+                'token_id' => $token,
+                'authentication' => true,
+                'bank' => 'bni'
+            );
+
+            $transactionData = array(
+                "payment_type" => "credit_card",
+                "transaction_details" => [
+                    "gross_amount" => $transaction->gross_amount,
+                    "order_id" => $transaction->order_id
+                ],
+            );
+
+            $transactionData["credit_card"] = $credit_card;
+            $result = CoreApi::charge($transactionData, $server_key);
+
+            return $result;
+        } catch (Throwable $e) {
+            dd($e);
+        }
     }
 }
