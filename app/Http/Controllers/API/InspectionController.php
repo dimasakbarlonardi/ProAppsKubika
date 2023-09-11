@@ -8,8 +8,10 @@ use App\Http\Controllers\Controller;
 use App\Models\ChecklistParameterEquiqment;
 use App\Models\EquipmentHousekeepingDetail;
 use App\Models\EquiqmentAhu;
+use App\Models\EngAhu;
 use App\Models\EquiqmentEngineeringDetail;
 use App\Models\EquiqmentToilet;
+use App\Models\Toilet;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -74,27 +76,41 @@ class InspectionController extends Controller
     public function showEngineering($id)
     {
         $connEquipment = ConnectionDB::setConnection(new EquiqmentAhu());
-        $parameter =  ConnectionDB::setConnection(new ChecklistParameterEquiqment());
+        $parameter = ConnectionDB::setConnection(new ChecklistParameterEquiqment());
+        $parameterEng = ConnectionDB::setConnection(new EngAHU());
 
         $equipment = $connEquipment->where('id_equiqment_engineering', $id)->first();
-    
+
         if (!$equipment) {
             return ResponseFormatter::error('Data Equipment tidak ditemukan', 404);
         }
-    
+
         // Ambil ID item yang terkait dengan equipment
         $id_items = $equipment->Inspection->pluck('id_item');
-    
+
         // Ambil semua data ChecklistParameterEquiqment yang sesuai dengan ID equipment dan ID item
         $parameters = $parameter->whereIn('id_equiqment', [$id])
             ->whereIn('id_item', $id_items)
             ->get();
-    
+
+        // Array untuk menyimpan data ChecklistParameterEquiqment yang terkait dengan EngAhu
+        $checklistParameters = [];
+
+        // Loop melalui setiap parameter dan ambil data terkait dari EngAhu
+        foreach ($parameters as $parameter) {
+            $engAhu = $parameterEng->where('id_eng_ahu', $parameter->id_checklist)->first();
+            if ($engAhu) {
+                $checklistParameters[] = $engAhu;
+            }
+        }
+
         return ResponseFormatter::success([
             'equipment' => $equipment,
             'parameters' => $parameters,
-        ], 'Berhasil mengambil Equipment dan Parameter');
+            'checklistParameters' => $checklistParameters,
+        ], 'Berhasil mengambil Equipment, Parameter, dan Data Checklist Parameter');
     }
+    
     
     
     // -----------HouseKeeping-------------
@@ -159,24 +175,37 @@ class InspectionController extends Controller
         {
             $connEquipment = ConnectionDB::setConnection(new EquiqmentToilet());
             $parameter =  ConnectionDB::setConnection(new ChecklistParameterEquiqment());
+            $parameterHK = ConnectionDB::setConnection(new Toilet());
 
             $equipment = $connEquipment->where('id_equipment_housekeeping', $id)->first();
-    
+
             if (!$equipment) {
                 return ResponseFormatter::error('Data Equipment tidak ditemukan', 404);
             }
-        
-            // Ambil ID item yang terkait dengan equipment
+
+            // ID item equipment
             $id_items = $equipment->Inspection->pluck('id_item');
-        
-            // Ambil semua data ChecklistParameterEquiqment yang sesuai dengan ID equipment dan ID item
+
+            // data ChecklistParameterEquiqment dar ID equipment dan ID item
             $parameters = $parameter->whereIn('id_equiqment', [$id])
                 ->whereIn('id_item', $id_items)
                 ->get();
-        
+
+            // Array data ChecklistParameterEquiqment dari EngAhu
+            $checklistParameters = [];
+
+            // Loop parameter dari Parameter HK
+            foreach ($parameters as $parameter) {
+                $HK = $parameterHK->where('id_hk_toilet', $parameter->id_checklist)->first();
+                if ($HK) {
+                    $checklistParameters[] = $HK;
+                }
+            }
+
             return ResponseFormatter::success([
                 'equipment' => $equipment,
                 'parameters' => $parameters,
-            ], 'Berhasil mengambil Equipment dan Parameter');
+                'checklistParameters' => $checklistParameters,
+            ], 'Berhasil mengambil Equipment, Parameter, dan Data Checklist Parameter');
         }
 }

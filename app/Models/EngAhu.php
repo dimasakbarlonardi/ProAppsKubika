@@ -23,4 +23,10 @@ class EngAhu extends Model
     {
         return $this->hasOne(ChecklistParameterEquiqment::class, 'id_checklist', 'id_eng_ahu');
     }
+
+    public function checklistParameters()
+    {
+        return $this->hasMany(ChecklistParameterEquiqment::class, 'id_checklist', 'id_eng_ahu');
+    }
+
 }

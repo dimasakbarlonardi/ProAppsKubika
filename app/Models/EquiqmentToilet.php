@@ -42,4 +42,9 @@ class EquiqmentToilet extends Model
     {
         return $this->hasOne(Role::class, 'id', 'id_role');
     }
+
+     public function Inspection()
+    {
+         return $this->hasMany(ChecklistParameterEquiqment::class, 'id_equiqment', 'id_equiqment');
+    }
 }
