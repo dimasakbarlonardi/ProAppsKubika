@@ -116,7 +116,7 @@ class OpenTicketController extends Controller
 
                 $createTicket->upload_image = $ticketImage;
             }
-            
+
             $createTicket->save();
             $system->sequence_notiket = $count;
             $system->save();
