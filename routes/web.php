@@ -151,6 +151,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/gis', function() {
+    return view('gis');
+});
+
 Route::post('/payments/midtrans-notifications', [PaymentController::class, 'receive']);
 Route::get('/delete/midtrans', [PaymentController::class, 'delete']);
 Route::get('/check/midtrans', [PaymentController::class, 'check']);
@@ -726,7 +730,7 @@ Route::prefix('admin')->group(function () {
         Route::resource('schedulemeeting', ScheduleMeetingController::class);
 
         // ---------------Parameter Attendance------------------
-        // -Request Attendance 
+        // -Request Attendance
         Route::resource('requestattendance', RequestAttendanceController::class);
         // -Permit Type
         Route::resource('permithr', PermitHRController::class);

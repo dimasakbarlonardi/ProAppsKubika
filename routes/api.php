@@ -8,6 +8,7 @@ use App\Http\Controllers\API\SiteController;
 use App\Http\Controllers\API\UnitController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\InspectionController;
+use App\Http\Controllers\API\WorkOrderController;
 use App\Http\Controllers\PaymentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -53,7 +54,12 @@ Route::prefix('v1')->group(function () {
         Route::get('/tenant-unit', [UnitController::class, 'tenantUnit']);
         Route::post('/open-ticket', [OpenTicketController::class, 'store']);
         Route::get('/open-ticket/{id}', [OpenTicketController::class, 'show']);
-        Route::get('/payable-tickets', [OpenTicketController::class, 'payableTickets']);
+        Route::get('/payable-tickets/{id}', [OpenTicketController::class, 'payableTickets']);
+
+        // Work Order
+        Route::get('/work-order/{id}', [WorkOrderController::class, 'show']);
+        Route::get('/accept/work-order/{id}', [WorkOrderController::class, 'acceptWO']);
+        Route::post('/generate/payment-wo/{id}', [WorkOrderController::class, 'generatePaymentWO']);
 
         // Billing
         Route::get('/list-billings/{id}', [BillingController::class, 'listBillings']);

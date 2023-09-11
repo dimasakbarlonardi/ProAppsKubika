@@ -6,7 +6,7 @@ use App\Models\Login;
 
 class ConnectionDB {
 
-    public function getDBname()
+    public static function getDBname()
     {
         $request = Request();
         $user_id = $request->user()->id;
@@ -16,7 +16,7 @@ class ConnectionDB {
         return $db;
     }
 
-    public function setConnection($model)
+    public static function setConnection($model)
     {
         $db = ConnectionDB::getDBname();
         $model = $model->setConnection($db);
