@@ -45,7 +45,8 @@
             "app/helpers.php",
             "app/Helpers/Rupiah.php",
             "app/Helpers/Persenan.php",
-            "app/Helpers/Notifikasi.php"
+            "app/Helpers/Notifikasi.php",
+            "app/Helpers/ConnectionDB.php"
         ]
     },
     "autoload-dev": {
