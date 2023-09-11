@@ -62,143 +62,132 @@ class InspectionController extends Controller
             DB::commit();
 
             return ResponseFormatter::success([
-                $create 
+                $create
             ], 'Berhasil Inspection Engineering');
-        } catch (\Throwable $e) {   
-            DB::rollBack(); 
+        } catch (\Throwable $e) {
+            DB::rollBack();
             dd($e);
             return ResponseFormatter::error([
                 'error' => $e,
-            ], 'Gagal Inspection Engineering');                                            
+            ], 'Gagal Inspection Engineering');
         }
     }
 
     public function showEngineering($id)
-{
-    $connEquipment = ConnectionDB::setConnection(new EquiqmentAhu());
-    $parameter = ConnectionDB::setConnection(new ChecklistParameterEquiqment());
-    $parameterEng = ConnectionDB::setConnection(new EngAHU());
+    {
+        $connEquipment = ConnectionDB::setConnection(new EquiqmentAhu());
+        $parameter = ConnectionDB::setConnection(new ChecklistParameterEquiqment());
+        $parameterEng = ConnectionDB::setConnection(new EngAHU());
 
-    $equipment = $connEquipment->where('id_equiqment_engineering', $id)->first();
+        $equipment = $connEquipment->where('id_equiqment_engineering', $id)->first();
 
-    if (!$equipment) {
-        return ResponseFormatter::error('Data Equipment tidak ditemukan', 404);
+        if (!$equipment) {
+            return ResponseFormatter::error('Data Equipment tidak ditemukan', 404);
+        }
+
+        $id_item = $equipment->id_equiqment_engineering;
+
+        $parameters = $parameter->where('id_item', $id_item)->get();
+
+        $checklistParameters = [];
+
+        foreach ($parameters as $parameter) {
+            $engAhu = $parameterEng->where('id_eng_ahu', $parameter->id_checklist)->get();
+
+            $checklistParameters[] = $engAhu;
+        }
+
+        return ResponseFormatter::success([
+            'equipment' => $equipment,
+            'checklistParameters' => $checklistParameters,
+        ], 'Berhasil mengambil Equipment dan Data Checklist Parameter');
     }
-
-    // Ambil ID item yang terkait dengan equipment
-    $id_item = $equipment->id_equiqment_engineering;
-
-    // Ambil semua data ChecklistParameterEquiqment yang sesuai dengan ID item
-    $parameters = $parameter->where('id_item', $id_item)->get();
-
-    // Array untuk menyimpan data EngAhu yang sesuai dengan kriteria
-    $checklistParameters = [];
-
-    foreach ($parameters as $parameter) {
-        // Ambil data EngAhu yang sesuai dengan id_checklist pada ChecklistParameterEquiqment
-        $engAhu = $parameterEng->where('id_eng_ahu', $parameter->id_checklist)->get();
-
-        // Tambahkan data EngAhu ke dalam array
-        $checklistParameters[] = $engAhu;
-    }
-
-    return ResponseFormatter::success([
-        'equipment' => $equipment,
-        'checklistParameters' => $checklistParameters,
-    ], 'Berhasil mengambil Equipment dan Data Checklist Parameter');
-}
 
     // -----------HouseKeeping-------------
-    
-        public function checklisthousekeeping(Request $request)
-        {
-            $connInspectionHK = ConnectionDB::setConnection(new EquipmentHousekeepingDetail());
-    
-            $inspection = $connInspectionHK->get();
-    
-            return ResponseFormatter::success([
-                $inspection
-            ], 'Berhasil mengambil Equiqment HouseKeeping');
-        }
 
-        public function schedueinspectionhk(Request $request)
-        {
-            $connInspectionHK = ConnectionDB::setConnection(new EquiqmentToilet());
-    
-            $inspection = $connInspectionHK->get();
-    
-            return ResponseFormatter::success([
-                $inspection
-            ], 'Berhasil mengambil Schedule HouseKeeping');
-        }
+    public function checklisthousekeeping(Request $request)
+    {
+        $connInspectionHK = ConnectionDB::setConnection(new EquipmentHousekeepingDetail());
 
-        public function storeinspectionHK(Request $request)
-        {
-            $conn = ConnectionDB::setConnection(new EquipmentHousekeepingDetail());
-    
-            try {
-                DB::beginTransaction();
-    
-                $create = $conn->create($request->all());
-                $create->id_equipment_housekeeping_detail = $request->id_equipment_housekeeping_detail;
-                $create->id_equipment_housekeeping = $request->id_equipment_housekeeping;
-                $create->image = $request->image;
-                $create->id_room = $request->id_room;
-                $create->status = $request->status;
-                $create->id_equipment = $request->id_equipment;
-                $create->id_role = $request->id_role;
-                $create->tgl_checklist = $request->tgl_checklist;
-                $create->time_checklist = $request->time_checklist;
-                $create->keterangan = $request->keterangan;
-    
-                $create->save();
-                DB::commit();
-    
-                return ResponseFormatter::success([
-                    $create 
-                ], 'Berhasil Inspection HouseKeeping');
-            } catch (\Throwable $e) {   
-                DB::rollBack(); 
-                dd($e);
-                return ResponseFormatter::error([
-                    'error' => $e,
-                ], 'Gagal Inspection HouseKeeping');                                            
-            }
-        }
-        
-        public function showHousekeeping($id)
-        {
-            $connEquipment = ConnectionDB::setConnection(new EquiqmentToilet());
-            $parameter =  ConnectionDB::setConnection(new ChecklistParameterEquiqment());
-            $parameterHK = ConnectionDB::setConnection(new Toilet());
+        $inspection = $connInspectionHK->get();
 
-            $equipment = $connEquipment->where('id_equipment_housekeeping', $id)->first();
+        return ResponseFormatter::success([
+            $inspection
+        ], 'Berhasil mengambil Equiqment HouseKeeping');
+    }
 
-            if (!$equipment) {
-                return ResponseFormatter::error('Data Equipment tidak ditemukan', 404);
-            }
+    public function schedueinspectionhk(Request $request)
+    {
+        $connInspectionHK = ConnectionDB::setConnection(new EquiqmentToilet());
 
-            // Ambil ID item yang terkait dengan equipment
-            $id_item = $equipment->id_equipment_housekeeping;
+        $inspection = $connInspectionHK->get();
 
-            // Ambil semua data ChecklistParameterEquiqment yang sesuai dengan ID item
-            $parameters = $parameter->where('id_item', $id_item)->get();
+        return ResponseFormatter::success([
+            $inspection
+        ], 'Berhasil mengambil Schedule HouseKeeping');
+    }
 
-            // Array untuk menyimpan data EngAhu yang sesuai dengan kriteria
-            $checklistParameters = [];
+    public function storeinspectionHK(Request $request)
+    {
+        $conn = ConnectionDB::setConnection(new EquipmentHousekeepingDetail());
 
-            foreach ($parameters as $parameter) {
-                // Ambil data EngAhu yang sesuai dengan id_checklist pada ChecklistParameterEquiqment
-                $HK = $parameterHK->where('id_hk_toilet', $parameter->id_checklist)->get();
+        try {
+            DB::beginTransaction();
 
-                // Tambahkan data EngAhu ke dalam array
-                $checklistParameters[] = $HK;
-            }
+            $create = $conn->create($request->all());
+            $create->id_equipment_housekeeping_detail = $request->id_equipment_housekeeping_detail;
+            $create->id_equipment_housekeeping = $request->id_equipment_housekeeping;
+            $create->image = $request->image;
+            $create->id_room = $request->id_room;
+            $create->status = $request->status;
+            $create->id_equipment = $request->id_equipment;
+            $create->id_role = $request->id_role;
+            $create->tgl_checklist = $request->tgl_checklist;
+            $create->time_checklist = $request->time_checklist;
+            $create->keterangan = $request->keterangan;
+
+            $create->save();
+            DB::commit();
 
             return ResponseFormatter::success([
-                'equipment' => $equipment,
-                'checklistParameters' => $checklistParameters,
-            ], 'Berhasil mengambil Equipment dan Data Checklist Parameter');
-
+                $create
+            ], 'Berhasil Inspection HouseKeeping');
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            dd($e);
+            return ResponseFormatter::error([
+                'error' => $e,
+            ], 'Gagal Inspection HouseKeeping');
         }
+    }
+
+    public function showHousekeeping($id)
+    {
+        $connEquipment = ConnectionDB::setConnection(new EquiqmentToilet());
+        $parameter =  ConnectionDB::setConnection(new ChecklistParameterEquiqment());
+        $parameterHK = ConnectionDB::setConnection(new Toilet());
+
+        $equipment = $connEquipment->where('id_equipment_housekeeping', $id)->first();
+
+        if (!$equipment) {
+            return ResponseFormatter::error('Data Equipment tidak ditemukan', 404);
+        }
+
+        $id_item = $equipment->id_equipment_housekeeping;
+
+        $parameters = $parameter->where('id_item', $id_item)->get();
+
+        $checklistParameters = [];
+
+        foreach ($parameters as $parameter) {
+            $HK = $parameterHK->where('id_hk_toilet', $parameter->id_checklist)->get();
+
+            $checklistParameters[] = $HK;
+        }
+
+        return ResponseFormatter::success([
+            'equipment' => $equipment,
+            'checklistParameters' => $checklistParameters,
+        ], 'Berhasil mengambil Equipment dan Data Checklist Parameter');
+    }
 }
