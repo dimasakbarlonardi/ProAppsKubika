@@ -74,14 +74,17 @@ class ChecklistAhuHController extends Controller
     {
         $parameter = $request->to;
         $checklistParameter = ConnectionDB::setConnection(new ChecklistParameterEquiqment());
-
+        $checklistahu = ConnectionDB::setConnection(new EquiqmentAhu());
+        $equiqment = $checklistahu->where('id_equiqment_engineering', $id)->first();
         if (isset($parameter)) {
             foreach ($parameter as $form) {
                 $checklistParameter->create([
                     'id_equiqment' => $id,
-                    'id_checklist' => $form
+                    'id_checklist' => $form,
+                    'id_item' => $equiqment->id_equiqment_engineering
                 ]);
-
+                
+                $checklistParameter->save();
                 DB::commit();
 
                 Alert::success('Berhasil', 'Berhasil Menambahkan Inspection AHU');
@@ -187,8 +190,11 @@ class ChecklistAhuHController extends Controller
 
             $equiqmentAHU = ConnectionDB::setConnection(new EquiqmentAhu());
 
+            $id_equiqment = 1;
+
             $equiqment = $equiqmentAHU->create([
                 'no_equiqment' => $request->no_equiqment,
+                'id_equiqment' => $id_equiqment,
                 'equiqment' => $request->equiqment,
                 'id_role' => $request->id_role,
                 'id_room' => $request->id_room,
@@ -224,7 +230,7 @@ class ChecklistAhuHController extends Controller
             return redirect()->route('checklistahus.index');
         } catch (\Throwable $e) {
             DB::rollBack();
-            Alert::success('Gagal', 'Gagal menambahkan Checklis AHU');
+            Alert::error('Gagal', 'Gagal menambahkan Checklis AHU Detail');
 
             return redirect()->route('checklistahus.index');
         }
@@ -245,12 +251,12 @@ class ChecklistAhuHController extends Controller
         $conndetail = ConnectionDB::setConnection(new ChecklistAhuDetail());
         $parameter = ConnectionDB::setConnection(new EngAhu());
         $user_id = $request->user()->id;
-        
+
         $data['checklistahu'] = $conn->where('id_equiqment_engineering', $id)->first();
         $data['equiqmentdetail'] = $equiqmentDetail->where('id_equiqment_engineering', $id)->first();
         $data['parameters'] = $checklist->where('id_equiqment', $equiqmentDetail)->get();
-        
-        
+
+
 
         $data['idusers'] = Login::where('id', $user_id)->get();
         return view('AdminSite.ChecklistAhuH.show', $data);

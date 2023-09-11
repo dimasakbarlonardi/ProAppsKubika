@@ -16,7 +16,7 @@ class EquiqmentToilet extends Model
 
     protected $fillable =[
         'id_equipment_housekeeping',
-        'id_inspection_housekeeping',
+        'id_equiqment',
         'barcode_room',
         'no_equipment',
         'equipment',    
@@ -41,5 +41,10 @@ class EquiqmentToilet extends Model
     public function role()
     {
         return $this->hasOne(Role::class, 'id', 'id_role');
+    }
+
+     public function Inspection()
+    {
+         return $this->hasMany(ChecklistParameterEquiqment::class, 'id_equiqment', 'id_equiqment');
     }
 }

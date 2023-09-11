@@ -19,7 +19,7 @@
                     </div>  
                     <div class=" col-6 mb-3">
                         <label class="form-label">Nama Equiqment</label>
-                        <input type="text" name="equiqment" class="form-control" required>
+                        <input type="text" name="equipment" class="form-control" required>
                     </div>
                     <div class="col-6 mb-3">
                         <label class="form-label">PIC</label>
@@ -41,34 +41,20 @@
                     </div>
     
                     <div class="row mt-3">
-                        <h6> Tanggal<hr></h6>
-                        <div class=" col-6 mb-3">
-                            <label class="form-label">Senin</label>
-                            <input type="date" name="senin" class="form-control">
+                        <h6> Schedule
+                            <hr>
+                        </h6>
+                        <div class="col-6 mb-3">
+                            <label class="form-label">Schedule</label>
+                            <input type="date" name="schedule" class="form-control" required>
                         </div>
-                        <div class=" col-6 mb-3">
-                            <label class="form-label">Selasa</label>
-                            <input type="date" name="selasa" class="form-control">
-                        </div>
-                        <div class=" col-6 mb-3">
-                            <label class="form-label">Rabu</label>
-                            <input type="date" name="rabu" class="form-control">
-                        </div>
-                        <div class=" col-6 mb-3">
-                            <label class="form-label">Kamis</label>
-                            <input type="date" name="kamis" class="form-control">
-                        </div>
-                        <div class=" col-6 mb-3">
-                            <label class="form-label">Jumat</label>
-                            <input type="date" name="jumat" class="form-control">
-                        </div>
-                        <div class=" col-6 mb-3">
-                            <label class="form-label">Sabtu</label>
-                            <input type="date" name="sabtu" class="form-control">
-                        </div>
-                        <div class=" col-6 mb-3">
-                            <label class="form-label">Minggu</label>
-                            <input type="date" name="minngu" class="form-control">
+                        <div class="col-6 mb-3">
+                            <label class="form-label">Set Schedule</label>
+                            <select class="form-control" name="set_schedule" required>
+                                <option selected disabled>-- Select Schedule --</option>
+                                <option value="weekly">Per Minggu</option>
+                                <option value="monthly">Per Bulan</option>
+                            </select>
                         </div>
                     </div>
                     <div class="mt-5">

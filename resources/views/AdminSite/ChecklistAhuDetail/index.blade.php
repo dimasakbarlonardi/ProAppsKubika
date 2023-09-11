@@ -30,9 +30,6 @@
             </div>
         </div>
         <div class="p-5">
-            <form method="post" action="{{ route('checklistahus.store') }}">
-                @csrf
-
                 <div class="row">
                     <div class="p-5">
                         <table class="table table-striped alternating-rows" id="table-engineeringhistory">
@@ -95,7 +92,6 @@
                             </tbody>
                         </table>
                     </div>
-            </form>
             <div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 500px">
                     <div class="modal-content position-relative">

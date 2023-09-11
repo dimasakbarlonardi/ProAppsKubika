@@ -39,10 +39,12 @@
                                         <td>{{\Carbon\Carbon::parse($checklistahu->tgl_checklist)->format(' d-M-Y') }}</td>
                                         <td>
                                             @if ($checklistahu->status_schedule == 0)
-                                                <span class="badge rounded-pill badge-subtle-success">On Time</span>
+                                                <span ></span>
                                             @elseif ($checklistahu->status_schedule == 1)
-                                                <span class="badge rounded-pill badge-subtle-danger">Late Not Done</span>
+                                                <span class="badge rounded-pill badge-subtle-success">On Time</span>
                                             @elseif ($checklistahu->status_schedule == 2)
+                                                <span class="badge rounded-pill badge-subtle-danger">Late Not Done</span>
+                                            @elseif ($checklistahu->status_schedule == 3)
                                                 <span class="badge rounded-pill badge-subtle-warning">Late Done</span>
                                             @endif
                                         </td>
