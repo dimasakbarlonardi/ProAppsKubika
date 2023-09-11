@@ -67,9 +67,7 @@ class ChecklistAhuDetailController extends Controller
     public function store(Request $request)
     {
         $conn = ConnectionDB::setConnection(new ChecklistAhuDetail());
-
         try {
-
             DB::beginTransaction();
 
             $conn->create([
