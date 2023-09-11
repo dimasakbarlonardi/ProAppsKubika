@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Helpers\ConnectionDB;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
+use App\Models\CashReceipt;
 use App\Models\JenisRequest;
 use App\Models\OpenTicket;
 use App\Models\System;
@@ -13,6 +14,7 @@ use App\Models\User;
 use Carbon\Carbon;
 use File;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Validator;
@@ -20,17 +22,27 @@ use Throwable;
 
 class OpenTicketController extends Controller
 {
-    public function listTickets(Request $request)
+    public function user()
     {
-        $connOpenTicket = ConnectionDB::setConnection(new OpenTicket());
         $connUser = ConnectionDB::setConnection(new User());
 
-        $user = $connUser->where('login_user', $request->user()->email)->first();
-        $tickets = $connOpenTicket->where('id_user', $user->id_user)->get();
+        $user = $connUser->where('login_user', Auth::user()->email)->first();
 
-        return ResponseFormatter::success([
-            $tickets
-        ], 'Berhasil mengambil semua tickets');
+        return $user;
+    }
+    public function listTickets()
+    {
+        $user = $this->user();
+
+        $connOpenTicket = ConnectionDB::setConnection(new OpenTicket());
+
+        $tickets = $connOpenTicket->where('id_tenant', $user->Tenant->id_tenant)
+            ->get();
+
+        return ResponseFormatter::success(
+            $tickets,
+            'Berhasil mengambil semua tickets'
+        );
     }
     public function jenisRequest(Request $request)
     {
@@ -45,6 +57,8 @@ class OpenTicketController extends Controller
 
     public function store(Request $request)
     {
+        $tenant = $this->user()->Tenant->id_tenant;
+
         $rules = [
             'id_jenis_request' => 'required',
         ];
@@ -80,10 +94,10 @@ class OpenTicketController extends Controller
             $createTicket->id_jenis_request = $request->id_jenis_request;
             $createTicket->judul_request = $request->judul_request;
             $createTicket->id_site = $unit->id_site;
+            $createTicket->id_tenant = $tenant;
             $createTicket->id_tower = $unit->id_tower;
             $createTicket->id_unit = $request->id_unit;
             $createTicket->id_lantai = $unit->id_lantai;
-            $createTicket->id_user = $unit->TenantUnit->Tenant->User->id_user;
             $createTicket->no_tiket = $no_tiket;
             $createTicket->status_request = 'PENDING';
             $createTicket->deskripsi_request = $request->deskripsi_request;
@@ -100,7 +114,7 @@ class OpenTicketController extends Controller
 
                 $createTicket->upload_image = $ticketImage;
             }
-
+            
             $createTicket->save();
             $system->sequence_notiket = $count;
             $system->save();
@@ -119,16 +133,29 @@ class OpenTicketController extends Controller
         }
     }
 
-    public function show($id, Request $request)
+    public function show($id)
     {
         $connRequest = ConnectionDB::setConnection(new OpenTicket());
 
-        $ticket = $connRequest->where('id', $id)->with('User')->first();
+        $ticket = $connRequest->where('id', $id)->with('Tenant')->first();
         $ticket->deskripsi_request = strip_tags($ticket->deskripsi_request);
         $ticket->deskripsi_respon = strip_tags($ticket->deskripsi_respon);
 
         return ResponseFormatter::success([
               $ticket
         ], 'Berhasil mengambil request');
+    }
+
+    public function payableTickets()
+    {
+        $connTicket = ConnectionDB::setConnection(new OpenTicket());
+
+        $tickets = $connTicket->where('no_invoice', '!=', null)
+            ->with('CashReceipt')
+            ->get();
+
+        return ResponseFormatter::success([
+            $tickets
+        ], 'Success get transactions');
     }
 }

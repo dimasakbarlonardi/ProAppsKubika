@@ -74,45 +74,40 @@ class InspectionController extends Controller
     }
 
     public function showEngineering($id)
-    {
-        $connEquipment = ConnectionDB::setConnection(new EquiqmentAhu());
-        $parameter = ConnectionDB::setConnection(new ChecklistParameterEquiqment());
-        $parameterEng = ConnectionDB::setConnection(new EngAHU());
+{
+    $connEquipment = ConnectionDB::setConnection(new EquiqmentAhu());
+    $parameter = ConnectionDB::setConnection(new ChecklistParameterEquiqment());
+    $parameterEng = ConnectionDB::setConnection(new EngAHU());
 
-        $equipment = $connEquipment->where('id_equiqment_engineering', $id)->first();
+    $equipment = $connEquipment->where('id_equiqment_engineering', $id)->first();
 
-        if (!$equipment) {
-            return ResponseFormatter::error('Data Equipment tidak ditemukan', 404);
-        }
-
-        // Ambil ID item yang terkait dengan equipment
-        $id_items = $equipment->Inspection->pluck('id_item');
-
-        // Ambil semua data ChecklistParameterEquiqment yang sesuai dengan ID equipment dan ID item
-        $parameters = $parameter->whereIn('id_equiqment', [$id])
-            ->whereIn('id_item', $id_items)
-            ->get();
-
-        // Array untuk menyimpan data ChecklistParameterEquiqment yang terkait dengan EngAhu
-        $checklistParameters = [];
-
-        // Loop melalui setiap parameter dan ambil data terkait dari EngAhu
-        foreach ($parameters as $parameter) {
-            $engAhu = $parameterEng->where('id_eng_ahu', $parameter->id_checklist)->first();
-            if ($engAhu) {
-                $checklistParameters[] = $engAhu;
-            }
-        }
-
-        return ResponseFormatter::success([
-            'equipment' => $equipment,
-            'parameters' => $parameters,
-            'checklistParameters' => $checklistParameters,
-        ], 'Berhasil mengambil Equipment, Parameter, dan Data Checklist Parameter');
+    if (!$equipment) {
+        return ResponseFormatter::error('Data Equipment tidak ditemukan', 404);
     }
-    
-    
-    
+
+    // Ambil ID item yang terkait dengan equipment
+    $id_item = $equipment->id_equiqment_engineering;
+
+    // Ambil semua data ChecklistParameterEquiqment yang sesuai dengan ID item
+    $parameters = $parameter->where('id_item', $id_item)->get();
+
+    // Array untuk menyimpan data EngAhu yang sesuai dengan kriteria
+    $checklistParameters = [];
+
+    foreach ($parameters as $parameter) {
+        // Ambil data EngAhu yang sesuai dengan id_checklist pada ChecklistParameterEquiqment
+        $engAhu = $parameterEng->where('id_eng_ahu', $parameter->id_checklist)->get();
+
+        // Tambahkan data EngAhu ke dalam array
+        $checklistParameters[] = $engAhu;
+    }
+
+    return ResponseFormatter::success([
+        'equipment' => $equipment,
+        'checklistParameters' => $checklistParameters,
+    ], 'Berhasil mengambil Equipment dan Data Checklist Parameter');
+}
+
     // -----------HouseKeeping-------------
     
         public function checklisthousekeeping(Request $request)
@@ -183,29 +178,27 @@ class InspectionController extends Controller
                 return ResponseFormatter::error('Data Equipment tidak ditemukan', 404);
             }
 
-            // ID item equipment
-            $id_items = $equipment->Inspection->pluck('id_item');
+            // Ambil ID item yang terkait dengan equipment
+            $id_item = $equipment->id_equipment_housekeeping;
 
-            // data ChecklistParameterEquiqment dar ID equipment dan ID item
-            $parameters = $parameter->whereIn('id_equiqment', [$id])
-                ->whereIn('id_item', $id_items)
-                ->get();
+            // Ambil semua data ChecklistParameterEquiqment yang sesuai dengan ID item
+            $parameters = $parameter->where('id_item', $id_item)->get();
 
-            // Array data ChecklistParameterEquiqment dari EngAhu
+            // Array untuk menyimpan data EngAhu yang sesuai dengan kriteria
             $checklistParameters = [];
 
-            // Loop parameter dari Parameter HK
             foreach ($parameters as $parameter) {
-                $HK = $parameterHK->where('id_hk_toilet', $parameter->id_checklist)->first();
-                if ($HK) {
-                    $checklistParameters[] = $HK;
-                }
+                // Ambil data EngAhu yang sesuai dengan id_checklist pada ChecklistParameterEquiqment
+                $HK = $parameterHK->where('id_hk_toilet', $parameter->id_checklist)->get();
+
+                // Tambahkan data EngAhu ke dalam array
+                $checklistParameters[] = $HK;
             }
 
             return ResponseFormatter::success([
                 'equipment' => $equipment,
-                'parameters' => $parameters,
                 'checklistParameters' => $checklistParameters,
-            ], 'Berhasil mengambil Equipment, Parameter, dan Data Checklist Parameter');
+            ], 'Berhasil mengambil Equipment dan Data Checklist Parameter');
+
         }
 }

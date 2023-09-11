@@ -12,6 +12,7 @@ use App\Models\CashReceipt;
 use App\Models\CashReceiptDetail;
 use App\Models\ElectricUUS;
 use App\Models\IPLType;
+use App\Models\ListBank;
 use App\Models\MonthlyArTenant;
 use App\Models\System;
 use Carbon\Carbon;
@@ -139,7 +140,7 @@ class BillingController extends Controller
                 $transaction->gross_amount = round($transaction->sub_total + $admin_fee);
                 $transaction->no_invoice = $mt->no_monthly_invoice;
 
-                $getTokenCC = $this->TransactionCC($request);                
+                $getTokenCC = $this->TransactionCC($request);
                 $chargeCC = $this->ChargeTransactionCC($getTokenCC->token_id, $transaction);
 
                 $transaction->save();
@@ -162,7 +163,7 @@ class BillingController extends Controller
         $card_exp_year = $expDate[1];
         $login = Auth::user();
         $site = Site::find($login->id_site);
-        
+
         try {
             $token = CoreApi::cardToken(
                 $request->card_number,
@@ -535,5 +536,17 @@ class BillingController extends Controller
             'admin_fee_plus_tax' => round($admin_fee_tax),
             'grand_total' => round($grand_total)
         ]);
+    }
+
+    public function listBank()
+    {
+        $connListBanks = ConnectionDB::setConnection(new ListBank());
+
+        $data = $connListBanks->get();
+
+        return ResponseFormatter::success(
+            $data,
+            'Success get list banks'
+        );
     }
 }

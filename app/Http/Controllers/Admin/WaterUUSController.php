@@ -121,12 +121,16 @@ class WaterUUSController extends Controller
         foreach($request->IDs as $id) {
             try {
                 DB::beginTransaction();
-                $waterUSS = $connWaterUUS->find($id);
+                $waterUSS = $connWaterUUS->where('id', $id)
+                ->where('is_updated', null)
+                ->first();
 
-                $waterUSS->is_approve = '1';
-                $waterUSS->save();
+                if ($waterUSS) {
+                    $waterUSS->is_approve = '1';
+                    $waterUSS->save();
 
-                DB::commit();
+                    DB::commit();
+                }
             } catch (Throwable $e) {
                 DB::rollBack();
                 dd($e);
@@ -136,8 +140,38 @@ class WaterUUSController extends Controller
         return response()->json(['status' => 'ok']);
     }
 
-    public function update(Request $request)
+    public function update(Request $request, $id)
     {
-        dd($request);
+        $connWater = ConnectionDB::setConnection(new WaterUUS());
+
+        $water = $connWater->find($id);
+
+        $water->is_updated = '1';
+        $water->catatan = $request->catatan;
+        $water->old_nomor_air_awal = $water->nomor_air_awal;
+        $water->old_nomor_air_akhir = $water->nomor_air_akhir;
+        $water->old_usage = $water->usage;
+        $water->nomor_air_awal = $request->nomor_air_awal;
+        $water->nomor_air_akhir = $request->nomor_air_akhir;
+        $water->usage = $request->nomor_air_akhir - $request->nomor_air_awal;
+        $water->save();
+
+        Alert::success('Success', 'Success update data');
+
+        return redirect()->back();
+    }
+
+    public function approveUpdate($id)
+    {
+        $connWater = ConnectionDB::setConnection(new WaterUUS());
+
+        $water = $connWater->find($id);
+
+        $water->is_updated = null;
+        $water->save();
+
+        Alert::success('Success', 'Success update data');
+
+        return redirect()->back();
     }
 }

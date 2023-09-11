@@ -199,8 +199,6 @@ class WorkOrderController extends Controller
 
     public function acceptWO($id)
     {
-        $request = Request();
-
         $connWO = ConnectionDB::setConnection(new WorkOrder());
 
         $wo = $connWO->find($id);
@@ -382,8 +380,6 @@ class WorkOrderController extends Controller
         try {
             DB::beginTransaction();
 
-            $items = $wo->WODetail;
-
             $createTransaction = $connTransaction;
             $createTransaction->order_id = $order_id;
             $createTransaction->id_site = $user->id_site;
@@ -396,10 +392,6 @@ class WorkOrderController extends Controller
             $createTransaction->transaction_status = 'PENDING';
             $createTransaction->id_user = $wo->Ticket->Tenant->User->id_user;
             $createTransaction->transaction_type = 'WorkOrder';
-
-            $midtrans = new CreateSnapTokenService($createTransaction, $items);
-
-            $createTransaction->snap_token = $midtrans->getSnapToken();
             $createTransaction->save();
 
             $system->sequence_no_cash_receiptment = $count;

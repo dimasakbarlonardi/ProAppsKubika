@@ -173,7 +173,7 @@
                 @endif
                 @if (
                     $wo->status_wo == 'APPROVED' &&
-                        $approve->approval_2 == $user->id_user &&
+                    $user->RoleH->work_relation_id == $wo->WorkRequest->id_work_relation &&
                         !$wo->sign_approve_2 &&
                         $wo->sign_approve_5)
                     <div class="card-footer border-top border-200 py-x1">
@@ -183,16 +183,15 @@
                 @endif
                 @if (
                     $wo->status_wo == 'APPROVED' &&
-                        $user->RoleH->WorkRelation->id_work_relation == $wo->WorkRequest->id_work_relation &&
+                        $user->id_user == $approve->approval_3 &&
                         $wo->sign_approve_2 &&
-                        !$wo->sign_approve_3 &&
-                        $user->Karyawan->is_can_approve)
+                        !$wo->sign_approve_3)
                     <div class="card-footer border-top border-200 py-x1">
                         <button type="button" class="btn btn-primary w-100"
                             onclick="approve3({{ $wo->id }})">Approve</button>
                     </div>
                 @endif
-                @if ($wo->status_wo == 'APPROVED' && $wo->sign_approve_3)
+                @if ($wo->status_wo == 'APPROVED' && $wo->sign_approve_3 && $user->RoleH->work_relation_id == $wo->WorkRequest->id_work_relation)
                     <div class="card-footer border-top border-200 py-x1">
                         <button type="button" class="btn btn-primary w-100"
                             onclick="workDone({{ $wo->id }})">PEKERJAAN SELESAI</button>
@@ -203,7 +202,7 @@
                         <button type="submit" class="btn btn-primary w-100" value="send">Update</button>
                     </div>
                 @endif
-                @if ($user->id_user == $approve->approval_4 && $wo->sign_approve_5 && !$wo->sign_approve_4)
+                @if ($user->id_user == $approve->approval_4 && $wo->sign_approve_5 && !$wo->sign_approve_4 && $wo->status_wo == 'DONE')
                     <div class="card-footer border-top border-200 py-x1">
                         <button type="button" class="btn btn-primary w-100"
                             onclick="completeWO({{ $wo->id }})">COMPLETE</button>

@@ -2,6 +2,7 @@
 
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\API\BillingController;
+use App\Http\Controllers\API\InboxController;
 use App\Http\Controllers\API\OpenTicketController;
 use App\Http\Controllers\API\SiteController;
 use App\Http\Controllers\API\UnitController;
@@ -52,11 +53,13 @@ Route::prefix('v1')->group(function () {
         Route::get('/tenant-unit', [UnitController::class, 'tenantUnit']);
         Route::post('/open-ticket', [OpenTicketController::class, 'store']);
         Route::get('/open-ticket/{id}', [OpenTicketController::class, 'show']);
+        Route::get('/payable-tickets', [OpenTicketController::class, 'payableTickets']);
 
         // Billing
         Route::get('/list-billings/{id}', [BillingController::class, 'listBillings']);
         Route::get('/get-billing/{id}', [BillingController::class, 'showBilling']);
         Route::post('/create-transaction/{id}', [BillingController::class, 'generateTransaction']);
+        Route::get('/list-banks', [BillingController::class, 'listBank']); // List all available bank
 
         Route::post('get/admin-fee', [BillingController::class, 'adminFee']);
 
@@ -70,5 +73,8 @@ Route::prefix('v1')->group(function () {
         Route::get('/inspection-hk-schedule', [InspectionController::class, 'schedueinspectionhk']);
         Route::post('/inspection-housekeeping', [InspectionController::class, 'storeinspectionHK']);
         Route::get('/equipment-housekeeping/{id}', [InspectionController::class, 'showHousekeeping']);
+
+        // Inbox
+        Route::get('/inboxes', [InboxController::class, 'index']);
     });
 });

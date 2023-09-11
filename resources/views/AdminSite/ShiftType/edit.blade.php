@@ -38,7 +38,7 @@
         var nama = "hrd";
 
         $.ajax({
-            url: '/api/v1/equipment-engineering/2',
+            url: '/api/v1/equipment-housekeeping/1',
             headers: {
                 "Content-Type": "application/json",
                 "Authorization": "Bearer 8|xiE6ez3tCtNJv3tNevvz0Mo3wAVCE7VTya75SFh0"
