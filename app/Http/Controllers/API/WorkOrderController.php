@@ -55,6 +55,20 @@ class WorkOrderController extends Controller
         );
     }
 
+    public function showBilling($id)
+    {
+        $connCR = ConnectionDB::setConnection(new CashReceipt());
+
+        $cr = $connCR->where('id', $id)
+        ->with(['WorkOrder.WODetail'])
+        ->first();
+
+        return ResponseFormatter::success(
+            $cr,
+            'Success get billing'
+        );
+    }
+
     public function createTransaction($wo)
     {
         $connSystem = ConnectionDB::setConnection(new System());
