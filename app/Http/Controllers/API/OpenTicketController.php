@@ -146,12 +146,12 @@ class OpenTicketController extends Controller
         ], 'Berhasil mengambil request');
     }
 
-    public function payableTickets(Request $request)
+    public function payableTickets($id)
     {
         $connTicket = ConnectionDB::setConnection(new OpenTicket());
 
         $tickets = $connTicket->where('no_invoice', '!=', null)
-            ->where('id_unit', $request->id_unit)
+            ->where('id_unit', $id)
             ->with('CashReceipt')
             ->get();
 
