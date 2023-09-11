@@ -116,7 +116,7 @@ class OpenTicketController extends Controller
 
                 $createTicket->upload_image = $ticketImage;
             }
-            
+
             $createTicket->save();
             $system->sequence_notiket = $count;
             $system->save();
@@ -148,11 +148,12 @@ class OpenTicketController extends Controller
         ], 'Berhasil mengambil request');
     }
 
-    public function payableTickets()
+    public function payableTickets(Request $request)
     {
         $connTicket = ConnectionDB::setConnection(new OpenTicket());
 
         $tickets = $connTicket->where('no_invoice', '!=', null)
+            ->where('id_unit', $request->id_unit)
             ->with('CashReceipt')
             ->get();
 
