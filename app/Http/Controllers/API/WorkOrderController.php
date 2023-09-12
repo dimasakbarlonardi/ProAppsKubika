@@ -25,8 +25,10 @@ class WorkOrderController extends Controller
         $connWorkOrder = ConnectionDB::setConnection(new WorkOrder());
 
         $wo = $connWorkOrder->where('id', $id)
-        ->with(['Ticket', 'WODetail', 'Ticket.CashReceipt'])
+        ->with(['Ticket.Tenant', 'WODetail', 'Ticket.CashReceipt', 'Ticket.Unit'])
         ->first();
+        $wo->Ticket->deskripsi_request = strip_tags($wo->Ticket->deskripsi_request);
+        $wo->Ticket->deskripsi_respon = strip_tags($wo->Ticket->deskripsi_respon);
 
         return ResponseFormatter::success(
             $wo,
