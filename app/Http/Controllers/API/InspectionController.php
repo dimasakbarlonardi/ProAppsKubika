@@ -12,8 +12,11 @@ use App\Models\EngAhu;
 use App\Models\EquiqmentEngineeringDetail;
 use App\Models\EquiqmentToilet;
 use App\Models\Toilet;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
+use File;
 
 class InspectionController extends Controller
 {
@@ -46,23 +49,29 @@ class InspectionController extends Controller
         try {
             DB::beginTransaction();
 
-            $create = $conn->create($request->all());
-            $create->id_equiqment_engineering_detail = $request->id_equiqment_engineering_detail;
-            $create->id_equiqment_engineering = $request->id_equiqment_engineering;
-            $create->image = $request->image;
-            $create->id_room = $request->id_room;
-            $create->status = $request->status;
-            $create->id_equiqment = $request->id_equiqment;
-            $create->id_role = $request->id_role;
-            $create->tgl_checklist = $request->tgl_checklist;
-            $create->time_checklist = $request->time_checklist;
-            $create->keterangan = $request->keterangan;
+            $conn->id_equiqment_engineering = $request->id_equiqment_engineering;
+            if ($request->image) {
+                $fileName = $request->id_equiqment . '-' .   $request->image->getClientOriginalName();
+                $outputTicketImage = '/public/img/inspection/' . $fileName;
+                $ticketImage = '/storage/img/inspection/' . $fileName;
 
-            $create->save();
+                Storage::disk('local')->put($outputTicketImage, File::get($request->image));
+
+                $conn->image = $ticketImage;
+            }
+            $conn->status = json_encode($request->status);
+            $conn->id_room = $request->id_room;
+            $conn->id_equiqment = $request->id_equiqment;
+            $conn->id_role = $request->id_role;
+            $conn->tgl_checklist = Carbon::now()->format('Y-m-d');
+            $conn->time_checklist = Carbon::now()->format('H:i');
+            $conn->keterangan = $request->keterangan;
+
+            $conn->save();
             DB::commit();
 
             return ResponseFormatter::success([
-                $create
+                $conn
             ], 'Berhasil Inspection Engineering');
         } catch (\Throwable $e) {
             DB::rollBack();
