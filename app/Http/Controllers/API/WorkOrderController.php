@@ -62,7 +62,7 @@ class WorkOrderController extends Controller
         $connCR = ConnectionDB::setConnection(new CashReceipt());
 
         $cr = $connCR->where('id', $id)
-        ->with(['WorkOrder.WODetail'])
+        ->with(['WorkOrder.WODetail', 'WorkOrder.Ticket.Tenant', 'WorkOrder.Ticket.Unit'])
         ->first();
 
         return ResponseFormatter::success(
