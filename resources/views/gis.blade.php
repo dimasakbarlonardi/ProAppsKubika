@@ -98,8 +98,6 @@
             };
 
             function addMarker(my_lat, my_long) {
-                my_lat = -6.140036867232763;
-                my_long = 106.92380431852365;
 
                 map.setCenter([my_long, my_lat]);
 
@@ -154,11 +152,6 @@
             }
 
             $('#absence-button').on('click', function() {
-                my_lat = -6.140036867232763;
-                my_long = 106.92380431852365;
-
-                console.log(my_lat, my_long);
-
                 if (my_lat != 0 && my_long != 0) {
                     $.ajax({
                         url: '/absence',
