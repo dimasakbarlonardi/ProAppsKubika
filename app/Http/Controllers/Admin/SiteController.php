@@ -59,6 +59,7 @@ class SiteController extends Controller
             DB::beginTransaction();
 
             $site->update($request->all());
+            $site->GenerateBarcode();
 
             DB::commit();
 

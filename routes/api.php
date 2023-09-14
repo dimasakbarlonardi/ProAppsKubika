@@ -1,6 +1,7 @@
 <?php
 
 use App\Helpers\ResponseFormatter;
+use App\Http\Controllers\Admin\AttendanceController;
 use App\Http\Controllers\API\BillingController;
 use App\Http\Controllers\API\InboxController;
 use App\Http\Controllers\API\OpenTicketController;
@@ -83,5 +84,8 @@ Route::prefix('v1')->group(function () {
 
         // Inbox
         Route::get('/inboxes', [InboxController::class, 'index']);
+
+        // Attendance
+        Route::get('/attendance', [AttendanceController::class, 'attendace']);
     });
 });

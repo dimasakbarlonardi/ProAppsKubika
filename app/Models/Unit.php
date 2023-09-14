@@ -67,11 +67,11 @@ class Unit extends Model
             ->errorCorrection('H')
             ->generate(url('') . '/api/v1/insert-water/' . $this->id_unit);
 
-        $outputListrik = '/public/' . $this->id_site . '/img/qr-core/meter-listrik/' . $this->id_unit . '-barcode_meter_listrik.png';
-        $listrik = '/storage/' . $this->id_site . '/img/qr-core/meter-listrik/' . $this->id_unit . '-barcode_meter_listrik.png';
+        $outputListrik = '/public/' . $this->id_site . '/img/qr-code/meter-listrik/' . $this->id_unit . '-barcode_meter_listrik.png';
+        $listrik = '/storage/' . $this->id_site . '/img/qr-code/meter-listrik/' . $this->id_unit . '-barcode_meter_listrik.png';
 
-        $outputAir = '/public/' . $this->id_site . '/img/qr-core/meter-air/' . $this->id_unit . '-barcode_meter_air.png';
-        $air = '/storage/' . $this->id_site . '/img/qr-core/meter-air/' . $this->id_unit . '-barcode_meter_air.png';
+        $outputAir = '/public/' . $this->id_site . '/img/qr-code/meter-air/' . $this->id_unit . '-barcode_meter_air.png';
+        $air = '/storage/' . $this->id_site . '/img/qr-code/meter-air/' . $this->id_unit . '-barcode_meter_air.png';
 
         Storage::disk('local')->put($outputListrik, $barcodeListrik);
         Storage::disk('local')->put($outputAir, $barcodeAir);

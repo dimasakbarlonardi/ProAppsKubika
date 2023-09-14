@@ -21,7 +21,6 @@ class AttendanceController extends Controller
     {
         $site = Site::find('004212');
 
-        // Koordinat lagoon
         $lat = $request->my_lat;
         $long = $request->my_long;
 
@@ -50,5 +49,10 @@ class AttendanceController extends Controller
         $d = $earth_radius * $c;
 
         return $d;
+    }
+
+    public function attendace()
+    {
+        return view('/gis');
     }
 }

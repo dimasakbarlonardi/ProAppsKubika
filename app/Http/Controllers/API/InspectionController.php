@@ -87,30 +87,13 @@ class InspectionController extends Controller
     public function showEngineering($id)
     {
         $connEquipment = ConnectionDB::setConnection(new EquiqmentAhu());
-        $parameter = ConnectionDB::setConnection(new ChecklistParameterEquiqment());
-        $parameterEng = ConnectionDB::setConnection(new EngAHU());
 
-        $equipment = $connEquipment->where('id_equiqment_engineering', $id)->first();
-
-        if (!$equipment) {
-            return ResponseFormatter::error('Data Equipment tidak ditemukan', 404);
-        }
-
-        $id_item = $equipment->id_equiqment_engineering;
-
-        $parameters = $parameter->where('id_item', $id_item)->get();
-
-        $checklistParameters = [];
-
-        foreach ($parameters as $parameter) {
-            $engAhu = $parameterEng->where('id_eng_ahu', $parameter->id_checklist)->get();
-
-            $checklistParameters[] = $engAhu;
-        }
+        $equipment = $connEquipment->where('id_equiqment_engineering', $id)
+        ->with('Inspection.Checklist')
+        ->first();
 
         return ResponseFormatter::success([
-            'equipment' => $equipment,
-            'checklistParameters' => $checklistParameters,
+            'equipment' => $equipment
         ], 'Berhasil mengambil Equipment dan Data Checklist Parameter');
     }
 
