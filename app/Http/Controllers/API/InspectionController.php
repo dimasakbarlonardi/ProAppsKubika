@@ -45,19 +45,21 @@ class InspectionController extends Controller
     public function storeinspectionEng(Request $request)
     {
         $conn = ConnectionDB::setConnection(new EquiqmentEngineeringDetail());
-
+       
         try {
             DB::beginTransaction();
 
             $conn->id_equiqment_engineering = $request->id_equiqment_engineering;
-            if ($request->image) {
-                $fileName = $request->id_equiqment . '-' .   $request->image->getClientOriginalName();
-                $outputTicketImage = '/public/img/inspection/' . $fileName;
-                $ticketImage = '/storage/img/inspection/' . $fileName;
+            $file = $request->file('image');
+            
+            if ($file) {
+                $fileName = $request->id_equiqment_engineering . '-' .   $file->getClientOriginalName();
+                $outputInspecImage = '/public/' . $request->user()->id_site . '/img/inspection/eng/' . $fileName;
+                $inspecImage = '/storage/' . $request->user()->id_site . '/img/inspection/eng/' . $fileName;
+               
+                Storage::disk('local')->put($outputInspecImage, File::get($file));
 
-                Storage::disk('local')->put($outputTicketImage, File::get($request->image));
-
-                $conn->image = $ticketImage;
+                $conn->image = $inspecImage;
             }
             $conn->status = json_encode($request->status);
             $conn->id_room = $request->id_room;
