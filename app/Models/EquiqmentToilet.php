@@ -19,7 +19,7 @@ class EquiqmentToilet extends Model
         'id_equiqment',
         'barcode_room',
         'no_equipment',
-        'equipment',    
+        'equipment',
         'id_role',
         'id_room',
         'schedule',
@@ -45,6 +45,7 @@ class EquiqmentToilet extends Model
 
      public function Inspection()
     {
-         return $this->hasMany(ChecklistParameterEquiqment::class, 'id_equiqment', 'id_equiqment');
+         return $this->hasMany(ChecklistParameterEquiqment::class, 'id_item', 'id_equipment_housekeeping')
+         ->where('id_equiqment', 2);
     }
 }

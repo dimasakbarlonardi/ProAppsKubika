@@ -45,18 +45,18 @@ class InspectionController extends Controller
     public function storeinspectionEng(Request $request)
     {
         $conn = ConnectionDB::setConnection(new EquiqmentEngineeringDetail());
-       
+
         try {
             DB::beginTransaction();
 
             $conn->id_equiqment_engineering = $request->id_equiqment_engineering;
             $file = $request->file('image');
-            
+
             if ($file) {
                 $fileName = $request->id_equiqment_engineering . '-' .   $file->getClientOriginalName();
                 $outputInspecImage = '/public/' . $request->user()->id_site . '/img/inspection/eng/' . $fileName;
                 $inspecImage = '/storage/' . $request->user()->id_site . '/img/inspection/eng/' . $fileName;
-               
+
                 Storage::disk('local')->put($outputInspecImage, File::get($file));
 
                 $conn->image = $inspecImage;
@@ -89,7 +89,7 @@ class InspectionController extends Controller
         $connEquipment = ConnectionDB::setConnection(new EquiqmentAhu());
 
         $equipment = $connEquipment->where('id_equiqment_engineering', $id)
-        ->with('Inspection.Checklist')
+        ->with('InspectionEng.Checklist')
         ->first();
 
         return ResponseFormatter::success([
@@ -128,60 +128,51 @@ class InspectionController extends Controller
         try {
             DB::beginTransaction();
 
-            $create = $conn->create($request->all());
-            $create->id_equipment_housekeeping_detail = $request->id_equipment_housekeeping_detail;
-            $create->id_equipment_housekeeping = $request->id_equipment_housekeeping;
-            $create->image = $request->image;
-            $create->id_room = $request->id_room;
-            $create->status = $request->status;
-            $create->id_equipment = $request->id_equipment;
-            $create->id_role = $request->id_role;
-            $create->tgl_checklist = $request->tgl_checklist;
-            $create->time_checklist = $request->time_checklist;
-            $create->keterangan = $request->keterangan;
+            $conn->id_equipment_housekeeping = $request->id_equipment_housekeeping;
+            $file = $request->file('image');
 
-            $create->save();
+            if ($file) {
+                $fileName = $request->id_equipment_housekeeping . '-' .   $file->getClientOriginalName();
+                $outputInspecImage = '/public/' . $request->user()->id_site . '/img/inspection/hk/' . $fileName;
+                $inspecImage = '/storage/' . $request->user()->id_site . '/img/inspection/hk/' . $fileName;
+
+                Storage::disk('local')->put($outputInspecImage, File::get($file));
+
+                $conn->image = $inspecImage;
+            }
+            $conn->id_room = $request->id_room;
+            $conn->status = json_encode($request->status);
+            $conn->id_equipment = $request->id_equipment;
+            $conn->id_role = $request->id_role;
+            $conn->tgl_checklist = Carbon::now()->format('Y-m-d');
+            $conn->time_checklist = Carbon::now()->format('H:i');
+            $conn->keterangan = $request->keterangan;
+
+            $conn->save();
             DB::commit();
 
             return ResponseFormatter::success([
-                $create
-            ], 'Berhasil Inspection HouseKeeping');
+                $conn
+            ], 'Berhasil Inspection House Keeping');
         } catch (\Throwable $e) {
             DB::rollBack();
             dd($e);
             return ResponseFormatter::error([
                 'error' => $e,
-            ], 'Gagal Inspection HouseKeeping');
+            ], 'Gagal Inspection House Keeping');
         }
     }
 
     public function showHousekeeping($id)
     {
         $connEquipment = ConnectionDB::setConnection(new EquiqmentToilet());
-        $parameter =  ConnectionDB::setConnection(new ChecklistParameterEquiqment());
-        $parameterHK = ConnectionDB::setConnection(new Toilet());
 
-        $equipment = $connEquipment->where('id_equipment_housekeeping', $id)->first();
-
-        if (!$equipment) {
-            return ResponseFormatter::error('Data Equipment tidak ditemukan', 404);
-        }
-
-        $id_item = $equipment->id_equipment_housekeeping;
-
-        $parameters = $parameter->where('id_item', $id_item)->get();
-
-        $checklistParameters = [];
-
-        foreach ($parameters as $parameter) {
-            $HK = $parameterHK->where('id_hk_toilet', $parameter->id_checklist)->get();
-
-            $checklistParameters[] = $HK;
-        }
+        $equipment = $connEquipment->where('id_equipment_housekeeping', $id)
+        ->with('Inspection.ChecklistHK')
+        ->first();
 
         return ResponseFormatter::success([
             'equipment' => $equipment,
-            'checklistParameters' => $checklistParameters,
         ], 'Berhasil mengambil Equipment dan Data Checklist Parameter');
     }
 }

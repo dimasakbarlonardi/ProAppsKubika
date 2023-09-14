@@ -43,8 +43,9 @@ class EquiqmentAhu extends Model
         return $this->hasOne(Role::class, 'id', 'id_role');
     }
 
-    public function Inspection()
+    public function InspectionEng()
     {
-         return $this->hasMany(ChecklistParameterEquiqment::class, 'id_item', 'id_equiqment_engineering');
+         return $this->hasMany(ChecklistParameterEquiqment::class, 'id_item', 'id_equiqment_engineering')
+         ->where('id_equiqment', 1);
     }
 }
