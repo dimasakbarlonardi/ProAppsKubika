@@ -3,6 +3,7 @@
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Admin\AttendanceController;
 use App\Http\Controllers\API\BillingController;
+use App\Http\Controllers\API\GIGOController;
 use App\Http\Controllers\API\InboxController;
 use App\Http\Controllers\API\OpenTicketController;
 use App\Http\Controllers\API\SiteController;
@@ -84,6 +85,13 @@ Route::prefix('v1')->group(function () {
 
         // Inbox
         Route::get('/inboxes', [InboxController::class, 'index']);
+
+        // GIGO
+        Route::get('/gigo/{id}', [GIGOController::class, 'show']);
+        Route::post('/gigo/add/{id}', [GIGOController::class, 'addGood']);
+        Route::post('/gigo/remove/{id}', [GIGOController::class, 'removeGood']);
+        Route::post('/gigo/{id}', [GIGOController::class, 'update']);
+
 
         // Attendance
         Route::get('/attendance', [AttendanceController::class, 'attendace']);
