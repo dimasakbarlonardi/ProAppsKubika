@@ -79,7 +79,7 @@ class InspectionController extends Controller
 
             $conn->save();
             DB::commit();
- 
+
             return ResponseFormatter::success([
                 $conn
             ], 'Berhasil Inspection Engineering');
@@ -124,7 +124,7 @@ class InspectionController extends Controller
         ], 'Berhasil mengambil Equipment dan Data Checklist Parameter');
     }
 
-    public function 
+    public function
 
     // -----------HouseKeeping-------------
 
@@ -222,5 +222,5 @@ class InspectionController extends Controller
     }
 
     // -------------- Security ---------------
-    
+
 }
