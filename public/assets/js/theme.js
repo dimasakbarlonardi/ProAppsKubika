@@ -6523,7 +6523,7 @@ var bandwidthSavedInit = function bandwidthSavedInit() {
                         height: 14,
                         fontSize: 28,
                         fontWeight: 500,
-                        fontFamily: 'poppins',
+                        fontFamily: 'montserrat',
                         color: utils.getColor('gray-500'),
                         formatter: '{value}%',
                         valueAnimation: true

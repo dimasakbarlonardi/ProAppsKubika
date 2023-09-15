@@ -16,7 +16,7 @@ class ChecklistParameterEquiqment extends Model
         'id_checklist_equiqment_parameter',
         'id_item',
         'id_checklist',
-        'id_equiqment',
+        'id_equiqment'
     ];
     protected $dates = ['deleted_at'];
 
@@ -35,9 +35,4 @@ class ChecklistParameterEquiqment extends Model
         return $this->hasOne(ChecklistAhuDetail::class, 'id_equiqment', 'id_equiqment');
     }
 
-
-    // public function checklisttoilet()
-    // {
-    //     return $this->hasOne(Toilet::class, 'id_hk_toilet', 'id_checklist');
-    // }
 }

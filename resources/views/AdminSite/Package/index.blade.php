@@ -10,19 +10,20 @@
     <div class="card-header py-2">
         <div class="row flex-between-center">
             <div class="my-3 col-auto">
-                <h6 class="mb-0 text-white">List Request Attendance</h6>
+                <h6 class="mb-0 text-white">List Package</h6>
             </div>
         </div>
     </div>
     <div class="p-5 justify-content-center">
-        <table class="table" id="table-requestattendance">
+        <table class="table" id="table-package">
             <thead>
                 <tr>
                     <th class="sort" data-sort="">No</th>
-                    <th class="sort" data-sort="date">Date</th>
+                    <th class="sort" data-sort="no_resi">Package Receipt Number</th>
                     <th class="sort" data-sort="id_request_type">Request Type</th>
+                    <th class="sort" data-sort="id_request_type">Request Type</th>fkjg
                     <th class="sort" data-sort="status">Status</th>
-                </tr>
+                </tr>    
             </thead>
             <tbody id="checklist_body">
                 @foreach ($requestattendance as $key => $request)

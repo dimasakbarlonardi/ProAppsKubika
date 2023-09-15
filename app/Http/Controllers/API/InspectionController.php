@@ -50,7 +50,7 @@ class InspectionController extends Controller
             $create->id_equiqment_engineering_detail = $request->id_equiqment_engineering_detail;
             $create->id_equiqment_engineering = $request->id_equiqment_engineering;
             $create->image = $request->image;
-            $create->id_room = $request->id_room;
+            $create->id_room = $request->id_room;   
             $create->status = $request->status;
             $create->id_equiqment = $request->id_equiqment;
             $create->id_role = $request->id_role;
@@ -60,7 +60,7 @@ class InspectionController extends Controller
 
             $create->save();
             DB::commit();
-
+ 
             return ResponseFormatter::success([
                 $create
             ], 'Berhasil Inspection Engineering');
@@ -93,7 +93,6 @@ class InspectionController extends Controller
 
         foreach ($parameters as $parameter) {
             $engAhu = $parameterEng->where('id_eng_ahu', $parameter->id_checklist)->get();
-
             $checklistParameters[] = $engAhu;
         }
 
@@ -181,7 +180,6 @@ class InspectionController extends Controller
 
         foreach ($parameters as $parameter) {
             $HK = $parameterHK->where('id_hk_toilet', $parameter->id_checklist)->get();
-
             $checklistParameters[] = $HK;
         }
 
@@ -190,4 +188,7 @@ class InspectionController extends Controller
             'checklistParameters' => $checklistParameters,
         ], 'Berhasil mengambil Equipment dan Data Checklist Parameter');
     }
+
+    // -------------- Security ---------------
+    
 }

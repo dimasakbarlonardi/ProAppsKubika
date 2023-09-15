@@ -27,8 +27,8 @@
                             <th scope="row">{{ $key + 1 }}</th>
                             <td>{{ $gigo->no_request_gigo }}</td>
                             <td>
-                                <a href="{{ route('agamas.edit', $gigo->id) }}" class="btn btn-sm btn-warning">Edit</a>
-                                @if (
+                                <a href="{{ route('gigo.edit', $gigo->id) }}" class="btn btn-sm btn-warning">Edit</a>
+                                {{-- @if (
                                     !$gigo->sign_approval_1 &&
                                         $approve->approval_1 == $user->RoleH->WorkRelation->id_work_relation &&
                                         $user->Karyawan->is_can_approve)
@@ -36,7 +36,7 @@
                                         @csrf
                                         <button class="btn btn-sm btn-success" type="submit">Approve</button>
                                     </form>
-                                @endif
+                                @endif --}}
                                 @if (
                                     $gigo->sign_approval_1 &&
                                         !$gigo->sign_approval_2 &&
