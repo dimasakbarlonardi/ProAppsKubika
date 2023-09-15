@@ -146,31 +146,38 @@ class AttendanceController extends Controller
             $my_lat = $request->my_lat;
             $my_long = $request->my_long;
 
-            $distance = $this->getDistance($site_lat, $site_long, $my_lat, $my_long);
-            $checkin = new DateTime($attend->check_in);
-            $checkout = Carbon::now();
-            $work_hour = $checkin->diff(new DateTime($checkout));
+            if ($attend) {
+                $distance = $this->getDistance($site_lat, $site_long, $my_lat, $my_long);
+                $checkin = new DateTime($attend->check_in);
+                $checkout = Carbon::now();
+                $work_hour = $checkin->diff(new DateTime($checkout));
 
-            if ($work_hour->format('%h') == 0) {
-                $work_hour = $work_hour->format('%i') . " Minutes";
-            } else {
-                $work_hour = $work_hour->format('%h') . " Hours " . $work_hour->format('%i') . " Minutes";
-            }
+                if ($work_hour->format('%h') == 0) {
+                    $work_hour = $work_hour->format('%i') . " Minutes";
+                } else {
+                    $work_hour = $work_hour->format('%h') . " Hours " . $work_hour->format('%i') . " Minutes";
+                }
 
-            if ($distance < 0.03) {
-                $attend->work_hour = $work_hour;
-                $attend->check_out = $checkout;
-                $attend->status = 'Finish';
-                $attend->save();
+                if ($distance < 0.03) {
+                    $attend->work_hour = $work_hour;
+                    $attend->check_out = $checkout;
+                    $attend->status = 'Finish';
+                    $attend->save();
 
-                return response()->json([
-                    'status' => 'OK',
-                    'Message' => 'Within 30 meter radius'
-                ]);
+                    return response()->json([
+                        'status' => 'OK',
+                        'Message' => 'Within 30 meter radius'
+                    ]);
+                } else {
+                    return response()->json([
+                        'status' => 'FAIL',
+                        'Message' => 'Outside 30 meter radius'
+                    ]);
+                }
             } else {
                 return response()->json([
                     'status' => 'FAIL',
-                    'Message' => 'Outside 30 meter radius'
+                    'Message' => 'Not checkin yet'
                 ]);
             }
         } else {
