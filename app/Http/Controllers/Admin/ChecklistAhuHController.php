@@ -86,7 +86,6 @@ class ChecklistAhuHController extends Controller
                 
                 $checklistParameter->save();
                 DB::commit();
-
                 Alert::success('Berhasil', 'Berhasil Menambahkan Inspection AHU');
             }
         }
@@ -255,8 +254,6 @@ class ChecklistAhuHController extends Controller
         $data['checklistahu'] = $conn->where('id_equiqment_engineering', $id)->first();
         $data['equiqmentdetail'] = $equiqmentDetail->where('id_equiqment_engineering', $id)->first();
         $data['parameters'] = $checklist->where('id_equiqment', $equiqmentDetail)->get();
-
-
 
         $data['idusers'] = Login::where('id', $user_id)->get();
         return view('AdminSite.ChecklistAhuH.show', $data);

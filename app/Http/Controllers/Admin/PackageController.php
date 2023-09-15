@@ -4,10 +4,11 @@ namespace App\Http\Controllers\Admin;
 
 use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
-use App\Models\RequestAttendance;
+use App\Models\Package;
+use FTP\Connection;
 use Illuminate\Http\Request;
 
-class RequestAttendanceController extends Controller
+class PackageController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,11 +17,11 @@ class RequestAttendanceController extends Controller
      */
     public function index()
     {
-        $conn = ConnectionDB::setConnection(new RequestAttendance());
+        $conn = ConnectionDB::setConnection(new Package());
 
-        $data['requestattendance'] = $conn->get();
+        $data['packages'] = $conn->get();
         
-        return view('AdminSite.RequestAttendance.index', $data);
+        return view('AdminSite.Package.index', $data);
     }
 
     /**

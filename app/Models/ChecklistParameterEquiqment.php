@@ -16,7 +16,7 @@ class ChecklistParameterEquiqment extends Model
         'id_checklist_equiqment_parameter',
         'id_item',
         'id_checklist',
-        'id_equiqment',
+        'id_equiqment'
     ];
     protected $dates = ['deleted_at'];
 

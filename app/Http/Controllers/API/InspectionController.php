@@ -205,4 +205,7 @@ class InspectionController extends Controller
             'question' => $checklist
         ], 'Berhasil mengambil Equipment dan Data Checklist Parameter');
     }
+
+    // -------------- Security ---------------
+
 }

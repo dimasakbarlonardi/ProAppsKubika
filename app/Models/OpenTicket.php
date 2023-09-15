@@ -13,10 +13,10 @@ class OpenTicket extends Model
 
     protected $fillable = [
         'id_site',
+        'id_tenant',
         'id_tower',
         'id_unit',
         'id_lantai',
-        'id_tenant',
         'no_tiket',
         'no_invoice',
         'status_request',
