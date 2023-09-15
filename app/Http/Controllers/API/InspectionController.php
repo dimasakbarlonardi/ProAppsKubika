@@ -26,9 +26,9 @@ class InspectionController extends Controller
 
         $inspection = $connInspectionEng->get();
 
-        return ResponseFormatter::success([
+        return ResponseFormatter::success(
             $inspection
-        ], 'Berhasil mengambil Equiqment Engineering');
+        , 'Berhasil mengambil Equiqment Engineering');
     }
 
     public function schedueinspection(Request $request)
@@ -37,9 +37,9 @@ class InspectionController extends Controller
 
         $inspection = $connInspectionEng->get();
 
-        return ResponseFormatter::success([
+        return ResponseFormatter::success(
             $inspection
-        ], 'Berhasil mengambil Schedule Engineering');
+        , 'Berhasil mengambil Schedule Engineering');
     }
 
     public function storeinspectionEng(Request $request)
@@ -105,9 +105,9 @@ class InspectionController extends Controller
 
         $inspection = $connInspectionHK->get();
 
-        return ResponseFormatter::success([
+        return ResponseFormatter::success(
             $inspection
-        ], 'Berhasil mengambil Equiqment HouseKeeping');
+        , 'Berhasil mengambil Equiqment HouseKeeping');
     }
 
     public function schedueinspectionhk(Request $request)
@@ -116,9 +116,9 @@ class InspectionController extends Controller
 
         $inspection = $connInspectionHK->get();
 
-        return ResponseFormatter::success([
+        return ResponseFormatter::success(
             $inspection
-        ], 'Berhasil mengambil Schedule HouseKeeping');
+        , 'Berhasil mengambil Schedule HouseKeeping');
     }
 
     public function storeinspectionHK(Request $request)
