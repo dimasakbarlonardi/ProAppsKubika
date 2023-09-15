@@ -33,7 +33,7 @@ class EquiqmentAhu extends Model
         return $this->hasOne(ChecklistAhuH::class, 'id_equiqment_ahu', 'id_equiqment_ahu');
     }
 
-    public function room()
+    public function Room()
     {
         return $this->hasOne(Room::class, 'id_room', 'id_room');
     }
