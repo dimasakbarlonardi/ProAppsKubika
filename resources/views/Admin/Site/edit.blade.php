@@ -84,6 +84,24 @@
                 </div>
             </div>
         </div>
+        <div class="mb-3">
+            <div class="row text-center">
+                <div class="col-6">
+                    <div class="mb-3">
+                        <label class="form-label">Barcode Attendance</label>
+                        <div class="">
+                            <img src="{{ url($site->barcode_attendance) }}" width="250">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-6">
+                    <div class="mb-3">
+                        <label class="form-label">Instagram</label>
+                        <input value="{{ $site->ig }}" type="text" name="ig" class="form-control">
+                    </div>
+                </div>
+            </div>
+        </div>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
  </div>

@@ -54,7 +54,7 @@ class Site extends Model
             ->eyeColor(1, 39, 178, 155, 0, 0, 0)
             ->eyeColor(2, 39, 178, 155, 0, 0, 0)
             ->errorCorrection('H')
-            ->generate(url('') . '/api/v1/insert-electric/' . $this->id_unit);
+            ->generate(url('') . '/api/v1/attendance/checkin/');
 
         $outputAttendace = '/public/' . $this->id_site . '/img/qr-code/attendance/' . $this->id_site . '-barcode_attendance.png';
         $attendace = '/storage/' . $this->id_site . '/img/qr-code/attendance/' . $this->id_site . '-barcode_attendance.png';
