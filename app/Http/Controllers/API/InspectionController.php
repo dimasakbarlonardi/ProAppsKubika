@@ -111,6 +111,21 @@ class InspectionController extends Controller
         ], 'Berhasil mengambil Equipment dan Data Checklist Parameter');
     }
 
+    public function showHistoryEngineering($id)
+    {
+        $connEquipmentDetail = ConnectionDB::setConnection(new EquiqmentEngineeringDetail());
+
+        $equipment = $connEquipmentDetail->where('id_equiqment_engineering_detail', $id)
+            ->with(['Room'])
+            ->first();
+
+        return ResponseFormatter::success([
+            'equipment' => $equipment
+        ], 'Berhasil mengambil Equipment dan Data Checklist Parameter');
+    }
+
+    public function 
+
     // -----------HouseKeeping-------------
 
     public function checklisthousekeeping(Request $request)
