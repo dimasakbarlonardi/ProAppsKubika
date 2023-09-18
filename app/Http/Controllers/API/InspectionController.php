@@ -86,13 +86,13 @@ class InspectionController extends Controller
 
             if ($schedule) {
                 $scheduleDate = $schedule->schedule;
-                
+
                 // Periksa dan perbarui status jadwal jika diperlukan
                 if ($schedule->status_schedule == 'not done') {
                     // Cek apakah jadwal sudah lewat (late)
                     $currentDate = Carbon::now();
                     $scheduleDateTime = Carbon::createFromFormat('Y-m-d', $scheduleDate)->setTime(0, 0);
-                    
+
                     if ($currentDate->greaterThan($scheduleDateTime)) {
                         $schedule->status_schedule = 'late done';
                     } else {
@@ -140,7 +140,7 @@ class InspectionController extends Controller
         $equipment = $connEquipmentDetail->where('id_equiqment_engineering_detail', $id)
             ->with(['Room', 'Equipment', 'Role'])
             ->first();
-            
+
             foreach ($equipment as $key => $data) {
                 $equipment[$key]['status'] = json_decode($data->status);
             }
@@ -223,13 +223,13 @@ class InspectionController extends Controller
 
             if ($schedule) {
                 $scheduleDate = $schedule->schedule;
-                
+
                 // Periksa dan perbarui status jadwal jika diperlukan
                 if ($schedule->status_schedule == 'not done') {
                     // Cek apakah jadwal sudah lewat (late)
                     $currentDate = Carbon::now();
                     $scheduleDateTime = Carbon::createFromFormat('Y-m-d', $scheduleDate)->setTime(0, 0);
-                    
+
                     if ($currentDate->greaterThan($scheduleDateTime)) {
                         $schedule->status_schedule = 'late done';
                     } else {
@@ -280,7 +280,7 @@ class InspectionController extends Controller
 
         foreach ($inspection as $key => $data) {
             $inspection[$key]['status'] = json_decode($data->status);
-        }    
+        }
 
         return ResponseFormatter::success(
         $inspection,
