@@ -44,4 +44,9 @@ class EquiqmentEngineeringDetail extends Model
     {
         return $this->hasOne(Role::class, 'id', 'id_role');
     }
+
+    public function Schedule()
+    {
+        return $this->hasOne(EquiqmentAhu::class, 'id_equiqment_engineering', 'id_equiqment_engineering');
+    }
 }

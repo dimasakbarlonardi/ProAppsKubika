@@ -42,4 +42,9 @@ class EquipmentHousekeepingDetail extends Model
     {
         return $this->hasOne(Role::class, 'id', 'id_role');
     }
+
+    public function Schedule()
+    {
+        return $this->hasOne(EquiqmentToilet::class, 'id_equipment_housekeeping', 'id_equipment_housekeeping');
+    }
 }
