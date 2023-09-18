@@ -1,7 +1,9 @@
 <?php
 
 use App\Helpers\ResponseFormatter;
+use App\Http\Controllers\Admin\AttendanceController;
 use App\Http\Controllers\API\BillingController;
+use App\Http\Controllers\API\GIGOController;
 use App\Http\Controllers\API\InboxController;
 use App\Http\Controllers\API\OpenTicketController;
 use App\Http\Controllers\API\SiteController;
@@ -60,6 +62,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/work-order/{id}', [WorkOrderController::class, 'show']);
         Route::get('/accept/work-order/{id}', [WorkOrderController::class, 'acceptWO']);
         Route::post('/generate/payment-wo/{id}', [WorkOrderController::class, 'generatePaymentWO']);
+        Route::get('/show/billing/{id}', [WorkOrderController::class, 'showBilling']);
 
         // Billing
         Route::get('/list-billings/{id}', [BillingController::class, 'listBillings']);
@@ -82,5 +85,15 @@ Route::prefix('v1')->group(function () {
 
         // Inbox
         Route::get('/inboxes', [InboxController::class, 'index']);
+
+        // GIGO
+        Route::get('/gigo/{id}', [GIGOController::class, 'show']);
+        Route::post('/gigo/add/{id}', [GIGOController::class, 'addGood']);
+        Route::post('/gigo/remove/{id}', [GIGOController::class, 'removeGood']);
+        Route::post('/gigo/{id}', [GIGOController::class, 'update']);
+
+
+        // Attendance
+        Route::get('/attendance', [AttendanceController::class, 'attendace']);
     });
 });

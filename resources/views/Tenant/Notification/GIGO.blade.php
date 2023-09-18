@@ -34,7 +34,7 @@
                     <div class="col-8">
                         <div class="card" id="permit_detail">
                             <div class="card-header">
-                                <h6 class="mb-0">Detail Work Permit</h6>
+                                <h6 class="mb-0">Detail GIGO</h6>
                             </div>
                             <div class="px-5">
                                 <div class="my-3">
@@ -55,13 +55,13 @@
                                     <div class="row">
                                         <div class="col-6">
                                             <label class="mb-1">Nama pembawa</label>
-                                            <input type="text"
+                                            <input type="text" required
                                                 value="{{ $gigo->nama_pembawa ? $gigo->nama_pembawa : '' }}"
                                                 name="nama_pembawa" class="form-control" />
                                         </div>
                                         <div class="col-6">
                                             <label class="mb-1">No Polisi Pembawa</label>
-                                            <input type="text"
+                                            <input type="text" required
                                                 value="{{ $gigo->no_pol_pembawa ? $gigo->no_pol_pembawa : '' }}"
                                                 name="no_pol_pembawa" class="form-control" />
                                         </div>
@@ -71,7 +71,7 @@
                                     <div class="row">
                                         <div class="col-6">
                                             <label class="mb-1">Tanggal & Jam bawa barang</label>
-                                            <input class="form-control datetimepicker"
+                                            <input class="form-control datetimepicker" required
                                                 value="{{ $gigo->date_request_gigo ? $gigo->date_request_gigo : '' }}"
                                                 name="date_request_gigo" id="datetimepicker" type="text"
                                                 placeholder="d/m/y H:i"
@@ -158,11 +158,12 @@
                                         <div class="mb-4 mt-n2">
                                             <label class="mb-1">Status</label>
                                             <input type="text" class="form-control" disabled
-                                                value="{{ $gigo->status_request }}">
+                                                value="{{ $gigo->status_request ? $gigo->status_request : 'PROSES' }}">
                                         </div>
                                     </div>
                                     @if (!$gigo->sign_approval_1)
-                                        <div class="card-footer border-top border-200 py-x1">
+                                        <div class="card-footer border-top border-200 py-x1" id="gigoSubmit"
+                                            style="display: none">
                                             <button type="submit" class="btn btn-primary w-100">Submit</button>
                                         </div>
                                     @endif
@@ -182,9 +183,12 @@
     <script>
         var goods = [];
         var idGood = 0;
+        var getGoods = '{{ count($gigo->DetailGIGO) }}'
 
         $('document').ready(function() {
-            console.log(goods)
+            if (getGoods > 0) {
+                $('#gigoSubmit').css('display', 'block');
+            }
         })
 
         function onAddBarang(gigo_id) {
@@ -217,6 +221,7 @@
                             'jumlah_barang': resp.data.jumlah_barang,
                             'keterangan': resp.data.keterangan,
                         }
+                        $('#gigoSubmit').css('display', 'block');
                         goods.push(good);
                         detailGoods();
                     }

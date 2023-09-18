@@ -21,6 +21,7 @@ use App\Http\Controllers\Admin\SiteController;
 use App\Http\Controllers\Admin\UnitController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AgamaController;
+use App\Http\Controllers\Admin\AttendanceController;
 use App\Http\Controllers\Admin\FloorController;
 use App\Http\Controllers\Admin\GroupController;
 use App\Http\Controllers\Admin\LoginController;
@@ -152,9 +153,8 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/gis', function() {
-    return view('gis');
-});
+Route::get('/gis', [AttendanceController::class, 'index']);
+Route::post('/absence', [AttendanceController::class, 'absence']);
 
 Route::post('/payments/midtrans-notifications', [PaymentController::class, 'receive']);
 Route::get('/delete/midtrans', [PaymentController::class, 'delete']);

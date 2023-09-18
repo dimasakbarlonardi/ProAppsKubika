@@ -27,14 +27,16 @@
                             <th scope="row">{{ $key + 1 }}</th>
                             <td>{{ $gigo->no_request_gigo }}</td>
                             <td>
-                                <a href="{{ route('gigo.edit', $gigo->id) }}" class="btn btn-sm btn-warning">Edit</a>
+                                <a href="{{ route('gigo.show', $gigo->id) }}" class="btn btn-sm btn-warning">Show</a>
                                 {{-- @if (
                                     !$gigo->sign_approval_1 &&
                                         $approve->approval_1 == $user->RoleH->WorkRelation->id_work_relation &&
-                                        $user->Karyawan->is_can_approve)
+                                        $user->Karyawan->is_can_approve &&
+                                        $gigo->date_request_gigo)
                                     <form action="{{ route('gigoApprove1', $gigo->id) }}" class="d-inline" method="post">
                                         @csrf
-                                        <button class="btn btn-sm btn-success" type="submit">Approve</button>
+                                        <button class="btn btn-sm btn-success" data-toggle="modal"
+                                            data-target="#exampleModal1" type="submit">Approve</button>
                                     </form>
                                 @endif --}}
                                 @if (
@@ -70,4 +72,10 @@
             </table>
         </div>
     </div>
+@endsection
+
+@section('script')
+    <script>
+        // $('#exampleModal').modal('show');
+    </script>
 @endsection

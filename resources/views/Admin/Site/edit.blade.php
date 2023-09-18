@@ -42,9 +42,7 @@
             <div class="row">
                 <div class="col-6">
                     <label class="form-label">Alamat</label>
-                    <textarea name="alamat" class="form-control" rows="10" required>
-                        {!! $site->alamat !!}
-                    </textarea>
+                    <textarea name="alamat" class="form-control" rows="10" required>{!! $site->alamat !!}</textarea>
                 </div>
                 <div class="col-6">
                     <div class="mb-3">
