@@ -25,15 +25,6 @@ class GIGOController extends Controller
         return view('AdminSite.GIGO.index', $data);
     }
 
-    public function show($id)
-    {
-        $conn = ConnectionDB::setConnection(new RequestGIGO());
-
-        $data['gigo'] = $conn->where('id', $id)->first();
-
-        return view('AdminSite.GIGO.show', $data);
-    }
-
     public function update(Request $request, $id)
     {
         $connGIGO = ConnectionDB::setConnection(new RequestGIGO());
@@ -130,16 +121,6 @@ class GIGOController extends Controller
         Alert::success('Berhasil', 'Berhasil approve GIGO');
 
         return redirect()->back();
-    }
-
-    public function show($id)
-    {
-        $connRG = ConnectionDB::setConnection(new RequestGIGO());
-        $conn = ConnectionDB:setConnection(new )
-
-        $data['gigo'] = $conn->where('id' , $id)->first();
-
-        return view('AdminSite.GIGO.show', $data);
     }
 
     public function show(Request $request, $id)
