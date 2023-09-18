@@ -53,6 +53,20 @@ class PackageController extends Controller
         );
     }
 
+    public function showPackage($id)
+    {
+        $connPackage = ConnectionDB::setConnection(new Package());
+
+        $packages = $connPackage->where('id', $id)
+            ->with('Unit')
+            ->first();
+
+        return ResponseFormatter::success(
+            $packages,
+            'Success get packages by unit'
+        );
+    }
+
     public function pickupPackage($id, $token)
     {
         $getToken = str_replace("RA164-", "|", $token);
