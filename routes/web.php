@@ -124,6 +124,7 @@ use App\Http\Controllers\Admin\InspectionSecurityController;
 use App\Http\Controllers\Admin\LeaveTypeHRController;
 use App\Http\Controllers\Admin\InvoiceController;
 use App\Http\Controllers\Admin\OffBoardingKepemilikanUnitController;
+use App\Http\Controllers\Admin\PackageController;
 use App\Http\Controllers\Admin\PermitHRController;
 use App\Http\Controllers\Admin\PPNController;
 use App\Http\Controllers\Admin\RequestAttendanceController;
@@ -740,6 +741,9 @@ Route::prefix('admin')->group(function () {
         Route::resource('forgottype', ForgotAttendanceController::class);
         // -Shift Type
         Route::resource('shifttype', ShiftTypeController::class);
+
+        // ---------------Package------------------
+        Route::resource('packages', PackageController::class);
     });
 });
 
