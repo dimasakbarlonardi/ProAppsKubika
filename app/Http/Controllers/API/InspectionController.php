@@ -107,7 +107,7 @@ class InspectionController extends Controller
 
         return ResponseFormatter::success([
             'equipment' => $equipment,
-            'checklist' => $checklist
+            'question' => $checklist
         ], 'Berhasil mengambil Equipment dan Data Checklist Parameter');
     }
 
@@ -135,6 +135,10 @@ class InspectionController extends Controller
         $inspection = $connInspectionHK->where('deleted_at', null)
             ->with('Room')
             ->get();
+
+        foreach ($inspection as $key => $data) {
+            $inspection[$key]['status'] = json_decode($data->status);
+        }
 
         return ResponseFormatter::success(
             $inspection,
@@ -206,8 +210,14 @@ class InspectionController extends Controller
             ->with(['Inspection.ChecklistHK', 'Room'])
             ->first();
 
+        $checklist = [];
+        foreach ($equipment->Inspection as $key => $data) {
+            $checklist[$key]['checklist'] = $data->ChecklistHK->nama_hk_toilet;
+        }
+
         return ResponseFormatter::success([
             'equipment' => $equipment,
+            'question' => $checklist
         ], 'Berhasil mengambil Equipment dan Data Checklist Parameter');
     }
 
