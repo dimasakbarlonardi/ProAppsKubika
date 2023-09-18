@@ -27,7 +27,7 @@
                             <th scope="row">{{ $key + 1 }}</th>
                             <td>{{ $gigo->no_request_gigo }}</td>
                             <td>
-                                <a href="{{ route('gigo.edit', $gigo->id) }}" class="btn btn-sm btn-warning">Edit</a>
+                                <a href="{{ route('gigo.show', $gigo->id) }}" class="btn btn-sm btn-warning">Show</a>
                                 {{-- @if (
                                     !$gigo->sign_approval_1 &&
                                         $approve->approval_1 == $user->RoleH->WorkRelation->id_work_relation &&

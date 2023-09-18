@@ -124,8 +124,6 @@ class InspectionController extends Controller
         ], 'Berhasil mengambil Equipment dan Data Checklist Parameter');
     }
 
-    public function 
-
     // -----------HouseKeeping-------------
 
     public function checklisthousekeeping(Request $request)
