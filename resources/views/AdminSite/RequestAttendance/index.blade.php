@@ -1,5 +1,10 @@
 @extends('layouts.master')
 
+@section('css')
+    <link rel="stylesheet" href="{{ asset('assets/vendors/flatpickr/flatpickr.min.css') }}">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
+@endsection
+
 @section('content')
 <div class="card">
     <div class="card-header py-2">
@@ -7,33 +12,30 @@
             <div class="my-3 col-auto">
                 <h6 class="mb-0 text-white">List Request Attendance</h6>
             </div>
-            <div class="col-auto d-flex">
-                <a class="btn btn-falcon-default text-600 btn-sm " href="{{ route('requestattendance.create') }}"><span class="fas fa-plus fs--2 me-1"></span>Create Request Attendance</a>
-            </div>
         </div>
     </div>
-    <div class="p-5">
-        <table class="table">
+    <div class="p-5 justify-content-center">
+        <table class="table" id="table-requestattendance">
             <thead>
                 <tr>
                     <th class="sort" data-sort="">No</th>
-                    <th class="sort" data-sort="ruang_reservation">Request Attendance</th>
-                    <th class="sort">Action</th>
+                    <th class="sort" data-sort="date">Date</th>
+                    <th class="sort" data-sort="id_request_type">Request Type</th>
+                    <th class="sort" data-sort="status">Status</th>
                 </tr>
             </thead>
-            <tbody>
-                @foreach ($requests as $key => $request)
+            <tbody id="checklist_body">
+                @foreach ($requestattendance as $key => $request)
                     <tr>
                         <th scope="row">{{ $key + 1 }}</th>
-                        <td>{{ $request->name_request }}</td>
-                        <td>
-                            <a href="{{ route('requestattendance.edit', $request->id) }}" class="btn btn-sm btn-warning"><span class="fas fa-pencil-alt fs--2 me-1"></span>Edit</a>
-                            <form class="d-inline" action="{{ route('requestattendance.destroy', $request->id) }}" method="post">
-                                @method('DELETE')
-                                @csrf
-                                <button type="submit" class="btn btn-danger btn-sm"
-                                    onclick="return confirm('are you sure?')"><span class="fas fa-trash-alt fs--2 me-1"></span>Hapus</button>
-                            </form>
+                        <td> {{ \Carbon\Carbon::parse($request->date_in)->format(' d M Y') }} - {{ \Carbon\Carbon::parse($request->date_out)->format(' d M Y') }}</td>
+                        <td>{{ $request->RequestType->name_request }}</td>
+                        <td> 
+                            @if ($request->status == 0)
+                            <span class="badge rounded-pill badge-subtle-success">Approve</span>
+                            @elseif ($request->status == 1)
+                            <span class="badge rounded-pill badge-subtle-danger">Reject</span>
+                            @endif
                         </td>
                     </tr>
                 @endforeach
@@ -43,3 +45,9 @@
 </div>
 @endsection
 
+@section('script')
+<script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+<script>
+    new DataTable('#table-requestattendance');
+</script>
+@endsection

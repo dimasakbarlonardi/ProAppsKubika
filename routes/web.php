@@ -128,6 +128,7 @@ use App\Http\Controllers\Admin\PackageController;
 use App\Http\Controllers\Admin\PermitHRController;
 use App\Http\Controllers\Admin\PPNController;
 use App\Http\Controllers\Admin\RequestAttendanceController;
+use App\Http\Controllers\Admin\RequestTypeController;
 use App\Http\Controllers\Admin\ScheduleMeetingController;
 use App\Http\Controllers\Admin\ScheduleSecurityController;
 use App\Http\Controllers\Admin\ShiftTypeController;
@@ -732,7 +733,7 @@ Route::prefix('admin')->group(function () {
 
         // ---------------Parameter Attendance------------------
         // -Request Attendance
-        Route::resource('requestattendance', RequestAttendanceController::class);
+        Route::resource('requesttype', RequestTypeController::class);
         // -Permit Type
         Route::resource('permithr', PermitHRController::class);
         // -Leave Type
@@ -741,6 +742,10 @@ Route::prefix('admin')->group(function () {
         Route::resource('forgottype', ForgotAttendanceController::class);
         // -Shift Type
         Route::resource('shifttype', ShiftTypeController::class);
+
+        // --------------- Attendance ------------------
+        Route::resource('requestattendance', RequestAttendanceController::class);
+
 
         // ---------------Package------------------
         Route::resource('packages', PackageController::class);

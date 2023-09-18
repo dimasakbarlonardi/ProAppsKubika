@@ -4,11 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
-use App\Models\Package;
-use FTP\Connection;
+use App\Models\RequestType;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use RealRashid\SweetAlert\Facades\Alert;
 
-class PackageController extends Controller
+class RequestTypeController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -17,11 +18,11 @@ class PackageController extends Controller
      */
     public function index()
     {
-        $conn = ConnectionDB::setConnection(new Package());
+        $conn = ConnectionDB::setConnection(new RequestType());
 
-        $data['packages'] = $conn->get();
+        $data['requests'] = $conn->get();
 
-        return view('AdminSite.Package.index', $data);
+        return view('AdminSite.RequestType.index', $data);
     }
 
     /**
@@ -31,7 +32,7 @@ class PackageController extends Controller
      */
     public function create()
     {
-        //
+        return view('AdminSite.RequestType.create');
     }
 
     /**
@@ -42,7 +43,25 @@ class PackageController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $conn = ConnectionDB::setConnection(new RequestType());
+
+        try {
+
+            DB::beginTransaction();
+
+            $conn->create($request->all());
+
+            DB::commit();
+
+            Alert::success('Success', 'Successfully Added Request Attendance');
+
+            return redirect()->route('requestattendance.index');
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            dd($e);
+            Alert::success('Failed', 'Failed to Add Request Attendance');
+            return redirect()->route('requestattendance.index');
+        }
     }
 
     /**
@@ -64,7 +83,11 @@ class PackageController extends Controller
      */
     public function edit($id)
     {
-        //
+        $conn = ConnectionDB::setConnection(new RequestType());
+
+        $data['request'] = $conn->where('id', $id)->first();
+
+        return view('AdminSite\RequestType\edit', $data);
     }
 
     /**
@@ -76,7 +99,13 @@ class PackageController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $conn = ConnectionDB::setConnection(new RequestType());
+
+        $jenisrequest = $conn->find($id);
+        $jenisrequest->update($request->all());
+
+        Alert::success('Berhasil', 'Berhasil mengupdate ruang reservation');
+        return redirect()->route('requestattendance.index');
     }
 
     /**

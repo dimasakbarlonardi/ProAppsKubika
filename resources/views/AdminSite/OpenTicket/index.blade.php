@@ -1,7 +1,7 @@
 @extends('layouts.master')
 
 @section('content')
-    <div class="row gx-3">
+    <div class="row">
         <div class="col-xxl-10 col-xl-9">
             <div class="card" id="ticketsTable"
                 data-list='{"valueNames":["client","subject","status","priority","agent"],"page":7,"pagination":true,"fallback":"tickets-card-fallback"}'>
@@ -44,7 +44,6 @@
                 </div>
                 <div class="card-body p-0">
                     @foreach ($tickets as $ticket)
-                    {{-- {{ dd($ticket->Tenant->User->profile_picture) }} --}}
                         <div class="list bg-light p-x1 d-flex flex-column gap-3" id="card-ticket-body">
                             <div
                                 class="d-md-flex d-xl-inline-block d-xxl-flex align-items-center p-x1 rounded-3 shadow-sm card-view-height">
@@ -52,8 +51,8 @@
                                     <a class="d-none d-sm-block" href="">
                                         <div class="avatar avatar-xl avatar-3xl">
                                             <div class="avatar-name rounded-circle">
-                                                <img src="{{ $ticket->Tenant->User->profile_picture ? url($ticket->Tenant->User->profile_picture) : '/assets/img/team/3-thumb.png' }}"
-                                                    alt="{{ $ticket->Tenant->User->profile_picture }}" class="avatar-image" />
+                                                <img src="{{ $ticket->Tenant->profile_picture ? url($ticket->Tenant->profile_picture) : '/assets/img/team/3-thumb.png' }}"
+                                                    alt="{{ $ticket->Tenant->profile_picture }}" class="avatar-image" />
                                             </div>
                                         </div>
                                     </a>

@@ -7,7 +7,7 @@
                 <div class="col-auto">
                     <nav aria-label="breadcrumb">
                         <ol class="my-3 breadcrumb">
-                            <li class="breadcrumb-item text-white"> <a href="{{ route('ruangreservations.index')}}" class="text-white"> List Ruang Reservation </a></li>
+                            <li class="breadcrumb-item text-white"> <a href="{{ route('requesttype.index')}}" class="text-white"> List Ruang Reservation </a></li>
                             <li class="breadcrumb-item active" aria-current="page">Edit Ruang Reservation</li>
                         </ol>
                     </nav>
@@ -15,7 +15,7 @@
             </div>
         </div>
         <div class="p-5">
-            <form method="post" action="{{ route('requestattendance.update', $request->id) }}">
+            <form method="post" action="{{ route('requesttype.update', $request->id) }}">
                 @method('PUT')
                 @csrf
                 <div class="mb-3">
@@ -24,7 +24,7 @@
                 </div>
                 <div class="mt-5">
                     <button type="submit" class="btn btn-primary">Submit</button>
-                    <button type="button" class="btn btn-danger"><a class="text-white" href="{{ route('requestattendance.index')}}">Cancel</a></button>
+                    <button type="button" class="btn btn-danger"><a class="text-white" href="{{ route('requesttype.index')}}">Cancel</a></button>
                 </div>
             </form> 
         </div>
