@@ -25,8 +25,12 @@ class InspectionController extends Controller
         $connInspectionEng = ConnectionDB::setConnection(new EquiqmentEngineeringDetail());
 
         $inspection = $connInspectionEng->where('deleted_at', null)
-            ->with('Room')
+            ->with(['Room', 'equipment', 'Schedule'])
             ->get();
+
+        foreach ($inspection as $key => $data) {
+            $inspection[$key]['status'] = json_decode($data->status);
+        }
 
         return ResponseFormatter::success(
             $inspection,
@@ -75,7 +79,7 @@ class InspectionController extends Controller
 
             $conn->save();
             DB::commit();
- 
+
             return ResponseFormatter::success([
                 $conn
             ], 'Berhasil Inspection Engineering');
@@ -93,11 +97,17 @@ class InspectionController extends Controller
         $connEquipment = ConnectionDB::setConnection(new EquiqmentAhu());
 
         $equipment = $connEquipment->where('id_equiqment_engineering', $id)
-            ->with(['InspectionEng.Checklist', 'Room'])
+            ->with('Room')
             ->first();
 
+        $checklist = [];
+        foreach ($equipment->InspectionEng as $key => $data) {
+            $checklist[$key]['checklist'] = $data->Checklist->nama_eng_ahu;
+        }
+
         return ResponseFormatter::success([
-            'equipment' => $equipment
+            'equipment' => $equipment,
+            'question' => $checklist
         ], 'Berhasil mengambil Equipment dan Data Checklist Parameter');
     }
 
@@ -115,8 +125,6 @@ class InspectionController extends Controller
         );
     }
 
-    public function 
-
     // -----------HouseKeeping-------------
 
     public function checklisthousekeeping(Request $request)
@@ -124,8 +132,12 @@ class InspectionController extends Controller
         $connInspectionHK = ConnectionDB::setConnection(new EquipmentHousekeepingDetail());
 
         $inspection = $connInspectionHK->where('deleted_at', null)
-            ->with('Room')
+            ->with(['Room', 'Schedule'])
             ->get();
+
+        foreach ($inspection as $key => $data) {
+            $inspection[$key]['status'] = json_decode($data->status);
+        }
 
         return ResponseFormatter::success(
             $inspection,
@@ -197,11 +209,17 @@ class InspectionController extends Controller
             ->with(['Inspection.ChecklistHK', 'Room'])
             ->first();
 
+        $checklist = [];
+        foreach ($equipment->Inspection as $key => $data) {
+            $checklist[$key]['checklist'] = $data->ChecklistHK->nama_hk_toilet;
+        }
+
         return ResponseFormatter::success([
             'equipment' => $equipment,
+            'question' => $checklist
         ], 'Berhasil mengambil Equipment dan Data Checklist Parameter');
     }
 
     // -------------- Security ---------------
-    
+
 }

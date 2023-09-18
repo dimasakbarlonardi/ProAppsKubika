@@ -124,6 +124,7 @@ use App\Http\Controllers\Admin\InspectionSecurityController;
 use App\Http\Controllers\Admin\LeaveTypeHRController;
 use App\Http\Controllers\Admin\InvoiceController;
 use App\Http\Controllers\Admin\OffBoardingKepemilikanUnitController;
+use App\Http\Controllers\Admin\PackageController;
 use App\Http\Controllers\Admin\PermitHRController;
 use App\Http\Controllers\Admin\PPNController;
 use App\Http\Controllers\Admin\RequestAttendanceController;
@@ -745,6 +746,9 @@ Route::prefix('admin')->group(function () {
         // --------------- Attendance ------------------
         Route::resource('requestattendance', RequestAttendanceController::class);
 
+
+        // ---------------Package------------------
+        Route::resource('packages', PackageController::class);
     });
 });
 

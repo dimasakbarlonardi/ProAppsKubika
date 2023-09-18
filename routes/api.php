@@ -11,6 +11,7 @@ use App\Http\Controllers\API\SiteController;
 use App\Http\Controllers\API\UnitController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\InspectionController;
+use App\Http\Controllers\API\PackageController;
 use App\Http\Controllers\API\WorkOrderController;
 use App\Http\Controllers\PaymentController;
 use Illuminate\Http\Request;
@@ -50,6 +51,9 @@ Route::prefix('v1')->group(function () {
         Route::post('/select-role', [UserController::class, 'selectRole']);
 
         Route::get('/invoice/{id}', [PaymentController::class, 'invoiceAPI']);
+
+        // Unit
+        Route::get('/units', [UnitController::class, 'getAllUnits']);
 
         // Open Ticket
         Route::get('/tickets', [OpenTicketController::class, 'listTickets']);
@@ -97,5 +101,11 @@ Route::prefix('v1')->group(function () {
         // Attendance
         Route::post('/attendance/checkin/{token}', [AppAttendanceController::class, 'checkin']);
         Route::post('/attendance/checkout/{token}', [AppAttendanceController::class, 'checkout']);
+
+        // Package
+        Route::post('/package', [PackageController::class, 'store']);
+        Route::get('/package/unit/{id}', [PackageController::class, 'packageByUnit']);
+        Route::get('/package/{id}', [PackageController::class, 'showPackage']);
+        Route::post('/pickup/package/{id}/{token}', [PackageController::class, 'pickupPackage']);
     });
 });
