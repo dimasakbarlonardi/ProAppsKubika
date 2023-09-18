@@ -25,6 +25,7 @@ class EquiqmentEngineeringDetail extends Model
         'id_role',
         'tgl_checklist',
         'time_checklist',
+        'status_checklist',
         'keterangan'
     ];
 
