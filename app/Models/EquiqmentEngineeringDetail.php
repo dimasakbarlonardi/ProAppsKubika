@@ -31,17 +31,17 @@ class EquiqmentEngineeringDetail extends Model
 
     protected $dates = ['deleted_at'];
 
-    public function equipment()
+    public function Equipment()
     {
         return $this->hasOne(EquiqmentAhu::class, 'id_equiqment_engineering', 'id_equiqment_engineering');
     }
 
-    public function room()
+    public function Room()
     {
         return $this->hasOne(Room::class, 'id_room', 'id_room');
     }
 
-    public function role()
+    public function Role()
     {
         return $this->hasOne(Role::class, 'id', 'id_role');
     }

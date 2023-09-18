@@ -218,7 +218,7 @@ class ChecklistAhuHController extends Controller
             foreach ($scheduleDates as $date) {
                 $equiqment->inspections()->create([
                     'schedule_date' => $date,
-                    'status_schedule' => 0, // Status awal
+                    'status_schedule' => 'not done', // Status awal
                 ]);
             }
 
