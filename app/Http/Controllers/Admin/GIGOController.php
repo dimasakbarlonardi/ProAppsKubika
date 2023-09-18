@@ -123,32 +123,12 @@ class GIGOController extends Controller
         return redirect()->back();
     }
 
-    public function show(Request $request, $id)
+    public function show($id)
     {
-        $connRP = ConnectionDB::setConnection(new RequestPermit());
-        $connWP = ConnectionDB::setConnection(new WorkPermit());
-        $connWorkRelation = ConnectionDB::setConnection(new WorkRelation());
-        $connApprove = ConnectionDB::setConnection(new Approve());
+        $conn = ConnectionDB::setConnection(new RequestGIGO());
 
-        $rp = $connRP->where('id', $id)->with(['tenant', 'ticket', 'rpdetail'])->first();
+        $data['gigo'] = $conn->where('id', $id)->first();
 
-        $data['approve'] = $connApprove->find(5);
-        $data['user'] = $request->session()->get('user');
-        $data['work_relations'] = $connWorkRelation->get();
-
-        if ($request->data_type == 'json') {
-            $data['ticket'] = $rp;
-            return response()->json(['data' => $rp]);
-        } else {
-            $wp = $connWP->find($id);
-            $data['wp'] = $wp;
-            $dataJSON = json_decode($wp->RequestPermit->RPDetail->data);
-            $dataJSON = json_decode($dataJSON);
-            $data['personels'] = $dataJSON->personels;
-            $data['alats'] = $dataJSON->alats;
-            $data['materials'] = $dataJSON->materials;
-
-            return view('AdminSite.WorkPermit.show', $data);
-        }
+        return view('AdminSite.GIGO.show', $data);
     }
 }
