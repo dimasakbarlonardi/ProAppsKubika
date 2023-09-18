@@ -105,5 +105,6 @@ Route::prefix('v1')->group(function () {
         // Package
         Route::post('/package', [PackageController::class, 'store']);
         Route::get('/package/unit/{id}', [PackageController::class, 'packageByUnit']);
+        Route::post('/pickup/package/{id}/{token}', [PackageController::class, 'pickupPackage']);
     });
 });
