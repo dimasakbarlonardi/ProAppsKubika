@@ -7,11 +7,24 @@ use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Models\Tenant;
 use App\Models\TenantUnit;
+use App\Models\Unit;
 use Illuminate\Http\Request;
 use Throwable;
 
 class UnitController extends Controller
 {
+    public function getAllUnits()
+    {
+        $connUnits = ConnectionDB::setConnection(new Unit());
+
+        $units = $connUnits->get();
+
+        return ResponseFormatter::success(
+            $units,
+            'Success get all units'
+        );
+    }
+
     public function tenantUnit(Request $request)
     {
         try {
@@ -22,13 +35,13 @@ class UnitController extends Controller
             $getTenant = $connTenant->where('email_tenant', $user->email)->first();
 
             $units = $connTU->where('id_tenant', $getTenant->id_tenant)
-            ->with('Unit')
-            ->get();
+                ->with('Unit')
+                ->get();
 
             return ResponseFormatter::success([
                 'units' => $units
             ], 'Berhasil mengambil units');
-        } catch(Throwable $e) {
+        } catch (Throwable $e) {
             return ResponseFormatter::error([
                 'message' => 'Tidak ada unit',
                 'error' => $e,

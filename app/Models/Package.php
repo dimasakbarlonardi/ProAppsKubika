@@ -2,37 +2,40 @@
 
 namespace App\Models;
 
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
 
 class Package extends Model
 {
     use HasFactory;
-    use SoftDeletes;
 
     protected $table = 'tb_package';
-    protected $primaryKey = 'id';
 
-    protected $fillable = [
-        'id',
-        'no_resi',
-        'status',
-        'id_unit',
-        'location',
-        'courier_type',
-        'courier_name',
-        'date',
-        'time',
-        'image',
-        'keterangan'
+    public function GenerateBarcode()
+    {
+        $barcodePackage = QrCode::format('png')
+            ->merge(public_path('assets/img/logos/proapps.png'), 0.6, true)
+            ->size(500)
+            ->color(0, 0, 0)
+            ->eyeColor(0, 39, 178, 155, 0, 0, 0)
+            ->eyeColor(1, 39, 178, 155, 0, 0, 0)
+            ->eyeColor(2, 39, 178, 155, 0, 0, 0)
+            ->errorCorrection('H')
+            ->generate(url('') . '/api/v1/pickup/package/');
 
-    ];
+        $outputPackage = '/public/' . $this->id_site . '/img/qr-code/package/' . $this->package_receipt_number . '-barcode_package.png';
+        $package = '/storage/' . $this->id_site . '/img/qr-code/package/' . $this->package_receipt_number . '-barcode_package.png';
 
-    protected $dates = ['deleted_at'];
+        Storage::disk('local')->put($outputPackage, $barcodePackage);
+
+        $this->barcode_package = $package;
+        $this->save();
+    }
 
     public function Unit()
     {
-        return $this->hasOne(Unit::class, 'id_unit', 'id_unit');
+        return $this->hasOne(Unit::class, 'id_unit', 'unit_id');
     }
 }

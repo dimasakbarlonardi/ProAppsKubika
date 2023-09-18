@@ -20,7 +20,7 @@ class PackageController extends Controller
         $conn = ConnectionDB::setConnection(new Package());
 
         $data['packages'] = $conn->get();
-        
+
         return view('AdminSite.Package.index', $data);
     }
 
