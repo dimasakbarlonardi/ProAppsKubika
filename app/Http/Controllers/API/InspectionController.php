@@ -116,7 +116,7 @@ class InspectionController extends Controller
         $connEquipmentDetail = ConnectionDB::setConnection(new EquiqmentEngineeringDetail());
 
         $equipment = $connEquipmentDetail->where('id_equiqment_engineering_detail', $id)
-            ->with(['Room'])
+            ->with(['Room', 'equipment'])
             ->first();
 
         $equipment['status'] = json_decode($equipment->status);
