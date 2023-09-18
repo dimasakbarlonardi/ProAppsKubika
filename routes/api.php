@@ -2,6 +2,7 @@
 
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Admin\AttendanceController;
+use App\Http\Controllers\API\AttendanceController as AppAttendanceController;
 use App\Http\Controllers\API\BillingController;
 use App\Http\Controllers\API\GIGOController;
 use App\Http\Controllers\API\InboxController;
@@ -92,8 +93,8 @@ Route::prefix('v1')->group(function () {
         Route::post('/gigo/remove/{id}', [GIGOController::class, 'removeGood']);
         Route::post('/gigo/{id}', [GIGOController::class, 'update']);
 
-
         // Attendance
-        Route::get('/attendance', [AttendanceController::class, 'attendace']);
+        Route::post('/attendance/checkin/{token}', [AppAttendanceController::class, 'checkin']);
+        Route::post('/attendance/checkout/{token}', [AppAttendanceController::class, 'checkout']);
     });
 });

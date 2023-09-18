@@ -33,7 +33,7 @@ class EquipmentHousekeepingDetail extends Model
         return $this->hasOne(EquiqmentToilet::class, 'id_equipment_housekeeping', 'id_equipment_housekeeping');
     }
 
-    public function room()
+    public function Room()
     {
         return $this->hasOne(Room::class, 'id_room', 'id_room');
     }

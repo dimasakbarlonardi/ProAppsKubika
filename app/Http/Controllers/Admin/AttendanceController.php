@@ -50,9 +50,4 @@ class AttendanceController extends Controller
 
         return $d;
     }
-
-    public function attendace()
-    {
-        return view('/gis');
-    }
 }
