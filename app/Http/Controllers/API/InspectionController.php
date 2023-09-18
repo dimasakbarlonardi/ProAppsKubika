@@ -106,12 +106,13 @@ class InspectionController extends Controller
         $connEquipmentDetail = ConnectionDB::setConnection(new EquiqmentEngineeringDetail());
 
         $equipment = $connEquipmentDetail->where('id_equiqment_engineering_detail', $id)
-            ->with(['Room', 'Equipment'])
+            ->with(['Room', 'Equipment', 'Role'])
             ->first();
 
-        return ResponseFormatter::success([
-            'equipment' => $equipment
-        ], 'Berhasil mengambil Equipment dan Data Checklist Parameter');
+        return ResponseFormatter::success(
+        $equipment,
+        'Berhasil mengambil history inspection Engineering'
+        );
     }
 
     public function 
