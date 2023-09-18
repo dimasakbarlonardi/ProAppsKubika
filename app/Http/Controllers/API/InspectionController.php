@@ -138,7 +138,7 @@ class InspectionController extends Controller
         $connEquipmentDetail = ConnectionDB::setConnection(new EquiqmentEngineeringDetail());
 
         $equipment = $connEquipmentDetail->where('id_equiqment_engineering_detail', $id)
-            ->with(['Room', 'Equipment', 'Role'])
+            ->with(['Room', 'equipment'])
             ->first();
 
             foreach ($equipment as $key => $data) {
