@@ -33,7 +33,7 @@ class EquiqmentAhu extends Model
         return $this->hasOne(ChecklistAhuH::class, 'id_equiqment_ahu', 'id_equiqment_ahu');
     }
 
-    public function room()
+    public function Room()
     {
         return $this->hasOne(Room::class, 'id_room', 'id_room');
     }
@@ -45,7 +45,6 @@ class EquiqmentAhu extends Model
 
     public function InspectionEng()
     {
-         return $this->hasMany(ChecklistParameterEquiqment::class, 'id_item', 'id_equiqment_engineering')
-         ->where('id_equiqment', 1);
+         return $this->hasMany(ChecklistParameterEquiqment::class, 'id_item', 'id_equiqment_engineering');
     }
 }

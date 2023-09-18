@@ -24,22 +24,26 @@ class InspectionController extends Controller
     {
         $connInspectionEng = ConnectionDB::setConnection(new EquiqmentEngineeringDetail());
 
-        $inspection = $connInspectionEng->get();
+        $inspection = $connInspectionEng->where('deleted_at', null)
+            ->with('Room')
+            ->get();
 
-        return ResponseFormatter::success([
-            $inspection
-        ], 'Berhasil mengambil Equiqment Engineering');
+        return ResponseFormatter::success(
+            $inspection,
+            'Berhasil mengambil Equiqment Engineering'
+        );
     }
 
     public function schedueinspection(Request $request)
     {
         $connInspectionEng = ConnectionDB::setConnection(new EquiqmentAhu());
 
-        $inspection = $connInspectionEng->get();
+        $inspection = $connInspectionEng->where('deleted_at', null)->with('Room')->get();
 
-        return ResponseFormatter::success([
-            $inspection
-        ], 'Berhasil mengambil Schedule Engineering');
+        return ResponseFormatter::success(
+            $inspection,
+            'Berhasil mengambil Schedule Engineering'
+        );
     }
 
     public function storeinspectionEng(Request $request)
@@ -89,8 +93,8 @@ class InspectionController extends Controller
         $connEquipment = ConnectionDB::setConnection(new EquiqmentAhu());
 
         $equipment = $connEquipment->where('id_equiqment_engineering', $id)
-        ->with('InspectionEng.Checklist')
-        ->first();
+            ->with(['InspectionEng.Checklist', 'Room'])
+            ->first();
 
         return ResponseFormatter::success([
             'equipment' => $equipment
@@ -103,22 +107,28 @@ class InspectionController extends Controller
     {
         $connInspectionHK = ConnectionDB::setConnection(new EquipmentHousekeepingDetail());
 
-        $inspection = $connInspectionHK->get();
+        $inspection = $connInspectionHK->where('deleted_at', null)
+            ->with('Room')
+            ->get();
 
-        return ResponseFormatter::success([
-            $inspection
-        ], 'Berhasil mengambil Equiqment HouseKeeping');
+        return ResponseFormatter::success(
+            $inspection,
+            'Berhasil mengambil Equiqment HouseKeeping'
+        );
     }
 
     public function schedueinspectionhk(Request $request)
     {
         $connInspectionHK = ConnectionDB::setConnection(new EquiqmentToilet());
 
-        $inspection = $connInspectionHK->get();
+        $inspection = $connInspectionHK->where('deleted_at', null)
+            ->with('Room')
+            ->get();
 
-        return ResponseFormatter::success([
-            $inspection
-        ], 'Berhasil mengambil Schedule HouseKeeping');
+        return ResponseFormatter::success(
+            $inspection,
+            'Berhasil mengambil Schedule HouseKeeping'
+        );
     }
 
     public function storeinspectionHK(Request $request)
@@ -168,8 +178,8 @@ class InspectionController extends Controller
         $connEquipment = ConnectionDB::setConnection(new EquiqmentToilet());
 
         $equipment = $connEquipment->where('id_equipment_housekeeping', $id)
-        ->with('Inspection.ChecklistHK')
-        ->first();
+            ->with(['Inspection.ChecklistHK', 'Room'])
+            ->first();
 
         return ResponseFormatter::success([
             'equipment' => $equipment,
