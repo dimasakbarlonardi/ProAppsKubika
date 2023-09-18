@@ -25,8 +25,12 @@ class InspectionController extends Controller
         $connInspectionEng = ConnectionDB::setConnection(new EquiqmentEngineeringDetail());
 
         $inspection = $connInspectionEng->where('deleted_at', null)
-            ->with('Room')
+            ->with(['Room', 'equipment'])
             ->get();
+
+        foreach ($inspection as $key => $data) {
+            $inspection[$key]['status'] = json_decode($data->status);
+        }
 
         return ResponseFormatter::success(
             $inspection,
