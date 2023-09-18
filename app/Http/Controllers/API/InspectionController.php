@@ -25,7 +25,7 @@ class InspectionController extends Controller
         $connInspectionEng = ConnectionDB::setConnection(new EquiqmentEngineeringDetail());
 
         $inspection = $connInspectionEng->where('deleted_at', null)
-            ->with(['Room', 'equipment'])
+            ->with(['Room', 'equipment', 'Schedule'])
             ->get();
 
         foreach ($inspection as $key => $data) {
@@ -133,7 +133,7 @@ class InspectionController extends Controller
         $connInspectionHK = ConnectionDB::setConnection(new EquipmentHousekeepingDetail());
 
         $inspection = $connInspectionHK->where('deleted_at', null)
-            ->with('Room')
+            ->with(['Room', 'Schedule'])
             ->get();
 
         foreach ($inspection as $key => $data) {
