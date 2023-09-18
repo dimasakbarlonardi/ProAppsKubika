@@ -97,11 +97,17 @@ class InspectionController extends Controller
         $connEquipment = ConnectionDB::setConnection(new EquiqmentAhu());
 
         $equipment = $connEquipment->where('id_equiqment_engineering', $id)
-            ->with(['InspectionEng.Checklist', 'Room'])
+            ->with('Room')
             ->first();
 
+        $checklist = [];
+        foreach ($equipment->InspectionEng as $key => $data) {
+            $checklist[$key]['checklist'] = $data->Checklist->nama_eng_ahu;
+        }
+
         return ResponseFormatter::success([
-            'equipment' => $equipment
+            'equipment' => $equipment,
+            'checklist' => $checklist
         ], 'Berhasil mengambil Equipment dan Data Checklist Parameter');
     }
 
