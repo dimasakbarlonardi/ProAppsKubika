@@ -34,7 +34,7 @@
                     <div class="col-8">
                         <div class="card" id="permit_detail">
                             <div class="card-header">
-                                <h6 class="mb-0">Detail Work Permit</h6>
+                                <h6 class="mb-0">Detail GIGO</h6>
                             </div>
                             <div class="px-5">
                                 <div class="my-3">

@@ -139,20 +139,20 @@
                     data.checklists.map((item, i) => {
                         $('#checklist_body').append(`
                             <tr>
-                                <th scope="row">${i + 1}</th>                           
-                                <td>${item.tgl_checklist}</td>                            
+                                <th scope="row">${i + 1}</th>
+                                <td>${item.tgl_checklist}</td>
                                 <td>${item.no_checklist_ahu}</td>
                                 <td>
                                     <div class="dropdown font-sans-serif position-static"><button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal" type="button" id="order-dropdown-0" data-bs-toggle="dropdown" data-boundary="viewport" aria-haspopup="true" aria-expanded="false"><span class="fas fa-ellipsis-h fs--1"></span></button>
                                         <div class="dropdown-menu dropdown-menu-end border py-0" aria-labelledby="order-dropdown-0">
                                             <a class="dropdown-item text" href="/admin/checklistahus/${item.no_checklist_ahu}">Detail ahu Inspection</a>
                                         </div>
-                                    </div>                        
+                                    </div>
                                 </td>
                             </tr>
                         `)
                     })
-                    
+
                 }
             })
         }

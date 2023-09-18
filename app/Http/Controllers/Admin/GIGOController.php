@@ -123,16 +123,6 @@ class GIGOController extends Controller
         return redirect()->back();
     }
 
-    public function show($id)
-    {
-        $connRG = ConnectionDB::setConnection(new RequestGIGO());
-        $conn = ConnectionDB:setConnection(new )
-
-        $data['gigo'] = $conn->where('id' , $id)->first();   
-
-        return view('AdminSite.GIGO.show', $data);
-    }
-
     public function show(Request $request, $id)
     {
         $connRP = ConnectionDB::setConnection(new RequestPermit());
