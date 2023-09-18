@@ -12,6 +12,7 @@ use App\Http\Controllers\API\UnitController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\InspectionController;
 use App\Http\Controllers\API\PackageController;
+use App\Http\Controllers\API\VisitorController;
 use App\Http\Controllers\API\WorkOrderController;
 use App\Http\Controllers\PaymentController;
 use Illuminate\Http\Request;
@@ -109,5 +110,12 @@ Route::prefix('v1')->group(function () {
         Route::get('/package/unit/{id}', [PackageController::class, 'packageByUnit']);
         Route::get('/package/{id}', [PackageController::class, 'showPackage']);
         Route::post('/pickup/package/{id}/{token}', [PackageController::class, 'pickupPackage']);
+
+
+        // Visitor
+        Route::post('/visitor', [VisitorController::class, 'store']);
+        Route::get('/visitors/unit/{id}', [VisitorController::class, 'visitorByUnit']);
+        Route::get('/visitor/{id}', [VisitorController::class, 'show']);
+        Route::post('/visitor/arrive/{id}', [VisitorController::class, 'arrive']);
     });
 });
