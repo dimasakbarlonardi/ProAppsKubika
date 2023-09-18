@@ -119,6 +119,8 @@ class InspectionController extends Controller
             ->with(['Room'])
             ->first();
 
+        $equipment['status'] = json_decode($equipment->status);
+
         return ResponseFormatter::success([
             'equipment' => $equipment
         ], 'Berhasil mengambil Equipment dan Data Checklist Parameter');
