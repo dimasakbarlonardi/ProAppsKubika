@@ -139,9 +139,7 @@ class InspectionController extends Controller
             ->with(['Room', 'Equipment', 'Role'])
             ->first();
 
-        foreach ($equipment as $key => $data) {
-            $equipment[$key]['status'] = json_decode($data->status);
-        }
+        $equipment['status'] = json_decode($equipment->status);
 
         return ResponseFormatter::success(
             $equipment,
@@ -274,9 +272,7 @@ class InspectionController extends Controller
             ->with(['Room', 'Equipment', 'Role', 'Schedule'])
             ->first();
 
-        foreach ($inspection as $key => $data) {
-            $inspection[$key]['status'] = json_decode($data->status);
-        }
+        $inspection['status'] = json_decode($inspection->status);
 
         return ResponseFormatter::success(
             $inspection,
