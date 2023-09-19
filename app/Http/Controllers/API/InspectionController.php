@@ -53,6 +53,7 @@ class InspectionController extends Controller
     public function storeinspectionEng(Request $request)
     {
         $conn = ConnectionDB::setConnection(new EquiqmentEngineeringDetail());
+        $connSchedule = ConnectionDB::setConnection(new EquiqmentAhu());
 
         try {
             DB::beginTransaction();
@@ -79,6 +80,27 @@ class InspectionController extends Controller
 
             $conn->save();
             DB::commit();
+
+            $equiqmentEngineeringId = $conn->id_equiqment_engineering;
+            $schedule = $connSchedule->where('id_equiqment_engineering', $equiqmentEngineeringId)->first();
+
+            if ($schedule) {
+                $scheduleDate = $schedule->schedule;
+                
+                // Periksa dan perbarui status jadwal jika diperlukan
+                if ($schedule->status_schedule == 'not done') {
+                    // Cek apakah jadwal sudah lewat (late)
+                    $currentDate = Carbon::now();
+                    $scheduleDateTime = Carbon::createFromFormat('Y-m-d', $scheduleDate)->setTime(0, 0);
+                    
+                    if ($currentDate->greaterThan($scheduleDateTime)) {
+                        $schedule->status_schedule = 'late done';
+                    } else {
+                        $schedule->status_schedule = 'ontime';
+                    }
+                    $schedule->save();
+                }
+            }
 
             return ResponseFormatter::success([
                 $conn
@@ -118,6 +140,10 @@ class InspectionController extends Controller
         $equipment = $connEquipmentDetail->where('id_equiqment_engineering_detail', $id)
             ->with(['Room', 'Equipment', 'Role'])
             ->first();
+            
+            foreach ($equipment as $key => $data) {
+                $equipment[$key]['status'] = json_decode($data->status);
+            }
 
         return ResponseFormatter::success(
         $equipment,
@@ -125,7 +151,9 @@ class InspectionController extends Controller
         );
     }
 
-    // -----------HouseKeeping-------------
+    //------------End Inspection Engineering------------
+
+    // -----------------HouseKeeping--------------------
 
     public function checklisthousekeeping(Request $request)
     {
@@ -162,6 +190,7 @@ class InspectionController extends Controller
     public function storeinspectionHK(Request $request)
     {
         $conn = ConnectionDB::setConnection(new EquipmentHousekeepingDetail());
+        $connSchedule = ConnectionDB::setConnection(new EquiqmentToilet());
 
         try {
             DB::beginTransaction();
@@ -189,15 +218,36 @@ class InspectionController extends Controller
             $conn->save();
             DB::commit();
 
+            $equiqmentEngineeringId = $conn->id_equiqment_engineering;
+            $schedule = $connSchedule->where('id_equiqment_engineering', $equiqmentEngineeringId)->first();
+
+            if ($schedule) {
+                $scheduleDate = $schedule->schedule;
+                
+                // Periksa dan perbarui status jadwal jika diperlukan
+                if ($schedule->status_schedule == 'not done') {
+                    // Cek apakah jadwal sudah lewat (late)
+                    $currentDate = Carbon::now();
+                    $scheduleDateTime = Carbon::createFromFormat('Y-m-d', $scheduleDate)->setTime(0, 0);
+                    
+                    if ($currentDate->greaterThan($scheduleDateTime)) {
+                        $schedule->status_schedule = 'late done';
+                    } else {
+                        $schedule->status_schedule = 'ontime';
+                    }
+                    $schedule->save();
+                }
+            }
+
             return ResponseFormatter::success([
                 $conn
-            ], 'Berhasil Inspection House Keeping');
+            ], 'Berhasil Inspection Engineering');
         } catch (\Throwable $e) {
             DB::rollBack();
             dd($e);
             return ResponseFormatter::error([
                 'error' => $e,
-            ], 'Gagal Inspection House Keeping');
+            ], 'Gagal Inspection Engineering');
         }
     }
 
@@ -220,6 +270,24 @@ class InspectionController extends Controller
         ], 'Berhasil mengambil Equipment dan Data Checklist Parameter');
     }
 
-    // -------------- Security ---------------
+    public function showHistoryHK($id)
+    {
+        $connInspectionDetail = ConnectionDB::setConnection(new EquipmentHousekeepingDetail());
+
+        $inspection = $connInspectionDetail->where('id_equipment_housekeeping_detail', $id)
+            ->with(['Room', 'Equipment', 'Role', 'Schedule'])
+            ->first();
+
+        foreach ($inspection as $key => $data) {
+            $inspection[$key]['status'] = json_decode($data->status);
+        }    
+
+        return ResponseFormatter::success(
+        $inspection,
+        'Berhasil mengambil history inspection HK'
+        );
+    }
+
+    // ------------ end inspection -----------------
 
 }

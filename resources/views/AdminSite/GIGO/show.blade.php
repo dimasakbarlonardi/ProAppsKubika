@@ -27,7 +27,7 @@
             </div>
         </div>
         <div class="card-body bg-light">
-            <form action="{{ route('gigo.update', $gigo->id) }}" method="post" class="d-inline">
+            {{-- <form action="{{ route('gigo.update', $gigo->id) }}" method="post" class="d-inline"> --}}
                 @method('PUT')
                 @csrf
                 <div class="row">
@@ -168,7 +168,7 @@
                         </div>
                     </div>
                 </div>
-            </form>
+            {{-- </form> --}}
         </div>
     </div>
 @endsection

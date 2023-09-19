@@ -31,7 +31,7 @@ class EquiqmentEngineeringDetail extends Model
 
     protected $dates = ['deleted_at'];
 
-    public function Equipment()
+    public function equipment()
     {
         return $this->hasOne(EquiqmentAhu::class, 'id_equiqment_engineering', 'id_equiqment_engineering');
     }
