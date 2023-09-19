@@ -19,7 +19,12 @@ class Toilet extends Model
     ];
     protected $dates = ['deleted_at'];
 
-    public function checklisttoilet()
+    public function checklist()
+    {
+        return $this->hasOne(ChecklistParameterEquiqment::class, 'id_checklist', 'id_hk_toilet');
+    }
+
+    public function checklistParameters()
     {
         return $this->hasMany(ChecklistParameterEquiqment::class, 'id_checklist', 'id_hk_toilet');
     }

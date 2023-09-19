@@ -38,15 +38,7 @@
                             <td>{{ $checklisttoilet->equipment }}</td>
                             <td>{{ $checklisttoilet->room->nama_room }}</td>
                             <td>{{ \Carbon\Carbon::parse($checklisttoilet->tgl_checklist)->format(' d-M-Y') }}</td>
-                            <td>
-                                @if ($checklisttoilet->status_schedule == 0)
-                                    <span class="badge rounded-pill badge-subtle-success">On Time</span>
-                                @elseif ($checklisttoilet->status_schedule == 1)
-                                    <span class="badge rounded-pill badge-subtle-danger">Late Not Done</span>
-                                @elseif ($checklisttoilet->status_schedule == 2)
-                                    <span class="badge rounded-pill badge-subtle-warning">Late Done</span>
-                                @endif
-                            </td>
+                            <td>{{ $checklisttoilet->status_schedule }}</td>
                             <td>
                                 <div class="dropdown font-sans-serif position-static"><button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal" type="button" id="order-dropdown-0" data-bs-toggle="dropdown" data-boundary="viewport" aria-haspopup="true" aria-expanded="false"><span class="fas fa-ellipsis-h fs--1"></span></button>
                                     <div class="dropdown-menu dropdown-menu-end border py-0" aria-labelledby="order-dropdown-0">

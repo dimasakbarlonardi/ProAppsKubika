@@ -169,7 +169,7 @@ class ChecklistToiletHController extends Controller
             foreach ($scheduleDates as $date) {
                 $equiqment->inspections()->create([
                     'schedule_date' => $date,
-                    'status_schedule' => 0, // Status awal
+                    'status_schedule' => 'Not Done ', // Status awal
                 ]);
             }
 

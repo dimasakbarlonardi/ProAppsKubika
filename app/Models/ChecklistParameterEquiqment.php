@@ -20,12 +20,12 @@ class ChecklistParameterEquiqment extends Model
     ];
     protected $dates = ['deleted_at'];
 
-    public function Checklist()
+    public function ChecklistEng()
     {
         return $this->hasOne(EngAhu::class, 'id_eng_ahu', 'id_checklist');
     }
 
-    public function checklisttoilet()
+    public function ChecklistHK()
     {
         return $this->hasOne(Toilet::class, 'id_hk_toilet', 'id_checklist');
     }
@@ -33,10 +33,5 @@ class ChecklistParameterEquiqment extends Model
     public function checklistahu()
     {
         return $this->hasOne(ChecklistAhuDetail::class, 'id_equiqment', 'id_equiqment');
-    }
-
-    public function ChecklistHK()
-    {
-        return $this->hasOne(Toilet::class, 'id_hk_toilet', 'id_checklist');
     }
 }

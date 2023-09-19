@@ -64,7 +64,7 @@
                                         <td scope="row">
                                             @foreach ($parameters as $parameter)
                                                 @if ($parameter['id_equiqment'] == $detail->id_equiqment)
-                                                    {{ $parameter->checklist->nama_eng_ahu }} <br>
+                                                    {{ $parameter->ChecklistEng->nama_eng_ahu }} <br>
                                                 @endif
                                             @endforeach
                                         </td>
