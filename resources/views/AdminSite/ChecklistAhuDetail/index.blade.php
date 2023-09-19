@@ -59,8 +59,8 @@
                                                     alt="{{ $detail->image }}" class="img-thumbnail rounded-circle" style="max-width: 50px; height: 50px">
                                             </a>
                                         </td>
-                                        <td>{{ $detail->equipment->equiqment }}</td>
-                                        <td>{{ $detail->room->nama_room }}</td>
+                                        <td>{{ $detail->Equipment->equiqment }}</td>
+                                        <td>{{ $detail->Room->nama_room }}</td>
                                         <td scope="row">
                                             @foreach ($parameters as $parameter)
                                                 @if ($parameter['id_equiqment'] == $detail->id_equiqment)
@@ -79,7 +79,7 @@
                                                 @endif
                                             @endforeach
                                         </td>
-                                        <td>{{ $detail->role->nama_role }}</td>
+                                        <td>{{ $detail->Role->nama_role }}</td>
                                         @foreach ($idusers as $iduser)
                                             <td>{{ $iduser->name }}</td>
                                         @endforeach

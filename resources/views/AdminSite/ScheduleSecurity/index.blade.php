@@ -39,7 +39,7 @@
                                             @if ($security->status_schedule == 0)
                                             <span class="badge rounded-pill badge-subtle-success">On Time</span>
                                             @elseif ($security->status_schedule == 1)
-                                                <span class="badge rounded-pill badge-subtle-warning">not Done</span>
+                                                <span class="badge rounded-pill badge-subtle-warning">Not Done</span>
                                             @elseif ($security->status_schedule == 2)
                                                 <span class="badge rounded-pill badge-subtle-danger">Late Not Done</span>
                                             @endif
