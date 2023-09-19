@@ -38,11 +38,11 @@
                                         <td>{{ $checklistahu->room->nama_room }}</td>
                                         <td>{{\Carbon\Carbon::parse($checklistahu->tgl_checklist)->format(' d-M-Y') }}</td>
                                         <td>
-                                            @if ($checklistahu->status_schedule == 'not done')
+                                            @if ($checklistahu->status_schedule == 'Not Done')
                                             <span class="badge rounded-pill badge-subtle-danger">Not Done</span>
                                             @elseif ($checklistahu->status_schedule == 'on time')
                                                 <span class="badge rounded-pill badge-subtle-success">On Time</span>
-                                            @elseif ($checklistahu->status_schedule == 'late not done')
+                                            @elseif ($checklistahu->status_schedule == 'late Not Done')
                                                 <span class="badge rounded-pill badge-subtle-danger">Late Not Done</span>
                                             @elseif ($checklistahu->status_schedule == 'late done')
                                                 <span class="badge rounded-pill badge-subtle-warning">Late Done</span>
