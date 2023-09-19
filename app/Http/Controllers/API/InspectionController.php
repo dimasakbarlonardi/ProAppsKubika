@@ -84,22 +84,20 @@ class InspectionController extends Controller
             $equiqmentEngineeringId = $conn->id_equiqment_engineering;
             $schedule = $connSchedule->where('id_equiqment_engineering', $equiqmentEngineeringId)->first();
 
-            if ($schedule) {
-                $scheduleDate = $schedule->schedule;
-                
-                // Periksa dan perbarui status jadwal jika diperlukan
-                if ($schedule->status_schedule == 'not done') {
-                    // Cek apakah jadwal sudah lewat (late)
-                    $currentDate = Carbon::now();
-                    $scheduleDateTime = Carbon::createFromFormat('Y-m-d', $scheduleDate)->setTime(0, 0);
-                    
-                    if ($currentDate->greaterThan($scheduleDateTime)) {
-                        $schedule->status_schedule = 'late done';
-                    } else {
-                        $schedule->status_schedule = 'ontime';
-                    }
-                    $schedule->save();
+            // Periksa dan perbarui status jadwal jika diperlukan
+            if ($schedule->status_schedule == 'Not Done') {
+                // Cek apakah jadwal sudah lewat (late)
+                $currentDate = Carbon::now();
+
+                if ($currentDate > $schedule->schedule) {
+                    $status = 'Late';
+                } elseif ($currentDate <= $schedule->schedule) {
+                    $status = 'On Time';
                 }
+
+                $schedule->status_schedule = $status;
+
+                $schedule->save();
             }
 
             return ResponseFormatter::success([
@@ -140,14 +138,12 @@ class InspectionController extends Controller
         $equipment = $connEquipmentDetail->where('id_equiqment_engineering_detail', $id)
             ->with(['Room', 'Equipment', 'Role'])
             ->first();
-            
-            foreach ($equipment as $key => $data) {
-                $equipment[$key]['status'] = json_decode($data->status);
-            }
+
+        $equipment['status'] = json_decode($equipment->status);
 
         return ResponseFormatter::success(
-        $equipment,
-        'Berhasil mengambil history inspection Engineering'
+            $equipment,
+            'Berhasil mengambil history inspection Engineering'
         );
     }
 
@@ -160,7 +156,7 @@ class InspectionController extends Controller
         $connInspectionHK = ConnectionDB::setConnection(new EquipmentHousekeepingDetail());
 
         $inspection = $connInspectionHK->where('deleted_at', null)
-            ->with(['Room', 'Schedule'])
+            ->with(['Room', 'Schedule', 'equipment'])
             ->get();
 
         foreach ($inspection as $key => $data) {
@@ -218,25 +214,23 @@ class InspectionController extends Controller
             $conn->save();
             DB::commit();
 
-            $equiqmentEngineeringId = $conn->id_equiqment_engineering;
-            $schedule = $connSchedule->where('id_equiqment_engineering', $equiqmentEngineeringId)->first();
+            $equiqmentEngineeringId = $conn->id_equipment_housekeeping;
+            $schedule = $connSchedule->find($equiqmentEngineeringId);
 
-            if ($schedule) {
-                $scheduleDate = $schedule->schedule;
-                
-                // Periksa dan perbarui status jadwal jika diperlukan
-                if ($schedule->status_schedule == 'not done') {
-                    // Cek apakah jadwal sudah lewat (late)
-                    $currentDate = Carbon::now();
-                    $scheduleDateTime = Carbon::createFromFormat('Y-m-d', $scheduleDate)->setTime(0, 0);
-                    
-                    if ($currentDate->greaterThan($scheduleDateTime)) {
-                        $schedule->status_schedule = 'late done';
-                    } else {
-                        $schedule->status_schedule = 'ontime';
-                    }
-                    $schedule->save();
+            // Periksa dan perbarui status jadwal jika diperlukan
+            if ($schedule->status_schedule == 'Not Done') {
+                // Cek apakah jadwal sudah lewat (late)
+                $currentDate = Carbon::now();
+
+                if ($currentDate > $schedule->schedule) {
+                    $status = 'Late';
+                } elseif ($currentDate <= $schedule->schedule) {
+                    $status = 'On Time';
                 }
+
+                $schedule->status_schedule = $status;
+
+                $schedule->save();
             }
 
             return ResponseFormatter::success([
@@ -278,13 +272,11 @@ class InspectionController extends Controller
             ->with(['Room', 'Equipment', 'Role', 'Schedule'])
             ->first();
 
-        foreach ($inspection as $key => $data) {
-            $inspection[$key]['status'] = json_decode($data->status);
-        }    
+        $inspection['status'] = json_decode($inspection->status);
 
         return ResponseFormatter::success(
-        $inspection,
-        'Berhasil mengambil history inspection HK'
+            $inspection,
+            'Berhasil mengambil history inspection HK'
         );
     }
 

@@ -83,7 +83,7 @@ class ChecklistAhuHController extends Controller
                     'id_checklist' => $form,
                     'id_item' => $equiqment->id_equiqment_engineering
                 ]);
-                
+
                 $checklistParameter->save();
                 DB::commit();
                 Alert::success('Berhasil', 'Berhasil Menambahkan Inspection AHU');
@@ -218,7 +218,7 @@ class ChecklistAhuHController extends Controller
             foreach ($scheduleDates as $date) {
                 $equiqment->inspections()->create([
                     'schedule_date' => $date,
-                    'status_schedule' => 'not done', // Status awal
+                    'status_schedule' => 'Not Done', // Status awal
                 ]);
             }
 
