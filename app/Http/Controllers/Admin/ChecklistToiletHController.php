@@ -43,7 +43,7 @@ class ChecklistToiletHController extends Controller
         $conn = ConnectionDB::setConnection(new ChecklistToiletH());
         $conntoiletdetail = ConnectionDB::setConnection(new ChecklistToiletDetail());
         $equiqment = ConnectionDB::setConnection(new EquiqmentToilet());
-        $user_id = $request->user()->id;    
+        $user_id = $request->user()->id;
 
         $data['checklisttoilets'] = $conn->get();
         $data['toiletdetails'] = $conntoiletdetail->first();
@@ -85,7 +85,7 @@ class ChecklistToiletHController extends Controller
 
             Alert::success('Berhasil', 'Berhasil Menambahkan Inspection Toilet');
         }
-       
+
         }
 
     return redirect()->route('checklisttoilets.index');
@@ -169,7 +169,7 @@ class ChecklistToiletHController extends Controller
             foreach ($scheduleDates as $date) {
                 $equiqment->inspections()->create([
                     'schedule_date' => $date,
-                    'status_schedule' => 0, // Status awal
+                    'status_schedule' => 'Not Done', // Status awal
                 ]);
             }
 
