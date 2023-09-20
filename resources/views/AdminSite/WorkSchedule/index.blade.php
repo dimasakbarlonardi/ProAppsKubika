@@ -5,11 +5,11 @@
         <div class="card-header py-2">
             <div class="row flex-between-center">
                 <div class="my-3 col-auto">
-                    <h6 class="mb-0 text-white">List Shift Type</h6>
+                    <h6 class="mb-0 text-white">Work Schedules</h6>
                 </div>
                 <div class="col-auto d-flex">
                     <a class="btn btn-falcon-default text-600 btn-sm " href="{{ route('shifttype.create') }}"><span
-                            class="fas fa-plus fs--2 me-1"></span>Create Shift Type</a>
+                            class="fas fa-plus fs--2 me-1"></span>Add Work Schedule</a>
                 </div>
             </div>
         </div>
@@ -18,23 +18,23 @@
                 <thead>
                     <tr>
                         <th class="sort" data-sort="">No</th>
+                        <th class="sort" data-sort="shift_type">Karyawan</th>
                         <th class="sort" data-sort="shift_type">Shift Type</th>
-                        <th class="sort" data-sort="shift_type">Check In</th>
-                        <th class="sort" data-sort="shift_type">Check Out</th>
+                        <th class="sort" data-sort="shift_type">Date</th>
                         <th class="sort">Action</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach ($shifttype as $key => $shift)
+                    @foreach ($work_timelines as $key => $wt)
                         <tr>
                             <th scope="row">{{ $key + 1 }}</th>
-                            <td>{{ $shift->shift }}</td>
-                            <td>{{ $shift->checkin }}</td>
-                            <td>{{ $shift->checkout }}</td>
+                            <td>{{ $wt->Karyawan->nama_karyawan }}</td>
+                            <td>{{ $wt->ShiftType->shift }}</td>
+                            <td>{{ $wt->date }}</td>
                             <td>
-                                <a href="{{ route('shifttype.edit', $shift->id) }}" class="btn btn-sm btn-warning"><span
+                                <a href="" class="btn btn-sm btn-warning"><span
                                         class="fas fa-pencil-alt fs--2 me-1"></span>Edit</a>
-                                <form class="d-inline" action="{{ route('shifttype.destroy', $shift->id) }}" method="post">
+                                <form class="d-inline" action="" method="post">
                                     @method('DELETE')
                                     @csrf
                                     <button type="submit" class="btn btn-danger btn-sm"
