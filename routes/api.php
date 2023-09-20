@@ -89,7 +89,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/inspection-hk', [InspectionController::class, 'checklisthousekeeping']);
         Route::get('/inspection-hk-history/{id}', [InspectionController::class, 'showHistoryHK']);
         Route::get('/inspection-hk-schedule', [InspectionController::class, 'schedueinspectionhk']);
-        Route::post('/inspection-housekeeping', [InspectionController::class, 'storeinspectionHK']);
+        Route::post('/inspection-housekeeping/{id}', [InspectionController::class, 'storeinspectionHK']);
         Route::get('/equipment-housekeeping/{id}', [InspectionController::class, 'showHousekeeping']);
 
         // Inbox
