@@ -69,7 +69,7 @@ class InspectionController extends Controller
 
                 $conn->image = $inspecImage;
             }
-            $conn->status = $request->status;
+            $conn->status = json_encode($request->status);
             $conn->id_room = $request->id_room;
             $conn->id_equiqment = $request->id_equiqment;
             $conn->id_role = $request->id_role;
@@ -106,7 +106,7 @@ class InspectionController extends Controller
             ], 'Berhasil Inspection Engineering');
         } catch (\Throwable $e) {
             DB::rollBack();
-            dd($e);
+            // dd($e);
             return ResponseFormatter::error([
                 'error' => $e,
             ], 'Gagal Inspection Engineering');
