@@ -183,7 +183,7 @@ class InspectionController extends Controller
         );
     }
 
-    public function storeinspectionHK(Request $request)
+    public function storeinspectionHK(Request $request, $id)
     {
         $conn = ConnectionDB::setConnection(new EquipmentHousekeepingDetail());
         $connSchedule = ConnectionDB::setConnection(new EquiqmentToilet());
@@ -209,13 +209,13 @@ class InspectionController extends Controller
             $conn->id_role = $request->id_role;
             $conn->tgl_checklist = Carbon::now()->format('Y-m-d');
             $conn->time_checklist = Carbon::now()->format('H:i');
+            $conn->id_equipment_housekeeping = $id;
             $conn->keterangan = $request->keterangan;
 
             $conn->save();
             DB::commit();
 
-            $equiqmentEngineeringId = $conn->id_equipment_housekeeping;
-            $schedule = $connSchedule->find($equiqmentEngineeringId);
+            $schedule = $connSchedule->find($id);
 
             // Periksa dan perbarui status jadwal jika diperlukan
             if ($schedule->status_schedule == 'Not Done') {
