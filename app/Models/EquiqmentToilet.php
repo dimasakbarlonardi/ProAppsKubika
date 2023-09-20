@@ -33,6 +33,11 @@ class EquiqmentToilet extends Model
         return $this->hasOne(ChecklistToiletH::class, 'id_equiqment_toilet', 'id_equiqment_toilet');
     }
 
+    public function Schedule()
+    {
+        return $this->hasOne(EquipmentHousekeepingDetail::class, 'id_equipment_housekeeping', 'id_equipment_housekeeping');
+    }
+
     public function room()
     {
         return $this->hasOne(Room::class, 'id_room', 'id_room');
