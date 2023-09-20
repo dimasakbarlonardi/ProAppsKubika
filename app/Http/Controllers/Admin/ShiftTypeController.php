@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
 use App\Models\ShiftType;
+use App\Models\WorkTimeline;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -119,5 +120,14 @@ class ShiftTypeController extends Controller
         Alert::success('Success','Successfully Deleted Shift Type');
 
         return redirect()->route('shifttype.index');
+    }
+
+    public function workSchedules()
+    {
+        $connWorkTimeline = ConnectionDB::setConnection(new WorkTimeline());
+
+        $data['work_timelines'] = $connWorkTimeline->get();
+
+        return view('AdminSite.WorkSchedule.index', $data);
     }
 }

@@ -14,7 +14,7 @@ class EquiqmentAhu extends Model
     protected $table = 'tb_equiqment_ahu';
     protected $primaryKey = 'id_equiqment_engineering';
 
-    protected $fillable =[
+    protected $fillable = [
         'id_equiqment_engineering',
         'id_equiqment',
         'barcode_room',
@@ -50,6 +50,7 @@ class EquiqmentAhu extends Model
 
     public function InspectionEng()
     {
-         return $this->hasMany(ChecklistParameterEquiqment::class, 'id_item', 'id_equiqment_engineering');
+        return $this->hasMany(ChecklistParameterEquiqment::class, 'id_item', 'id_equiqment_engineering')
+            ->where('id_equiqment', 1);
     }
 }
