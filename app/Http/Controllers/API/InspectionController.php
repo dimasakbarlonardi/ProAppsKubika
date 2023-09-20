@@ -50,7 +50,7 @@ class InspectionController extends Controller
         );
     }
 
-    public function storeinspectionEng(Request $request)
+    public function storeinspectionEng(Request $request, $id)
     {
         $conn = ConnectionDB::setConnection(new EquiqmentEngineeringDetail());
         $connSchedule = ConnectionDB::setConnection(new EquiqmentAhu());
@@ -60,7 +60,6 @@ class InspectionController extends Controller
 
             $conn->id_equiqment_engineering = $request->id_equiqment_engineering;
             $file = $request->file('image');
-
             if ($file) {
                 $fileName = $request->id_equiqment_engineering . '-' .   $file->getClientOriginalName();
                 $outputInspecImage = '/public/' . $request->user()->id_site . '/img/inspection/eng/' . $fileName;
@@ -70,20 +69,22 @@ class InspectionController extends Controller
 
                 $conn->image = $inspecImage;
             }
-            $conn->status = json_encode($request->status);
+            $conn->status = $request->status;
             $conn->id_room = $request->id_room;
             $conn->id_equiqment = $request->id_equiqment;
             $conn->id_role = $request->id_role;
             $conn->tgl_checklist = Carbon::now()->format('Y-m-d');
             $conn->time_checklist = Carbon::now()->format('H:i');
+            $conn->user_id = $request->user_id;
+            $conn->id_equiqment_engineering = $id;
             $conn->keterangan = $request->keterangan;
 
             $conn->save();
             DB::commit();
 
             $equiqmentEngineeringId = $conn->id_equiqment_engineering;
-            $schedule = $connSchedule->where('id_equiqment_engineering', $equiqmentEngineeringId)->first();
-
+            $schedule = $connSchedule->find($id);
+            
             // Periksa dan perbarui status jadwal jika diperlukan
             if ($schedule->status_schedule == 'Not Done') {
                 // Cek apakah jadwal sudah lewat (late)

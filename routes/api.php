@@ -82,7 +82,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/inspectioneng', [InspectionController::class, 'checklistengineering']);
         Route::get('/inspection-engineering-history/{id}', [InspectionController::class, 'showHistoryEngineering']);
         Route::get('/inspectioneng-schedule', [InspectionController::class, 'schedueinspection']);
-        Route::post('/inspection-engineering', [InspectionController::class, 'storeinspectionEng']);
+        Route::post('/inspection-engineering/{id}', [InspectionController::class, 'storeinspectionEng']);
         Route::get('/equipment-engineering/{id}', [InspectionController::class, 'showEngineering']);
 
         // Inspection HK showHistoryHK
