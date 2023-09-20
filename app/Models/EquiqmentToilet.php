@@ -14,7 +14,7 @@ class EquiqmentToilet extends Model
     protected $table = 'tb_equipment_toilet';
     protected $primaryKey = 'id_equipment_housekeeping';
 
-    protected $fillable =[
+    protected $fillable = [
         'id_equipment_housekeeping',
         'id_equiqment',
         'barcode_room',
@@ -43,9 +43,9 @@ class EquiqmentToilet extends Model
         return $this->hasOne(Role::class, 'id', 'id_role');
     }
 
-     public function Inspection()
+    public function Inspection()
     {
-         return $this->hasMany(ChecklistParameterEquiqment::class, 'id_item', 'id_equipment_housekeeping')
-         ->where('id_equiqment', 2);
+        return $this->hasMany(ChecklistParameterEquiqment::class, 'id_item', 'id_equipment_housekeeping')
+            ->where('id_equiqment', 2);
     }
 }

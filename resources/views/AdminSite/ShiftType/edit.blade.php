@@ -23,6 +23,18 @@
                     <label class="form-label">Shift Type</label>
                     <input type="text" name="shift" value="{{ $shift->shift }}" class="form-control">
                 </div>
+                <div class="mb-3">
+                    <div class="row">
+                        <div class="col-6">
+                            <label class="form-label">Check In</label>
+                            <input type="text" name="shift" value="{{ $shift->check_in }}" class="form-control">
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">Check Out</label>
+                            <input type="text" name="shift" value="{{ $shift->check_out }}" class="form-control">
+                        </div>
+                    </div>
+                </div>
                 <div class="mt-5">
                     <button type="submit" class="btn btn-primary">Submit</button>
                     <button type="button" class="btn btn-danger"><a class="text-white"
