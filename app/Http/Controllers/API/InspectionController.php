@@ -42,7 +42,10 @@ class InspectionController extends Controller
     {
         $connInspectionEng = ConnectionDB::setConnection(new EquiqmentAhu());
 
-        $inspection = $connInspectionEng->where('deleted_at', null)->with('Room')->get();
+        $inspection = $connInspectionEng->where('deleted_at', null)
+            ->doesntHave('Schedule')
+            ->with('Room')
+            ->get();
 
         return ResponseFormatter::success(
             $inspection,
@@ -84,7 +87,7 @@ class InspectionController extends Controller
 
             $equiqmentEngineeringId = $conn->id_equiqment_engineering;
             $schedule = $connSchedule->find($id);
-            
+
             // Periksa dan perbarui status jadwal jika diperlukan
             if ($schedule->status_schedule == 'Not Done') {
                 // Cek apakah jadwal sudah lewat (late)
@@ -175,6 +178,7 @@ class InspectionController extends Controller
         $connInspectionHK = ConnectionDB::setConnection(new EquiqmentToilet());
 
         $inspection = $connInspectionHK->where('deleted_at', null)
+            ->doesntHave('Schedule')
             ->with('Room')
             ->get();
 
