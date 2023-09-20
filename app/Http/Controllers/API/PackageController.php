@@ -58,7 +58,7 @@ class PackageController extends Controller
         $connPackage = ConnectionDB::setConnection(new Package());
 
         $packages = $connPackage->where('unit_id', $id)
-            ->with('Unit')
+            ->with(['Unit', 'Receiver'])
             ->get();
 
         return ResponseFormatter::success(
