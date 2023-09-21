@@ -16,24 +16,15 @@ use Laravel\Sanctum\PersonalAccessToken;
 
 class AttendanceController extends Controller
 {
-    public function getCoor($token)
+    public function siteLocation(Request $request)
     {
-        $getToken = str_replace("RA164-", "|", $token);
-        $tokenable = PersonalAccessToken::findToken($getToken);
+        $user = $request->user();
+        $site = Site::find($user->id_site);
 
-        if ($tokenable) {
-            $user = $tokenable->tokenable;
-            $site = Site::find($user->id_site);
-
-            return ResponseFormatter::success([
-                'lat' => $site->lat,
-                'long' => $site->long,
-            ], 'Get success location');
-        } else {
-            return ResponseFormatter::error([
-                'message' => 'Unauthorized'
-            ], 'Authentication Failed', 401);
-        }
+        return ResponseFormatter::success([
+            'lat' => $site->lat,
+            'long' => $site->long,
+        ], 'Success get site location');
     }
 
     function attend($user)

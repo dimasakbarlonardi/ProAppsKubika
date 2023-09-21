@@ -14,7 +14,7 @@ class EquiqmentAhu extends Model
     protected $table = 'tb_equiqment_ahu';
     protected $primaryKey = 'id_equiqment_engineering';
 
-    protected $fillable =[
+    protected $fillable = [
         'id_equiqment_engineering',
         'id_equiqment',
         'barcode_room',
@@ -38,6 +38,11 @@ class EquiqmentAhu extends Model
         return $this->hasOne(Room::class, 'id_room', 'id_room');
     }
 
+    public function Schedule()
+    {
+        return $this->hasOne(EquiqmentEngineeringDetail::class, 'id_equiqment_engineering', 'id_equiqment_engineering');
+    }
+
     public function role()
     {
         return $this->hasOne(Role::class, 'id', 'id_role');
@@ -45,6 +50,7 @@ class EquiqmentAhu extends Model
 
     public function InspectionEng()
     {
-         return $this->hasMany(ChecklistParameterEquiqment::class, 'id_item', 'id_equiqment_engineering');
+        return $this->hasMany(ChecklistParameterEquiqment::class, 'id_item', 'id_equiqment_engineering')
+            ->where('id_equiqment', 1);
     }
 }

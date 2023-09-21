@@ -576,6 +576,9 @@ Route::prefix('admin')->group(function () {
         Route::get('/inspection-parameter-engineering/{id}', [ChecklistAhuHController::class, 'checklist'])->name('checklistengineering');
         Route::post('/checklist-parameter-engineering/{id}', [ChecklistAhuHController::class, 'checklistParameter'])->name('checklistParameter');
         Route::post('/inspection-enginerring', [ChecklistAhuHController::class, 'inspectionStore'])->name('inspectionStore');
+        Route::get('/inspections/schedules/{id}', [ChecklistAhuHController::class, 'inspectionSchedules'])->name('inspectionSchedules');
+        Route::post('/inspections/create-schedules/{id}', [ChecklistAhuHController::class, 'postSchedules'])->name('postSchedules');
+        Route::post('/inspections/destroy-schedules/{id}', [ChecklistAhuHController::class, 'destroySchedules'])->name('destroySchedules');
 
         //CRUD Checklist AHU Detail
         Route::resource('ahudetails', ChecklistAhuDetailController::class);
@@ -631,6 +634,8 @@ Route::prefix('admin')->group(function () {
         Route::get('/inspection-toilet/{id}', [ChecklistToiletHController::class, 'fronttoilet'])->name('fronttoilet');
         Route::get('/inspection-parameter-toilet/{id}', [ChecklistToiletHController::class, 'checklisttoilet'])->name('checklisttoilet');
         Route::post('/checklist-parameter-toilet/{id}', [ChecklistToiletHController::class, 'checklistParameterHK'])->name('checklistParameterHK');
+        Route::get('/inspections-hk/schedules/{id}', [ChecklistToiletHController::class, 'inspectionSchedulesHK'])->name('inspectionSchedulesHK');
+        Route::post('/inspections-hk/schedules/{id}', [ChecklistToiletHController::class, 'postSchedulesHK'])->name('postSchedulesHK');
 
         //CRUD Checklist Toilet Detail
         Route::resource('toiletdetails', ChecklistToiletDetailController::class);
@@ -742,6 +747,9 @@ Route::prefix('admin')->group(function () {
         Route::resource('forgottype', ForgotAttendanceController::class);
         // -Shift Type
         Route::resource('shifttype', ShiftTypeController::class);
+
+        // Work Schedule
+        Route::get('/work-schedules', [ShiftTypeController::class, 'workSchedules'])->name('workSchedules');
 
         // --------------- Attendance ------------------
         Route::resource('requestattendance', RequestAttendanceController::class);

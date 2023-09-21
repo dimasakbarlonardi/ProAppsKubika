@@ -82,7 +82,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/inspectioneng', [InspectionController::class, 'checklistengineering']);
         Route::get('/inspection-engineering-history/{id}', [InspectionController::class, 'showHistoryEngineering']);
         Route::get('/inspectioneng-schedule', [InspectionController::class, 'schedueinspection']);
-        Route::post('/inspection-engineering', [InspectionController::class, 'storeinspectionEng']);
+        Route::post('/inspection-engineering/{id}', [InspectionController::class, 'storeinspectionEng']);
         Route::get('/equipment-engineering/{id}', [InspectionController::class, 'showEngineering']);
 
         // Inspection HK showHistoryHK
@@ -102,6 +102,7 @@ Route::prefix('v1')->group(function () {
         Route::post('/gigo/{id}', [GIGOController::class, 'update']);
 
         // Attendance
+        Route::get('/site-location', [AppAttendanceController::class, 'siteLocation']);
         Route::post('/attendance/checkin/{token}', [AppAttendanceController::class, 'checkin']);
         Route::post('/attendance/checkout/{token}', [AppAttendanceController::class, 'checkout']);
 

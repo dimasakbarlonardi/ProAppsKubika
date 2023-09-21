@@ -27,7 +27,6 @@
                                     <th class="align-baseline" data-sort="room">Location</th>
                                     <th class="align-baseline" data-sort="inspection">Inspection HouseKeeping</th>
                                     <th class="align-baseline" data-sort="status">Status</th>
-                                    <th class="align-baseline" data-sort="pic">PIC</th>
                                     <th class="align-baseline" data-sort="user">CheckBy</th>
                                     <th class="align-baseline" data-sort="tgl_checklist">Check Date</th>
                                     <th class="align-baseline" data-sort="keterangan">Keterangan</th>
@@ -38,60 +37,55 @@
                                     <tr>
                                         <th scope="row">{{ $key + 1 }}</th>
                                         <td>
-                                            <a href="{{ $detail->image ? asset($detail->image) : asset('/assets/img/team/3-thumb.png') }}" data-bs-toggle="modal" data-bs-target="#error-modal" data-image="{{ $detail->image ? asset($detail->image) : asset('/assets/img/team/3-thumb.png') }}">
-                                                <img src="{{ $detail->image ? asset($detail->image) : asset('/assets/img/team/3-thumb.png') }}" alt="{{ $detail->image }}" class="img-thumbnail rounded-circle" style="max-width: 50px; height: 50px">
+                                            <a href="{{ $detail->image ? asset($detail->image) : asset('/assets/img/team/3-thumb.png') }}"
+                                                data-bs-toggle="modal" data-bs-target="#error-modal"
+                                                data-image="{{ $detail->image ? asset($detail->image) : asset('/assets/img/team/3-thumb.png') }}">
+                                                <img src="{{ $detail->image ? asset($detail->image) : asset('/assets/img/team/3-thumb.png') }}"
+                                                    alt="{{ $detail->image }}" class="img-thumbnail rounded-circle"
+                                                    style="max-width: 50px; height: 50px">
                                             </a>
                                         </td>
                                         <td>{{ $detail->equipment->equipment }}</td>
-                                        <td>{{ $detail->room->nama_room }}</td>
+                                        <td>{{ $detail->Room->nama_room }}</td>
                                         <td scope="row">
-                                            @foreach ($parameters as $parameter)
-                                                @if ($parameter['id_equiqment'] == $detail->id_equipment)
-                                                    {{ $parameter->checklisttoilet->nama_hk_toilet }} <br>
-                                                @endif
-                                            @endforeach
+
                                         </td>
                                         <td>
-                                            @foreach ($parameters as $parameter)
-                                            @if ($parameter['id_equiqment'] == $detail->id_equipment)
-                                                @if ($parameter->status == 0)
-                                                    OK <br>
-                                                @else
-                                                    Not OK
-                                                @endif
-                                            @endif
-                                        @endforeach
+
                                         </td>
                                         <td>{{ $detail->role->nama_role }}</td>
-                                        @foreach ($idusers as $iduser)
-                                        <td>{{ $iduser->name }}</td>
-                                        @endforeach
                                         <td>
                                             {{ \Carbon\Carbon::parse($detail->usage_return)->format(' d M Y') }}
                                         </td>
                                         <td>{{ $detail->keterangan }}</td>
                                     </tr>
-                                    @endforeach
+                                    <div class="modal fade" id="error-modal" tabindex="-1" role="dialog"
+                                        aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered" role="document"
+                                            style="max-width: 500px">
+                                            <div class="modal-content position-relative">
+                                                <div class="position-absolute top-0 end-0 mt-2 me-2 z-index-1">
+                                                    <button
+                                                        class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base"
+                                                        data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <img id="modal-image"
+                                                    src="{{ $detail->image ? asset($detail->image) : asset('/assets/img/team/3-thumb.png') }}"
+                                                    alt="{{ $detail->image }}" class="img-thumbnail">
+                                                <div class="modal-footer">
+                                                    <button class="btn btn-secondary" type="button"
+                                                        data-bs-dismiss="modal">Close</button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endforeach
                             </tbody>
                         </table>
                     </div>
-                </form>
-
-                <div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 500px">
-                      <div class="modal-content position-relative">
-                        {{-- <div class="position-absolute top-0 end-0 mt-2 me-2 z-index-1">
-                          <button class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div> --}}
-                        <img id="modal-image" src="{{ $detail->image ? asset($detail->image) : asset('/assets/img/team/3-thumb.png') }}" alt="{{ $detail->image }}" class="img-thumbnail">
-                        {{-- <div class="modal-footer">
-                            <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
-                        </div> --}}
-                       </div>
-                      </div>
-                </div>
-            </div>
+            </form>
         </div>
+    </div>
     </div>
 @endsection
 
@@ -103,7 +97,7 @@
     <script>
         const modal = new bootstrap.Modal(document.getElementById('error-modal'));
         const modalImage = document.getElementById('modal-image');
-        
+
         document.querySelectorAll('[data-bs-toggle="modal"]').forEach((element) => {
             element.addEventListener('click', (event) => {
                 event.preventDefault();
@@ -114,4 +108,3 @@
         });
     </script>
 @endsection
-  

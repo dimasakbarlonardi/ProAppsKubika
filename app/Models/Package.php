@@ -38,4 +38,9 @@ class Package extends Model
     {
         return $this->hasOne(Unit::class, 'id_unit', 'unit_id');
     }
+
+    public function Receiver()
+    {
+        return $this->hasOne(User::class, 'id_user', 'receiver_id');
+    }
 }
