@@ -46,4 +46,9 @@ class EquipmentHousekeepingDetail extends Model
     {
         return $this->hasOne(EquiqmentToilet::class, 'id_equipment_housekeeping', 'id_equipment_housekeeping');
     }
+
+    public function CheckedBy()
+    {
+        return $this->hasOne(User::class, 'id_user', 'user_id');
+    }
 }

@@ -19,14 +19,9 @@ class ChecklistToiletDetailController extends Controller
      */
     public function index(Request $request)
     {
-        $conn = ConnectionDB::setConnection(new EquiqmentToilet());
         $equiqmentDetail = ConnectionDB::setConnection(new EquipmentHousekeepingDetail());
 
-        $user_id = $request->user()->id;
-
         $data['equiqmentdetails'] = $equiqmentDetail->where('status_schedule', '!=', 'Not done')->get();
-        $data['checklisttoilet'] = $conn->first();
-        $data['idusers'] = Login::where('id', $user_id)->get();
 
         return view('AdminSite.ChecklistToiletDetail.index',$data);
     }
