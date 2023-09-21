@@ -15,7 +15,6 @@ use App\Models\Login;
 use App\Models\Role;
 use App\Models\Room;
 use Carbon\Carbon;
-use FTP\Connection;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Http\Request;
@@ -93,30 +92,6 @@ class ChecklistAhuHController extends Controller
         return redirect()->route('checklistahus.index');
     }
 
-    // public function filterByNoChecklist(Request $request)
-    // {
-    //     $conn = ConnectionDB::setConnection(new ChecklistAhuH());
-
-
-    //     if ($request->date_to == null) {
-    //         $data = $conn->where('tgl_checklist', $request->date_from);
-    //     } else {
-    //         $data = $conn->whereBetween('tgl_checklist', [$request->date_from, $request->date_to]);
-    //     }
-
-    //     if ($request->no_checklist_ahu) {
-    //         $data = $data->where('no_checklist_ahu', $request->no_checklist_ahu);
-    //     }
-    //     $data = $data->get();
-
-    //     return response()->json(['checklists' => $data]);
-    // }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create(Request $request)
     {
         $connroom = ConnectionDB::setConnection(new Room());
@@ -146,13 +121,6 @@ class ChecklistAhuHController extends Controller
 
         return view('AdminSite.ChecklistAhuH.add', $data);
     }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
 
     public function inspectionStore(Request $request)
     {
@@ -313,5 +281,45 @@ class ChecklistAhuHController extends Controller
         Alert::success('Berhasil', 'Berhasil Menghapus Checklist AHU');
 
         return redirect()->route('checklistahus.index');
+    }
+
+    public function inspectionSchedules($id)
+    {
+        $connEquiqment = ConnectionDB::setConnection(new EquiqmentAhu());
+        $connSchedules = ConnectionDB::setConnection(new EquiqmentEngineeringDetail());
+
+        $data['eq'] = $connEquiqment->find($id);
+        $data['schedules'] = $connSchedules->where('id_equiqment_engineering', $id)
+        ->orderBy('schedule', 'ASC')
+        ->get();
+
+        return view('AdminSite.ChecklistAhuH.schedules', $data);
+    }
+
+    public function postSchedules(Request $request, $id)
+    {
+        $connEquipmentDetail = ConnectionDB::setConnection(new EquiqmentEngineeringDetail());
+
+        $connEquipmentDetail->create([
+            'id_equiqment_engineering' => $id,
+            'schedule' => $request->schedule,
+            'status_schedule' => 'Not Done'
+        ]);
+
+        Alert::success('Success', 'Success add schedule');
+
+        return redirect()->back();
+    }
+
+    public function destroySchedules($id)
+    {
+        $connSchedules = ConnectionDB::setConnection(new EquiqmentEngineeringDetail());
+
+        $schedule = $connSchedules->find($id);
+        $schedule->delete();
+
+        Alert::success('Success', 'Success remove schedule');
+
+        return redirect()->back();
     }
 }
