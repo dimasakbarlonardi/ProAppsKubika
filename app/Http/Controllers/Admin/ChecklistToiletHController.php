@@ -7,6 +7,7 @@ use App\Helpers\ConnectionDB;
 use App\Models\ChecklistParameterEquiqment;
 use App\Models\ChecklistToiletDetail;
 use App\Models\ChecklistToiletH;
+use App\Models\EquipmentHousekeepingDetail;
 use App\Models\EquiqmentToilet;
 use App\Models\Login;
 use App\Models\Role;
@@ -26,12 +27,10 @@ class ChecklistToiletHController extends Controller
      */
     public function index(Request $request)
     {
-        $conntoiletdetail = ConnectionDB::setConnection(new ChecklistToiletDetail());
         $equiqment = ConnectionDB::setConnection(new EquiqmentToilet());
         $user_id = $request->user()->id;
 
         $data['checklisttoilets'] = $equiqment->get();
-        $data['toiletdetail'] = $conntoiletdetail->first();
         $data['equiqments'] = $equiqment->get();
         $data['idusers'] = Login::where('id', $user_id)->get();
 
@@ -90,24 +89,6 @@ class ChecklistToiletHController extends Controller
 
     return redirect()->route('checklisttoilets.index');
     }
-
-    // public function filterByNoChecklist(Request $request)
-    // {
-    //     $conn = ConnectionDB::setConnection(new ChecklistToiletH());
-
-    //     if ($request->date_to == null) {
-    //         $data = $conn->where('tgl_checklist', $request->date_from);
-    //     } else {
-    //         $data = $conn->whereBetween('tgl_checklist', [$request->date_from, $request->date_to]);
-    //     }
-
-    //     if ($request->no_checklist_toilet) {
-    //         $data = $data->where('no_checklist_toilet', $request->no_checklist_toilet);
-    //     }
-    //     $data = $data->get();
-
-    //     return response()->json(['checklists' => $data]);
-    // }
 
     /**
      * Show the form for creating a new resource.
@@ -208,37 +189,31 @@ class ChecklistToiletHController extends Controller
         return view('AdminSite.ChecklistToiletH.show', $data);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
+    public function inspectionSchedulesHK($id)
     {
-        //
+        $connEquiqment = ConnectionDB::setConnection(new EquiqmentToilet());
+        $connSchedules = ConnectionDB::setConnection(new EquipmentHousekeepingDetail());
+
+        $data['eq'] = $connEquiqment->find($id);
+        $data['schedules'] = $connSchedules->where('id_equipment_housekeeping', $id)
+        ->orderBy('schedule', 'ASC')
+        ->get();
+
+        return view('AdminSite.ChecklistToiletH.schedules', $data);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
+    public function postSchedulesHK(Request $request, $id)
     {
-        //
-    }
+        $connEquipmentDetail = ConnectionDB::setConnection(new EquipmentHousekeepingDetail());
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
+        $connEquipmentDetail->create([
+            'id_equipment_housekeeping' => $id,
+            'schedule' => $request->schedule,
+            'status_schedule' => 'Not Done'
+        ]);
+
+        Alert::success('Success', 'Success add schedule');
+
+        return redirect()->back();
     }
 }
