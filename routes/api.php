@@ -102,6 +102,7 @@ Route::prefix('v1')->group(function () {
         Route::post('/gigo/{id}', [GIGOController::class, 'update']);
 
         // Attendance
+        Route::get('/site-location', [AppAttendanceController::class, 'siteLocation']);
         Route::post('/attendance/checkin/{token}', [AppAttendanceController::class, 'checkin']);
         Route::post('/attendance/checkout/{token}', [AppAttendanceController::class, 'checkout']);
 
