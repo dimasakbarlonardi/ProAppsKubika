@@ -23,26 +23,10 @@ class ChecklistAhuDetailController extends Controller
      */
     public function index(Request $request)
     {
-        $conn = ConnectionDB::setConnection(new EquiqmentAhu());
         $equiqmentDetail = ConnectionDB::setConnection(new EquiqmentEngineeringDetail());
-
-        $checklist = ConnectionDB::setConnection(new ChecklistParameterEquiqment());
         $user_id = $request->user()->id;
 
-        $eq = $equiqmentDetail->find(1);
-
-        $statuses = [
-            ['id_eq' => 'Freyon', 'status' => 'OK'],
-            ['id_eq' => 'Dingin', 'status' => 'NOT OK']
-        ];
-        $eq->update([
-            'status' => json_encode($statuses)
-        ]);
-
-        $data['equiqmentdetails'] = $equiqmentDetail->get();
-        // $data['equiqmentdetails'] = $statuses;
-        $data['checklistahu'] = $conn->first();
-        $data['parameters'] = $checklist->get();
+        $data['equiqmentdetails'] = $equiqmentDetail->where('status_schedule', '!=', 'Not Done')->get();
 
         $data['idusers'] = Login::where('id', $user_id)->get();
         return view('AdminSite.ChecklistAhuDetail.index', $data);
