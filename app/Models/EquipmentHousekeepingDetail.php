@@ -21,14 +21,13 @@ class EquipmentHousekeepingDetail extends Model
         'image',
         'id_room',
         'status',
-        'id_equipment',
-        'id_role',
-        'tgl_checklist',
-        'time_checklist',
-        'keterangan'
+        'checklist_datetime',
+        'schedule',
+        'status_schedule',
+        'user_id'
     ];
 
-    public function equipment()
+    public function Equipment()
     {
         return $this->hasOne(EquiqmentToilet::class, 'id_equipment_housekeeping', 'id_equipment_housekeeping');
     }

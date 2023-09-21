@@ -17,6 +17,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use File;
+use stdClass;
 
 class InspectionController extends Controller
 {
@@ -38,51 +39,65 @@ class InspectionController extends Controller
         );
     }
 
-    public function schedueinspection(Request $request)
+    public function schedueinspection()
     {
-        $connInspectionEng = ConnectionDB::setConnection(new EquiqmentAhu());
+        $connSchedules = ConnectionDB::setConnection(new EquiqmentEngineeringDetail());
 
-        $inspection = $connInspectionEng->where('deleted_at', null)->with('Room')->get();
+        $nowMonth = Carbon::now()->format('m');
+        $getSchedules = $connSchedules->whereMonth('schedule', $nowMonth)
+            ->where('status_schedule', 'Not Done')
+            ->with('Equipment.Room')
+            ->get();
+
+        $inspections = [];
+
+        if ($getSchedules) {
+            foreach ($getSchedules as $schedule) {
+                $eq = $schedule->Equipment;
+
+                $object = new stdClass();
+                $object->id_equiqment_engineering = $schedule->id_equiqment_engineering_detail;
+                $object->schedule = $schedule->schedule;
+                $object->equipment = $eq->equiqment;
+                $object->status_schedule = $schedule->status_schedule;
+
+                $object->room = $eq->Room;
+
+                $inspections[] = $object;
+            }
+        }
 
         return ResponseFormatter::success(
-            $inspection,
+            $inspections,
             'Berhasil mengambil Schedule Engineering'
         );
     }
 
-    public function storeinspectionEng(Request $request)
+    public function storeinspectionEng(Request $request, $id)
     {
-        $conn = ConnectionDB::setConnection(new EquiqmentEngineeringDetail());
-        $connSchedule = ConnectionDB::setConnection(new EquiqmentAhu());
+        $connSchedule = ConnectionDB::setConnection(new EquiqmentEngineeringDetail());
+        $schedule = $connSchedule->find($id);
 
         try {
             DB::beginTransaction();
 
-            $conn->id_equiqment_engineering = $request->id_equiqment_engineering;
             $file = $request->file('image');
-
             if ($file) {
-                $fileName = $request->id_equiqment_engineering . '-' .   $file->getClientOriginalName();
+                $fileName = $id . '-' .   $file->getClientOriginalName();
                 $outputInspecImage = '/public/' . $request->user()->id_site . '/img/inspection/eng/' . $fileName;
                 $inspecImage = '/storage/' . $request->user()->id_site . '/img/inspection/eng/' . $fileName;
 
                 Storage::disk('local')->put($outputInspecImage, File::get($file));
 
-                $conn->image = $inspecImage;
+                $schedule->image = $inspecImage;
             }
-            $conn->status = json_encode($request->status);
-            $conn->id_room = $request->id_room;
-            $conn->id_equiqment = $request->id_equiqment;
-            $conn->id_role = $request->id_role;
-            $conn->tgl_checklist = Carbon::now()->format('Y-m-d');
-            $conn->time_checklist = Carbon::now()->format('H:i');
-            $conn->keterangan = $request->keterangan;
+            $schedule->status = json_encode($request->status);
+            $schedule->id_room = $request->id_room;
+            $schedule->checklist_datetime = Carbon::now();
+            $schedule->user_id = $request->user_id;
 
-            $conn->save();
+            $schedule->save();
             DB::commit();
-
-            $equiqmentEngineeringId = $conn->id_equiqment_engineering;
-            $schedule = $connSchedule->where('id_equiqment_engineering', $equiqmentEngineeringId)->first();
 
             // Periksa dan perbarui status jadwal jika diperlukan
             if ($schedule->status_schedule == 'Not Done') {
@@ -101,11 +116,11 @@ class InspectionController extends Controller
             }
 
             return ResponseFormatter::success([
-                $conn
+                $schedule
             ], 'Berhasil Inspection Engineering');
         } catch (\Throwable $e) {
             DB::rollBack();
-            dd($e);
+            // dd($e);
             return ResponseFormatter::error([
                 'error' => $e,
             ], 'Gagal Inspection Engineering');
@@ -136,7 +151,7 @@ class InspectionController extends Controller
         $connEquipmentDetail = ConnectionDB::setConnection(new EquiqmentEngineeringDetail());
 
         $equipment = $connEquipmentDetail->where('id_equiqment_engineering_detail', $id)
-            ->with(['Room', 'Equipment', 'Role'])
+            ->with(['Room', 'Equipment'])
             ->first();
 
         $equipment['status'] = json_decode($equipment->status);
@@ -155,7 +170,7 @@ class InspectionController extends Controller
     {
         $connInspectionHK = ConnectionDB::setConnection(new EquipmentHousekeepingDetail());
 
-        $inspection = $connInspectionHK->where('deleted_at', null)
+        $inspection = $connInspectionHK->where('status_schedule', '!=', 'Not Done')
             ->with(['Room', 'Schedule', 'equipment'])
             ->get();
 
@@ -169,53 +184,62 @@ class InspectionController extends Controller
         );
     }
 
-    public function schedueinspectionhk(Request $request)
+    public function schedueinspectionhk()
     {
-        $connInspectionHK = ConnectionDB::setConnection(new EquiqmentToilet());
+        $connInspectionHK = ConnectionDB::setConnection(new EquipmentHousekeepingDetail());
 
-        $inspection = $connInspectionHK->where('deleted_at', null)
-            ->with('Room')
+        $nowMonth = Carbon::now()->format('m');
+        $getSchedules = $connInspectionHK->whereMonth('schedule', $nowMonth)
+            ->where('status_schedule', 'Not Done')
+            ->with('Equipment.Room')
             ->get();
 
+        $inspections = [];
+
+        if ($getSchedules) {
+            foreach ($getSchedules as $schedule) {
+                $eq = $schedule->Equipment;
+
+                $object = new stdClass();
+                $object->id_equipment_housekeeping = $schedule->id_equipment_housekeeping_detail;
+                $object->schedule = $schedule->schedule;
+                $object->equipment = $eq->equiqment;
+                $object->status_schedule = $schedule->status_schedule;
+
+                $object->room = $eq->Room;
+
+                $inspections[] = $object;
+            }
+        }
+
         return ResponseFormatter::success(
-            $inspection,
+            $inspections,
             'Berhasil mengambil Schedule HouseKeeping'
         );
     }
 
-    public function storeinspectionHK(Request $request)
+    public function storeinspectionHK(Request $request, $id)
     {
         $conn = ConnectionDB::setConnection(new EquipmentHousekeepingDetail());
-        $connSchedule = ConnectionDB::setConnection(new EquiqmentToilet());
+        $schedule = $conn->find($id);
 
         try {
             DB::beginTransaction();
 
-            $conn->id_equipment_housekeeping = $request->id_equipment_housekeeping;
             $file = $request->file('image');
 
             if ($file) {
-                $fileName = $request->id_equipment_housekeeping . '-' .   $file->getClientOriginalName();
+                $fileName = $id . '-' .   $file->getClientOriginalName();
                 $outputInspecImage = '/public/' . $request->user()->id_site . '/img/inspection/hk/' . $fileName;
                 $inspecImage = '/storage/' . $request->user()->id_site . '/img/inspection/hk/' . $fileName;
 
                 Storage::disk('local')->put($outputInspecImage, File::get($file));
 
-                $conn->image = $inspecImage;
+                $schedule->image = $inspecImage;
             }
-            $conn->id_room = $request->id_room;
-            $conn->status = json_encode($request->status);
-            $conn->id_equipment = $request->id_equipment;
-            $conn->id_role = $request->id_role;
-            $conn->tgl_checklist = Carbon::now()->format('Y-m-d');
-            $conn->time_checklist = Carbon::now()->format('H:i');
-            $conn->keterangan = $request->keterangan;
-
-            $conn->save();
-            DB::commit();
-
-            $equiqmentEngineeringId = $conn->id_equipment_housekeeping;
-            $schedule = $connSchedule->find($equiqmentEngineeringId);
+            $schedule->id_room = $request->id_room;
+            $schedule->status = json_encode($request->status);
+            $schedule->checklist_datetime = Carbon::now();
 
             // Periksa dan perbarui status jadwal jika diperlukan
             if ($schedule->status_schedule == 'Not Done') {
@@ -229,19 +253,20 @@ class InspectionController extends Controller
                 }
 
                 $schedule->status_schedule = $status;
-
-                $schedule->save();
             }
 
+            $schedule->save();
+            DB::commit();
+
             return ResponseFormatter::success([
-                $conn
-            ], 'Berhasil Inspection Engineering');
+                $schedule
+            ], 'Berhasil Inspection House Keeping');
         } catch (\Throwable $e) {
             DB::rollBack();
             dd($e);
             return ResponseFormatter::error([
                 'error' => $e,
-            ], 'Gagal Inspection Engineering');
+            ], 'Gagal Inspection House Keeping');
         }
     }
 
@@ -269,7 +294,7 @@ class InspectionController extends Controller
         $connInspectionDetail = ConnectionDB::setConnection(new EquipmentHousekeepingDetail());
 
         $inspection = $connInspectionDetail->where('id_equipment_housekeeping_detail', $id)
-            ->with(['Room', 'Equipment', 'Role', 'Schedule'])
+            ->with(['Room', 'Equipment', 'Schedule'])
             ->first();
 
         $inspection['status'] = json_decode($inspection->status);
