@@ -2060,6 +2060,7 @@ progress {
     align-content: center;
     justify-content: center;
     flex-direction: row-reverse;
+    justify-content: flex-end;
 }
 
 .row > * {
@@ -14273,7 +14274,7 @@ html[data-bs-theme="dark"] .tox .tox-dialog__footer .tox-button--secondary,
 }
 
 .mb-5 {
-    margin-bottom: 3rem !important;
+    /* margin-bottom: 3rem !important; */
 }
 
 .mb-6 {
@@ -33340,7 +33341,7 @@ h5,
 .flex-between-center {
     -webkit-box-pack: justify;
     -ms-flex-pack: justify;
-    justify-content: space-between;
+    /* justify-content: space-between; */
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
@@ -41016,3 +41017,19 @@ html[data-bs-theme="dark"] .bg-priority-low:checked {
             border-bottom: 1px solid #ddd;
             border: none;
         }
+
+
+        .image-container {
+            position: relative;
+        }
+        
+        .logo {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-46%, -50%);
+            width: 91%;
+            height: 20%;
+        }
+        
+        
