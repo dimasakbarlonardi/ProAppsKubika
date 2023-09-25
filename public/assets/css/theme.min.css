@@ -2055,8 +2055,11 @@ progress {
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
     margin-top: calc(-1 * var(--falcon-gutter-y));
-    margin-right: calc(-0.5 * var(--falcon-gutter-x));
-    margin-left: calc(-0.5 * var(--falcon-gutter-x));
+
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+    flex-direction: row-reverse;
 }
 
 .row > * {
@@ -2264,7 +2267,7 @@ progress {
 .timeline-simple .timeline-item,
 .timeline-zigzag .timeline-item,
 .timeline-vertical .timeline-item {
-    --falcon-gutter-x: 0;
+    /* --falcon-gutter-x: 0; */
 }
 
 .g-0,

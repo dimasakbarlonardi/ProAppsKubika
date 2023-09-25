@@ -4,8 +4,9 @@
     <div class="col-md-7 d-flex flex-center">
         <div class="p-4 p-md-5 flex-grow-1">
             <div class="row flex-between-center">
+            <div class="image"><img class="logo-colored" src="{{ asset('/assets/img/logo_colored.png') }}" /></div>
                 <div class="col-auto mb-5">
-                    <h3 class="text-primary">Login</h3>
+                    <h3 class="text-primary">Masuk Dashboard</h3>
                 </div>
             </div>
             <form method="POST" action="{{ route('login') }}">
