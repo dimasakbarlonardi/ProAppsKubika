@@ -19,7 +19,7 @@
                         </div>
                     <div class="p-5">
                         <a href="{{ route('checklistsecurity.index') }}" class="btn btn-primary float-right mb-4">History Inspection</a>
-                        <table class="table" id="table-schedulesecurity">
+                        <table class="table table-striped" id="table-schedulesecurity">
                             <thead>
                                 <tr>
                                     <th class="sort" data-sort="">No</th>

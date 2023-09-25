@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 
-class ToolsHKController extends Controller
+class ToolsHKController extends Controller 
 {
     /**
      * Display a listing of the resource.
@@ -32,11 +32,22 @@ class ToolsHKController extends Controller
     {
         try {
             $conn = ConnectionDB::setConnection(new ToolsHousekeeping());
-            $tool = $conn->findOrFail($id);
+            $tool = $conn->findOrFail($id); 
             $borrowQty = $request->input('borrow_qty');
         
-            if ($borrowQty <= 0 || $borrowQty > ($tool->total_tools - $tool->borrow)) {
-                return redirect()->back()->with('error', 'Invalid borrow quantity');
+            if ( $borrowQty > $tool->total_tools) {
+                Alert::error('error', 'Invalid borrow quantity');
+                return redirect()->back();
+            }
+
+            if ( $borrowQty < $tool->total_tools) {
+                Alert::error('error', 'Invalid borrow quantity');
+                return redirect()->back();
+            }
+
+            if ($tool->total_tools ==  $tool->borrow ) {
+                Alert::error('error', 'Invalid borrow quantity');
+                return redirect()->back();
             }
             
             $user_id = $request->user()->id;
@@ -48,8 +59,8 @@ class ToolsHKController extends Controller
             // Update current_totals
             $tool->current_totals = $tool->total_tools - $tool->borrow;
             $tool->save();
-        
-            return redirect()->route('toolshousekeeping.index')->with('success', 'Tool borrowed successfully');
+            Alert::success('success', 'Tool Borrower successfully');
+            return redirect()->back();
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'An error occurred while borrowing the tool.');
         }
@@ -63,7 +74,13 @@ class ToolsHKController extends Controller
         $returnQty = $request->input('return_qty');
     
         if ($returnQty <= 0 || $returnQty > $tool->borrow) {
-            return redirect()->back()->with('error', 'Invalid return quantity');
+            Alert::error('error', 'Invalid return quantity');
+            return redirect()->back();
+        }
+
+        if ($returnQty > $tool->borrow ) {
+            Alert::error('error', 'Invalid return quantity');
+            return redirect()->back();
         }
     
         $tool->borrow -= $returnQty;
@@ -76,8 +93,9 @@ class ToolsHKController extends Controller
         // Update current_totals
         $tool->current_totals = $tool->total_tools - $tool->borrow;
         $tool->save();
-    
-        return redirect()->route('toolshousekeeping.index')->with('success', 'Tool returned successfully');
+
+        Alert::success('success', 'Tool returned successfully');
+        return redirect()->back();
     }
 
     /**

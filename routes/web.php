@@ -134,7 +134,9 @@ use App\Http\Controllers\Admin\ScheduleSecurityController;
 use App\Http\Controllers\Admin\ShiftTypeController;
 use App\Http\Controllers\Admin\ToolsEngController;
 use App\Http\Controllers\Admin\ToolsHKController;
+use App\Http\Controllers\Admin\VisitorsController;
 use App\Http\Controllers\Admin\WaterUUSController;
+use App\Http\Controllers\API\VisitorController;
 use App\Models\ForgotAttendance;
 use App\Models\IncidentalReportHK;
 use App\Models\PermitHR;
@@ -655,8 +657,7 @@ Route::prefix('admin')->group(function () {
         Route::resource('checklistkoridors', ChecklistKoridorHController::class);
         Route::get('/checklist-filter-koridor', [ChecklistKoridorHController::class, 'filterByNoChecklist']);
 
-        // ---------------End Checklist HK-----------------
-
+        // ---------------End Checklist HK-------------------
 
         // ---------------Start UUS Electric ----------------
         Route::get('uus-electric', [ElectricUUSController::class, 'index'])->name('usr-electric');
@@ -730,6 +731,9 @@ Route::prefix('admin')->group(function () {
         // -------------------Attendance-----------------------
         // -Schedule Meeting
         Route::resource('schedulemeeting', ScheduleMeetingController::class);
+        Route::get('/data-employee/{id}', [ScheduleMeetingController::class, 'dataEmployee'])->name('dataEmployee');
+        Route::post('/data-employee-store', [ScheduleMeetingController::class, 'storedataEmployee'])->name('storedataEmployee');
+        Route::get('/employee-meeting/{id}', [ScheduleMeetingController::class, 'employeeMeeting'])->name('employeeMeeting');
 
         // ---------------Parameter Attendance------------------
         // -Request Attendance
@@ -749,6 +753,9 @@ Route::prefix('admin')->group(function () {
 
         // ---------------Package------------------
         Route::resource('packages', PackageController::class);
+
+        // ---------------Visitor------------------
+        Route::resource('visitor', VisitorsController::class);
     });
 });
 

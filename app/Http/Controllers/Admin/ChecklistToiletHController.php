@@ -26,12 +26,10 @@ class ChecklistToiletHController extends Controller
      */
     public function index(Request $request)
     {
-        $conntoiletdetail = ConnectionDB::setConnection(new ChecklistToiletDetail());
         $equiqment = ConnectionDB::setConnection(new EquiqmentToilet());
         $user_id = $request->user()->id;
 
         $data['checklisttoilets'] = $equiqment->get();
-        $data['toiletdetail'] = $conntoiletdetail->first();
         $data['equiqments'] = $equiqment->get();
         $data['idusers'] = Login::where('id', $user_id)->get();
 

@@ -20,12 +20,12 @@
         </div>
         <div class="p-5">
             <a href="{{ route('toiletdetails.index') }}" class="btn btn-primary float-right mb-4">History Inspection</a>
-            <table class="table" id="table-housekeeping">
+            <table class="table table-striped" id="table-housekeeping">
                 <thead>
                     <tr>
                         <th class="sort" data-sort="">No</th>
-                        <th class="sort" data-sort="equiqment">Equiqment</th>
-                        <th class="sort" data-sort="id_room">Lokasi</th>
+                        <th class="sort" data-sort="inspection">Inspection</th>
+                        <th class="sort" data-sort="id_room">Location</th>
                         <th class="sort" data-sort="tgl_checklist">Schedule</th>
                         <th class="sort" data-sort="status_schedule">Status Schedule</th>
                         <th class="sort" data-sort="action">Action</th>

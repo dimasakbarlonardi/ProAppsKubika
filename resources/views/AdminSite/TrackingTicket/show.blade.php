@@ -414,14 +414,14 @@
                                             class="d-md-flex d-xl-inline-block d-xxl-flex align-items-center justify-content-between mb-x1">
                                             <div class="d-flex align-items-center gap-2">
                                                 <div class="avatar avatar-2xl">
-                                                    <img class="rounded-circle" src="{{ url($ticket->User->profile_picture) }}"
-                                                        alt="" />
+                                                    {{-- <img class="rounded-circle" src="{{ url($ticket->User->profile_picture) }}"
+                                                        alt="" /> --}}
                                                 </div>
-                                                <p class="mb-0"><a class="fw-semi-bold mb-0 text-800"
+                                                {{-- <p class="mb-0"><a class="fw-semi-bold mb-0 text-800"
                                                         href="../../app/support-desk/contact-details.html">{{ $ticket->User->nama_user }}</a>
                                                     <a class="mb-0 fs--1 d-block text-500"
                                                         href="mailto:emma@watson.com">{{ $ticket->User->login_user }}</a>
-                                                </p>
+                                                </p> --}}
                                             </div>
                                             <p class="mb-0 fs--2 fs-sm--1 fw-semi-bold mt-2 mt-md-0 mt-xl-2 mt-xxl-0 ms-5">
                                                 {{ HumanDate($ticket->created_at) }}

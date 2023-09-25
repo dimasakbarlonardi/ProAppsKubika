@@ -19,7 +19,7 @@
                         </div>
                     <div class="p-5">
                         <a href="{{ route('ahudetails.index') }}" class="btn btn-primary float-right mb-4">History Inspection</a>
-                        <table class="table" id="table-engineering">
+                        <table class="table table-striped" id="table-engineering">
                             <thead>
                                 <tr>
                                     <th class="sort" data-sort="">No</th>
@@ -38,20 +38,17 @@
                                         <td>{{ $checklistahu->room->nama_room }}</td>
                                         <td>{{\Carbon\Carbon::parse($checklistahu->tgl_checklist)->format(' d-M-Y') }}</td>
                                         <td>
-                                            @if ($checklistahu->status_schedule == 'Not Done')
+                                            @if ($checklistahu->status_schedule == 'not done')
                                             <span class="badge rounded-pill badge-subtle-danger">Not Done</span>
                                             @elseif ($checklistahu->status_schedule == 'on time')
                                                 <span class="badge rounded-pill badge-subtle-success">On Time</span>
-                                            @elseif ($checklistahu->status_schedule == 'late Not Done')
-                                                <span class="badge rounded-pill badge-subtle-danger">Late Not Done</span>
-                                            @elseif ($checklistahu->status_schedule == 'late done')
-                                                <span class="badge rounded-pill badge-subtle-warning">Late Done</span>
+                                            @elseif ($checklistahu->status_schedule == 'Late')
+                                                <span class="badge rounded-pill badge-subtle-danger">Late</span>
                                             @endif
                                         </td>
                                         <td>
-                                            <div class="dropdown font-sans-serif position-static"><button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal" type="button" id="order-dropdown-0" data-bs-toggle="dropdown" data-boundary="viewport" aria-haspopup="true" aria-expanded="false"><span class="fas fa-ellipsis-h fs--1"></span></button>
-                                                <div class="dropdown-menu dropdown-menu-end border py-0" aria-labelledby="order-dropdown-0">
-                                                  <div class="py-2"><a class="dropdown-item text" href="{{ route('checklistengineering', $checklistahu->id_equiqment_engineering) }}">Inspection Parameter</a>
+                                            <a href="{{ route('checklistengineering', $checklistahu->id_equiqment_engineering) }}" class="btn btn-sm btn-warning"><span
+                                                class="fas fa-pencil-alt fs--2 me-1"></span>Detail</a>
                                             </div>
                                             </div>
                                         </div>

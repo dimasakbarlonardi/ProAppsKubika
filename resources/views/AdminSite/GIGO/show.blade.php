@@ -40,12 +40,12 @@
                                 <div class="my-3">
                                     <div class="row">
                                         <div class="col-6">
-                                            <label class="form-label">No Tiket</label>
+                                            <label class="form-label">No Ticket</label>
                                             <input type="text" class="form-control" value="{{ $gigo->Ticket->no_tiket }}"
                                                 disabled>
                                         </div>
                                         <div class="col-6">
-                                            <label class="form-label">No Request Permit</label>
+                                            <label class="form-label">No Request Gigo</label>
                                             <input type="text" class="form-control" value="{{ $gigo->no_request_gigo }}"
                                                 disabled>
                                         </div>
@@ -54,12 +54,12 @@
                                 <div class="mb-3">
                                     <div class="row">
                                         <div class="col-6">
-                                            <label class="form-label">Nama pembawa</label>
+                                            <label class="form-label">Driver</label>
                                             <input type="text" class="form-control" value="{{ $gigo->nama_pembawa }}"
                                                 disabled>
                                         </div>
                                         <div class="col-6">
-                                            <label class="form-label">No Polisi Pembawa</label>
+                                            <label class="form-label">No Car Plate</label>
                                             <input type="text" class="form-control" value="{{ $gigo->no_pol_pembawa }}"
                                                 disabled>
                                         </div>
@@ -67,7 +67,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <div class="col-6">
-                                        <label class="form-label">Tanggal & Jam bawa barang</label>
+                                        <label class="form-label">Gigo Time</label>
                                         <input type="text" class="form-control" value="{{ $gigo->date_request_gigo }}"
                                             disabled>
                                     </div>
@@ -79,7 +79,7 @@
                                 <div class="card-body">
                                     <div class="card-body p-0">
                                         <div class="row gx-card mx-0 bg-200 text-900 fs--1 fw-semi-bold">
-                                            <div class="col-9 col-md-8 py-2">List Barang</div>
+                                            <div class="col-9 col-md-8 py-2">List Items</div>
                                         </div>
                                         {{-- @foreach ($gigo->DetailGIGO as $good)
                                             <div class='row gx-card mx-0 align-items-center border-bottom border-200'
@@ -118,16 +118,16 @@
                                         @foreach ($gigo->DetailGIGO as $good)
                                             <div class="row gx-card mx-0">
                                                 <div class="col-8 py-3">
-                                                    <label class="mb-1">Nama barang</label>
+                                                    <label class="mb-1">Name of Goods</label>
                                                     <input value="{{ $good->nama_barang }}" class="form-control" type="text" id="nama_barang" disabled>
                                                 </div>
                                                 <div class="col-6">
-                                                    <label class="form-label">Jumlah barang</label>
+                                                    <label class="form-label">Qty</label>
                                                     <input value="{{ $good->jumlah_barang }}" type="text" class="form-control" value="{{ $gigo->no_pol_pembawa }}"
                                                         disabled>
                                                 </div>
                                                 <div class="col-6">
-                                                    <label class="form-label">Keterangan</label>
+                                                    <label class="form-label">Description</label>
                                                     <input value="{{ $good->keterangan }}" type="text" class="form-control" value="{{ $gigo->no_pol_pembawa }}"
                                                         disabled>
                                                 </div>

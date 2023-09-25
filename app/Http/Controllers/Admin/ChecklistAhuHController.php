@@ -80,7 +80,7 @@ class ChecklistAhuHController extends Controller
             foreach ($parameter as $form) {
                 $checklistParameter->create([
                     'id_equiqment' => $id,
-                    'id_checklist' => $form,
+                    'id_checklist' => $form,                
                     'id_item' => $equiqment->id_equiqment_engineering
                 ]);
 

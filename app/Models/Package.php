@@ -13,6 +13,24 @@ class Package extends Model
 
     protected $table = 'tb_package';
 
+    protected $primaryKey = 'id';
+
+    protected $fillable = [
+        'id',
+        'package_receipt_number',
+        'receiver_id',
+        'unit_id',
+        'received_location',
+        'courier_type',
+        'courier_name',
+        'barcode_package',
+        'image',
+        'receive_time',
+        'status',
+        'description',
+        
+    ];
+
     public function GenerateBarcode()
     {
         $barcodePackage = QrCode::format('png')
