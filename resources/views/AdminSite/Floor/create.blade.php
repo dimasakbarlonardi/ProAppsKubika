@@ -13,10 +13,6 @@
             <form method="post" action="{{ route('floors.store') }}">
                 @csrf
                 <div class="mb-3">
-                    <label class="form-label">ID Lantai</label>
-                    <input type="text" maxlength="3" name="id_lantai" class="form-control" required>
-                </div>
-                <div class="mb-3">
                     <label class="form-label">Nama Lantai</label>
                     <input type="text" name="nama_lantai" class="form-control" required>
                 </div>

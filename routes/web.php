@@ -1,11 +1,7 @@
 <?php
 
-use App\Models\ChecklistPutrH;
 use App\Models\MonthlyArTenant;
 use App\Models\ChecklistGensetH;
-use App\Models\ChecklistListrikH;
-use App\Models\ChecklistPemadamH;
-use App\Models\ChecklistGroundRoofH;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\OpenTicket;
 use App\Models\ChecklistOfficeManagementH;
@@ -28,15 +24,12 @@ use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\TowerController;
 use App\Http\Controllers\Admin\DivisiController;
 use App\Http\Controllers\Admin\EngAHUController;
-use App\Http\Controllers\Admin\EngGasController;
-use App\Http\Controllers\Admin\EngPamController;
 use App\Http\Controllers\Admin\HunianController;
 use App\Http\Controllers\Admin\IdcardController;
 use App\Http\Controllers\Admin\OwnerHController;
 use App\Http\Controllers\Admin\TenantController;
 use App\Http\Controllers\Admin\ToiletController;
 use App\Http\Controllers\Admin\EngBAPPcontroller;
-use App\Http\Controllers\Admin\EngPutrController;
 use App\Http\Controllers\Admin\HKFloorController;
 use App\Http\Controllers\Admin\IPLTypeController;
 use App\Http\Controllers\Admin\JabatanController;
@@ -49,13 +42,9 @@ use App\Http\Controllers\Admin\MainFormController;
 use App\Http\Controllers\Admin\PengurusController;
 use App\Http\Controllers\Admin\SubMenu2Controller;
 use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\EngGroundController;
 use App\Http\Controllers\Admin\HKKoridorController;
 use App\Http\Controllers\Admin\WorkOrderController;
 use App\Http\Controllers\Admin\DepartemenController;
-use App\Http\Controllers\Admin\EngChillerController;
-use App\Http\Controllers\Admin\EngListrikController;
-use App\Http\Controllers\Admin\EngPemadamController;
 use App\Http\Controllers\Admin\JenisAcaraController;
 use App\Http\Controllers\Admin\JenisDendaController;
 use App\Http\Controllers\Admin\OpenTicketController;
@@ -68,7 +57,6 @@ use App\Http\Controllers\Admin\PeriodeSewaController;
 use App\Http\Controllers\Admin\ReservationController;
 use App\Http\Controllers\Admin\StatusKawinController;
 use App\Http\Controllers\Admin\WorkRequestController;
-use App\Http\Controllers\Admin\EngDeepWheelController;
 use App\Http\Controllers\Admin\JenisKelaminController;
 use App\Http\Controllers\Admin\JenisRequestController;
 use App\Http\Controllers\Admin\MemberTenantController;
@@ -76,15 +64,12 @@ use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\WorkPriorityController;
 use App\Http\Controllers\Admin\WorkRelationController;
 use App\Http\Controllers\Admin\ChecklistAhuHController;
-use App\Http\Controllers\Admin\ChecklistGasHController;
 use App\Http\Controllers\Admin\PerubahanUnitController;
 use App\Http\Controllers\Admin\RequestPermitController;
 use App\Http\Controllers\Admin\StatusRequestController;
 use App\Http\Controllers\Admin\StatusTinggalController;
 use App\Http\Controllers\Admin\SystemSettingController;
 use App\Http\Controllers\Admin\ChecklistLiftHController;
-use App\Http\Controllers\Admin\ChecklistPutrHController;
-use App\Http\Controllers\Admin\EngPompasumpitController;
 use App\Http\Controllers\Admin\JenisKendaraanController;
 use App\Http\Controllers\Admin\JenisPekerjaanController;
 use App\Http\Controllers\Admin\ReminderLetterController;
@@ -100,16 +85,11 @@ use App\Http\Controllers\Admin\ChecklistToiletHController;
 use App\Http\Controllers\Admin\OffBoardingOwnerController;
 use App\Http\Controllers\Admin\OfficeManagementController;
 use App\Http\Controllers\Admin\RuangReservationController;
-use App\Http\Controllers\Admin\ChecklistChillerHController;
 use App\Http\Controllers\Admin\ChecklistKoridorHController;
-use App\Http\Controllers\Admin\ChecklistListrikHController;
-use App\Http\Controllers\Admin\ChecklistPemadamHController;
 use App\Http\Controllers\Admin\OffBoardingTenantController;
 use App\Http\Controllers\Admin\ChecklistAhuDetailController;
 use App\Http\Controllers\Admin\StatusAktifKaryawanController;
-use App\Http\Controllers\Admin\ChecklistGroundRoofHController;
 use App\Http\Controllers\Admin\ChecklistTemperaturHController;
-use App\Http\Controllers\Admin\ChecklistPompaSumpitHController;
 use App\Http\Controllers\Admin\OffBoardingTenantUnitController;
 use App\Http\Controllers\Admin\ChecklistTanggaDaruratHController;
 use App\Http\Controllers\Admin\ChecklistOfficeManagementHController;
@@ -495,33 +475,6 @@ Route::prefix('admin')->group(function () {
         //CRUD Parameter Engineering
         Route::resource('engahus', EngAHUController::class);
 
-        //CRUD Engeneering Chiller
-        Route::resource('engchillers', EngChillerController::class);
-
-        //CRUD Engeneering Listrik
-        Route::resource('englistriks', EngListrikController::class);
-
-        //CRUD Engeneering PAM
-        Route::resource('engpams', EngPamController::class);
-
-        //CRUD Engeneering DeepWheel
-        Route::resource('engdeeps', EngDeepWheelController::class);
-
-        //CRUD Engeneering PompaSumpit
-        Route::resource('engpompas', EngPompasumpitController::class);
-
-        //CRUD Engeneering GroundRoffTank
-        Route::resource('enggrounds', EngGroundController::class);
-
-        //CRUD Engeneering Pemadam
-        Route::resource('engpemadams', EngPemadamController::class);
-
-        //CRUD Engeneering Putr
-        Route::resource('engputrs', EngPutrController::class);
-
-        //CRUD Engeneering Gas
-        Route::resource('enggases', EngGasController::class);
-
         // --------End Eng Parameter--------
 
         // -------HK Parameter-------
@@ -529,17 +482,8 @@ Route::prefix('admin')->group(function () {
         //CRUD HK Toilet
         Route::resource('toilets', ToiletController::class);
 
-        //CRUD HK OfficeManagemet
-        Route::resource('officemanagements', OfficeManagementController::class);
-
-        //CRUD HK Lift
-        Route::resource('lifts', LiftController::class);
-
         //CRUD HK Floor
         Route::resource('hkfloors', HKFloorController::class);
-
-        //CRUD HK Koridor
-        Route::resource('hkkoridors', HKKoridorController::class);
 
         //CRUD HK TanggaDarurat
         Route::resource('hktanggadarurats', HKTanggaDaruratController::class);
@@ -585,34 +529,9 @@ Route::prefix('admin')->group(function () {
         //CRUD Checklist AHU Detail
         Route::resource('ahudetails', ChecklistAhuDetailController::class);
 
-        //CRUD Checklist Chiller
-        Route::resource('checklistchillers', ChecklistChillerHController::class);
-        Route::get('/checklist-filter-chiller ', [ChecklistChillerHController::class, 'filterByNoChecklist']);
-        Route::get('/inspection-chiller/{id}', [ChecklistChillerHController::class, 'frontchiller'])->name('frontchiller');
-
-        //CRUD Checklist Listrik
-        Route::resource('checklistlistriks', ChecklistListrikHController::class);
-        Route::get('/checklist-filter-listrik', [ChecklistListrikHController::class, 'filterByNoChecklist']);
-
-        //CRUD Checklist Pompa Sumpit
-        Route::resource('checklistpompasumpits', ChecklistPompaSumpitHController::class);
-        Route::get('/checklist-filter-pompasumpit', [ChecklistPompaSumpitHController::class, 'filterByNoChecklist']);
-
-        //CRUD Checklist GroundRoof
-        Route::resource('checklistgroundroofs', ChecklistGroundRoofHController::class);
-        Route::get('/checklist-filter-groundroof', [ChecklistGroundRoofHController::class, 'filterByNoChecklist']);
-
         //CRUD Checklist Solar
         Route::resource('checklistsolars', ChecklistSolarHController::class);
         Route::get('/checklist-filter-solar', [ChecklistSolarHController::class, 'filterByNoChecklist']);
-
-        //CRUD Checklist Gas
-        Route::resource('checklistgases', ChecklistGasHController::class);
-        Route::get('/checklist-filter-gas', [ChecklistGasHController::class, 'filterByNoChecklist']);
-
-        //CRUD Checklist PUTR
-        Route::resource('checklistputrs', ChecklistPutrHController::class);
-        Route::get('/checklist-filter-putr', [ChecklistPutrHController::class, 'filterByNoChecklist']);
 
         //CRUD Checklist Genset
         Route::resource('checklistgensets', ChecklistGensetHController::class);
@@ -621,10 +540,6 @@ Route::prefix('admin')->group(function () {
         //CRUD Checklist Temperatur
         Route::resource('checklisttemperaturs', ChecklistTemperaturHController::class);
         Route::get('/checklist-filter-temperatur', [ChecklistTemperaturHController::class, 'filterByNoChecklist']);
-
-        //CRUD Checklist Pemadam
-        Route::resource('checklistpemadams', ChecklistPemadamHController::class);
-        Route::get('/checklist-filter-pemadam', [ChecklistPemadamHController::class, 'filterByNoChecklist']);
 
         // ------------End Checklist AHU---------------
 
@@ -642,14 +557,6 @@ Route::prefix('admin')->group(function () {
         //CRUD Checklist Toilet Detail
         Route::resource('toiletdetails', ChecklistToiletDetailController::class);
 
-        //CRUD Checklist Office Management
-        Route::resource('checklistoffices', ChecklistOfficeManagementHController::class);
-        Route::get('/checklist-filter-office_management', [ChecklistOfficeManagementHController::class, 'filterByNoChecklist']);
-
-        //CRUD Checklist Lift
-        Route::resource('checklistlifts', ChecklistLiftHController::class);
-        Route::get('/checklist-filter-lift', [ChecklistLiftHController::class, 'filterByNoChecklist']);
-
         //CRUD Checklist Floor
         Route::resource('checklistfloors', ChecklistFloorHController::class);
         Route::get('/checklist-filter-floor', [ChecklistFloorHController::class, 'filterByNoChecklist']);
@@ -657,10 +564,6 @@ Route::prefix('admin')->group(function () {
         //CRUD Checklist Tangga Darurat
         Route::resource('checklisttanggadarurats', ChecklistTanggaDaruratHController::class);
         Route::get('/checklist-filter-tangga_darurat', [ChecklistTanggaDaruratHController::class, 'filterByNoChecklist']);
-
-        //CRUD Checklist Koridor
-        Route::resource('checklistkoridors', ChecklistKoridorHController::class);
-        Route::get('/checklist-filter-koridor', [ChecklistKoridorHController::class, 'filterByNoChecklist']);
 
         // ---------------End Checklist HK-------------------
 

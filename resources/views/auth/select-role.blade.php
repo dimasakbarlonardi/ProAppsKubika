@@ -3,11 +3,11 @@
 @section('content')
     <div class="col-md-7 d-flex flex-center">
         <div class="p-4 p-md-5 flex-grow-1">
-            <div class="row flex-between-center">
+            <!-- <div class="row flex-between-center"> -->
                 <div class="col-auto mb-5">
-                    <h3 class="text-primary">Login</h3>
+                    <h3 class="text-primary mb-3">Login</h3>
                 </div>
-            </div>
+            <!-- </div> -->
             <form method="POST" action="{{ route('updateRoleID') }}">
                 @csrf
                 <div class="mb-3">
