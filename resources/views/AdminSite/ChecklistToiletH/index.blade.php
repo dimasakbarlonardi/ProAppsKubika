@@ -20,7 +20,7 @@
         </div>
         <div class="p-5">
             <a href="{{ route('toiletdetails.index') }}" class="btn btn-primary float-right mb-4">History Inspection</a>
-            <table class="table" id="table-housekeeping">
+            <table class="table table-striped" id="table-housekeeping">
                 <thead>
                     <tr>
                         <th class="sort" data-sort="">No</th>

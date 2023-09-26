@@ -10,7 +10,7 @@
                         <div class="row flex-between-center gy-2 px-x1">
                             <div class="col-auto pe-0">
                                 <div class="col-auto">
-                                    <h5 class="mb-0 text-white">Tracking Tickets
+                                    <h5 class="mb-0 text-white">Tracking Request
                                         <span class=" fas fa-ticket-alt"></span>
                                     </h5>
                                 </div>

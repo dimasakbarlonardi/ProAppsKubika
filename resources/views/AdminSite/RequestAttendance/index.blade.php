@@ -10,15 +10,16 @@
     <div class="card-header py-2">
         <div class="row flex-between-center">
             <div class="my-3 col-auto">
-                <h6 class="mb-0 text-white">List Request Attendance</h6>
+                <h6 class="mb-0 text-white">List Request Permit</h6>
             </div>
         </div>
     </div>
     <div class="p-5 justify-content-center">
-        <table class="table" id="table-requestattendance">
+        <table class="table table-striped" id="table-requestattendance">
             <thead>
                 <tr>
                     <th class="sort" data-sort="">No</th>
+                    <th class="sort" data-sort="">Name</th>
                     <th class="sort" data-sort="date">Date</th>
                     <th class="sort" data-sort="id_request_type">Request Type</th>
                     <th class="sort" data-sort="status">Status</th>
@@ -28,6 +29,9 @@
                 @foreach ($requestattendance as $key => $request)
                     <tr>
                         <th scope="row">{{ $key + 1 }}</th>
+                        @foreach ($idusers as $iduser)
+                            <td>{{ $iduser->name }}</td>
+                        @endforeach
                         <td> {{ \Carbon\Carbon::parse($request->date_in)->format(' d M Y') }} - {{ \Carbon\Carbon::parse($request->date_out)->format(' d M Y') }}</td>
                         <td>{{ $request->RequestType->name_request }}</td>
                         <td> 

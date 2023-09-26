@@ -10,10 +10,11 @@
     <div class="card-header py-2">
         <div class="row flex-between-center">
             <div class="my-3 col-auto">
-                <h6 class="mb-0 text-white">List Schedule Meeting</h6>
-            </div>
-            <div class="col-auto d-flex">
-                <a class="btn btn-falcon-default text-600 btn-sm"  href="{{ route('schedulemeeting.create') }}"><span class="fas fa-plus fs--2 me-1"></span>Create Schedule Meeting</a>
+                @if(isset($employee[0])) 
+                    <h6 class="mb-0 text-white">List Participants {{ $employee[0]->Meeting->meeting }}</h6>
+                @else
+                    <h6 class="mb-0 text-white">List Participants</h6>
+                @endif
             </div>
         </div>
     </div>
@@ -22,23 +23,25 @@
             <thead>
                 <tr>
                     <th class="sort" data-sort="">No</th>
-                    <th class="sort" data-sort="meeting">Meeting</th>
-                    <th class="sort" data-sort="date">Date</th>
-                    <th class="sort" data-sort="id_room">Room</th>
-                    <th class="sort" data-sort="time">Time</th>
+                    <th class="sort" data-sort="id_karyawan">Employee</th>
                     <th class="sort" data-sort="action">Action</th>
                 </tr>
             </thead>
             <tbody id="checklist_body">
-                @foreach ($schedulemeeting as $key => $meeting)
+                @foreach ($employee as $key => $meeting)
                     <tr>
                         <th scope="row">{{ $key + 1 }}</th>
-                        <td> {{ $meeting->meeting }}</td>
-                        <td> {{ \Carbon\Carbon::parse($meeting->date)->format(' d M Y') }}</td>
-                        <td> {{ $meeting->Room->nama_room }}</td>
-                        <td> {{ \Carbon\Carbon::parse($meeting->time_in)->format(' h:i') }} - {{ \Carbon\Carbon::parse($meeting->time_out)->format(' h:i') }}</td>
+                        <td> {{ $meeting->Karyawan->nama_karyawan }}</td>
                         <td>
-                            <a href="{{ route('employeeMeeting', $meeting->id) }}" class="btn btn-sm btn-warning"><span class=""></span>Participants</a>
+                            <a href="{{ route('shifttype.edit', $meeting->id) }}" class="btn btn-sm btn-warning"><span
+                                    class="fas fa-pencil-alt fs--2 me-1"></span>Edit</a>
+                            <form class="d-inline" action="{{ route('shifttype.destroy', $meeting->id) }}" method="post">
+                                @method('DELETE')
+                                @csrf
+                                <button type="submit" class="btn btn-danger btn-sm"
+                                    onclick="return confirm('are you sure?')"><span
+                                        class="fas fa-trash-alt fs--2 me-1"></span>Hapus</button>
+                            </form>
                         </td>
                     </tr>
                 @endforeach

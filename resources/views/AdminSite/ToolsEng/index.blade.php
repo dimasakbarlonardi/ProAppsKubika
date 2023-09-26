@@ -18,15 +18,15 @@
         </div>
     </div>
     <div class="p-5 justify-content-center">
-        <table class="table" id="table-toolseng">
+        <table class="table table-striped" id="table-toolseng">
             <thead>
                 <tr>
                     <th class="sort" data-sort="">No</th>
-                    <th class="sort" data-sort="name_tools">Tools Name</th>
-                    <th class="sort" data-sort="status">Total Tools</th>
-                    <th class="sort" data-sort="status">Borrowed Tools</th>
-                    <th class="sort" data-sort="date_out">Current Totals</th>
-                    <th class="sort" data-sort="status">Borrowing PIC</th>
+                    <th class="sort" data-sort="name_tools">Tools</th>
+                    <th class="sort" data-sort="status">Stock</th>
+                    <th class="sort" data-sort="status">Out</th>
+                    <th class="sort" data-sort="date_out">Current Stock</th>
+                    <th class="sort" data-sort="borrower">Borrower</th>
                     <th class="sort" data-sort="status">Status</th>
                     <th class="sort" data-sort="action">Action</th>
                 </tr>
@@ -64,13 +64,13 @@
                             @if ($tools->status == 0)
                             <span class="badge rounded-pill badge-subtle-success">Item Completed</span>
                             @elseif ($tools->status == 1)
-                            <span class="badge rounded-pill badge-subtle-warning">Item are still on loan</span>
+                            <span class="badge rounded-pill badge-subtle-warning">Item Not Completed</span>
                             @endif
                         </td>
                         <td class="text-end">
                             <div class="dropdown font-sans-serif position-static">
-                                <button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false">
-                                    <span class="fas fa-ellipsis-h fs--1"></span>
+                                <button class="btn btn-sm btn-warning" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false">
+                                    <span class=""></span>Borrow / Return
                                 </button>
                                 <div class="dropdown-menu dropdown-menu-end border py-0">
                                     <div class="py-2">
@@ -80,7 +80,7 @@
                                                 <form action="{{ route('return.tool', ['id' => $tools->id]) }}" method="POST">
                                                     @csrf
                                                     <input type="hidden" name="date_out" value="{{ $tools->date_out }}">
-                                                    <input type="number" name="return_qty" min="1" max="{{ $tools->borrow }}" required>
+                                                    <input type="number" name="return_qty"  required>
                                                     <button type="submit">Return</button>
                                                 </form>
                                             </a>
@@ -88,7 +88,7 @@
                                         <a class="dropdown-item text-danger" href="#">
                                             <form action="{{ route('borrow.tool', ['id' => $tools->id]) }}" method="POST">
                                                 @csrf
-                                                <input type="number" name="borrow_qty" min="1" max="{{ $tools->total_tools - $tools->borrow }}" required>
+                                                <input type="number" name="borrow_qty" required>
                                                 <button type="submit">Borrow</button>
                                             </form>
                                         </a>

@@ -53,7 +53,11 @@ class PackageController extends Controller
      */
     public function show($id)
     {
-        //
+        $conn = ConnectionDB::setConnection(new Package());
+
+        $data['package'] = $conn->where('id', $id)->first();
+
+        return view('AdminSite.Package.show', $data);
     }
 
     /**

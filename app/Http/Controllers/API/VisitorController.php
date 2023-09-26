@@ -14,12 +14,12 @@ class VisitorController extends Controller
     {
         $connVisitor = ConnectionDB::setConnection(new Visitor());
 
+        $connVisitor->name_visitor = $request->name_visitor;
         $connVisitor->unit_id = $request->unit_id;
         $connVisitor->arrival_date = $request->arrival_date;
         $connVisitor->arrival_time = $request->arrival_time;
         $connVisitor->heading_to = $request->heading_to;
         $connVisitor->desc = $request->desc;
-        $connVisitor->status = 'Waiting';
 
         $connVisitor->save();
 
@@ -55,17 +55,17 @@ class VisitorController extends Controller
         );
     }
 
-    public function arrive($id)
-    {
-        $connVisitor = ConnectionDB::setConnection(new Visitor());
+    // public function arrive($id)
+    // {
+    //     $connVisitor = ConnectionDB::setConnection(new Visitor());
 
-        $visitor = $connVisitor->find($id);
-        $visitor->status = 'Arrive';
-        $visitor->save();
+    //     $visitor = $connVisitor->find($id);
+    //     $visitor->status = 'Arrive';
+    //     $visitor->save();
 
-        return ResponseFormatter::success(
-            $visitor,
-            'Success visitors detail'
-        );
-    }
+    //     return ResponseFormatter::success(
+    //         $visitor,
+    //         'Success visitors detail'
+    //     );
+    // }
 }

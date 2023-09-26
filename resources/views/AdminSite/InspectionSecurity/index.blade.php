@@ -16,7 +16,7 @@
                 </div>
                     <div class="p-5">
                         <button class="btn btn-primary mb-4" type="button" class="fas fa-plus" data-bs-toggle="modal" data-bs-target="#error-modal">+ Import Excel</button>
-                        <table class="table" id="table-security">
+                        <table class="table table-striped" id="table-security">
                             <thead>
                                 <tr>
                                     <th class="sort" data-sort="">No</th>

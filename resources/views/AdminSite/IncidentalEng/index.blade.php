@@ -18,7 +18,7 @@
         </div>
     </div>
     <div class="p-5 justify-content-center">
-        <table class="table" id="table-incidenteng">
+        <table class="table table-striped" id="table-incidenteng">
             <thead>
                 <tr>
                     <th class="sort" data-sort="">No</th>
@@ -27,7 +27,7 @@
                     <th class="sort" data-sort="location">Location</th>
                     <th class="sort" data-sort="date">Date</th>
                     <th class="sort" data-sort="time">Time</th>
-                    <th class="sort" data-sort="keterangan">Keterangan</th>
+                    <th class="sort" data-sort="keterangan">Description</th>
                     <th class="sort" data-sort="image">Image</th>
                 </tr>
             </thead>

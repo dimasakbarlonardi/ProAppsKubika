@@ -23,7 +23,7 @@ class ToolsEngController extends Controller
         $conn = ConnectionDB::setConnection(new ToolsEngineering());
         $user_id = $request->user()->id;
 
-        $data ['toolsengineer'] = $conn->get();
+        $data['toolsengineer'] = $conn->get();
         $data['idusers'] = Login::where('id', $user_id)->get();
 
         return view('AdminSite.ToolsEng.index', $data);
@@ -34,12 +34,23 @@ class ToolsEngController extends Controller
         try {
             $conn = ConnectionDB::setConnection(new ToolsEngineering());
             $tool = $conn->findOrFail($id);
-            $borrowQty = $request->input('borrow_qty');
-        
-            if ($borrowQty <= 0 || $borrowQty > ($tool->total_tools - $tool->borrow)) {
-                return redirect()->back()->with('error', 'Invalid borrow quantity');
+            $borrowQty = (int) $request->input('borrow_qty');
+
+            if ( $borrowQty > $tool->total_tools) {
+                Alert::error('error', 'Invalid borrow quantity');
+                return redirect()->back();
             }
-            
+
+            if ( $borrowQty < $tool->total_tools) {
+                Alert::error('error', 'Invalid borrow quantity');
+                return redirect()->back();
+            }
+
+            if ($tool->total_tools ==  $tool->borrow ) {
+                Alert::error('error', 'Invalid borrow quantity');
+                return redirect()->back();
+            }
+
             $user_id = $request->user()->id;
             $tool->borrow += $borrowQty;
             $tool->date_out = now();
@@ -49,40 +60,49 @@ class ToolsEngController extends Controller
             // Update current_totals
             $tool->current_totals = $tool->total_tools - $tool->borrow;
             $tool->save();
-        
-            return redirect()->route('toolsengineering.index')->with('success', 'Tool borrowed successfully');
+            Alert::success('success', 'Tool Borrower successfully');
+            return redirect()->back();
         } catch (\Exception $e) {
+            DB::rollBack();
+            dd($e);
+            Alert::error('Gagal', 'Gagal menambahkan tenant');
             return redirect()->back()->with('error', 'An error occurred while borrowing the tool.');
         }
     }
-    
+
     public function returnTool(Request $request, $id)
     {
         $conn = ConnectionDB::setConnection(new ToolsEngineering());
         $tool = $conn->findOrFail($id);
-    
+
         $returnQty = $request->input('return_qty');
-    
+
         if ($returnQty <= 0 || $returnQty > $tool->borrow) {
-            return redirect()->back()->with('error', 'Invalid return quantity');
+            Alert::error('error', 'Invalid return quantity');
+            return redirect()->back();
         }
-    
+
+        if ($returnQty > $tool->borrow ) {
+            Alert::error('error', 'Invalid return quantity');
+            return redirect()->back();
+        }
+
         $tool->borrow -= $returnQty;
         if ($tool->borrow == 0) {
             $tool->status = 0; // Item completed
             $tool->date_out = null;
         }
         $tool->save();
-    
+
         // Update current_totals
         $tool->current_totals = $tool->total_tools - $tool->borrow;
         $tool->save();
-    
-        return redirect()->route('toolsengineering.index')->with('success', 'Tool returned successfully');
-    }
-    
+        Alert::success('success', 'Tool returned successfully');
+        return redirect()->back();
+    } 
 
-    
+
+
     /**
      * Show the form for creating a new resource.
      *
@@ -103,7 +123,7 @@ class ToolsEngController extends Controller
     {
         $conn = ConnectionDB::setConnection(new ToolsEngineering());
 
-        try{
+        try {
             DB::beginTransaction();
             $conn->create([
                 'name_tools' => $request->name_tools,
@@ -112,13 +132,13 @@ class ToolsEngController extends Controller
 
             DB::commit();
 
-            Alert::success('Berhasi','Berhasil Menambahkan Tools Engineering');
+            Alert::success('Berhasi', 'Berhasil Menambahkan Tools Engineering');
 
             return redirect()->route('toolsengineering.index');
         } catch (\Throwable $e) {
             DB::rollBack();
             dd($e);
-            Alert::success('Gagal','Gagal Menambahkan Tools Engineering');
+            Alert::success('Gagal', 'Gagal Menambahkan Tools Engineering');
 
             return redirect()->route('toolsrngineering.index');
         }

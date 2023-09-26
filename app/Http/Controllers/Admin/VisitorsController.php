@@ -4,26 +4,23 @@ namespace App\Http\Controllers\Admin;
 
 use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
-use App\Models\Login;
-use App\Models\RequestAttendance;
+use App\Models\Visitor;
 use Illuminate\Http\Request;
 
-class RequestAttendanceController extends Controller
+class VisitorsController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        $conn = ConnectionDB::setConnection(new RequestAttendance());
-        $user_id = $request->user()->id;
+        $conn = ConnectionDB::setConnection(new Visitor());
 
-        $data['requestattendance'] = $conn->get();
-        $data['idusers'] = Login::where('id', $user_id)->get();
+        $data['visitors'] = $conn->get();
         
-        return view('AdminSite.RequestAttendance.index', $data);
+        return view('AdminSite.Visitor.index', $data);
     }
 
     /**

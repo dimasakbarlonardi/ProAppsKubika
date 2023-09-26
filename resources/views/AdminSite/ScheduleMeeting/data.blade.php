@@ -5,13 +5,13 @@
         <div class="card-header">
             <div class="row flex-between-center">
                 <div class="col-auto">
-                    <h6 class="mb-0">Create Schedule Meeting</h6>
+                    <h6 class="mb-0">Data Employee</h6>
                 </div>
             </div>
         </div>
         <div class="p-5">
-            <form method="post" action="{{ route('storedataEmployee') }}">
-                @csrf
+            <form action="{{ route('storedataEmployee' , $id) }}" method="post">
+                    @csrf
                     <div class="row">
                         <div class="col-6 mb-3">
                             <label class="form-label">Meeting</label>
@@ -23,12 +23,12 @@
                         </div>
                         <div class="col-6 mb-3">
                             <label class="form-label" for="timepicker1">Start Time</label>
-                            <input class="form-control datetimepicker" name="time_in" id="timepicker1" type="time" placeholder="H:i" 
+                            <input class="form-control datetimepicker" name="time_in" id="timepicker1" type="text" placeholder="H:i" 
                                 data-options='{"enableTime":true,"noCalendar":true,"dateFormat":"H:i","disableMobile":true}' />
                         </div>
                         <div class="col-6 mb-3">
                             <label class="form-label" for="timepicker1">End Time</label>
-                            <input class="form-control datetimepicker" name="time_out" id="timepicker1" type="time" placeholder="H:i" 
+                            <input class="form-control datetimepicker" name="time_out" id="timepicker1" type="text" placeholder="H:i" 
                                 data-options='{"enableTime":true,"noCalendar":true,"dateFormat":"H:i","disableMobile":true}' />
                         </div>
                         <div class="col-6 mb-3">
@@ -40,7 +40,9 @@
                                 @endforeach
                             </select>
                         </div>
+                       
                     </div>
+                @csrf
                 <div class="form-group">
                     <div class="row d-flex justify-content-between">
                         <div class="col-5">

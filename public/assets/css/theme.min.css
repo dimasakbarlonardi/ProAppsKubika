@@ -791,7 +791,7 @@
 :root .table,
 [data-bs-theme="light"] .table {
     --falcon-table-border-color: #e9f7f5;
-    --falcon-table-striped-bg: #f9fafd;
+    --falcon-table-striped-bg: #f3f3f3;
     --falcon-table-striped-color: #5e6e82;
     --falcon-table-color: #5e6e82;
 }
