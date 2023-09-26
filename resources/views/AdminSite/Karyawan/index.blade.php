@@ -38,7 +38,8 @@
                             </div>
                         </div>
                         <div class="d-flex align-items-center" id="table-ticket-replace-element">
-                            <a class="btn btn-falcon-default text-600 btn-sm" href="{{ route('karyawans.create') }}">Tambah Karyawan</a>
+                            <a class="btn btn-falcon-default text-600 btn-sm" href="{{ route('karyawans.create') }}">Tambah
+                                Karyawan</a>
                         </div>
                     </div>
                 </div>
@@ -49,7 +50,6 @@
                         data-bulk-select='{"body":"card-ticket-body","actions":"table-ticket-actions","replacedElement":"table-ticket-replace-element"}' />
                 </div>
                 <div class="list bg-light p-x1 d-flex flex-column gap-3" id="card-ticket-body">
-
                     <div class="row">
                         @foreach ($karyawans as $karyawan)
                             <div class="col-3">
@@ -58,25 +58,31 @@
                                     <div class="d-flex align-items-start align-items-sm-center">
                                         <a class="d-none d-sm-block" href="">
                                             <div class="avatar avatar-xl avatar-3xl">
-                                                <img src="{{ $karyawan->profile_picture ? $karyawan->profile_picture : '/assets/img/team/3-thumb.png' }}" alt="{{ $karyawan->profile_picture }}"
-                                                    class="avatar-image" />
+                                                <img src="{{ $karyawan->profile_picture ? $karyawan->profile_picture : '/assets/img/team/3-thumb.png' }}"
+                                                    alt="{{ $karyawan->profile_picture }}" class="avatar-image" />
                                             </div>
                                         </a>
                                         <div class="ms-2 ms-sm-4">
                                             <p class="fw-semi-bold mb-3 mb-sm-2">
-                                                <a class="text-primary" >
+                                                <a class="text-primary">
                                                     Karyawan
                                                 </a>
                                             </p>
                                             <p class="fw-semi-bold mb-3 ">
-                                                <a class="text-black" href="{{ route('karyawans.show', $karyawan->id_karyawan) }}">
+                                                <a class="text-black"
+                                                    href="{{ route('karyawans.show', $karyawan->id_karyawan) }}">
                                                     {{ $karyawan->nama_karyawan }}
                                                 </a>
                                             </p>
                                             <div class="row">
-                                            <hr>
-                                                <button class="btn btn-outline-success text-success mb-2" type="button"><a class="text-success" href="{{ route('karyawans.show', $karyawan->id_karyawan) }}"> Detail</a></button>
-                                        </div>
+                                                <hr>
+                                                <button class="btn btn-outline-success mb-2" type="button">
+                                                    Detail
+                                                </button>
+                                                <a href="{{ route('workSchedules', $karyawan->id) }}" class="btn btn-outline-success mb-2" type="button">
+                                                    Work Schedule
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -102,5 +108,3 @@
         </div>
     </div>
 @endsection
-
-

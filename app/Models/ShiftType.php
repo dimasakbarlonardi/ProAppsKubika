@@ -18,8 +18,11 @@ class ShiftType extends Model
     protected $fillable = [
         'id',
         'shift',
+        'kode_shift',
         'checkin',
-        'checkout'
+        'checkout',
+        'color',
+        'work_hour'
     ];
 
     protected $dates = ['deleted_at'];
