@@ -20,9 +20,9 @@
                         <th class="sort" data-sort="">No</th>
                         <th class="sort" data-sort="shift_type">Shift Type</th>
                         <th class="sort" data-sort="shift_type">Kode Type</th>
-                        <th class="sort" data-sort="shift_type">Check In</th>
-                        <th class="sort" data-sort="shift_type">Check Out</th>
-                        <th class="sort">Action</th>
+                        <th class="sort" data-sort="shift_type">Check In / Check Out</th>
+                        <th class="sort text-center" data-sort="shift_type">Work Hour</th>
+                        <th class="sort text-center">Action</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -31,9 +31,9 @@
                             <th scope="row">{{ $key + 1 }}</th>
                             <td>{{ $shift->shift }}</td>
                             <td>{{ $shift->kode_shift }}</td>
-                            <td>{{ $shift->checkin }}</td>
-                            <td>{{ $shift->checkout }}</td>
-                            <td>
+                            <td>{{ $shift->checkin }} / {{ $shift->checkout }}</td>
+                            <td class="text-center">{{ $shift->work_hour }}</td>
+                            <td class="text-center">
                                 <a href="{{ route('shifttype.edit', $shift->id) }}" class="btn btn-sm btn-warning"><span
                                         class="fas fa-pencil-alt fs--2 me-1"></span>Edit</a>
                                 <form class="d-inline" action="{{ route('shifttype.destroy', $shift->id) }}" method="post">

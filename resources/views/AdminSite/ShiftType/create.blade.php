@@ -16,7 +16,7 @@
             </div>
         </div>
         <div class="p-5">
-            <form method="post" action="{{ route('shifttype.store') }}">
+            <form method="post" action="{{ route('shifttype.store') }}" id="form-shift-type">
                 @csrf
                 <div class="row">
                     <div class="col-7 mb-3">
@@ -35,28 +35,30 @@
                 <div class="row">
                     <div class="col-6 mb-3">
                         <label class="form-label">Checkin</label>
-                        <input type="time" name="checkin" class="form-control" id="checkin" required>
+                        <input type="time" onchange="modalTotalHour()" name="checkin" class="form-control" id="checkin"
+                            required>
                     </div>
                     <div class="col-6 mb-3">
                         <label class="form-label">Checkout</label>
-                        <input type="time" name="checkout" class="form-control" id="checkout" required>
+                        <input type="time" onchange="modalTotalHour()" name="checkout" class="form-control"
+                            id="checkout" required>
                     </div>
                 </div>
                 <div class="row">
                     <div class="col-6 mb-3">
                         <label class="form-label">Type</label>
-                        <select name="" id="" class="form-control">
-                            <option value="">6 HK + 1 OFF</option>
-                            <option value="">4 HK + 2 OFF</option>
-                            <option value="">5 HK + 2 OFF</option>
+                        <select name="work_hour" id="work-hour" onchange="modalTotalHour()" class="form-control">
+                            <option value="8">6 HK + 1 OFF</option>
+                            <option value="12">4 HK + 2 OFF</option>
+                            <option value="9">5 HK + 2 OFF</option>
                         </select>
                     </div>
                 </div>
-                <input type="hidden" id="work-hour" name="work_hour">
+                <input type="hidden" id="input-work-hour" name="work_hour">
                 <div class="mt-5">
                     <a class="text-white btn btn-danger ml-5" href="{{ route('shifttype.index') }}"
                         style="float: right; margin-left: 10px;">Cancel</a>
-                    <button type="button" onclick="modalTotalHour()" class="btn btn-primary"
+                    <button type="button" onclick="onSubmit()" class="btn btn-primary"
                         style="float: right;">Submit</button>
                 </div>
             </form>
@@ -65,60 +67,35 @@
 @endsection
 
 @section('script')
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js" crossorigin="anonymous"></script>
     <script>
-
         function modalTotalHour() {
             var valuestart = $("#checkin").val();
-            var valuestop = $("#checkout").val();
+            var workHour = $("#work-hour").val();
 
-            var nowDate = new Date();
-            var newDateObj = new Date(nowDate.getTime() + valuestart*60000);
+            var startDateTime = `2023-09-26 ${valuestart}`;
+            var endDateTime = moment(startDateTime, "YYYY-MM-DD hh:mm:ss")
+                .add(workHour, 'hours')
+                .format('YYYY-MM-DD HH:mm:ss');
 
-            alert(newDateObj);
+            d = endDateTime.split(' ')[1];
+            var splitValueStop = d.split(":");
 
-            // const d = new Date();
-            // d.setHours(d.getHours() + 12);
+            var endHour = splitValueStop[0];
+            var endMinute = splitValueStop[1];
 
-            // alert(d)
+            $("#checkout").val(`${endHour}:${endMinute}`)
+        }
 
-            // if (valuestart > valuestop) {
-            //     dt1 = new Date(`October 13, 2014 ${valuestart}`);
-            //     dt2 = new Date(`October 14, 2014 ${valuestart}`);
-            //     console.log(diff_hours(dt1, dt2));
-            // } else {
-            //     dt1 = new Date("October 13, 2014 21:00:00");
-            //     dt2 = new Date("October 14, 2014 06:13:00");
-            //     console.log(diff_hours(dt1, dt2));
-            // }
-            // if (hourDiff < 0) {
-            //     hourDiff = 24 + hourDiff;
-            // }
+        function onSubmit() {
+            var workHour = $("#work-hour").val();
 
+            var result = confirm(`Apakah anda yakin jumlah jam kerja ${workHour} jam dan 1 jam istirahat?`);
+            $('#input-work-hour').val(workHour - 1);
 
-            // var totalHour = valuestart + valuestop;
-
-            // console.log(totalHour);
-
-
-
-
-            // if (timeEnd > timeStart) {
-
-
-            // } else {
-            //     var hourDiff = timeStart - timeEnd;
-            // }
-
-            // var workHour = hourDiff - 1;
-
-            // var result = confirm(`Apakah anda yakin jumlah jam kerja ${workHour} jam dan 1 jam istirahat?`);
-
-            // if (result == true) {
-            //     var test = `Apakah anda yakin jumlah kerja ${workHour} jam?`;
-            // } else {
-            //     var test = `Apakah anda yakin jumlah kerja ${workHour} jam?`;
-            // }
-            // $('#work-hour').val(workHour);
+            if (result == true) {
+                $( "#form-shift-type" ).trigger( "submit" );
+            }
         }
     </script>
 @endsection
