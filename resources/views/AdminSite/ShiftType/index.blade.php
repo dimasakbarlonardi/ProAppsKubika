@@ -19,6 +19,7 @@
                     <tr>
                         <th class="sort" data-sort="">No</th>
                         <th class="sort" data-sort="shift_type">Shift Type</th>
+                        <th class="sort" data-sort="shift_type">Kode Type</th>
                         <th class="sort" data-sort="shift_type">Check In</th>
                         <th class="sort" data-sort="shift_type">Check Out</th>
                         <th class="sort">Action</th>
@@ -29,6 +30,7 @@
                         <tr>
                             <th scope="row">{{ $key + 1 }}</th>
                             <td>{{ $shift->shift }}</td>
+                            <td>{{ $shift->kode_shift }}</td>
                             <td>{{ $shift->checkin }}</td>
                             <td>{{ $shift->checkout }}</td>
                             <td>

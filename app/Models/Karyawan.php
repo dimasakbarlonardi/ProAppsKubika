@@ -107,4 +107,9 @@ class Karyawan extends Model
     {
         return $this->hasOne(StatusKawin::class, 'id_status_kawin', 'id_status_kawin_karyawan');
     }
+
+    public function WorkSchedule()
+    {
+        return $this->hasMany(WorkTimeline::class, 'karyawan_id', 'id');
+    }
 }

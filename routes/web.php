@@ -753,7 +753,9 @@ Route::prefix('admin')->group(function () {
         Route::resource('shifttype', ShiftTypeController::class);
 
         // Work Schedule
-        Route::get('/work-schedules', [ShiftTypeController::class, 'workSchedules'])->name('workSchedules');
+        Route::get('/work-schedules', [ShiftTypeController::class, 'listWorkSchedules'])->name('listWorkSchedules');
+        Route::get('/work-schedules/{id}', [ShiftTypeController::class, 'workSchedules'])->name('workSchedules');
+        Route::post('/work-schedules/store/{id}', [ShiftTypeController::class, 'storeWorkSchedules'])->name('storeWorkSchedules');
 
         // --------------- Attendance ------------------
         Route::resource('requestattendance', RequestAttendanceController::class);
