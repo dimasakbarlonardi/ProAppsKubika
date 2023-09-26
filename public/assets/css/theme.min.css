@@ -2055,8 +2055,6 @@ progress {
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
     margin-top: calc(-1 * var(--falcon-gutter-y));
-    margin-right: calc(-0.5 * var(--falcon-gutter-x));
-    margin-left: calc(-0.5 * var(--falcon-gutter-x));
 }
 
 .row > * {
@@ -2264,7 +2262,7 @@ progress {
 .timeline-simple .timeline-item,
 .timeline-zigzag .timeline-item,
 .timeline-vertical .timeline-item {
-    --falcon-gutter-x: 0;
+    /* --falcon-gutter-x: 0; */
 }
 
 .g-0,
@@ -14270,7 +14268,7 @@ html[data-bs-theme="dark"] .tox .tox-dialog__footer .tox-button--secondary,
 }
 
 .mb-5 {
-    margin-bottom: 3rem !important;
+    /* margin-bottom: 3rem !important; */
 }
 
 .mb-6 {
@@ -41013,3 +41011,27 @@ html[data-bs-theme="dark"] .bg-priority-low:checked {
             border-bottom: 1px solid #ddd;
             border: none;
         }
+
+
+        .image-container {
+            position: relative;
+        }
+        
+        .logo {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-46%, -50%);
+            width: 91%;
+            height: 20%;
+        }
+
+     .reverse{   
+        flex-direction: row-reverse;
+        align-items: center; 
+        align-content: center; 
+        justify-content: center; 
+        flex-direction: row-reverse;
+        justify-content: flex-end;
+     }
+        

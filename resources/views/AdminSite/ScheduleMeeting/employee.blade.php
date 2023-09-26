@@ -24,7 +24,7 @@
                 <tr>
                     <th class="sort" data-sort="">No</th>
                     <th class="sort" data-sort="id_karyawan">Employee</th>
-                    <th class="sort" data-sort="action">Action</th>
+                    <th class="sort" data-sort="action">Divisi</th>
                 </tr>
             </thead>
             <tbody id="checklist_body">
@@ -32,7 +32,8 @@
                     <tr>
                         <th scope="row">{{ $key + 1 }}</th>
                         <td> {{ $meeting->Karyawan->nama_karyawan }}</td>
-                        <td>
+                        <td> {{ $meeting->Karyawan->Divisi->nama_divisi}}</td>
+                        <!-- <td>
                             <a href="{{ route('shifttype.edit', $meeting->id) }}" class="btn btn-sm btn-warning"><span
                                     class="fas fa-pencil-alt fs--2 me-1"></span>Edit</a>
                             <form class="d-inline" action="{{ route('shifttype.destroy', $meeting->id) }}" method="post">
@@ -42,7 +43,7 @@
                                     onclick="return confirm('are you sure?')"><span
                                         class="fas fa-trash-alt fs--2 me-1"></span>Hapus</button>
                             </form>
-                        </td>
+                        </td> -->
                     </tr>
                 @endforeach
             </tbody>
