@@ -32,4 +32,9 @@ class EmployeeMeeting extends Model
     {
         return $this->hasOne( ScheduleMeeting::class, 'id', 'id_meeting');
     }
+
+    public function Divisi()
+    {
+        return $this->hasOne(Divisi::class, 'id_divisi', 'id_karyawan');
+    }
 }

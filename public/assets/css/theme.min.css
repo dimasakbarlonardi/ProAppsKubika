@@ -2055,12 +2055,6 @@ progress {
     -ms-flex-wrap: wrap;
     flex-wrap: wrap;
     margin-top: calc(-1 * var(--falcon-gutter-y));
-
-    align-items: center;
-    align-content: center;
-    justify-content: center;
-    flex-direction: row-reverse;
-    justify-content: flex-end;
 }
 
 .row > * {
@@ -33341,7 +33335,7 @@ h5,
 .flex-between-center {
     -webkit-box-pack: justify;
     -ms-flex-pack: justify;
-    /* justify-content: space-between; */
+    justify-content: space-between;
     -webkit-box-align: center;
     -ms-flex-align: center;
     align-items: center;
@@ -41031,5 +41025,13 @@ html[data-bs-theme="dark"] .bg-priority-low:checked {
             width: 91%;
             height: 20%;
         }
-        
+
+     .reverse{   
+        flex-direction: row-reverse;
+        align-items: center; 
+        align-content: center; 
+        justify-content: center; 
+        flex-direction: row-reverse;
+        justify-content: flex-end;
+     }
         

@@ -8,8 +8,8 @@
     <div class="card">
         <div class="card-header">
             <div class="row">
-                <div class="col-md d-flex">Nama pembawa
-                    <div class="avatar avatar-2xl">
+                <div class="col-md d-flex ">Nama pembawa
+                    <div class="avatar avatar-2xl ms-2">
                         <img class="rounded-circle" src="../../assets/img/team/1.jpg" alt="" />
                     </div>
                     <div class="flex-1 ms-2">
@@ -49,10 +49,6 @@
                                             <input type="text" class="form-control" value="{{ $gigo->no_request_gigo }}"
                                                 disabled>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <div class="row">
                                         <div class="col-6">
                                             <label class="form-label">Driver</label>
                                             <input type="text" class="form-control" value="{{ $gigo->nama_pembawa }}"
@@ -60,16 +56,19 @@
                                         </div>
                                         <div class="col-6">
                                             <label class="form-label">No Car Plate</label>
-                                            <input type="text" class="form-control" value="{{ $gigo->no_pol_pembawa }}"
+                                            <input ßtype="text" class="form-control" value="{{ $gigo->no_pol_pembawa }}"
                                                 disabled>
                                         </div>
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <div class="col-6">
-                                        <label class="form-label">Gigo Time</label>
-                                        <input type="text" class="form-control" value="{{ $gigo->date_request_gigo }}"
-                                            disabled>
+                                        <div class="col-6">
+                                            <label class="form-label">Gigo Time</label>
+                                            <input type="text" class="form-control" value="{{ $gigo->date_request_gigo }}"
+                                                disabled>
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="form-label">Gigo Type</label>
+                                            <input type="text" class="form-control" value="{{ $gigo->gigo_type }}"
+                                                disabled>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

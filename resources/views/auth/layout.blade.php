@@ -14,7 +14,7 @@
                 <div class="col-lg-8 col-xxl-5 py-3 position-relative">
                     <div class="">
                         <div class="card-body p-0">
-                            <div class="row g-0 h-100">
+                            <div class="row g-0 h-100 reverse">
                             <div class="col-md-5 text-center">
                                 <div class="image-container">
                                     <img src="{{ asset('/assets/img/login_image.png') }}" alt="background_image" width="105%" height="100%">
