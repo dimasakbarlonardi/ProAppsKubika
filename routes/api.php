@@ -55,6 +55,8 @@ Route::prefix('v1')->group(function () {
 
         // Unit
         Route::get('/units', [UnitController::class, 'getAllUnits']);
+        Route::get('/water-usage-record/{unitID}', [UnitController::class, 'waterUsageRecord']);
+        Route::get('/electric-usage-record/{unitID}', [UnitController::class, 'electricUsageRecord']);
 
         // Open Ticket
         Route::get('/tickets', [OpenTicketController::class, 'listTickets']);
