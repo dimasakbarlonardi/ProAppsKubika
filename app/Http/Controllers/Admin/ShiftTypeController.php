@@ -45,7 +45,7 @@ class ShiftTypeController extends Controller
     public function store(Request $request)
     {
         $conn = ConnectionDB::setConnection(new ShiftType());
-        dd($request);
+
         try {
             DB::beginTransaction();
 

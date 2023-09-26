@@ -44,66 +44,49 @@
                     </div>
                 </div>
             </div>
-            <div class="card-body p-0">
-                <div class="form-check d-none">
-                    <input class="form-check-input" id="checkbox-bulk-card-tickets-select" type="checkbox"
-                        data-bulk-select='{"body":"card-ticket-body","actions":"table-ticket-actions","replacedElement":"table-ticket-replace-element"}' />
-                </div>
-                <div class="list bg-light p-x1 d-flex flex-column gap-3" id="card-ticket-body">
-                    <div class="row">
-                        @foreach ($karyawans as $karyawan)
-                            <div class="col-3">
-                                <div
-                                    class="bg-white dark__bg-1100 d-md-flex d-xl-inline-block d-xxl-flex align-items-center p-x1 rounded-3 shadow-sm card-view-height">
-                                    <div class="d-flex align-items-start align-items-sm-center">
-                                        <a class="d-none d-sm-block" href="">
-                                            <div class="avatar avatar-xl avatar-3xl">
-                                                <img src="{{ $karyawan->profile_picture ? $karyawan->profile_picture : '/assets/img/team/3-thumb.png' }}"
-                                                    alt="{{ $karyawan->profile_picture }}" class="avatar-image" />
-                                            </div>
-                                        </a>
-                                        <div class="ms-2 ms-sm-4">
-                                            <p class="fw-semi-bold mb-3 mb-sm-2">
-                                                <a class="text-primary">
-                                                    Karyawan
-                                                </a>
-                                            </p>
-                                            <p class="fw-semi-bold mb-3 ">
-                                                <a class="text-black"
-                                                    href="{{ route('karyawans.show', $karyawan->id_karyawan) }}">
-                                                    {{ $karyawan->nama_karyawan }}
-                                                </a>
-                                            </p>
-                                            <div class="row">
-                                                <hr>
-                                                <button class="btn btn-outline-success mb-2" type="button">
-                                                    Detail
-                                                </button>
-                                                <a href="{{ route('workSchedules', $karyawan->id) }}" class="btn btn-outline-success mb-2" type="button">
-                                                    Work Schedule
-                                                </a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
+            <div class="card-body pt-4">
+                <table class="table table-striped alternating-rows" id="table-engineeringhistory">
+                    <thead>
+                        <tr>
+                            <th class="sort" data-sort="">No</th>
+                            <th></th>
+                            <th class="sort" data-sort="equipment">Karyawan</th>
+                            <th class="sort" data-sort="room">Role</th>
+                            <th class="sort" data-sort="inspection">Address</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody id="checklist_body">
+                        @foreach ($karyawans as $key => $karyawan)
+                            <tr>
+                                <th scope="row">{{ $key + 1 }}</th>
+                                <td>
+                                    <img src="{{ $karyawan->User->profile_picture ? asset($karyawan->User->profile_picture) : asset('/assets/img/team/3-thumb.png') }}"
+                                        alt="{{ $karyawan->User->profile_picture }}" class="rounded-circle"
+                                        style="max-width: 50px; height: 50px">
+                                </td>
+                                <td>
+                                    {{ $karyawan->nama_karyawan }} <br>
+                                    <small>{{ $karyawan->email_karyawan }}</small>
+                                </td>
+                                <td class="align-middle">
+                                    {{ $karyawan->User->RoleH->nama_role }}
+                                </td>
+                                <td>
+                                    {{ $karyawan->alamat_ktp_karyawan }}
+                                </td>
+                                <td class="text-center">
+                                    <button class="btn btn-outline-info btn-sm mb-2" type="button">
+                                        Detail
+                                    </button>
+                                    <a href="{{ route('workSchedules', $karyawan->id) }}" class="btn btn-outline-success btn-sm mb-2" type="button">
+                                        Work Schedule
+                                    </a>
+                                </td>
+                            </tr>
                         @endforeach
-                    </div>
-
-                </div>
-            </div>
-            <div class="card-footer">
-                <div class="d-flex justify-content-center">
-                    <button class="btn btn-sm btn-falcon-default me-1" type="button" title="Previous"
-                        data-list-pagination="prev">
-                        <span class="fas fa-chevron-left"></span>
-                    </button>
-                    <ul class="pagination mb-0"></ul>
-                    <button class="btn btn-sm btn-falcon-default ms-1" type="button" title="Next"
-                        data-list-pagination="next">
-                        <span class="fas fa-chevron-right"></span>
-                    </button>
-                </div>
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
