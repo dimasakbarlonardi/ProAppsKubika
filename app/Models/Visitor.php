@@ -23,7 +23,9 @@ class Visitor extends Model
     'leave_date',
     'heading_to',
     'desc',
-    'status'
+    'status',
+    'leave_date',
+    'leave_time'
     ];
 
     protected $dates = ['deleted_at'];
