@@ -27,6 +27,7 @@ class InspectionController extends Controller
 
         $inspection = $connInspectionEng->where('deleted_at', null)
             ->with(['Room', 'equipment', 'Schedule'])
+            ->where('status_schedule', '!=', 'Not Done')
             ->get();
 
         foreach ($inspection as $key => $data) {

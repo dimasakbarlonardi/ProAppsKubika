@@ -5,10 +5,10 @@
     <div class="card-header py-2">
         <div class="row flex-between-center">
             <div class="my-3 col-auto">
-                <h6 class="mb-0 text-white">List Toilet</h6>
+                <h6 class="mb-0 text-white">List Inspection House Keeping</h6>
             </div>
             <div class="col-auto d-flex">
-                <a class="btn btn-falcon-default text-600 btn-sm " href="{{ route('toilets.create') }}"><span class="fas fa-plus fs--2 me-1"></span>Create Toilet</a>
+                <a class="btn btn-falcon-default text-600 btn-sm " href="{{ route('toilets.create') }}"><span class="fas fa-plus fs--2 me-1"></span>Create Parameter</a>
             </div>
         </div>
     </div>
@@ -17,7 +17,7 @@
             <thead>
                 <tr>
                     <th class="sort" data-sort="">No</th>
-                    <th class="sort" data-sort="nama_hk_toilet">Nama Toilet</th>
+                    <th class="sort" data-sort="nama_hk_toilet">Inspection House Keeping Name</th>
                     <th class="sort">Action</th>
                 </tr>
             </thead>

@@ -433,7 +433,6 @@ class BillingController extends Controller
             try {
                 DB::beginTransaction();
 
-
                 $connWaterUUS = new WaterUUS();
                 $connWaterUUS = $connWaterUUS->setConnection($site->db_name);
 

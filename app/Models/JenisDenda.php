@@ -19,14 +19,15 @@ class JenisDenda extends Model
         'jenis_denda',
         'denda_flat_procetage',
         'denda_flat_amount',
+        'is_active'
     ];
 
     protected $dates = ['deleted_at'];
 
     function rupiah($angka){
-	
+
         $hasil_rupiah = "Rp " . number_format($angka,2,',','.');
         echo $hasil_rupiah;
-     
+
     }
 }

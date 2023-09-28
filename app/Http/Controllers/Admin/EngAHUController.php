@@ -20,7 +20,7 @@ class EngAHUController extends Controller
     {
         $conn = ConnectionDB::setConnection(new EngAhu());
 
-        $data ['engahus'] = $conn->paginate(2);
+        $data ['engahus'] = $conn->paginate(10);
 
         return view('AdminSite.EngAhu.index', $data);
     }
@@ -46,7 +46,7 @@ class EngAHUController extends Controller
         $conn = ConnectionDB::setConnection(new EngAhu());
 
         try {
-            
+
             DB::beginTransaction();
 
             $conn->create([
