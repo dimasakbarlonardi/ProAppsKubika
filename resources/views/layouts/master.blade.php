@@ -46,7 +46,20 @@
     <link href="{{ url('assets/vendors/simplebar/simplebar.min.css') }}" rel="stylesheet">
 
     <link href="{{ url('assets/css/theme.min.css') }}" rel="stylesheet" id="style-default">
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+    <script>
+        // Enable pusher logging - don't include this in production
+        Pusher.logToConsole = true;
 
+        var pusher = new Pusher('0861d580b79b849c276c', {
+            cluster: 'ap1'
+        });
+
+        var channel = pusher.subscribe('my-channel');
+        channel.bind('my-event', function(data) {
+            alert(JSON.stringify(data));
+        });
+    </script>
 </head>
 
 <body>
