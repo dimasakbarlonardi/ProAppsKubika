@@ -76,7 +76,7 @@
                         </div>
                         <div class="mb-3">
                             <div class="row">
-                                <div class="col-6">
+                                {{-- <div class="col-6">
                                     <label class="mb-1">Tipe reservasi</label>
                                     <select class="form-control" name="id_type_reservation">
                                         <option selected disable>--- Pilih tipe reservasi ---</option>
@@ -84,7 +84,7 @@
                                             <option value="{{ $type->id_type_reservation }}">{{ $type->type_reservation }}</option>
                                         @endforeach
                                     </select>
-                                </div>
+                                </div> --}}
                                 <div class="col-6">
                                     <label class="mb-1">Ruang reservasi</label>
                                     <select class="form-control" name="id_ruang_reservation">
@@ -94,14 +94,10 @@
                                         @endforeach
                                     </select>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="mb-3">
-                            <div class="row">
                                 <div class="col-6">
                                     <label class="mb-1">Jenis acara</label>
                                     <select class="form-control" name="id_jenis_acara">
-                                        <option selected disable>--- Pilhih jenis acara ---</option>
+                                        <option selected disable>--- Pilih jenis acara ---</option>
                                         @foreach ($jenisAcara as $acara)
                                             <option value="{{ $acara->id_jenis_acara }}">{{ $acara->jenis_acara }}</option>
                                         @endforeach
@@ -109,6 +105,19 @@
                                 </div>
                             </div>
                         </div>
+                        {{-- <div class="mb-3">
+                            <div class="row">
+                                <div class="col-6">
+                                    <label class="mb-1">Jenis acara</label>
+                                    <select class="form-control" name="id_jenis_acara">
+                                        <option selected disable>--- Pilih jenis acara ---</option>
+                                        @foreach ($jenisAcara as $acara)
+                                            <option value="{{ $acara->id_jenis_acara }}">{{ $acara->jenis_acara }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div> --}}
                         <div class="mb-3">
                             <label class="mb-1">Keterangan</label>
                             <textarea class="form-control" name="keterangan" id="keterangan_reservation"></textarea>

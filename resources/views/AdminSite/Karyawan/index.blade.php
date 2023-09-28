@@ -76,9 +76,9 @@
                                     {{ $karyawan->alamat_ktp_karyawan }}
                                 </td>
                                 <td class="text-center">
-                                    <button class="btn btn-outline-info btn-sm mb-2" type="button">
+                                    <a href={{ route('karyawans.show', $karyawan->id) }} class="btn btn-outline-info btn-sm mb-2" type="button">
                                         Detail
-                                    </button>
+                                    </a>
                                     <a href="{{ route('workSchedules', $karyawan->id) }}" class="btn btn-outline-success btn-sm mb-2" type="button">
                                         Work Schedule
                                     </a>

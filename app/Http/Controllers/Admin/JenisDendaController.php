@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\JenisDenda;
 use App\Helpers\ConnectionDB;
+use App\Helpers\ResponseFormatter;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
@@ -43,12 +44,12 @@ class JenisDendaController extends Controller
      */
     public function store(Request $request)
     {
-        
+
         try {
             $conn = ConnectionDB::setConnection(new JenisDenda());
-            
+
             DB::beginTransaction();
-    
+
             $conn->create([
                 'id_jenis_denda' => $request->id_jenis_denda,
                 'jenis_denda' => $request->jenis_denda,
@@ -139,5 +140,26 @@ class JenisDendaController extends Controller
         Alert::success('Berhasil','Berhasil Menghapus Jenis Denda');
 
         return redirect()->route('jenisdendas.index');
+    }
+
+    public function isActive($id)
+    {
+        $connJenisDenda = ConnectionDB::setConnection(new JenisDenda());
+
+        $prevDenda = $connJenisDenda->where('is_active', 1)->first();
+
+        if ($prevDenda) {
+            $prevDenda->is_active = false;
+            $prevDenda->save();
+
+            $denda = $connJenisDenda->find($id);
+            $denda->is_active = true;
+            $denda->save();
+        }
+
+
+        return ResponseFormatter::success([
+            'status' => 'OK'
+        ], 'Success');
     }
 }

@@ -22,6 +22,7 @@ class VisitorController extends Controller
         $connVisitor->desc = $request->desc;
         $connVisitor->leave_date = $request->leave_date;
         $connVisitor->leave_time = $request->leave_time;
+        $connVisitor->status = 'Waiting';
 
         $connVisitor->save();
 

@@ -5,10 +5,10 @@
     <div class="card-header py-2">
         <div class="row flex-between-center">
             <div class="my-3 col-auto">
-                <h6 class="mb-0">List Engeneering AHU</h6>
+                <h6 class="mb-0">List Engeneering Inspection Parameter</h6>
             </div>
             <div class="col-auto d-flex">
-                <a class="btn btn-falcon-default btn-sm text-600" href="{{ route('engahus.create') }}"><span class="fas fa-plus fs--2 me-1"></span>Create Engeneering AHU</a>
+                <a class="btn btn-falcon-default btn-sm text-600" href="{{ route('engahus.create') }}"><span class="fas fa-plus fs--2 me-1"></span>Create Parameter</a>
             </div>
         </div>
     </div>
@@ -17,7 +17,7 @@
             <thead>
                 <tr>
                     <th class="sort" data-sort="">No</th>
-                    <th class="sort" data-sort="nama_eng_ahu">Nama Engeneering AHU</th>
+                    <th class="sort" data-sort="nama_eng_ahu">Engineering Inspection Parameter</th>
                     <th class="sort">Action</th>
                 </tr>
             </thead>

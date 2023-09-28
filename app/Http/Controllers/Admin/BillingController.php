@@ -144,8 +144,12 @@ class BillingController extends Controller
         $unit = $connUnit->find($elecUSS->id_unit);
 
         $ipl_service_charge = (int) $unit->luas_unit * $sc->biaya_permeter;
-        $ipl_sink_fund = (int) $unit->luas_unit * $sf->biaya_permeter;
 
+        if ($sf->biaya_procentage != null) {
+            $ipl_sink_fund = $sf->biaya_procentage / 100 * $ipl_service_charge;
+        } else {
+            $ipl_sink_fund = $sf->biaya_permeter * (int) $unit->luas_unit;
+        }
         $total_tagihan_ipl = $ipl_service_charge + $ipl_sink_fund;
 
         $connIPL->id_site = $unit->id_site;

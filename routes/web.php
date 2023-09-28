@@ -556,6 +556,7 @@ Route::prefix('admin')->group(function () {
 
         // CRUD JenisDenda
         Route::resource('jenisdendas', JenisDendaController::class);
+        Route::post('/jenis-denda/isactive/{id}', [JenisDendaController::class, 'isActive']);
 
         //CRUD Perhit Denda
         Route::resource('perhitdendas', PerhitDendaController::class);
