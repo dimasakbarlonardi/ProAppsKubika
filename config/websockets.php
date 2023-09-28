@@ -27,9 +27,8 @@ return [
             'name' => env('APP_NAME'),
             'key' => env('PUSHER_APP_KEY'),
             'secret' => env('PUSHER_APP_SECRET'),
-            'enable_client_messages' => true,
+            'enable_client_messages' => false,
             'enable_statistics' => true,
-            'encrypted' => false,
         ],
     ],
 
@@ -46,6 +45,9 @@ return [
      * This array contains the hosts of which you want to allow incoming requests.
      * Leave this empty if you want to accept requests from all hosts.
      */
+    'allowed_origins' => [
+        //
+    ],
 
     /*
      * The maximum request size in kilobytes that is allowed for an incoming WebSocket request.
@@ -123,8 +125,7 @@ return [
         /*
          * Passphrase for your local_cert file.
          */
-        'passphrase' => null,
-        'verify_peer' => false,
+        'passphrase' => env('LARAVEL_WEBSOCKETS_SSL_PASSPHRASE', null),
     ],
 
     /*

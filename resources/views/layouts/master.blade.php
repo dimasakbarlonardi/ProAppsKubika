@@ -378,6 +378,16 @@
             return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
         }
     </script>
+    <script src="{{ asset('js/app.js') }}"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function(event) {
+            Echo.channel("hello-channel")
+                .listen('HelloEvent', (e) => {
+                    console.log('Hellow World');
+                    console.log(e);
+                })
+        });
+    </script>
     @yield('script')
 </body>
 

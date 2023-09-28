@@ -1,5 +1,7 @@
 <?php
 
+use App\Events\HelloEvent;
+use App\Models\ChecklistPutrH;
 use App\Models\MonthlyArTenant;
 use App\Models\ChecklistGensetH;
 use Illuminate\Support\Facades\Route;
@@ -142,6 +144,12 @@ Route::post('/absence', [AttendanceController::class, 'absence']);
 Route::post('/payments/midtrans-notifications', [PaymentController::class, 'receive']);
 Route::get('/delete/midtrans', [PaymentController::class, 'delete']);
 Route::get('/check/midtrans', [PaymentController::class, 'check']);
+
+Route::get('/send-event', function() {
+    $text = "Testing message event notification";
+
+    broadcast(new HelloEvent($text));
+});
 
 // Check role id
 Route::get('/check-role-id', [RoleController::class, 'checkRoleID']);
