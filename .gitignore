@@ -14,3 +14,5 @@ yarn-error.log
 /.idea
 /.vscode
 /config/database.php
+/config/websockets.php
+/config/broadcasting.php

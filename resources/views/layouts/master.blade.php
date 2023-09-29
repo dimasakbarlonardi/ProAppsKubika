@@ -383,8 +383,8 @@
         document.addEventListener("DOMContentLoaded", function(event) {
             Echo.channel("hello-channel")
                 .listen('HelloEvent', (e) => {
-                    console.log('Hellow World');
-                    console.log(e);
+                    alert(e.data);
+                    console.log(e.data);
                 })
         });
     </script>
