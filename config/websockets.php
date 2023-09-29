@@ -27,8 +27,9 @@ return [
             'name' => env('APP_NAME'),
             'key' => env('PUSHER_APP_KEY'),
             'secret' => env('PUSHER_APP_SECRET'),
-            'enable_client_messages' => false,
+            'enable_client_messages' => true,
             'enable_statistics' => true,
+	    'encrypted' => true,
         ],
     ],
 
@@ -46,7 +47,7 @@ return [
      * Leave this empty if you want to accept requests from all hosts.
      */
     'allowed_origins' => [
-        //
+        'dev.pro-apps.xyz'
     ],
 
     /*
@@ -125,8 +126,9 @@ return [
         /*
          * Passphrase for your local_cert file.
          */
-        'passphrase' => env('LARAVEL_WEBSOCKETS_SSL_PASSPHRASE', null),
-    ],
+        'passphrase' => null,
+	    'verify_peer' => false,
+],
 
     /*
      * Channel Manager
