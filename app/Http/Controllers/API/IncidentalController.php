@@ -19,7 +19,6 @@ class IncidentalController extends Controller
         $connIncident = ConnectionDB::setConnection(new IncidentalReport());
 
         $reports = $connIncident->where('deleted_at', null)
-            ->with('Room')
             ->get();
 
         return ResponseFormatter::success(
@@ -38,7 +37,7 @@ class IncidentalController extends Controller
 
             $createReport = $connIncident->create($request->all());
             $createReport->incident_name = $request->incident_name;
-            $createReport->room_id = $request->room_id;
+            $createReport->location = $request->location;
             $createReport->incident_date = $request->incident_date;
             $createReport->incident_time = $request->incident_time;
             $createReport->desc = $request->desc;
@@ -75,12 +74,11 @@ class IncidentalController extends Controller
     {
         $connIncident = ConnectionDB::setConnection(new IncidentalReport());
 
-        $reporst = $connIncident->where('id', $id)
-            ->with('Room')
-            ->get();
+        $report = $connIncident->where('id', $id)
+            ->first();
 
         return ResponseFormatter::success(
-            $reporst,
+            $report,
             'Success get all reports'
         );
     }
