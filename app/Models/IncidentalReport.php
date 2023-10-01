@@ -13,7 +13,7 @@ class IncidentalReport extends Model
 
     protected $fillable = [
         'incident_name',
-        'room_id',
+        'location',
         'incident_date',
         'incident_time',
         'incident_image',
