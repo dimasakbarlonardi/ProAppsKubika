@@ -6,12 +6,14 @@ use App\Http\Controllers\API\AttendanceController as AppAttendanceController;
 use App\Http\Controllers\API\BillingController;
 use App\Http\Controllers\API\GIGOController;
 use App\Http\Controllers\API\InboxController;
+use App\Http\Controllers\API\IncidentalController;
 use App\Http\Controllers\API\OpenTicketController;
 use App\Http\Controllers\API\SiteController;
 use App\Http\Controllers\API\UnitController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\InspectionController;
 use App\Http\Controllers\API\PackageController;
+use App\Http\Controllers\API\RoomController;
 use App\Http\Controllers\API\VisitorController;
 use App\Http\Controllers\API\WorkOrderController;
 use App\Http\Controllers\PaymentController;
@@ -120,5 +122,13 @@ Route::prefix('v1')->group(function () {
         Route::get('/visitors/unit/{id}', [VisitorController::class, 'visitorByUnit']);
         Route::get('/visitor/{id}', [VisitorController::class, 'show']);
         Route::post('/visitor/arrive/{id}', [VisitorController::class, 'arrive']);
+
+        // Room
+        Route::get('/rooms', [RoomController::class, 'index']);
+
+        // Incedental Report
+        Route::post('/incidental-report', [IncidentalController::class, 'store']);
+        Route::get('/incidental-reports', [IncidentalController::class, 'index']);
+        Route::get('/incidental-report/{id}', [IncidentalController::class, 'show']);
     });
 });
