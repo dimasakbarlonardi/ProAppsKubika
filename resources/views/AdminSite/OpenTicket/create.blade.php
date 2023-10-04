@@ -18,6 +18,7 @@
             <form method="post" action="{{ route('open-tickets.store') }}" enctype="multipart/form-data"
                 id="my-awesome-dropzone">
                 @csrf
+                <div class="row">
                 <div class="mb-3">
                     <label class="form-label">Jenis Request</label>
                     <select name="id_jenis_request" class="form-control" id="id_jenis_request">
@@ -31,8 +32,7 @@
                     <input type="text" maxlength="50" value="{{ old('judul_request') }}" name="judul_request"
                         class="form-control" required>
                 </div>
-                <div class="mb-3">
-                    <div class="row">
+                <!-- <div class="mb-3"> -->
                         <div class="col-6">
                             <label class="form-label">No HP</label>
                             <input type="text" value="{{ old('no_hp') }}" maxlength="13" name="no_hp"
@@ -61,7 +61,7 @@
                                 </select>
                             </div>
                         @endif
-                    </div>
+                    <!-- </div> -->
                 </div>
                 <div class="mb-3">
                     @if ($user->user_category == 2)

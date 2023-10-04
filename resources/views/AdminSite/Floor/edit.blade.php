@@ -14,10 +14,6 @@
                 @method('PUT')
                 @csrf
                 <div class="mb-3">
-                    <label class="form-label">ID Lantai</label>
-                    <input type="text" maxlength="3" name="id_lantai" value="{{ $floor->id_lantai }}" class="form-control">
-                </div>
-                <div class="mb-3">
                     <label class="form-label">Nama Lantai</label>
                     <input type="text" name="nama_lantai" value="{{ $floor->nama_lantai }}" class="form-control">
                 </div>

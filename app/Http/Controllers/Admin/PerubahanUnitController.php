@@ -15,9 +15,11 @@ use App\Models\Tenant;
 use App\Models\TenantUnit;
 use App\Models\TenantUnitOFF;
 use App\Models\Unit;
+use App\Models\User;
 use App\Models\WorkRequest;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -315,7 +317,7 @@ class PerubahanUnitController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request,$id)
+    public function show(Request $request, $id)
     {
         $conn = ConnectionDB::setConnection(new TenantUnit());
         $connTenantUnit = $this->setConnection(new TenantUnit());
@@ -410,7 +412,7 @@ class PerubahanUnitController extends Controller
         $data['tenantunit'] = $connTenantUnit->where('id_tenant_unit', $id)->first();
         // $data['tenantunit'] = $connTenantUnit->find($id);
         $data['id_tenant'] = $id;
-        $data['units'] = $connUnit->get();   
+        $data['units'] = $connUnit->get();
         $data['owners'] = $connOwner->get();
         $data['periodeSewa'] = $periodeSewa->get();
         $data['getCreateUnits'] = $this->getUnitIDFromTU();
@@ -462,13 +464,18 @@ class PerubahanUnitController extends Controller
     public function validationPerubahan(Request $request)
     {
         $connTicket = ConnectionDB::setConnection(new OpenTicket());
+        $connUser = ConnectionDB::setConnection(new User());
 
-        $tickets = $connTicket->where('id_user', $request->id_user)
-        ->where('id_unit', $request->id_unit)
-        ->where('status_request', '!=', 'COMPLETE')
-        ->get();
+        $user = $connUser->find($request->id_user);
+       
+        $tenantID = $user->Tenant->id_tenant;
+       
+        $tickets = $connTicket->where('id_tenant', $tenantID)
+            ->where('id_unit', $request->id_unit)
+            ->where('status_request', '!=', 'COMPLETE')
+            ->get();
         $errors = [];
-
+        
         foreach ($tickets as $ticket) {
 
             $tiket['error_header'] = $ticket->no_tiket;
@@ -482,7 +489,6 @@ class PerubahanUnitController extends Controller
                 $wr['error_status'] = $ticket->WorkRequest->status_request;
                 $wr['type'] = 'Work Request';
                 array_push($errors, $wr);
-
             }
 
             if ($ticket->WorkOrder) {

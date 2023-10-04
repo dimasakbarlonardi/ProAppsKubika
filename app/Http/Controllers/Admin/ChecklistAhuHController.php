@@ -29,12 +29,10 @@ class ChecklistAhuHController extends Controller
      */
     public function index(Request $request)
     {
-        // $connahudetail = ConnectionDB::setConnection(new ChecklistAhuDetail());
         $equiqment = ConnectionDB::setConnection(new EquiqmentAhu());
         $user_id = $request->user()->id;
 
         $data['checklistahus'] = $equiqment->get();
-        // $data['ahudetails'] = $connahudetail->first();
         $data['equiqments'] = $equiqment->get();
         $data['idusers'] = Login::where('id', $user_id)->get();
 
@@ -159,45 +157,23 @@ class ChecklistAhuHController extends Controller
 
             $id_equiqment = 1;
 
-            $equiqment = $equiqmentAHU->create([
+            $equiqmentAHU->create([
                 'no_equiqment' => $request->no_equiqment,
                 'id_equiqment' => $id_equiqment,
                 'equiqment' => $request->equiqment,
                 'id_role' => $request->id_role,
                 'id_room' => $request->id_room,
-                'schedule' => $request->schedule,
-                'set_schedule' => $request->set_schedule,
             ]);
-
-            // Buat jadwal inspeksi berdasarkan set schedule yang dipilih
-            $selectedSetSchedule = $request->set_schedule;
-            $startDate = Carbon::parse($request->schedule);
-            $endDate = $startDate->copy()->endOfYear(); // Akhir tahun
-
-            $scheduleDates = [];
-            $interval = ($selectedSetSchedule === 'weekly') ? '1 week' : '1 month';
-
-            while ($startDate->lte($endDate)) {
-                $scheduleDates[] = $startDate->format('Y-m-d');
-                $startDate->add($interval);
-            }
-
-            // Simpan jadwal inspeksi ke dalam database
-            foreach ($scheduleDates as $date) {
-                $equiqment->inspections()->create([
-                    'schedule_date' => $date,
-                    'status_schedule' => 'Not Done', // Status awal
-                ]);
-            }
 
             DB::commit();
 
-            Alert::success('Berhasil', 'Berhasil menambahkan Inspection AHU');
+            Alert::success('Berhasil', 'Berhasil menambahkan Inspection Engineering');
 
             return redirect()->route('checklistahus.index');
+            
         } catch (\Throwable $e) {
             DB::rollBack();
-            Alert::error('Gagal', 'Gagal menambahkan Checklis AHU Detail');
+            Alert::error('Gagal', 'Gagal menambahkan Inspection Engineering');
 
             return redirect()->route('checklistahus.index');
         }
@@ -235,12 +211,12 @@ class ChecklistAhuHController extends Controller
      */
     public function edit(Request $request, $id)
     {
-        $conn = ConnectionDB::setConnection(new ChecklistAhuH());
+        $connequiqment = ConnectionDB::setConnection(new EquiqmentAhu());
         $conndetail = ConnectionDB::setConnection(new ChecklistAhuDetail());
         $connroom = ConnectionDB::setConnection(new Room());
         $user_id = $request->user()->id;
 
-        $data['checklistahu'] = $conn->where('no_checklist_ahu', $id)->first();
+        $data['equipmentengineering'] = $connequiqment->where('id_equiqment_engineering', $id)->first();
         $data['ahudetail'] = $conndetail->where('no_checklist_ahu', $id)->first();
         $data['rooms'] = $connroom->get();
         $data['idusers'] = Login::where('id', $user_id)->get();
@@ -257,7 +233,7 @@ class ChecklistAhuHController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $conn = ConnectionDB::setConnection(new ChecklistAhuH());
+        $conn = ConnectionDB::setConnection(new EquiqmentAhu());
 
         $checklistahu = $conn->find($id);
         $checklistahu->update($request->all());

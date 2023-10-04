@@ -22,8 +22,6 @@ class EquiqmentAhu extends Model
         'equiqment',
         'id_role',
         'id_room',
-        'schedule',
-        'status_schedule',
     ];
 
     protected $dates = ['deleted_at'];

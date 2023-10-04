@@ -17,7 +17,6 @@
             <thead>
                 <tr>
                     <th class="sort" data-sort="">No</th>
-                    <th class="sort" data-sort="id_lantai">ID Lantai</th>
                     <th class="sort" data-sort="nama_lantai">Nama Lantai</th>
                     <th class="sort">Action</th>
                 </tr>
@@ -26,7 +25,6 @@
                 @foreach ($floors as $key => $floor)
                     <tr>
                         <th scope="row">{{ $key + 1 }}</th>
-                        <td>{{ $floor->id_lantai }}</td>
                         <td>{{ $floor->nama_lantai }}</td>
                         <td>
                             <a href="{{ route('floors.edit', $floor->id) }}" class="btn btn-sm btn-warning">Edit</a>

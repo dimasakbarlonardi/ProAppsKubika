@@ -77,6 +77,12 @@
                                                 placeholder="d/m/y H:i"
                                                 data-options='{"enableTime":true,"dateFormat":"Y-m-d H:i","disableMobile":true}' />
                                         </div>
+                                        <div class="col-6">
+                                            <label class="mb-1">GIGO Type</label>
+                                            <input type="text" required
+                                                value="{{ $gigo->gigo_type ? $gigo->gigo_type : '' }}"
+                                                name="gigo_type" class="form-control" />
+                                        </div>
                                     </div>
                                 </div>
                             </div>

@@ -37,20 +37,6 @@ class ChecklistToiletHController extends Controller
         return view('AdminSite.ChecklistToiletH.index', $data);
     }
 
-    public function fronttoilet(Request $request)
-    {
-        $conn = ConnectionDB::setConnection(new ChecklistToiletH());
-        $conntoiletdetail = ConnectionDB::setConnection(new ChecklistToiletDetail());
-        $equiqment = ConnectionDB::setConnection(new EquiqmentToilet());
-        $user_id = $request->user()->id;
-
-        $data['checklisttoilets'] = $conn->get();
-        $data['toiletdetails'] = $conntoiletdetail->first();
-        $data['equiqments'] = $equiqment->get();
-        $data['idusers'] = Login::where('id', $user_id)->get();
-
-        return view('AdminSite.ChecklistToiletH.front', $data);
-    }
 
     public function checklisttoilet($id)
     {
@@ -108,65 +94,74 @@ class ChecklistToiletHController extends Controller
         return view('AdminSite.ChecklistToiletH.create', $data);
     }
 
+    public function edit($id)
+    {
+        $connHK = ConnectionDB::setConnection(new EquiqmentToilet());
+        $connroom = ConnectionDB::setConnection(new Room());
+        $conntoilet = ConnectionDB::setConnection(new Toilet());
+        $role = ConnectionDB::setConnection(new Role());
+
+        $data['checklisttoilets'] = $connHK->where('id_equipment_housekeeping', $id)->first();
+        $data['rooms'] = $connroom->get();
+        $data['engtoilets'] = $conntoilet->get();
+        $data['role'] = $role->get();
+
+        return view('AdminSite.ChecklistToiletH.edit', $data);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $connHK = ConnectionDB::setConnection(new EquiqmentToilet());
+
+        $equipmentHK = $connHK->find($id);
+        $equipmentHK->update($request->all());
+
+        Alert::success('Berhasil', 'Berhasil mengupdate Inspection HouseKeeping');
+
+        return redirect()->route('checklisttoilets.index');
+    }
+
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
-    {
-        try {
-            DB::beginTransaction();
+    
+     public function store(Request $request)
+     {
+         $equipmentHK = ConnectionDB::setConnection(new EquiqmentToilet());
+     
+         try {
+             DB::beginTransaction();
+             $id_equiqment = 2;
 
-            $equiqmentHK = ConnectionDB::setConnection(new EquiqmentToilet());
-
-            $id_equiqment = 2;
-
-            $equiqment = $equiqmentHK->create([
-                'no_equipment' => $request->no_equipment,
-                'id_equiqment' => $id_equiqment,
-                'equipment' => $request->equipment,
-                'id_role' => $request->id_role,
-                'id_room' => $request->id_room,
-                'schedule' => $request->schedule,
-                'set_schedule' => $request->set_schedule,
-            ]);
-
-            // Buat jadwal inspeksi berdasarkan set schedule yang dipilih
-            $selectedSetSchedule = $request->set_schedule;
-            $startDate = Carbon::parse($request->schedule);
-            $endDate = $startDate->copy()->endOfYear(); // Akhir tahun
-
-            $scheduleDates = [];
-            $interval = ($selectedSetSchedule === 'weekly') ? '1 week' : '1 month';
-
-            while ($startDate->lte($endDate)) {
-                $scheduleDates[] = $startDate->format('Y-m-d');
-                $startDate->add($interval);
-            }
-
-            // Simpan jadwal inspeksi ke dalam database
-            foreach ($scheduleDates as $date) {
-                $equiqment->inspections()->create([
-                    'schedule_date' => $date,
-                    'status_schedule' => 'Not Done ', // Status awal
-                ]);
-            }
-
-            DB::commit();
-
-            Alert::success('Berhasil', 'Berhasil menambahkan Inspection HK');
-
-            return redirect()->route('checklisttoilets.index');
-        } catch (\Throwable $e) {
-            DB::rollBack();
-            Alert::error('Gagal', 'Gagal menambahkan Inspection HK');
-
-            return redirect()->route('checklisttoilets.index');
-        }
-    }
-
+             $no_equipment = $request->no_equipment;
+             $barcode_room = $this->generateBarcode($no_equipment);
+     
+             $equipmentHK->create([
+                 'no_equipment' => $no_equipment,
+                 'id_equiqment' => $id_equiqment,
+                 'barcode_room' => $barcode_room, 
+                 'equipment' => $request->equipment,
+                 'id_role' => $request->id_role,
+                 'id_room' => $request->id_room,
+             ]);
+     
+             DB::commit();
+     
+             Alert::success('Berhasil', 'Berhasil menambahkan Inspection HouseKeeping');
+     
+             return redirect()->route('checklisttoilets.index');
+         } catch (\Throwable $e) {
+             DB::rollBack();
+             dd($e);
+             Alert::error('Gagal', 'Gagal menambahkan Inspection HouseKeeping');
+     
+             return redirect()->route('checklisttoilets.index');
+         }
+     }
+     
     /**
      * Display the specified resource.
      *
