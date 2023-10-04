@@ -2,19 +2,73 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
+use App\Models\Attendance;
+use App\Models\Karyawan;
 use App\Models\Site;
+use App\Models\User;
+use App\Models\WorkTimeline;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class AttendanceController extends Controller
 {
     public function index()
     {
-        $site = Site::find('004212');
+        // $nowDate = Carbon::now()->format('Y-m-d');
+        // $attendances = DB::connection('park-royale')
+        //     ->table('tb_work_timeline as wt')
+        //     ->select('u.id_user', 'wt.date', 'shift_type_id', 'u.id_site')
+        //     ->join('tb_karyawan as k', 'k.id_karyawan', '=', 'wt.karyawan_id')
+        //     ->join('tb_user as u', 'u.login_user', '=', 'k.email_karyawan')
+        //     ->get();
 
-        $data['site'] = $site;
+        // foreach ($attendances as $schedule) {
+        //     $attendance = new Attendance();
+        //     $attendance->setConnection('park-royale');
 
-        return view('gis', $data);
+        //     $currAttendance = $attendance->where('date_schedule', $schedule->date)
+        //         ->first();
+
+        //     $status = $nowDate > $schedule->date;
+        //     if ($status && !$currAttendance) {
+        //         $attendance->id_site = $schedule->id_site;
+        //         $attendance->id_user = $schedule->id_user;
+        //         $attendance->status_absence = 'Alpha';
+        //         $attendance->date_schedule = $schedule->date;
+        //         $attendance->status = 'Finish';
+        //         $attendance->save();
+        //     }
+        // }
+
+        $connKaryawan = ConnectionDB::setConnection(new Karyawan());
+
+        $data['karyawans'] = $connKaryawan
+            ->where('deleted_at', null)
+            ->with('User.Attendance')
+            ->get();
+
+        $data['nowDate'] = '2023-10-01';
+
+        return view('AdminSite.Attendance.index', $data);
+    }
+
+    public function presenceByMonth(Request $request)
+    {
+        $connKaryawan = ConnectionDB::setConnection(new Karyawan());
+
+        $data['karyawans'] = $connKaryawan
+            ->where('deleted_at', null)
+            ->with('User.Attendance')
+            ->get();
+
+        $data['nowDate'] = $request->month;
+
+        return response()->json([
+            'html' => view('AdminSite.Attendance.attendance_table', $data)->render()
+        ]);
     }
 
     public function absence(Request $request)

@@ -29,7 +29,7 @@ class User extends Model
 
     public function RoleH()
     {
-       return $this->hasOne(Role::class, 'id', 'id_role_hdr');
+        return $this->hasOne(Role::class, 'id', 'id_role_hdr');
     }
 
     public function Karyawan()
@@ -54,6 +54,13 @@ class User extends Model
 
     public function tools()
     {
-        return $this->belongsTo(ToolsEngineering::class, 'id'); 
+        return $this->belongsTo(ToolsEngineering::class, 'id');
+    }
+
+    public function Attendance($date = "2023-09-01")
+    {
+        // dd($date);
+        return $this->hasOne(Attendance::class, 'id_user', 'id_user')
+            ->where('date_schedule', $date);
     }
 }

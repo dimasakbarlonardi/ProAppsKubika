@@ -651,6 +651,10 @@ Route::prefix('admin')->group(function () {
         Route::post('/data-employee-store', [ScheduleMeetingController::class, 'storedataEmployee'])->name('storedataEmployee');
         Route::get('/employee-meeting/{id}', [ScheduleMeetingController::class, 'employeeMeeting'])->name('employeeMeeting');
 
+        // presences
+        Route::get('/presences', [AttendanceController::class, 'index'])->name('presences');
+        Route::get('/presences-by-month', [AttendanceController::class, 'presenceByMonth']);
+
         // ---------------Parameter Attendance------------------
         // -Request Attendance
         Route::resource('requesttype', RequestTypeController::class);
