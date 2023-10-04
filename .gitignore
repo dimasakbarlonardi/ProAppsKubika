@@ -19,3 +19,4 @@ yarn-error.log
 /resources/js/bootstrap.js
 /resources/js/app.js
 /public/js/app.js
+**/.DS_Store
