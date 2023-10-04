@@ -18,3 +18,4 @@ yarn-error.log
 /config/broadcasting.php
 /resources/js/bootstrap.js
 /resources/js/app.js
+/public/js/app.js
