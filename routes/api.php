@@ -109,6 +109,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/site-location', [AppAttendanceController::class, 'siteLocation']);
         Route::post('/attendance/checkin/{token}', [AppAttendanceController::class, 'checkin']);
         Route::post('/attendance/checkout/{token}', [AppAttendanceController::class, 'checkout']);
+        Route::get('/attendance/shift-schedule/{userID}', [AppAttendanceController::class, 'shiftSchedule']);
 
         // Package
         Route::post('/package', [PackageController::class, 'store']);
