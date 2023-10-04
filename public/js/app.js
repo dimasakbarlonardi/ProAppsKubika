@@ -5346,15 +5346,9 @@ window.axios.defaults.headers.common["X-Requested-With"] = "XMLHttpRequest";
 window.Pusher = __webpack_require__(/*! pusher-js */ "./node_modules/pusher-js/dist/web/pusher.js");
 window.Echo = new laravel_echo__WEBPACK_IMPORTED_MODULE_0__["default"]({
   broadcaster: "pusher",
-  key: "1b8d8a1e275c7acc2f6fcb0060d6acdf",
-  cluster: "mt1",
+  key: "0861d580b79b849c276c",
   wsHost: window.location.hostname,
-  wsPort: 6001,
-  wssPort: 6001,
-  encrypted: true,
-  disableStats: false,
-  forceTLS: true,
-  enabledTransports: ['ws', 'wss']
+  wsPort: 6001
 });
 
 /***/ }),
@@ -24475,7 +24469,7 @@ process.umask = function() { return 0; };
 /***/ (function(module) {
 
 /*!
- * Pusher JavaScript Library v4.3.1
+ * Pusher JavaScript Library v4.4.0
  * https://pusher.com/
  *
  * Copyright 2017, Pusher
@@ -24599,16 +24593,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	                _this.timelineSender.send(_this.connection.isUsingTLS());
 	            }
 	        });
-	        this.connection.bind('message', function (params) {
-	            var internal = (params.event.indexOf('pusher_internal:') === 0);
-	            if (params.channel) {
-	                var channel = _this.channel(params.channel);
+	        this.connection.bind('message', function (event) {
+	            var eventName = event.event;
+	            var internal = (eventName.indexOf('pusher_internal:') === 0);
+	            if (event.channel) {
+	                var channel = _this.channel(event.channel);
 	                if (channel) {
-	                    channel.handleEvent(params.event, params.data);
+	                    channel.handleEvent(event);
 	                }
 	            }
 	            if (!internal) {
-	                _this.global_emitter.emit(params.event, params.data);
+	                _this.global_emitter.emit(event.event, event.data);
 	            }
 	        });
 	        this.connection.bind('connecting', function () {
@@ -24750,21 +24745,21 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 2 */
-/***/ (function(module, exports, __nested_webpack_require_10551__) {
+/***/ (function(module, exports, __nested_webpack_require_10565__) {
 
 	"use strict";
-	var dependencies_1 = __nested_webpack_require_10551__(3);
-	var xhr_auth_1 = __nested_webpack_require_10551__(7);
-	var jsonp_auth_1 = __nested_webpack_require_10551__(15);
-	var script_request_1 = __nested_webpack_require_10551__(16);
-	var jsonp_request_1 = __nested_webpack_require_10551__(17);
-	var script_receiver_factory_1 = __nested_webpack_require_10551__(4);
-	var jsonp_timeline_1 = __nested_webpack_require_10551__(18);
-	var transports_1 = __nested_webpack_require_10551__(19);
-	var net_info_1 = __nested_webpack_require_10551__(26);
-	var default_strategy_1 = __nested_webpack_require_10551__(27);
-	var transport_connection_initializer_1 = __nested_webpack_require_10551__(28);
-	var http_1 = __nested_webpack_require_10551__(29);
+	var dependencies_1 = __nested_webpack_require_10565__(3);
+	var xhr_auth_1 = __nested_webpack_require_10565__(7);
+	var jsonp_auth_1 = __nested_webpack_require_10565__(15);
+	var script_request_1 = __nested_webpack_require_10565__(16);
+	var jsonp_request_1 = __nested_webpack_require_10565__(17);
+	var script_receiver_factory_1 = __nested_webpack_require_10565__(4);
+	var jsonp_timeline_1 = __nested_webpack_require_10565__(18);
+	var transports_1 = __nested_webpack_require_10565__(19);
+	var net_info_1 = __nested_webpack_require_10565__(26);
+	var default_strategy_1 = __nested_webpack_require_10565__(27);
+	var transport_connection_initializer_1 = __nested_webpack_require_10565__(28);
+	var http_1 = __nested_webpack_require_10565__(29);
 	var Runtime = {
 	    nextAuthCallbackID: 1,
 	    auth_callbacks: {},
@@ -24893,12 +24888,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 3 */
-/***/ (function(module, exports, __nested_webpack_require_15403__) {
+/***/ (function(module, exports, __nested_webpack_require_15417__) {
 
 	"use strict";
-	var script_receiver_factory_1 = __nested_webpack_require_15403__(4);
-	var defaults_1 = __nested_webpack_require_15403__(5);
-	var dependency_loader_1 = __nested_webpack_require_15403__(6);
+	var script_receiver_factory_1 = __nested_webpack_require_15417__(4);
+	var defaults_1 = __nested_webpack_require_15417__(5);
+	var dependency_loader_1 = __nested_webpack_require_15417__(6);
 	exports.DependenciesReceivers = new script_receiver_factory_1.ScriptReceiverFactory("_pusher_dependencies", "Pusher.DependenciesReceivers");
 	exports.Dependencies = new dependency_loader_1["default"]({
 	    cdn_http: defaults_1["default"].cdn_http,
@@ -24950,7 +24945,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 	var Defaults = {
-	    VERSION: "4.3.1",
+	    VERSION: "4.4.0",
 	    PROTOCOL: 7,
 	    host: 'ws.pusherapp.com',
 	    ws_port: 80,
@@ -24976,11 +24971,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 6 */
-/***/ (function(module, exports, __nested_webpack_require_17946__) {
+/***/ (function(module, exports, __nested_webpack_require_17960__) {
 
 	"use strict";
-	var script_receiver_factory_1 = __nested_webpack_require_17946__(4);
-	var runtime_1 = __nested_webpack_require_17946__(2);
+	var script_receiver_factory_1 = __nested_webpack_require_17960__(4);
+	var runtime_1 = __nested_webpack_require_17960__(2);
 	var DependencyLoader = (function () {
 	    function DependencyLoader(options) {
 	        this.options = options;
@@ -25036,12 +25031,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 7 */
-/***/ (function(module, exports, __nested_webpack_require_20191__) {
+/***/ (function(module, exports, __nested_webpack_require_20205__) {
 
 	"use strict";
-	var logger_1 = __nested_webpack_require_20191__(8);
-	var runtime_1 = __nested_webpack_require_20191__(2);
-	var url_store_1 = __nested_webpack_require_20191__(14);
+	var logger_1 = __nested_webpack_require_20205__(8);
+	var runtime_1 = __nested_webpack_require_20205__(2);
+	var url_store_1 = __nested_webpack_require_20205__(14);
 	var ajax = function (context, socketId, callback) {
 	    var self = this, xhr;
 	    xhr = runtime_1["default"].createXHR();
@@ -25082,11 +25077,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 8 */
-/***/ (function(module, exports, __nested_webpack_require_21924__) {
+/***/ (function(module, exports, __nested_webpack_require_21938__) {
 
 	"use strict";
-	var collections_1 = __nested_webpack_require_21924__(9);
-	var pusher_1 = __nested_webpack_require_21924__(1);
+	var collections_1 = __nested_webpack_require_21938__(9);
+	var pusher_1 = __nested_webpack_require_21938__(1);
 	var Logger = {
 	    debug: function () {
 	        var args = [];
@@ -25123,11 +25118,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 9 */
-/***/ (function(module, exports, __nested_webpack_require_23103__) {
+/***/ (function(module, exports, __nested_webpack_require_23117__) {
 
 	"use strict";
-	var base64_1 = __nested_webpack_require_23103__(10);
-	var util_1 = __nested_webpack_require_23103__(11);
+	var base64_1 = __nested_webpack_require_23117__(10);
+	var util_1 = __nested_webpack_require_23117__(11);
 	function extend(target) {
 	    var sources = [];
 	    for (var _i = 1; _i < arguments.length; _i++) {
@@ -25385,10 +25380,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 11 */
-/***/ (function(module, exports, __nested_webpack_require_30853__) {
+/***/ (function(module, exports, __nested_webpack_require_30867__) {
 
 	"use strict";
-	var timers_1 = __nested_webpack_require_30853__(12);
+	var timers_1 = __nested_webpack_require_30867__(12);
 	var Util = {
 	    now: function () {
 	        if (Date.now) {
@@ -25418,7 +25413,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 12 */
-/***/ (function(module, exports, __nested_webpack_require_31702__) {
+/***/ (function(module, exports, __nested_webpack_require_31716__) {
 
 	"use strict";
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -25426,7 +25421,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var abstract_timer_1 = __nested_webpack_require_31702__(13);
+	var abstract_timer_1 = __nested_webpack_require_31716__(13);
 	function clearTimeout(timer) {
 	    (window).clearTimeout(timer);
 	}
@@ -25500,6 +25495,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        },
 	        javascriptQuickStart: {
 	            path: "/docs/javascript_quick_start"
+	        },
+	        triggeringClientEvents: {
+	            path: "/docs/client_api_guide/client_events#trigger-events"
 	        }
 	    }
 	};
@@ -25525,10 +25523,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 15 */
-/***/ (function(module, exports, __nested_webpack_require_34519__) {
+/***/ (function(module, exports, __nested_webpack_require_34653__) {
 
 	"use strict";
-	var logger_1 = __nested_webpack_require_34519__(8);
+	var logger_1 = __nested_webpack_require_34653__(8);
 	var jsonp = function (context, socketId, callback) {
 	    if (this.authOptions.headers !== undefined) {
 	        logger_1["default"].warn("Warn", "To send headers with the auth request, you must use AJAX, rather than JSONP.");
@@ -25624,11 +25622,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 17 */
-/***/ (function(module, exports, __nested_webpack_require_38089__) {
+/***/ (function(module, exports, __nested_webpack_require_38223__) {
 
 	"use strict";
-	var Collections = __nested_webpack_require_38089__(9);
-	var runtime_1 = __nested_webpack_require_38089__(2);
+	var Collections = __nested_webpack_require_38223__(9);
+	var runtime_1 = __nested_webpack_require_38223__(2);
 	var JSONPRequest = (function () {
 	    function JSONPRequest(url, data) {
 	        this.url = url;
@@ -25656,11 +25654,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 18 */
-/***/ (function(module, exports, __nested_webpack_require_38998__) {
+/***/ (function(module, exports, __nested_webpack_require_39132__) {
 
 	"use strict";
-	var runtime_1 = __nested_webpack_require_38998__(2);
-	var script_receiver_factory_1 = __nested_webpack_require_38998__(4);
+	var runtime_1 = __nested_webpack_require_39132__(2);
+	var script_receiver_factory_1 = __nested_webpack_require_39132__(4);
 	var getAgent = function (sender, useTLS) {
 	    return function (data, callback) {
 	        var scheme = "http" + (useTLS ? "s" : "") + "://";
@@ -25689,15 +25687,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 19 */
-/***/ (function(module, exports, __nested_webpack_require_40061__) {
+/***/ (function(module, exports, __nested_webpack_require_40195__) {
 
 	"use strict";
-	var transports_1 = __nested_webpack_require_40061__(20);
-	var transport_1 = __nested_webpack_require_40061__(22);
-	var URLSchemes = __nested_webpack_require_40061__(21);
-	var runtime_1 = __nested_webpack_require_40061__(2);
-	var dependencies_1 = __nested_webpack_require_40061__(3);
-	var Collections = __nested_webpack_require_40061__(9);
+	var transports_1 = __nested_webpack_require_40195__(20);
+	var transport_1 = __nested_webpack_require_40195__(22);
+	var URLSchemes = __nested_webpack_require_40195__(21);
+	var runtime_1 = __nested_webpack_require_40195__(2);
+	var dependencies_1 = __nested_webpack_require_40195__(3);
+	var Collections = __nested_webpack_require_40195__(9);
 	var SockJSTransport = new transport_1["default"]({
 	    file: "sockjs",
 	    urls: URLSchemes.sockjs,
@@ -25740,13 +25738,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 20 */
-/***/ (function(module, exports, __nested_webpack_require_41849__) {
+/***/ (function(module, exports, __nested_webpack_require_41983__) {
 
 	"use strict";
-	var URLSchemes = __nested_webpack_require_41849__(21);
-	var transport_1 = __nested_webpack_require_41849__(22);
-	var Collections = __nested_webpack_require_41849__(9);
-	var runtime_1 = __nested_webpack_require_41849__(2);
+	var URLSchemes = __nested_webpack_require_41983__(21);
+	var transport_1 = __nested_webpack_require_41983__(22);
+	var Collections = __nested_webpack_require_41983__(9);
+	var runtime_1 = __nested_webpack_require_41983__(2);
 	var WSTransport = new transport_1["default"]({
 	    urls: URLSchemes.ws,
 	    handlesActivityChecks: false,
@@ -25795,10 +25793,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 21 */
-/***/ (function(module, exports, __nested_webpack_require_43695__) {
+/***/ (function(module, exports, __nested_webpack_require_43829__) {
 
 	"use strict";
-	var defaults_1 = __nested_webpack_require_43695__(5);
+	var defaults_1 = __nested_webpack_require_43829__(5);
 	function getGenericURL(baseScheme, params, path) {
 	    var scheme = baseScheme + (params.useTLS ? "s" : "");
 	    var host = params.useTLS ? params.hostTLS : params.hostNonTLS;
@@ -25836,10 +25834,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 22 */
-/***/ (function(module, exports, __nested_webpack_require_44988__) {
+/***/ (function(module, exports, __nested_webpack_require_45122__) {
 
 	"use strict";
-	var transport_connection_1 = __nested_webpack_require_44988__(23);
+	var transport_connection_1 = __nested_webpack_require_45122__(23);
 	var Transport = (function () {
 	    function Transport(hooks) {
 	        this.hooks = hooks;
@@ -25858,7 +25856,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 23 */
-/***/ (function(module, exports, __nested_webpack_require_45644__) {
+/***/ (function(module, exports, __nested_webpack_require_45778__) {
 
 	"use strict";
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -25866,11 +25864,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var util_1 = __nested_webpack_require_45644__(11);
-	var Collections = __nested_webpack_require_45644__(9);
-	var dispatcher_1 = __nested_webpack_require_45644__(24);
-	var logger_1 = __nested_webpack_require_45644__(8);
-	var runtime_1 = __nested_webpack_require_45644__(2);
+	var util_1 = __nested_webpack_require_45778__(11);
+	var Collections = __nested_webpack_require_45778__(9);
+	var dispatcher_1 = __nested_webpack_require_45778__(24);
+	var logger_1 = __nested_webpack_require_45778__(8);
+	var runtime_1 = __nested_webpack_require_45778__(2);
 	var TransportConnection = (function (_super) {
 	    __extends(TransportConnection, _super);
 	    function TransportConnection(hooks, name, priority, key, options) {
@@ -26020,11 +26018,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 24 */
-/***/ (function(module, exports, __nested_webpack_require_51364__) {
+/***/ (function(module, exports, __nested_webpack_require_51498__) {
 
 	"use strict";
-	var Collections = __nested_webpack_require_51364__(9);
-	var callback_registry_1 = __nested_webpack_require_51364__(25);
+	var Collections = __nested_webpack_require_51498__(9);
+	var callback_registry_1 = __nested_webpack_require_51498__(25);
 	var Dispatcher = (function () {
 	    function Dispatcher(failThrough) {
 	        this.callbacks = new callback_registry_1["default"]();
@@ -26056,15 +26054,21 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.unbind_global();
 	        return this;
 	    };
-	    Dispatcher.prototype.emit = function (eventName, data) {
-	        var i;
-	        for (i = 0; i < this.global_callbacks.length; i++) {
+	    Dispatcher.prototype.emit = function (eventName, data, metadata) {
+	        for (var i = 0; i < this.global_callbacks.length; i++) {
 	            this.global_callbacks[i](eventName, data);
 	        }
 	        var callbacks = this.callbacks.get(eventName);
+	        var args = [];
+	        if (metadata) {
+	            args.push(data, metadata);
+	        }
+	        else if (data) {
+	            args.push(data);
+	        }
 	        if (callbacks && callbacks.length > 0) {
-	            for (i = 0; i < callbacks.length; i++) {
-	                callbacks[i].fn.call(callbacks[i].context || (window), data);
+	            for (var i = 0; i < callbacks.length; i++) {
+	                callbacks[i].fn.apply(callbacks[i].context || (window), args);
 	            }
 	        }
 	        else if (this.failThrough) {
@@ -26080,10 +26084,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 25 */
-/***/ (function(module, exports, __nested_webpack_require_53397__) {
+/***/ (function(module, exports, __nested_webpack_require_53701__) {
 
 	"use strict";
-	var Collections = __nested_webpack_require_53397__(9);
+	var Collections = __nested_webpack_require_53701__(9);
 	var CallbackRegistry = (function () {
 	    function CallbackRegistry() {
 	        this._callbacks = {};
@@ -26139,7 +26143,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 26 */
-/***/ (function(module, exports, __nested_webpack_require_55439__) {
+/***/ (function(module, exports, __nested_webpack_require_55743__) {
 
 	"use strict";
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -26147,7 +26151,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var dispatcher_1 = __nested_webpack_require_55439__(24);
+	var dispatcher_1 = __nested_webpack_require_55743__(24);
 	var NetInfo = (function (_super) {
 	    __extends(NetInfo, _super);
 	    function NetInfo() {
@@ -26281,10 +26285,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 28 */
-/***/ (function(module, exports, __nested_webpack_require_60552__) {
+/***/ (function(module, exports, __nested_webpack_require_60856__) {
 
 	"use strict";
-	var dependencies_1 = __nested_webpack_require_60552__(3);
+	var dependencies_1 = __nested_webpack_require_60856__(3);
 	function default_1() {
 	    var self = this;
 	    self.timeline.info(self.buildTimelineMessage({
@@ -26319,11 +26323,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 29 */
-/***/ (function(module, exports, __nested_webpack_require_61615__) {
+/***/ (function(module, exports, __nested_webpack_require_61919__) {
 
 	"use strict";
-	var http_xdomain_request_1 = __nested_webpack_require_61615__(30);
-	var http_1 = __nested_webpack_require_61615__(32);
+	var http_xdomain_request_1 = __nested_webpack_require_61919__(30);
+	var http_1 = __nested_webpack_require_61919__(32);
 	http_1["default"].createXDR = function (method, url) {
 	    return this.createRequest(http_xdomain_request_1["default"], method, url);
 	};
@@ -26333,10 +26337,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 30 */
-/***/ (function(module, exports, __nested_webpack_require_62011__) {
+/***/ (function(module, exports, __nested_webpack_require_62315__) {
 
 	"use strict";
-	var Errors = __nested_webpack_require_62011__(31);
+	var Errors = __nested_webpack_require_62315__(31);
 	var hooks = {
 	    getRequest: function (socket) {
 	        var xdr = new window.XDomainRequest();
@@ -26441,14 +26445,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 32 */
-/***/ (function(module, exports, __nested_webpack_require_65379__) {
+/***/ (function(module, exports, __nested_webpack_require_65683__) {
 
 	"use strict";
-	var http_request_1 = __nested_webpack_require_65379__(33);
-	var http_socket_1 = __nested_webpack_require_65379__(34);
-	var http_streaming_socket_1 = __nested_webpack_require_65379__(36);
-	var http_polling_socket_1 = __nested_webpack_require_65379__(37);
-	var http_xhr_request_1 = __nested_webpack_require_65379__(38);
+	var http_request_1 = __nested_webpack_require_65683__(33);
+	var http_socket_1 = __nested_webpack_require_65683__(34);
+	var http_streaming_socket_1 = __nested_webpack_require_65683__(36);
+	var http_polling_socket_1 = __nested_webpack_require_65683__(37);
+	var http_xhr_request_1 = __nested_webpack_require_65683__(38);
 	var HTTP = {
 	    createStreamingSocket: function (url) {
 	        return this.createSocket(http_streaming_socket_1["default"], url);
@@ -26472,7 +26476,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 33 */
-/***/ (function(module, exports, __nested_webpack_require_66418__) {
+/***/ (function(module, exports, __nested_webpack_require_66722__) {
 
 	"use strict";
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -26480,8 +26484,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var runtime_1 = __nested_webpack_require_66418__(2);
-	var dispatcher_1 = __nested_webpack_require_66418__(24);
+	var runtime_1 = __nested_webpack_require_66722__(2);
+	var dispatcher_1 = __nested_webpack_require_66722__(24);
 	var MAX_BUFFER_LENGTH = 256 * 1024;
 	var HTTPRequest = (function (_super) {
 	    __extends(HTTPRequest, _super);
@@ -26551,12 +26555,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 34 */
-/***/ (function(module, exports, __nested_webpack_require_69090__) {
+/***/ (function(module, exports, __nested_webpack_require_69394__) {
 
 	"use strict";
-	var state_1 = __nested_webpack_require_69090__(35);
-	var util_1 = __nested_webpack_require_69090__(11);
-	var runtime_1 = __nested_webpack_require_69090__(2);
+	var state_1 = __nested_webpack_require_69394__(35);
+	var util_1 = __nested_webpack_require_69394__(11);
+	var runtime_1 = __nested_webpack_require_69394__(2);
 	var autoIncrement = 1;
 	var HTTPSocket = (function () {
 	    function HTTPSocket(hooks, url) {
@@ -26797,10 +26801,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 38 */
-/***/ (function(module, exports, __nested_webpack_require_76544__) {
+/***/ (function(module, exports, __nested_webpack_require_76848__) {
 
 	"use strict";
-	var runtime_1 = __nested_webpack_require_76544__(2);
+	var runtime_1 = __nested_webpack_require_76848__(2);
 	var hooks = {
 	    getRequest: function (socket) {
 	        var Constructor = runtime_1["default"].getXHRAPI();
@@ -26834,12 +26838,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 39 */
-/***/ (function(module, exports, __nested_webpack_require_77696__) {
+/***/ (function(module, exports, __nested_webpack_require_78000__) {
 
 	"use strict";
-	var Collections = __nested_webpack_require_77696__(9);
-	var util_1 = __nested_webpack_require_77696__(11);
-	var level_1 = __nested_webpack_require_77696__(40);
+	var Collections = __nested_webpack_require_78000__(9);
+	var util_1 = __nested_webpack_require_78000__(11);
+	var level_1 = __nested_webpack_require_78000__(40);
 	var Timeline = (function () {
 	    function Timeline(key, session, options) {
 	        this.key = key;
@@ -26919,21 +26923,21 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 41 */
-/***/ (function(module, exports, __nested_webpack_require_80305__) {
+/***/ (function(module, exports, __nested_webpack_require_80609__) {
 
 	"use strict";
-	var Collections = __nested_webpack_require_80305__(9);
-	var util_1 = __nested_webpack_require_80305__(11);
-	var transport_manager_1 = __nested_webpack_require_80305__(42);
-	var Errors = __nested_webpack_require_80305__(31);
-	var transport_strategy_1 = __nested_webpack_require_80305__(64);
-	var sequential_strategy_1 = __nested_webpack_require_80305__(65);
-	var best_connected_ever_strategy_1 = __nested_webpack_require_80305__(66);
-	var cached_strategy_1 = __nested_webpack_require_80305__(67);
-	var delayed_strategy_1 = __nested_webpack_require_80305__(68);
-	var if_strategy_1 = __nested_webpack_require_80305__(69);
-	var first_connected_strategy_1 = __nested_webpack_require_80305__(70);
-	var runtime_1 = __nested_webpack_require_80305__(2);
+	var Collections = __nested_webpack_require_80609__(9);
+	var util_1 = __nested_webpack_require_80609__(11);
+	var transport_manager_1 = __nested_webpack_require_80609__(42);
+	var Errors = __nested_webpack_require_80609__(31);
+	var transport_strategy_1 = __nested_webpack_require_80609__(64);
+	var sequential_strategy_1 = __nested_webpack_require_80609__(65);
+	var best_connected_ever_strategy_1 = __nested_webpack_require_80609__(66);
+	var cached_strategy_1 = __nested_webpack_require_80609__(67);
+	var delayed_strategy_1 = __nested_webpack_require_80609__(68);
+	var if_strategy_1 = __nested_webpack_require_80609__(69);
+	var first_connected_strategy_1 = __nested_webpack_require_80609__(70);
+	var runtime_1 = __nested_webpack_require_80609__(2);
 	var Transports = runtime_1["default"].Transports;
 	exports.build = function (scheme, options) {
 	    var context = Collections.extend({}, globalContext, options);
@@ -27089,10 +27093,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 42 */
-/***/ (function(module, exports, __nested_webpack_require_86808__) {
+/***/ (function(module, exports, __nested_webpack_require_87112__) {
 
 	"use strict";
-	var factory_1 = __nested_webpack_require_86808__(43);
+	var factory_1 = __nested_webpack_require_87112__(43);
 	var TransportManager = (function () {
 	    function TransportManager(options) {
 	        this.options = options || {};
@@ -27118,19 +27122,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 43 */
-/***/ (function(module, exports, __nested_webpack_require_87722__) {
+/***/ (function(module, exports, __nested_webpack_require_88026__) {
 
 	"use strict";
-	var assistant_to_the_transport_manager_1 = __nested_webpack_require_87722__(44);
-	var handshake_1 = __nested_webpack_require_87722__(45);
-	var pusher_authorizer_1 = __nested_webpack_require_87722__(48);
-	var timeline_sender_1 = __nested_webpack_require_87722__(49);
-	var presence_channel_1 = __nested_webpack_require_87722__(50);
-	var private_channel_1 = __nested_webpack_require_87722__(51);
-	var encrypted_channel_1 = __nested_webpack_require_87722__(54);
-	var channel_1 = __nested_webpack_require_87722__(52);
-	var connection_manager_1 = __nested_webpack_require_87722__(62);
-	var channels_1 = __nested_webpack_require_87722__(63);
+	var assistant_to_the_transport_manager_1 = __nested_webpack_require_88026__(44);
+	var handshake_1 = __nested_webpack_require_88026__(45);
+	var pusher_authorizer_1 = __nested_webpack_require_88026__(48);
+	var timeline_sender_1 = __nested_webpack_require_88026__(49);
+	var presence_channel_1 = __nested_webpack_require_88026__(50);
+	var private_channel_1 = __nested_webpack_require_88026__(51);
+	var encrypted_channel_1 = __nested_webpack_require_88026__(54);
+	var channel_1 = __nested_webpack_require_88026__(52);
+	var connection_manager_1 = __nested_webpack_require_88026__(62);
+	var channels_1 = __nested_webpack_require_88026__(63);
 	var Factory = {
 	    createChannels: function () {
 	        return new channels_1["default"]();
@@ -27172,11 +27176,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 44 */
-/***/ (function(module, exports, __nested_webpack_require_89798__) {
+/***/ (function(module, exports, __nested_webpack_require_90102__) {
 
 	"use strict";
-	var util_1 = __nested_webpack_require_89798__(11);
-	var Collections = __nested_webpack_require_89798__(9);
+	var util_1 = __nested_webpack_require_90102__(11);
+	var Collections = __nested_webpack_require_90102__(9);
 	var AssistantToTheTransportManager = (function () {
 	    function AssistantToTheTransportManager(manager, transport, options) {
 	        this.manager = manager;
@@ -27224,12 +27228,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 45 */
-/***/ (function(module, exports, __nested_webpack_require_91881__) {
+/***/ (function(module, exports, __nested_webpack_require_92185__) {
 
 	"use strict";
-	var Collections = __nested_webpack_require_91881__(9);
-	var Protocol = __nested_webpack_require_91881__(46);
-	var connection_1 = __nested_webpack_require_91881__(47);
+	var Collections = __nested_webpack_require_92185__(9);
+	var Protocol = __nested_webpack_require_92185__(46);
+	var connection_1 = __nested_webpack_require_92185__(47);
 	var Handshake = (function () {
 	    function Handshake(transport, callback) {
 	        this.transport = transport;
@@ -27291,30 +27295,35 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ (function(module, exports) {
 
 	"use strict";
-	exports.decodeMessage = function (message) {
+	exports.decodeMessage = function (messageEvent) {
 	    try {
-	        var params = JSON.parse(message.data);
-	        if (typeof params.data === 'string') {
+	        var messageData = JSON.parse(messageEvent.data);
+	        var pusherEventData = messageData.data;
+	        if (typeof pusherEventData === 'string') {
 	            try {
-	                params.data = JSON.parse(params.data);
+	                pusherEventData = JSON.parse(messageData.data);
 	            }
-	            catch (e) {
-	                if (!(e instanceof SyntaxError)) {
-	                    throw e;
-	                }
-	            }
+	            catch (e) { }
 	        }
-	        return params;
+	        var pusherEvent = {
+	            event: messageData.event,
+	            channel: messageData.channel,
+	            data: pusherEventData
+	        };
+	        if (messageData.user_id) {
+	            pusherEvent.user_id = messageData.user_id;
+	        }
+	        return pusherEvent;
 	    }
 	    catch (e) {
-	        throw { type: 'MessageParseError', error: e, data: message.data };
+	        throw { type: 'MessageParseError', error: e, data: messageEvent.data };
 	    }
 	};
-	exports.encodeMessage = function (message) {
-	    return JSON.stringify(message);
+	exports.encodeMessage = function (event) {
+	    return JSON.stringify(event);
 	};
-	exports.processHandshake = function (message) {
-	    message = exports.decodeMessage(message);
+	exports.processHandshake = function (messageEvent) {
+	    var message = exports.decodeMessage(messageEvent);
 	    if (message.event === "pusher:connection_established") {
 	        if (!message.data.activity_timeout) {
 	            throw "No activity timeout specified in handshake";
@@ -27378,7 +27387,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 47 */
-/***/ (function(module, exports, __nested_webpack_require_96519__) {
+/***/ (function(module, exports, __nested_webpack_require_97067__) {
 
 	"use strict";
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -27386,10 +27395,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var Collections = __nested_webpack_require_96519__(9);
-	var dispatcher_1 = __nested_webpack_require_96519__(24);
-	var Protocol = __nested_webpack_require_96519__(46);
-	var logger_1 = __nested_webpack_require_96519__(8);
+	var Collections = __nested_webpack_require_97067__(9);
+	var dispatcher_1 = __nested_webpack_require_97067__(24);
+	var Protocol = __nested_webpack_require_97067__(46);
+	var logger_1 = __nested_webpack_require_97067__(8);
 	var Connection = (function (_super) {
 	    __extends(Connection, _super);
 	    function Connection(id, transport) {
@@ -27406,12 +27415,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return this.transport.send(data);
 	    };
 	    Connection.prototype.send_event = function (name, data, channel) {
-	        var message = { event: name, data: data };
+	        var event = { event: name, data: data };
 	        if (channel) {
-	            message.channel = channel;
+	            event.channel = channel;
 	        }
-	        logger_1["default"].debug('Event sent', message);
-	        return this.send(Protocol.encodeMessage(message));
+	        logger_1["default"].debug('Event sent', event);
+	        return this.send(Protocol.encodeMessage(event));
 	    };
 	    Connection.prototype.ping = function () {
 	        if (this.transport.supportsPing()) {
@@ -27427,23 +27436,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	    Connection.prototype.bindListeners = function () {
 	        var _this = this;
 	        var listeners = {
-	            message: function (m) {
-	                var message;
+	            message: function (messageEvent) {
+	                var pusherEvent;
 	                try {
-	                    message = Protocol.decodeMessage(m);
+	                    pusherEvent = Protocol.decodeMessage(messageEvent);
 	                }
 	                catch (e) {
 	                    _this.emit('error', {
 	                        type: 'MessageParseError',
 	                        error: e,
-	                        data: m.data
+	                        data: messageEvent.data
 	                    });
 	                }
-	                if (message !== undefined) {
-	                    logger_1["default"].debug('Event recd', message);
-	                    switch (message.event) {
+	                if (pusherEvent !== undefined) {
+	                    logger_1["default"].debug('Event recd', pusherEvent);
+	                    switch (pusherEvent.event) {
 	                        case 'pusher:error':
-	                            _this.emit('error', { type: 'PusherError', data: message.data });
+	                            _this.emit('error', { type: 'PusherError', data: pusherEvent.data });
 	                            break;
 	                        case 'pusher:ping':
 	                            _this.emit("ping");
@@ -27452,7 +27461,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                            _this.emit("pong");
 	                            break;
 	                    }
-	                    _this.emit('message', message);
+	                    _this.emit('message', pusherEvent);
 	                }
 	            },
 	            activity: function () {
@@ -27497,10 +27506,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 48 */
-/***/ (function(module, exports, __nested_webpack_require_100828__) {
+/***/ (function(module, exports, __nested_webpack_require_101429__) {
 
 	"use strict";
-	var runtime_1 = __nested_webpack_require_100828__(2);
+	var runtime_1 = __nested_webpack_require_101429__(2);
 	var PusherAuthorizer = (function () {
 	    function PusherAuthorizer(channel, options) {
 	        this.channel = channel;
@@ -27532,10 +27541,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 49 */
-/***/ (function(module, exports, __nested_webpack_require_102268__) {
+/***/ (function(module, exports, __nested_webpack_require_102869__) {
 
 	"use strict";
-	var runtime_1 = __nested_webpack_require_102268__(2);
+	var runtime_1 = __nested_webpack_require_102869__(2);
 	var TimelineSender = (function () {
 	    function TimelineSender(timeline, options) {
 	        this.timeline = timeline;
@@ -27555,7 +27564,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 50 */
-/***/ (function(module, exports, __nested_webpack_require_102920__) {
+/***/ (function(module, exports, __nested_webpack_require_103521__) {
 
 	"use strict";
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -27563,10 +27572,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var private_channel_1 = __nested_webpack_require_102920__(51);
-	var logger_1 = __nested_webpack_require_102920__(8);
-	var members_1 = __nested_webpack_require_102920__(53);
-	var url_store_1 = __nested_webpack_require_102920__(14);
+	var private_channel_1 = __nested_webpack_require_103521__(51);
+	var logger_1 = __nested_webpack_require_103521__(8);
+	var members_1 = __nested_webpack_require_103521__(53);
+	var url_store_1 = __nested_webpack_require_103521__(14);
 	var PresenceChannel = (function (_super) {
 	    __extends(PresenceChannel, _super);
 	    function PresenceChannel(name, pusher) {
@@ -27590,18 +27599,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	            callback(error, authData);
 	        });
 	    };
-	    PresenceChannel.prototype.handleEvent = function (event, data) {
-	        switch (event) {
+	    PresenceChannel.prototype.handleEvent = function (event) {
+	        var eventName = event.event;
+	        if (eventName.indexOf("pusher_internal:") === 0) {
+	            this.handleInternalEvent(event);
+	        }
+	        else {
+	            var data = event.data;
+	            var metadata = {};
+	            if (event.user_id) {
+	                metadata.user_id = event.user_id;
+	            }
+	            this.emit(eventName, data, metadata);
+	        }
+	    };
+	    PresenceChannel.prototype.handleInternalEvent = function (event) {
+	        var eventName = event.event;
+	        var data = event.data;
+	        switch (eventName) {
 	            case "pusher_internal:subscription_succeeded":
-	                this.subscriptionPending = false;
-	                this.subscribed = true;
-	                if (this.subscriptionCancelled) {
-	                    this.pusher.unsubscribe(this.name);
-	                }
-	                else {
-	                    this.members.onSubscription(data);
-	                    this.emit("pusher:subscription_succeeded", this.members);
-	                }
+	                this.handleSubscriptionSucceededEvent(event);
 	                break;
 	            case "pusher_internal:member_added":
 	                var addedMember = this.members.addMember(data);
@@ -27613,8 +27630,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    this.emit('pusher:member_removed', removedMember);
 	                }
 	                break;
-	            default:
-	                private_channel_1["default"].prototype.handleEvent.call(this, event, data);
+	        }
+	    };
+	    PresenceChannel.prototype.handleSubscriptionSucceededEvent = function (event) {
+	        this.subscriptionPending = false;
+	        this.subscribed = true;
+	        if (this.subscriptionCancelled) {
+	            this.pusher.unsubscribe(this.name);
+	        }
+	        else {
+	            this.members.onSubscription(event.data);
+	            this.emit("pusher:subscription_succeeded", this.members);
 	        }
 	    };
 	    PresenceChannel.prototype.disconnect = function () {
@@ -27629,7 +27655,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 51 */
-/***/ (function(module, exports, __nested_webpack_require_106015__) {
+/***/ (function(module, exports, __nested_webpack_require_107140__) {
 
 	"use strict";
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -27637,8 +27663,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var factory_1 = __nested_webpack_require_106015__(43);
-	var channel_1 = __nested_webpack_require_106015__(52);
+	var factory_1 = __nested_webpack_require_107140__(43);
+	var channel_1 = __nested_webpack_require_107140__(52);
 	var PrivateChannel = (function (_super) {
 	    __extends(PrivateChannel, _super);
 	    function PrivateChannel() {
@@ -27656,7 +27682,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 52 */
-/***/ (function(module, exports, __nested_webpack_require_106970__) {
+/***/ (function(module, exports, __nested_webpack_require_108095__) {
 
 	"use strict";
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -27664,9 +27690,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var dispatcher_1 = __nested_webpack_require_106970__(24);
-	var Errors = __nested_webpack_require_106970__(31);
-	var logger_1 = __nested_webpack_require_106970__(8);
+	var dispatcher_1 = __nested_webpack_require_108095__(24);
+	var Errors = __nested_webpack_require_108095__(31);
+	var logger_1 = __nested_webpack_require_108095__(8);
+	var url_store_1 = __nested_webpack_require_108095__(14);
 	var Channel = (function (_super) {
 	    __extends(Channel, _super);
 	    function Channel(name, pusher) {
@@ -27686,27 +27713,35 @@ return /******/ (function(modules) { // webpackBootstrap
 	        if (event.indexOf("client-") !== 0) {
 	            throw new Errors.BadEventName("Event '" + event + "' does not start with 'client-'");
 	        }
+	        if (!this.subscribed) {
+	            var suffix = url_store_1["default"].buildLogSuffix("triggeringClientEvents");
+	            logger_1["default"].warn("Client event triggered before channel 'subscription_succeeded' event . " + suffix);
+	        }
 	        return this.pusher.send_event(event, data, this.name);
 	    };
 	    Channel.prototype.disconnect = function () {
 	        this.subscribed = false;
 	        this.subscriptionPending = false;
 	    };
-	    Channel.prototype.handleEvent = function (event, data) {
-	        if (event.indexOf("pusher_internal:") === 0) {
-	            if (event === "pusher_internal:subscription_succeeded") {
-	                this.subscriptionPending = false;
-	                this.subscribed = true;
-	                if (this.subscriptionCancelled) {
-	                    this.pusher.unsubscribe(this.name);
-	                }
-	                else {
-	                    this.emit("pusher:subscription_succeeded", data);
-	                }
-	            }
+	    Channel.prototype.handleEvent = function (event) {
+	        var eventName = event.event;
+	        var data = event.data;
+	        if (eventName === "pusher_internal:subscription_succeeded") {
+	            this.handleSubscriptionSucceededEvent(event);
+	        }
+	        else if (eventName.indexOf("pusher_internal:") !== 0) {
+	            var metadata = {};
+	            this.emit(eventName, data, metadata);
+	        }
+	    };
+	    Channel.prototype.handleSubscriptionSucceededEvent = function (event) {
+	        this.subscriptionPending = false;
+	        this.subscribed = true;
+	        if (this.subscriptionCancelled) {
+	            this.pusher.unsubscribe(this.name);
 	        }
 	        else {
-	            this.emit(event, data);
+	            this.emit("pusher:subscription_succeeded", event.data);
 	        }
 	    };
 	    Channel.prototype.subscribe = function () {
@@ -27718,7 +27753,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        this.subscriptionCancelled = false;
 	        this.authorize(this.pusher.connection.socket_id, function (error, data) {
 	            if (error) {
-	                _this.handleEvent('pusher:subscription_error', data);
+	                _this.emit('pusher:subscription_error', data);
 	            }
 	            else {
 	                _this.pusher.send_event('pusher:subscribe', {
@@ -27749,10 +27784,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 53 */
-/***/ (function(module, exports, __nested_webpack_require_110271__) {
+/***/ (function(module, exports, __nested_webpack_require_111865__) {
 
 	"use strict";
-	var Collections = __nested_webpack_require_110271__(9);
+	var Collections = __nested_webpack_require_111865__(9);
 	var Members = (function () {
 	    function Members() {
 	        this.reset();
@@ -27811,7 +27846,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 54 */
-/***/ (function(module, exports, __nested_webpack_require_112081__) {
+/***/ (function(module, exports, __nested_webpack_require_113675__) {
 
 	"use strict";
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -27819,11 +27854,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var private_channel_1 = __nested_webpack_require_112081__(51);
-	var Errors = __nested_webpack_require_112081__(31);
-	var logger_1 = __nested_webpack_require_112081__(8);
-	var tweetnacl_1 = __nested_webpack_require_112081__(55);
-	var tweetnacl_util_1 = __nested_webpack_require_112081__(57);
+	var private_channel_1 = __nested_webpack_require_113675__(51);
+	var Errors = __nested_webpack_require_113675__(31);
+	var logger_1 = __nested_webpack_require_113675__(8);
+	var tweetnacl_1 = __nested_webpack_require_113675__(55);
+	var tweetnacl_util_1 = __nested_webpack_require_113675__(57);
 	var EncryptedChannel = (function (_super) {
 	    __extends(EncryptedChannel, _super);
 	    function EncryptedChannel() {
@@ -27852,12 +27887,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    EncryptedChannel.prototype.trigger = function (event, data) {
 	        throw new Errors.UnsupportedFeature('Client events are not currently supported for encrypted channels');
 	    };
-	    EncryptedChannel.prototype.handleEvent = function (event, data) {
-	        if (event.indexOf("pusher_internal:") === 0 || event.indexOf("pusher:") === 0) {
-	            _super.prototype.handleEvent.call(this, event, data);
+	    EncryptedChannel.prototype.handleEvent = function (event) {
+	        var eventName = event.event;
+	        var data = event.data;
+	        if (eventName.indexOf("pusher_internal:") === 0 || eventName.indexOf("pusher:") === 0) {
+	            _super.prototype.handleEvent.call(this, event);
 	            return;
 	        }
-	        this.handleEncryptedEvent(event, data);
+	        this.handleEncryptedEvent(eventName, data);
 	    };
 	    EncryptedChannel.prototype.handleEncryptedEvent = function (event, data) {
 	        var _this = this;
@@ -27916,7 +27953,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 55 */
-/***/ (function(module, exports, __nested_webpack_require_116865__) {
+/***/ (function(module, exports, __nested_webpack_require_118529__) {
 
 	(function(nacl) {
 	'use strict';
@@ -30283,7 +30320,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    });
 	  } else if (true) {
 	    // Node.js.
-	    crypto = __nested_webpack_require_116865__(56);
+	    crypto = __nested_webpack_require_118529__(56);
 	    if (crypto && crypto.randomBytes) {
 	      nacl.setPRNG(function(x, n) {
 	        var i, v = crypto.randomBytes(n);
@@ -30305,7 +30342,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 57 */
-/***/ (function(module, exports, __nested_webpack_require_180829__) {
+/***/ (function(module, exports, __nested_webpack_require_182493__) {
 
 	/* WEBPACK VAR INJECTION */(function(Buffer) {// Written in 2014-2016 by Dmitry Chestnykh and Devi Mandiri.
 	// Public domain.
@@ -30389,11 +30426,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	}));
 
-	/* WEBPACK VAR INJECTION */}.call(exports, __nested_webpack_require_180829__(58).Buffer))
+	/* WEBPACK VAR INJECTION */}.call(exports, __nested_webpack_require_182493__(58).Buffer))
 
 /***/ }),
 /* 58 */
-/***/ (function(module, exports, __nested_webpack_require_183271__) {
+/***/ (function(module, exports, __nested_webpack_require_184935__) {
 
 	/*!
 	 * The buffer module from node.js, for the browser.
@@ -30405,9 +30442,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict'
 
-	var base64 = __nested_webpack_require_183271__(59)
-	var ieee754 = __nested_webpack_require_183271__(60)
-	var isArray = __nested_webpack_require_183271__(61)
+	var base64 = __nested_webpack_require_184935__(59)
+	var ieee754 = __nested_webpack_require_184935__(60)
+	var isArray = __nested_webpack_require_184935__(61)
 
 	exports.Buffer = Buffer
 	exports.SlowBuffer = SlowBuffer
@@ -32446,7 +32483,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 62 */
-/***/ (function(module, exports, __nested_webpack_require_240020__) {
+/***/ (function(module, exports, __nested_webpack_require_241684__) {
 
 	"use strict";
 	var __extends = (this && this.__extends) || function (d, b) {
@@ -32454,11 +32491,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    function __() { this.constructor = d; }
 	    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 	};
-	var dispatcher_1 = __nested_webpack_require_240020__(24);
-	var timers_1 = __nested_webpack_require_240020__(12);
-	var logger_1 = __nested_webpack_require_240020__(8);
-	var Collections = __nested_webpack_require_240020__(9);
-	var runtime_1 = __nested_webpack_require_240020__(2);
+	var dispatcher_1 = __nested_webpack_require_241684__(24);
+	var timers_1 = __nested_webpack_require_241684__(12);
+	var logger_1 = __nested_webpack_require_241684__(8);
+	var Collections = __nested_webpack_require_241684__(9);
+	var runtime_1 = __nested_webpack_require_241684__(2);
 	var ConnectionManager = (function (_super) {
 	    __extends(ConnectionManager, _super);
 	    function ConnectionManager(key, options) {
@@ -32742,12 +32779,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 63 */
-/***/ (function(module, exports, __nested_webpack_require_250736__) {
+/***/ (function(module, exports, __nested_webpack_require_252400__) {
 
 	"use strict";
-	var Collections = __nested_webpack_require_250736__(9);
-	var factory_1 = __nested_webpack_require_250736__(43);
-	var Errors = __nested_webpack_require_250736__(31);
+	var Collections = __nested_webpack_require_252400__(9);
+	var factory_1 = __nested_webpack_require_252400__(43);
+	var Errors = __nested_webpack_require_252400__(31);
 	var Channels = (function () {
 	    function Channels() {
 	        this.channels = {};
@@ -32800,13 +32837,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 64 */
-/***/ (function(module, exports, __nested_webpack_require_252634__) {
+/***/ (function(module, exports, __nested_webpack_require_254298__) {
 
 	"use strict";
-	var factory_1 = __nested_webpack_require_252634__(43);
-	var util_1 = __nested_webpack_require_252634__(11);
-	var Errors = __nested_webpack_require_252634__(31);
-	var Collections = __nested_webpack_require_252634__(9);
+	var factory_1 = __nested_webpack_require_254298__(43);
+	var util_1 = __nested_webpack_require_254298__(11);
+	var Errors = __nested_webpack_require_254298__(31);
+	var Collections = __nested_webpack_require_254298__(9);
 	var TransportStrategy = (function () {
 	    function TransportStrategy(name, priority, transport, options) {
 	        this.name = name;
@@ -32907,12 +32944,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 65 */
-/***/ (function(module, exports, __nested_webpack_require_256263__) {
+/***/ (function(module, exports, __nested_webpack_require_257927__) {
 
 	"use strict";
-	var Collections = __nested_webpack_require_256263__(9);
-	var util_1 = __nested_webpack_require_256263__(11);
-	var timers_1 = __nested_webpack_require_256263__(12);
+	var Collections = __nested_webpack_require_257927__(9);
+	var util_1 = __nested_webpack_require_257927__(11);
+	var timers_1 = __nested_webpack_require_257927__(12);
 	var SequentialStrategy = (function () {
 	    function SequentialStrategy(strategies, options) {
 	        this.strategies = strategies;
@@ -33004,11 +33041,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 66 */
-/***/ (function(module, exports, __nested_webpack_require_259696__) {
+/***/ (function(module, exports, __nested_webpack_require_261360__) {
 
 	"use strict";
-	var Collections = __nested_webpack_require_259696__(9);
-	var util_1 = __nested_webpack_require_259696__(11);
+	var Collections = __nested_webpack_require_261360__(9);
+	var util_1 = __nested_webpack_require_261360__(11);
 	var BestConnectedEverStrategy = (function () {
 	    function BestConnectedEverStrategy(strategies) {
 	        this.strategies = strategies;
@@ -33067,13 +33104,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 67 */
-/***/ (function(module, exports, __nested_webpack_require_261812__) {
+/***/ (function(module, exports, __nested_webpack_require_263476__) {
 
 	"use strict";
-	var util_1 = __nested_webpack_require_261812__(11);
-	var runtime_1 = __nested_webpack_require_261812__(2);
-	var sequential_strategy_1 = __nested_webpack_require_261812__(65);
-	var Collections = __nested_webpack_require_261812__(9);
+	var util_1 = __nested_webpack_require_263476__(11);
+	var runtime_1 = __nested_webpack_require_263476__(2);
+	var sequential_strategy_1 = __nested_webpack_require_263476__(65);
+	var Collections = __nested_webpack_require_263476__(9);
 	var CachedStrategy = (function () {
 	    function CachedStrategy(strategy, transports, options) {
 	        this.strategy = strategy;
@@ -33182,10 +33219,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 68 */
-/***/ (function(module, exports, __nested_webpack_require_265662__) {
+/***/ (function(module, exports, __nested_webpack_require_267326__) {
 
 	"use strict";
-	var timers_1 = __nested_webpack_require_265662__(12);
+	var timers_1 = __nested_webpack_require_267326__(12);
 	var DelayedStrategy = (function () {
 	    function DelayedStrategy(strategy, _a) {
 	        var number = _a.delay;
@@ -33276,10 +33313,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 71 */
-/***/ (function(module, exports, __nested_webpack_require_268439__) {
+/***/ (function(module, exports, __nested_webpack_require_270103__) {
 
 	"use strict";
-	var defaults_1 = __nested_webpack_require_268439__(5);
+	var defaults_1 = __nested_webpack_require_270103__(5);
 	exports.getGlobalConfig = function () {
 	    return {
 	        wsHost: defaults_1["default"].host,
@@ -33320,7 +33357,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ ((module) => {
 
 "use strict";
-module.exports = JSON.parse('{"_from":"axios@^0.21","_id":"axios@0.21.4","_inBundle":false,"_integrity":"sha512-ut5vewkiu8jjGBdqpM44XxjuCjq9LAKeHVmoVfHVzy8eHgxxq8SbAVQNovDA8mVi05kP0Ea/n/UzcSHcTJQfNg==","_location":"/axios","_phantomChildren":{},"_requested":{"type":"range","registry":true,"raw":"axios@^0.21","name":"axios","escapedName":"axios","rawSpec":"^0.21","saveSpec":null,"fetchSpec":"^0.21"},"_requiredBy":["#DEV:/"],"_resolved":"https://registry.npmjs.org/axios/-/axios-0.21.4.tgz","_shasum":"c67b90dc0568e5c1cf2b0b858c43ba28e2eda575","_spec":"axios@^0.21","_where":"/var/www/dev.pro-apps.xyz","author":{"name":"Matt Zabriskie"},"browser":{"./lib/adapters/http.js":"./lib/adapters/xhr.js"},"bugs":{"url":"https://github.com/axios/axios/issues"},"bundleDependencies":false,"bundlesize":[{"path":"./dist/axios.min.js","threshold":"5kB"}],"dependencies":{"follow-redirects":"^1.14.0"},"deprecated":false,"description":"Promise based HTTP client for the browser and node.js","devDependencies":{"coveralls":"^3.0.0","es6-promise":"^4.2.4","grunt":"^1.3.0","grunt-banner":"^0.6.0","grunt-cli":"^1.2.0","grunt-contrib-clean":"^1.1.0","grunt-contrib-watch":"^1.0.0","grunt-eslint":"^23.0.0","grunt-karma":"^4.0.0","grunt-mocha-test":"^0.13.3","grunt-ts":"^6.0.0-beta.19","grunt-webpack":"^4.0.2","istanbul-instrumenter-loader":"^1.0.0","jasmine-core":"^2.4.1","karma":"^6.3.2","karma-chrome-launcher":"^3.1.0","karma-firefox-launcher":"^2.1.0","karma-jasmine":"^1.1.1","karma-jasmine-ajax":"^0.1.13","karma-safari-launcher":"^1.0.0","karma-sauce-launcher":"^4.3.6","karma-sinon":"^1.0.5","karma-sourcemap-loader":"^0.3.8","karma-webpack":"^4.0.2","load-grunt-tasks":"^3.5.2","minimist":"^1.2.0","mocha":"^8.2.1","sinon":"^4.5.0","terser-webpack-plugin":"^4.2.3","typescript":"^4.0.5","url-search-params":"^0.10.0","webpack":"^4.44.2","webpack-dev-server":"^3.11.0"},"homepage":"https://axios-http.com","jsdelivr":"dist/axios.min.js","keywords":["xhr","http","ajax","promise","node"],"license":"MIT","main":"index.js","name":"axios","repository":{"type":"git","url":"git+https://github.com/axios/axios.git"},"scripts":{"build":"NODE_ENV=production grunt build","coveralls":"cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js","examples":"node ./examples/server.js","fix":"eslint --fix lib/**/*.js","postversion":"git push && git push --tags","preversion":"npm test","start":"node ./sandbox/server.js","test":"grunt test","version":"npm run build && grunt version && git add -A dist && git add CHANGELOG.md bower.json package.json"},"typings":"./index.d.ts","unpkg":"dist/axios.min.js","version":"0.21.4"}');
+module.exports = JSON.parse('{"name":"axios","version":"0.21.4","description":"Promise based HTTP client for the browser and node.js","main":"index.js","scripts":{"test":"grunt test","start":"node ./sandbox/server.js","build":"NODE_ENV=production grunt build","preversion":"npm test","version":"npm run build && grunt version && git add -A dist && git add CHANGELOG.md bower.json package.json","postversion":"git push && git push --tags","examples":"node ./examples/server.js","coveralls":"cat coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js","fix":"eslint --fix lib/**/*.js"},"repository":{"type":"git","url":"https://github.com/axios/axios.git"},"keywords":["xhr","http","ajax","promise","node"],"author":"Matt Zabriskie","license":"MIT","bugs":{"url":"https://github.com/axios/axios/issues"},"homepage":"https://axios-http.com","devDependencies":{"coveralls":"^3.0.0","es6-promise":"^4.2.4","grunt":"^1.3.0","grunt-banner":"^0.6.0","grunt-cli":"^1.2.0","grunt-contrib-clean":"^1.1.0","grunt-contrib-watch":"^1.0.0","grunt-eslint":"^23.0.0","grunt-karma":"^4.0.0","grunt-mocha-test":"^0.13.3","grunt-ts":"^6.0.0-beta.19","grunt-webpack":"^4.0.2","istanbul-instrumenter-loader":"^1.0.0","jasmine-core":"^2.4.1","karma":"^6.3.2","karma-chrome-launcher":"^3.1.0","karma-firefox-launcher":"^2.1.0","karma-jasmine":"^1.1.1","karma-jasmine-ajax":"^0.1.13","karma-safari-launcher":"^1.0.0","karma-sauce-launcher":"^4.3.6","karma-sinon":"^1.0.5","karma-sourcemap-loader":"^0.3.8","karma-webpack":"^4.0.2","load-grunt-tasks":"^3.5.2","minimist":"^1.2.0","mocha":"^8.2.1","sinon":"^4.5.0","terser-webpack-plugin":"^4.2.3","typescript":"^4.0.5","url-search-params":"^0.10.0","webpack":"^4.44.2","webpack-dev-server":"^3.11.0"},"browser":{"./lib/adapters/http.js":"./lib/adapters/xhr.js"},"jsdelivr":"dist/axios.min.js","unpkg":"dist/axios.min.js","typings":"./index.d.ts","dependencies":{"follow-redirects":"^1.14.0"},"bundlesize":[{"path":"./dist/axios.min.js","threshold":"5kB"}]}');
 
 /***/ })
 
