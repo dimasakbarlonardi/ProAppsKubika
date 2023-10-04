@@ -20,11 +20,11 @@ use Illuminate\Database\Eloquent\Model;
             'id_room',
             'status',
             'id_equiqment',
-            'id_role',
+            'status',
+            'checklist_datetime',
             'schedule',
             'status_schedule',
-            'keterangan',
-            'checklist_datetime'
+            'user_id',
         ];
 
         protected $dates = ['deleted_at'];

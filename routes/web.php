@@ -548,7 +548,6 @@ Route::prefix('admin')->group(function () {
         //CRUD Checklist Toilet
         Route::resource('checklisttoilets', ChecklistToiletHController::class);
         Route::get('/checklist-filter-toilet', [ChecklistToiletHController::class, 'filterByNoChecklist']);
-        Route::get('/inspection-toilet/{id}', [ChecklistToiletHController::class, 'fronttoilet'])->name('fronttoilet');
         Route::get('/inspection-parameter-toilet/{id}', [ChecklistToiletHController::class, 'checklisttoilet'])->name('checklisttoilet');
         Route::post('/checklist-parameter-toilet/{id}', [ChecklistToiletHController::class, 'checklistParameterHK'])->name('checklistParameterHK');
         Route::get('/inspections-hk/schedules/{id}', [ChecklistToiletHController::class, 'inspectionSchedulesHK'])->name('inspectionSchedulesHK');

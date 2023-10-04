@@ -33,7 +33,7 @@
                     </div>
                     <div class="col-6">
                         <label class="col-form-label">Keterangan:</label>
-                        <input class="form-control" type="date" name="keterangan" 
+                        <input class="form-control" type="text" name="keterangan" 
                             required>
                     </div>
                     <div class="mt-5">

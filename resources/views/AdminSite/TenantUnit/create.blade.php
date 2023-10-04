@@ -2,7 +2,7 @@
 
 @section('content')
     <div class="row mt-5 mt-lg-0 mt-xl-5 mt-xxl-0">
-        <div class="col-lg-6 col-xl-12 col-xxl-6 h-100">
+        <div class="col">
             <div class="d-flex mb-4"><span class="fa-stack me-2 ms-n1"><i class="fas fa-circle fa-stack-2x text-300"></i><i
                         class="fa-inverse fa-stack-1x text-primary fas fa-tasks"></i></span>
                 <div class="col">

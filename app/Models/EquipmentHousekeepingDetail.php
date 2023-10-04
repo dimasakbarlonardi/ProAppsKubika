@@ -20,6 +20,7 @@ class EquipmentHousekeepingDetail extends Model
         'id_equipment_housekeeping',
         'image',
         'id_room',
+        'id_equiqment',
         'status',
         'checklist_datetime',
         'schedule',

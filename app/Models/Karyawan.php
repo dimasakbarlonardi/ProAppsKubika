@@ -21,7 +21,7 @@ class Karyawan extends Model
         'nik_karyawan',
         'nama_karyawan',
         'id_status_karyawan',
-        'id_status_kawin_karyawan',
+        'id_status_kawin',
         'id_status_aktif_karyawan',
         'kewarganegaraan',
         'masa_berlaku_id',

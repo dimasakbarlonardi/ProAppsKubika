@@ -21,7 +21,8 @@
         "maatwebsite/excel": "^3.1",
         "midtrans/midtrans-php": "^2.5",
         "realrashid/sweet-alert": "^7.0",
-        "simplesoftwareio/simple-qrcode": "^4.2"
+        "simplesoftwareio/simple-qrcode": "^4.2",
+        "zendframework/zend-barcode": "^2.5"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
@@ -38,6 +39,7 @@
             "Database\\Seeders\\": "database/seeders/",
             "files\\": "app/Helpers/Rupiah.php/",
             "files\\": "app/Helpers/Persenan.php/",
+            "Zend\\": "vendor/zendframework/zend-barcode/src/",
             "files\\": "app/Helpers/DateTime.php"
         },
         "files": [
