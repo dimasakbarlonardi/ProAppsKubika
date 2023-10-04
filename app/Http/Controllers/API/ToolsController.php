@@ -13,7 +13,7 @@ class ToolsController extends Controller
 {
     public function index($wrID)
     {
-        if ($wrID == 12) {
+        if ($wrID == 9) {
             $connToolsHK = ConnectionDB::setConnection(new ToolsHousekeeping());
 
             $tools = $connToolsHK->get();
@@ -36,7 +36,7 @@ class ToolsController extends Controller
 
     public function borrowTool(Request $request, $wrID, $id)
     {
-        if ($wrID == 12) {
+        if ($wrID == 9) {
             $connToolsHK = ConnectionDB::setConnection(new ToolsHousekeeping());
             $tool = $connToolsHK->find($id);
             try {
@@ -106,7 +106,7 @@ class ToolsController extends Controller
 
     public function returnTool(Request $request, $wrID, $id)
     {
-        if ($wrID == 12) {
+        if ($wrID == 9) {
             try {
                 $conn = ConnectionDB::setConnection(new ToolsHousekeeping());
                 $tool = $conn->find($id);
