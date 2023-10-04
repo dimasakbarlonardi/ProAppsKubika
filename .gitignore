@@ -16,3 +16,5 @@ yarn-error.log
 /config/database.php
 /config/websockets.php
 /config/broadcasting.php
+/resources/js/bootstrap.js
+/resources/js/app.js
