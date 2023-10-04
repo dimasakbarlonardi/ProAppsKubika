@@ -61,8 +61,7 @@
                             <tr>
                                 <th scope="row">{{ $key + 1 }}</th>
                                 <td>
-                                    <img src="{{ $karyawan->User->profile_picture ? asset($karyawan->User->profile_picture) : asset('/assets/img/team/3-thumb.png') }}"
-                                        alt="{{ $karyawan->User->profile_picture }}" class="rounded-circle"
+                                    <img src="{{ $karyawan->User ? asset($karyawan->User->profile_picture) : asset('/assets/img/team/3-thumb.png') }}" class="rounded-circle" alt="image"
                                         style="max-width: 50px; height: 50px">
                                 </td>
                                 <td>
@@ -70,7 +69,7 @@
                                     <small>{{ $karyawan->email_karyawan }}</small>
                                 </td>
                                 <td class="align-middle">
-                                    {{ $karyawan->User->RoleH->nama_role }}
+                                    {{ $karyawan->User ? $karyawan->User->RoleH->nama_role : ''}}
                                 </td>
                                 <td>
                                     {{ $karyawan->alamat_ktp_karyawan }}

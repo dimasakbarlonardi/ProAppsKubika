@@ -1,8 +1,7 @@
 <?php
 
 use App\Helpers\ResponseFormatter;
-use App\Http\Controllers\Admin\AttendanceController;
-use App\Http\Controllers\API\AttendanceController as AppAttendanceController;
+use App\Http\Controllers\API\AttendanceController;
 use App\Http\Controllers\API\BillingController;
 use App\Http\Controllers\API\GIGOController;
 use App\Http\Controllers\API\InboxController;
@@ -14,6 +13,7 @@ use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\InspectionController;
 use App\Http\Controllers\API\PackageController;
 use App\Http\Controllers\API\RoomController;
+use App\Http\Controllers\API\ToolsController;
 use App\Http\Controllers\API\VisitorController;
 use App\Http\Controllers\API\WorkOrderController;
 use App\Http\Controllers\PaymentController;
@@ -106,10 +106,10 @@ Route::prefix('v1')->group(function () {
         Route::post('/gigo/{id}', [GIGOController::class, 'update']);
 
         // Attendance
-        Route::get('/site-location', [AppAttendanceController::class, 'siteLocation']);
-        Route::post('/attendance/checkin/{token}', [AppAttendanceController::class, 'checkin']);
-        Route::post('/attendance/checkout/{token}', [AppAttendanceController::class, 'checkout']);
-        Route::get('/attendance/shift-schedule/{userID}', [AppAttendanceController::class, 'shiftSchedule']);
+        Route::get('/site-location', [AttendanceController::class, 'siteLocation']);
+        Route::post('/attendance/checkin/{token}', [AttendanceController::class, 'checkin']);
+        Route::post('/attendance/checkout/{token}', [AttendanceController::class, 'checkout']);
+        Route::get('/attendance/shift-schedule/{userID}', [AttendanceController::class, 'shiftSchedule']);
 
         // Package
         Route::post('/package', [PackageController::class, 'store']);
@@ -132,5 +132,9 @@ Route::prefix('v1')->group(function () {
         Route::post('/incidental-report', [IncidentalController::class, 'store']);
         Route::get('/incidental-reports', [IncidentalController::class, 'index']);
         Route::get('/incidental-report/{id}', [IncidentalController::class, 'show']);
+
+        // Tools
+        Route::get('/tools/{wrID}', [ToolsController::class, 'index']);
+        Route::post('/borrow-tool/{wrID}/{id}', [ToolsController::class, 'borrowTool']);
     });
 });
