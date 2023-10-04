@@ -32,42 +32,34 @@ class ToolsEngController extends Controller
     public function borrowTool(Request $request, $id)
     {
         try {
+            // Menghubungkan ke database dan mencari alat berdasarkan ID
             $conn = ConnectionDB::setConnection(new ToolsEngineering());
-            $tool = $conn->findOrFail($id);
-            $borrowQty = (int) $request->input('borrow_qty');
-
-            if ( $borrowQty > $tool->total_tools) {
+            $tool = $conn->findOrFail($id); 
+            $borrowQty = $request->input('borrow_qty');
+        
+            // Validasi jumlah peminjaman
+            if ($borrowQty <= 0 || $borrowQty > $tool->total_tools - $tool->borrow) {
                 Alert::error('error', 'Invalid borrow quantity');
                 return redirect()->back();
             }
-
-            if ( $borrowQty < $tool->total_tools) {
-                Alert::error('error', 'Invalid borrow quantity');
-                return redirect()->back();
-            }
-
-            if ($tool->total_tools ==  $tool->borrow ) {
-                Alert::error('error', 'Invalid borrow quantity');
-                return redirect()->back();
-            }
-
+            
+            // Mengambil ID pengguna yang sedang login
             $user_id = $request->user()->id;
+
+            // Memperbarui atribut-atribut alat
             $tool->borrow += $borrowQty;
             $tool->date_out = now();
-            $tool->status = 1; // Item are still on loan
-            $tool->id_user = Login::where('id', $user_id)->get(); // Set the user ID as the PIC
-            $tool->save();
-            // Update current_totals
+            $tool->status = 1; // Item masih dipinjam
+            $tool->id_user = $user_id;
             $tool->current_totals = $tool->total_tools - $tool->borrow;
             $tool->save();
-            Alert::success('success', 'Tool Borrower successfully');
+
+            Alert::success('success', 'Tool Borrowed successfully');
             return redirect()->back();
         } catch (\Exception $e) {
-            DB::rollBack();
-            dd($e);
-            Alert::error('Gagal', 'Gagal menambahkan tenant');
             return redirect()->back()->with('error', 'An error occurred while borrowing the tool.');
         }
+
     }
 
     public function returnTool(Request $request, $id)

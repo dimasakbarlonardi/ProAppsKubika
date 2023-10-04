@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Carbon;
 
 class Karyawan extends Model
 {
@@ -21,7 +22,7 @@ class Karyawan extends Model
         'nik_karyawan',
         'nama_karyawan',
         'id_status_karyawan',
-        'id_status_kawin_karyawan',
+        'id_status_kawin',
         'id_status_aktif_karyawan',
         'kewarganegaraan',
         'masa_berlaku_id',
@@ -111,5 +112,12 @@ class Karyawan extends Model
     public function WorkSchedule()
     {
         return $this->hasMany(WorkTimeline::class, 'karyawan_id', 'id');
+    }
+
+    public function NowSchedule()
+    {
+        return $this->hasOne(WorkTimeline::class, 'karyawan_id', 'id_karyawan')
+            ->where('date', Carbon::now()->format('Y-m-d'))
+            ->with('ShiftType');
     }
 }

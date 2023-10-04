@@ -16,6 +16,20 @@ use Illuminate\Support\Facades\Storage;
 
 class PackageController extends Controller
 {
+    public function index()
+    {
+        $connPackage = ConnectionDB::setConnection(new Package());
+
+        $packages = $connPackage->where('deleted_at', null)
+            ->with(['Unit', 'Receiver'])
+            ->get();
+
+        return ResponseFormatter::success(
+            $packages,
+            'Success get packages by unit'
+        );
+    }
+
     public function store(Request $request)
     {
         $connPackage = ConnectionDB::setConnection(new Package());

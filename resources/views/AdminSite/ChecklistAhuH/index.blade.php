@@ -50,21 +50,23 @@
                                 @endif
                             </td> --}}
                             <td>
-                                <div class="dropdown font-sans-serif position-static"><button
-                                        class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal" type="button"
-                                        id="order-dropdown-0" data-bs-toggle="dropdown" data-boundary="viewport"
-                                        aria-haspopup="true" aria-expanded="false"><span
-                                            class="fas fa-ellipsis-h fs--1"></span></button>
-                                    <div class="dropdown-menu dropdown-menu-end border py-0"
-                                        aria-labelledby="order-dropdown-0">
+                                <div class="dropdown font-sans-serif position-static">
+                                    <button class="btn btn-sm btn-warning" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false">
+                                        <span class=""></span>Inspection/schedule
+                                    </button>
+                                    <div class="dropdown-menu dropdown-menu-end border py-0">
                                         <div class="py-2">
-                                            <a class="dropdown-item text"
+                                        <a class="dropdown-item text"
                                                 href="{{ route('checklistengineering', $checklistahu->id_equiqment_engineering) }}">Inspection
                                                 Parameter
                                             </a>
                                             <a class="dropdown-item text"
                                                 href="{{ route('inspectionSchedules', $checklistahu->id_equiqment_engineering) }}">
                                                 Schedules
+                                            </a>
+                                            <a class="dropdown-item text" 
+                                                href="{{ route('checklistahus.edit', $checklistahu->id_equiqment_engineering) }}">
+                                                Edit Equipment
                                             </a>
                                         </div>
                                     </div>

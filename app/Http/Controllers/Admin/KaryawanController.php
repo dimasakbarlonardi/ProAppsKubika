@@ -58,8 +58,6 @@ class KaryawanController extends Controller
 
         $agama = ConnectionDB::setConnection(new Agama());
 
-        $statuskawin = ConnectionDB::setConnection(new StatusKawin());
-
         $jabatan = ConnectionDB::setConnection(new Jabatan());
 
         $divisi = ConnectionDB::setConnection(new Divisi());
@@ -81,7 +79,6 @@ class KaryawanController extends Controller
         $data['departemens'] = $departemen->get();
         $data['idcards'] = $idcard->get();
         $data['idusers'] = $users->get();
-        $data['statuskawins'] = $statuskawin->get();
         $data['penempatans'] = $penempatan->get();
         $data['statuskaryawans'] = $statuskaryawan->get();
         $data['statusaktifkaryawans'] = $connStatusaktifkaryawan->get();
@@ -98,6 +95,7 @@ class KaryawanController extends Controller
     public function store(Request $request)
     {
         $connKaryawan = ConnectionDB::setConnection(new Karyawan());
+        // dd($request);
 
         $checkNIK = $connKaryawan->where('nik_karyawan', $request->nik_karyawan)->first();
         $checkEmail = $connKaryawan->where('email_karyawan', $request->email_karyawan)->first();
@@ -153,6 +151,7 @@ class KaryawanController extends Controller
                 'id_agama'=> $request->id_agama,
                 'id_status_kawin'=> $request->id_status_kawin,
             ]);
+
 
             $karyawan->id_karyawan = sprintf("%04d", $karyawan->id);
             $karyawan->save();

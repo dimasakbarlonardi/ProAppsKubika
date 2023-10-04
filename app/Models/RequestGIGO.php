@@ -18,6 +18,7 @@ class RequestGIGO extends Model
         'date_request_gigo',
         'no_pol_pembawa',
         'id_pembawa',
+        'gigo_type',
         'nama_pembawa',
         'status_request',
         'sign_approval_1',

@@ -19,6 +19,8 @@ class Visitor extends Model
     'unit_id',
     'arrival_date',
     'arrival_time',
+    'leave_time',
+    'leave_date',
     'heading_to',
     'desc',
     'status',

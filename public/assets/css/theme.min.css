@@ -2064,7 +2064,7 @@ progress {
     max-width: 100%;
     padding-right: calc(var(--falcon-gutter-x) * 0.5);
     padding-left: calc(var(--falcon-gutter-x) * 0.5);
-    margin-top: var(--falcon-gutter-y);
+    /* margin-top: var(--falcon-gutter-y); */
 }
 
 .col {
@@ -10163,9 +10163,7 @@ html[data-bs-theme="dark"] .tox .tox-dialog__footer .tox-button--secondary,
     --falcon-badge-border-radius: 0.25rem;
     display: inline-block;
     padding: var(--falcon-badge-padding-y) var(--falcon-badge-padding-x);
-    font-size: var(--falcon-
-
-    -font-size);
+    font-size: var(--falcon- -font-size);
     font-weight: var(--falcon-badge-font-weight);
     line-height: 1;
     color: var(--falcon-badge-color);
@@ -11390,7 +11388,7 @@ html[data-bs-theme="dark"] .tox .tox-dialog__footer .tox-button--secondary,
     padding: var(--falcon-tooltip-arrow-height);
     margin: var(--falcon-tooltip-margin);
     font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Montserrat, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji",
+        Montserrat, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji",
         "Segoe UI Emoji", "Segoe UI Symbol";
     font-style: normal;
     font-weight: 400;
@@ -11521,7 +11519,7 @@ html[data-bs-theme="dark"] .tox .tox-dialog__footer .tox-button--secondary,
     display: block;
     max-width: var(--falcon-popover-max-width);
     font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Montserrat, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji",
+        Montserrat, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji",
         "Segoe UI Emoji", "Segoe UI Symbol";
     font-style: normal;
     font-weight: 400;
@@ -36779,7 +36777,7 @@ html[dir="rtl"] .img-dropdown {
     display: flex;
     font-size: 0.8333333333rem;
     font-family: "Open Sans", -apple-system, BlinkMacSystemFont, "Segoe UI",
-    Montserrat, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji",
+        Montserrat, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji",
         "Segoe UI Emoji", "Segoe UI Symbol";
     -webkit-transition: all 0.2s ease-in-out;
     -o-transition: all 0.2s ease-in-out;
@@ -41000,38 +40998,707 @@ html[data-bs-theme="dark"] .bg-priority-low:checked {
     width: 13.75rem;
 }
 
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+th,
+td {
+    padding: 8px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+    border: none;
+}
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            padding: 8px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-            border: none;
-        }
+.image-container {
+    position: relative;
+}
 
+.logo {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-46%, -50%);
+    width: 91%;
+    height: 20%;
+}
 
-        .image-container {
-            position: relative;
-        }
-        
-        .logo {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-46%, -50%);
-            width: 91%;
-            height: 20%;
-        }
+.reverse {
+    flex-direction: row-reverse;
+    align-items: center;
+    align-content: center;
+    justify-content: center;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+}
+.icon-background {
+    width: 60px; /* Atur lebar dan tinggi sesuai kebutuhan */
+    height: 60px;
+    background-color: #27b29b; /* Warna latar belakang bulatan */
+    border-radius: 500%; /* Untuk membuat lingkaran */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white; /* Warna ikon */
+}
 
-     .reverse{   
-        flex-direction: row-reverse;
-        align-items: center; 
-        align-content: center; 
-        justify-content: center; 
-        flex-direction: row-reverse;
-        justify-content: flex-end;
-     }
-        
+.icon-background-2 {
+    width: 60px; /* Atur lebar dan tinggi sesuai kebutuhan */
+    height: 60px;
+    background-color: #10473e; /* Warna latar belakang bulatan */
+    border-radius: 500%; /* Untuk membuat lingkaran */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: white; /* Warna ikon */
+}
+
+/* CSS untuk layout */
+.container-card {
+    display: flex;
+    width: 199.75px;
+    padding: 20px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 30px;
+    margin-right: 20px;
+    margin-left: 20px;
+}
+
+/* CSS untuk gaya */
+.container-card {
+    border-radius: 16px;
+    background: var(--primary-15, #bee8e1);
+}
+
+.frame-537 {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    align-self: stretch;
+    flex-shrink: 0;
+    position: relative;
+}
+.frame-193 {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+    justify-content: flex-start;
+    flex-shrink: 0;
+    position: relative;
+}
+.request-volume-performance {
+    color: var(--neutral-8, #3f4045);
+    text-align: left;
+    font: 600 20px "Montserrat", sans-serif;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+.icon {
+    flex-shrink: 0;
+    position: relative;
+    overflow: visible;
+}
+.frame-285 {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+    justify-content: flex-start;
+    flex-shrink: 0;
+    position: relative;
+}
+.showing-data-for {
+    color: var(--primary-5, #27b29b);
+    text-align: left;
+    font: 500 16px "Montserrat", sans-serif;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+.frame-284 {
+    background: #ffffff;
+    border-radius: 4px;
+    border-style: solid;
+    border-color: var(--neutral-3, #bfc0c7);
+    border-width: 1px;
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    gap: 7px;
+    align-items: center;
+    justify-content: flex-start;
+    flex-shrink: 0;
+    width: 180px;
+    position: relative;
+}
+.icon2 {
+    flex-shrink: 0;
+    position: relative;
+    overflow: visible;
+}
+.choose-date {
+    color: var(--neutral-4, #a9abb4);
+    text-align: left;
+    font: 400 14px "Montserrat", sans-serif;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+.frame-536 {
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+    align-items: flex-start;
+    justify-content: center;
+    align-self: stretch;
+    flex-shrink: 0;
+    position: relative;
+}
+.frame-281 {
+    display: flex;
+    flex-direction: row;
+    gap: 0px;
+    align-items: flex-start;
+    justify-content: flex-start;
+    align-self: stretch;
+    flex-shrink: 0;
+    position: relative;
+}
+.frame-278 {
+    border-style: solid;
+    border-color: #edf2f9;
+    border-width: 0px 2px 2px 0px;
+    padding: 0px 20px 0px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+    justify-content: center;
+    flex: 1;
+    height: 100px;
+    position: relative;
+}
+.entry-request {
+    color: var(--neutral-8, #3f4045);
+    text-align: left;
+    font: 600 14px "Montserrat", sans-serif;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+._100 {
+    color: var(--primary-5, #27b29b);
+    text-align: left;
+    font: 600 32px/32px "Montserrat", sans-serif;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+.frame-279 {
+    border-style: solid;
+    border-color: #edf2f9;
+    border-width: 0px 2px 2px 0px;
+    padding: 0px 20px 0px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+    justify-content: center;
+    flex: 1;
+    height: 100px;
+    position: relative;
+}
+.work-request {
+    color: var(--neutral-8, #3f4045);
+    text-align: left;
+    font: 600 14px "Montserrat", sans-serif;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+.frame-280 {
+    border-style: solid;
+    border-color: #edf2f9;
+    border-width: 0px 0px 2px 0px;
+    padding: 0px 20px 0px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+    justify-content: center;
+    flex: 1;
+    height: 100px;
+    position: relative;
+}
+.work-order {
+    color: var(--neutral-8, #3f4045);
+    text-align: left;
+    font: 600 14px "Montserrat", sans-serif;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+.frame-282 {
+    display: flex;
+    flex-direction: row;
+    gap: 0px;
+    align-items: center;
+    justify-content: center;
+    align-self: stretch;
+    flex-shrink: 0;
+    position: relative;
+}
+.frame-2782 {
+    border-style: solid;
+    border-color: #edf2f9;
+    border-width: 0px 2px 0px 0px;
+    padding: 0px 20px 0px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+    justify-content: center;
+    flex: 1;
+    height: 100px;
+    position: relative;
+}
+.bapp {
+    color: var(--neutral-8, #3f4045);
+    text-align: left;
+    font: 600 14px "Montserrat", sans-serif;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+.frame-2792 {
+    border-style: solid;
+    border-color: #edf2f9;
+    border-width: 0px 2px 0px 0px;
+    padding: 0px 20px 0px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+    justify-content: center;
+    flex: 1;
+    height: 100px;
+    position: relative;
+}
+.good-in-good-out {
+    color: var(--neutral-8, #3f4045);
+    text-align: left;
+    font: 600 14px "Montserrat", sans-serif;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+.frame-2802 {
+    padding: 0px 20px 0px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: flex-start;
+    justify-content: center;
+    flex: 1;
+    height: 100px;
+    position: relative;
+}
+.reservation {
+    color: var(--neutral-8, #3f4045);
+    text-align: left;
+    font: 600 14px "Montserrat", sans-serif;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.frame-283,
+.frame-283 * {
+    box-sizing: border-box;
+}
+.frame-283 {
+    background: #ffffff;
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: flex-start;
+    justify-content: center;
+    flex-shrink: 0;
+    position: relative;
+    box-shadow: var(
+        --card-dashboard-box-shadow,
+        0px 3px 6px 0px rgba(0, 0, 0, 0.07),
+        0px 7px 14px 0px rgba(65, 69, 88, 0.1)
+    );
+}
+.frame-537 {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    align-self: stretch;
+    flex-shrink: 0;
+    position: relative;
+}
+.frame-193 {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+    justify-content: flex-start;
+    flex-shrink: 0;
+    position: relative;
+}
+.request-quality-performance {
+    color: var(--neutral-8, #3f4045);
+    text-align: left;
+    font: 600 20px "Montserrat", sans-serif;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+.icon {
+    flex-shrink: 0;
+    position: relative;
+    overflow: visible;
+}
+.frame-285 {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+    justify-content: flex-start;
+    flex-shrink: 0;
+    position: relative;
+}
+.showing-data-for {
+    color: var(--primary-5, #27b29b);
+    text-align: left;
+    font: 500 16px "Montserrat", sans-serif;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+.frame-284 {
+    background: #ffffff;
+    border-radius: 4px;
+    border-style: solid;
+    border-color: var(--neutral-3, #bfc0c7);
+    border-width: 1px;
+    padding: 10px;
+    display: flex;
+    flex-direction: row;
+    gap: 7px;
+    align-items: center;
+    justify-content: flex-start;
+    flex-shrink: 0;
+    width: 180px;
+    position: relative;
+}
+.icon2 {
+    flex-shrink: 0;
+    position: relative;
+    overflow: visible;
+}
+.choose-date {
+    color: var(--neutral-4, #a9abb4);
+    text-align: left;
+    font: 400 14px "Montserrat", sans-serif;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+}
+.frame-536 {
+    display: flex;
+    flex-direction: column;
+    gap: 0px;
+    align-items: flex-start;
+    justify-content: center;
+    flex-shrink: 0;
+    position: relative;
+}
+.frame-341 {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-shrink: 0;
+    width: 829px;
+    position: relative;
+}
+._1 {
+    flex-shrink: 0;
+    width: 199.75px;
+    height: 183px;
+    position: static;
+}
+.frame-340 {
+    background: var(--primary-0, #e9f7f5);
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    align-items: flex-start;
+    justify-content: flex-start;
+    width: 199.75px;
+    position: absolute;
+    left: 0px;
+    top: 0px;
+}
+.frame-539 {
+    background: var(--primary-5, #27b29b);
+    border-radius: 44px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+}
+.check {
+    flex-shrink: 0;
+    position: relative;
+    overflow: visible;
+}
+.frame-364 {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: flex-start;
+    justify-content: center;
+    flex-shrink: 0;
+    position: relative;
+}
+.frame-538 {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    align-items: flex-start;
+    justify-content: center;
+    flex-shrink: 0;
+    position: relative;
+}
+.frame-342 {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+    justify-content: flex-start;
+    flex-shrink: 0;
+    position: relative;
+}
+._150 {
+    color: var(--primary-5, #27b29b);
+    text-align: left;
+    font: 600 32px/32px "Montserrat", sans-serif;
+    position: relative;
+}
+._100 {
+    color: #8792a1;
+    text-align: left;
+    font: 500 20px/24px "Montserrat", sans-serif;
+    position: relative;
+}
+.request-complete {
+    color: var(--neutral-8, #3f4045);
+    text-align: left;
+    font: 600 14px/32px "Montserrat", sans-serif;
+    position: relative;
+}
+._11 {
+    flex-shrink: 0;
+    width: 199.75px;
+    height: 183px;
+    position: static;
+}
+.frame-3402 {
+    background: var(--primary-1-5, #bee8e1);
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    align-items: flex-start;
+    justify-content: flex-start;
+    width: 199.75px;
+    position: absolute;
+    left: 209.75px;
+    top: 0px;
+}
+.frame-5392 {
+    background: var(--primary-7, #176b5d);
+    border-radius: 44px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: flex-start;
+    justify-content: flex-start;
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+}
+.list-check-solid-1 {
+    flex-shrink: 0;
+    position: relative;
+    overflow: visible;
+}
+._1502 {
+    color: var(--primary-7, #176b5d);
+    text-align: left;
+    font: 600 32px/32px "Roboto", sans-serif;
+    position: relative;
+}
+._1002 {
+    color: var(--neutral-6, #787982);
+    text-align: left;
+    font: 500 20px/24px "Roboto", sans-serif;
+    position: relative;
+}
+.ticket-on-progress {
+    color: var(--neutral-8, #3f4045);
+    text-align: left;
+    font: 500 16px/32px "Roboto", sans-serif;
+    position: relative;
+}
+.frame-3412 {
+    background: var(--primary-1-5, #bee8e1);
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    align-items: flex-start;
+    justify-content: flex-start;
+    width: 199.75px;
+    position: absolute;
+    left: 209.75px;
+    top: 0px;
+}
+.list-check-solid-12 {
+    flex-shrink: 0;
+    position: relative;
+    overflow: visible;
+}
+._1503 {
+    color: var(--primary-7, #176b5d);
+    text-align: left;
+    font: 600 32px/32px "Montserrat", sans-serif;
+    position: relative;
+}
+._1003 {
+    color: var(--neutral-6, #787982);
+    text-align: left;
+    font: 500 20px/24px "Montserrat", sans-serif;
+    position: relative;
+}
+.request-on-progress {
+    color: var(--neutral-8, #3f4045);
+    text-align: left;
+    font: 600 14px/32px "Montserrat", sans-serif;
+    position: relative;
+}
+._12 {
+    flex: 1;
+    height: 183px;
+    position: static;
+}
+.frame-3403 {
+    background: var(--primary-0, #e9f7f5);
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    align-items: flex-start;
+    justify-content: flex-start;
+    width: 199.75px;
+    position: absolute;
+    left: 419.5px;
+    top: 0px;
+}
+.frame {
+    flex-shrink: 0;
+    position: relative;
+    overflow: visible;
+}
+.request-hold {
+    color: var(--neutral-8, #3f4045);
+    text-align: left;
+    font: 600 14px/32px "Montserrat", sans-serif;
+    position: relative;
+}
+._14 {
+    flex: 1;
+    height: 183px;
+    position: static;
+}
+.frame-3404 {
+    background: var(--primary-1-5, #bee8e1);
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    align-items: flex-start;
+    justify-content: flex-start;
+    width: 199.75px;
+    position: absolute;
+    left: 629.25px;
+    top: 0px;
+}
+.list-check-solid-13 {
+    flex-shrink: 0;
+    position: relative;
+    overflow: visible;
+}
+.frame-3413 {
+    background: var(--primary-1-5, #bee8e1);
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    align-items: flex-start;
+    justify-content: flex-start;
+    width: 199.75px;
+    position: absolute;
+    left: 629.25px;
+    top: 0px;
+}
+.times {
+    flex-shrink: 0;
+    position: relative;
+    overflow: visible;
+}
+.request-cancel {
+    color: var(--neutral-8, #3f4045);
+    text-align: left;
+    font: 600 14px/32px "Montserrat", sans-serif;
+    position: relative;
+}
+

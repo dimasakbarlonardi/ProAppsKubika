@@ -39,24 +39,6 @@
                             @endforeach
                         </select>
                     </div>
-
-                    <div class="row mt-3">
-                        <h6> Schedule
-                            <hr>
-                        </h6>
-                        <div class="col-6 mb-3">
-                            <label class="form-label">Schedule</label>
-                            <input type="date" name="schedule" class="form-control" required>
-                        </div>
-                        <div class="col-6 mb-3">
-                            <label class="form-label">Set Schedule</label>
-                            <select class="form-control" name="set_schedule" required>
-                                <option selected disabled>-- Select Schedule --</option>
-                                <option value="weekly">Per Minggu</option>
-                                <option value="monthly">Per Bulan</option>
-                            </select>
-                        </div>
-                    </div>
                     <div class="mt-5">
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </div>

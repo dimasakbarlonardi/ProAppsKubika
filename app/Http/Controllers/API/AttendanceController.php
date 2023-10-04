@@ -6,9 +6,11 @@ use App\Helpers\ConnectionDB;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Models\Attendance;
+use App\Models\Karyawan;
 use App\Models\Site;
 use App\Models\Unit;
 use App\Models\User;
+use App\Models\WorkTimeline;
 use Carbon\Carbon;
 use DateTime;
 use Illuminate\Http\Request;
@@ -27,75 +29,98 @@ class AttendanceController extends Controller
         ], 'Success get site location');
     }
 
-    function attend($user)
+    function attend($karyawan)
     {
-        $connUser = ConnectionDB::setConnection(new User());
-        $connAttend = ConnectionDB::setConnection(new Attendance());
+        $connAttend = ConnectionDB::setConnection(new WorkTimeline());
 
-        $data['getUser'] = $connUser->where('login_user', $user->email)->first();
-
-        $data['attend'] = $connAttend->where('id_user', $data['getUser']->id_user)
-            ->where('status', 'On Work')
+        $attend = $connAttend->where('karyawan_id', $karyawan->id)
+            ->where('date', Carbon::now()->format('Y-m-d'))
+            ->where('status_absence', null)
             ->first();
 
-        return $data;
+        return $attend;
+    }
+
+    function attendCheckout($karyawan)
+    {
+        $connAttend = ConnectionDB::setConnection(new WorkTimeline());
+
+        $attend = $connAttend->where('karyawan_id', $karyawan->id)
+            ->where('date', Carbon::now()->format('Y-m-d'))
+            ->where('check_in', '!=', null)
+            ->where('check_out', null)
+            ->first();
+
+        return $attend;
     }
 
     public function checkin(Request $request, $token)
     {
         $getToken = str_replace("RA164-", "|", $token);
         $tokenable = PersonalAccessToken::findToken($getToken);
+        $connKaryawan = ConnectionDB::setConnection(new Karyawan());
 
         if ($tokenable) {
             $user = $tokenable->tokenable;
             $site = Site::find($user->id_site);
 
-            $attend = $this->attend($user);
+            $karyawan = $connKaryawan->where('email_karyawan', $user->email)->first();
+            $attend = $this->attend($karyawan);
+            // dd($attend);
+            if ($karyawan->NowSchedule) {
+                if ($attend) {
+                    $site_lat = $site->lat;
+                    $site_long = $site->long;
+                    $my_lat = $request->my_lat;
+                    $my_long = $request->my_long;
 
-            if (!$attend['attend']) {
-                $site_lat = $site->lat;
-                $site_long = $site->long;
-                $my_lat = $request->my_lat;
-                $my_long = $request->my_long;
+                    $distance = $this->getDistance($site_lat, $site_long, $my_lat, $my_long);
 
-                $distance = $this->getDistance($site_lat, $site_long, $my_lat, $my_long);
+                    $checkin = Carbon::now()->format('H:i');
 
-                $start_hour = '09:00';
-                $checkin = Carbon::now()->format('H:i');
+                    if ($distance < 0.03) {
+                        $start_hour = $karyawan->NowSchedule->ShiftType->checkin;
+                        $start_hour = '22:00'; //temporary just for dev
+                        if ($checkin > $start_hour) {
+                            $status_absence = 'Late';
+                        } elseif ($checkin < $start_hour) {
+                            $status_absence = 'Early';
+                        } elseif ($checkin == $start_hour) {
+                            $status_absence = 'On Time';
+                        }
+                        // dd($karyawan->NowSchedule);
+                        // $connAttend = ConnectionDB::setConnection(new Attendance());
+                        $karyawan->NowSchedule->check_in = Carbon::now();
+                        $karyawan->NowSchedule->status_absence = $status_absence;
+                        $karyawan->NowSchedule->save();
+                        // $connAttend->create([
+                        //     'id_site' => $site->id_site,
+                        //     'id_user' => $attend['getUser']->id_user,
+                        //     'check_in' =>  Carbon::now(),
+                        //     'status' => 'On Work',
+                        //     'status_absence' => $status_absence
+                        // ]);
 
-                if ($checkin > $start_hour) {
-                    $status_absence = 'Late';
-                } elseif ($checkin < $start_hour) {
-                    $status_absence = 'Early';
-                } elseif ($checkin == $start_hour) {
-                    $status_absence = 'On Time';
-                }
-
-                if ($distance < 0.03) {
-                    $connAttend = ConnectionDB::setConnection(new Attendance());
-
-                    $connAttend->create([
-                        'id_site' => $site->id_site,
-                        'id_user' => $attend['getUser']->id_user,
-                        'check_in' =>  Carbon::now(),
-                        'status' => 'On Work',
-                        'status_absence' => $status_absence
-                    ]);
-
-                    return response()->json([
-                        'status' => 'OK',
-                        'Message' => 'Within 30 meter radius'
-                    ]);
+                        return response()->json([
+                            'status' => 'OK',
+                            'Message' => 'Within 30 meter radius'
+                        ]);
+                    } else {
+                        return response()->json([
+                            'status' => 'FAIL',
+                            'Message' => 'Outside 30 meter radius'
+                        ]);
+                    }
                 } else {
                     return response()->json([
                         'status' => 'FAIL',
-                        'Message' => 'Outside 30 meter radius'
+                        'Message' => 'Already Checkin'
                     ]);
                 }
             } else {
                 return response()->json([
                     'status' => 'FAIL',
-                    'Message' => 'Already Checkin'
+                    'Message' => 'You dont have schedule today'
                 ]);
             }
         } else {
@@ -124,51 +149,59 @@ class AttendanceController extends Controller
     {
         $getToken = str_replace("RA164-", "|", $token);
         $tokenable = PersonalAccessToken::findToken($getToken);
+        $connKaryawan = ConnectionDB::setConnection(new Karyawan());
+
+        $user = $tokenable->tokenable;
+        $karyawan = $connKaryawan->where('email_karyawan', $user->email)->first();
+        $attend = $this->attendCheckout($karyawan);
+        $site = Site::find($user->id_site);
 
         if ($tokenable) {
-            $user = $tokenable->tokenable;
-            $site = Site::find($user->id_site);
+            if ($attend && !$attend->checkout) {
+                if ($attend) {
+                    $site_lat = $site->lat;
+                    $site_long = $site->long;
+                    $my_lat = $request->my_lat;
+                    $my_long = $request->my_long;
 
-            $data = $this->attend($user);
-            $attend = $data['attend'];
+                    $distance = $this->getDistance($site_lat, $site_long, $my_lat, $my_long);
+                    $checkin = new DateTime($attend->check_in);
+                    $checkout = Carbon::now();
+                    $checkout = '2023-01-02 09:00'; //temporary just for dev
+                    $work_hour = $checkin->diff(new DateTime($checkout));
 
-            $site_lat = $site->lat;
-            $site_long = $site->long;
-            $my_lat = $request->my_lat;
-            $my_long = $request->my_long;
 
-            if ($attend) {
-                $distance = $this->getDistance($site_lat, $site_long, $my_lat, $my_long);
-                $checkin = new DateTime($attend->check_in);
-                $checkout = Carbon::now();
-                $work_hour = $checkin->diff(new DateTime($checkout));
+                    if ($work_hour->format('%h') == 0) {
+                        $work_hour = $work_hour->format('%i') . " Minutes";
+                    } else {
+                        $work_hour = $work_hour->format('%h') . " Hours " . $work_hour->format('%i') . " Minutes";
+                    }
 
-                if ($work_hour->format('%h') == 0) {
-                    $work_hour = $work_hour->format('%i') . " Minutes";
-                } else {
-                    $work_hour = $work_hour->format('%h') . " Hours " . $work_hour->format('%i') . " Minutes";
-                }
+                    if ($distance < 0.03) {
+                        $karyawan->NowSchedule->work_hour = $work_hour;
+                        $karyawan->NowSchedule->check_out = $checkout;
+                        $karyawan->NowSchedule->save();
 
-                if ($distance < 0.03) {
-                    $attend->work_hour = $work_hour;
-                    $attend->check_out = $checkout;
-                    $attend->status = 'Finish';
-                    $attend->save();
-
-                    return response()->json([
-                        'status' => 'OK',
-                        'Message' => 'Within 30 meter radius'
-                    ]);
+                        return response()->json([
+                            'status' => 'OK',
+                            'Message' => 'Within 30 meter radius'
+                        ]);
+                    } else {
+                        return response()->json([
+                            'status' => 'FAIL',
+                            'Message' => 'Outside 30 meter radius'
+                        ]);
+                    }
                 } else {
                     return response()->json([
                         'status' => 'FAIL',
-                        'Message' => 'Outside 30 meter radius'
+                        'Message' => 'Not checkin yet'
                     ]);
                 }
             } else {
                 return response()->json([
                     'status' => 'FAIL',
-                    'Message' => 'Not checkin yet'
+                    'Message' => 'Already checkout'
                 ]);
             }
         } else {
@@ -191,5 +224,23 @@ class AttendanceController extends Controller
         $d = $earth_radius * $c;
 
         return $d;
+    }
+
+    public function shiftSchedule($userID)
+    {
+        $connUser = ConnectionDB::setConnection(new User());
+        $connAttend = ConnectionDB::setConnection(new WorkTimeline());
+
+        $user = $connUser->find($userID);
+
+        $getAttends = $connAttend->where('karyawan_id', $user->Karyawan->id)
+            ->with('ShiftType')
+            ->where('status_absence', null)
+            ->get();
+
+        return ResponseFormatter::success(
+            $getAttends,
+            'Success get site location'
+        );
     }
 }
