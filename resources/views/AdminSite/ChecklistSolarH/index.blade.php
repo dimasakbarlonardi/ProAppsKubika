@@ -53,7 +53,7 @@
                                     <th class="sort" data-sort="">No</th>
                                     {{-- <th class="sort" data-sort="barcode_room">Barcode Room</th>
                                     <th class="sort" data-sort="id_room">Room</th> --}}
-                                    <th class="sort" data-sort="tgl_checklist">Tanggal Checklist</th> 
+                                    <th class="sort" data-sort="tgl_checklist">Tanggal Checklist</th>
                                     {{-- <th class="sort" data-sort="time_checklist">Time Checklist</th>
                                     <th class="sort" data-sort="id_user">User</th>  --}}
                                     <th class="sort" data-sort="no_checklist_solar">Nomer Check list Solar</th>
@@ -63,18 +63,18 @@
                             <tbody id="checklist_body">
                                 @foreach ($checklistsolars as $key => $checklistsolar)
                                     <tr>
-                                        <th scope="row">{{$key + 1 }}</th>                           
-                                        <td>{{ $checklistsolar->tgl_checklist }}</td>                            
+                                        <th scope="row">{{$key + 1 }}</th>
+                                        <td>{{ $checklistsolar->tgl_checklist }}</td>
                                         <td>{{ $checklistsolar->no_checklist_solar }}</td>
                                         <td>
                                             <div class="dropdown font-sans-serif position-static"><button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal" type="button" id="order-dropdown-0" data-bs-toggle="dropdown" data-boundary="viewport" aria-haspopup="true" aria-expanded="false"><span class="fas fa-ellipsis-h fs--1"></span></button>
                                                 <div class="dropdown-menu dropdown-menu-end border py-0" aria-labelledby="order-dropdown-0">
                                                     <div class="py-2"><a class="dropdown-item text" href="{{ route('checklistsolars.show', $checklistsolar->no_checklist_solar) }}">Detail Solar Checklist</a>
                                                 </div>
-                                            </div>  
-                                         </div>                      
+                                            </div>
+                                         </div>
                                         </td>
-                                    </tr>   
+                                    </tr>
                                 @endforeach
                             </tbody>
                         </table>
@@ -129,7 +129,7 @@
                                             <option value="{{ $checklistsolar->no_checklist_solar }}"> {{ $checklistsolar->no_checklist_solar }}</option>
                                         @endforeach
                                     </select>
-                                </div>     
+                                </div>
                                 <div class="mb-3 mt-n2">
                                     <label class="mb-1">User Checklist Solar</label>
                                     <select class="form-select form-select-sm" name="no_checklist_solar" required id="no_checklist_solar">
@@ -137,7 +137,7 @@
                                             <option value="{{ $iduser->id }}"> {{ $iduser->name }}</option>
                                         @endforeach
                                     </select>
-                                </div>                        
+                                </div>
                             </form>
                         </div>
                         <div class="card-footer border-top border-200 py-x1">
@@ -146,7 +146,7 @@
                     </div>
                 </div>
             </div>
-            
+
         </div>
     </div>
 @endsection
@@ -162,9 +162,6 @@
                 var tgl_checklist = $('#tgl_checklist').val()
                 var date_from = tgl_checklist.substr(0, 10)
                 var date_to = tgl_checklist.substr(14, 23)
-                 
-                console.log("date from : ", date_from)
-                console.log("date to : ", date_to)
 
                 index(no_checklist_solar, date_from, date_to)
             })
@@ -173,8 +170,6 @@
                 var tgl_checklist = $('#tgl_checklist').val()
                 var date_from = tgl_checklist.substr(0, 10)
                 var date_to = tgl_checklist.substr(14, 23)
-
-                // console.log(tgl_checklist, no_checklist_solar)
 
                 index(no_checklist_solar, date_from, date_to)
             })
@@ -194,22 +189,22 @@
                     data.checklists.map((item, i) => {
                         $('#checklist_body').append(`
                             <tr>
-                                <th scope="row">${i + 1}</th>                           
-                                <td>${item.tgl_checklist}</td>                            
+                                <th scope="row">${i + 1}</th>
+                                <td>${item.tgl_checklist}</td>
                                 <td>${item.no_checklist_solar}</td>
                                 <td>
                                     <div class="dropdown font-sans-serif position-static"><button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal" type="button" id="order-dropdown-0" data-bs-toggle="dropdown" data-boundary="viewport" aria-haspopup="true" aria-expanded="false"><span class="fas fa-ellipsis-h fs--1"></span></button>
                                         <div class="dropdown-menu dropdown-menu-end border py-0" aria-labelledby="order-dropdown-0">
                                             <a class="dropdown-item text" href="/admin/checklistsolars/${item.no_checklist_solar}">Detail Solar Checklist</a>
                                         </div>
-                                    </div>                        
+                                    </div>
                                 </td>
                             </tr>
                         `)
                     })
-                    
+
                 }
             })
         }
     </script>
-@endsection 
+@endsection

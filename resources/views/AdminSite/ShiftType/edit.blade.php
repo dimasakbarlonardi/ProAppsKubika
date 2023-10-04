@@ -58,7 +58,6 @@
 
             type: 'GET',
             success: function(resp) {
-                console.log(resp.data);
             }
         })
     </script>

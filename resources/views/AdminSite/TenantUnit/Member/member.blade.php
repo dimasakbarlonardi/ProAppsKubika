@@ -113,7 +113,7 @@
 <script>
     function btnUnitClick(id) {
         var id_tenant = $('#id_tenant').val();
-        console.log(id)
+
         $.ajax({
             url: '/admin/kepemilikan-member-unit/' + id,
             type: 'GET',

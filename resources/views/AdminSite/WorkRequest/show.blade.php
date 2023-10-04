@@ -229,7 +229,6 @@
 
         $('document').ready(function() {
             var status = $('#select_status').val();
-            console.log(status)
             showDetailWO(status);
             getWoByID(noWO);
             detailServiceWO();
@@ -254,7 +253,7 @@
             var id_bayar = $('#id_bayarnon').val();
             var deskripsi_wr = $('textarea#deskripsi_wr').val();
             var estimasi_pengerjaan = $('#estimasi_pengerjaan').val();
-            console.log(id_bayar);
+
             $.ajax({
                 url: '/admin/work-orders',
                 data: {
@@ -318,7 +317,7 @@
             var lastID = 0;
             var detilPekerjaan = $('#input_detil_pekerjaan').val();
             var detilBiayaAlat = $('#input_biaya_alat').val();
-            console.log(noWO, services)
+
             if (noWO && services.length > 0) {
                 lastID = services[services.length - 1]['id'];
             }

@@ -354,8 +354,6 @@
                 $('#nama_personil').val('');
                 detailPersonels();
             }
-
-            console.log(personels)
         }
 
         function detailPersonels() {

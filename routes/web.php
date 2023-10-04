@@ -135,7 +135,7 @@ use App\Models\PermitHR;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('/login');
 });
 
 Route::get('/gis', [AttendanceController::class, 'index']);

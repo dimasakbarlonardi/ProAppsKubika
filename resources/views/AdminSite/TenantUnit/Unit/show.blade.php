@@ -132,9 +132,9 @@
                     </button>
                 </form> --}}
             </div>
-         </div> 
+         </div>
     </div>
-           
+
 
         </div>
     </div>
@@ -149,16 +149,15 @@
                     url: '/admin/tenant-unit/' + id_pemilik,
                     type: 'GET',
                     success: function(data) {
-                        console.log(data.units)
                         $.each(data.units, function(key, value) {
-                            console.log(key, value.id_unit)
+
                             $("#id_unit").append(value.id_unit +
                                  + value.nama_unit );
 
                                 value="{{ $tenantunits->id_unit }}"
                         });
                     }
-                }) 
+                })
 
             })
                 var id_unit = $('#id_unit').val();
@@ -167,7 +166,6 @@
                     url: '/admin/unit-by-id/' + id_unit,
                     type: 'GET',
                     success: function(data) {
-                        console.log(data.unit)
                         $('#luas_unit').val(data.unit.luas_unit)
                         $('#barcode_unit').val(data.unit.barcode_unit)
                         $('#barcode_meter_air').val(data.unit.barcode_meter_air)

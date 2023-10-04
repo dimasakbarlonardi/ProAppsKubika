@@ -71,7 +71,6 @@
                     month
                 },
                 success: function(resp) {
-                    console.log(resp.html)
                     $('#presence_table').html(resp.html);
                 }
             })

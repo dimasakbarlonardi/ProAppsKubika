@@ -110,7 +110,6 @@
                 url: '/admin/units-by-tenant/' + id_tenant,
                 type: 'GET',
                 success: function(resp) {
-                    console.log(resp.data)
                     resp.data.map((item, i) => {
                         $('#id_unit').append(
                             `

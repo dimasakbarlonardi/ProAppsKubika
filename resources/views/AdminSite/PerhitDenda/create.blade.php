@@ -33,7 +33,7 @@
                     <div class="mt-5" id="cancel">
                         <button class="btn btn-danger"><a class="text-white" href="{{ route('perhitdendas.index')}}">Cancel</a></button>
                     </div>
-    
+
                     <div class="mt-5" id="biaya">
                         <h5> Pilih Biaya </h5>
                         <hr>
@@ -62,7 +62,7 @@
     <script>
         $(document).ready(function() {
             var status = $('#pilihbiayaipl').val();
-            console.log(status)
+
             {
                 $('#biaya').css('display', 'none')
             }

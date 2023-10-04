@@ -162,7 +162,6 @@
                         },
                         success: function(resp) {
                             alert(resp.status);
-                            console.log(resp.status);
                         }
                     })
                 } else {

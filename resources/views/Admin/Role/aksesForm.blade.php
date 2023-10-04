@@ -60,9 +60,6 @@
 @section('script')
 <script src="{{ asset('assets/js/crlcu_multiselect.min.js') }}"></script>
     <script>
-        console.log('asd')
-    </script>
-    <script>
         $('document').ready(function(){
             $('#search').multiselect({
                 search: {

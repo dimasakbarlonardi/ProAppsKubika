@@ -5,7 +5,7 @@
         <div class="card-header py-2">
             <div class="row flex-between-center">
                 <div class="col-aut6">
-                     
+
                 </div>
             </div>
         </div>
@@ -59,7 +59,7 @@
     <script>
         $(document).ready(function() {
             var status = $('#pilihbiayaipl').val();
-            console.log(status)
+
             {
                 $('#biaya').css('display', 'none')
             }

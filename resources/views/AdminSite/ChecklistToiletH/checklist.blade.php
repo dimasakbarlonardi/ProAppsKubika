@@ -95,7 +95,6 @@
                     right: '<input type="text" name="q" class="form-control" placeholder="Search..." />',
                 },
                 fireSearch: function(value) {
-                    console.log(value)
                     return value.length > 2;
                 }
             });

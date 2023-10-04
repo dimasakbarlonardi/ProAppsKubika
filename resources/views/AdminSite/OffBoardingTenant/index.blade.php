@@ -161,7 +161,6 @@
                     type: 'GET',
                     success: function(data) {
                         units = data.nama_unit.length
-                        console.log(units)
                         $('#nama_pasangan_penjamin').val(data.tenant.nama_pasangan_penjamin)
                         $('#nik_pasangan_penjamin').val(data.tenant.nik_pasangan_penjamin)
                         $('#no_telp_penjamin').val(data.tenant.no_telp_penjamin)

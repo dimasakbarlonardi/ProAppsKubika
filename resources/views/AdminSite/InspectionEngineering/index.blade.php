@@ -68,7 +68,7 @@
                                             <option value="{{ $checklistahu->no_checklist_ahu }}"> {{ $checklistahu->no_checklist_ahu }} </option>
                                             @endforeach
                                     </select>
-                                </div>     
+                                </div>
                                 <div class="mb-3 mt-n2">
                                     <label class="mb-1">User Inspection AHU</label>
                                     <select class="form-select form-select-sm" name="user" required id="user">
@@ -76,7 +76,7 @@
                                             <option value="{{ $iduser->id }}"> {{ $iduser->name }}</option>
                                         @endforeach
                                     </select>
-                                </div>   
+                                </div>
                                 <div class="card-footer border-top border-200 py-x1">
                                     <button type="reset" class="btn btn-primary w-100">Reset</button>
                                 </div>
@@ -99,9 +99,6 @@
                 var tgl_checklist = $('#tgl_checklist').val()
                 var date_from = tgl_checklist.substr(0, 10)
                 var date_to = tgl_checklist.substr(14, 23)
-
-                console.log("date from : ", date_from)
-                console.log("date to : ", date_to)
 
                 index(no_checklist_ahu, date_from, date_to)
             })
@@ -129,20 +126,20 @@
                     data.checklists.map((item, i) => {
                         $('#checklist_body').append(`
                             <tr>
-                                <th scope="row">${i + 1}</th>                           
-                                <td>${item.tgl_checklist}</td>                            
+                                <th scope="row">${i + 1}</th>
+                                <td>${item.tgl_checklist}</td>
                                 <td>${item.no_checklist_ahu}</td>
                                 <td>
                                     <div class="dropdown font-sans-serif position-static"><button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal" type="button" id="order-dropdown-0" data-bs-toggle="dropdown" data-boundary="viewport" aria-haspopup="true" aria-expanded="false"><span class="fas fa-ellipsis-h fs--1"></span></button>
                                         <div class="dropdown-menu dropdown-menu-end border py-0" aria-labelledby="order-dropdown-0">
                                             <a class="dropdown-item text" href="/admin/checklistahus/${item.no_checklist_ahu}">Detail ahu Inspection</a>
                                         </div>
-                                    </div>                        
+                                    </div>
                                 </td>
                             </tr>
                         `)
                     })
-                    
+
                 }
             })
         }

@@ -46,7 +46,7 @@
     <link href="{{ url('assets/vendors/simplebar/simplebar.min.css') }}" rel="stylesheet">
 
     <link href="{{ url('assets/css/theme.min.css') }}" rel="stylesheet" id="style-default">
-    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
+    {{-- <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
     <script>
         // Enable pusher logging - don't include this in production
         Pusher.logToConsole = true;
@@ -59,7 +59,7 @@
         channel.bind('my-event', function(data) {
             alert(JSON.stringify(data));
         });
-    </script>
+    </script> --}}
 </head>
 
 <body>
@@ -286,7 +286,6 @@
                 },
                 type: 'GET',
                 success: function(data) {
-                    console.log(data)
                     if (data.length > 0) {
                         var is_notif = 0;
                         data.map((item) => {
@@ -294,7 +293,7 @@
                                 is_notif += 1;
                             }
                             var current = new Date();
-                            console.log(item.sender);
+
                             $('#notification-lists').append(`
                                 <div class="list-group-item">
                                     <a class="notification notification-flush ${item.is_read == 1 ? 'notification' : 'notification-unread' }"
@@ -378,8 +377,8 @@
             return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
         }
     </script>
-    <script src="{{ asset('js/app.js') }}"></script>
-    <script>
+    {{-- <script src="{{ asset('js/app.js') }}"></script> --}}
+    {{-- <script>
         document.addEventListener("DOMContentLoaded", function(event) {
             Echo.channel("hello-channel")
                 .listen('HelloEvent', (e) => {
@@ -387,7 +386,7 @@
                     console.log(e.data);
                 })
         });
-    </script>
+    </script> --}}
     @yield('script')
 </body>
 

@@ -160,7 +160,6 @@
                     type: 'GET',
                     success: function(data) {
                         units = data.nama_unit.length
-                        console.log(data)
                         $('#nama_kontak_pic').val(data.owner.nama_kontak_pic)
                         $('#nik_kontak_pic').val(data.owner.nik_kontak_pic)
                         $('#no_telp_kontak_pic').val(data.owner.no_telp_kontak_pic)

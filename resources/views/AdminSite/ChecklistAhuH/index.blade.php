@@ -64,7 +64,7 @@
                                                 href="{{ route('inspectionSchedules', $checklistahu->id_equiqment_engineering) }}">
                                                 Schedules
                                             </a>
-                                            <a class="dropdown-item text" 
+                                            <a class="dropdown-item text"
                                                 href="{{ route('checklistahus.edit', $checklistahu->id_equiqment_engineering) }}">
                                                 Edit Equipment
                                             </a>
@@ -113,64 +113,3 @@
         new DataTable('#table-engineering');
     </script>
 @endsection
-
-
-{{-- @section('script')
-    <script src="{{ asset('assets/js/flatpickr.js') }}"></script>
-    <script>
-        $('document').ready(function() {
-
-            $('#tgl_checklist').on('change', function() {
-                var no_checklist_ahu = $('#no_checklist_ahu').val()
-                var tgl_checklist = $('#tgl_checklist').val()
-                var date_from = tgl_checklist.substr(0, 10)
-                var date_to = tgl_checklist.substr(14, 23)
-
-                console.log("date from : ", date_from)
-                console.log("date to : ", date_to)
-
-                index(no_checklist_ahu, date_from, date_to)
-            })
-            $('#no_checklist_ahu').on('change', function() {
-                var no_checklist_ahu = $('#no_checklist_ahu').val()
-                var tgl_checklist = $('#tgl_checklist').val()
-                var date_from = tgl_checklist.substr(0, 10)
-                var date_to = tgl_checklist.substr(14, 23)
-
-                index(no_checklist_ahu, date_from, date_to)
-            })
-        })
-
-        function index(no_checklist_ahu, date_from, date_to) {
-            $.ajax({
-                url: '/admin/checklist-filter-ahu',
-                type: 'GET',
-                data: {
-                    no_checklist_ahu,
-                    date_from,
-                    date_to,
-                },
-                success: function(data) {
-                    $('#checklist_body').html("")
-                    data.checklists.map((item, i) => {
-                        $('#checklist_body').append(`
-                            <tr>
-                                <th scope="row">${i + 1}</th>
-                                <td>${item.tgl_checklist}</td>
-                                <td>${item.no_checklist_ahu}</td>
-                                <td>
-                                    <div class="dropdown font-sans-serif position-static"><button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal" type="button" id="order-dropdown-0" data-bs-toggle="dropdown" data-boundary="viewport" aria-haspopup="true" aria-expanded="false"><span class="fas fa-ellipsis-h fs--1"></span></button>
-                                        <div class="dropdown-menu dropdown-menu-end border py-0" aria-labelledby="order-dropdown-0">
-                                            <a class="dropdown-item text" href="/admin/checklistahus/${item.no_checklist_ahu}">Detail ahu Inspection</a>
-                                        </div>
-                                    </div>
-                                </td>
-                            </tr>
-                        `)
-                    })
-
-                }
-            })
-        }
-    </script>
-@endsection --}}

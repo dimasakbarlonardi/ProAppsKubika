@@ -126,7 +126,7 @@
 
                 <div class="penjamin mt-5" id="penjamin">
                     <h5>Pasangan</h5>
-                    <hr> 
+                    <hr>
                     <div class="row mb-3">
                         <div class="col-6">
                             <label class="form-label">Nama Pasangan</label>
@@ -218,7 +218,7 @@
 <script>
     $(document).ready(function() {
         var status = $('#id_status_kawin').val();
-        console.log(status)
+
         if (status == 1) {
             $('#penjamin').css('display', 'none')
             $('#pasangan').css('display', 'block')

@@ -57,7 +57,6 @@
                 url: `/admin/jenis-denda/isactive/${id}`,
                 type: 'POST',
                 success: function(data) {
-                    console.log(data.data.status);
                     if (data.data.status === 'OK') {
 
                         window.location.reload()

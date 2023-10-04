@@ -23,12 +23,12 @@
                         </div>
                         <div class="col-6 mb-3">
                             <label class="form-label" for="timepicker1">Start Time</label>
-                            <input class="form-control datetimepicker" name="time_in" id="timepicker1" type="text" placeholder="H:i" 
+                            <input class="form-control datetimepicker" name="time_in" id="timepicker1" type="text" placeholder="H:i"
                                 data-options='{"enableTime":true,"noCalendar":true,"dateFormat":"H:i","disableMobile":true}' />
                         </div>
                         <div class="col-6 mb-3">
                             <label class="form-label" for="timepicker1">End Time</label>
-                            <input class="form-control datetimepicker" name="time_out" id="timepicker1" type="text" placeholder="H:i" 
+                            <input class="form-control datetimepicker" name="time_out" id="timepicker1" type="text" placeholder="H:i"
                                 data-options='{"enableTime":true,"noCalendar":true,"dateFormat":"H:i","disableMobile":true}' />
                         </div>
                         <div class="col-6 mb-3">
@@ -40,7 +40,7 @@
                                 @endforeach
                             </select>
                         </div>
-                       
+
                     </div>
                 @csrf
                 <div class="form-group">
@@ -126,7 +126,6 @@
                     right: '<input type="text" name="q" class="form-control" placeholder="Search..." />',
                 },
                 fireSearch: function(value) {
-                    console.log(value)
                     return value.length > 2;
                 }
             });

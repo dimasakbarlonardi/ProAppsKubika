@@ -172,7 +172,6 @@
             if (optionMenu == false) {
                 $('#bulk-action-menu').css('display', 'none');
             }
-            console.log(optionMenu);
         })
         $('#applyBulk').on('click', function() {
             if (confirm('Are you sure?')) {
@@ -205,7 +204,6 @@
                     'type': 'water'
                 },
                 success: function(resp) {
-                    console.log(resp)
                     if (resp.status === 'ok') {
                         Swal.fire(
                             'Success!',

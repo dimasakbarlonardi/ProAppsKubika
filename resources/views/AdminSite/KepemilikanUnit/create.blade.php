@@ -158,14 +158,12 @@
                     url: '/admin/kepemilikan-unit/' + id_pemilik,
                     type: 'GET',
                     success: function(data) {
-                        console.log(data.units)
                         $.each(data.units, function(key, value) {
-                            console.log(key, value.id_unit)
                             $("#id_unit").append('<option value=' + value.id_unit +
                                 '>' + value.nama_unit + '</option>');
                         });
                     }
-                }) 
+                })
 
             })
 
@@ -177,7 +175,6 @@
                     url: '/admin/unit-by-id/' + id_unit,
                     type: 'GET',
                     success: function(data) {
-                        console.log(data.unit)
                         $('#luas_unit').val(data.unit.luas_unit)
                         $('#barcode_unit').val(data.unit.barcode_unit)
                         $('#barcode_meter_air').val(data.unit.barcode_meter_air)

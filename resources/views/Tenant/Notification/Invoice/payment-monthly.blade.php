@@ -31,7 +31,7 @@
 @section('script')
     <script>
         var expiry = '{{ $transaction->expiry_time }}'
-        console.log(expiry);
+
         // Set the date we're counting down to
         var countDownDate = new Date(expiry).getTime();
 

@@ -119,7 +119,6 @@
                                     <span class="mx-1">|</span><span class="fst-italic">${new Date(data.data.created_at).toLocaleTimeString()} (${timeDifference(new Date(), new Date(data.data.created_at))})</span></p>
                             </div>
                         `)
-                        console.log(data.data.tenant)
                     }
                 })
             })

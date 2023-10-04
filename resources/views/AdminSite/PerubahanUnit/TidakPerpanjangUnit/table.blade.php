@@ -147,7 +147,7 @@
                         <button type="button" data-toggle="modal" data-target="#modalValidation"
                         class="btn btn-sm btn-warning" id="btnPerpanjangSewa">Tidak Perpanjang Unit</button>
                         </div>
-                        
+
                         <div class="modal fade" id="modalValidation" data-bs-keyboard="false" data-bs-backdrop="static"
                         tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                         <div class="modal-dialog modal-md mt-6" role="document">
@@ -210,7 +210,6 @@ $('#btnPerpanjangSewa').on('click', function() {
                     'id_unit':id_unit
                 },
                 success: function(resp) {
-                    console.log(resp.errors)
                     if (resp.errors.length > 0) {
                         resp.errors.map((item) => {
                             $('#modalListErrors').append(`
@@ -242,9 +241,7 @@ $('#btnPerpanjangSewa').on('click', function() {
                     url: '/admin/tenant-unit/' + id_pemilik,
                     type: 'GET',
                     success: function(data) {
-                        console.log(data.units)
                         $.each(data.units, function(key, value) {
-                            console.log(key, value.id_unit)
                             $("#id_unit").append(value.id_unit +
                                 +value.nama_unit);
 
@@ -260,7 +257,6 @@ $('#btnPerpanjangSewa').on('click', function() {
                 url: '/admin/unit-by-id/' + id_unit,
                 type: 'GET',
                 success: function(data) {
-                    console.log(data.unit)
                     $('#luas_unit').val(data.unit.luas_unit)
                     $('#barcode_unit').val(data.unit.barcode_unit)
                     $('#barcode_meter_air').val(data.unit.barcode_meter_air)
