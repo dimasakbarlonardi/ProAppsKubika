@@ -15,7 +15,9 @@ use App\Models\StatusHunianTenant;
 use App\Models\StatusKawin;
 use App\Models\User;
 use FTP\Connection;
+use File;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class TenantController extends Controller
@@ -29,10 +31,8 @@ class TenantController extends Controller
     public function index(Request $request)
     {
         $conn = ConnectionDB::setConnection(new Tenant());
-        $user_id = $request->user()->id;
 
         $data['tenants'] = $conn->get();
-        $data['idusers'] = Login::where('id', $user_id)->get();
 
         return view('AdminSite.Tenant.index', $data);
     }
@@ -90,15 +90,12 @@ class TenantController extends Controller
         try {
             DB::beginTransaction();
 
-            $id_user = $request->user()->id;
-            $login = Login::where('id', $id_user)->with('site')->first();
-            $site = $login->site->id_site;
+            $site = $request->user()->id_site;
 
-            $connTenant->create([
+            $tenant = $connTenant->create([
                 'id_tenant' => sprintf("%03d", $count),
                 'email_tenant' => $request->email_tenant,
                 'id_site' => $site,
-                'id_user' => $id_user,
                 'id_card_type' => $request->id_card_type,
                 'nik_tenant' => $request->nik_tenant,
                 'nama_tenant' => $request->nama_tenant,
@@ -118,6 +115,18 @@ class TenantController extends Controller
                 'no_telp_penjamin' => $request->no_telp_penjamin
             ]);
 
+            $file = $request->file('profile_picture');
+
+            if ($file) {
+                $fileName = $tenant->id_tenant . '-' .   $file->getClientOriginalName();
+                $outputTenantImage = '/public/' . $site . '/img/profile_picture/' . $fileName;
+                $tenantImage = '/storage/' . $site . '/img/profile_picture/' . $fileName;
+
+                Storage::disk('local')->put($outputTenantImage, File::get($file));
+
+                $tenant->profile_picture = $tenantImage;
+                $tenant->save();
+            }
             DB::commit();
 
             Alert::success('Berhasil', 'Berhasil menambahkan tenant');

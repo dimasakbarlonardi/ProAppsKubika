@@ -6,7 +6,7 @@
                 <th scope="col">Nama Member</th>
                 <th scope="col">Hubungan Tenant</th>
                 <th scope="col">No Telp Member</th>
-                <th scope="col">ID Status Tinggal</th>
+                {{-- <th scope="col">ID Status Tinggal</th> --}}
                 <th scope="col">ID Tenant</th>
                 <th class="text-end" scope="col">Actions</th>
             </tr>
@@ -18,12 +18,12 @@
                     <td>{{ $tm->nama_tenant_member }}</td>
                     <td>{{ $tm->hubungan_tenant }}</td>
                     <td>{{ $tm->no_telp_member }}</td>
-                    <td>{{ $tm->status->status_tinggal }}</td>
+                    {{-- <td>{{ $tm->status->status_tinggal }}</td> --}}
                     <td>{{ $tm->tenant->nama_tenant }}</td>
                     <td class="text-end">
                         <div>
-                      
-                            
+
+
                             <form action="{{ route('deleteTenantMember', $tm->id_tenant_member) }}" method="post" class="d-inline">
                                 @csrf
                                 <button class="btn btn-link p-0 ms-2" type="submit" data-bs-toggle="tooltip"

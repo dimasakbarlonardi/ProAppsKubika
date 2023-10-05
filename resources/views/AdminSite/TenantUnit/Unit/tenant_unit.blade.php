@@ -13,8 +13,8 @@
                     <div class="d-flex align-items-start align-items-sm-center">
                         <a class="d-none d-sm-block" href="../../app/support-desk/contact-details.html">
                             <div class="avatar avatar-xl avatar-3xl">
-                                <img src="{{ $tenant->profile_picture ? '/' . $tenant->profile_picture : '/assets/img/team/3-thumb.png' }}" alt="akmal"
-                                    class="avatar-image" />
+                                <img src="{{ $tenant->profile_picture ? url($tenant->profile_picture) : '/assets/img/team/3-thumb.png' }}"
+                                    alt="akmal" class="avatar-image" />
                             </div>
                         </a>
                         <div class="ms-1 ms-sm-3">
@@ -24,16 +24,14 @@
                                 </a>
                             </p>
                             <p class="fw-semi-bold mb-3 mb-sm-2">
-                                <a class="text-black" href="{{ route('tenantunits.show',$tu->id_tenant_unit ) }}">
+                                <a class="text-black" href="{{ route('tenantunits.show', $tu->id_tenant_unit) }}">
                                     {{ $tu->unit->nama_unit }}
                                 </a>
                             </p>
                             <div class="row align-items-center gx-0 gy-2">
                                 <div class="col-auto me-2">
                                     <h6 class="client mb-0">
-                                        <a class="text-800 d-flex align-items-center gap-1"><span
-                                                class="fas fa-user"
-                                                data-fa-transform="shrink-3 up-1"></span><span>{{ $tu->Owner->nama_pemilik }}</span></a>
+                                        <span class="badge  bg-info">{{ $tu->is_owner == 1 ? 'Owner' : 'Rent' }}</span>
                                     </h6>
                                 </div>
                             </div>
@@ -46,7 +44,7 @@
             </div>
         @endforeach
     </div>
-</div> 
+</div>
 
 <div class="modal fade" id="tambah-unit" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 800px">
@@ -58,29 +56,33 @@
             </div>
             <div class="modal-body p-0">
                 <div class="rounded-top-lg py-3 ps-4 pe-6 bg-light">
-                    <h4 class="mb-1" id="modalExampleDemoLabel">Tambah Unit</h4>
+                    <h4 class="mb-1" id="modalExampleDemoLabel">Add Unit</h4>
                 </div>
                 <div class="p-4 pb-0">
                     <form action="{{ route('storeTenantUnit') }}" method="post">
                         @csrf
                         <div class="mb-3">
                             <div class="row">
-                                  <div class="col-6">
-                                    <label class="form-label">Unit :</label>
-                                    <select class="form-control" name="id_unit" required>
-                                        <option selected disabled>-- Pilih Unit --</option>
-                                        @foreach ($getCreateUnits as $unit)
-                                            <option value="{{ $unit->id_unit }}">{{ $unit->nama_unit }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
                                 <div class="col-6">
-                                    <label class="col-form-label">Owner :</label>
-                                    <select class="form-control" name="id_pemilik" required>
-                                        @foreach ($owners as $owner)
-                                            <option value="{{ $owner->id_pemilik }}">
-                                                {{ $owner->nama_pemilik }}</option>
-                                        @endforeach
+                                    <div class="col-6">
+                                        <label class="col-form-label">Is Owner:</label>
+                                        <select class="form-control" name="is_owner" id="is_owner" required>
+                                            <option value="1">Yes</option>
+                                            <option value="0">No</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="row">
+                                <div class="col-6">
+                                    <label class="form-label">Unit :</label>
+                                    <select class="form-control" name="id_unit" id="select_unit" required>
+                                        <option selected disabled>-- Select Unit --</option>
+                                        {{-- @foreach ($getCreateUnits as $unit)
+                                            <option value="{{ $unit->id_unit }}">{{ $unit->nama_unit }}</option>
+                                        @endforeach --}}
                                     </select>
                                 </div>
                                 <div class="col-6">
@@ -134,7 +136,7 @@
                             <button class="btn btn-primary" type="submit">Simpan
                             </button>
                         </div>
-                        <input type="hidden" name="id_tenant" value="{{ $tenant->id_tenant }}">
+                        <input type="hidden" name="id_tenant" id="id_tenant" value="{{ $tenant->id_tenant }}">
                     </form>
                 </div>
             </div>
@@ -160,6 +162,39 @@
 
 @section('script')
     <script>
+        $('document').ready(function() {
+            var is_owner = $('#is_owner').val();
+            getUnitForCreate(is_owner);
+        })
+
+        $('#is_owner').on('change', function() {
+            var is_owner = $(this).val();
+            getUnitForCreate(is_owner);
+        })
+
+        function getUnitForCreate(is_owner)
+        {
+            var id_tenant = $('#id_tenant').val();
+            $('#select_unit').html("");
+            $.ajax({
+                url: '/admin/tenant-unit/unit',
+                type: 'POST',
+                data: {
+                    'is_owner': is_owner,
+                    'id_tenant': id_tenant,
+                },
+                success: function(resp) {
+                    var data = resp.data;
+
+                    data.map((item, i) => {
+                        $('#select_unit').append(`
+                            <option value="${item.id_unit}">${item.nama_unit}</option>
+                        `)
+                    })
+                }
+            })
+        }
+
         function editUnitModal(id) {
             $.ajax({
                 url: '/admin/get/tenantunits-edit/' + id,

@@ -103,18 +103,21 @@ class UserController extends Controller
             $user = $getKaryawan;
             $nama = $getKaryawan->nama_karyawan;
             $email = $getKaryawan->email_karyawan;
+            $profile_picture = $getKaryawan->profile_picture;
             $user_category = 2;
         }
         if (isset($getOwner)) {
             $user = $getOwner;
             $nama = $getOwner->nama_pemilik;
             $email = $getOwner->email_owner;
+            $profile_picture = $getOwner->profile_picture;
             $user_category = 1;
         }
         if (isset($getTenant)) {
             $user = $getTenant;
             $nama = $getTenant->nama_tenant;
             $email = $getTenant->email_tenant;
+            $profile_picture = $getTenant->profile_picture;
             $user_category = 3;
         }
 
@@ -136,7 +139,8 @@ class UserController extends Controller
                 'password_user' => Hash::make($request->password_user),
                 'id_status_user' => 1,
                 'id_role_hdr' => $request->id_role_hdr,
-                'user_category' => $user_category
+                'user_category' => $user_category,
+                'profile_picture' => $profile_picture
             ]);
 
             $user->update([

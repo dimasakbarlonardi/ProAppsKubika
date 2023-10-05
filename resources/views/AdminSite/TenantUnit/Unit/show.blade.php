@@ -24,7 +24,7 @@
                     </div>
                     <div class="col-4 mb-3">
                         <label class="form-label">Owner</label>
-                        <input type="text" value="{{ $tenantunits->Owner->nama_pemilik}}" class="form-control" readonly>
+                        <input type="text" value="{{ $tenantunits->Owner($tenantunits->unit->id_unit)->Tenant->nama_tenant }}" class="form-control" readonly>
                     </div>
                     <div class="col-4 mb-3">
                         <label class="form-label">Tanggal Masuk - Tanggal Keluar</label>

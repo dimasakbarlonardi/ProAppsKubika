@@ -47,7 +47,7 @@ class Tenant extends Model
         'alamat_ktp_pasangan_penjamin',
         'alamat_tinggal_pasangan_penjamin',
         'hubungan_penjamin',
-        'no_telp_penjamin'
+        'no_telp_penjamin',
 
     ];
 

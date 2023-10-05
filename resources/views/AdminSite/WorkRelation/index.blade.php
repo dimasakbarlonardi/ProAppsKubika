@@ -7,9 +7,6 @@
             <div class="my-3 col-auto">
                 <h6 class="mb-0 text-white">List Work Relation</h6>
             </div>
-            <div class="col-auto d-flex">
-                <a class="btn btn-falcon-default text-600 btn-sm" href="{{ route('workrelations.create') }}"><span class="fas fa-plus fs--2 me-1"></span>Create Work Relation</a>
-            </div>
         </div>
     </div>
     <div class="p-5">
