@@ -5,20 +5,20 @@
     <div class="card-header py-2">
         <div class="row flex-between-center">
             <div class="col-auto">
-                <h6 class="my-3 text-white">Tambah Karyawan</h6>
+                <h6 class="my-3 text-white">Create Employee</h6>
             </div>
         </div>
     </div>
     <div class="p-5">
-        <form method="post" action="{{ route('karyawans.store') }}">
+        <form method="post" action="{{ route('karyawans.store') }}" enctype="multipart/form-data">
             @csrf
             <div class="karyawan">
-                <h5>Karyawan</h5>
+                <h5>Employee</h5>
                 <hr>
                 <div class="mb-3">
                     <div class="row">
                         <div class="col-6">
-                            <label class="form-label">Nama Site</label>
+                            <label class="form-label">Site Name</label>
                             <input type="text" value="Park Royale" class="form-control" readonly>
                         </div>
                         <div class="col-6">
@@ -30,9 +30,9 @@
                 <div class="mb-3">
                     <div class="row">
                         <div class="col-6">
-                            <label class="form-label">Card Karyawan</label>
+                            <label class="form-label">ID Card</label>
                             <select class="form-control" name="id_card_type" required>
-                                <option selected disabled>-- Pilih ID Card --</option>
+                                <option selected disabled>-- Choose ID Card --</option>
                                 @foreach ($idcards as $idcard)
                                 <option value="{{ $idcard->id_card_type }}" @if (old('id_card_type')==$idcard->id_card_type) selected @endif>{{ $idcard->card_id_name }}
                                 </option>
@@ -40,7 +40,7 @@
                             </select>
                         </div>
                         <div class="col-6">
-                            <label class="form-label">Nik Karyawan</label>
+                            <label class="form-label">ID Number</label>
                             <input type="text" value="{{ old('nik_karyawan') }}" maxlength="16" name="nik_karyawan" class="form-control" required>
                         </div>
                     </div>
@@ -48,11 +48,11 @@
                 <div class="mb-3">
                     <div class="row">
                         <div class="col-6">
-                            <label class="form-label">Nama Karyawan</label>
+                            <label class="form-label">Employee Name</label>
                             <input type="text" value="{{ old('nama_karyawan') }}" name="nama_karyawan" class="form-control" required>
                         </div>
                         <div class="col-6">
-                            <label class="form-label">Kewarganegaraan</label>
+                            <label class="form-label">Citizenship</label>
                             <input type="text" value="{{ old('kewarganegaraan') }}" name="kewarganegaraan" class="form-control" required>
                         </div>
                     </div>
@@ -64,7 +64,7 @@
                             <input type="date" value="{{ old('masa_berlaku_id') }}" name="masa_berlaku_id" class="form-control" required>
                         </div>
                         <div class="col-6">
-                            <label class="form-label">Alamat KTP Karyawan</label>
+                            <label class="form-label">Domicile</label>
                             <input type="text" value="{{ old('alamat_ktp_karyawan') }}" name="alamat_ktp_karyawan" class="form-control" required>
                         </div>
                     </div>
@@ -72,11 +72,11 @@
                 <div class="mb-3">
                     <div class="row">
                         <div class="col-6">
-                            <label class="form-label">No Telp Karyawan</label>
+                            <label class="form-label">Call Number</label>
                             <input type="text" value="{{ old('no_telp_karyawan') }}" name="no_telp_karyawan" class="form-control" required>
                         </div>
                         <div class="col-6">
-                            <label class="form-label">Tanggal Masuk</label>
+                            <label class="form-label">Join Date</label>
                             <input type="date" value="{{ old('tgl_masuk') }}" name="tgl_masuk" class="form-control" required>
                         </div>
                     </div>
@@ -84,7 +84,7 @@
                 <div class="mb-3">
                     <div class="row">
                         <div class="col-6">
-                            <label class="form-label">Tanggal Keluar</label>
+                            <label class="form-label">Resign Date</label>
                             <input type="date" value="{{ old('tgl_keluar') }}" name="tgl_keluar" class="form-control" required>
                         </div>
                         <div class="col-6">
@@ -114,7 +114,7 @@
                             </select>
                         </div>
                         <div class="col-6">
-                            <label class="form-label">Jabatan</label>
+                            <label class="form-label">Position</label>
                             <select class="form-control" name="id_jabatan" required>
                                 <option selected disabled>-- Pilih Jabatan --</option>
                                 @foreach ($jabatans as $jabatan)
@@ -140,7 +140,7 @@
                             </select>
                         </div>
                         <div class="col-6">
-                            <label class="form-label">Tanggal Lahir</label>
+                            <label class="form-label">Date Of Birth</label>
                             <input type="date" value="{{ old('tgl_lahir') }}" name="tgl_lahir" class="form-control" required>
                         </div>
                     </div>
@@ -148,11 +148,11 @@
                 <div class="mb-3">
                     <div class="row">
                         <div class="col-6">
-                            <label class="form-label">Tempat Lahir</label>
+                            <label class="form-label">Place Of Birth</label>
                             <input type="text" value="{{ old('tempat_lahir') }}" name="tempat_lahir" class="form-control" required>
                         </div>
                         <div class="col-6">
-                            <label class="form-label">Agama</label>
+                            <label class="form-label">Religion</label>
                             <select class="form-control" name="id_agama" required>
                                 <option selected disabled>-- Pilih Agama --</option>
                                 @foreach ($agamas as $agama)
@@ -166,7 +166,7 @@
                 <div class="mb-3">
                     <div class="row">
                         <div class="col-6">
-                            <label class="form-label">Jenis Kelamin</label>
+                            <label class="form-label">Gender</label>
                             <select class="form-control" name="id_jenis_kelamin" required>
                                 <option selected disabled>-- Pilih Jenis Kelamin --</option>
                                 @foreach ($jeniskelamins as $jeniskelamin)
@@ -191,7 +191,7 @@
                 <div class="mb-3">
                     <div class="row">
                         <div class="col-6">
-                            <label class="form-label">Bisa Approve</label>
+                            <label class="form-label">Approver</label>
                             <select class="form-control" name="is_can_approve" id="is_can_approve" required>
                                 <option selected disabled>-- Pilih Status --</option>
                                 <option value="1">Yes</option>
@@ -199,7 +199,7 @@
                             </select>
                         </div>
                         <div class="col-6">
-                            <label class="form-label">Status Kawin</label>
+                            <label class="form-label">Marital Status</label>
                             <select class="form-control" name="id_status_kawin" id="id_status_kawin" required>
                                 <option selected disabled>-- Pilih Status Kawin --</option>
                                 <option value="1">
@@ -210,20 +210,26 @@
                                 </option>
                             </select>
                         </div>
+                        <div class="col-6 mt-3">
+                            <div class="col-6">
+                                <label class="form-label">Image Employee</label>
+                                <input class="form-control" type="file" name="profile_picture">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="penjamin mt-5" id="penjamin">
-                <h5>Penjamin</h5>
+                <h5>Emergency Contact</h5>
                 <hr>
                 <div class="mb-3">
                     <div class="row">
                         <div class="col-6">
-                            <label class="form-label">Nama Pasangan Penjamin</label>
+                            <label class="form-label">Name</label>
                             <input type="text" value="{{ old('nama_pasangan_penjamin') }}" name="nama_pasangan_penjamin" class="form-control">
                         </div>
                         <div class="col-6">
-                            <label class="form-label">NIK Pasangan Penjamin</label>
+                            <label class="form-label">ID Number</label>
                             <input type="text" value="{{ old('nik_pasangan_penjamin') }}" maxlength="16" name="nik_pasangan_penjamin" class="form-control">
                         </div>
                     </div>
@@ -231,11 +237,11 @@
                 <div class="mb-3">
                     <div class="row">
                         <div class="col-6">
-                            <label class="form-label">Alamat KTP Pasangan Penjamin</label>
+                            <label class="form-label">Domicile ID Card</label>
                             <input type="text" value="{{ old('alamat_ktp_pasangan_penjamin') }}" name="alamat_ktp_pasangan_penjamin" class="form-control">
                         </div>
                         <div class="col-6">
-                            <label class="form-label">Alamat Tinggal Pasangan Penjamin</label>
+                            <label class="form-label">Domicile</label>
                             <input type="text" value="{{ old('alamat_tinggal_pasangan_penjamin') }}" name="alamat_tinggal_pasangan_penjamin" class="form-control">
                         </div>
                     </div>
@@ -243,11 +249,11 @@
                 <div class="mb-3">
                     <div class="row">
                         <div class="col-6">
-                            <label class="form-label">Hubungan Penjamin</label>
+                            <label class="form-label">Relation</label>
                             <input type="text" value="{{ old('hubungan_penjamin') }}" name="hubungan_penjamin" class="form-control">
                         </div>
                         <div class="col-6">
-                            <label class="form-label">No Telp Penjamin</label>
+                            <label class="form-label">Call Number</label>
                             <input type="text" value="{{ old('no_telp_penjamin') }}" name="no_telp_penjamin" class="form-control">
                         </div>
                     </div>

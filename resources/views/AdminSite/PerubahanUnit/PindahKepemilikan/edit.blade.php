@@ -10,7 +10,8 @@
             </div>
         </div>
         <div class="p-5">
-            <form method="post" action="{{ route('offkepemilkanunits.store')}}">
+            <form method="post" action="{{ route('deleteKepemilikanUnit', $kepemilikans->id_pemilik)}}">
+            @method('POST')
                 @csrf
                 <div class="mb-5">
                     <div class="row">
