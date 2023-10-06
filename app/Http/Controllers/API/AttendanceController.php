@@ -23,10 +23,19 @@ class AttendanceController extends Controller
         $user = $request->user();
         $site = Site::find($user->id_site);
 
-        return ResponseFormatter::success([
+        $data = [];
+
+        $coordinate = [
+            'site_name' => 'Holding',
             'lat' => $site->lat,
             'long' => $site->long,
-        ], 'Success get site location');
+        ];
+
+        $data[] = $coordinate;
+
+        return ResponseFormatter::success(
+            $data,
+            'Success get site location');
     }
 
     function attend($karyawan)
