@@ -15,7 +15,15 @@ class InvoiceController extends Controller
 
         $data['transactions'] = $connCR->get();
 
-        // dd($data);
         return view('AdminSite.Invoice.index', $data);
+    }
+
+    public function show($id)
+    {
+        $connCR = ConnectionDB::setConnection(new CashReceipt());
+
+        $data['transaction'] = $connCR->find($id);
+
+        return view('AdminSite.Invoice.show', $data);
     }
 }

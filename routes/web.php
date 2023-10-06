@@ -604,6 +604,7 @@ Route::prefix('admin')->group(function () {
         Route::post('blast-invoice', [BillingController::class, 'blastMonthlyInvoice'])->name('blastMonthlyInvoice');
         // Invoice index
         Route::get('invoices', [InvoiceController::class, 'index'])->name('invoices');
+        Route::get('invoice/{id}', [InvoiceController::class, 'show'])->name('showInvoices');
 
         // Payment monthly tenant
         Route::post('payment-monthly-page/{id}', [BillingController::class, 'generatePaymentMonthly'])->name('generatePaymentMonthly');
