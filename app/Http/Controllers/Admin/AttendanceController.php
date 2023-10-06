@@ -104,4 +104,9 @@ class AttendanceController extends Controller
 
         return $d;
     }
+
+    public function coordinates()
+    {
+        return view('AdminSite.Attendance.coordinates');
+    }
 }

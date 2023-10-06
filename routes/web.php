@@ -656,9 +656,10 @@ Route::prefix('admin')->group(function () {
         // presences
         Route::get('/presences', [AttendanceController::class, 'index'])->name('presences');
         Route::get('/presences-by-month', [AttendanceController::class, 'presenceByMonth']);
+        Route::get('/coordinates', [AttendanceController::class, 'coordinates'])->name('coordinates');
 
         // ---------------Parameter Attendance------------------
-        // -Request Attendance
+        // -Request Attendancence
         Route::resource('requesttype', RequestTypeController::class);
         // -Permit Type
         Route::resource('permithr', PermitHRController::class);
