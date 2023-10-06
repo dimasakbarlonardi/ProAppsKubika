@@ -27,6 +27,7 @@ class AttendanceController extends Controller
 
         $coordinate = [
             'site_name' => 'Holding',
+            'radius' => 30,
             'lat' => $site->lat,
             'long' => $site->long,
         ];
