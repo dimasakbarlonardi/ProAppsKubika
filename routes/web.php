@@ -469,12 +469,13 @@ Route::prefix('admin')->group(function () {
         Route::get('/perubahantenantunits-show/{id}', [PerubahanUnitController::class, 'showPerubahan'])->name('perubahanunit');
 
         Route::post('/update/tenantunits-perpanjangan/{id}', [PerubahanUnitController::class, 'updateTenantUnit'])->name('updateTenantUnit');
-        // Route::post('/update/kepemilikanunits-pindah/{id}', [PerubahanUnitController::class, 'updateKU'])->name('updateKU');
+        Route::post('/update/kepemilikanunits-pindah/{id}', [PerubahanUnitController::class, 'updateKU'])->name('updateKU');
         Route::post('/update/tenantunits-pindahkepemilikan/{id}', [PerubahanUnitController::class, 'deleteKepemilikanUnit'])->name('deleteKepemilikanUnit');
         Route::post('/update/tenantunits-perubahan/{id}', [PerubahanUnitController::class, 'updatePerubahanUnit'])->name('updatePerubahanUnit');
         Route::post('/update/tenantunits-tidakperpanjang/{id}', [PerubahanUnitController::class, 'deleteTenantUnit'])->name('deleteTenantUnit');
 
         Route::get('/validation/perubahan', [PerubahanUnitController::class, 'validationPerubahan'])->name('validationPerubahan');
+        Route::get('/validation/perubahan/owner', [PerubahanUnitController::class, 'validationPerubahanOwner'])->name('validationPerubahanOwner');
 
         // ---------Eng Parameter--------
 
