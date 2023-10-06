@@ -34,13 +34,13 @@ class OpenTicketController extends Controller
     public function index(Request $request)
     {
         $user = $request->session()->get('user');
-
+        
         $connRequest = ConnectionDB::setConnection(new OpenTicket());
+        $connUser = ConnectionDB::setConnection(new User());
         $connTenant = ConnectionDB::setConnection(new Tenant());
 
-        $tenant = $connTenant->where('id_user', Auth::user()->id)->first();
-
         if ($user->user_category == 3) {
+            $tenant = $connTenant->where('email_tenant', $user->login_user)->first();
             $data['tickets'] = $connRequest->where('id_tenant', $tenant->id_tenant)->get();
         } else {
             $data['tickets'] = $connRequest->latest()->get();
@@ -74,13 +74,13 @@ class OpenTicketController extends Controller
 
     public function store(Request $request)
     {
+        $user = $request->session()->get('user');
         $connOpenTicket = ConnectionDB::setConnection(new OpenTicket());
         $connSystem = ConnectionDB::setConnection(new System());
         $connUnit = ConnectionDB::setConnection(new Unit());
         $connTenant = ConnectionDB::setConnection(new Tenant());
 
-        $tenant = $connTenant->where('id_user', Auth::user()->id)->first();
-        $user = $request->session()->get('user');
+        $tenant = $connTenant->where('email_tenant', $user->login_user)->first();
 
         $system = $connSystem->find(1);
         $count = $system->sequence_notiket + 1;

@@ -53,22 +53,22 @@
                             <label class="form-label">Luas Unit</label>
                             <input type="text" name="luas_unit" class="form-control" required>
                         </div>
-                        <div class="col-6">
+                        <!-- <div class="col-6">
                             <label class="form-label">Barcode Unit</label>
                             <input type="text" name="barcode_unit" class="form-control" required>
-                        </div>
-                        <div class="col-6">
+                        </div> -->
+                        <!-- <div class="col-6">
                             <label class="form-label">Barcode Meter Air</label>
                             <input type="text" name="barcode_meter_air" class="form-control" required>
-                        </div>
-                        <div class="col-6">
+                        </div> -->
+                        <!-- <div class="col-6">
                             <label class="form-label">Barcode Meter Listrik</label>
                             <input type="text" name="barcode_meter_listrik" class="form-control" required>
-                        </div>
-                        <div class="col-6">
+                        </div> -->
+                        <!-- <div class="col-6">
                             <label class="form-label">Barcode Meter Gas</label>
                             <input type="text" name="barcode_meter_gas" class="form-control" required>
-                        </div>
+                        </div> -->
                         <div class="col-6">
                             <label class="form-label">No Meter Air</label>
                             <input type="text" name="no_meter_air" class="form-control" required>

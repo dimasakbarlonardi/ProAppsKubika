@@ -59,10 +59,10 @@
                 </div>
                 <div class="mb-3">
                     <div class="row">
-                        <div class="col-6">
+                        <!-- <div class="col-6">
                             <label class="form-label">Masa Berlaku ID</label>
                             <input type="date" value="{{ old('masa_berlaku_id') }}" name="masa_berlaku_id" class="form-control" required>
-                        </div>
+                        </div> -->
                         <div class="col-6">
                             <label class="form-label">Domicile</label>
                             <input type="text" value="{{ old('alamat_ktp_karyawan') }}" name="alamat_ktp_karyawan" class="form-control" required>
@@ -83,10 +83,10 @@
                 </div>
                 <div class="mb-3">
                     <div class="row">
-                        <div class="col-6">
+                        <!-- <div class="col-6">
                             <label class="form-label">Resign Date</label>
                             <input type="date" value="{{ old('tgl_keluar') }}" name="tgl_keluar" class="form-control" required>
-                        </div>
+                        </div> -->
                         <div class="col-6">
                             <label class="form-label">Departement</label>
                             <select class="form-control" name="id_departemen" required>
