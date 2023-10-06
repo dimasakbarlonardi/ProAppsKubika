@@ -70,6 +70,8 @@ class TenantUnitController extends Controller
         $tenant_units = $this->setConnection(new TenantUnit());
         $units = $this->setConnection(new Unit());
 
+        $idUnit = [];
+
         if ($request->is_owner == 1) {
             $tenant_units = $tenant_units->get();
             foreach ($tenant_units as $unit) {
@@ -85,7 +87,6 @@ class TenantUnitController extends Controller
             }
             $units = $units->whereIn('id_unit', $idUnit)->get();
         }
-        $idUnit = [];
 
         return response()->json([
             "data" => $units

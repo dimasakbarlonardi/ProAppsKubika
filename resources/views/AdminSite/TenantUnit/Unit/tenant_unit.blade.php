@@ -175,6 +175,15 @@
         function getUnitForCreate(is_owner)
         {
             var id_tenant = $('#id_tenant').val();
+            if (is_owner == 1) {
+                console.log("yes")
+                $('#periode').attr("disabled", true);
+                $('#tgl_keluar').attr("disabled", true);
+            } else {
+                $('#periode').attr("disabled", false);
+                $('#tgl_keluar').attr("disabled", false);
+            }
+
             $('#select_unit').html("");
             $.ajax({
                 url: '/admin/tenant-unit/unit',
