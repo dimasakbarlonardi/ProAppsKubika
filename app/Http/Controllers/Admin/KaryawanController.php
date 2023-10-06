@@ -21,7 +21,9 @@ use App\Models\StatusAktifKaryawan;
 use App\Models\StatusKaryawan;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use Symfony\Component\Console\Input\Input;
+use File;
 
 class KaryawanController extends Controller
 {
@@ -94,25 +96,15 @@ class KaryawanController extends Controller
      */
     public function store(Request $request)
     {
-        $connKaryawan = ConnectionDB::setConnection(new Karyawan());
-        // dd($request);
-
-        $checkNIK = $connKaryawan->where('nik_karyawan', $request->nik_karyawan)->first();
-        $checkEmail = $connKaryawan->where('email_karyawan', $request->email_karyawan)->first();
-
-        if (isset($checkNIK)) {
-            Alert::error('Maaf', 'NIK sudah terdaftar');
-            return redirect()->back()->withInput();
-        }
-
-        if (isset($checkEmail)) {
-            Alert::error('Maaf', 'Email sudah terdaftar');
-            return redirect()->back()->withInput();
-        }
+        // Validasi formulir lainnya
+        $request->validate([
+            // Aturan validasi untuk kolom formulir lainnya
+        ]);
 
         try {
             DB::beginTransaction();
 
+            $connKaryawan = ConnectionDB::setConnection(new Karyawan());
             $id_user = $request->user()->id;
             $login = Login::where('id', $id_user)->with('site')->first();
             $site = $login->site->id_site;
@@ -140,28 +132,36 @@ class KaryawanController extends Controller
                 'hubungan_penjamin' => $request->hubungan_penjamin,
                 'no_telp_penjamin' => $request->no_telp_penjamin,
                 'tgl_masuk' => $request->tgl_masuk,
-                'tgl_keluar'=> $request->tgl_keluar,
+                'tgl_keluar' => $request->tgl_keluar,
                 'id_jabatan' => $request->id_jabatan,
-                'id_divisi'=> $request->id_divisi,
-                'id_departemen'=> $request->id_departemen,
-                'id_penempatan'=> $request->id_penempatan,
-                'tempat_lahir'=> $request->tempat_lahir,
-                'tgl_lahir'=> $request->tgl_lahir,
-                'id_jenis_kelamin'=> $request->id_jenis_kelamin,
-                'id_agama'=> $request->id_agama,
-                'id_status_kawin'=> $request->id_status_kawin,
+                'id_divisi' => $request->id_divisi,
+                'id_departemen' => $request->id_departemen,
+                'id_penempatan' => $request->id_penempatan,
+                'tempat_lahir' => $request->tempat_lahir,
+                'tgl_lahir' => $request->tgl_lahir,
+                'id_jenis_kelamin' => $request->id_jenis_kelamin,
+                'id_agama' => $request->id_agama,
+                'id_status_kawin' => $request->id_status_kawin,
             ]);
-
-
+            
+            $file = $request->file('profile_picture');
+            if ($file) {
+                $fileName = $karyawan->id . '-' .   $file->getClientOriginalName();
+                $outputProfilePicture = '/public/' . $site . '/img/profile_picture/' . $fileName;
+                $profilePictureImage = '/storage/' . $site . '/img/profile_picture/' . $fileName;
+                
+                Storage::disk('local')->put($outputProfilePicture, File::get($file));
+                
+                $karyawan->profile_picture = $profilePictureImage;
+            }
+            
             $karyawan->id_karyawan = sprintf("%04d", $karyawan->id);
             $karyawan->save();
-
             DB::commit();
 
             Alert::success('Berhasil', 'Berhasil menambahkan karyawan');
 
             return redirect()->route('karyawans.index');
-
         } catch (\Throwable $e) {
             DB::rollBack();
             dd($e);
@@ -177,7 +177,7 @@ class KaryawanController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request,$id)
+    public function show(Request $request, $id)
     {
         $agama = ConnectionDB::setConnection(new Agama());
         $users = ConnectionDB::setConnection(new User());
@@ -212,7 +212,7 @@ class KaryawanController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Request $request,$id)
+    public function edit(Request $request, $id)
     {
         $connKaryawan = ConnectionDB::setConnection(new Karyawan());
         $user = $request->session()->get('user');

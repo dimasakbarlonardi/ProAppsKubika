@@ -58,8 +58,8 @@
                     <tr>
                         <th scope="row">{{ $key + 1 }}</th>
                         <td>
-                            <img src="{{ $karyawan->User ? asset($karyawan->User->profile_picture) : asset('/assets/img/team/3-thumb.png') }}" class="rounded-circle" style="max-width: 50px; height: 50px">
-                        </td>
+                            <img src="{{ $karyawan->User ? asset($karyawan->profile_picture) : asset('/assets/img/team/3-thumb.png') }}" class="rounded-circle" style="max-width: 50px; height: 50px">
+                        </td> 
                         <td>
                             {{ $karyawan->nama_karyawan }} <br>
                             <small>{{ $karyawan->email_karyawan }}</small>
@@ -71,9 +71,9 @@
                             {{ $karyawan->alamat_ktp_karyawan }}
                         </td>
                         <td class="text-center">
-                            <button class="btn btn-outline-info btn-sm mb-2" type="button">
+                            <a href="{{ route('karyawans.show', $karyawan->id) }}" class="btn btn-outline-info btn-sm mb-2" type="button">
                                 Detail
-                            </button>
+                            </a>
                             <a href="{{ route('workSchedules', $karyawan->id) }}" class="btn btn-outline-success btn-sm mb-2" type="button">
                                 Work Schedule
                             </a>

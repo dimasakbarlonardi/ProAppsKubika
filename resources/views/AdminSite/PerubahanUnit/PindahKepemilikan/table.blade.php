@@ -176,13 +176,13 @@
 @section('script')
     <script>
 $('#btnPerpanjangSewa').on('click', function() {
-            var id_pemilik = '{{ $kepemilikans->Owner->User->id_user }}';
+            var id_pemilik = '{{ $kepemilikans->id_pemilik }}';
             var id_unit = '{{ $kepemilikans->id_unit }}';
             var id_tenant_unit = '{{ $kepemilikans->id_pemilik }}';
 
             $('#modalListErrors').html('');
             $.ajax({
-                url: `/admin/validation/perubahan`,
+                url: `/admin/validation/perubahan/owner`,
                 type: 'GET',
                 data: {
                     'id_user': id_pemilik,

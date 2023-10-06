@@ -35,7 +35,7 @@
                             <div class="col-6">
                                 <label class="form-label">ID Card</label>
                                 <select class="form-control" name="id_card_type" id="id_card_type" required disabled>
-                                    <option selected disabled>-- Pilih ID Card --</option>
+                                    <option selected disabled>-- Choose ID Card --</option>
                                     @foreach ($idcards as $idcard)
                                         <option value="{{ $idcard->id_card_type }}"
                                             {{ $idcard->id_card_type == $karyawan->id_card_type ? 'selected' : '' }}>
@@ -82,12 +82,12 @@
                         </div>
                         <div class="row">
                             <div class="col-6">
-                                <label class="form-label">Join Date</label>
+                                <label class="form-label">Date In</label>
                                 <input type="date" name="tgl_masuk" value="{{ $karyawan->tgl_masuk }}"
                                     class="form-control">
                             </div>
                             <div class="col-6">
-                                <label class="form-label">Resign Date</label>
+                                <label class="form-label">Date Out</label>
                                 <input type="date" name="tgl_keluar" value="{{ $karyawan->tgl_keluar }}"
                                     class="form-control">
                             </div>

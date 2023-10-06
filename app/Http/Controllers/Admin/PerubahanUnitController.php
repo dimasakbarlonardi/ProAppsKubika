@@ -268,7 +268,7 @@ class PerubahanUnitController extends Controller
 
         $nowDate = Carbon::now();
 
-        $conn = $conn->where('id_pemilik_unit', $id)->first();
+        $conn = $conn->where('id_kepemilikan_unit', $id)->first();
         $conn->unit->isempty = 0;
         $conn->unit->save();
         $conn->delete();
@@ -277,7 +277,7 @@ class PerubahanUnitController extends Controller
             'id_pemilik' => $conn->id_pemilik,
             'id_unit' => $conn->id_unit,
             'id_status_hunian' => $conn->id_status_hunian,
-            'tgl_masuk' => $conn->tgl_masuk,
+            'tgl_masuk' => $conn->tgl_mulai,
             'tgl_keluar' => $request->tgl_keluar,
             'tgl_sys' => $nowDate,
             'no_bukti_milik' => $conn->no_bukti_milik,
@@ -502,40 +502,43 @@ class PerubahanUnitController extends Controller
         return response()->json(['errors' => $errors]);
     }
 
-    // public function validationPerubahanOwner(Request $request)
-    // {
-    //     $connTicket = ConnectionDB::setConnection(new OpenTicket());
+    public function validationPerubahanOwner(Request $request)
+    {
+        $connTicket = ConnectionDB::setConnection(new OpenTicket());
+        $kepemilikans = ConnectionDB::setConnection(new KepemilikanUnit());
 
-    //     $tickets = $connTicket->where('id_tenant', $request->id_tenant)
-    //     ->where('id_unit', $request->id_unit)
-    //     ->where('status_request', '!=', 'COMPLETE')
-    //     ->get();
-    //     $errors = [];
+        $kepemilikanID = $kepemilikans->id_pemilik;
 
-    //     foreach ($tickets as $ticket) {
+        $tickets = $connTicket->where('id', $kepemilikanID)
+        ->where('id_unit', $request->id_unit)
+        ->where('status_request', '!=', 'COMPLETE')
+        ->get();
+        $errors = [];
 
-    //         $tiket['error_header'] = $ticket->no_tiket;
-    //         $tiket['error_status'] = $ticket->status_request;
-    //         $tiket['type'] = 'Tiket';
+        foreach ($tickets as $ticket) {
 
-    //         array_push($errors, $tiket);
+            $tiket['error_header'] = $ticket->no_tiket;
+            $tiket['error_status'] = $ticket->status_request;
+            $tiket['type'] = 'Tiket';
 
-    //         if ($ticket->WorkRequest) {
-    //             $wr['error_header'] = $ticket->WorkRequest->no_work_request;
-    //             $wr['error_status'] = $ticket->WorkRequest->status_request;
-    //             $wr['type'] = 'Work Request';
-    //             array_push($errors, $wr);
+            array_push($errors, $tiket);
 
-    //         }
+            if ($ticket->WorkRequest) {
+                $wr['error_header'] = $ticket->WorkRequest->no_work_request;
+                $wr['error_status'] = $ticket->WorkRequest->status_request;
+                $wr['type'] = 'Work Request';
+                array_push($errors, $wr);
 
-    //         if ($ticket->WorkOrder) {
-    //             $wo['error_header'] = $ticket->WorkOrder->no_work_order;
-    //             $wo['error_status'] = $ticket->WorkOrder->status_request;
-    //             $wo['type'] = 'Work Order';
-    //             array_push($errors, $wo);
-    //         }
-    //     }
+            }
 
-    //     return response()->json(['errors' => $errors]);
-    // }
+            if ($ticket->WorkOrder) {
+                $wo['error_header'] = $ticket->WorkOrder->no_work_order;
+                $wo['error_status'] = $ticket->WorkOrder->status_request;
+                $wo['type'] = 'Work Order';
+                array_push($errors, $wo);
+            }
+        }
+
+        return response()->json(['errors' => $errors]);
+    }
 }
