@@ -270,6 +270,7 @@
                 url: '/admin/get-nav/' + user_id,
                 type: 'GET',
                 success: function(data) {
+                    console.log(data)
                     $('#dynamicMenu').append(data.html)
                 }
             }).then(function() {
