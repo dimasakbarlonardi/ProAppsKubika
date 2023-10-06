@@ -223,14 +223,7 @@ class TenantUnitController extends Controller
         try {
             DB::beginTransaction();
 
-            $count = $connKendaraanTenant->count();
-            $count += 1;
-            if ($count < 10) {
-                $count = '0' . $count;
-            }
-
             $connKendaraanTenant->create([
-                'id_tenant_vehicle' => $count,
                 'id_tenant' => $request->id_tenant,
                 'id_unit' => $request->id_unit,
                 'id_jenis_kendaraan' => $request->id_jenis_kendaraan,
@@ -255,14 +248,12 @@ class TenantUnitController extends Controller
     {
 
         $connTenantKendaraan = $this->setConnection(new KendaraanTenant());
-        $connUnit = $this->setConnection(new Unit());
         $connJenisKendaraan = $this->setConnection(new JenisKendaraan());
+        $connTU = ConnectionDB::setConnection(new TenantUnit());
 
-        // $periodeSewa = $this->setConnection(new PeriodeSewa());
-        // $data['id_tenant'] = $id;
-        $data['units'] = $connUnit->get();
-        // $data['periodeSewa'] = $periodeSewa->get();
         $data['tenantkendaraan'] = $connTenantKendaraan->where('id_tenant_vehicle', $id)->first();
+        $data['getCreateUnits'] = $connTU->where('id_tenant', $data['tenantkendaraan']->id_tenant)
+            ->get();
         $data['jenis_kendaraan'] = $connJenisKendaraan->get();
 
         return view('AdminSite.TenantUnit.Kendaraan.edit', $data)->render();
