@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\HelloEvent;
 use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
 use App\Models\Approve;
@@ -34,14 +35,14 @@ class OpenTicketController extends Controller
     public function index(Request $request)
     {
         $user = $request->session()->get('user');
-        
+
         $connRequest = ConnectionDB::setConnection(new OpenTicket());
         $connUser = ConnectionDB::setConnection(new User());
         $connTenant = ConnectionDB::setConnection(new Tenant());
 
         if ($user->user_category == 3) {
             $tenant = $connTenant->where('email_tenant', $user->login_user)->first();
-            $data['tickets'] = $connRequest->where('id_tenant', $tenant->id_tenant)->get();
+            $data['tickets'] = $connRequest->where('id_tenant', $tenant->id_tenant)->latest()->get();
         } else {
             $data['tickets'] = $connRequest->get();
         }
@@ -75,13 +76,14 @@ class OpenTicketController extends Controller
     public function store(Request $request)
     {
         $user = $request->session()->get('user');
+        $connReceiver = ConnectionDB::setConnection(new WorkRelation());
         $connOpenTicket = ConnectionDB::setConnection(new OpenTicket());
         $connSystem = ConnectionDB::setConnection(new System());
         $connUnit = ConnectionDB::setConnection(new Unit());
         $connTenant = ConnectionDB::setConnection(new Tenant());
 
         $tenant = $connTenant->where('email_tenant', $user->login_user)->first();
-
+        $receiver = $connReceiver->find(1);
         $system = $connSystem->find(1);
         $count = $system->sequence_notiket + 1;
 
@@ -118,6 +120,19 @@ class OpenTicketController extends Controller
             $system->save();
 
             DB::commit();
+
+            $dataNotif = [
+                'models' => 'OpenTicket',
+                'notif_title' => $createTicket->no_tiket,
+                'message' => $createTicket->no_tiket,
+                'id_data' => $createTicket->id,
+                'sender' => $tenant->User->id_user,
+                'division_receiver' => $receiver->id_work_relation,
+                'notif_message' => 'Tiket sudah dibuat, mohon proses request saya',
+                'receiver' => null,
+            ];
+
+            broadcast(new HelloEvent($dataNotif));
 
             Alert::success('Berhasil', 'Berhasil menambahkan request');
 

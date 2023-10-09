@@ -227,6 +227,12 @@
 
     </main>
 
+    <audio id="notifSound" allow="autoplay">
+        <source src="{{ url('/assets/audio/notifsound.ogg') }}" type="audio/ogg">
+        <source src="{{ url('/assets/audio/notifsound.mp3') }}" type="audio/mpeg">
+    </audio>
+
+
     <!-- ===============================================-->
     <!--    JavaScripts-->
     <!-- ===============================================-->
@@ -250,10 +256,13 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-    </script>
-    <script>
+        var user_id = "{{ Session::get('user_id') }}"
+
         $('document').ready(function() {
-            var user_id = "{{ Session::get('user_id') }}"
+            var notifSound = document.getElementById("notifSound");
+
+            getNotifications(user_id);
+
             $.ajax({
                 url: '/check-role-id',
                 method: 'GET',
@@ -270,7 +279,6 @@
                 url: '/admin/get-nav/' + user_id,
                 type: 'GET',
                 success: function(data) {
-                    console.log(data)
                     $('#dynamicMenu').append(data.html)
                 }
             }).then(function() {
@@ -279,84 +287,6 @@
 
                 $('#' + id).addClass('active my-2')
             })
-
-            $.ajax({
-                url: '/admin/get-notifications',
-                data: {
-                    'receiver': user_id
-                },
-                type: 'GET',
-                success: function(data) {
-                    if (data.length > 0) {
-                        var is_notif = 0;
-                        data.map((item) => {
-                            if (item.is_read == 0) {
-                                is_notif += 1;
-                            }
-                            var current = new Date();
-
-                            $('#notification-lists').append(`
-                                <div class="list-group-item">
-                                    <a class="notification notification-flush ${item.is_read == 1 ? 'notification' : 'notification-unread' }"
-                                        href="/admin/notification/${item.id}">
-                                        <div class="notification-avatar">
-                                            <div class="avatar avatar-2xl me-3">
-                                                <img class="rounded-circle"
-                                                    src="${item.sender ? item.sender.profile_picture : ''}"
-                                                    alt="" />
-                                            </div>
-                                        </div>
-                                        <div class="notification-body">
-                                            <p class="mb-1">
-                                                <strong>${item.sender ? item.sender.nama_user : ''}</strong> Mengirim anda :
-                                                ${item.notif_message} ${item.notif_title}
-                                            </p>
-                                            <span class="notification-time">
-                                                ${timeDifference(current, new Date(item.created_at))}
-                                            </span>
-                                        </div>
-                                    </a>
-                                </div>
-                            `)
-                        })
-                        if (is_notif > 0) {
-                            $('#navbarDropdownNotification').addClass('notification-indicator')
-                        }
-                    } else {
-                        $('#notification-lists').append(`
-                            <div class="list-group-item">
-                                <div class="notification-body my-3 text-center">
-                                    <strong>Tidak ada Notifikasi</strong>
-                                </div>
-                            </div>
-                        `)
-                    }
-                }
-            })
-
-            function timeDifference(current, previous) {
-                var msPerMinute = 60 * 1000;
-                var msPerHour = msPerMinute * 60;
-                var msPerDay = msPerHour * 24;
-                var msPerMonth = msPerDay * 30;
-                var msPerYear = msPerDay * 365;
-
-                var elapsed = current - previous;
-
-                if (elapsed < msPerMinute) {
-                    return Math.round(elapsed / 1000) + ' seconds ago';
-                } else if (elapsed < msPerHour) {
-                    return Math.round(elapsed / msPerMinute) + ' minutes ago';
-                } else if (elapsed < msPerDay) {
-                    return Math.round(elapsed / msPerHour) + ' hours ago';
-                } else if (elapsed < msPerMonth) {
-                    return Math.round(elapsed / msPerDay) + ' days ago';
-                } else if (elapsed < msPerYear) {
-                    return Math.round(elapsed / msPerMonth) + ' months ago';
-                } else {
-                    return Math.round(elapsed / msPerYear) + ' years ago';
-                }
-            }
         });
 
         function formatRupiah(angka, prefix) {
@@ -383,10 +313,86 @@
         document.addEventListener("DOMContentLoaded", function(event) {
             Echo.channel("hello-channel")
                 .listen('HelloEvent', (e) => {
-                    alert(e.data);
-                    console.log(e.data);
+                    getNotifications(user_id);
                 })
         });
+
+        function getNotifications(user_id) {
+            $.ajax({
+                url: `/admin/get-notifications/${user_id}`,
+                type: 'GET',
+                success: function(data) {
+                    if (data.length > 0) {
+                        var is_notif = 0;
+                        data.map((item) => {
+                            if (item.is_read == 0) {
+                                notifSound.play();
+                                is_notif += 1;
+                            }
+                            var current = new Date();
+                            $('#notification-lists').append(`
+                                    <div class="list-group-item">
+                                        <a class="notification notification-flush ${item.is_read == 1 ? 'notification' : 'notification-unread' }"
+                                            href="/admin/notification/${item.id}">
+                                            <div class="notification-avatar">
+                                                <div class="avatar avatar-2xl me-3">
+                                                    <img class="rounded-circle"
+                                                        src="${item.sender ? item.sender.profile_picture : ''}"
+                                                        alt="" />
+                                                </div>
+                                            </div>
+                                            <div class="notification-body">
+                                                <p class="mb-1">
+                                                    <strong>${item.sender ? item.sender.nama_user : ''}</strong> Mengirim anda :
+                                                    ${item.notif_message} ${item.notif_title}
+                                                </p>
+                                                <span class="notification-time">
+                                                    ${timeDifference(current, new Date(item.created_at))}
+                                                </span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                `)
+                        })
+                        if (is_notif > 0) {
+                            $('#navbarDropdownNotification').addClass('notification-indicator')
+                        }
+                    } else {
+                        $('#notification-lists').append(`
+                                <div class="list-group-item">
+                                    <div class="notification-body my-3 text-center">
+                                        <strong>Tidak ada Notifikasi</strong>
+                                    </div>
+                                </div>
+                            `)
+                    }
+                }
+            })
+        }
+
+        function timeDifference(current, previous) {
+            var msPerMinute = 60 * 1000;
+            var msPerHour = msPerMinute * 60;
+            var msPerDay = msPerHour * 24;
+            var msPerMonth = msPerDay * 30;
+            var msPerYear = msPerDay * 365;
+
+            var elapsed = current - previous;
+
+            if (elapsed < msPerMinute) {
+                return Math.round(elapsed / 1000) + ' seconds ago';
+            } else if (elapsed < msPerHour) {
+                return Math.round(elapsed / msPerMinute) + ' minutes ago';
+            } else if (elapsed < msPerDay) {
+                return Math.round(elapsed / msPerHour) + ' hours ago';
+            } else if (elapsed < msPerMonth) {
+                return Math.round(elapsed / msPerDay) + ' days ago';
+            } else if (elapsed < msPerYear) {
+                return Math.round(elapsed / msPerMonth) + ' months ago';
+            } else {
+                return Math.round(elapsed / msPerYear) + ' years ago';
+            }
+        }
     </script>
     @yield('script')
 </body>
