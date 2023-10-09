@@ -132,18 +132,15 @@
                         </div>
                     </div>
                     @if (
-                        $user->RoleH->WorkRelation->id_work_relation == $wo->WorkRequest->id_work_relation &&
+                        $user->id_user == $approve->approval_3 &&
                         $wo->sign_approve_2 &&
                         !$wo->sign_approve_3 &&
                         $user->Karyawan->is_can_approve
                     )
-                        <div class="text-center">
-                            <form action="{{ route('approve3', $wo->id) }}" method="post">
-                                @csrf
-                                <button type="submit" class="btn btn-success btn-lg my-4" type="button">
-                                    Approve
-                                </button>
-                            </form>
+                        <div class="text-center">                            
+                            <button type="button" onclick="approve3" class="btn btn-success btn-lg my-4" type="button">
+                                Approve
+                            </button>
                         </div>
                     @endif
                     @if (!$wo->sign_approve_1)
@@ -197,5 +194,21 @@
             readonly: true,
             height: "180"
         });
+
+        function approve3(id) {
+            $.ajax({
+                url: `/admin/approve3/work-order/${id}`,
+                type: 'POST',
+                success: function(data) {
+                    if (data.status === 'ok') {
+                        Swal.fire(
+                            'Berhasil!',
+                            'Berhasil mengupdate Work Order!',
+                            'success'
+                        ).then(() => window.location.reload())
+                    }
+                }
+            })
+        }
     </script>
 @endsection
