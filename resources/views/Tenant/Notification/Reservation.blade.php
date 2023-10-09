@@ -65,21 +65,12 @@
                                 </div>
                             </div>
                             <div class="mb-3">
-                                <div class="row">
-                                    <div class="col-6">
-                                        <label class="mb-1">Tipe reservasi</label>
-                                        <input type="text" class="form-control" disabled
-                                            value="{{ $reservation->TypeReservation->type_reservation }}">
-                                    </div>
+                                <div class="row">                                   
                                     <div class="col-6">
                                         <label class="mb-1">Ruang reservasi</label>
                                         <input type="text" class="form-control" disabled
                                             value="{{ $reservation->RuangReservation->ruang_reservation }}">
                                     </div>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <div class="row">
                                     <div class="col-6">
                                         <label class="mb-1">Jenis acara</label>
                                         <input type="text" class="form-control" disabled
@@ -87,6 +78,7 @@
                                     </div>
                                 </div>
                             </div>
+                            
                             <div class="mb-3">
                                 <label class="mb-1">Keterangan</label>
                                 <textarea class="form-control" name="keterangan" id="keterangan_reservation">

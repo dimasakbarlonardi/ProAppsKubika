@@ -93,7 +93,7 @@
                                         <div class="col-3">
                                             <div class="avatar avatar-3xl">
                                                 <img class="rounded-circle"
-                                                    src="{{ url($wr->Ticket->Tenant->profile_picture) }}" alt="" />
+                                                    src="{{ $wr->Ticket->Tenant->profile_picture ? url($wr->Ticket->Tenant->profile_picture) : '' }}" alt="" />
                                             </div>
                                         </div>
                                         <div class="col-6">

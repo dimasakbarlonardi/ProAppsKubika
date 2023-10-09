@@ -51,7 +51,7 @@
                                     <a class="d-none d-sm-block" href="">
                                         <div class="avatar avatar-xl avatar-3xl">
                                             <div class="avatar-name rounded-circle">
-                                                <img src="{{ $ticket->Tenant ? url($ticket->Tenant->profile_picture) : '/assets/img/team/3-thumb.png' }}"
+                                                <img src="{{ $ticket->Tenant->profile_picture ? url($ticket->Tenant->profile_picture) : '/assets/img/team/3-thumb.png' }}"
                                                     alt="image" class="avatar-image" />
                                             </div>
                                         </div>
@@ -124,7 +124,7 @@
                                             </div>
                                             <div class="col-auto">
                                                 <h6 class="mb-0 text-500">
-                                                    {{ \Carbon\Carbon::createFromTimeStamp(strtotime($ticket->created_at))->diffForHumans() }}
+                                                    <!-- {{ \Carbon\Carbon::createFromTimeStamp(strtotime($ticket->created_at))->diffForHumans() }} -->
                                                 </h6>
                                             </div>
                                         </div>

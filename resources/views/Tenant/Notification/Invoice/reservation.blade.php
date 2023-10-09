@@ -83,7 +83,7 @@
                         <td>:</td>
                         <td class="align-middle">
                             <p class="mb-0">
-                                {{ $reservation->TypeReservation->type_reservation }}
+                               
                             </p>
                         </td>
                     </tr>

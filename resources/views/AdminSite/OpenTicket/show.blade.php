@@ -25,7 +25,7 @@
                             class="d-md-flex d-xl-inline-block d-xxl-flex align-items-center justify-content-between mb-x1">
                             <div class="d-flex align-items-center gap-2">
                                 <div class="avatar avatar-2xl">
-                                    <img class="rounded-circle" src="{{ url($ticket->Tenant->User->profile_picture) }}"
+                                    <img class="rounded-circle" src="{{ $ticket->Tenant->User->profile_picture ? url($ticket->Tenant->User->profile_picture) : ''  }}"
                                         alt="" />
                                 </div>
                                 <p class="mb-0"><a class="fw-semi-bold mb-0 text-800"
@@ -80,7 +80,7 @@
                             {{-- <div class="d-flex align-items-center gap-2">
                                 <div class="avatar avatar-2xl">
                                     <img class="rounded-circle"
-                                        src="{{ $ticket->TenantRelation->Karyawan->profile_picture }}" alt="" />
+                                        src="{{ $ticket->TenantRelation->Karyawan->photo_profile ? url($ticket->TenantRelation->Karyawan->photo_profile) : '' }}" alt="" />
                                 </div>
                                 <p class="mb-0"><a class="fw-semi-bold mb-0 text-800"
                                         href="../../app/support-desk/contact-details.html">{{ $ticket->TenantRelation->Karyawan->nama_karyawan }}</a>
@@ -187,7 +187,7 @@
                                 <div class="row g-0 border-bottom pb-x1 mb-x1 align-items-sm-center align-items-xl-start">
                                     <div class="col-12 col-sm-auto col-xl-12 me-sm-3 me-xl-0">
                                         <div class="avatar avatar-3xl">
-                                            <img class="rounded-circle" src="{{ url($ticket->Tenant->User->profile_picture) }}"
+                                            <img class="rounded-circle" src="{{ $ticket->Tenant->User->profile_picture ? url($ticket->Tenant->User->profile_picture) : '' }}"
                                                 alt="" />
                                         </div>
                                     </div>

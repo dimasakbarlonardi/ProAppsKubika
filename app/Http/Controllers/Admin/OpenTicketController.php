@@ -43,7 +43,7 @@ class OpenTicketController extends Controller
             $tenant = $connTenant->where('email_tenant', $user->login_user)->first();
             $data['tickets'] = $connRequest->where('id_tenant', $tenant->id_tenant)->get();
         } else {
-            $data['tickets'] = $connRequest->latest()->get();
+            $data['tickets'] = $connRequest->get();
         }
         $data['user'] = $user;
 
