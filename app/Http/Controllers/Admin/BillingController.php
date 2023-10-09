@@ -13,6 +13,7 @@ use App\Models\IPLType;
 use App\Models\MonthlyArTenant;
 use App\Models\MonthlyIPL;
 use App\Models\MonthlyUtility;
+use App\Models\Notifikasi;
 use App\Models\PerhitDenda;
 use App\Models\ReminderLetter;
 use App\Models\Site;
@@ -325,7 +326,25 @@ class BillingController extends Controller
                     $transaction->no_reff = $no_inv;
                     $transaction->save();
 
-                    HelpNotifikasi::paymentMonthlyTenant($util->MonthlyUtility->MonthlyTenant);
+                    $connNotif = ConnectionDB::setConnection(new Notifikasi());
+                    $request = Request();
+
+                    $notif = $connNotif->where('models', 'MonthlyTenant')
+                        ->where('is_read', 0)
+                        ->where('id_data', $util->MonthlyUtility->id_monthly_ar_tenant)
+                        ->first();
+
+                    if (!$notif) {
+                        $createNotif = $connNotif;
+                        $createNotif->sender = $request->session()->get('user')->id_user;
+                        $createNotif->receiver = $util->MonthlyUtility->Unit->TenantUnit->Tenant->User->id_user;
+                        $createNotif->is_read = 0;
+                        $createNotif->id_data = $util->MonthlyUtility->id_monthly_ar_tenant;
+                        $createNotif->notif_title = 'Invoice Bulanan';
+                        $createNotif->notif_message = 'Harap melakukan pembayaran tagihan bulanan anda';
+                        $createNotif->models = 'MonthlyTenant';
+                        $createNotif->save();
+                    }
 
                     DB::commit();
                 }

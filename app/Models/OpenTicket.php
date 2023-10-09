@@ -75,4 +75,9 @@ class OpenTicket extends Model
     {
         return $this->hasOne(CashReceipt::class, 'no_invoice', 'no_invoice');
     }
+
+    public function Tower()
+    {
+        return $this->hasOne(Tower::class, 'id_tower', 'id_tower');
+    }
 }

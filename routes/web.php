@@ -135,7 +135,7 @@ use App\Models\PermitHR;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return redirect('/login');
 });
 
 Route::get('/gis', [AttendanceController::class, 'index']);
@@ -199,7 +199,7 @@ Route::prefix('admin')->group(function () {
         // CRUD TenantUnit
         Route::resource('tenantunits', TenantUnitController::class);
         Route::get('tenant-unit/{id}', [TenantUnitController::class, 'getTenantUnit'])->name('getTenantUnit');
-        Route::get('get-vehicle/by-unit/{id}', [TenantUnitController::class, 'getVehicleUnit']);
+        Route::post('tenant-unit/unit', [TenantUnitController::class, 'getUnitIDFromTU'])->name('getUnitIDFromTU');
         Route::get('get-vehicle/by-unit/{id}', [TenantUnitController::class, 'getVehicleUnit']);
         Route::post('/store/tenantunit', [TenantUnitController::class, 'storeTenantUnit'])->name('storeTenantUnit');
 
@@ -604,6 +604,7 @@ Route::prefix('admin')->group(function () {
         Route::post('blast-invoice', [BillingController::class, 'blastMonthlyInvoice'])->name('blastMonthlyInvoice');
         // Invoice index
         Route::get('invoices', [InvoiceController::class, 'index'])->name('invoices');
+        Route::get('invoice/{id}', [InvoiceController::class, 'show'])->name('showInvoices');
 
         // Payment monthly tenant
         Route::post('payment-monthly-page/{id}', [BillingController::class, 'generatePaymentMonthly'])->name('generatePaymentMonthly');
@@ -655,9 +656,10 @@ Route::prefix('admin')->group(function () {
         // presences
         Route::get('/presences', [AttendanceController::class, 'index'])->name('presences');
         Route::get('/presences-by-month', [AttendanceController::class, 'presenceByMonth']);
+        Route::get('/coordinates', [AttendanceController::class, 'coordinates'])->name('coordinates');
 
         // ---------------Parameter Attendance------------------
-        // -Request Attendance
+        // -Request Attendancence
         Route::resource('requesttype', RequestTypeController::class);
         // -Permit Type
         Route::resource('permithr', PermitHRController::class);

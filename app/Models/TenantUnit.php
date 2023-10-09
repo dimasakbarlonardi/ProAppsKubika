@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\ConnectionDB;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -24,7 +25,8 @@ class TenantUnit extends Model
         'tgl_masuk',
         'tgl_keluar',
         'tgl_jatuh_tempo_ipl',
-        'tgl_jatuh_tempo_util'
+        'tgl_jatuh_tempo_util',
+        'is_owner'
     ];
 
     public function unit()
@@ -32,9 +34,16 @@ class TenantUnit extends Model
         return $this->hasOne(Unit::class, 'id_unit', 'id_unit');
     }
 
-    public function Owner()
+    public function Owner($unitID)
     {
-        return $this->hasOne(OwnerH::class, 'id_pemilik', 'id_pemilik');
+        $connTU = ConnectionDB::setConnection(new TenantUnit());
+
+        $tu = $connTU->where('id_unit', $unitID)
+            ->where('is_owner', 1)
+            ->with('Tenant')
+            ->first();
+
+        return $tu;
     }
 
     public function tenant()

@@ -283,7 +283,6 @@
         }
 
         function completeWO(id) {
-            console.log(id);
             $.ajax({
                 url: `/admin/complete/work-order/${id}`,
                 type: 'POST',

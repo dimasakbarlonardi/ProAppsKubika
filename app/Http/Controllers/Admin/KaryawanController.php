@@ -142,19 +142,20 @@ class KaryawanController extends Controller
                 'id_jenis_kelamin' => $request->id_jenis_kelamin,
                 'id_agama' => $request->id_agama,
                 'id_status_kawin' => $request->id_status_kawin,
+                'is_can_approve' => $request->is_can_approve,
             ]);
-            
+
             $file = $request->file('profile_picture');
             if ($file) {
                 $fileName = $karyawan->id . '-' .   $file->getClientOriginalName();
                 $outputProfilePicture = '/public/' . $site . '/img/profile_picture/' . $fileName;
                 $profilePictureImage = '/storage/' . $site . '/img/profile_picture/' . $fileName;
-                
+
                 Storage::disk('local')->put($outputProfilePicture, File::get($file));
-                
+
                 $karyawan->profile_picture = $profilePictureImage;
             }
-            
+
             $karyawan->id_karyawan = sprintf("%04d", $karyawan->id);
             $karyawan->save();
             DB::commit();

@@ -136,5 +136,6 @@ Route::prefix('v1')->group(function () {
         // Tools
         Route::get('/tools/{wrID}', [ToolsController::class, 'index']);
         Route::post('/borrow-tool/{wrID}/{id}', [ToolsController::class, 'borrowTool']);
+        Route::post('/return-tool/{wrID}/{id}', [ToolsController::class, 'returnTool']);
     });
 });

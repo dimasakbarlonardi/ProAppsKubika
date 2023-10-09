@@ -270,6 +270,7 @@
                 url: '/admin/get-nav/' + user_id,
                 type: 'GET',
                 success: function(data) {
+                    console.log(data)
                     $('#dynamicMenu').append(data.html)
                 }
             }).then(function() {
@@ -286,7 +287,6 @@
                 },
                 type: 'GET',
                 success: function(data) {
-                    console.log(data)
                     if (data.length > 0) {
                         var is_notif = 0;
                         data.map((item) => {
@@ -294,7 +294,7 @@
                                 is_notif += 1;
                             }
                             var current = new Date();
-                            console.log(item.sender);
+
                             $('#notification-lists').append(`
                                 <div class="list-group-item">
                                     <a class="notification notification-flush ${item.is_read == 1 ? 'notification' : 'notification-unread' }"

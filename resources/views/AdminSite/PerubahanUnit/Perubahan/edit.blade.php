@@ -241,7 +241,6 @@
                     url: '/admin/unit-by-id/' + id_unit,
                     type: 'GET',
                     success: function(data) {
-                        console.log(data.unit)
                         $('#luas_unit').val(data.unit.luas_unit)
                         $('#barcode_unit').val(data.unit.barcode_unit)
                         $('#barcode_meter_air').val(data.unit.barcode_meter_air)
@@ -274,7 +273,6 @@
                     url: '/admin/perubahannunit-by-id/' + id_unit,
                     type: 'GET',
                     success: function(data) {
-                        console.log(data.unit)
                         $('#id_pemilik').val(data.unit.id_pemilik)
                     }
                 })
@@ -305,7 +303,7 @@
         })
     </script>
 @endsection
-{{-- 
+{{--
 <div class="modal-footer">
     <button class="btn btn-primary" type="submit">Simpan
     </button>

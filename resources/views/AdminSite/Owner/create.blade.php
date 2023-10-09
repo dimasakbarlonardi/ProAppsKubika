@@ -208,7 +208,7 @@
                             <input type="text" value="{{ old('no_telp_penjamin') }}" name="no_telp_penjamin" class="form-control">
                         </div>
                     </div>
-                </div> 
+                </div>
 
 
                 <div class="pic mt-5" id="pic">
@@ -257,7 +257,6 @@
     <script>
         $(document).ready(function() {
             var status = $('#id_status_kawin').val();
-            console.log(status)
             if (status == 1) {
                 $('#penjamin').css('display', 'block')
                 $('#pasangan').css('display', 'none')

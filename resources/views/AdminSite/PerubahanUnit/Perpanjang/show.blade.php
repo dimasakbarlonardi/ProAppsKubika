@@ -148,7 +148,7 @@
                         <button type="button" data-toggle="modal" data-target="#modalValidation"
                             class="btn btn-sm btn-warning" id="btnPerpanjangSewa">Perpanjang Sewa</button>
                         </div>
-                        
+
                         <div class="modal fade" id="modalValidation" data-bs-keyboard="false" data-bs-backdrop="static"
                             tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
                             <div class="modal-dialog modal-md mt-6" role="document">
@@ -212,7 +212,6 @@
                     'id_unit':id_unit
                 },
                 success: function(resp) {
-                    console.log(resp.errors)
                     if (resp.errors.length > 0) {
                         resp.errors.map((item) => {
                             $('#modalListErrors').append(`
@@ -226,7 +225,7 @@
                                             <p class="text-break fs--1 mt-1">${item.type} - ${item.error_header} masih berstatus ${item.error_status}</p>
                                         </div>
                                     </div>
-                                </div>  
+                                </div>
                             `);
                         })
                         $('#modalValidation').modal('show')

@@ -64,7 +64,7 @@
     <script>
         $(document).ready(function() {
             var status = $('#pilihbiayaipl').val();
-            console.log(status)
+
             {
                 $('#biaya').css('display', 'none')
             }

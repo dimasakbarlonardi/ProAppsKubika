@@ -1,4 +1,4 @@
-                  
+
 @extends('layouts.master')
 
 @section('content')
@@ -189,9 +189,8 @@ $('#btnPerpanjangSewa').on('click', function() {
                     'id_unit':id_unit
                 },
                 success: function(resp) {
-                    console.log(resp.errors)
                     if (resp.errors.length > 0) {
-                        resp.errors.map((item) => { 
+                        resp.errors.map((item) => {
                             $('#modalListErrors').append(`
                                  <div class="row">
                                     <div class="d-flex">
@@ -221,7 +220,6 @@ $('#btnPerpanjangSewa').on('click', function() {
                     url: '/admin/unit-by-id/' + id_unit,
                     type: 'GET',
                     success: function(data) {
-                        console.log(data.unit)
                         $('#luas_unit').val(data.unit.luas_unit)
                         $('#barcode_unit').val(data.unit.barcode_unit)
                         $('#barcode_meter_air').val(data.unit.barcode_meter_air)

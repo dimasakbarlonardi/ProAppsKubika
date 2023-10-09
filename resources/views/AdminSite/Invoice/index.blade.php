@@ -7,7 +7,7 @@
                 <div class="card-header py-2">
                     <div class="row flex-between-center">
                         <div class="my-3 col-auto">
-                            <h6 class="mb-0 text-white">List Utility Usage Recording Water</h6>
+                            <h6 class="mb-0 text-white">Invoices</h6>
                         </div>
                     </div>
                 </div>
@@ -46,74 +46,25 @@
                                             <th class="align-middle">No Invoice</th>
                                             <th class="align-middle">Trasaction Type</th>
                                             <th class="align-middle">Status</th>
-                                            <th class="align-middle">Action</th>
+                                            <th class="align-middle text-center">Action</th>
                                         </tr>
                                     </thead>
                                     <tbody id="bulk-select-body">
                                         @foreach ($transactions as $key => $item)
                                             <tr>
-                                                <th class="align-middle">
-                                                    {{ $item->no_reff }}
-                                                </th>
-                                                <th class="align-middle">
+                                                <td class="align-middle">
+                                                    {{ $item->no_invoice }}
+                                                </td>
+                                                <td class="align-middle">
                                                     {{ $item->transaction_type }}
-                                                </th>
+                                                </td>
+                                                <td class="align-middle">
+                                                    {{ $item->transaction_status }}
+                                                </td>
+                                                <td class="text-center">
+                                                    <a href="{{ route('showInvoices', $item->id) }}" class="btn btn-outline-info btn-sm">View</a>
+                                                </td>
                                             </tr>
-
-                                            <div class="modal fade" id="edit-modal{{ $item->id }}" tabindex="-1"
-                                                role="dialog" aria-hidden="true">
-                                                <div class="modal-dialog modal-dialog-centered" role="document"
-                                                    style="max-width: 500px">
-                                                    <div class="modal-content position-relative">
-                                                        <div class="position-absolute top-0 end-0 mt-2 me-2 z-1">
-                                                            <button
-                                                                class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base"
-                                                                data-bs-dismiss="modal" aria-label="Close"></button>
-                                                        </div>
-                                                        <div class="modal-body p-0">
-                                                            <div class="rounded-top-3 py-3 ps-4 pe-6 bg-light">
-                                                                <h4 class="mb-1" id="modalExampleDemoLabel">Edit Record
-                                                                </h4>
-                                                            </div>
-                                                            <div class="p-4 pb-0">
-                                                                <form method="post" action="{{ route('updateWater') }}">
-                                                                    @csrf
-                                                                    <div class="mb-3">
-                                                                        <div class="row">
-                                                                            <div class="col-6">
-                                                                                <label class="col-form-label"
-                                                                                    for="recipient-name">Previous:</label>
-                                                                                <input class="form-control"
-                                                                                    value="{{ $item->nomor_air_awal }}"
-                                                                                    type="integer" />
-                                                                            </div>
-                                                                            <div class="col-6">
-                                                                                <label class="col-form-label"
-                                                                                    for="recipient-name">Current:</label>
-                                                                                <input class="form-control"
-                                                                                    value="{{ $item->nomor_air_akhir }}"
-                                                                                    type="integer" />
-                                                                            </div>
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="mb-3">
-                                                                        <label class="col-form-label"
-                                                                            for="message-text">Notes:</label>
-                                                                        <textarea class="form-control" rows="8" id="message-text"></textarea>
-                                                                    </div>
-                                                                </form>
-                                                            </div>
-                                                        </div>
-                                                        <div class="modal-footer">
-                                                            <button class="btn btn-secondary" type="button"
-                                                                data-bs-dismiss="modal">Close</button>
-                                                            <button class="btn btn-primary" type="button"
-                                                                onclick="return confirm('are you sure?')">Edit
-                                                            </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
                                         @endforeach
                                     </tbody>
                                 </table>
@@ -127,7 +78,7 @@
             <div class="card">
                 <form action="" method="post">
                     <div class="card-header">
-                        <h6 class="mb-0">Properties</h6>
+                        <h6 class="mb-0">Filter</h6>
                     </div>
                     <div class="card-body">
                         <div class="mb-3">
@@ -172,7 +123,6 @@
             if (optionMenu == false) {
                 $('#bulk-action-menu').css('display', 'none');
             }
-            console.log(optionMenu);
         })
         $('#applyBulk').on('click', function() {
             if (confirm('Are you sure?')) {
@@ -205,7 +155,6 @@
                     'type': 'water'
                 },
                 success: function(resp) {
-                    console.log(resp)
                     if (resp.status === 'ok') {
                         Swal.fire(
                             'Success!',

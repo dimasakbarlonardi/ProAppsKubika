@@ -210,7 +210,27 @@ class WorkOrderController extends Controller
 
         $createTransaction = $this->createTransaction($wo);
 
-        HelpNotifikasi::paymentWO($id, $createTransaction);
+        // HelpNotifikasi::paymentWO($id, $createTransaction);
+        $connWO = ConnectionDB::setConnection(new WorkOrder());
+        $connNotif = ConnectionDB::setConnection(new Notifikasi());
+        $connApprove = ConnectionDB::setConnection(new Approve());
+
+        $notif = $connNotif->where('models', 'PaymentWO')
+            ->where('is_read', 0)
+            ->where('id_data', $createTransaction->id)
+            ->first();
+
+        if (!$notif) {
+            $createNotif = $connNotif;
+            $createNotif->sender = $connApprove->find(3)->approval_4;
+            $createNotif->receiver = $wo->Ticket->Tenant->User->id_user;
+            $createNotif->is_read = 0;
+            $createNotif->id_data = $createTransaction->id;
+            $createNotif->notif_title = $wo->no_work_order;
+            $createNotif->notif_message = 'Harap melakukan pembayaran untuk menselesaikan transaksi';
+            $createNotif->models = 'PaymentWO';
+            $createNotif->save();
+        }
 
         Alert::success('Berhasil', 'Berhasil menerima WO');
 

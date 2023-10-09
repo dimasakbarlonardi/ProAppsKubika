@@ -19,6 +19,7 @@ use App\Models\Tower;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Models\Unit;
+use App\Models\User;
 use Carbon\Carbon;
 use Symfony\Component\HttpFoundation\Session\Session;
 
@@ -64,30 +65,32 @@ class TenantUnitController extends Controller
         return view('AdminSite.TenantUnit.Unit.show', $data);
     }
 
-    public function getUnitIDFromTU()
+    public function getUnitIDFromTU(Request $request)
     {
         $tenant_units = $this->setConnection(new TenantUnit());
-        $tenant_units = $tenant_units->get();
+        $units = $this->setConnection(new Unit());
+
         $idUnit = [];
 
-        foreach ($tenant_units as $unit) {
-            $idUnit[] = $unit->id_unit;
+        if ($request->is_owner == 1) {
+            $tenant_units = $tenant_units->get();
+            foreach ($tenant_units as $unit) {
+                $idUnit[] = $unit->id_unit;
+            }
+            $units = $units->whereNotIn('id_unit', $idUnit)->get();
+        } else {
+            $tenant_units = $tenant_units->where('id_tenant', '!=', $request->id_tenant)
+                ->where('is_owner', 1)
+                ->get();
+            foreach ($tenant_units as $unit) {
+                $idUnit[] = $unit->id_unit;
+            }
+            $units = $units->whereIn('id_unit', $idUnit)->get();
         }
 
-        $units = $this->setConnection(new Unit());
-        $units = $units->whereNotIn('id_unit', $idUnit)->get();
-
-        return $units;
-    }
-
-    public function getIDunitFromTU()
-    {
-        $tenant_units = $this->setConnection(new TenantUnit());
-        $tenant_units['getIDunitFromTU'] = $tenant_units->get();
-
-        $tenant_units = $tenant_units->whereNotIn('id_tenant_unit', $tenant_units)->get();
-
-        return $tenant_units;
+        return response()->json([
+            "data" => $units
+        ]);
     }
 
     public function getTenantUnit($id)
@@ -100,13 +103,10 @@ class TenantUnitController extends Controller
         $connKendaraanTenant = $this->setConnection(new KendaraanTenant());
         $connJenisKendaraan = $this->setConnection(new JenisKendaraan());
         $connStatusTinggal = $this->setConnection(new StatusTinggal());
-        $connOwner = $this->setConnection(new OwnerH());
+        $connOwner = $this->setConnection(new User());
 
         $data['tenant_units'] = $connTenantUnit->where('id_tenant', $id)->get();
         $data['tenant'] = $connTenant->find($id);
-        $data['getCreateUnits'] = $this->getUnitIDFromTU();
-
-        $data['getIDunitFromTU'] = $this->getIDunitFromTU();
 
         $data['units'] = $connUnit->get();
         $data['periodeSewa'] = $connPeriodeSewa->get();
@@ -135,6 +135,7 @@ class TenantUnitController extends Controller
             'tgl_keluar' => $request->tgl_keluar,
             'tgl_jatuh_tempo_ipl' => $request->tgl_jatuh_tempo_ipl,
             'tgl_jatuh_tempo_util' => $request->tgl_jatuh_tempo_util,
+            'is_owner' => $request->is_owner,
             'sewa_ke' => 1
         ]);
 
@@ -222,14 +223,7 @@ class TenantUnitController extends Controller
         try {
             DB::beginTransaction();
 
-            $count = $connKendaraanTenant->count();
-            $count += 1;
-            if ($count < 10) {
-                $count = '0' . $count;
-            }
-
             $connKendaraanTenant->create([
-                'id_tenant_vehicle' => $count,
                 'id_tenant' => $request->id_tenant,
                 'id_unit' => $request->id_unit,
                 'id_jenis_kendaraan' => $request->id_jenis_kendaraan,
@@ -254,14 +248,12 @@ class TenantUnitController extends Controller
     {
 
         $connTenantKendaraan = $this->setConnection(new KendaraanTenant());
-        $connUnit = $this->setConnection(new Unit());
         $connJenisKendaraan = $this->setConnection(new JenisKendaraan());
+        $connTU = ConnectionDB::setConnection(new TenantUnit());
 
-        // $periodeSewa = $this->setConnection(new PeriodeSewa());
-        // $data['id_tenant'] = $id;
-        $data['units'] = $connUnit->get();
-        // $data['periodeSewa'] = $periodeSewa->get();
         $data['tenantkendaraan'] = $connTenantKendaraan->where('id_tenant_vehicle', $id)->first();
+        $data['getCreateUnits'] = $connTU->where('id_tenant', $data['tenantkendaraan']->id_tenant)
+            ->get();
         $data['jenis_kendaraan'] = $connJenisKendaraan->get();
 
         return view('AdminSite.TenantUnit.Kendaraan.edit', $data)->render();
@@ -279,7 +271,7 @@ class TenantUnitController extends Controller
         return redirect()->back();
     }
 
-    public function deleteTenantUnit(Request $request,$id)
+    public function deleteTenantUnit(Request $request, $id)
     {
         $conn = $this->setConnection(new TenantUnit());
         $connTUOFF = ConnectionDB::setConnection(new TenantUnitOFF());

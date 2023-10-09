@@ -246,7 +246,6 @@
                                 <input class="form-control my-3" type="text" value="${item.nama_personil}" disabled>
                             `)
                         })
-                        console.log(dataJSON.alats)
 
                         dataJSON.alats.map((item) => {
                             $('#detailItems').append(`

@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Attendance;
 use App\Models\Karyawan;
 use App\Models\Site;
+use App\Models\Coordinate;
 use App\Models\Unit;
 use App\Models\User;
 use App\Models\WorkTimeline;
@@ -22,11 +23,13 @@ class AttendanceController extends Controller
     {
         $user = $request->user();
         $site = Site::find($user->id_site);
+        $conCoordinates = ConnectionDB::setConnection(new Coordinate());
 
-        return ResponseFormatter::success([
-            'lat' => $site->lat,
-            'long' => $site->long,
-        ], 'Success get site location');
+        $data = $conCoordinates->get();
+
+        return ResponseFormatter::success(
+            $data,
+            'Success get site location');
     }
 
     function attend($karyawan)

@@ -368,7 +368,6 @@
             }).get();
 
             var value = $('#valueAction').val();
-            console.log(value);
 
             if (value === 'approve') {
                 url = '/admin/approve/usr-electric';

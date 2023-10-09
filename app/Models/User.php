@@ -24,7 +24,8 @@ class User extends Model
         'user_category',
         'password_user',
         'id_status_user',
-        'id_role_hdr'
+        'id_role_hdr',
+        'profile_picture'
     ];
 
     public function RoleH()

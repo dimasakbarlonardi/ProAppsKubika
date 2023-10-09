@@ -30,7 +30,7 @@
                             <label class="form-label">Nik Pemilik</label>
                             <input type="text" value="{{ $owners->nik_pemilik }}" class="form-control" readonly>
                         </div>
-            
+
                         <div class="col-6">
                             <label class="form-label">Nama Pemilik</label>
                             <input type="text" value="{{$owners->nama_pemilik}}" class="form-control" readonly>
@@ -56,7 +56,7 @@
                             <label class="form-label">Alamat KTP Pemilik</label>
                             <input type="text" value="{{$owners->alamat_ktp_pemilik}}" class="form-control" readonly>
                         </div>
-              
+
                         <div class="col-6">
                             <label class="form-label">Alamat Tinggal Pemilik</label>
                             <input type="text" value="{{$owners->alamat_tinggal_pemilik}}" class="form-control" readonly>
@@ -65,7 +65,7 @@
                             <label class="form-label">Provinsi</label>
                             <input type="text" value="{{$owners->provinsi}}" class="form-control" readonly>
                         </div>
-          
+
                         <div class="col-6">
                             <label class="form-label">Kode Pos</label>
                             <input type="text" value="{{$owners->kode_pos}}" class="form-control" readonly>
@@ -82,13 +82,13 @@
                             <label class="form-label">Tanggal Keluar</label>
                             <input type="text" value="{{\Carbon\Carbon::parse($owners->tgl_keluar)->format('d-M-Y')}}" class="form-control" readonly>
                         </div>
-             
-                    
+
+
                         {{-- <div class="col-6">
                             <label class="form-label">ID Kepemilikan Unit</label>
                             <input type="text" name="" value="{{$kepemilikan->id_kempemilikan_unit}}" class="form-control" readonly>
                         </div> --}}
-                        
+
                         <div class="col-6">
                             <label class="form-label">Tempat Lahir</label>
                             <input type="text" value="{{$owners->tempat_lahir}}" class="form-control" readonly>
@@ -97,7 +97,7 @@
                             <label class="form-label">Tanggal Lahir</label>
                             <input type="text" value="{{\Carbon\Carbon::parse($owners->tgl_lahir)->format('d-M-Y')}}" class="form-control" readonly>
                         </div>
-                        
+
                         <div class="col-6">
                             <label class="form-label">Jenis Kelamin</label>
                             <input type="text" value="{{ $owners->jeniskelamin->jenis_kelamin }}" class="form-control" readonly>
@@ -106,7 +106,7 @@
                             <label class="form-label">Agama</label>
                             <input type="text" value="{{ $owners->agama->nama_agama }}" class="form-control" readonly>
                         </div>
-                        
+
                         <div class="col-6">
                             <label class="form-label">Status Kawin</label>
                             <input type="text" id="id_status_kawin" value="{{$owners->statuskawin->status_kawin }}" class="form-control" readonly>
@@ -115,7 +115,7 @@
                             <label class="form-label">Pekerjaan</label>
                             <input type="text" value="{{$owners->pekerjaan}}" class="form-control" readonly>
                         </div>
-                        
+
                         <div class="col-6">
                             <label class="form-label">NIK Kontak PIC</label>
                             <input type="text" value="{{$owners->nik_kontak_pic}}" class="form-control" readonly>
@@ -124,7 +124,7 @@
                             <label class="form-label">Nama Kontak PIC</label>
                             <input type="text" value="{{$owners->nama_kontak_pic}}" class="form-control" readonly>
                         </div>
-               
+
                         <div class="col-6">
                             <label class="form-label">Alamat Tinggal Kontak PIC</label>
                             <input type="text" value="{{$owners->alamat_tinggal_kontak_pic}}" class="form-control" readonly>
@@ -142,7 +142,7 @@
                             <label class="form-label">Hubungan Kontak PIC</label>
                             <input type="text" value="{{$owners->hubungan_kontak_pic}}" class="form-control" readonly>
                         </div>
-                        
+
                         <div class="penjamin mt-5" id="penjamin">
                             <h5>Penjamin</h5>
                             <hr>
@@ -156,7 +156,7 @@
                                         <label class="form-label">Nama Penjamin</label>
                                         <input type="text" value="{{$owners->nama_pasangan_penjamin}}" class="form-control" readonly>
                                     </div>
-                          
+
                                     <div class="col-6">
                                         <label class="form-label">Alamat KTP Penjamin</label>
                                         <input type="text" value="{{$owners->alamat_ktp_pasangan_penjamin}}" class="form-control" readonly>
@@ -165,7 +165,7 @@
                                         <label class="form-label">Alamat Tinggal Penjamin</label>
                                         <input type="text" value="{{$owners->alamat_tinggal_pasangan_penjamin}}" class="form-control" readonly>
                                     </div>
-                            
+
                                     <div class="col-6">
                                         <label class="form-label">Hubungan Penjamin</label>
                                         <input type="text" value="{{$owners->hubungan_penjamin}}" class="form-control" readonly>
@@ -191,7 +191,7 @@
                                         <label class="form-label">Nama Pasangan</label>
                                         <input type="text" value="{{$owners->nama_pasangan_penjamin}}" class="form-control" readonly>
                                     </div>
-                          
+
                                     <div class="col-6">
                                         <label class="form-label">Alamat KTP Pasangan</label>
                                         <input type="text" value="{{$owners->alamat_ktp_pasangan_penjamin}}" class="form-control" readonly>
@@ -200,7 +200,7 @@
                                         <label class="form-label">Alamat Tinggal Pasangan</label>
                                         <input type="text" value="{{$owners->alamat_tinggal_pasangan_penjamin}}" class="form-control" readonly>
                                     </div>
-                            
+
                                     <div class="col-6">
                                         <label class="form-label">Hubungan Pasangan</label>
                                         <input type="text" value="{{$owners->hubungan_penjamin}}" class="form-control" readonly>
@@ -227,7 +227,6 @@
     <script>
         $(document).ready(function() {
             var status = $('#id_status_kawin').val();
-            console.log(status)
             if (status == 1) {
                 $('#penjamin').css('display', 'block')
                 $('#pasangan').css('display', 'none')

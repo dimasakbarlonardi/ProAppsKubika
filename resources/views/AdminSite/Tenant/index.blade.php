@@ -60,7 +60,7 @@
                                     <div class="d-flex align-items-start align-items-sm-center">
                                         <a class="d-none d-sm-block" href="../../app/support-desk/contact-details.html">
                                             <div class="avatar avatar-xl avatar-3xl">
-                                                <img src="{{ $tenant->profile_picture ? '/' . $tenant->profile_picture : '/assets/img/team/3-thumb.png' }}" 
+                                                <img src="{{ $tenant->profile_picture ? url($tenant->profile_picture) : '/assets/img/team/3-thumb.png' }}"
                                                     class="avatar-image" />
                                             </div>
                                         </a>
@@ -75,17 +75,6 @@
                                                     {{ $tenant->nama_tenant }}
                                                 </a>
                                             </p>
-                                            <div class="row align-items-center gx-0 gy-2">
-                                                <div class="col-auto me-2">
-                                                    <h6 class="client mb-0">
-                                                        <a class="text-800 d-flex align-items-center gap-1"
-                                                            href="../../app/support-desk/contact-details.html">
-                                                            @foreach ($idusers as $iduser)
-                                                            <span class="fas fa-user" data-fa-transform="shrink-3 up-1"></span><span>{{$iduser->name}} </span></a>
-                                                            @endforeach
-                                                    </h6>
-                                                </div>
-                                            </div>
                                             <hr>
                                             <a href="{{ route('getTenantUnit', $tenant->id_tenant) }}"
                                                 class="btn btn-primary btn-sm">Tenant Unit</a>

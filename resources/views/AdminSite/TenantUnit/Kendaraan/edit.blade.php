@@ -10,10 +10,10 @@
                     <label class="form-label">Unit</label>
                     <select class="form-control" name="id_unit" required>
                         <option selected disabled>-- Pilih Unit --</option>
-                        @foreach ($getCreateUnits as $unit)
-                            <option value="{{ $unit->id_unit }}"
-                                {{ $tenantkendaraan->id_unit == $unit->id_unit ? 'selected' : '' }}>
-                                {{ $unit->nama_unit }}
+                        @foreach ($getCreateUnits as $item)
+                            <option value="{{ $item->id_unit }}"
+                                {{ $tenantkendaraan->id_unit == $item->Unit->id_unit ? 'selected' : '' }}>
+                                {{ $item->Unit->nama_unit }}
                             </option>
                         @endforeach
                     </select>
@@ -33,7 +33,8 @@
             <div class="row">
                 <div class="col-6">
                     <label class="form-label">No Polisi </label>
-                    <input type="text" name="no_polisi" value="{{ $tenantkendaraan->no_polisi }}" class="form-control" required>
+                    <input type="text" name="no_polisi" value="{{ $tenantkendaraan->no_polisi }}"
+                        class="form-control" required>
                 </div>
             </div>
         </div>

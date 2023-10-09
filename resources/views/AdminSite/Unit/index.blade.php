@@ -181,7 +181,6 @@
                     id_floor
                 },
                 success: function(data) {
-                    console.log(data.html)
                     $('#all-units').html(data.html)
                 }
             })

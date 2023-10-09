@@ -183,10 +183,8 @@
                 }
             })
         })
-        console.log(tickets);
 
         $('document').on('ready', function() {
-            console.log(tickets)
             tickets.map((ticket, i) => {
                 // $('#list_tickets').html(`
                 //     <div class="list bg-light p-x1 d-flex flex-column gap-3">
