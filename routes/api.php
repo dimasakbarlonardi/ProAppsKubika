@@ -110,6 +110,8 @@ Route::prefix('v1')->group(function () {
         Route::post('/attendance/checkin/{token}', [AttendanceController::class, 'checkin']);
         Route::post('/attendance/checkout/{token}', [AttendanceController::class, 'checkout']);
         Route::get('/attendance/shift-schedule/{userID}', [AttendanceController::class, 'shiftSchedule']);
+        Route::get('/attendance/today-activity/{userID}', [AttendanceController::class, 'todayData']);
+        Route::get('/attendance/recent-activity/{userID}', [AttendanceController::class, 'recentData']);
 
         // Package
         Route::post('/package', [PackageController::class, 'store']);

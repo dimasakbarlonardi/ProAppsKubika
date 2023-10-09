@@ -43,11 +43,11 @@
                     <hr>
                     <div class="row mb-3">
                         <div class="col-6">
-                            <label class="form-label">Nama Site</label>
+                            <label class="form-label">Site Name</label>
                             <input type="text" value="Park Royale" class="form-control" readonly>
                         </div>
                         <div class="col-6">
-                            <label class="form-label">Nama Tenant</label>
+                            <label class="form-label">Tenant Name</label>
                             <input type="text" value="{{ old('nama_tenant') }}" name="nama_tenant" class="form-control"
                                 required>
                         </div>
@@ -59,7 +59,7 @@
                                 required>
                         </div>
                         <div class="col-6">
-                            <label class="form-label">Nik Tenant</label>
+                            <label class="form-label">NIK Tenant</label>
                             <input type="text" value="{{ old('nik_tenant') }}" maxlength="16" name="nik_tenant"
                                 class="form-control" required>
                         </div>
@@ -92,53 +92,43 @@
                     </div>
                     <div class="row mb-3">
                         <div class="col-6">
-                            <label class="form-label">Kewarganegaraan</label>
+                            <label class="form-label">Citizenship</label>
                             <input type="text" value="{{ old('kewarganegaraan') }}" name="kewarganegaraan"
                                 class="form-control" required>
                         </div>
                         <div class="col-6">
-                            <label class="form-label">Masa Berlaku ID</label>
-                            <input type="date" value="{{ old('masa_berlaku_id') }}" name="masa_berlaku_id"
-                                class="form-control" required>
-                        </div>
-
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-6">
-                            <label class="form-label">Alamat KTP Tenant</label>
-                            <textarea type="text" rows="10" name="alamat_ktp_tenant" class="form-control" required>{{ old('alamat_ktp_tenant') }}</textarea>
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label">Provinsi</label>
+                            <label class="form-label">Province</label>
                             <input type="text" value="{{ old('provinsi') }}" name="provinsi" class="form-control"
                                 required>
                         </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-6">
+                            <label class="form-label">KTP Address Tenant</label>
+                            <textarea type="text" rows="10" name="alamat_ktp_tenant" class="form-control" required>{{ old('alamat_ktp_tenant') }}</textarea>
+                        </div>
+
 
                     </div>
                     <div class="row mb-3">
                         <div class="col-6">
-                            <label class="form-label">Kode Pos</label>
+                            <label class="form-label">Postal Code</label>
                             <input type="text" value="{{ old('kode_pos') }}" name="kode_pos" class="form-control"
                                 required>
                         </div>
                         <div class="col-6">
-                            <label class="form-label">Alamat Tinggal Tenant</label>
-                            <input type="text" value="{{ old('alamat_tinggal_tenant') }}"
-                                name="alamat_tinggal_tenant" class="form-control" required>
+                            <label class="form-label">No Telp Tenant </label>
+                            <input type="text" value="{{ old('no_telp_tenant') }}" maxlength="13" name="no_telp_tenant"
+                                class="form-control" required>
                         </div>
-
                     </div>
                 </div>
                 <div class="row mb-3">
+
                     <div class="col-6">
-                        <label class="form-label">No Telp Tenant </label>
-                        <input type="text" value="{{ old('no_telp_tenant') }}" maxlength="13" name="no_telp_tenant"
-                            class="form-control" required>
-                    </div>
-                    <div class="col-6">
-                        <label class="form-label">Status Kawin</label>
+                        <label class="form-label">Marriage Status</label>
                         <select class="form-control" name="id_status_kawin" id="id_status_kawin" required>
-                            <option selected disabled>-- Pilih Status Kawin --</option>
+                            <option selected disabled>-- Select Marriage Status --</option>
                             @foreach ($statuskawins as $statuskawin)
                                 <option value="{{ $statuskawin->id_status_kawin }}"
                                     @if (old('id_status_kawin') == $statuskawin->id_status_kawin) selected @endif>{{ $statuskawin->status_kawin }}
@@ -148,91 +138,50 @@
                     </div>
                 </div>
 
-                <div class="penjamin mt-5" id="penjamin">
-                    <h5>Pasangan</h5>
-                    <hr>
-                    <div class="row mb-3">
-                        <div class="col-6">
-                            <label class="form-label">Nama Pasangan</label>
-                            <input type="text" value="{{ old('nama_pasangan_penjamin') }}"
-                                name="nama_pasangan_penjamin" class="form-control">
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label">NIK Pasangan</label>
-                            <input type="text" value="{{ old('nik_pasangan_penjamin') }}" maxlength="16"
-                                name="nik_pasangan_penjamin" class="form-control">
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-6">
-                            <label class="form-label">Alamat KTP Pasangan</label>
-                            <input type="text" value="{{ old('alamat_ktp_pasangan_penjamin') }}"
-                                name="alamat_ktp_pasangan_penjamin" class="form-control">
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label">Alamat Tinggal Pasangan</label>
-                            <input type="text" value="{{ old('alamat_tinggal_pasangan_penjamin') }}"
-                                name="alamat_tinggal_pasangan_penjamin" class="form-control">
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-6">
-                            <label class="form-label">Hubungan Pasangan</label>
-                            <input type="text" value="{{ old('hubungan_penjamin') }}" name="hubungan_penjamin"
-                                class="form-control">
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label">No Telp Pasangan</label>
-                            <input type="text" value="{{ old('no_telp_penjamin') }}" maxlength="13"
-                                name="no_telp_penjamin" class="form-control">
-                        </div>
-                    </div>
-                </div>
-
                 <div class="penjamin mt-5" id="pasangan">
-                    <h5>Penjamin</h5>
+                    <h5>Second Contact <small class="text-danger">(optional)</small></h5>
                     <hr>
                     <div class="row mb-3">
                         <div class="col-6">
-                            <label class="form-label">Nama Penjamin</label>
+                            <label class="form-label">Contact Name</label>
                             <input type="text" value="{{ old('nama_pasangan_penjamin') }}"
                                 name="nama_pasangan_penjamin" class="form-control">
                         </div>
                         <div class="col-6">
-                            <label class="form-label">Nik Penjamin</label>
+                            <label class="form-label">NIK Contact</label>
                             <input type="text" value="{{ old('nik_pasangan_penjamin') }}" maxlength="16"
                                 name="nik_pasangan_penjamin" class="form-control">
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div class="col-6">
-                            <label class="form-label">Alamat KTP Penjamin</label>
+                            <label class="form-label">KTP Address Contact</label>
                             <input type="text" value="{{ old('alamat_ktp_pasangan_penjamin') }}"
                                 name="alamat_ktp_pasangan_penjamin" class="form-control">
                         </div>
                         <div class="col-6">
-                            <label class="form-label">Alamat Tinggal Penjamin</label>
+                            <label class="form-label">Contact Address</label>
                             <input type="text" value="{{ old('alamat_tinggal_pasangan_penjamin') }}"
                                 name="alamat_tinggal_pasangan_penjamin" class="form-control">
                         </div>
                     </div>
                     <div class="row mb-3">
                         <div class="col-6">
-                            <label class="form-label">Hubungan Penjamin</label>
+                            <label class="form-label">Contact Relationship</label>
                             <input type="text" value="{{ old('hubungan_penjamin') }}" name="hubungan_penjamin"
                                 class="form-control">
                         </div>
                         <div class="col-6">
-                            <label class="form-label">No Telp Penjamin</label>
+                            <label class="form-label">Contact Phone</label>
                             <input type="text" value="{{ old('no_telp_penjamin') }}" maxlength="13"
                                 name="no_telp_penjamin" class="form-control">
                         </div>
                     </div>
                 </div>
 
-                <div class="mt-5">
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                </div>
+                {{-- <div class="mt-5"> --}}
+                    <button type="submit" class="btn btn-primary text-center mt-5">Submit</button>
+                {{-- </div> --}}
             </div>
         </div>
     </form>
@@ -254,32 +203,27 @@
         });
 
         $(document).ready(function() {
-            var status = $('#id_status_kawin').val();
+            // var status = $('#id_status_kawin').val();
 
-            if (status == 1) {
-                $('#penjamin').css('display', 'none')
-                $('#pasangan').css('display', 'block')
-            } else {
-                $('#penjamin').css('display', 'block')
-                $('#pasangan').css('display', 'none')
-            }
+            // if (status == 1) {
+            //     $('#penjamin').css('display', 'none')
+            //     $('#pasangan').css('display', 'block')
+            // } else {
+            //     $('#penjamin').css('display', 'block')
+            //     $('#pasangan').css('display', 'none')
+            // }
 
-            $('#id_status_kawin').on('change', function() {
-                var status = $(this).val();
+            // $('#id_status_kawin').on('change', function() {
+            //     var status = $(this).val();
 
-                if (status == 1) {
-                    $('#penjamin').css('display', 'block')
-                    $('#pasangan').css('display', 'none')
-                } else {
-                    $('#penjamin').css('display', 'none')
-                    $('#pasangan').css('display', 'block')
-                }
-            })
-
-
-
-
-
+            //     if (status == 1) {
+            //         $('#penjamin').css('display', 'block')
+            //         $('#pasangan').css('display', 'none')
+            //     } else {
+            //         $('#penjamin').css('display', 'none')
+            //         $('#pasangan').css('display', 'block')
+            //     }
+            // })
         })
     </script>
 @endsection

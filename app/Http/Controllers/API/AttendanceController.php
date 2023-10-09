@@ -246,4 +246,40 @@ class AttendanceController extends Controller
             'Success get site location'
         );
     }
+
+    public function todayData($userID)
+    {
+        $connUser = ConnectionDB::setConnection(new User());
+        $connAttend = ConnectionDB::setConnection(new WorkTimeline());
+
+        $user = $connUser->find($userID);
+
+        $getAttends = $connAttend->where('karyawan_id', $user->Karyawan->id)
+            ->with('ShiftType')
+            ->where('date', Carbon::now()->format('Y-m-d'))
+            ->first();
+
+        return ResponseFormatter::success(
+            $getAttends,
+            'Success get site location'
+        );
+    }
+
+    public function recentData($userID)
+    {
+        $connUser = ConnectionDB::setConnection(new User());
+        $connAttend = ConnectionDB::setConnection(new WorkTimeline());
+
+        $user = $connUser->find($userID);
+
+        $getAttends = $connAttend->where('karyawan_id', $user->Karyawan->id)
+            ->with('ShiftType')
+            ->orderBy('created_at', 'DESC')
+            ->get();
+
+        return ResponseFormatter::success(
+            $getAttends[1],
+            'Success get site location'
+        );
+    }
 }
