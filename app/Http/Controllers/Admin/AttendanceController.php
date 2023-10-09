@@ -6,6 +6,7 @@ use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
 use App\Models\Attendance;
 use App\Models\Karyawan;
+use App\Models\Coordinate;
 use App\Models\Site;
 use App\Models\User;
 use App\Models\WorkTimeline;
@@ -17,32 +18,6 @@ class AttendanceController extends Controller
 {
     public function index()
     {
-        // $nowDate = Carbon::now()->format('Y-m-d');
-        // $attendances = DB::connection('park-royale')
-        //     ->table('tb_work_timeline as wt')
-        //     ->select('u.id_user', 'wt.date', 'shift_type_id', 'u.id_site')
-        //     ->join('tb_karyawan as k', 'k.id_karyawan', '=', 'wt.karyawan_id')
-        //     ->join('tb_user as u', 'u.login_user', '=', 'k.email_karyawan')
-        //     ->get();
-
-        // foreach ($attendances as $schedule) {
-        //     $attendance = new Attendance();
-        //     $attendance->setConnection('park-royale');
-
-        //     $currAttendance = $attendance->where('date_schedule', $schedule->date)
-        //         ->first();
-
-        //     $status = $nowDate > $schedule->date;
-        //     if ($status && !$currAttendance) {
-        //         $attendance->id_site = $schedule->id_site;
-        //         $attendance->id_user = $schedule->id_user;
-        //         $attendance->status_absence = 'Alpha';
-        //         $attendance->date_schedule = $schedule->date;
-        //         $attendance->status = 'Finish';
-        //         $attendance->save();
-        //     }
-        // }
-
         $connKaryawan = ConnectionDB::setConnection(new Karyawan());
 
         $data['karyawans'] = $connKaryawan
@@ -107,6 +82,10 @@ class AttendanceController extends Controller
 
     public function coordinates()
     {
-        return view('AdminSite.Attendance.coordinates');
+        $connCoordinates = ConnectionDB::setConnection(new Coordinate());
+
+        $data['coordinates'] = $connCoordinates->get();
+
+        return view('AdminSite.Attendance.coordinates', $data);
     }
 }

@@ -7,7 +7,7 @@
                 <div class="card-header py-2">
                     <div class="row flex-between-center">
                         <div class="my-3 col-auto">
-                            <h6 class="mb-0 text-white">List Utility Usage Recording Water</h6>
+                            <h6 class="mb-0 text-white">Invoices</h6>
                         </div>
                     </div>
                 </div>
@@ -63,7 +63,6 @@
                                                 </td>
                                                 <td class="text-center">
                                                     <a href="{{ route('showInvoices', $item->id) }}" class="btn btn-outline-info btn-sm">View</a>
-                                                    <a class="btn btn-outline-success btn-sm">Download</a>
                                                 </td>
                                             </tr>
                                         @endforeach

@@ -39,6 +39,7 @@ class HelpNotifikasi
 
     public function paymentMonthlyTenant($mt)
     {
+        dd($mt);
         $connNotif = ConnectionDB::setConnection(new Notifikasi());
         $request = Request();
 

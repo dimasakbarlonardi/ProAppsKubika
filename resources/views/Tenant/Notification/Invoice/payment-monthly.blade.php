@@ -14,12 +14,14 @@
                             <span>Pay Before</span>
                             <h3 class="" id="countdown"></h3>
                             <span>Virtual Number</span>
-                            <p class="lead text-800 font-sans-serif fw-semi-bold w-md-75 w-xl-100 mx-auto">{{ $transaction->bank }} : {{ $transaction->va_number }}</p>
+                            <p class="lead text-800 font-sans-serif fw-semi-bold w-md-75 w-xl-100 mx-auto">
+                                {{ $transaction->bank }} : {{ $transaction->va_number }}</p>
                             <hr />
                             <p>Make sure the address is correct and that the page hasn't moved. If you think this is a
                                 mistake, <a href="mailto:info@exmaple.com">contact us</a>.</p>
-                            <a class="btn btn-primary btn-sm mt-3" href="">
-                                <span class="fas fa-home me-2"></span>Check payment status</a>
+                            <button onclick="checkPaymentStatus('{{ $transaction->transaction_id }}')"
+                                class="btn btn-primary btn-sm mt-3" href="">
+                                <span class="fas fa-home me-2"></span>Check payment status</button>
                         </div>
                     </div>
                 </div>
@@ -60,5 +62,22 @@
                 document.getElementById("demo").innerHTML = "EXPIRED";
             }
         }, 1000);
+
+        function checkPaymentStatus(transaction_id) {
+            console.log(transaction_id);
+            $.ajax({
+                url: `https://api.sandbox.midtrans.com/v2/${transaction_id}/status`,
+                headers: {
+                    'Accept': 'application/json',
+                    'Authorization': 'Basic U0ItTWlkLXNlcnZlci1VQkJEOVpMcUdRRFBPd2VpekdkSGFnTFo6',
+                    'Content-Type': 'application/json'
+                },
+                type: 'GET',
+                dataType: "jsonp",
+                success: function(resp) {
+                    console.log(resp);
+                }
+            })
+        }
     </script>
 @endsection

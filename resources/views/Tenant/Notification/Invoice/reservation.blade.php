@@ -78,17 +78,6 @@
                     </tr>
                     <tr>
                         <td class="align-middle">
-                            Type Reservation
-                        </td>
-                        <td>:</td>
-                        <td class="align-middle">
-                            <p class="mb-0">
-                               
-                            </p>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="align-middle">
                             Room Reservation
                         </td>
                         <td>:</td>
@@ -117,6 +106,17 @@
                         <td class="align-middle">
                             <p class="mb-0">
                                 {{ $reservation->durasi_acara }}
+                            </p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td class="align-middle">
+                            Deposit
+                        </td>
+                        <td>:</td>
+                        <td class="align-middle">
+                            <p class="mb-0">
+                                {{ Rupiah($reservation->jumlah_deposit) }}
                             </p>
                         </td>
                     </tr>

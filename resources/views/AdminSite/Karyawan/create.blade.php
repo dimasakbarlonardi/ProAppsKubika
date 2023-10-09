@@ -184,7 +184,7 @@
                                 <option value="{{ $statuskaryawan->id_status_karyawan }}">
                                     {{ $statuskaryawan->status_karyawan }}
                                 </option>
-                                <<<<<<< HEAD @endforeach </select>
+                                @endforeach </select>
                         </div>
                     </div>
                 </div>

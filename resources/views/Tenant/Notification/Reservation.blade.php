@@ -65,7 +65,7 @@
                                 </div>
                             </div>
                             <div class="mb-3">
-                                <div class="row">                                   
+                                <div class="row">
                                     <div class="col-6">
                                         <label class="mb-1">Ruang reservasi</label>
                                         <input type="text" class="form-control" disabled
@@ -78,7 +78,7 @@
                                     </div>
                                 </div>
                             </div>
-                            
+
                             <div class="mb-3">
                                 <label class="mb-1">Keterangan</label>
                                 <textarea class="form-control" name="keterangan" id="keterangan_reservation">

@@ -39,9 +39,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Alamat</label>
-                                <textarea class="form-control" id="alamat" cols="20" rows="5" disabled>
-                                    {!! $wp->RequestPermit->alamat !!}
-                                </textarea>
+                                <textarea class="form-control" id="alamat" cols="20" rows="5" disabled>{!! $wp->RequestPermit->alamat !!}</textarea>
                             </div>
                             <div class="mb-3">
                                 <div class="row">
@@ -73,9 +71,7 @@
                             </div>
                             <div class="mb-3">
                                 <label class="form-label">Keterangan Pekerjaan</label>
-                                <textarea class="form-control" id="keterangan_pekerjaan" cols="20" rows="5" disabled>
-                                    {{ $wp->RequestPermit->keterangan_pekerjaan }}
-                                </textarea>
+                                <textarea class="form-control" id="keterangan_pekerjaan" cols="20" rows="5" disabled>{{ $wp->RequestPermit->keterangan_pekerjaan }}</textarea>
                             </div>
                         </div>
                         <div id="ticket_permit" class="mt-3">
