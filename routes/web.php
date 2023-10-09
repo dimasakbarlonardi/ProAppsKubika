@@ -148,7 +148,7 @@ Route::get('/check/midtrans', [PaymentController::class, 'check']);
 Route::get('/send-event', function() {
     $text = "Testing message event notification";
 
-    broadcast(new HelloEvent($text));
+    // broadcast(new HelloEvent($text));
 });
 
 // Check role id
@@ -395,7 +395,7 @@ Route::prefix('admin')->group(function () {
 
         // Notification
         Route::get('/notifications', [DashboardController::class, 'notifications'])->name('notifications');  // Get all notifications list
-        Route::get('/get-notifications', [DashboardController::class, 'getNotifications'])->name('getNotifications');  // Get all notifications by user_id
+        Route::get('/get-notifications/{userID}', [DashboardController::class, 'getNotifications'])->name('getNotifications');  // Get all notifications by user_id
         Route::get('/notification/{id}', [DashboardController::class, 'showNotification'])->name('showNotification'); // Show all notification by user_id
 
         // CRUD Work Order
@@ -435,10 +435,6 @@ Route::prefix('admin')->group(function () {
         // Eng BAPP
         Route::resource('eng-bapp', EngBAPPcontroller::class);
 
-        // Notification
-        Route::get('/notifications', [DashboardController::class, 'notifications'])->name('notifications');  // Get all notifications list
-        Route::get('/get-notifications', [DashboardController::class, 'getNotifications'])->name('getNotifications');  // Get all notifications by user_id
-        Route::get('/notification/{id}', [DashboardController::class, 'showNotification'])->name('showNotification'); // Show all notification by user_id
 
         //CRUD OffBoarding Tenant
         Route::resource('offtenants', OffBoardingTenantController::class);

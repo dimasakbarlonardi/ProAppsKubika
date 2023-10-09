@@ -13,7 +13,6 @@ class HelpNotifikasi
 {
     public function paymentWO($woID, $transaction)
     {
-        dd($woID, $transaction);
         $connWO = ConnectionDB::setConnection(new WorkOrder());
         $connNotif = ConnectionDB::setConnection(new Notifikasi());
         $connApprove = ConnectionDB::setConnection(new Approve());
