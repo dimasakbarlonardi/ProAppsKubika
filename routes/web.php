@@ -346,6 +346,8 @@ Route::prefix('admin')->group(function () {
         // Akses form for user
         Route::get('/akses-form-user/{id}', [RoleController::class, 'aksesForm'])->name('get-akses-form');
         Route::post('/akses-form-user/{id}', [RoleController::class, 'storeAksesForm'])->name('akses-form');
+        Route::get('/access-mobile-menu/{id}', [RoleController::class, 'aksesMobile'])->name('akses-mobile');
+        Route::post('/access-mobile-menu/{id}', [RoleController::class, 'storeAksesMobile'])->name('storeAksesMobile');
 
         //CRUD OffBoarding Tenant Unit
         Route::resource('offtenantunits', OffBoardingTenantUnitController::class);
