@@ -12,7 +12,6 @@
         <div class="p-5">
             <form method="post" action="{{ route('updateSystemApprove', $approve->id_approval_subject) }}">
                 @csrf
-                {{-- {{ dd($roles[5]->WorkRelation) }} --}}
                 <div class="mb-3">
                     <div class="row">
                         <div class="col-6">
@@ -21,7 +20,7 @@
                                 @foreach ($roles as $role)
                                     <option
                                         {{ $role->WorkRelation->id_work_relation == $approve->approval_1 ? 'selected' : '' }}
-                                        value="{{ $role->WorkRelation->id_work_relation }}">{{ $role->nama_role }}</option>
+                                        value="{{ $role->WorkRelation->id_work_relation }}">{{ $role->WorkRelation->work_relation }}</option>
                                 @endforeach
                             </select>
                         </div>

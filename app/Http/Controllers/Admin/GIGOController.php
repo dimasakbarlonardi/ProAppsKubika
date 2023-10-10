@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\HelloEvent;
 use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
 use App\Models\Approve;
@@ -27,10 +28,24 @@ class GIGOController extends Controller
 
     public function update(Request $request, $id)
     {
+        $connApprove = ConnectionDB::setConnection(new Approve());
         $connGIGO = ConnectionDB::setConnection(new RequestGIGO());
 
+        $approve = $connApprove->find(8);
         $gigo = $connGIGO->find($id);
         $gigo->update($request->all());
+
+        $dataNotif = [
+            'models' => 'GIGO',
+            'notif_title' => $gigo->no_request_gigo,
+            'id_data' => $gigo->id,
+            'sender' => $request->session()->get('user_id'),
+            'division_receiver' => $approve->approval_1,
+            'notif_message' => 'Form GIGO sudah dilengkapi, terima kasih',
+            'receiver' => null,
+        ];
+
+        broadcast(new HelloEvent($dataNotif));
 
         Alert::success('Berhasil', 'Berhasil mengupdate tiket');
 
@@ -60,10 +75,12 @@ class GIGOController extends Controller
         return response()->json(['status' => 'ok']);
     }
 
-    public function gigoApprove1($id)
+    public function gigoApprove1(Request $request, $id)
     {
+        $connApprove = ConnectionDB::setConnection(new Approve());
         $connDetailGIGO = ConnectionDB::setConnection(new RequestGIGO());
 
+        $approve = $connApprove->find(8);
         $gigo = $connDetailGIGO->find($id);
 
         $gigo->update([
@@ -71,12 +88,22 @@ class GIGOController extends Controller
             'status_request' => 'APPROVED'
         ]);
 
-        Alert::success('Berhasil', 'Berhasil approve GIGO');
+        $dataNotif = [
+            'models' => 'GIGO',
+            'notif_title' => $gigo->no_request_gigo,
+            'id_data' => $gigo->id,
+            'sender' => $request->session()->get('user_id'),
+            'division_receiver' => $approve->approval_2,
+            'notif_message' => 'Form GIGO sudah diapprove, mohon di tindak lanjuti',
+            'receiver' => null,
+        ];
 
-        return redirect()->back();
+        broadcast(new HelloEvent($dataNotif));
+
+        return response()->json(['status' => 'ok']);
     }
 
-    public function gigoApprove2($id)
+    public function gigoApprove2(Request $request, $id)
     {
         $connDetailGIGO = ConnectionDB::setConnection(new RequestGIGO());
 
@@ -86,21 +113,45 @@ class GIGOController extends Controller
             'sign_approval_2' => Carbon::now()
         ]);
 
-        Alert::success('Berhasil', 'Berhasil approve GIGO');
+        $dataNotif = [
+            'models' => 'GIGO',
+            'notif_title' => $gigo->no_request_gigo,
+            'id_data' => $gigo->id,
+            'sender' => $request->session()->get('user_id'),
+            'division_receiver' => null,
+            'notif_message' => 'GIGO disetujui, mohon melakukan kegiatan sesuai jadwal',
+            'receiver' => $gigo->Ticket->Tenant->User->id_user,
+        ];
 
-        return redirect()->back();
+        broadcast(new HelloEvent($dataNotif));
+
+        return response()->json(['status' => 'ok']);
     }
 
-    public function gigoDone($id)
+    public function gigoDone(Request $request, $id)
     {
         $connDetailGIGO = ConnectionDB::setConnection(new RequestGIGO());
+        $connApprove = ConnectionDB::setConnection(new Approve());
 
+        $approve = $connApprove->find(8);
         $gigo = $connDetailGIGO->find($id);
 
         $gigo->status_request = 'DONE';
         $gigo->save();
         $gigo->Ticket->status_request = 'DONE';
         $gigo->Ticket->save();
+
+        $dataNotif = [
+            'models' => 'GIGO',
+            'notif_title' => $gigo->no_request_gigo,
+            'id_data' => $gigo->id,
+            'sender' => $request->session()->get('user_id'),
+            'division_receiver' => null,
+            'notif_message' => 'GIGO telah selesai, terima kasih',
+            'receiver' => $approve->approval_3,
+        ];
+
+        broadcast(new HelloEvent($dataNotif));
 
         Alert::success('Berhasil', 'Berhasil approve GIGO');
 
@@ -114,13 +165,12 @@ class GIGOController extends Controller
         $gigo = $connDetailGIGO->find($id);
 
         $gigo->status_request = 'COMPLETE';
+        $gigo->sign_approval_3 = Carbon::now();
         $gigo->save();
         $gigo->Ticket->status_request = 'COMPLETE';
         $gigo->Ticket->save();
 
-        Alert::success('Berhasil', 'Berhasil approve GIGO');
-
-        return redirect()->back();
+        return response()->json(['status' => 'ok']);
     }
 
     public function show($id)
