@@ -42,14 +42,19 @@ class HelloEvent implements ShouldBroadcast
 
     public function broadcastWith()
     {
-        $connNotif = ConnectionDB::setConnection(new Notifikasi());
-
         $dataNotif = $this->dataNotif;
 
+        if (!isset($dataNotif['connection'])) {
+            $connNotif = ConnectionDB::setConnection(new Notifikasi());
+        } else {
+            $connNotif = new Notifikasi();
+            $connNotif = $connNotif->setConnection($dataNotif['connection']);
+        }
+
         $notif = $connNotif->where('models', $dataNotif['models'])
-        ->where('is_read', 0)
-        ->where('id_data', $dataNotif['id_data'])
-        ->first();
+            ->where('is_read', 0)
+            ->where('id_data', $dataNotif['id_data'])
+            ->first();
 
         if (!$notif) {
             $notif = $connNotif;

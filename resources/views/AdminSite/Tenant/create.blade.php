@@ -139,7 +139,7 @@
                 </div>
 
                 <div class="penjamin mt-5" id="pasangan">
-                    <h5>Second Contact <small class="text-danger">(optional)</small></h5>
+                    <h5>Emergency Contact <small class="text-danger">(optional)</small></h5>
                     <hr>
                     <div class="row mb-3">
                         <div class="col-6">

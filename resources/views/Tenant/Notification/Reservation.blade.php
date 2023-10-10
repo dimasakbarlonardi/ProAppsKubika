@@ -91,11 +91,37 @@
                                         <label class="mb-1">Jumlah deposit</label>
                                         <div class="input-group flex-nowrap">
                                             <span class="input-group-text" id="addon-wrapping">Rp</span>
-                                            <input class="form-control" value="{{ $reservation->jumlah_deposit }}" name="jumlah_deposit" disabled/>
+                                            <input class="form-control" value="{{ $reservation->jumlah_deposit }}"
+                                                name="jumlah_deposit" disabled />
                                         </div>
                                     </div>
                                 </div>
                             </div>
+                            @if ($reservation->status_bayar == 'PAYED')
+                                <div class="mb-3">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <label class="mb-1">Admin Fee</label>
+                                            <div class="input-group flex-nowrap">
+                                                <span class="input-group-text" id="addon-wrapping">Rp</span>
+                                                <input class="form-control"
+                                                    value="{{ $reservation->CashReceipt->admin_fee }}" name="jumlah_deposit"
+                                                    disabled />
+                                            </div>
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="mb-1">Grand Total</label>
+                                            <div class="input-group flex-nowrap">
+                                                <span class="input-group-text" id="addon-wrapping">Rp</span>
+                                                <input class="form-control"
+                                                    value="{{ $reservation->CashReceipt->gross_amount }}"
+                                                    name="jumlah_deposit" disabled />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            @endif
+
                         </div>
                     </div>
 
@@ -123,11 +149,38 @@
                                     </div>
                                 </div>
                             </div>
-                            @if (!$reservation->sign_approval_1)
+                            @if (!$reservation->sign_approval_1 && $notif->receiver == Session::get('user_id'))
                                 <div class="card-footer border-top border-200 py-x1">
                                     <form action="{{ route('rsvApprove1', $reservation->id) }}" method="post">
                                         @csrf
                                         <button type="submit" class="btn btn-primary w-100">Approve</button>
+                                    </form>
+                                </div>
+                            @endif
+                            @if (
+                                $reservation->sign_approval_1 &&
+                                    !$reservation->sign_approval_2 &&
+                                    $notif->division_receiver == Session::get('work_relation_id'))
+                                <div class="card-footer border-top border-200 py-x1">
+                                    <form action="{{ route('rsvApprove2', $reservation->id) }}" method="post">
+                                        @csrf
+                                        <button type="submit" class="btn btn-primary w-100">Approve</button>
+                                    </form>
+                                </div>
+                            @endif
+                            @if ($reservation->sign_approval_2 && !$reservation->sign_approval_3 && $notif->receiver == Session::get('user_id'))
+                                <div class="card-footer border-top border-200 py-x1">
+                                    <form action="{{ route('rsvApprove3', $reservation->id) }}" method="post">
+                                        @csrf
+                                        <button type="submit" class="btn btn-primary w-100">Approve</button>
+                                    </form>
+                                </div>
+                            @endif
+                            @if ($notif->receiver == Session::get('user_id') && $reservation->Ticket->status_request == 'DONE' && !$reservation->sign_approval_4)
+                                <div class="card-footer border-top border-200 py-x1">
+                                    <form action="{{ route('rsvComplete', $reservation->id) }}" method="post">
+                                        @csrf
+                                        <button type="submit" class="btn btn-primary w-100">Complete</button>
                                     </form>
                                 </div>
                             @endif

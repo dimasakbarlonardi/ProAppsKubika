@@ -59,10 +59,9 @@ class OpenTicketController extends Controller
         $connJenisReq = ConnectionDB::setConnection(new JenisRequest());
 
         if ($user->user_category == 3) {
-            $data['units'] = $connTU->get();
+            $data['units'] = $connTU->where('id_tenant', $user->Tenant->id_tenant)->get();
             $data['tenants'] = $connTenant->get();
         } else {
-
             $data['units'] = $connTU->get();
             $data['tenants'] = $connTenant->get();
         }
@@ -124,7 +123,6 @@ class OpenTicketController extends Controller
             $dataNotif = [
                 'models' => 'OpenTicket',
                 'notif_title' => $createTicket->no_tiket,
-                'message' => $createTicket->no_tiket,
                 'id_data' => $createTicket->id,
                 'sender' => $tenant->User->id_user,
                 'division_receiver' => $receiver->id_work_relation,

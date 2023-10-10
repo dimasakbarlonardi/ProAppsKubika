@@ -76,15 +76,6 @@
                         </div>
                         <div class="mb-3">
                             <div class="row">
-                                {{-- <div class="col-6">
-                                    <label class="mb-1">Tipe reservasi</label>
-                                    <select class="form-control" name="id_type_reservation">
-                                        <option selected disable>--- Pilih tipe reservasi ---</option>
-                                        @foreach ($typeRsv as $type)
-                                            <option value="{{ $type->id_type_reservation }}">{{ $type->type_reservation }}</option>
-                                        @endforeach
-                                    </select>
-                                </div> --}}
                                 <div class="col-6">
                                     <label class="mb-1">Ruang reservasi</label>
                                     <select class="form-control" name="id_ruang_reservation">
@@ -105,19 +96,6 @@
                                 </div>
                             </div>
                         </div>
-                        {{-- <div class="mb-3">
-                            <div class="row">
-                                <div class="col-6">
-                                    <label class="mb-1">Jenis acara</label>
-                                    <select class="form-control" name="id_jenis_acara">
-                                        <option selected disable>--- Pilih jenis acara ---</option>
-                                        @foreach ($jenisAcara as $acara)
-                                            <option value="{{ $acara->id_jenis_acara }}">{{ $acara->jenis_acara }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                        </div> --}}
                         <div class="mb-3">
                             <label class="mb-1">Keterangan</label>
                             <textarea class="form-control" name="keterangan" id="keterangan_reservation"></textarea>
@@ -125,10 +103,17 @@
                         <div class="mb-3">
                             <div class="row">
                                 <div class="col-6">
+                                    <label class="mb-1">Status Reservasi</label>
+                                    <select name="is_deposit" class="form-control" id="is_deposit">
+                                        <option value="1">Berbayar</option>
+                                        <option value="">Tidak berbayar</option>
+                                    </select>
+                                </div>
+                                <div class="col-6">
                                     <label class="mb-1">Jumlah deposit</label>
                                     <div class="input-group flex-nowrap">
                                         <span class="input-group-text" id="addon-wrapping">Rp</span>
-                                        <input class="form-control" type="number" name="jumlah_deposit" />
+                                        <input class="form-control" id="jumlah_deposit" type="number" name="jumlah_deposit" />
                                     </div>
                                 </div>
                             </div>
@@ -207,6 +192,14 @@
                         `)
                 }
             })
+        })
+
+        $('#is_deposit').on('change', function() {
+            if ($(this).val() == 0) {
+                $('#jumlah_deposit').attr("disabled", true);
+            } else {
+                $('#jumlah_deposit').attr("disabled", false);
+            }
         })
 
         function timeDifference(current, previous) {
