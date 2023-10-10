@@ -169,14 +169,29 @@ class ToolsController extends Controller
                 $tool->current_totals = $tool->total_tools - $tool->borrow;
                 $tool->save();
 
-                $connToolHistory->create([
+                $createHistory = $connToolHistory->create([
                     'type' => 'HK',
                     'id_data' => $id,
                     'qty' => $returnQty,
                     'action' => 'Returning',
-                    'borrowed_by' => $user->id_user,
-                    'status' => $tool->current_totals == $tool->total_tools ? 'Returned' : 'Still On Borrow'
+                    'borrowed_by' => $user->id_user
                 ]);
+
+                $countBorrow = $connToolHistory->where('borrowed_by', $user->id_user)
+                    ->where('action', 'Borrowing')
+                    ->sum('qty');
+                $countReturn = $connToolHistory->where('borrowed_by', $user->id_user)
+                    ->where('action', 'Returning')
+                    ->sum('qty');
+
+                if ($countBorrow == $countReturn) {
+                    $status = 'Returned';
+                } else {
+                    $status = 'Still On Borrow';
+                }
+
+                $createHistory->status = $status;
+                $createHistory->save();
 
                 DB::commit();
 
@@ -225,9 +240,24 @@ class ToolsController extends Controller
                 'id_data' => $id,
                 'qty' => $returnQty,
                 'action' => 'Returning',
-                'borrowed_by' => $user->id_user,
-                'status' => $tool->current_totals == $tool->total_tools ? 'Returned' : 'Still On Borrow'
+                'borrowed_by' => $user->id_user
             ]);
+
+            $countBorrow = $connToolHistory->where('borrowed_by', $user->id_user)
+                ->where('action', 'Borrowing')
+                ->sum('qty');
+            $countReturn = $connToolHistory->where('borrowed_by', $user->id_user)
+                ->where('action', 'Returning')
+                ->sum('qty');
+            dd($countBorrow == $countReturn);
+            if ($countBorrow == $countReturn) {
+                $status = 'Returned';
+            } else {
+                $status = 'Still On Borrow';
+            }
+
+            $connToolHistory->status = $status;
+            $connToolHistory->save();
 
             return ResponseFormatter::success(
                 $tool,
@@ -243,13 +273,14 @@ class ToolsController extends Controller
 
         if ($wrID == 9) {
             $histories = $histories->where('type', 'HK')
-                ->with('HKTool')
-                ->get();
+                ->with('HKTool');
         } elseif ($wrID == 8) {
             $histories = $histories->where('type', 'ENG')
-                ->with('EngTool')
-                ->get();
+                ->with('EngTool');
         }
+
+        $histories = $histories->latest()->get();
+
         return ResponseFormatter::success(
             $histories,
             'Success return tools'
