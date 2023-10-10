@@ -1,6 +1,7 @@
 <?php
 
 use App\Helpers\ResponseFormatter;
+use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\API\AttendanceController;
 use App\Http\Controllers\API\BillingController;
 use App\Http\Controllers\API\GIGOController;
@@ -47,6 +48,8 @@ Route::prefix('v1')->group(function () {
     Route::get('/store/insert-water/{unitID}/{token}', [BillingController::class, 'storeWaterMeter'])->name('store-usr-water');
 
     Route::middleware('auth:sanctum')->group(function () {
+        Route::get('get/access-menu/{roleID}', [RoleController::class, 'getAccessAPI']);
+
         Route::post('get/cc-token', [BillingController::class, 'getTokenCC']);
 
         Route::get('/user', [UserController::class, 'user'])->name('user');
