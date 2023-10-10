@@ -97,7 +97,7 @@
                                     </div>
                                 </div>
                             </div>
-                            @if ($reservation->status_bayar == 'PAYED')
+                            @if ($reservation->status_bayar == 'PAYED' && $reservation->is_deposit)
                                 <div class="mb-3">
                                     <div class="row">
                                         <div class="col-6">
@@ -149,7 +149,10 @@
                                     </div>
                                 </div>
                             </div>
-                            @if (!$reservation->sign_approval_1 && $notif->receiver == Session::get('user_id'))
+                            @if (
+                                !$reservation->sign_approval_1 &&
+                                    $notif->receiver == Session::get('user_id') &&
+                                    $reservation->Ticket->status_request != 'REJECTED')
                                 <div class="card-footer border-top border-200 py-x1">
                                     <form action="{{ route('rsvApprove1', $reservation->id) }}" method="post">
                                         @csrf
@@ -160,7 +163,8 @@
                             @if (
                                 $reservation->sign_approval_1 &&
                                     !$reservation->sign_approval_2 &&
-                                    $notif->division_receiver == Session::get('work_relation_id'))
+                                    $notif->division_receiver == Session::get('work_relation_id') &&
+                                    $reservation->Ticket->status_request != 'REJECTED')
                                 <div class="card-footer border-top border-200 py-x1">
                                     <form action="{{ route('rsvApprove2', $reservation->id) }}" method="post">
                                         @csrf
@@ -168,7 +172,11 @@
                                     </form>
                                 </div>
                             @endif
-                            @if ($reservation->sign_approval_2 && !$reservation->sign_approval_3 && $notif->receiver == Session::get('user_id'))
+                            @if (
+                                $reservation->sign_approval_2 &&
+                                    !$reservation->sign_approval_3 &&
+                                    $notif->receiver == Session::get('user_id') &&
+                                    $reservation->Ticket->status_request != 'REJECTED')
                                 <div class="card-footer border-top border-200 py-x1">
                                     <form action="{{ route('rsvApprove3', $reservation->id) }}" method="post">
                                         @csrf
@@ -176,7 +184,11 @@
                                     </form>
                                 </div>
                             @endif
-                            @if ($notif->receiver == Session::get('user_id') && $reservation->Ticket->status_request == 'DONE' && !$reservation->sign_approval_4)
+                            @if (
+                                $notif->receiver == Session::get('user_id') &&
+                                    $reservation->Ticket->status_request == 'DONE' &&
+                                    !$reservation->sign_approval_4 &&
+                                    $reservation->Ticket->status_request != 'REJECTED')
                                 <div class="card-footer border-top border-200 py-x1">
                                     <form action="{{ route('rsvComplete', $reservation->id) }}" method="post">
                                         @csrf
