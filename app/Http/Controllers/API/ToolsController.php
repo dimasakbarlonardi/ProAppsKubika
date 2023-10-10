@@ -5,9 +5,12 @@ namespace App\Http\Controllers\API;
 use App\Helpers\ConnectionDB;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
+use App\Models\ToolHistory;
 use App\Models\ToolsEngineering;
 use App\Models\ToolsHousekeeping;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ToolsController extends Controller
 {
@@ -36,33 +39,51 @@ class ToolsController extends Controller
 
     public function borrowTool(Request $request, $wrID, $id)
     {
+        $connToolHistory = ConnectionDB::setConnection(new ToolHistory());
+        $connUser = ConnectionDB::setConnection(new User());
+        $user = $connUser->where('login_user', $request->user()->email)->first();
+
         if ($wrID == 9) {
             $connToolsHK = ConnectionDB::setConnection(new ToolsHousekeeping());
+
             $tool = $connToolsHK->find($id);
+
             try {
+                DB::beginTransaction();
+
                 $borrowQty = (int) $request->amount;
 
-                if ($borrowQty <= 0 || $borrowQty > $tool->total_tools - $tool->borrow) {
+                if ($borrowQty <= 0 || $borrowQty > ($tool->total_tools - $tool->borrow)) {
                     return ResponseFormatter::error([
                         'message' => 'Error'
                     ], 'Invalid borrow quantity');
                 }
 
-                $user_id = $request->user()->id;
-
                 // Memperbarui atribut-atribut alat
                 $tool->borrow += $borrowQty;
                 $tool->date_out = now();
                 $tool->status = 1; // Item masih dipinjam
-                $tool->id_user = $user_id;
                 $tool->current_totals = $tool->total_tools - $tool->borrow;
                 $tool->save();
+
+                $connToolHistory->create([
+                    'type' => 'HK',
+                    'id_data' => $id,
+                    'qty' => $borrowQty,
+                    'borrowed_by' => $user->id_user,
+                    'action' => 'Borrowing',
+                    'status' => 'Still On Borrow'
+                ]);
+
+                DB::commit();
 
                 return ResponseFormatter::success(
                     $tool,
                     'Success borrow tools'
                 );
             } catch (\Exception $e) {
+                DB::rollBack();
+                dd($e);
                 return ResponseFormatter::error([
                     'message' => 'An error occurred while borrowing the tool.'
                 ], 'Invalid return quantity');
@@ -72,31 +93,38 @@ class ToolsController extends Controller
                 // Menghubungkan ke database dan mencari alat berdasarkan ID
                 $conn = ConnectionDB::setConnection(new ToolsEngineering());
                 $tool = $conn->find($id);
-                $borrowQty = $request->amount;
+                $borrowQty = (int) $request->amount;
 
                 // Validasi jumlah peminjaman
-                if ($borrowQty <= 0 || $borrowQty > $tool->total_tools - $tool->borrow) {
+                if ($borrowQty <= 0 || $borrowQty > ($tool->total_tools - $tool->borrow)) {
                     return ResponseFormatter::error([
                         'message' => 'Error'
                     ], 'Invalid borrow quantity');
                 }
 
-                // Mengambil ID pengguna yang sedang login
-                $user_id = $request->user()->id;
-
                 // Memperbarui atribut-atribut alat
                 $tool->borrow += $borrowQty;
                 $tool->date_out = now();
                 $tool->status = 1; // Item masih dipinjam
-                $tool->id_user = $user_id;
                 $tool->current_totals = $tool->total_tools - $tool->borrow;
                 $tool->save();
+
+                $connToolHistory->create([
+                    'type' => 'ENG',
+                    'id_data' => $id,
+                    'qty' => $borrowQty,
+                    'borrowed_by' => $user->id_user,
+                    'action' => 'Borrowing',
+                    'status' => 'Still On Borrow'
+                ]);
 
                 return ResponseFormatter::success(
                     $tool,
                     'Success borrow tools'
                 );
             } catch (\Exception $e) {
+                DB::rollBack();
+                dd($e);
                 return ResponseFormatter::error([
                     'message' => 'An error occurred while borrowing the tool.'
                 ], 'Data not found');
@@ -106,12 +134,18 @@ class ToolsController extends Controller
 
     public function returnTool(Request $request, $wrID, $id)
     {
+        $connToolHistory = ConnectionDB::setConnection(new ToolHistory());
+        $connUser = ConnectionDB::setConnection(new User());
+        $user = $connUser->where('login_user', $request->user()->email)->first();
+
         if ($wrID == 9) {
             try {
+                DB::beginTransaction();
+
                 $conn = ConnectionDB::setConnection(new ToolsHousekeeping());
                 $tool = $conn->find($id);
 
-                $returnQty = $request->amount;
+                $returnQty = (int) $request->amount;
 
                 if ($returnQty <= 0 || $returnQty > $tool->borrow) {
                     return ResponseFormatter::error([
@@ -130,17 +164,30 @@ class ToolsController extends Controller
                     $tool->status = 0; // Item completed
                     $tool->date_out = null;
                 }
-                $tool->save();
 
                 // Update current_totals
                 $tool->current_totals = $tool->total_tools - $tool->borrow;
                 $tool->save();
+
+                $connToolHistory->create([
+                    'type' => 'HK',
+                    'id_data' => $id,
+                    'qty' => $returnQty,
+                    'action' => 'Returning',
+                    'borrowed_by' => $user->id_user,
+                    'status' => $tool->current_totals == $tool->total_tools ? 'Returned' : 'Still On Borrow'
+                ]);
+
+                DB::commit();
 
                 return ResponseFormatter::success(
                     $tool,
                     'Tool returned successfully'
                 );
             } catch (\Exception $e) {
+                DB::rollBack();
+                dd($e);
+
                 return ResponseFormatter::error([
                     'message' => 'An error occurred while borrowing the tool.'
                 ], 'Invalid return quantity');
@@ -168,16 +215,44 @@ class ToolsController extends Controller
                 $tool->status = 0; // Item completed
                 $tool->date_out = null;
             }
-            $tool->save();
 
             // Update current_totals
             $tool->current_totals = $tool->total_tools - $tool->borrow;
             $tool->save();
+
+            $connToolHistory->create([
+                'type' => 'ENG',
+                'id_data' => $id,
+                'qty' => $returnQty,
+                'action' => 'Returning',
+                'borrowed_by' => $user->id_user,
+                'status' => $tool->current_totals == $tool->total_tools ? 'Returned' : 'Still On Borrow'
+            ]);
 
             return ResponseFormatter::success(
                 $tool,
                 'Success return tools'
             );
         }
+    }
+
+    public function historyTools($wrID, $userID)
+    {
+        $connToolHistory = ConnectionDB::setConnection(new ToolHistory());
+        $histories = $connToolHistory->where('borrowed_by', $userID);
+
+        if ($wrID == 9) {
+            $histories = $histories->where('type', 'HK')
+                ->with('HKTool')
+                ->get();
+        } elseif ($wrID == 8) {
+            $histories = $histories->where('type', 'ENG')
+                ->with('EngTool')
+                ->get();
+        }
+        return ResponseFormatter::success(
+            $histories,
+            'Success return tools'
+        );
     }
 }

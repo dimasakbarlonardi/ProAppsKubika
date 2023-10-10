@@ -34,15 +34,15 @@ class ToolsEngController extends Controller
         try {
             // Menghubungkan ke database dan mencari alat berdasarkan ID
             $conn = ConnectionDB::setConnection(new ToolsEngineering());
-            $tool = $conn->findOrFail($id); 
+            $tool = $conn->findOrFail($id);
             $borrowQty = $request->input('borrow_qty');
-        
+
             // Validasi jumlah peminjaman
             if ($borrowQty <= 0 || $borrowQty > $tool->total_tools - $tool->borrow) {
                 Alert::error('error', 'Invalid borrow quantity');
                 return redirect()->back();
             }
-            
+
             // Mengambil ID pengguna yang sedang login
             $user_id = $request->user()->id;
 
@@ -91,7 +91,7 @@ class ToolsEngController extends Controller
         $tool->save();
         Alert::success('success', 'Tool returned successfully');
         return redirect()->back();
-    } 
+    }
 
 
 
@@ -120,6 +120,7 @@ class ToolsEngController extends Controller
             $conn->create([
                 'name_tools' => $request->name_tools,
                 'total_tools' => $request->total_tools,
+                'current_totals' => $request->total_tools,
             ]);
 
             DB::commit();
