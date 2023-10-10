@@ -177,8 +177,6 @@ class ReservationController extends Controller
 
         try {
             DB::beginTransaction();
-            $rsv->sign_approval_2 = Carbon::now();
-            $rsv->save();
 
             if ($rsv->is_deposit) {
                 $createTransaction = $connTransaction;
@@ -209,20 +207,25 @@ class ReservationController extends Controller
                 ];
 
                 broadcast(new HelloEvent($dataNotif));
-
             } else {
                 $dataNotif = [
                     'models' => 'Reservation',
-                    'notif_title' => $createRsv->no_request_reservation,
-                    'id_data' => $createRsv->id,
-                    'sender' => $user->id_user,
+                    'notif_title' => $rsv->no_request_reservation,
+                    'id_data' => $rsv->id,
+                    'sender' => $request->session()->get('user')->id_user,
                     'division_receiver' => null,
                     'notif_message' => 'Request Reservation diterima, mohon approve reservasi',
-                    'receiver' => $ticket->Tenant->User->id_user,
+                    'receiver' => $rsv->Ticket->Tenant->User->id_user,
                 ];
+                $rsv->sign_approval_3 = Carbon::now();
+                $rsv->sign_approval_5 = Carbon::now();
+                $rsv->status_bayar = 'PAYED';
 
                 broadcast(new HelloEvent($dataNotif));
             }
+
+            $rsv->sign_approval_2 = Carbon::now();
+            $rsv->save();
 
             DB::commit();
         } catch (Throwable $e) {
