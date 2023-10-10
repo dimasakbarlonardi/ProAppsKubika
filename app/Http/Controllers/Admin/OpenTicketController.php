@@ -196,7 +196,7 @@ class OpenTicketController extends Controller
                     $createNotif->save();
                 }
             } elseif ($request->status_request == 'PROSES KE GIGO') {
-                $this->createGIGO($connNotif, $user, $ticket);
+                $this->createGIGO($user, $ticket);
             } elseif (!$request->status_request) {
                 $ticket->status_request = 'RESPONDED';
             }
@@ -215,7 +215,7 @@ class OpenTicketController extends Controller
         return redirect()->back();
     }
 
-    public function createGIGO($connNotif, $user, $ticket)
+    public function createGIGO($user, $ticket)
     {
         $connSystem = ConnectionDB::setConnection(new System());
         $nowDate = Carbon::now();
@@ -232,27 +232,21 @@ class OpenTicketController extends Controller
         $createRG->no_request_gigo = $no_gigo;
 
         $system->sequence_no_gigo = $count;
-
-        $notif = $connNotif->where('models', 'GIGO')
-            ->where('is_read', 0)
-            ->where('id_data', $createRG->id)
-            ->first();
-
         $createRG->save();
-
-        if (!$notif) {
-            $createNotif = $connNotif;
-            $createNotif->sender = $user->id_user;
-            $createNotif->receiver = $ticket->Tenant->User->id_user;
-            $createNotif->is_read = 0;
-            $createNotif->models = 'GIGO';
-            $createNotif->id_data = $createRG->id;
-            $createNotif->notif_title = $createRG->no_request_gigo;
-            $createNotif->notif_message = 'Request GIGO disetujui, mohon mengisi formulir GIGO';
-            $createNotif->save();
-        }
-
         $system->save();
+
+        $dataNotif = [
+            'models' => 'GIGO',
+            'notif_title' => $createRG->no_request_gigo,
+            'id_data' => $createRG->id,
+            'sender' => $user->id_user,
+            'division_receiver' => '',
+            'notif_message' => 'Request GIGO disetujui, mohon mengisi formulir GIGO',
+            'receiver' => $ticket->Tenant->User->id_user,
+        ];
+
+        broadcast(new HelloEvent($dataNotif));
+
     }
 
     public function updateRequestTicket(Request $request, $id)

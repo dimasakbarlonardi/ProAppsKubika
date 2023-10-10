@@ -182,14 +182,14 @@ class DashboardController extends Controller
                 break;
 
             case ('GIGO'):
-                $data = $this->handleGIGO($getNotif);
+                $data = $this->handleGIGO($connApprove, $getNotif);
+                $data['user'] = $user;
                 return view('Tenant.Notification.GIGO', $data);
                 break;
 
             case ('PaymentWO'):
                 $data = $this->handlePaymentWO($getNotif);
                 $data['user'] = $user;
-
                 return view('Tenant.Notification.Payment', $data);
                 break;
         }
@@ -310,10 +310,11 @@ class DashboardController extends Controller
         return $data;
     }
 
-    public function handleGIGO($getNotif)
+    public function handleGIGO($connApprove, $getNotif)
     {
         $model = new RequestGIGO();
         $getData = ConnectionDB::setConnection($model);
+        $data['sysApprove'] = $connApprove->find(8);
         $gigo =  $getData->find($getNotif->id_data);
         $data['gigo'] = $gigo;
 
