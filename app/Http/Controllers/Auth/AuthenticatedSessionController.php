@@ -123,6 +123,7 @@ class AuthenticatedSessionController extends Controller
             }
             $request->session()->put('user', $getUser);
             $request->session()->put('user_id', $getUser->id_user);
+            $request->session()->put('work_relation_id', $getUser->RoleH->work_relation_id);
 
             $connKaryawan = ConnectionDB::setConnection(new Karyawan());
             $connOwner = ConnectionDB::setConnection(new OwnerH());

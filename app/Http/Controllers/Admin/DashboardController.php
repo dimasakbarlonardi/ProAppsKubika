@@ -98,7 +98,6 @@ class DashboardController extends Controller
 
     public function showNotification(Request $request, $id)
     {
-
         $connNotif = ConnectionDB::setConnection(new Notifikasi());
         $connApprove = ConnectionDB::setConnection(new Approve());
         $getNotif = $connNotif->find($id);
@@ -173,6 +172,7 @@ class DashboardController extends Controller
 
             case ('Reservation'):
                 $data = $this->handleReservation($getNotif);
+                $data['notif'] = $getNotif;
                 return view('Tenant.Notification.Reservation', $data);
                 break;
 

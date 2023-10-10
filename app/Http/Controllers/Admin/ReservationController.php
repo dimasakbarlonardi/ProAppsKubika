@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\HelloEvent;
 use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
 use App\Models\Approve;
@@ -87,6 +88,7 @@ class ReservationController extends Controller
                 'durasi_acara' => $request->durasi_acara . ' ' . $request->satuan_durasi_acara,
                 'waktu_mulai' => $request->waktu_mulai,
                 'waktu_akhir' => $request->waktu_akhir,
+                'is_deposit' => $request->is_deposit,
                 'jumlah_deposit' => $request->jumlah_deposit,
                 'status_bayar' => 'PENDING',
             ]);
@@ -94,23 +96,17 @@ class ReservationController extends Controller
             $ticket->status_request = 'PROSES';
             $ticket->save();
 
-            $connNotif = ConnectionDB::setConnection(new Notifikasi());
-            $checkNotif = $connNotif->where('models', 'Reservation')
-                ->where('is_read', 0)
-                ->where('id_data', $createRsv->id)
-                ->first();
+            $dataNotif = [
+                'models' => 'Reservation',
+                'notif_title' => $createRsv->no_request_reservation,
+                'id_data' => $createRsv->id,
+                'sender' => $user->id_user,
+                'division_receiver' => null,
+                'notif_message' => 'Request Reservation diterima, mohon approve reservasi',
+                'receiver' => $ticket->Tenant->User->id_user,
+            ];
 
-            if (!$checkNotif) {
-                $connNotif->create([
-                    'receiver' => $ticket->Tenant->User->id_user,
-                    'sender' => $user->id_user,
-                    'is_read' => 0,
-                    'models' => 'Reservation',
-                    'id_data' => $createRsv->id,
-                    'notif_title' => $createRsv->no_request_reservation,
-                    'notif_message' => 'Request Reservation diterima, mohon approve reservasi'
-                ]);
-            }
+            broadcast(new HelloEvent($dataNotif));
 
             $system->sequence_no_reservation = $count;
             $system->save();
@@ -126,14 +122,27 @@ class ReservationController extends Controller
         }
     }
 
-    public function approve1($id)
+    public function approve1(Request $request, $id)
     {
         $connReservation = ConnectionDB::setConnection(new Reservation());
+        $user = $request->session()->get('user');
 
         $rsv = $connReservation->find($id);
 
         $rsv->sign_approval_1 = Carbon::now();
         $rsv->save();
+
+        $dataNotif = [
+            'models' => 'Reservation',
+            'notif_title' => $rsv->no_request_reservation,
+            'id_data' => $rsv->id,
+            'sender' => $user->id_user,
+            'division_receiver' => 10,
+            'notif_message' => 'Request Reservation diterima, mohon approve reservasi',
+            'receiver' => null,
+        ];
+
+        broadcast(new HelloEvent($dataNotif));
 
         Alert::success('Berhasil', 'Berhasil approve reservasi');
 
@@ -145,11 +154,12 @@ class ReservationController extends Controller
         $connReservation = ConnectionDB::setConnection(new Reservation());
         $connSystem = ConnectionDB::setConnection(new System());
         $connTransaction = ConnectionDB::setConnection(new CashReceipt());
+        $connApprove = ConnectionDB::setConnection(new Approve());
 
         $rsv = $connReservation->find($id);
         $system = $connSystem->find(1);
         $count = $system->sequence_no_invoice + 1;
-
+        $approve = $connApprove->find(7);
         $user = $rsv->Ticket->Tenant->User;
 
         $no_invoice = $system->kode_unik_perusahaan . '/' .
@@ -164,46 +174,54 @@ class ReservationController extends Controller
             sprintf("%06d", $countCR);
 
         $order_id = $user->id_site . '-' . $no_cr;
-        $sender = $request->session()->get('user');
 
         try {
             DB::beginTransaction();
             $rsv->sign_approval_2 = Carbon::now();
             $rsv->save();
 
-            $createTransaction = $connTransaction;
-            $createTransaction->order_id = $order_id;
-            $createTransaction->id_site = $user->id_site;
-            $createTransaction->no_reff = $rsv->no_request_reservation;
-            $createTransaction->no_invoice = $no_invoice;
-            $createTransaction->no_draft_cr = $no_cr;
-            $createTransaction->ket_pembayaran = 'INV/' . $user->id_user . '/' . $rsv->Ticket->Unit->nama_unit;
-            $createTransaction->sub_total = $rsv->jumlah_deposit;
-            $createTransaction->transaction_status = 'PENDING';
-            $createTransaction->id_user = $user->id_user;
-            $createTransaction->transaction_type = 'Reservation';
-            $createTransaction->save();
+            if ($rsv->is_deposit) {
+                $createTransaction = $connTransaction;
+                $createTransaction->order_id = $order_id;
+                $createTransaction->id_site = $user->id_site;
+                $createTransaction->no_reff = $rsv->no_request_reservation;
+                $createTransaction->no_invoice = $no_invoice;
+                $createTransaction->no_draft_cr = $no_cr;
+                $createTransaction->ket_pembayaran = 'INV/' . $user->id_user . '/' . $rsv->Ticket->Unit->nama_unit;
+                $createTransaction->sub_total = $rsv->jumlah_deposit;
+                $createTransaction->transaction_status = 'PENDING';
+                $createTransaction->id_user = $user->id_user;
+                $createTransaction->transaction_type = 'Reservation';
+                $createTransaction->save();
 
-            $system->sequence_no_cash_receiptment = $countCR;
-            $system->sequence_no_invoice = $count;
-            $system->save();
+                $system->sequence_no_cash_receiptment = $countCR;
+                $system->sequence_no_invoice = $count;
+                $system->save();
 
-            $connNotif = ConnectionDB::setConnection(new Notifikasi());
-            $checkNotif = $connNotif->where('models', 'PaymentReservation')
-                ->where('is_read', 0)
-                ->where('id_data', $id)
-                ->first();
-
-            if (!$checkNotif) {
-                $connNotif->create([
-                    'receiver' => $user->id_user,
-                    'sender' => $sender->id_user,
-                    'is_read' => 0,
+                $dataNotif = [
                     'models' => 'PaymentReservation',
-                    'id_data' => $rsv->id,
                     'notif_title' => $createTransaction->no_invoice,
-                    'notif_message' => 'Request Reservation diterima, mohon membayar deposit untuk melanjutkan proses reservasi'
-                ]);
+                    'id_data' => $rsv->id,
+                    'sender' => $approve->approval_3,
+                    'division_receiver' => null,
+                    'notif_message' => 'Request Reservation diterima, mohon membayar deposit untuk melanjutkan proses reservasi',
+                    'receiver' => $rsv->Ticket->Tenant->User->id_user,
+                ];
+
+                broadcast(new HelloEvent($dataNotif));
+
+            } else {
+                $dataNotif = [
+                    'models' => 'Reservation',
+                    'notif_title' => $createRsv->no_request_reservation,
+                    'id_data' => $createRsv->id,
+                    'sender' => $user->id_user,
+                    'division_receiver' => null,
+                    'notif_message' => 'Request Reservation diterima, mohon approve reservasi',
+                    'receiver' => $ticket->Tenant->User->id_user,
+                ];
+
+                broadcast(new HelloEvent($dataNotif));
             }
 
             DB::commit();
@@ -234,15 +252,29 @@ class ReservationController extends Controller
         return redirect()->back();
     }
 
-    public function rsvDone($id)
+    public function rsvDone(Request $request, $id)
     {
         $connReservation = ConnectionDB::setConnection(new Reservation());
+        $connApprove = ConnectionDB::setConnection(new Approve());
 
         $rsv = $connReservation->find($id);
 
         $rsv->Ticket->status_request = 'DONE';
         $rsv->Ticket->save();
 
+        $user = $request->session()->get('user');
+        $approve = $connApprove->find(7);
+        $dataNotif = [
+            'models' => 'Reservation',
+            'notif_title' => $rsv->no_request_reservation,
+            'id_data' => $rsv->id,
+            'sender' => $user->id_user,
+            'division_receiver' => null,
+            'notif_message' => 'Reservation telah selesai, mohon complete reservasi',
+            'receiver' => $approve->approval_4
+        ];
+
+        broadcast(new HelloEvent($dataNotif));
         Alert::success('Berhasil', 'Berhasil update reservasi');
 
         return redirect()->back();

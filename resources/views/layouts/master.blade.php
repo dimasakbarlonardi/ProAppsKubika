@@ -246,7 +246,6 @@
     <script src="https://polyfill.io/v3/polyfill.min.js?features=window.scroll"></script>
     <script src="{{ url('assets/vendors/list.js/list.min.js') }}"></script>
     <script src="{{ url('assets/js/theme.js') }}"></script>
-
     @include('sweetalert::alert')
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -257,6 +256,7 @@
             }
         });
         var user_id = "{{ Session::get('user_id') }}"
+        var division_relation = "{{ Session::get('work_relation_id') }}"
 
         $('document').ready(function() {
             var notifSound = document.getElementById("notifSound");
@@ -313,7 +313,7 @@
         document.addEventListener("DOMContentLoaded", function(event) {
             Echo.channel("hello-channel")
                 .listen('HelloEvent', (e) => {
-                    getNotifications(user_id);
+                    getNewNotifications(user_id);
                 })
         });
 
@@ -326,7 +326,6 @@
                         var is_notif = 0;
                         data.map((item) => {
                             if (item.is_read == 0) {
-                                notifSound.play();
                                 is_notif += 1;
                             }
                             var current = new Date();
@@ -359,12 +358,53 @@
                         }
                     } else {
                         $('#notification-lists').append(`
+                            <div id="empty_notif">
                                 <div class="list-group-item">
                                     <div class="notification-body my-3 text-center">
                                         <strong>Tidak ada Notifikasi</strong>
                                     </div>
                                 </div>
-                            `)
+                            </div>
+                        `)
+                    }
+                }
+            })
+        }
+
+        function getNewNotifications(user_id) {
+            $.ajax({
+                url: `/admin/get-notifications/${user_id}`,
+                type: 'GET',
+                success: function(resp) {
+                    data = resp[0];
+                    if (data.division_receiver == division_relation || data.receiver == user_id) {
+                        notifSound.play();
+                        var current = new Date();
+                        $('#navbarDropdownNotification').addClass('notification-indicator')
+                        $('#empty_notif').html("");
+                        $('#notification-lists').prepend(`
+                            <div class="list-group-item">
+                                <a class="notification notification-flush ${data.is_read == 1 ? 'notification' : 'notification-unread' }"
+                                    href="/admin/notification/${data.id}">
+                                    <div class="notification-avatar">
+                                        <div class="avatar avatar-2xl me-3">
+                                            <img class="rounded-circle"
+                                                src="${data.sender ? data.sender.profile_picture : ''}"
+                                                alt="" />
+                                        </div>
+                                    </div>
+                                    <div class="notification-body">
+                                        <p class="mb-1">
+                                            <strong>${data.sender ? data.sender.nama_user : ''}</strong> Mengirim anda :
+                                            ${data.notif_message} ${data.notif_title}
+                                        </p>
+                                        <span class="notification-time">
+                                            ${timeDifference(current, new Date(data.created_at))}
+                                        </span>
+                                    </div>
+                                </a>
+                            </div>
+                        `)
                     }
                 }
             })
