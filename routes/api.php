@@ -126,6 +126,7 @@ Route::prefix('v1')->group(function () {
 
         // Visitor
         Route::post('/visitor', [VisitorController::class, 'store']);
+        Route::get('/visitors', [VisitorController::class, 'index']);
         Route::get('/visitors/unit/{id}', [VisitorController::class, 'visitorByUnit']);
         Route::get('/visitor/{id}', [VisitorController::class, 'show']);
         Route::post('/visitor/arrive/{id}', [VisitorController::class, 'arrive']);
