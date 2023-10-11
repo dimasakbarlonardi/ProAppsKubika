@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\HelloEvent;
 use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
 use App\Models\Approve;
@@ -29,7 +30,6 @@ class WorkRequestController extends Controller
         if ($user->id_role_hdr != 8) {
             $role = $user->RoleH->WorkRelation->id_work_relation;
             $data['work_requests'] = $conn->where('id_work_relation', $role)->latest()->get();
-            // dd($user->id_role_hdr, $conn->latest()->get());
         } else {
             $data['work_requests'] = $conn->latest()->get();
         }
@@ -83,23 +83,17 @@ class WorkRequestController extends Controller
             $ticket->status_request = 'PROSES';
             $ticket->save();
 
-            // $connNotif = ConnectionDB::setConnection(new Notifikasi());
-            // $checkNotif = $connNotif->where('models', 'OpenTicket')
-            //     ->where('is_read', 0)
-            //     ->where('id_data', $request->no_tiket)
-            //     ->first();
-            // $user = $request->session()->get('user');
-            // if (!$checkNotif) {
-            //     $connNotif->create([
-            //         'receiver' => $ticket->Tenant->User->id_user,
-            //         'sender' => $user->id_user,
-            //         'is_read' => 0,
-            //         'models' => 'OpenTicket',
-            //         'id_data' => $request->no_tiket,
-            //         'notif_title' => $connWorkRequest->no_work_request,
-            //         'notif_message' => 'Work Request sudah dibuat, mohon di approve'
-            //     ]);
-            // }
+            $dataNotif = [
+                'models' => 'WorkRequest',
+                'notif_title' => $no_work_request,
+                'id_data' => $connWorkRequest->id,
+                'sender' => $request->session()->get('user')->id_user,
+                'division_receiver' => $request->id_work_relation,
+                'notif_message' => 'Work Request baru, mohon segera dikerjakan',
+                'receiver' => null,
+            ];
+
+            broadcast(new HelloEvent($dataNotif));
 
             DB::commit();
 

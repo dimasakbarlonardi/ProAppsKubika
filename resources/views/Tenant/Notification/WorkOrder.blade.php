@@ -61,7 +61,7 @@
                                                 </div>
                                                 <div class="col-3 py-3 text-end">
                                                     <input class="form-control" type="text"
-                                                        value="Rp {{ $wod->detil_biaya_alat }}" disabled>
+                                                        value="{{ Rupiah($wod->detil_biaya_alat) }}" disabled>
                                                 </div>
                                             </div>
                                         @endforeach
@@ -75,7 +75,7 @@
                                                         ({{ count($wo->WODetail) > 1 ? 'Items' : 'Item' }})
                                                     </div>
                                                     <div class="col-12 col-md-4 text-end py-2" id="totalServicePrice">
-                                                        Rp {{ $wo->jumlah_bayar_wo }}
+                                                        {{ Rupiah($wo->jumlah_bayar_wo) }}
                                                     </div>
                                                 </div>
                                             </div>
@@ -137,7 +137,7 @@
                         !$wo->sign_approve_3 &&
                         $user->Karyawan->is_can_approve
                     )
-                        <div class="text-center">                            
+                        <div class="text-center">
                             <button type="button" onclick="approve3" class="btn btn-success btn-lg my-4" type="button">
                                 Approve
                             </button>
