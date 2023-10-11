@@ -132,7 +132,7 @@
                         <div class="col-md-6 col-xl-12 rounded-3">
                             <div class="card">
                                 <div class="card-header">
-                                    <h6 class="mb-0">Ticket</h6>
+                                    <h6 class="mb-0">Request</h6>
                                 </div>
                                 <div class="card-body">
                                     <div class="mb-4 mt-n2"><label class="mb-1">No Tiket</label>

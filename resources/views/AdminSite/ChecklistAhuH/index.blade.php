@@ -88,7 +88,7 @@
                 </div>
             </div>
             <div class="text-center d-none" id="tickets-card-fallback">
-                <p class="fw-bold fs-1 mt-3">No ticket found</p>
+                <p class="fw-bold fs-1 mt-3">No request found</p>
             </div>
         </div>
         <div class="card-footer">

@@ -63,7 +63,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/water-usage-record/{unitID}', [UnitController::class, 'waterUsageRecord']);
         Route::get('/electric-usage-record/{unitID}', [UnitController::class, 'electricUsageRecord']);
 
-        // Open Ticket
+        // Open Request
         Route::get('/tickets', [OpenTicketController::class, 'listTickets']);
         Route::get('/jenis-request', [OpenTicketController::class, 'jenisRequest']);
         Route::get('/tenant-unit', [UnitController::class, 'tenantUnit']);

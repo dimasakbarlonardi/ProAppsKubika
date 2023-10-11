@@ -40,7 +40,7 @@
                                 <div class="my-3">
                                     <div class="row">
                                         <div class="col-6">
-                                            <label class="form-label">No Ticket</label>
+                                            <label class="form-label">No Request</label>
                                             <input type="text" class="form-control" value="{{ $gigo->Ticket->no_tiket }}"
                                                 disabled>
                                         </div>
@@ -162,7 +162,7 @@
                                             <button type="submit" class="btn btn-primary w-100">Submit</button>
                                         </div>
                                     @endif --}}
-                                    
+
                                     {{-- @if (
                                     !$gigo->sign_approval_1 &&
                                         $approve->approval_1 == $user->RoleH->WorkRelation->id_work_relation &&
