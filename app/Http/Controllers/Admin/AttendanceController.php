@@ -86,6 +86,10 @@ class AttendanceController extends Controller
 
         $data['coordinates'] = $connCoordinates->get();
 
+        foreach ($data['coordinates'] as $coor) {
+            $coor->generateBarcode();
+        }
+
         return view('AdminSite.Attendance.coordinates', $data);
     }
 }
