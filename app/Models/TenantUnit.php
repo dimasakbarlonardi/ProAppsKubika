@@ -39,11 +39,11 @@ class TenantUnit extends Model
         $connTU = ConnectionDB::setConnection(new TenantUnit());
 
         $tu = $connTU->where('id_unit', $unitID)
-            ->where('is_owner', 1)
-            ->with('Tenant')
-            ->first();
+        ->where('is_owner', 1)
+        ->with('Tenant')
+        ->first();
 
-        return $tu;
+        return $tu->Tenant;
     }
 
     public function tenant()
