@@ -43,9 +43,9 @@
                                 <h6 class="mb-0">Properties</h6>
                             </div>
                             <div class="card-body">
-                                <div class="mb-4 mt-n2"><label class="mb-1">Tickets</label>
+                                <div class="mb-4 mt-n2"><label class="mb-1">Requests</label>
                                     <select name="no_tiket" class="form-select form-select-sm" id="select_ticket">
-                                        <option disabled selected>--Pilih Ticket ---</option>
+                                        <option disabled selected>-- Select Request ---</option>
                                         @foreach ($tickets as $ticket)
                                             <option value="{{ $ticket->id }}">{{ $ticket->no_tiket }}</option>
                                         @endforeach

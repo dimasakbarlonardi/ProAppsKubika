@@ -135,7 +135,7 @@
                         </div>
                         <div class="card-body">
                             @csrf
-                            <div class="mb-4 mt-n2"><label class="mb-1">Tickets</label>
+                            <div class="mb-4 mt-n2"><label class="mb-1">Request</label>
                                 <input class="form-control" type="text" value="{{ $wp->Ticket->no_tiket }}" disabled>
                             </div>
                             <div class="mb-4 mt-n2"><label class="mb-1">No Request Permit</label>
