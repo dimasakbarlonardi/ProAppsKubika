@@ -14,7 +14,7 @@
                 <div class="card">
                     <div class="card">
                         <div class="card-header d-flex flex-between-center">
-                            <h6 class="mb-0">Deskripsi Ticket</h6>
+                            <h6 class="mb-0">Deskripsi Request</h6>
                         </div>
                     </div>
                     <div class="card-body">
@@ -31,7 +31,7 @@
                             </div>
                         </div>
                         <div class="card-body">
-                            <textarea class="form-control" name="deskripsi_wr" id="deskripsi_wr" cols="30" rows="10">
+                            <textarea class="form-control" name="deskripsi_wr" id="deskripsi_wr" cols="30" rows="10" required>
                                 {!! $wr->deskripsi_wr !!}
                             </textarea>
                         </div>
@@ -210,14 +210,14 @@
             menubar: false,
             toolbar: false,
             height: "180",
-            readonly: 1
+            readonly: true
         });
         tinyMCE.init({
             selector: 'textarea#deskripsi_wr',
             menubar: false,
             toolbar: false,
             height: "180",
-            readonly: 1
+            readonly: false
         });
     </script>
     <script>
@@ -367,7 +367,7 @@
                             </div>
                         </div>
                         <div class='col-4 py-3 text-end text-600'>
-                            Rp. ${item.detil_biaya_alat}
+                            Rp ${formatRupiah(item.detil_biaya_alat.toString())}
                         </div>
                     </div>`
                 )
@@ -378,7 +378,7 @@
             }, 0);
 
             $('#totalServiceItems').html(`${services.length} (${services.length > 1 ? 'items' : 'item'})`)
-            $('#totalServicePrice').html(`Rp ${sum}`)
+            $('#totalServicePrice').html(`Rp ${formatRupiah(sum.toString())}`)
         }
     </script>
 @endsection
