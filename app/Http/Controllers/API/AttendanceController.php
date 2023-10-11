@@ -21,15 +21,39 @@ class AttendanceController extends Controller
 {
     public function siteLocation(Request $request)
     {
-        $user = $request->user();
-        $site = Site::find($user->id_site);
         $conCoordinates = ConnectionDB::setConnection(new Coordinate());
 
         $data = $conCoordinates->get();
 
         return ResponseFormatter::success(
             $data,
-            'Success get site location');
+            'Success get site location'
+        );
+    }
+
+    public function showLocation($id, $token)
+    {
+        $conCoordinate = ConnectionDB::setConnection(new Coordinate());
+
+        $getToken = str_replace("RA164-", "|", $token);
+        $tokenable = PersonalAccessToken::findToken($getToken);
+
+        if ($tokenable) {
+            $coor = $conCoordinate->find($id);
+            $data = [
+                'lat' => $coor->lat,
+                'long' => $coor->long,
+            ];
+
+            return ResponseFormatter::success(
+                $data,
+                'Success get site location'
+            );
+        } else {
+            return ResponseFormatter::error([
+                'message' => 'Unauthorized'
+            ], 'Authentication Failed', 401);
+        }
     }
 
     function attend($karyawan)
@@ -65,10 +89,10 @@ class AttendanceController extends Controller
 
         if ($tokenable) {
             $user = $tokenable->tokenable;
-         
+
             $karyawan = $connKaryawan->where('email_karyawan', $user->email)->first();
             $attend = $this->attend($karyawan);
-           
+
             if ($karyawan->NowSchedule) {
                 if ($attend) {
                     $my_lat = $request->my_lat;
@@ -77,7 +101,7 @@ class AttendanceController extends Controller
                     $distance = $this->getDistance($my_lat, $my_long);
 
                     $checkin = Carbon::now()->format('H:i');
-                    
+
                     if ($distance < 10) {
                         $start_hour = $karyawan->NowSchedule->ShiftType->checkin;
                         if ($checkin > $start_hour) {
@@ -154,7 +178,7 @@ class AttendanceController extends Controller
                     $distance = $this->getDistance($my_lat, $my_long);
                     $checkin = new DateTime($attend->check_in);
                     $checkout = Carbon::now();
-                    
+
                     $work_hour = $checkin->diff(new DateTime($checkout));
 
 
@@ -221,11 +245,11 @@ class AttendanceController extends Controller
             $d = $earth_radius * $c;
 
             return $d;
-        } 
-       
+        }
+
         $resp = "Outside 10000 meter radius";
 
-        return response()->json(['status' => $resp]);        
+        return response()->json(['status' => $resp]);
     }
 
     public function shiftSchedule($userID)

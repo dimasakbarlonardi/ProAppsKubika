@@ -110,6 +110,7 @@ Route::prefix('v1')->group(function () {
 
         // Attendance
         Route::get('/site-location', [AttendanceController::class, 'siteLocation']);
+        Route::get('/site-location/{id}/{token}', [AttendanceController::class, 'showLocation']);
         Route::post('/attendance/checkin/{token}', [AttendanceController::class, 'checkin']);
         Route::post('/attendance/checkout/{token}', [AttendanceController::class, 'checkout']);
         Route::get('/attendance/shift-schedule/{userID}', [AttendanceController::class, 'shiftSchedule']);
