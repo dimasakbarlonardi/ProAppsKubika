@@ -17,7 +17,7 @@
                 <tr>
                     <td>{{ $tu->tenant->nama_tenant }}</td>
                     <td>{{ $tu->unit->nama_unit }}</td>
-                    <td>{{ $tu->Owner->nama_pemilik }}</td>
+                    <td>{{ $tu->Owner($tu->unit->id_unit)->nama_tenant }}</td>
                     <td>
                         {{ \Carbon\Carbon::parse($tu->tgl_masuk)->format(' d-M-Y') }} -
                         {{ \Carbon\Carbon::parse($tu->tgl_keluar)->format(' d-M-Y') }}
