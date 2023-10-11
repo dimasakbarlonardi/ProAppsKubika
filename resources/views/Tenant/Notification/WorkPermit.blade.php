@@ -169,7 +169,7 @@
                                         <input type="text" class="form-control" disabled
                                             value="{{ $permit->RequestPermit->JenisPekerjaan->jenis_pekerjaan }}">
                                     </div>
-                                    <div class="mb-4 mt-n2"><label class="mb-1">Tickets</label>
+                                    <div class="mb-4 mt-n2"><label class="mb-1">Request</label>
                                         <input class="form-control" type="text"
                                             value="{{ $permit->Ticket->no_tiket }}" disabled>
                                     </div>
