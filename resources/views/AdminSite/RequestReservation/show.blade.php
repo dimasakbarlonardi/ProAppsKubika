@@ -91,8 +91,7 @@
                                         <label class="mb-1">Jumlah deposit</label>
                                         <div class="input-group flex-nowrap">
                                             <span class="input-group-text" id="addon-wrapping">Rp</span>
-                                            <input style="text-align: right" class="form-control"
-                                                value="{{ number_format($reservation->jumlah_deposit, 0, ',', '.') }}"
+                                            <input class="form-control" style="text-align: right" value="{{ number_format($reservation->jumlah_deposit, '0', ',', '.') }}"
                                                 name="jumlah_deposit" disabled />
                                         </div>
                                     </div>
@@ -125,7 +124,6 @@
 
                         </div>
                     </div>
-
                 </div>
 
                 <div class="col-4">
@@ -148,64 +146,6 @@
                             </div>
                         </div>
                     </div>
-                    @if (
-                        !$reservation->sign_approval_1 &&
-                            $notif->receiver == Session::get('user_id') &&
-                            $reservation->Ticket->status_request != 'REJECTED')
-                        <div class="card-footer border-top border-200 py-x1">
-                            <div class="row">
-                                <div class="col">
-                                    <form action="{{ route('rsvReject', $reservation->id) }}" method="post">
-                                        @csrf
-                                        <button type="submit" onclick="return confirm('are you sure?')" class="btn btn-danger w-100">Reject</button>
-                                    </form>
-                                </div>
-                                <div class="col">
-                                    <form action="{{ route('rsvApprove1', $reservation->id) }}" method="post">
-                                        @csrf
-                                        <button type="submit" class="btn btn-primary w-100">Approve</button>
-                                    </form>
-                                </div>
-                            </div>
-
-                        </div>
-                    @endif
-                    @if (
-                        $reservation->sign_approval_1 &&
-                            !$reservation->sign_approval_2 &&
-                            $notif->division_receiver == Session::get('work_relation_id') &&
-                            $reservation->Ticket->status_request != 'REJECTED')
-                        <div class="card-footer border-top border-200 py-x1">
-                            <form action="{{ route('rsvApprove2', $reservation->id) }}" method="post">
-                                @csrf
-                                <button type="submit" class="btn btn-primary w-100">Approve</button>
-                            </form>
-                        </div>
-                    @endif
-                    @if (
-                        $reservation->sign_approval_2 &&
-                            !$reservation->sign_approval_3 &&
-                            $notif->receiver == Session::get('user_id') &&
-                            $reservation->Ticket->status_request != 'REJECTED')
-                        <div class="card-footer border-top border-200 py-x1">
-                            <form action="{{ route('rsvApprove3', $reservation->id) }}" method="post">
-                                @csrf
-                                <button type="submit" class="btn btn-primary w-100">Approve</button>
-                            </form>
-                        </div>
-                    @endif
-                    @if (
-                        $notif->receiver == Session::get('user_id') &&
-                            $reservation->Ticket->status_request == 'DONE' &&
-                            !$reservation->sign_approval_4 &&
-                            $reservation->Ticket->status_request != 'REJECTED')
-                        <div class="card-footer border-top border-200 py-x1">
-                            <form action="{{ route('rsvComplete', $reservation->id) }}" method="post">
-                                @csrf
-                                <button type="submit" class="btn btn-primary w-100">Complete</button>
-                            </form>
-                        </div>
-                    @endif
                 </div>
             </div>
 

@@ -16,36 +16,55 @@
                         </div>
                     </div>
                 </div>
-                <table class="table">
+                <table class="table table-striped">
                     <thead>
                         <tr>
-                            <th scope="col">No</th>
-                            <th scope="col">No Tiket</th>
-                            <th scope="col">No Request Reservation</th>
-                            <th scope="col">Tenant</th>
-                            <th scope="col">Action</th>
+                            <th>No</th>
+                            <th>No Tiket</th>
+                            <th>No Request Reservation</th>
+                            <th>Tenant</th>
+                            <th class="text-center">Status</th>
+                            <th class="text-center">Action</th>
                         </tr>
                     </thead>
                     <tbody>
                         @foreach ($reservations as $key => $req)
                             <tr>
                                 <th scope="row">{{ $key + 1 }}</th>
-                                <td>{{ $req->no_tiket }}</td>
-                                <td>{{ $req->no_request_reservation }}</td>
-                                <td>{{ $req->Ticket->Tenant->nama_tenant }}</td>
-                                <td>
-                                    <a href="{{ route('bapp.edit', $req->id) }}" class="btn btn-sm btn-warning">View</a>
-
-                                    @if ($approve->approval_3 == $user->id_user && !$req->sign_approval_3)
-                                        <form action="{{ route('rsvApprove3', $req->id) }}" method="post">
-                                            @csrf
-                                            <button type="submit" class="btn btn-primary btn-sm w-100">Approve</button>
-                                        </form>
+                                <td class="align-middle">{{ $req->no_tiket }}</td>
+                                <td class="align-middle">{{ $req->no_request_reservation }}</td>
+                                <td class="align-middle">{{ $req->Ticket->Tenant->nama_tenant }}</td>
+                                <td class="align-middle text-center">
+                                    {{ $req->is_deposit == 1 ? 'Berbayar' : 'Tidak Berbayar' }} <br>
+                                    @if ($req->CashReceipt && $req->CashReceipt->transaction_status == 'PAYED')
+                                        <h6>
+                                            <span
+                                                class="badge bg-success mt-2">{{ $req->CashReceipt->transaction_status }}</span>
+                                        </h6>
+                                    @elseif ($req->CashReceipt && $req->CashReceipt->transaction_status == 'VERIFYING')
+                                        <h6>
+                                            <span
+                                                class="badge bg-info mt-2">{{ $req->CashReceipt->transaction_status }}</span>
+                                        </h6>
+                                    @elseif ($req->CashReceipt && $req->CashReceipt->transaction_status == 'PENDING')
+                                        <h6>
+                                            <span
+                                                class="badge bg-warning mt-2">{{ $req->CashReceipt->transaction_status }}</span>
+                                        </h6>
                                     @endif
-                                    @if ($req->sign_approval_3 && $req->Ticket->status_request != 'DONE' && $req->Ticket->status_request != 'COMPLETE')
+                                </td>
+                                <td class="text-center">
+                                    <a href="{{ route('request-reservations.show', $req->id) }}"
+                                        class="btn btn-sm btn-warning mb-2">View</a>
+                                    @if (
+                                        $req->sign_approval_3 &&
+                                            $req->Ticket->status_request != 'DONE' &&
+                                            $req->Ticket->status_request != 'COMPLETE' &&
+                                            Request::session()->get('work_relation_id') == 1)
                                         <form action="{{ route('rsvDone', $req->id) }}" method="post">
                                             @csrf
-                                            <button type="submit" class="btn btn-primary btn-sm w-100">Acara Selesai</button>
+                                            <button type="submit" class="btn btn-primary btn-sm w-100">Acara
+                                                Selesai</button>
                                         </form>
                                     @endif
                                 </td>
