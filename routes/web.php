@@ -387,6 +387,8 @@ Route::prefix('admin')->group(function () {
 
         // Reservation
         Route::resource('request-reservations', ReservationController::class);
+        Route::get('/reservation/get/booked-date', [ReservationController::class, 'getBookedDate']);
+        Route::post('rsvReject/{id}', [ReservationController::class, 'reject'])->name('rsvReject');
         Route::post('rsvApprove1/{id}', [ReservationController::class, 'approve1'])->name('rsvApprove1');
         Route::post('rsvApprove2/{id}', [ReservationController::class, 'approve2'])->name('rsvApprove2');
         Route::post('rsvApprove3/{id}', [ReservationController::class, 'approve3'])->name('rsvApprove3');

@@ -43,6 +43,23 @@ class ReservationController extends Controller
         return view('AdminSite.RequestReservation.index', $data);
     }
 
+    public function getBookedDate(Request $request)
+    {
+        $startdate = $request->startdate;
+        $startdatetime = $request->startdatetime;
+        $enddatetime = $request->enddatetime;
+        $enddate = $request->enddate;
+
+        $connReqRev = ConnectionDB::setConnection(new Reservation());
+
+        $rsv = $connReqRev->whereDate('waktu_mulai', $startdate)
+            ->whereBetween('waktu_mulai', [$startdatetime, $enddatetime])
+            ->orWhereBetween('waktu_akhir', [$startdatetime, $enddatetime])
+            ->get(['id', 'waktu_mulai', 'waktu_akhir']);
+
+        return response()->json(['data' => $rsv]);
+    }
+
     public function create()
     {
         $connTicket = ConnectionDB::setConnection(new OpenTicket());
@@ -65,6 +82,9 @@ class ReservationController extends Controller
         $connSystem = ConnectionDB::setConnection(new System());
         $user = $request->session()->get('user');
 
+        $waktu_mulai = $request->tgl_request_reservation . ' ' . $request->waktu_mulai;
+        $waktu_akhir = $request->tgl_request_reservation . ' ' . $request->waktu_akhir;
+
         try {
             DB::beginTransaction();
 
@@ -86,8 +106,8 @@ class ReservationController extends Controller
                 'id_jenis_acara' => $request->id_jenis_acara,
                 'keterangan' => $request->keterangan,
                 'durasi_acara' => $request->durasi_acara . ' ' . $request->satuan_durasi_acara,
-                'waktu_mulai' => $request->waktu_mulai,
-                'waktu_akhir' => $request->waktu_akhir,
+                'waktu_mulai' => $waktu_mulai,
+                'waktu_akhir' => $waktu_akhir,
                 'is_deposit' => $request->is_deposit,
                 'jumlah_deposit' => $request->jumlah_deposit,
                 'status_bayar' => 'PENDING',
@@ -118,8 +138,33 @@ class ReservationController extends Controller
             return redirect()->route('request-reservations.index');
         } catch (Throwable $e) {
             DB::rollBack();
+            dd($e);
             return redirect()->back();
         }
+    }
+
+    public function show($id)
+    {
+        $connReservation = ConnectionDB::setConnection(new Reservation());
+
+        $rsv = $connReservation->find($id);
+        $data['reservation'] = $rsv;
+
+        return view('AdminSite.RequestReservation.show', $data);
+    }
+
+    public function reject($id)
+    {
+        $connReservation = ConnectionDB::setConnection(new Reservation());
+
+        $rsv = $connReservation->find($id);
+
+        $rsv->Ticket->status_request = 'REJECTED';
+        $rsv->Ticket->save();
+
+        Alert::success('Berhasil', 'Success reject reservation');
+
+        return redirect()->back();
     }
 
     public function approve1(Request $request, $id)
@@ -249,6 +294,8 @@ class ReservationController extends Controller
 
         $rsv->sign_approval_3 = Carbon::now();
         $rsv->save();
+        $rsv->Ticket->status_request = 'APPROVED';
+        $rsv->Ticket->save();
 
         Alert::success('Berhasil', 'Berhasil approve reservasi');
 

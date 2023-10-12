@@ -378,6 +378,8 @@
                 success: function(resp) {
                     data = resp[0];
                     if (data.division_receiver == division_relation || data.receiver == user_id) {
+                        console.log('masuk');
+                        console.log(data.id);
                         notifSound.play();
                         var current = new Date();
                         $('#navbarDropdownNotification').addClass('notification-indicator')

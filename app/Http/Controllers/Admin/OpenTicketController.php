@@ -37,7 +37,6 @@ class OpenTicketController extends Controller
         $user = $request->session()->get('user');
 
         $connRequest = ConnectionDB::setConnection(new OpenTicket());
-        $connUser = ConnectionDB::setConnection(new User());
         $connTenant = ConnectionDB::setConnection(new Tenant());
 
         if ($user->user_category == 3) {
@@ -114,11 +113,7 @@ class OpenTicketController extends Controller
                 $createTicket->upload_image = $fileName;
             }
 
-            $createTicket->save();
             $system->sequence_notiket = $count;
-            $system->save();
-
-            DB::commit();
 
             $dataNotif = [
                 'models' => 'OpenTicket',
@@ -130,11 +125,16 @@ class OpenTicketController extends Controller
                 'receiver' => null,
             ];
 
+            $system->save();
+            $createTicket->save();
+
             broadcast(new HelloEvent($dataNotif));
+            DB::commit();
 
-            Alert::success('Berhasil', 'Berhasil menambahkan request');
+            Alert::success('Success', 'Success create request');
 
-            return redirect()->route('open-tickets.index');
+            return redirect()->route('open-tickets.index')->with('success', 'Success create request');
+
         } catch (Throwable $e) {
             DB::rollBack();
             dd($e);
