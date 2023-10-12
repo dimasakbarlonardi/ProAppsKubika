@@ -18,7 +18,7 @@
                         <select class="form-control" name="id_room" required>
                             <option selected disabled>-- Select Location --</option>
                             @foreach ($rooms as $room)
-                                <option value="{{ $room->id_room }}">{{ $room->nama_room }} - {{ $room->nama_lantai}}</option>
+                                <option value="{{ $room->id_room }}">{{ $room->nama_room }} - {{ $room->floor->nama_lantai}}</option>
                             @endforeach
                         </select>
                     </div>

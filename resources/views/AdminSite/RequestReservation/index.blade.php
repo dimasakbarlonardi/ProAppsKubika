@@ -35,15 +35,7 @@
                                 <td>{{ $req->Ticket->Tenant->nama_tenant }}</td>
                                 <td>
                                     <a href="{{ route('bapp.edit', $req->id) }}" class="btn btn-sm btn-warning">View</a>
-                                    @if (
-                                        $approve->approval_2 == $user->RoleH->WorkRelation->id_work_relation &&
-                                            $user->Karyawan->is_can_approve &&
-                                            !$req->sign_approval_2)
-                                        <form action="{{ route('rsvApprove2', $req->id) }}" method="post">
-                                            @csrf
-                                            <button type="submit" class="btn btn-primary btn-sm w-100">Approve</button>
-                                        </form>
-                                    @endif
+                                   
                                     @if ($approve->approval_3 == $user->id_user && !$req->sign_approval_3)
                                         <form action="{{ route('rsvApprove3', $req->id) }}" method="post">
                                             @csrf

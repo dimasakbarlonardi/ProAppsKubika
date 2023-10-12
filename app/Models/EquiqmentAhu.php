@@ -17,7 +17,7 @@ class EquiqmentAhu extends Model
     protected $fillable = [
         'id_equiqment_engineering',
         'id_equiqment',
-        'barcode_room',
+        // 'barcode_room',
         'no_equiqment',
         'equiqment',
         'id_role',

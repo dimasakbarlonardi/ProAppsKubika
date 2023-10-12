@@ -82,6 +82,7 @@
             </div>
         </div>
 
+
         <div class="card mb-3 p-3">
             <div class="frame-537">
                 <div class="frame-193">
@@ -106,59 +107,57 @@
                     </form>
                 </div>
             </div>
-            <div class="row" data-bs-theme="light">
-
-                <div class="col-3 mb-4">
-                    <div class="card text-white bg-secondary">
-                        <div class="card-body" style="background-color: #E9F7F5;">
-                            <div class="card-title">Ticket Complete <img height="40" src="{{ asset('assets/img/icons/ticket_complete.png') }}" alt=""> </div>
-                            <h4 class="fs-3 fw-normal text-700 mb-0">
-                                <span>{{ $complete_ticket }}</span>
-                                <span>/</span>
-                                <span>{{ $entry_ticket }}</span>
-                            </h4>
-                        </div>
+        <div class="row" data-bs-theme="light">
+            <div class="col-sm-6 col-lg-6 mb-4">
+                <div class="card text-white bg-primary">
+                    <div class="card-body" style="background-color: #E9F7F5;">
+                        <div class="card-title">Ticket Complete <img height="35" src="{{ asset('assets/img/icons/ticket_complete.png') }}" alt=""> </div>
+                        <h4 class="fs-3 fw-normal text-700 mb-0">
+                            <span>{{ $complete_ticket }}</span>
+                            <span>/</span>
+                            <span>{{ $entry_ticket }}</span>
+                        </h4>
                     </div>
                 </div>
-                <div class="col-3 mb-4">
-                    <div class="card text-white bg-secondary">
-                        <div class="card-body" style="background-color: #BEE8E1;">
-                            <div class="card-title">Ticket on Progress <img height="40" src="{{ asset('assets/img/icons/ticket_on_progress.png') }}" alt=""></div>
-                            <h4 class="fs-3 fw-normal text-700 mb-0">
-                                <span>{{ $progress_ticket }}</span>
-                                <span>/</span>
-                                <span>{{ $entry_ticket }}</span>
-                            </h4>
-                        </div>
+            </div>
+            <div class="col-sm-6 col-lg-6 mb-4">
+                <div class="card text-white bg-secondary">
+                    <div class="card-body" style="background-color: #BEE8E1;">
+                        <div class="card-title">Ticket on Progress <img height="35" src="{{ asset('assets/img/icons/ticket_on_progress.png') }}" alt=""></div>
+                        <h4 class="fs-3 fw-normal text-700 mb-0">
+                            <span>{{ $progress_ticket }}</span>
+                            <span>/</span>
+                            <span>{{ $entry_ticket }}</span>
+                        </h4>
                     </div>
                 </div>
-                <div class="col-3 mb-4">
-                    <div class="card text-white bg-secondary">
-                        <div class="card-body" style="background-color: #E9F7F5;">
-                            <div class="card-title">Ticket Hold <img height="40" src="{{ asset('assets/img/icons/ticket_hold.png') }}" alt=""></div>
-                            <h4 class="fs-3 fw-normal text-700 mb-0">
-                                <span>0</span>
-                                <span>/</span>
-                                <span>{{ $entry_ticket }}</span>
-                            </h4>
-                        </div>
+            </div>
+            <div class="col-sm-6 col-lg-6 mb-4">
+                <div class="card text-white bg-success">
+                    <div class="card-body" style="background-color: #E9F7F5;">
+                        <div class="card-title">Ticket Hold <img height="35" src="{{ asset('assets/img/icons/ticket_hold.png') }}" alt=""></div>
+                        <h4 class="fs-3 fw-normal text-700 mb-0">
+                            <span>0</span>
+                            <span>/</span>
+                            <span>{{ $entry_ticket }}</span>
+                        </h4>
                     </div>
                 </div>
-                <div class="col-3 col-lg-3 mb-4">
-                    <div class="card text-white bg-secondary">
-                        <div class="card-body" style="background-color: #BEE8E1;">
-                            <div class="card-title">Ticket Cancel <img height="40" src="{{ asset('assets/img/icons/ticket_cancel.png') }}" alt=""></div>
-                            <h4 class="fs-3 fw-normal text-700 mb-0">
-                                <span>0</span>
-                                <span>/</span>
-                                <span>{{ $entry_ticket }}</span>
-                            </h4>
-                        </div>
+            </div>
+            <div class="col-sm-6 col-lg-6 mb-4">
+                <div class="card text-white bg-danger">
+                    <div class="card-body" style="background-color: #BEE8E1;">
+                        <div class="card-title">Ticket Cancel <img height="35" src="{{ asset('assets/img/icons/ticket_cancel.png') }}" alt=""></div>
+                        <h4 class="fs-3 fw-normal text-700 mb-0">
+                            <span>0</span>
+                            <span>/</span>
+                            <span>{{ $entry_ticket }}</span>
+                        </h4>
                     </div>
                 </div>
             </div>
         </div>
-
+        </div>
 
         <div class="card mb-3">
             <div class="row" data-bs-theme="light">
@@ -230,11 +229,11 @@
                             <g clip-path="url(#clip0_542_36716)">
                                 <path d="M15.6 15.5H17.4C17.7 15.5 18 15.2 18 14.9V8.6C18 8.3 17.7 8 17.4 8H15.6C15.3 8 15 8.3 15 8.6V14.9C15 15.2 15.3 15.5 15.6 15.5ZM20.1 15.5H21.9C22.2 15.5 22.5 15.2 22.5 14.9V4.1C22.5 3.8 22.2 3.5 21.9 3.5H20.1C19.8 3.5 19.5 3.8 19.5 4.1V14.9C19.5 15.2 19.8 15.5 20.1 15.5ZM6.6 15.5H8.4C8.7 15.5 9 15.2 9 14.9V11.6C9 11.3 8.7 11 8.4 11H6.6C6.3 11 6 11.3 6 11.6V14.9C6 15.2 6.3 15.5 6.6 15.5ZM11.1 15.5H12.9C13.2 15.5 13.5 15.2 13.5 14.9V5.6C13.5 5.3 13.2 5 12.9 5H11.1C10.8 5 10.5 5.3 10.5 5.6V14.9C10.5 15.2 10.8 15.5 11.1 15.5ZM23.25 18.5H3V4.25C3 3.83562 2.66438 3.5 2.25 3.5H0.75C0.335625 3.5 0 3.83562 0 4.25V20C0 20.8283 0.671719 21.5 1.5 21.5H23.25C23.6644 21.5 24 21.1644 24 20.75V19.25C24 18.8356 23.6644 18.5 23.25 18.5Z" fill="black" />
                             </g>
-                        <defs>
-                            <clipPath id="clip0_542_36712">
-                                <rect width="24" height="24" fill="white" transform="translate(0 0.5)" />
-                            </clipPath>
-                        </defs>
+                            <defs>
+                                <clipPath id="clip0_542_36712">
+                                    <rect width="24" height="24" fill="white" transform="translate(0 0.5)" />
+                                </clipPath>
+                            </defs>
                         </svg>
                     </div>
                     <div class="col-md-auto p-3">

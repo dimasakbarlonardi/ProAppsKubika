@@ -25,4 +25,12 @@ class TenantUnitOFF extends Model
     ];
 
     protected $date = ['deleted_at'];
+    
+    public function Tenant(){
+        return $this->hasOne(Tenant::class, 'id_tenant','id_tenant');
+    }
+
+    public function Unit(){
+        return $this->hasOne(Unit::class, 'id_unit', 'id_unit');
+    }
 }

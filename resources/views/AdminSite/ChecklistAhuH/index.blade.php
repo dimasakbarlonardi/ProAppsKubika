@@ -26,8 +26,6 @@
                         <th class="sort" data-sort="">No</th>
                         <th class="sort" data-sort="barcode_room">Equipment</th>
                         <th class="sort" data-sort="id_room">Location</th>
-                        {{-- <th class="sort" data-sort="tgl_checklist">Schedule</th> --}}
-                        {{-- <th class="sort" data-sort="status_schedule">Status Schedule</th> --}}
                         <th class="sort" data-sort="action">Action</th>
                     </tr>
                 </thead>
@@ -37,18 +35,6 @@
                             <th scope="row">{{ $key + 1 }}</th>
                             <td>{{ $checklistahu->equiqment }}</td>
                             <td>{{ $checklistahu->room->nama_room }}</td>
-                            {{-- <td>{{ \Carbon\Carbon::parse($checklistahu->tgl_checklist)->format(' d-M-Y') }}</td> --}}
-                            {{-- <td>
-                                @if ($checklistahu->status_schedule == 'Not Done')
-                                    <span class="badge rounded-pill badge-subtle-danger">Not Done</span>
-                                @elseif ($checklistahu->status_schedule == 'on time')
-                                    <span class="badge rounded-pill badge-subtle-success">On Time</span>
-                                @elseif ($checklistahu->status_schedule == 'late Not Done')
-                                    <span class="badge rounded-pill badge-subtle-danger">Late Not Done</span>
-                                @elseif ($checklistahu->status_schedule == 'late done')
-                                    <span class="badge rounded-pill badge-subtle-warning">Late Done</span>
-                                @endif
-                            </td> --}}
                             <td>
                                 <div class="dropdown font-sans-serif position-static">
                                     <button class="btn btn-sm btn-warning" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false">

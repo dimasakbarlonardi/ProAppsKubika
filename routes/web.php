@@ -116,6 +116,7 @@ use App\Http\Controllers\Admin\ScheduleSecurityController;
 use App\Http\Controllers\Admin\ShiftTypeController;
 use App\Http\Controllers\Admin\ToolsEngController;
 use App\Http\Controllers\Admin\ToolsHKController;
+use App\Http\Controllers\Admin\ToolsSecurityController;
 use App\Http\Controllers\Admin\VisitorsController;
 use App\Http\Controllers\Admin\WaterUUSController;
 use App\Http\Controllers\API\VisitorController;
@@ -634,6 +635,11 @@ Route::prefix('admin')->group(function () {
         Route::resource('toolshousekeeping', ToolsHKController::class);
         Route::post('/tools/borrowHK/{id}', [ToolsHKController::class, 'borrowToolHK'])->name('borrowHK.tool');
         Route::post('/tools/returnHK/{id}', [ToolsHKController::class, 'returnToolHK'])->name('returnHK.tool');
+
+         // ---------------Inspection Tools Engineering-----------------
+         Route::resource('tools-security', ToolsSecurityController::class);
+         Route::post('tools/borrowSecurity/{id}', [ToolsSecurityController::class, 'borrowToolSecurity'])->name('borrowSecurity.tool');
+         Route::post('tools/returnSecurity/{id}', [ToolsSecurityController::class, 'returnToolSecurity'])->name('returnSecurity.tool');
 
         // ---------------Inspection Security-----------------
         Route::resource('checklistsecurity', ChecklistSecurityController::class);
