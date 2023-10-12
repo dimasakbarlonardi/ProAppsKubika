@@ -226,7 +226,7 @@
                     },
                     success: function(resp) {
                         var data = resp.data;
-                        if (data === []) {
+                        if (data.length > 0) {
                             $('#event-lists').html("");
                             data.map((event, i) => {
                                 $('#event-lists').append(`
