@@ -57,7 +57,7 @@ class UserController extends Controller
                 $currUser = new User();
                 $currUser = $currUser->setConnection($login->site->db_name);
                 $getUser = $currUser->where('login_user', $login->email)
-                    ->with(['RoleH.AksesForm', 'RoleH.WorkRelation'])
+                    ->with(['RoleH.AksesForm', 'RoleH.WorkRelation', 'Karyawan'])
                     ->first();
 
                 if (!Hash::check($request->password, $login->password, [])) {

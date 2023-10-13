@@ -5,7 +5,7 @@
         <div class="card-header">
             <div class="row flex-between-center">
                 <div class="col-auto">
-                    <h6 class="mb-0">Inspection Parameter</h6>
+                    <h6 class="mb-0">Detail Parameter</h6>
                 </div>
             </div>
         </div>

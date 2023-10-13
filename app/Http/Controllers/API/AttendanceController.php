@@ -9,6 +9,7 @@ use App\Models\Attendance;
 use App\Models\Karyawan;
 use App\Models\Site;
 use App\Models\Coordinate;
+use App\Models\ShiftType;
 use App\Models\Unit;
 use App\Models\User;
 use App\Models\WorkTimeline;
@@ -239,11 +240,30 @@ class AttendanceController extends Controller
         if ($latitude1 && $longitude1) {
             $dLat = deg2rad($latitude2 - $latitude1);
             $dLon = deg2rad($longitude2 - $longitude1);
+        $conCoordinates = ConnectionDB::setConnection(new Coordinate());
+
+        $coordinates = $conCoordinates->get();
+
+        foreach ($coordinates as $item) {
+            $latitude1 = $item->lat;
+            $longitude1 = $item->long;
+        }
+
+        if ($latitude1 && $longitude1) {
+            $dLat = deg2rad($latitude2 - $latitude1);
+            $dLon = deg2rad($longitude2 - $longitude1);
 
             $a = sin($dLat / 2) * sin($dLat / 2) + cos(deg2rad($latitude1)) * cos(deg2rad($latitude2)) * sin($dLon / 2) * sin($dLon / 2);
             $c = 2 * asin(sqrt($a));
             $d = $earth_radius * $c;
 
+            return $d;
+        }
+
+        $resp = "Outside 10000 meter radius";
+
+        return response()->json(['status' => $resp]);
+    }
             return $d;
         }
 
@@ -303,6 +323,33 @@ class AttendanceController extends Controller
         return ResponseFormatter::success(
             $getAttends[1],
             'Success get site location'
+        );
+    }
+
+    public function getShiftType()
+    {
+        $connShift = ConnectionDB::setConnection(new ShiftType());
+
+        $shifts = $connShift->get();
+
+        return ResponseFormatter::success(
+            $shifts,
+            'Success get all shift types'
+        );
+    }
+
+    public function getScheduleByShift($karyawanID, $id)
+    {
+        $connWorkSchedule = ConnectionDB::setConnection(new WorkTimeline());
+
+        $schedules = $connWorkSchedule->where('karyawan_id', $karyawanID)
+            ->where('shift_type_id', $id)
+            ->where('status_absence', null)
+            ->get();
+
+        return ResponseFormatter::success(
+            $schedules,
+            'Success get all schedules'
         );
     }
 }

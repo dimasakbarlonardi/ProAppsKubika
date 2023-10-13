@@ -116,6 +116,7 @@ use App\Http\Controllers\Admin\ScheduleSecurityController;
 use App\Http\Controllers\Admin\ShiftTypeController;
 use App\Http\Controllers\Admin\ToolsEngController;
 use App\Http\Controllers\Admin\ToolsHKController;
+use App\Http\Controllers\Admin\ToolsSecurityController;
 use App\Http\Controllers\Admin\VisitorsController;
 use App\Http\Controllers\Admin\WaterUUSController;
 use App\Http\Controllers\API\VisitorController;
@@ -145,11 +146,10 @@ Route::post('/payments/midtrans-notifications', [PaymentController::class, 'rece
 Route::get('/delete/midtrans', [PaymentController::class, 'delete']);
 Route::get('/check/midtrans', [PaymentController::class, 'check']);
 
-Route::get('/send-event', function() {
-    $text = "Testing message event notification";
-
-    // broadcast(new HelloEvent($text));
-});
+//dev
+Route::post('/send-event', [AgamaController::class, 'testFCM'])->name('testFCM');
+Route::get('/notification', [AgamaController::class, 'notification']);
+Route::post('/save-token', [AgamaController::class, 'saveToken'])->name('save-token');
 
 // Check role id
 Route::get('/check-role-id', [RoleController::class, 'checkRoleID']);
@@ -634,6 +634,11 @@ Route::prefix('admin')->group(function () {
         Route::resource('toolshousekeeping', ToolsHKController::class);
         Route::post('/tools/borrowHK/{id}', [ToolsHKController::class, 'borrowToolHK'])->name('borrowHK.tool');
         Route::post('/tools/returnHK/{id}', [ToolsHKController::class, 'returnToolHK'])->name('returnHK.tool');
+
+         // ---------------Inspection Tools Engineering-----------------
+         Route::resource('tools-security', ToolsSecurityController::class);
+         Route::post('tools/borrowSecurity/{id}', [ToolsSecurityController::class, 'borrowToolSecurity'])->name('borrowSecurity.tool');
+         Route::post('tools/returnSecurity/{id}', [ToolsSecurityController::class, 'returnToolSecurity'])->name('returnSecurity.tool');
 
         // ---------------Inspection Security-----------------
         Route::resource('checklistsecurity', ChecklistSecurityController::class);

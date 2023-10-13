@@ -25,7 +25,6 @@
                                     <th class="sort" data-sort="">No</th>
                                     <th class="sort" data-sort="id_room">Location</th>
                                     <th class="sort" data-sort="schedule">Schedule</th>
-                                    <th class="sort" data-sort="status_schedule">Status Schedule</th>
                                     </tr>
                             </thead>
                             <tbody id="checklist_body">
@@ -34,16 +33,6 @@
                                         <th scope="row">{{ $key + 1 }}</th>
                                         <td>{{ $security->room->nama_room}} - {{ $security->room->floor->nama_lantai }}</td>
                                         <td>{{ $security->schedule}}</td>
-                                        {{-- <td>{{\Carbon\Carbon::parse($security->tgl_checklist)->format(' d-M-Y') }}</td> --}}
-                                        <td>
-                                            @if ($security->status_schedule == 0)
-                                            <span class="badge rounded-pill badge-subtle-success">On Time</span>
-                                            @elseif ($security->status_schedule == 1)
-                                                <span class="badge rounded-pill badge-subtle-warning">Not Done</span>
-                                            @elseif ($security->status_schedule == 2)
-                                                <span class="badge rounded-pill badge-subtle-danger">Late Not Done</span>
-                                            @endif
-                                        </td>
                                     </tr>
                                 @endforeach
                             </tbody>
