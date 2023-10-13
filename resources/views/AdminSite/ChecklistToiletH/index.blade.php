@@ -26,7 +26,6 @@
                     <th class="sort" data-sort="">No</th>
                     <th class="sort" data-sort="equiqment">Equipment</th>
                     <th class="sort" data-sort="id_room">Lokasi</th>
-                    <th class="sort" data-sort="barcode">Barcode</th>
                     <th class="sort" data-sort="action">Action</th>
                 </tr>
             </thead>
@@ -36,11 +35,6 @@
                         <th scope="row">{{ $key + 1 }}</th>
                         <td>{{ $checklisttoilet->equipment }}</td>
                         <td>{{ $checklisttoilet->room->nama_room }}</td>
-                        <td>
-                            <a href="#" data-toggle="modal" data-target="#barcodeModal{{ $key }}">
-                                <img src="{{ asset('barcodes/' . $checklisttoilet->barcode_room) }}" alt="Barcode" width="100" height="50">
-                            </a>
-                        </td>
                         <td>
                             <div class="dropdown font-sans-serif position-static">
                                 <button class="btn btn-sm btn-warning" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false">

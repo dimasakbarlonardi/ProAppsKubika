@@ -5,12 +5,12 @@
         <div class="card-header">
             <div class="row flex-between-center">
                 <div class="col-auto">
-                    <h6 class="mb-0">Inspection Parameter</h6>
+                    <h6 class="mb-0">Detail Parameter</h6>
                 </div>
             </div>
         </div>
         <div class="p-5">
-            <form action="{{ route('checklistParameter' , $id) }}" method="post">
+            <form action="{{ route('checklistParameterHK' , $id) }}" method="post">
                 @csrf
                 <div class="form-group">
                     <div class="row d-flex justify-content-between">

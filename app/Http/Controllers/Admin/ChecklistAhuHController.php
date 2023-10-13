@@ -150,13 +150,13 @@ class ChecklistAhuHController extends Controller
 
     public function store(Request $request)
     {
+        $equiqmentAHU = ConnectionDB::setConnection(new EquiqmentAhu());
+
         try {
             DB::beginTransaction();
 
-            $equiqmentAHU = ConnectionDB::setConnection(new EquiqmentAhu());
-
             $id_equiqment = 1;
-
+            
             $equiqmentAHU->create([
                 'no_equiqment' => $request->no_equiqment,
                 'id_equiqment' => $id_equiqment,
@@ -164,19 +164,20 @@ class ChecklistAhuHController extends Controller
                 'id_role' => $request->id_role,
                 'id_room' => $request->id_room,
             ]);
-
+            
             DB::commit();
-
+            
             Alert::success('Berhasil', 'Berhasil menambahkan Inspection Engineering');
 
             return redirect()->route('checklistahus.index');
-            
-        } catch (\Throwable $e) {
-            DB::rollBack();
-            Alert::error('Gagal', 'Gagal menambahkan Inspection Engineering');
 
-            return redirect()->route('checklistahus.index');
-        }
+            } catch (\Throwable $e) {
+                DB::rollBack();
+                dd($e);
+                Alert::error('Gagal', 'Gagal menambahkan Inspection Engineering');
+
+                return redirect()->route('checklistahus.index');
+            }
     }
 
     /**
