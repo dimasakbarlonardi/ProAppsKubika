@@ -146,11 +146,10 @@ Route::post('/payments/midtrans-notifications', [PaymentController::class, 'rece
 Route::get('/delete/midtrans', [PaymentController::class, 'delete']);
 Route::get('/check/midtrans', [PaymentController::class, 'check']);
 
-Route::get('/send-event', function() {
-    $text = "Testing message event notification";
-
-    // broadcast(new HelloEvent($text));
-});
+//dev
+Route::post('/send-event', [AgamaController::class, 'testFCM'])->name('testFCM');
+Route::get('/notification', [AgamaController::class, 'notification']);
+Route::post('/save-token', [AgamaController::class, 'saveToken'])->name('save-token');
 
 // Check role id
 Route::get('/check-role-id', [RoleController::class, 'checkRoleID']);

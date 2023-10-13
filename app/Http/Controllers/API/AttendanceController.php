@@ -9,6 +9,7 @@ use App\Models\Attendance;
 use App\Models\Karyawan;
 use App\Models\Site;
 use App\Models\Coordinate;
+use App\Models\ShiftType;
 use App\Models\Unit;
 use App\Models\User;
 use App\Models\WorkTimeline;
@@ -303,6 +304,33 @@ class AttendanceController extends Controller
         return ResponseFormatter::success(
             $getAttends[1],
             'Success get site location'
+        );
+    }
+
+    public function getShiftType()
+    {
+        $connShift = ConnectionDB::setConnection(new ShiftType());
+
+        $shifts = $connShift->get();
+
+        return ResponseFormatter::success(
+            $shifts,
+            'Success get all shift types'
+        );
+    }
+
+    public function getScheduleByShift($karyawanID, $id)
+    {
+        $connWorkSchedule = ConnectionDB::setConnection(new WorkTimeline());
+
+        $schedules = $connWorkSchedule->where('karyawan_id', $karyawanID)
+            ->where('shift_type_id', $id)
+            ->where('status_absence', null)
+            ->get();
+
+        return ResponseFormatter::success(
+            $schedules,
+            'Success get all schedules'
         );
     }
 }

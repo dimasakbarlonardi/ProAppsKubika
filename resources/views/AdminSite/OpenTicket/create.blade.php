@@ -87,7 +87,7 @@
                 </div>
 
                 <div class="mt-5">
-                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="button" onclick="onSubmit()" class="btn btn-primary">Submit</button>
                 </div>
             </form>
         </div>
@@ -102,6 +102,10 @@
             plugins: 'code table lists',
             toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist | code | table'
         });
+
+        function onSubmit() {
+            console.log('asd');
+        }
 
         $('#id_tenant').on('change', function() {
             $('#id_unit').html('');
