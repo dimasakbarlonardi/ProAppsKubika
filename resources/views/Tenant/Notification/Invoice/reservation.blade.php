@@ -20,8 +20,13 @@
                     alt="invoice" width="150" /></div>
             <div class="col text-sm-end mt-3 mt-sm-0">
                 <h2 class="mb-3">Invoice</h2>
-                <h5>Falcon Design Studio</h5>
-                <p class="fs--1 mb-0">156 University Ave, Toronto<br />On, Canada, M5H 2H7</p>
+                <h5>Proapps</h5>
+                <p class="fs--1 mb-0">
+                    Harton Tower Citihub, 6th floor <br>
+                    Jl. Boulevard Artha Gading Blok D No. 3, <br>
+                    Kelapa Gading Barat
+                    Jakarta Utara, 14240
+                </p>
             </div>
             <div class="col-12">
                 <hr />
@@ -159,8 +164,8 @@
                                 </div>
                                 <p class="fs--1 mb-4">Pay with PayPal, Apple Pay, PayPal Credit and much more</p>
                                 <div class="form-check mb-0">
-                                    <input class="form-check-input" type="radio" value="credit_card" id="credit-card"
-                                        name="billing" />
+                                    <input class="form-check-input" type="radio" value="credit_card"
+                                        id="credit-card" name="billing" />
                                     <label class="form-check-label d-flex align-items-center mb-0" for="credit-card">
                                         <span class="fs-1 text-nowrap">Credit Card</span>
                                         <img class="d-none d-sm-inline-block ms-2 mt-lg-0"

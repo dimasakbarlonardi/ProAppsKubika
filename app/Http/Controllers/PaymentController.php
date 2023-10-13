@@ -39,6 +39,20 @@ class PaymentController extends Controller
                         $cr->WorkOrder->sign_approve_5 = 1;
                         $cr->WorkOrder->date_approve_5 = Carbon::now();
                         $cr->WorkOrder->save();
+
+                        $dataNotif = [
+                            'models' => 'WorkOrder',
+                            'notif_title' => $cr->WorkOrder->no_work_order,
+                            'id_data' => $cr->WorkOrder->id,
+                            'sender' => $cr->WorkOrder->Ticket->Tenant->User->id_user,
+                            'division_receiver' => 9,
+                            'notif_message' => 'Pembayaran berhasil, mohon approve proses Work Order',
+                            'receiver' => null,
+                            'connection' => $site->db_name
+                        ];
+
+                        broadcast(new HelloEvent($dataNotif));
+
                         break;
 
                     case ('WorkPermit'):

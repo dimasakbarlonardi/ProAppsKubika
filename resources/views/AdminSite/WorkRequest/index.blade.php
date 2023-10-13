@@ -11,15 +11,15 @@
                             <div class="col-auto pe-0">
                                 <h6 class="mb-0">Work Requests</h6>
                             </div>
-                                <div class="col-auto">
-                                    <form>
-                                        <div class="input-group input-search-width"><input
-                                                class="form-control form-control-sm shadow-none search" type="search"
-                                                placeholder="Search by name" aria-label="search" />
+                            <div class="col-auto">
+                                <form>
+                                    <div class="input-group input-search-width"><input
+                                            class="form-control form-control-sm shadow-none search" type="search"
+                                            placeholder="Search by name" aria-label="search" />
 
-                                        </div>
-                                    </form>
-                                </div>
+                                    </div>
+                                </form>
+                            </div>
                         </div>
                         <div class="border-bottom border-200 my-3"></div>
                         <div class="d-flex align-items-center justify-content-between justify-content-lg-end px-x1">
@@ -93,41 +93,43 @@
                                     <div class="">
                                         <h5>{{ $wr->judul_request }}</h5>
                                     </div>
-                                    <div class="row text-right">
-                                        <div class="">
-                                            <span
-                                                class="badge rounded-pill badge-subtle-primary">{{ $wr->workRelation->work_relation }}</span>
-                                            @switch($wr->status_request)
-                                                @case('PENDING')
-                                                    <span
-                                                        class="badge rounded bg-warning red__bg-1000">{{ $wr->status_request }}</span>
-                                                @break
 
-                                                @case('COMPLETE')
-                                                    <span
-                                                        class="badge rounded bg-success red__bg-1000">{{ $wr->status_request }}</span>
-                                                @break
+                                    <span
+                                        class="badge rounded-pill badge-subtle-primary">{{ $wr->workRelation->work_relation }}</span>
+                                    <h6 class="ml-3">
+                                        @switch($wr->status_request)
+                                            @case('PENDING')
+                                                <span
+                                                    class="badge rounded bg-warning red__bg-1000">{{ $wr->status_request }}</span>
+                                            @break
 
-                                                @case('WORK ORDER')
-                                                    <span
-                                                        class="badge rounded bg-info red__bg-1000">{{ $wr->status_request }}</span>
-                                                @break
+                                            @case('WORK DONE')
+                                                <span
+                                                    class="badge rounded bg-success red__bg-1000">{{ $wr->status_request }}</span>
+                                            @break
 
-                                                @case('ON WORK')
-                                                    <span
-                                                        class="badge rounded bg-info red__bg-1000">{{ $wr->status_request }}</span>
-                                                @break
+                                            @case('COMPLETE')
+                                                <span
+                                                    class="badge rounded bg-success red__bg-1000">{{ $wr->status_request }}</span>
+                                            @break
 
-                                                @case('DONE')
-                                                    <span
-                                                        class="badge rounded bg-success red__bg-1000">{{ $wr->status_request }}</span>
-                                                @break
+                                            @case('WORK ORDER')
+                                                <span class="badge rounded bg-info red__bg-1000">{{ $wr->status_request }}</span>
+                                            @break
 
-                                                @default
-                                            @endswitch
+                                            @case('ON WORK')
+                                                <span class="badge rounded bg-info red__bg-1000">{{ $wr->status_request }}</span>
+                                            @break
 
-                                        </div>
-                                    </div>
+                                            @case('DONE')
+                                                <span
+                                                    class="badge rounded bg-success red__bg-1000">{{ $wr->status_request }}</span>
+                                            @break
+
+                                            @default
+                                        @endswitch
+                                    </h6>
+
                                 </div>
                             </div>
                         </div>

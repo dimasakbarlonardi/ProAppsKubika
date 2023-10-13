@@ -132,30 +132,23 @@ class WorkRequestController extends Controller
             $wr->sign_approval_1 = 1;
             $wr->date_approval_1 = Carbon::now();
             $wr->save();
-
         } elseif ($request->status_request == 'WORK DONE') {
             $ticket->status_request = 'WORK DONE';
 
             $getUser = $ticket->Tenant->User;
             $user = $request->session()->get('user');
 
-            $connNotif = ConnectionDB::setConnection(new Notifikasi());
-            $checkNotif = $connNotif->where('models', 'WorkRequest')
-                ->where('is_read', 0)
-                ->where('id_data', $id)
-                ->first();
+            $dataNotif = [
+                'models' => 'WorkRequestT',
+                'notif_title' => $wr->no_work_request,
+                'id_data' => $id,
+                'sender' => $user->id_user,
+                'division_receiver' => null,
+                'notif_message' => 'Work Request sudah dikerjakan, mohon periksa kembali pekerjaan kami',
+                'receiver' => $getUser->id_user,
+            ];
 
-            if (!$checkNotif) {
-                $connNotif->create([
-                    'receiver' => $getUser->id_user,
-                    'sender' => $user->id_user,
-                    'is_read' => 0,
-                    'models' => 'WorkRequest',
-                    'id_data' => $id,
-                    'notif_title' => $wr->no_work_request,
-                    'notif_message' => 'Work Request sudah dikerjakan, mohon periksa kembali pekerjaan kami'
-                ]);
-            }
+            broadcast(new HelloEvent($dataNotif));
         }
 
         $ticket->save();
@@ -183,22 +176,17 @@ class WorkRequestController extends Controller
         $wr->status_request = 'DONE';
         $wr->save();
 
-        $notif = $connNotif->where('models', 'WorkRequest')
-            ->where('is_read', 0)
-            ->where('id_data', $id)
-            ->first();
+        $dataNotif = [
+            'models' => 'WorkRequestT',
+            'notif_title' => $ticket->no_tiket,
+            'id_data' => $id,
+            'sender' => $user->id_user,
+            'division_receiver' => null,
+            'notif_message' => 'Work Request sudah saya selesaikan',
+            'receiver' => $approve->approval_2,
+        ];
 
-        if (!$notif) {
-            $createNotif = $connNotif;
-            $createNotif->sender = $user->id_user;
-            $createNotif->receiver = $approve->approval_2;
-            $createNotif->is_read = 0;
-            $createNotif->models = 'WorkRequest';
-            $createNotif->id_data = $id;
-            $createNotif->notif_title = $ticket->no_tiket;
-            $createNotif->notif_message = 'Work Request sudah saya approve';
-            $createNotif->save();
-        }
+        broadcast(new HelloEvent($dataNotif));
 
         Alert::success('Berhasil', 'Berhasil approve WR');
 
@@ -218,7 +206,7 @@ class WorkRequestController extends Controller
         $wr->status_request = 'COMPLETE';
         $wr->save();
 
-        Alert::success('Berhasil', 'Berhasil approve WR');
+        Alert::success('Success', 'Success completing WR');
 
         return redirect()->back();
     }

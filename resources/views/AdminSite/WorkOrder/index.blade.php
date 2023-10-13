@@ -77,13 +77,37 @@
                                     <div class="">
                                         <h5>{{ $wo->judul_request }}</h5>
                                     </div>
-                                    <div class="row text-right">
-                                        <div class="">
-                                            <span
-                                                class="badge rounded-pill badge-subtle-primary">{{ $wo->WorkRequest->WorkRelation->work_relation }}</span>
-                                            <span class="badge rounded bg-info red__bg-1000">{{ $wo->status_wo }}</span>
-                                        </div>
-                                    </div>
+                                    <span
+                                        class="badge rounded-pill badge-subtle-primary">{{ $wo->WorkRequest->WorkRelation->work_relation }}</span>
+                                    <h6>
+                                        <span
+                                            class="{{ $wo->id_bayarnon == 1 ? 'badge rounded-pill badge-subtle-success' : '' }}">{{ $wo->id_bayarnon == 1 ? 'Payable' : '' }}</span>
+                                    </h6>
+                                    <h6>
+                                        @switch($wo->status_wo)
+                                            @case('PENDING')
+                                                <span class="badge rounded bg-warning red__bg-1000">{{ $wo->status_wo }}</span>
+                                            @break
+
+                                            @case('COMPLETE')
+                                                <span class="badge rounded bg-success red__bg-1000">{{ $wo->status_wo }}</span>
+                                            @break
+
+                                            @case('APPROVED')
+                                                <span class="badge rounded bg-info red__bg-1000">{{ $wo->status_wo }}</span>
+                                            @break
+
+                                            @case('DONE')
+                                                <span class="badge rounded bg-success red__bg-1000">{{ $wo->status_wo }}</span>
+                                            @break
+
+                                            @case('REJECTED')
+                                                <span class="badge rounded bg-danger red__bg-1000">{{ $wo->status_wo }}</span>
+                                            @break
+
+                                            @default
+                                        @endswitch
+                                    </h6>
                                 </div>
                             </div>
                         </div>

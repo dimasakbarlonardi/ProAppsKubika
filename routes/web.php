@@ -406,6 +406,7 @@ Route::prefix('admin')->group(function () {
         Route::resource('/work-orders', WorkOrderController::class);
         Route::get('/work-order/no-wo', [WorkOrderController::class, 'showByNoWO']);
         Route::post('/accept/work-order/{id}', [WorkOrderController::class, 'acceptWO'])->name('acceptWO'); // accept wo from tenant
+        Route::post('/reject/work-order/{id}', [WorkOrderController::class, 'rejectWO'])->name('rejectWO'); // reject wo from tenant
         Route::post('/approve2/work-order/{id}', [WorkOrderController::class, 'approve2'])->name('approve2'); // approve wo from engineering
         Route::post('/approve3/work-order/{id}', [WorkOrderController::class, 'approve3'])->name('approve3'); // approve wo from engineering
         Route::post('/work-done/work-order/{id}', [WorkOrderController::class, 'workDone'])->name('workDone'); // update wo from engineering
