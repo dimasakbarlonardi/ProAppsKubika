@@ -253,15 +253,17 @@ class AttendanceController extends Controller
         return response()->json(['status' => $resp]);
     }
 
-    public function shiftSchedule($userID)
+    public function shiftSchedule(Request $request)
     {
         $connUser = ConnectionDB::setConnection(new User());
         $connAttend = ConnectionDB::setConnection(new WorkTimeline());
 
-        $user = $connUser->find($userID);
+
+        $user = $connUser->where('login_user', $request->user()->email)->first();
 
         $getAttends = $connAttend->where('karyawan_id', $user->Karyawan->id)
             ->with('ShiftType')
+            ->where('date', $request->date)
             ->where('status_absence', null)
             ->get();
 
@@ -319,12 +321,16 @@ class AttendanceController extends Controller
         );
     }
 
-    public function getScheduleByShift($karyawanID, $id)
+    public function getScheduleByShift(Request $request, $id)
     {
+        $connUser = ConnectionDB::setConnection(new User());
         $connWorkSchedule = ConnectionDB::setConnection(new WorkTimeline());
 
-        $schedules = $connWorkSchedule->where('karyawan_id', $karyawanID)
+        $user = $connUser->where('login_user', $request->user()->email)->first();
+
+        $schedules = $connWorkSchedule->where('karyawan_id', $user->Karyawan->id)
             ->where('shift_type_id', $id)
+            ->where('date', $request->date)
             ->where('status_absence', null)
             ->get();
 
