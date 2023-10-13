@@ -250,15 +250,16 @@
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-        $.ajaxSetup({
-            headers: {
-                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-            }
-        });
         var user_id = "{{ Session::get('user_id') }}"
         var division_relation = "{{ Session::get('work_relation_id') }}"
 
         $('document').ready(function() {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
             var notifSound = document.getElementById("notifSound");
 
             getNotifications(user_id);
@@ -343,21 +344,12 @@
                 .listen('HelloEvent', (e) => {
                     getNewNotifications(user_id);
                 })
-
             messaging
                 .requestPermission()
                 .then(function() {
                     return messaging.getToken()
                 })
                 .then(function(token) {
-                    console.log(token);
-
-                    $.ajaxSetup({
-                        headers: {
-                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                        }
-                    });
-
                     $.ajax({
                         url: "{{ route('save-token') }}",
                         type: 'POST',

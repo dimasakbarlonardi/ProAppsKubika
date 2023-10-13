@@ -141,6 +141,12 @@ class DashboardController extends Controller
                 return redirect()->route('work-requests.show', $getNotif->id_data);
                 break;
 
+            case ('WorkRequestT'):
+                $data = $this->handleWR($connApprove, $getNotif);
+                $data['user'] = $user;
+                return view('Tenant.Notification.WorkRequest', $data);
+                break;
+
             case ('MonthlyTenant'):
                 $data = $this->handleMonthlyTenant($getNotif);
                 $data['user'] = $user;
