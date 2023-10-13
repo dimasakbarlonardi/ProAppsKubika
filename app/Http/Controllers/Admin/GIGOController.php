@@ -47,9 +47,7 @@ class GIGOController extends Controller
 
         broadcast(new HelloEvent($dataNotif));
 
-        Alert::success('Berhasil', 'Berhasil mengupdate tiket');
-
-        return redirect()->back();
+        return response()->json(['status' => 'ok']);
     }
 
     public function addGood(Request $request)
@@ -60,7 +58,7 @@ class GIGOController extends Controller
             'id_request_gigo' => $request->id_request_gigo,
             'nama_barang' => $request->nama_barang,
             'jumlah_barang' => $request->jumlah_barang,
-            'keterangan' => $request->keterangan,
+            'keterangan' => $request->keterangan ? $request->keterangan : '-',
         ]);
 
         return response()->json(['data' => $data]);

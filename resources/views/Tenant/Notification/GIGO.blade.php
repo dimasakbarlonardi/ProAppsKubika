@@ -27,7 +27,7 @@
             </div>
         </div>
         <div class="card-body bg-light">
-            <form action="{{ route('gigo.update', $gigo->id) }}" method="post" class="d-inline">
+            <form action="{{ route('gigo.update', $gigo->id) }}" method="post" class="d-inline" id="form-update-gigo">
                 @method('PUT')
                 @csrf
                 <div class="row">
@@ -57,13 +57,13 @@
                                             <label class="mb-1">Nama pembawa</label>
                                             <input {{ $gigo->gigo_type ? 'disabled' : '' }} type="text" required
                                                 value="{{ $gigo->nama_pembawa ? $gigo->nama_pembawa : '' }}"
-                                                name="nama_pembawa" class="form-control" />
+                                                name="nama_pembawa" class="form-control" id="nama_pembawa" />
                                         </div>
                                         <div class="col-6">
                                             <label class="mb-1">No Polisi Pembawa</label>
                                             <input {{ $gigo->gigo_type ? 'disabled' : '' }} type="text" required
                                                 value="{{ $gigo->no_pol_pembawa ? $gigo->no_pol_pembawa : '' }}"
-                                                name="no_pol_pembawa" class="form-control" />
+                                                name="no_pol_pembawa" class="form-control" id="no_pol_pembawa" />
                                         </div>
                                     </div>
                                 </div>
@@ -74,14 +74,14 @@
                                             <input {{ $gigo->gigo_type ? 'disabled' : '' }}
                                                 class="form-control datetimepicker" required
                                                 value="{{ $gigo->date_request_gigo ? $gigo->date_request_gigo : '' }}"
-                                                name="date_request_gigo" id="datetimepicker" type="text"
+                                                name="date_request_gigo" id="date_request_gigo" type="text"
                                                 placeholder="d/m/y H:i"
                                                 data-options='{"enableTime":true,"dateFormat":"Y-m-d H:i","disableMobile":true}' />
                                         </div>
                                         <div class="col-6">
                                             <label class="mb-1">GIGO Type</label>
                                             <select name="gigo_type" class="form-control" required
-                                                {{ $gigo->gigo_type ? 'disabled' : '' }}>
+                                                {{ $gigo->gigo_type ? 'disabled' : '' }} id="gigo_type">
                                                 <option value="In">In</option>
                                                 <option value="Out">Out</option>
                                             </select>
@@ -157,45 +157,45 @@
                         </div>
                     </div>
                     <div class="col-3">
-                        <div class="row g-3 position-sticky top-0">
-                            <div class="col-md-6 col-xl-12 rounded-3">
-                                <div class="card">
-                                    <div class="card-header">
-                                        <h6 class="mb-0">Status</h6>
-                                    </div>
-                                    <div class="card-body">
-                                        <div class="mb-4 mt-n2">
-                                            <label class="mb-1">Status</label>
-                                            <input type="text" class="form-control" disabled
-                                                value="{{ $gigo->status_request ? $gigo->status_request : 'PROSES' }}">
-                                        </div>
-                                    </div>
-                                    @if (!$gigo->sign_approval_1 && !$gigo->gigo_type)
-                                        <div class="card-footer border-top border-200 py-x1" id="gigoSubmit"
-                                            style="display: none">
-                                            <button type="submit" class="btn btn-primary w-100">Submit</button>
-                                        </div>
-                                    @endif
-                                    @if (!$gigo->sign_approval_1 && $gigo->gigo_type)
-                                        <div class="card-footer border-top border-200 py-x1">
-                                            <button type="button" id="btnApprove1" class="btn btn-primary w-100"
-                                                onclick="approve1({{ $gigo->id }})">Approve</button>
-                                        </div>
-                                    @endif
-                                    @if ($gigo->sign_approval_1 && !$gigo->sign_approval_2 && $user->RoleH->work_relation_id == $sysApprove->approval_2)
-                                        <div class="card-footer border-top border-200 py-x1">
-                                            <button type="button" id="btnApprove2" class="btn btn-primary w-100"
-                                                onclick="approve2({{ $gigo->id }})">Approve</button>
-                                        </div>
-                                    @endif
-                                    @if (!$gigo->sign_approval_3 && $gigo->status_request == 'DONE' && $user->id_user == $sysApprove->approval_3)
-                                        <div class="card-footer border-top border-200 py-x1">
-                                            <button type="button" id="gigoComplete" class="btn btn-primary w-100"
-                                                onclick="actionGigoComplete({{ $gigo->id }})">COMPLETE</button>
-                                        </div>
-                                    @endif
+                        <div class="card">
+                            <div class="card-header">
+                                <h6 class="mb-0">Status</h6>
+                            </div>
+                            <div class="card-body">
+                                <div class="mb-4 mt-n2">
+                                    <label class="mb-1">Status</label>
+                                    <input type="text" class="form-control" disabled
+                                        value="{{ $gigo->status_request ? $gigo->status_request : 'PROSES' }}">
                                 </div>
                             </div>
+                            @if (!$gigo->sign_approval_1 && !$gigo->gigo_type)
+                                <div class="card-footer border-top border-200 py-x1" id="gigoSubmit"
+                                    style="display: none">
+                                    <button type="button" onclick="onSubmit({{ $gigo->id }})"
+                                        class="btn btn-primary w-100">Submit</button>
+                                </div>
+                            @endif
+                            @if (
+                                !$gigo->sign_approval_1 &&
+                                    $gigo->gigo_type &&
+                                    $sysApprove->approval_1 == Request::session()->get('work_relation_id'))
+                                <div class="card-footer border-top border-200 py-x1">
+                                    <button type="button" id="btnApprove1" class="btn btn-primary w-100"
+                                        onclick="approve1({{ $gigo->id }})">Approve</button>
+                                </div>
+                            @endif
+                            @if ($gigo->sign_approval_1 && !$gigo->sign_approval_2 && $user->RoleH->work_relation_id == $sysApprove->approval_2)
+                                <div class="card-footer border-top border-200 py-x1">
+                                    <button type="button" id="btnApprove2" class="btn btn-primary w-100"
+                                        onclick="approve2({{ $gigo->id }})">Approve</button>
+                                </div>
+                            @endif
+                            @if (!$gigo->sign_approval_3 && $gigo->status_request == 'DONE' && $user->id_user == $sysApprove->approval_3)
+                                <div class="card-footer border-top border-200 py-x1">
+                                    <button type="button" id="gigoComplete" class="btn btn-primary w-100"
+                                        onclick="actionGigoComplete({{ $gigo->id }})">COMPLETE</button>
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -208,6 +208,13 @@
     <script src="{{ asset('assets/js/flatpickr.js') }}"></script>
 
     <script>
+        flatpickr("#date_request_gigo", {
+            dateFormat: "Y-m-d H;i",
+            minDate: "today",
+            altInput: true,
+            altFormat: "F j, Y - H:i"
+        });
+
         var goods = [];
         var idGood = 0;
         var getGoods = '{{ count($gigo->DetailGIGO) }}'
@@ -218,41 +225,86 @@
             }
         })
 
+        function onSubmit(id) {
+            var nama_pembawa = $('#nama_pembawa').val();
+            var no_pol_pembawa = $('#no_pol_pembawa').val();
+            var date_request_gigo = $('#date_request_gigo').val();
+            var gigo_type = $('#gigo_type').val();
+
+            if (!nama_pembawa || !no_pol_pembawa || !date_request_gigo || !gigo_type) {
+                Swal.fire(
+                    'Failed!',
+                    'Please fill all field',
+                    'error'
+                )
+            } else {
+                $.ajax({
+                    url: '/admin/gigo/' + id,
+                    type: 'PATCH',
+                    data: {
+                        "nama_pembawa": nama_pembawa,
+                        "no_pol_pembawa": no_pol_pembawa,
+                        "date_request_gigo": date_request_gigo,
+                        "gigo_type": gigo_type,
+                    },
+                    success: function(resp) {
+                        if (resp.status == 'ok') {
+                            Swal.fire(
+                                'Success!',
+                                'Success submit request',
+                                'success'
+                            ).then(() => {
+                                window.location.reload();
+                            });
+                        }
+                    }
+                })
+            }
+        }
+
         function onAddBarang(gigo_id) {
             var lastID = 0;
             var namaBarang = $('#nama_barang').val();
             var jumlahBarang = parseInt($('#jumlah_barang').val());
             var keterangan = $('#keterangan').val();
 
-            lastID += 1;
+            if (!namaBarang || !jumlahBarang) {
+                Swal.fire(
+                    'Failed!',
+                    'Please fill all field',
+                    'error'
+                )
+            } else {
+                lastID += 1;
 
-            if (namaBarang !== '' && jumlahBarang !== null) {
-                $('#nama_barang').val('');
-                $('#jumlah_barang').val('');
-                $('#keterangan').val('');
+                if (namaBarang !== '' && jumlahBarang !== null) {
+                    $('#nama_barang').val('');
+                    $('#jumlah_barang').val('');
+                    $('#keterangan').val('');
 
-                $.ajax({
-                    url: '/admin/gigo/add-good',
-                    type: 'post',
-                    data: {
-                        'id_request_gigo': gigo_id,
-                        'nama_barang': namaBarang,
-                        'jumlah_barang': jumlahBarang,
-                        'keterangan': keterangan,
-                    },
-                    success: function(resp) {
-                        let good = {
-                            'id': resp.data.id,
-                            'id_request_gigo': resp.data.id_request_gigo,
-                            'nama_barang': resp.data.nama_barang,
-                            'jumlah_barang': resp.data.jumlah_barang,
-                            'keterangan': resp.data.keterangan,
+                    $.ajax({
+                        url: '/admin/gigo/add-good',
+                        type: 'post',
+                        data: {
+                            'id_request_gigo': gigo_id,
+                            'nama_barang': namaBarang,
+                            'jumlah_barang': jumlahBarang,
+                            'keterangan': keterangan,
+                        },
+                        success: function(resp) {
+                            let good = {
+                                'id': resp.data.id,
+                                'id_request_gigo': resp.data.id_request_gigo,
+                                'nama_barang': resp.data.nama_barang,
+                                'jumlah_barang': resp.data.jumlah_barang,
+                                'keterangan': resp.data.keterangan,
+                            }
+                            $('#gigoSubmit').css('display', 'block');
+                            goods.push(good);
+                            detailGoods();
                         }
-                        $('#gigoSubmit').css('display', 'block');
-                        goods.push(good);
-                        detailGoods();
-                    }
-                })
+                    })
+                }
             }
         }
 
