@@ -77,17 +77,6 @@
                         </div>
                         <div
                             class="d-md-flex d-xl-inline-block d-xxl-flex align-items-center justify-content-between mb-x1">
-                            {{-- <div class="d-flex align-items-center gap-2">
-                                <div class="avatar avatar-2xl">
-                                    <img class="rounded-circle"
-                                        src="{{ $ticket->TenantRelation->Karyawan->photo_profile ? url($ticket->TenantRelation->Karyawan->photo_profile) : '' }}" alt="" />
-                                </div>
-                                <p class="mb-0"><a class="fw-semi-bold mb-0 text-800"
-                                        href="../../app/support-desk/contact-details.html">{{ $ticket->TenantRelation->Karyawan->nama_karyawan }}</a>
-                                    <a class="mb-0 fs--1 d-block text-500"
-                                        href="mailto:{{ $ticket->TenantRelation->Karyawan->email_karyawan }}">{{ $ticket->TenantRelation->Karyawan->email_karyawan }}</a>
-                                </p>
-                            </div> --}}
                             <p class="mb-0 fs--2 fs-sm--1 fw-semi-bold mt-2 mt-md-0 mt-xl-2 mt-xxl-0 ms-5">
                                 {{ HumanDate($ticket->tgl_respon_tiket) }}
                                 <span class="mx-1">|</span>
@@ -109,10 +98,10 @@
                             </span>
                         </div>
                         <div class="border-bottom mb-5 pb-5 text-right">
-                            <form action="{{ route('updateRequestTicket', $ticket->id) }}" method="post">
+                            <form action="{{ route('updateRequestTicket', $ticket->id) }}" method="post" id="form-response">
                                 @csrf
-                                <textarea class="form-control" name="deskripsi_respon" id="myeditorinstance" cols="30" rows="10"></textarea>
-                                <button type="submit" class="btn btn-success mt-5">Kirim</button>
+                                <textarea class="form-control" name="deskripsi_respon" id="deskripsi_response" cols="30" rows="10"></textarea>
+                                <button type="button" onclick="onSubmit()" class="btn btn-success mt-5">Kirim</button>
                             </form>
                         </div>
                     </div>
@@ -237,7 +226,7 @@
         referrerpolicy="origin"></script>
     <script>
         tinymce.init({
-            selector: 'textarea#myeditorinstance', // Replace this CSS selector to match the placeholder element for TinyMCE
+            selector: 'textarea#deskripsi_response', // Replace this CSS selector to match the placeholder element for TinyMCE
             plugins: 'code table lists',
             toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist | code | table'
         });
@@ -246,6 +235,22 @@
         function onReply() {
             $('#response').css('display', 'block')
             $('#btnReply').css('display', 'none')
+        }
+
+        function onSubmit() {
+            tinyMCE.triggerSave();
+            var deskripsi_response = $('#deskripsi_response').val();
+
+            if (!deskripsi_response) {
+                Swal.fire(
+                    'Failed!',
+                    'Please insert your response',
+                    'error'
+                )
+            } else {
+                $("#form-response").submit();
+            }
+            console.log(deskripsi_response);
         }
     </script>
 @endsection

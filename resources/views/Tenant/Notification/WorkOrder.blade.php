@@ -86,46 +86,41 @@
                         </div>
 
                         <div class="col-4">
-                            <div class="row g-3 position-sticky top-0">
-                                <div class="col-md-6 col-xl-12 rounded-3">
-                                    <div class="card">
-                                        <div class="card-header">
-                                            <h6 class="mb-0">Status</h6>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="mb-4 mt-n2"><label class="mb-1">Work Relation</label>
-                                                <input type="text" class="form-control" disabled
-                                                    value="{{ $wo->status_wo }}">
-                                            </div>
-                                            <div class="mb-4 mt-n2"><label class="mb-1">Status Berbayar WO</label>
-                                                <input type="text" class="form-control" disabled
-                                                    value="{{ $wo->id_bayarnon == 1 ? 'Berbayar' : 'Non Berbayar' }}">
-                                            </div>
+                            <div class="card">
+                                <div class="card-header">
+                                    <h6 class="mb-0">Status</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-4 mt-n2"><label class="mb-1">Work Relation</label>
+                                        <input type="text" class="form-control" disabled value="{{ $wo->status_wo }}">
+                                    </div>
+                                    <div class="mb-4 mt-n2"><label class="mb-1">Status Berbayar WO</label>
+                                        <input type="text" class="form-control" disabled
+                                            value="{{ $wo->id_bayarnon == 1 ? 'Berbayar' : 'Non Berbayar' }}">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="card mt-3">
+                                <div class="card-header">
+                                    <h6 class="mb-0">Detail Pengerjaan</h6>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-3">
+                                        <label class="mb-1">Estimasi Pengerjaan</label>
+                                        <div class="input-group">
+                                            <input class="form-control" value="{{ $wo->estimasi_pengerjaan }}"
+                                                {{ $wo->estimasi_pengerjaan ? 'disabled' : '' }} type="text"
+                                                name="estimasi_pengerjaan" id="estimasi_pengerjaan" />
+                                            <span class="input-group-text">Jam</span>
                                         </div>
                                     </div>
-
-                                    <div class="card mt-3">
-                                        <div class="card-header">
-                                            <h6 class="mb-0">Detail Pengerjaan</h6>
-                                        </div>
-                                        <div class="card-body">
-                                            <div class="mb-3">
-                                                <label class="mb-1">Estimasi Pengerjaan</label>
-                                                <div class="input-group">
-                                                    <input class="form-control" value="{{ $wo->estimasi_pengerjaan }}"
-                                                        {{ $wo->estimasi_pengerjaan ? 'disabled' : '' }} type="text"
-                                                        name="estimasi_pengerjaan" id="estimasi_pengerjaan" />
-                                                    <span class="input-group-text">Jam</span>
-                                                </div>
-                                            </div>
-                                            <div class="mb-4">
-                                                <label class="mb-1">Jadwal Pengerjaan</label>
-                                                <input value="{{ $wo->jadwal_pengerjaan }}" disabled
-                                                    class="form-control datetimepicker" name="jadwal_pengerjaan"
-                                                    id="datetimepicker" type="text" placeholder="d/m/y H:i"
-                                                    data-options='{"enableTime":true,"dateFormat":"Y-m-d H:i","disableMobile":true}' />
-                                            </div>
-                                        </div>
+                                    <div class="mb-4">
+                                        <label class="mb-1">Jadwal Pengerjaan</label>
+                                        <input value="{{ $wo->jadwal_pengerjaan }}" disabled
+                                            class="form-control datetimepicker" name="jadwal_pengerjaan" id="jadwal_pengerjaan"
+                                            type="text" placeholder="d/m/y H:i"
+                                            data-options='{"enableTime":true,"dateFormat":"Y-m-d H:i","disableMobile":true}' />
                                     </div>
                                 </div>
                             </div>
@@ -133,17 +128,16 @@
                     </div>
                     @if (
                         $user->id_user == $approve->approval_3 &&
-                        $wo->sign_approve_2 &&
-                        !$wo->sign_approve_3 &&
-                        $user->Karyawan->is_can_approve
-                    )
+                            $wo->sign_approve_2 &&
+                            !$wo->sign_approve_3 &&
+                            $user->Karyawan->is_can_approve)
                         <div class="text-center">
                             <button type="button" onclick="approve3" class="btn btn-success btn-lg my-4" type="button">
                                 Approve
                             </button>
                         </div>
                     @endif
-                    @if (!$wo->sign_approve_1)
+                    @if (!$wo->sign_approve_1 && $wo->status_wo != 'REJECTED')
                         <div class="">
                             <div class="row">
                                 <div class="col-6 text-end">
@@ -155,8 +149,9 @@
                                     </form>
                                 </div>
                                 <div class="col-6 text-start">
-                                    <form action="">
-                                        <button type="button" class="btn btn-danger btn-lg my-4">
+                                    <form action="{{ route('rejectWO', $wo->id) }}" method="post">
+                                        @csrf
+                                        <button type="submit" class="btn btn-danger btn-lg my-4">
                                             Reject
                                         </button>
                                     </form>
@@ -187,6 +182,13 @@
         referrerpolicy="origin"></script>
     <script src="{{ asset('assets/js/flatpickr.js') }}"></script>
     <script>
+        flatpickr("#jadwal_pengerjaan", {
+            minDate: "today",
+            enableTime: true,
+            altInput: true,
+            altFormat: "F j, Y - H:i"
+        });
+
         tinyMCE.init({
             selector: 'textarea#deskripsi_wr',
             menubar: false,

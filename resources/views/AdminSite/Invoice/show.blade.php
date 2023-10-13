@@ -63,8 +63,13 @@
                         alt="invoice" width="150" /></div>
                 <div class="col text-sm-end mt-3 mt-sm-0">
                     <h2 class="mb-3">Invoice</h2>
-                    <h5>Falcon Design Studio</h5>
-                    <p class="fs--1 mb-0">156 University Ave, Toronto<br />On, Canada, M5H 2H7</p>
+                    <h5>Proapps</h5>
+                    <p class="fs--1 mb-0">
+                        Harton Tower Citihub, 6th floor <br>
+                        Jl. Boulevard Artha Gading Blok D No. 3, <br>
+                        Kelapa Gading Barat
+                        Jakarta Utara, 14240
+                    </p>
                 </div>
                 <div class="col-12">
                     <hr />
@@ -307,7 +312,7 @@
                             <tr>
                                 <td class="align-middle">
                                     <p class="mb-0">
-                                       <b>{{ Rupiah($data->jumlah_deposit) }}</b>
+                                        <b>{{ Rupiah($data->jumlah_deposit) }}</b>
                                     </p>
                                 </td>
                                 <td class="align-middle text-center">

@@ -6,7 +6,7 @@
 @endsection
 
 @section('content')
-    <form action="{{ route('work-requests.update', $wr->id) }}" method="post">
+    <form action="{{ route('work-requests.update', $wr->id) }}" method="post" id="form-show-wr">
         @method('PUT')
         @csrf
         <div class="row g-3">
@@ -93,7 +93,8 @@
                                         <div class="col-3">
                                             <div class="avatar avatar-3xl">
                                                 <img class="rounded-circle"
-                                                    src="{{ $wr->Ticket->Tenant->profile_picture ? url($wr->Ticket->Tenant->profile_picture) : '' }}" alt="" />
+                                                    src="{{ $wr->Ticket->Tenant->profile_picture ? url($wr->Ticket->Tenant->profile_picture) : '' }}"
+                                                    alt="" />
                                             </div>
                                         </div>
                                         <div class="col-6">
@@ -173,7 +174,9 @@
                                         <div class="mb-4 mt-n2" id="select_estimasi_pengerjaan" style="display: none">
                                             <label class="mb-1">Estimasi Pengerjaan</label>
                                             <div class="input-group">
-                                                <input class="form-control" value="{{ $wr->WorkOrder ? $wr->WorkOrder->estimasi_pengerjaan : '' }}" type="text" name="estimasi_pengerjaan"
+                                                <input class="form-control"
+                                                    value="{{ $wr->WorkOrder ? $wr->WorkOrder->estimasi_pengerjaan : '' }}"
+                                                    type="text" name="estimasi_pengerjaan"
                                                     id="estimasi_pengerjaan" /><span class="input-group-text">Jam</span>
                                             </div>
                                         </div>
@@ -182,11 +185,11 @@
                             </div>
                             <div class="card-footer border-top border-200 py-x1">
                                 @if ($wr->status_request == 'PENDING')
-                                    <button type="submit" class="btn btn-primary w-100" name="status_request"
-                                        value="ON WORK">Kerjakan</button>
+                                    <button type="button" onclick="onSubmit('ON WORK')"
+                                        class="btn btn-primary w-100">Kerjakan</button>
                                 @elseif ($wr->status_request == 'ON WORK')
-                                    <button type="submit" class="btn btn-primary w-100" name="status_request"
-                                        id="btn_pekerjaan_selesai" value="WORK DONE">Pekerjaan Selesai</button>
+                                    <button type="button" onclick="onSubmit('WORK DONE')" class="btn btn-primary w-100"
+                                        id="btn_pekerjaan_selesai">Pekerjaan Selesai</button>
                                 @endif
                                 @if ($wr->status_request != 'WORK ORDER')
                                     <button type="button" class="btn btn-primary w-100" id="btn_request_wo">Ajukan Work
@@ -198,6 +201,7 @@
                 </div>
             @endif
         </div>
+        <input type="hidden" name="status_request" id="status_request">
     </form>
 @endsection
 
@@ -234,6 +238,26 @@
             detailServiceWO();
         })
 
+        function onSubmit(status) {
+            $('#status_request').val(status);
+
+            if (status != 'ON WORK') {
+                tinyMCE.triggerSave();
+                var deskripsi_wr = $('#deskripsi_wr').val();
+                if (!deskripsi_wr) {
+                    Swal.fire(
+                        'Failed!',
+                        'Please insert the description',
+                        'error'
+                    )
+                } else {
+                    $("#form-show-wr").submit();
+                }
+            } else {
+                $("#form-show-wr").submit();
+            }
+        }
+
         $('#select_status').on('change', function() {
             status = $(this).val()
             id_bayar = $('#id_bayarnon').val()
@@ -254,27 +278,47 @@
             var deskripsi_wr = $('textarea#deskripsi_wr').val();
             var estimasi_pengerjaan = $('#estimasi_pengerjaan').val();
 
-            $.ajax({
-                url: '/admin/work-orders',
-                data: {
-                    'no_tiket': '{{ $wr->no_tiket }}',
-                    'no_work_request': '{{ $wr->no_work_request }}',
-                    'services': services,
-                    'id_bayarnon': parseInt(id_bayar),
-                    'deskripsi_wr': deskripsi_wr,
-                    'estimasi_pengerjaan': estimasi_pengerjaan
-                },
-                type: 'POST',
-                success: function(data) {
-                    noWO = data;
-                    getWoByID(noWO);
+            if (!deskripsi_wr || !estimasi_pengerjaan) {
+                Swal.fire(
+                    'Failed!',
+                    'Please insert all field',
+                    'error'
+                )
+            } else {
+                if (id_bayar == 1 && services.length <= 0) {
                     Swal.fire(
-                        'Berhasil!',
-                        'Berhasil mengajukan Work Order!',
-                        'success'
-                    ).then(() => window.location.reload());
+                        'Failed!',
+                        'Please insert detail work',
+                        'error'
+                    )
+                } else {
+                    $.ajax({
+                        url: '/admin/work-orders',
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        },
+                        data: {
+                            'no_tiket': '{{ $wr->no_tiket }}',
+                            'no_work_request': '{{ $wr->no_work_request }}',
+                            'services': services,
+                            'id_bayarnon': parseInt(id_bayar),
+                            'deskripsi_wr': deskripsi_wr,
+                            'estimasi_pengerjaan': estimasi_pengerjaan
+                        },
+                        type: 'POST',
+                        success: function(data) {
+                            noWO = data;
+                            getWoByID(noWO);
+                            Swal.fire(
+                                'Berhasil!',
+                                'Berhasil mengajukan Work Order!',
+                                'success'
+                            ).then(() => window.location.reload());
+                        }
+                    })
                 }
-            })
+            }
+
         })
 
         function getWoByID(noWO) {
@@ -329,7 +373,6 @@
                 detil_pekerjaan: detilPekerjaan,
                 detil_biaya_alat: detilBiayaAlat,
             }
-
 
             if (detilPekerjaan !== '' && detilBiayaAlat !== '') {
                 services.push(service);

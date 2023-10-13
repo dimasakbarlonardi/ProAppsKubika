@@ -7,7 +7,7 @@
 @endsection
 
 @section('content')
-    <form action="{{ route('work-orders.update', $wo->id) }}" method="post">
+    <form action="{{ route('work-orders.update', $wo->id) }}" method="post" id="form-send-to-tenant">
         @method('PUT')
         @csrf
         <div class="row">
@@ -50,8 +50,8 @@
                                             disabled>
                                     </div>
                                     <div class="col-3 py-3 text-end">
-                                        <input class="form-control" type="text" value="{{ Rupiah($wod->detil_biaya_alat) }}"
-                                            disabled>
+                                        <input class="form-control" type="text"
+                                            value="{{ Rupiah($wod->detil_biaya_alat) }}" disabled>
                                     </div>
                                 </div>
                             @endforeach
@@ -158,7 +158,7 @@
                         <div class="mb-4">
                             <label class="mb-1">Jadwal Pengerjaan</label>
                             <input value="{{ $wo->jadwal_pengerjaan }}" {{ $user->id_role_hdr != 8 ? 'disabled' : '' }}
-                                class="form-control datetimepicker" name="jadwal_pengerjaan" id="datetimepicker"
+                                class="form-control datetimepicker" name="jadwal_pengerjaan" id="jadwal_pengerjaan"
                                 type="text" placeholder="d/m/y H:i"
                                 data-options='{"enableTime":true,"dateFormat":"Y-m-d H:i","disableMobile":true}' />
                         </div>
@@ -166,13 +166,13 @@
                 </div>
                 @if ($user->id_role_hdr == 8 && $wo->status_wo == 'PENDING')
                     <div class="card-footer border-top border-200 py-x1">
-                        <button type="submit" class="btn btn-primary w-100" value="send">Send to
+                        <button type="button" onclick="onSubmit()" class="btn btn-primary w-100" value="send">Send to
                             Tenant</button>
                     </div>
                 @endif
                 @if (
                     $wo->status_wo == 'APPROVED' &&
-                    $user->RoleH->work_relation_id == $wo->WorkRequest->id_work_relation &&
+                        $user->RoleH->work_relation_id == $wo->WorkRequest->id_work_relation &&
                         !$wo->sign_approve_2 &&
                         $wo->sign_approve_5)
                     <div class="card-footer border-top border-200 py-x1">
@@ -190,7 +190,10 @@
                             onclick="approve3({{ $wo->id }})">Approve</button>
                     </div>
                 @endif
-                @if ($wo->status_wo == 'APPROVED' && $wo->sign_approve_3 && $user->RoleH->work_relation_id == $wo->WorkRequest->id_work_relation)
+                @if (
+                    $wo->status_wo == 'APPROVED' &&
+                        $wo->sign_approve_3 &&
+                        $user->RoleH->work_relation_id == $wo->WorkRequest->id_work_relation)
                     <div class="card-footer border-top border-200 py-x1">
                         <button type="button" class="btn btn-primary w-100"
                             onclick="workDone({{ $wo->id }})">PEKERJAAN SELESAI</button>
@@ -198,7 +201,7 @@
                 @endif
                 @if ($user->id_role_hdr == 8 && $wo->status_wo == 'WAITING APPROVE')
                     <div class="card-footer border-top border-200 py-x1">
-                        <button type="submit" class="btn btn-primary w-100" value="send">Update</button>
+                        <button type="button" onclick="onSubmit()" class="btn btn-primary w-100" value="send">Update</button>
                     </div>
                 @endif
                 @if ($user->id_user == $approve->approval_4 && $wo->sign_approve_5 && !$wo->sign_approve_4 && $wo->status_wo == 'DONE')
@@ -217,6 +220,13 @@
         referrerpolicy="origin"></script>
     <script src="{{ asset('assets/js/flatpickr.js') }}"></script>
     <script>
+        flatpickr("#jadwal_pengerjaan", {
+            minDate: "today",
+            enableTime: true,
+            altInput: true,
+            altFormat: "F j, Y - H:i"
+        });
+
         tinyMCE.init({
             selector: 'textarea#deskripsi_wr_tenant',
             menubar: false,
@@ -232,6 +242,19 @@
             height: "180",
             readonly: true
         });
+
+        function onSubmit() {
+            var jadwal_pengerjaan = $('#jadwal_pengerjaan').val()
+            if (!jadwal_pengerjaan) {
+                Swal.fire(
+                    'Failed!',
+                    'Please insert work date',
+                    'error'
+                )
+            } else {
+                $('#form-send-to-tenant').submit()
+            }
+        }
 
         function workDone(id) {
             $.ajax({
