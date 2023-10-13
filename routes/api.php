@@ -116,6 +116,8 @@ Route::prefix('v1')->group(function () {
         Route::get('/attendance/shift-schedule/{userID}', [AttendanceController::class, 'shiftSchedule']);
         Route::get('/attendance/today-activity/{userID}', [AttendanceController::class, 'todayData']);
         Route::get('/attendance/recent-activity/{userID}', [AttendanceController::class, 'recentData']);
+        Route::get('/attendance/shift-types', [AttendanceController::class, 'getShiftType']);
+        Route::get('/attendance/work-schedule/{karyawanID}/{id}', [AttendanceController::class, 'getScheduleByShift']);
 
         // Package
         Route::post('/package', [PackageController::class, 'store']);

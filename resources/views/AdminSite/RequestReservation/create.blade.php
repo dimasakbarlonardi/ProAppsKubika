@@ -207,7 +207,6 @@
             var startTime = $('#timeStartEvent').val();
             var endTime = $('#timeEndEvent').val();
 
-            console.log(selectdate);
             if (!selectdate || !durasiAcara || !jenisAcara || !ruangReservasi || !isDeposit || !jumlahDeposit || !
                 startTime || !endTime) {
                 Swal.fire(

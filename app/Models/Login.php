@@ -26,7 +26,8 @@ class Login extends Authenticatable
         'name',
         'email',
         'password',
-        'no_hp'
+        'no_hp',
+        'fcm_token'
     ];
 
     /**
