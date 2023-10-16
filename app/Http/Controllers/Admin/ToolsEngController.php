@@ -49,9 +49,8 @@ class ToolsEngController extends Controller
                 $borrowQty = (int) $request->amount;
 
                 if ($borrowQty <= 0 || $borrowQty > ($tool->total_tools - $tool->borrow)) {
-                    return ResponseFormatter::error([
-                        'message' => 'Error'
-                    ], 'Invalid borrow quantity');
+                    Alert::error('error', 'Invalid borrow quantity');
+                    return redirect()->back();
                 }
 
                 // Memperbarui atribut-atribut alat
