@@ -28,6 +28,12 @@
                             <td>{{ $gigo->no_request_gigo }}</td>
                             <td>
                                 <a href="{{ route('gigo.show', $gigo->id) }}" class="btn btn-sm btn-warning">View</a>
+                                @if ($gigo->sign_approval_2 && $gigo->status_request != 'DONE')
+                                    <form action="{{ route('gigoDone', $gigo->id) }}" class="d-inline" method="post">
+                                        @csrf
+                                        <button type="submit" class="btn btn-info btn-sm">Done</button>
+                                    </form>
+                                @endif
                             </td>
                         </tr>
                     @endforeach

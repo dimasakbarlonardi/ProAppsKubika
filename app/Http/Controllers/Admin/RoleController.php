@@ -3,11 +3,14 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Helpers\ConnectionDB;
+use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
+use App\Models\AccessMobileMenu;
 use App\Models\AksesForm;
 use App\Models\Login;
 use App\Models\Menu;
 use App\Models\MenuHeading;
+use App\Models\MobileMenu;
 use App\Models\Role;
 use App\Models\SubMenu;
 use App\Models\SubMenu2;
@@ -353,5 +356,87 @@ class RoleController extends Controller
         return response()->json([
             'html' => view('layouts.side-navigation')->render(),
         ]);
+    }
+
+    public function aksesMobile($id)
+    {
+        $connMobileMenu = ConnectionDB::setConnection(new MobileMenu());
+        $connSelectedMenu = ConnectionDB::setConnection(new AccessMobileMenu());
+
+        $data['selected_menus'] = $connSelectedMenu->where('role_id', $id)->get();
+        $selectedMenus = [];
+
+        foreach ($data['selected_menus'] as $item) {
+            $selectedMenus[] = $item->kode_menu;
+        }
+
+        $data['menus'] = $connMobileMenu->whereNotIn('kode_menu', $selectedMenus)
+            ->get();
+
+        return view('AdminSite.AksesForm.mobile-menu', $data);
+    }
+
+    public function storeAksesMobile(Request $request, $id)
+    {
+        $connSelectedMenu = ConnectionDB::setConnection(new AccessMobileMenu());
+
+        $takeMenus = $request->to;
+
+        $kodeMenuArray = [];
+        $menuCatArray = [];
+        $menuIDArray = [];
+
+        if (isset($takeMenus)) {
+            foreach ($takeMenus as $form) {
+                $kode_menu = explode("|", $form);
+                $kodeMenuArray[] = $kode_menu[1];
+                $menuCatArray[] = $kode_menu[0];
+                $menuIDArray[] = $kode_menu[2];
+            }
+
+            $deletes = $connSelectedMenu->where('role_id', $id)
+                ->whereNotIn('kode_menu', $kodeMenuArray)
+                ->get();
+
+            if (count($deletes) > 0) {
+                $connSelectedMenu->where('role_id', $id)
+                    ->whereNotIn('kode_menu', $kodeMenuArray)
+                    ->delete();
+            } else {
+                foreach ($request->to as $data) {
+                    $get_req = explode("|", $data);
+                    $menu_category = $get_req[0];
+                    $kode_menu = $get_req[1];
+                    $menu_id = $get_req[2];
+
+                    $connSelectedMenu->where('kode_menu', $kode_menu)->firstOrCreate([
+                        'kode_menu' => $kode_menu,
+                        'role_id' => $id,
+                        'menu_id' => $menu_id,
+                        'menu_category' => $menu_category,
+                    ]);
+                }
+            }
+        } else {
+            $connSelectedMenu->where('role_id', $id)
+                ->whereNotIn('kode_menu', $kodeMenuArray)
+                ->get();
+        }
+
+        return redirect()->back();
+    }
+
+    public function getAccessAPI($roleID)
+    {
+        $connSelectedMenu = ConnectionDB::setConnection(new AccessMobileMenu());
+
+        $menus = $connSelectedMenu->where('role_id', $roleID)
+            ->with('Menu')
+            ->get();
+
+        return ResponseFormatter::success(
+            $menus,
+            'Success get menus'
+        );
     }
 }

@@ -23,6 +23,7 @@ class Reservation extends Model
         'durasi_acara',
         'waktu_mulai',
         'waktu_akhir',
+        'is_deposit',
         'jumlah_deposit',
         'no_cash_receipt',
         'status_bayar',

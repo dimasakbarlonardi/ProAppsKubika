@@ -6,12 +6,67 @@ use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
 use App\Models\Agama;
 use App\Models\Login;
+use App\Notifications\SendPushNotification;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Http\Request;
+use Notification;
 
 class AgamaController extends Controller
 {
+    public function notification()
+    {
+        return view('notification');
+    }
+
+    public function testFCM(Request $request)
+    {
+        try {
+            $fcmTokens = Login::whereNotNull('fcm_token')->pluck('fcm_token')->toArray();
+
+            $SERVER_API_KEY = env("FIREBASE_SERVER_KEY", null);
+
+            $data = [
+                "registration_ids" => $fcmTokens,
+                "notification" => [
+                    "title" => $request->title,
+                    "body" => $request->body,
+                    "content_available" => true,
+                    "priority" => "high",
+                ]
+            ];
+            $dataString = json_encode($data);
+
+            $headers = [
+                'Authorization: key=' . $SERVER_API_KEY,
+                'Content-Type: application/json',
+            ];
+
+            $ch = curl_init();
+
+            curl_setopt($ch, CURLOPT_URL, 'https://fcm.googleapis.com/fcm/send');
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, $dataString);
+
+            $response = curl_exec($ch);
+
+            return response()->json($response);
+
+        } catch (\Exception $e) {
+            report($e);
+            return redirect()->back();
+        }
+    }
+
+    public function saveToken(Request $request)
+    {
+        auth()->user()->update(['fcm_token' => $request->token]);
+        return response()->json(['token saved successfully.']);
+    }
+
     /**
      * Display a listing of the resource.
      *

@@ -116,7 +116,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="mb-3">
+                        {{-- <div class="mb-3">
                             <div class="row">
                                 <div class="col-6">
                                     <label class="col-form-label">Tanggal
@@ -130,7 +130,7 @@
                                     <input class="form-control" type="date" name="tgl_jatuh_tempo_util" required>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                         <div class="modal-footer">
                             <button class="btn btn-secondary" type="button" data-bs-dismiss="modal">Close</button>
                             <button class="btn btn-primary" type="submit">Simpan

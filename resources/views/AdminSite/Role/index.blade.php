@@ -29,9 +29,9 @@
                     <table class="table table-bordered table-striped fs--1 mb-0">
                         <thead class="bg-200 text-900">
                             <tr>
-                                <th class="sort">No</th>
-                                <th class="sort">Nama Role</th>
-                                <th class="sort">Action</th>
+                                <th>No</th>
+                                <th>Nama Role</th>
+                                <th class="text-center">Action</th>
                             </tr>
                         </thead>
                         <tbody class="list">
@@ -39,9 +39,11 @@
                                 <tr>
                                     <td class="id_site">{{ $key + 1 }}</td>
                                     <td class="id_site">{{ $role->nama_role }}</td>
-                                    <td>
+                                    <td class="text-center">
                                         <a href="{{ route('akses-form', $role->id) }}"
-                                            class="btn btn-sm btn-primary">Access Role</a>
+                                            class="btn btn-sm btn-primary">Web Access Role</a>
+                                        <a href="{{ route('akses-mobile', $role->id) }}"
+                                            class="btn btn-sm btn-info">Mobile Access Role</a>
                                         <a href="{{ route('roles.edit', $role->id) }}"
                                             class="btn btn-sm btn-warning">Edit</a>
                                         <form class="d-inline" action="{{ route('roles.destroy', $role->id) }}"

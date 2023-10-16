@@ -52,7 +52,7 @@
                                                         <h5 class="mb-2 hover-primary">{{ $ticket->judul_request }}</h5>
                                                     </a>
                                                     <p class="fs--1 border-bottom mb-3 pb-3 text-600">
-                                                        Ticket #{{ $ticket->no_tiket }}
+                                                        Request #{{ $ticket->no_tiket }}
                                                     </p>
                                                     <p>
                                                         {!! $ticket->deskripsi_request !!}
@@ -96,7 +96,7 @@
                                                             <h6 class="mb-2 hover-primary">Respond</h6>
                                                         </a>
                                                         <p class="fs--1 border-bottom mb-3 pb-3 text-600">
-                                                            Ticket #{{ $ticket->no_tiket }}
+                                                            Request #{{ $ticket->no_tiket }}
                                                         </p>
                                                         <p>
                                                             {!! $ticket->deskripsi_respon !!}
@@ -184,7 +184,7 @@
                                                             {{ $ticket->WorkRequest->WorkRelation->work_relation }}
                                                         </h6>
                                                         <p class="fs--1 border-bottom mb-3 pb-3 text-600">
-                                                            Ticket #{{ $ticket->WorkRequest->no_work_request }}
+                                                            Request #{{ $ticket->WorkRequest->no_work_request }}
                                                         </p>
                                                         <div class="d-flex flex-wrap pt-2">
                                                             <h6 class="mb-0 text-600 lh-base">
@@ -364,7 +364,7 @@
                                                 <div class="timeline-item-content arrow-bg-white">
                                                     <div class="timeline-item-card bg-white dark__bg-1100">
                                                         <p class="fs--1 border-bottom mb-3 pb-3 text-600">
-                                                            Ticket #{{ $ticket->RequestGIGO->no_work_request }}
+                                                            Request #{{ $ticket->RequestGIGO->no_work_request }}
                                                         </p>
                                                         <div class="d-flex flex-wrap pt-2">
                                                             <h6 class="mb-0 text-600 lh-base">

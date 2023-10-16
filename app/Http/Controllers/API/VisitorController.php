@@ -10,6 +10,18 @@ use Illuminate\Http\Request;
 
 class VisitorController extends Controller
 {
+    public function index()
+    {
+        $connVisitor = ConnectionDB::setConnection(new Visitor());
+
+        $visitors = $connVisitor->get();
+
+        return ResponseFormatter::success(
+            $visitors,
+            'Success get all visitors'
+        );
+    }
+
     public function store(Request $request)
     {
         $connVisitor = ConnectionDB::setConnection(new Visitor());

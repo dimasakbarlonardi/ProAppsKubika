@@ -10,7 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 
-class ToolsHKController extends Controller 
+class ToolsHKController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -33,15 +33,15 @@ class ToolsHKController extends Controller
         try {
             // Menghubungkan ke database dan mencari alat berdasarkan ID
             $conn = ConnectionDB::setConnection(new ToolsHousekeeping());
-            $tool = $conn->findOrFail($id); 
+            $tool = $conn->findOrFail($id);
             $borrowQty = $request->input('borrow_qty');
-        
+
             // Validasi jumlah peminjaman
             if ($borrowQty <= 0 || $borrowQty > $tool->total_tools - $tool->borrow) {
                 Alert::error('error', 'Invalid borrow quantity');
                 return redirect()->back();
             }
-            
+
             // Mengambil ID pengguna yang sedang login
             $user_id = $request->user()->id;
 
@@ -65,9 +65,9 @@ class ToolsHKController extends Controller
     {
         $conn = ConnectionDB::setConnection(new ToolsHousekeeping());
         $tool = $conn->findOrFail($id);
-    
+
         $returnQty = $request->input('return_qty');
-    
+
         if ($returnQty <= 0 || $returnQty > $tool->borrow) {
             Alert::error('error', 'Invalid return quantity');
             return redirect()->back();
@@ -77,14 +77,14 @@ class ToolsHKController extends Controller
             Alert::error('error', 'Invalid return quantity');
             return redirect()->back();
         }
-    
+
         $tool->borrow -= $returnQty;
         if ($tool->borrow == 0) {
             $tool->status = 0; // Item completed
             $tool->date_out = null;
         }
         $tool->save();
-    
+
         // Update current_totals
         $tool->current_totals = $tool->total_tools - $tool->borrow;
         $tool->save();
@@ -118,6 +118,7 @@ class ToolsHKController extends Controller
             $conn->create([
                 'name_tools' => $request->name_tools,
                 'total_tools' => $request->total_tools,
+                'current_totals' => $request->total_tools,
             ]);
 
             DB::commit();
@@ -130,7 +131,7 @@ class ToolsHKController extends Controller
             dd($e);
             Alert::success('Failed','Failed to Add HouseKeeping Tools');
 
-            return redirect()->route('toolshousekeeping.index'); 
+            return redirect()->route('toolshousekeeping.index');
         }
     }
 

@@ -41,13 +41,13 @@
                                     <div class="row">
                                         <div class="col-6">
                                             <label class="form-label">No Tiket</label>
-                                            <input type="text" class="form-control" value="{{ $gigo->Ticket->no_tiket }}"
-                                                disabled>
+                                            <input {{ $gigo->gigo_type ? 'disabled' : '' }} type="text"
+                                                class="form-control" value="{{ $gigo->Ticket->no_tiket }}" disabled>
                                         </div>
                                         <div class="col-6">
                                             <label class="form-label">No Request Permit</label>
-                                            <input type="text" class="form-control" value="{{ $gigo->no_request_gigo }}"
-                                                disabled>
+                                            <input {{ $gigo->gigo_type ? 'disabled' : '' }} type="text"
+                                                class="form-control" value="{{ $gigo->no_request_gigo }}" disabled>
                                         </div>
                                     </div>
                                 </div>
@@ -55,13 +55,13 @@
                                     <div class="row">
                                         <div class="col-6">
                                             <label class="mb-1">Nama pembawa</label>
-                                            <input type="text" required
+                                            <input {{ $gigo->gigo_type ? 'disabled' : '' }} type="text" required
                                                 value="{{ $gigo->nama_pembawa ? $gigo->nama_pembawa : '' }}"
                                                 name="nama_pembawa" class="form-control" />
                                         </div>
                                         <div class="col-6">
                                             <label class="mb-1">No Polisi Pembawa</label>
-                                            <input type="text" required
+                                            <input {{ $gigo->gigo_type ? 'disabled' : '' }} type="text" required
                                                 value="{{ $gigo->no_pol_pembawa ? $gigo->no_pol_pembawa : '' }}"
                                                 name="no_pol_pembawa" class="form-control" />
                                         </div>
@@ -71,7 +71,8 @@
                                     <div class="row">
                                         <div class="col-6">
                                             <label class="mb-1">Tanggal & Jam bawa barang</label>
-                                            <input class="form-control datetimepicker" required
+                                            <input {{ $gigo->gigo_type ? 'disabled' : '' }}
+                                                class="form-control datetimepicker" required
                                                 value="{{ $gigo->date_request_gigo ? $gigo->date_request_gigo : '' }}"
                                                 name="date_request_gigo" id="datetimepicker" type="text"
                                                 placeholder="d/m/y H:i"
@@ -79,9 +80,11 @@
                                         </div>
                                         <div class="col-6">
                                             <label class="mb-1">GIGO Type</label>
-                                            <input type="text" required
-                                                value="{{ $gigo->gigo_type ? $gigo->gigo_type : '' }}"
-                                                name="gigo_type" class="form-control" />
+                                            <select name="gigo_type" class="form-control" required
+                                                {{ $gigo->gigo_type ? 'disabled' : '' }}>
+                                                <option value="In">In</option>
+                                                <option value="Out">Out</option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -117,18 +120,18 @@
                                                                     <td>{{ $good->keterangan }}</td>
                                                                 </tr>
                                                             </table>
-                                                            <div class='fs--2 fs-md--1'>
-                                                                <a class='text-danger'
-                                                                    onclick='onRemoveGood({{ $good->id }})'>Remove</a>
-                                                            </div>
+                                                            @if (!$gigo->sign_approval_1 && !$gigo->gigo_type)
+                                                                <div class='fs--2 fs-md--1'>
+                                                                    <a class='text-danger'
+                                                                        onclick='onRemoveGood({{ $good->id }})'>Remove</a>
+                                                                </div>
+                                                            @endif
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         @endforeach
-                                        <div id="detailGoods">
-                                        </div>
-                                        @if (!$gigo->sign_approval_1)
+                                        @if (!$gigo->sign_approval_1 && !$gigo->gigo_type)
                                             <div class="row gx-card mx-0">
                                                 <div class="col-8 py-3">
                                                     <label class="mb-1">Nama barang</label>
@@ -167,10 +170,28 @@
                                                 value="{{ $gigo->status_request ? $gigo->status_request : 'PROSES' }}">
                                         </div>
                                     </div>
-                                    @if (!$gigo->sign_approval_1)
+                                    @if (!$gigo->sign_approval_1 && !$gigo->gigo_type)
                                         <div class="card-footer border-top border-200 py-x1" id="gigoSubmit"
                                             style="display: none">
                                             <button type="submit" class="btn btn-primary w-100">Submit</button>
+                                        </div>
+                                    @endif
+                                    @if (!$gigo->sign_approval_1 && $gigo->gigo_type)
+                                        <div class="card-footer border-top border-200 py-x1">
+                                            <button type="button" id="btnApprove1" class="btn btn-primary w-100"
+                                                onclick="approve1({{ $gigo->id }})">Approve</button>
+                                        </div>
+                                    @endif
+                                    @if ($gigo->sign_approval_1 && !$gigo->sign_approval_2 && $user->RoleH->work_relation_id == $sysApprove->approval_2)
+                                        <div class="card-footer border-top border-200 py-x1">
+                                            <button type="button" id="btnApprove2" class="btn btn-primary w-100"
+                                                onclick="approve2({{ $gigo->id }})">Approve</button>
+                                        </div>
+                                    @endif
+                                    @if (!$gigo->sign_approval_3 && $gigo->status_request == 'DONE' && $user->id_user == $sysApprove->approval_3)
+                                        <div class="card-footer border-top border-200 py-x1">
+                                            <button type="button" id="gigoComplete" class="btn btn-primary w-100"
+                                                onclick="actionGigoComplete({{ $gigo->id }})">COMPLETE</button>
                                         </div>
                                     @endif
                                 </div>
@@ -283,6 +304,54 @@
                     if (resp.status === 'ok') {
                         $(`#good${id}`).html('');
                         window.location.reload()
+                    }
+                }
+            })
+        }
+
+        function approve1(id) {
+            $.ajax({
+                url: `/admin/gigo/approve1/${id}`,
+                type: 'POST',
+                success: function(data) {
+                    if (data.status === 'ok') {
+                        Swal.fire(
+                            'Success!',
+                            'Success approve GIGO!',
+                            'success'
+                        ).then(() => window.location.reload())
+                    }
+                }
+            })
+        }
+
+        function approve2(id) {
+            $.ajax({
+                url: `/admin/gigo/approve2/${id}`,
+                type: 'POST',
+                success: function(data) {
+                    if (data.status === 'ok') {
+                        Swal.fire(
+                            'Success!',
+                            'Success approve GIGO!',
+                            'success'
+                        ).then(() => window.location.reload())
+                    }
+                }
+            })
+        }
+
+        function actionGigoComplete(id) {
+            $.ajax({
+                url: `/admin/gigo/complete/${id}`,
+                type: 'POST',
+                success: function(data) {
+                    if (data.status === 'ok') {
+                        Swal.fire(
+                            'Success!',
+                            'Success approve GIGO!',
+                            'success'
+                        ).then(() => window.location.reload())
                     }
                 }
             })

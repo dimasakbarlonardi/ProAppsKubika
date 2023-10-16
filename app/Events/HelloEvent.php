@@ -2,6 +2,10 @@
 
 namespace App\Events;
 
+use App\Helpers\ConnectionDB;
+use App\Models\Approve;
+use App\Models\Notifikasi;
+use App\Models\OpenTicket;
 use Illuminate\Broadcasting\Channel;
 use Illuminate\Broadcasting\InteractsWithSockets;
 use Illuminate\Broadcasting\PresenceChannel;
@@ -14,16 +18,16 @@ class HelloEvent implements ShouldBroadcast
 {
     use Dispatchable, InteractsWithSockets, SerializesModels;
 
-    public $text;
+    public $dataNotif;
 
     /**
      * Create a new event instance.
      *
      * @return void
      */
-    public function __construct($text)
+    public function __construct($dataNotif)
     {
-        $this->text = $text;
+        $this->dataNotif = $dataNotif;
     }
 
     /**
@@ -38,8 +42,31 @@ class HelloEvent implements ShouldBroadcast
 
     public function broadcastWith()
     {
-        return [
-            "data" => $this->text
-        ];
+        $dataNotif = $this->dataNotif;
+
+        if (!isset($dataNotif['connection'])) {
+            $connNotif = ConnectionDB::setConnection(new Notifikasi());
+        } else {
+            $connNotif = new Notifikasi();
+            $connNotif = $connNotif->setConnection($dataNotif['connection']);
+        }
+
+        $notif = $connNotif->where('models', $dataNotif['models'])
+            ->where('is_read', 0)
+            ->where('id_data', $dataNotif['id_data'])
+            ->first();
+
+        if (!$notif) {
+            $notif = $connNotif;
+            $notif->sender = $dataNotif['sender'];
+            $notif->division_receiver = $dataNotif['division_receiver'];
+            $notif->receiver = $dataNotif['receiver'];
+            $notif->is_read = 0;
+            $notif->id_data = $dataNotif['id_data'];
+            $notif->notif_title = $dataNotif['notif_title'];
+            $notif->notif_message = $dataNotif['notif_message'];
+            $notif->models = $dataNotif['models'];
+            $notif->save();
+        }
     }
 }

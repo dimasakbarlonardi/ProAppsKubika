@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\HelloEvent;
 use App\Helpers\ConnectionDB;
+use App\Models\Approve;
 use App\Models\CashReceipt;
 use App\Models\MonthlyArTenant;
 use App\Models\Site;
@@ -21,10 +23,13 @@ class PaymentController extends Controller
             $order = $callback->getOrder();
             $site = Site::find($order->id_site);
 
-
             $cr = new CashReceipt();
             $cr = $cr->setConnection($site->db_name);
             $cr = $cr->where('no_draft_cr', $order->no_draft_cr)->first();
+
+            $approve = new Approve();
+            $approve = $approve->setConnection($site->db_name);
+            $approve = $approve->find(7);
 
             if ($callback->isSuccess()) {
                 $cr->transaction_status = 'PAYED';
@@ -46,6 +51,19 @@ class PaymentController extends Controller
                         $cr->Reservation->status_bayar = 'PAYED';
                         $cr->Reservation->sign_approval_5 = Carbon::now();
                         $cr->Reservation->save();
+
+                        $dataNotif = [
+                            'models' => 'Reservation',
+                            'notif_title' => $cr->Reservation->no_reservation,
+                            'id_data' => $cr->Reservation->id,
+                            'sender' => $cr->Reservation->Ticket->Tenant->User->id_user,
+                            'division_receiver' => null,
+                            'notif_message' => 'Pembayaran berhasil, mohon approve proses reservasi',
+                            'receiver' => $approve->approval_3,
+                            'connection' => $site->db_name
+                        ];
+
+                        broadcast(new HelloEvent($dataNotif));
                         break;
 
                     case ('MonthlyTenant'):
@@ -53,7 +71,7 @@ class PaymentController extends Controller
                         $bills = $bills->setConnection($site->db_name);
                         $bills = $bills->where('id_unit', $cr->MonthlyARTenant->id_unit)->get();
 
-                        foreach($bills as $bill) {
+                        foreach ($bills as $bill) {
                             $bill->tgl_bayar_invoice = Carbon::now();
                             $bill->save();
                         }

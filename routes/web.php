@@ -146,11 +146,10 @@ Route::post('/payments/midtrans-notifications', [PaymentController::class, 'rece
 Route::get('/delete/midtrans', [PaymentController::class, 'delete']);
 Route::get('/check/midtrans', [PaymentController::class, 'check']);
 
-Route::get('/send-event', function() {
-    $text = "Testing message event notification";
-
-    broadcast(new HelloEvent($text));
-});
+//dev
+Route::post('/send-event', [AgamaController::class, 'testFCM'])->name('testFCM');
+Route::get('/notification', [AgamaController::class, 'notification']);
+Route::post('/save-token', [AgamaController::class, 'saveToken'])->name('save-token');
 
 // Check role id
 Route::get('/check-role-id', [RoleController::class, 'checkRoleID']);
@@ -347,6 +346,8 @@ Route::prefix('admin')->group(function () {
         // Akses form for user
         Route::get('/akses-form-user/{id}', [RoleController::class, 'aksesForm'])->name('get-akses-form');
         Route::post('/akses-form-user/{id}', [RoleController::class, 'storeAksesForm'])->name('akses-form');
+        Route::get('/access-mobile-menu/{id}', [RoleController::class, 'aksesMobile'])->name('akses-mobile');
+        Route::post('/access-mobile-menu/{id}', [RoleController::class, 'storeAksesMobile'])->name('storeAksesMobile');
 
         //CRUD OffBoarding Tenant Unit
         Route::resource('offtenantunits', OffBoardingTenantUnitController::class);
@@ -386,6 +387,8 @@ Route::prefix('admin')->group(function () {
 
         // Reservation
         Route::resource('request-reservations', ReservationController::class);
+        Route::get('/reservation/get/booked-date', [ReservationController::class, 'getBookedDate']);
+        Route::post('rsvReject/{id}', [ReservationController::class, 'reject'])->name('rsvReject');
         Route::post('rsvApprove1/{id}', [ReservationController::class, 'approve1'])->name('rsvApprove1');
         Route::post('rsvApprove2/{id}', [ReservationController::class, 'approve2'])->name('rsvApprove2');
         Route::post('rsvApprove3/{id}', [ReservationController::class, 'approve3'])->name('rsvApprove3');
@@ -396,7 +399,7 @@ Route::prefix('admin')->group(function () {
 
         // Notification
         Route::get('/notifications', [DashboardController::class, 'notifications'])->name('notifications');  // Get all notifications list
-        Route::get('/get-notifications', [DashboardController::class, 'getNotifications'])->name('getNotifications');  // Get all notifications by user_id
+        Route::get('/get-notifications/{userID}', [DashboardController::class, 'getNotifications'])->name('getNotifications');  // Get all notifications by user_id
         Route::get('/notification/{id}', [DashboardController::class, 'showNotification'])->name('showNotification'); // Show all notification by user_id
 
         // CRUD Work Order
@@ -436,10 +439,6 @@ Route::prefix('admin')->group(function () {
         // Eng BAPP
         Route::resource('eng-bapp', EngBAPPcontroller::class);
 
-        // Notification
-        Route::get('/notifications', [DashboardController::class, 'notifications'])->name('notifications');  // Get all notifications list
-        Route::get('/get-notifications', [DashboardController::class, 'getNotifications'])->name('getNotifications');  // Get all notifications by user_id
-        Route::get('/notification/{id}', [DashboardController::class, 'showNotification'])->name('showNotification'); // Show all notification by user_id
 
         //CRUD OffBoarding Tenant
         Route::resource('offtenants', OffBoardingTenantController::class);

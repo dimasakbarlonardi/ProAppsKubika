@@ -1,6 +1,7 @@
 <?php
 
 use App\Helpers\ResponseFormatter;
+use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\API\AttendanceController;
 use App\Http\Controllers\API\BillingController;
 use App\Http\Controllers\API\GIGOController;
@@ -47,6 +48,8 @@ Route::prefix('v1')->group(function () {
     Route::get('/store/insert-water/{unitID}/{token}', [BillingController::class, 'storeWaterMeter'])->name('store-usr-water');
 
     Route::middleware('auth:sanctum')->group(function () {
+        Route::get('get/access-menu/{roleID}', [RoleController::class, 'getAccessAPI']);
+
         Route::post('get/cc-token', [BillingController::class, 'getTokenCC']);
 
         Route::get('/user', [UserController::class, 'user'])->name('user');
@@ -60,7 +63,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/water-usage-record/{unitID}', [UnitController::class, 'waterUsageRecord']);
         Route::get('/electric-usage-record/{unitID}', [UnitController::class, 'electricUsageRecord']);
 
-        // Open Ticket
+        // Open Request
         Route::get('/tickets', [OpenTicketController::class, 'listTickets']);
         Route::get('/jenis-request', [OpenTicketController::class, 'jenisRequest']);
         Route::get('/tenant-unit', [UnitController::class, 'tenantUnit']);
@@ -107,9 +110,14 @@ Route::prefix('v1')->group(function () {
 
         // Attendance
         Route::get('/site-location', [AttendanceController::class, 'siteLocation']);
+        Route::get('/site-location/{id}/{token}', [AttendanceController::class, 'showLocation']);
         Route::post('/attendance/checkin/{token}', [AttendanceController::class, 'checkin']);
         Route::post('/attendance/checkout/{token}', [AttendanceController::class, 'checkout']);
-        Route::get('/attendance/shift-schedule/{userID}', [AttendanceController::class, 'shiftSchedule']);
+        Route::get('/attendance/shift-schedule', [AttendanceController::class, 'shiftSchedule']);
+        Route::get('/attendance/today-activity/{userID}', [AttendanceController::class, 'todayData']);
+        Route::get('/attendance/recent-activity/{userID}', [AttendanceController::class, 'recentData']);
+        Route::get('/attendance/shift-types', [AttendanceController::class, 'getShiftType']);
+        Route::get('/attendance/work-schedule/{id}', [AttendanceController::class, 'getScheduleByShift']);
 
         // Package
         Route::post('/package', [PackageController::class, 'store']);
@@ -121,6 +129,7 @@ Route::prefix('v1')->group(function () {
 
         // Visitor
         Route::post('/visitor', [VisitorController::class, 'store']);
+        Route::get('/visitors', [VisitorController::class, 'index']);
         Route::get('/visitors/unit/{id}', [VisitorController::class, 'visitorByUnit']);
         Route::get('/visitor/{id}', [VisitorController::class, 'show']);
         Route::post('/visitor/arrive/{id}', [VisitorController::class, 'arrive']);
@@ -137,5 +146,6 @@ Route::prefix('v1')->group(function () {
         Route::get('/tools/{wrID}', [ToolsController::class, 'index']);
         Route::post('/borrow-tool/{wrID}/{id}', [ToolsController::class, 'borrowTool']);
         Route::post('/return-tool/{wrID}/{id}', [ToolsController::class, 'returnTool']);
+        Route::get('/history-tools/{wrID}/{id}', [ToolsController::class, 'historyTools']);
     });
 });

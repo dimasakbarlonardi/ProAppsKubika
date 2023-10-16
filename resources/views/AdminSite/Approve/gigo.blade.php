@@ -12,16 +12,15 @@
         <div class="p-5">
             <form method="post" action="{{ route('updateSystemApprove', $approve->id_approval_subject) }}">
                 @csrf
-                {{-- {{ dd($roles[5]->WorkRelation) }} --}}
                 <div class="mb-3">
                     <div class="row">
                         <div class="col-6">
                             <label class="form-label">Approve 1</label>
                             <select name="approval_1" class="form-control">
-                                @foreach ($roles as $role)
+                                @foreach ($work_relations as $wr)
                                     <option
-                                        {{ $role->WorkRelation->id_work_relation == $approve->approval_1 ? 'selected' : '' }}
-                                        value="{{ $role->WorkRelation->id_work_relation }}">{{ $role->nama_role }}</option>
+                                        {{ $wr->id_work_relation == $approve->approval_1 ? 'selected' : '' }}
+                                        value="{{ $wr->id_work_relation }}">{{ $wr->work_relation }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -38,16 +37,18 @@
                     </div>
                 </div>
                 <div class="mb-3">
-                    <div class="col-6">
-                        <label class="form-label">Approve 3</label>
-                        <select name="approval_3" class="form-control">
-                            @foreach ($karyawans as $karyawan)
-                                @if ($karyawan->User)
-                                    <option {{ $karyawan->User->id_user == $approve->approval_3 ? 'selected' : '' }}
-                                        value="{{ $karyawan->User->id_user }}">{{ $karyawan->nama_karyawan }}</option>
-                                @endif
-                            @endforeach
-                        </select>
+                    <div class="row">
+                        <div class="col-6">
+                            <label class="form-label">Approve 3</label>
+                            <select name="approval_3" class="form-control">
+                                @foreach ($karyawans as $karyawan)
+                                    @if ($karyawan->User)
+                                        <option {{ $karyawan->User->id_user == $approve->approval_3 ? 'selected' : '' }}
+                                            value="{{ $karyawan->User->id_user }}">{{ $karyawan->nama_karyawan }}</option>
+                                    @endif
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                 </div>
                 <div class="mt-5">

@@ -227,6 +227,12 @@
 
     </main>
 
+    <audio id="notifSound" allow="autoplay">
+        <source src="{{ url('/assets/audio/notifsound.ogg') }}" type="audio/ogg">
+        <source src="{{ url('/assets/audio/notifsound.mp3') }}" type="audio/mpeg">
+    </audio>
+
+
     <!-- ===============================================-->
     <!--    JavaScripts-->
     <!-- ===============================================-->
@@ -240,7 +246,6 @@
     <script src="https://polyfill.io/v3/polyfill.min.js?features=window.scroll"></script>
     <script src="{{ url('assets/vendors/list.js/list.min.js') }}"></script>
     <script src="{{ url('assets/js/theme.js') }}"></script>
-
     @include('sweetalert::alert')
 
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -250,10 +255,14 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-    </script>
-    <script>
+        var user_id = "{{ Session::get('user_id') }}"
+        var division_relation = "{{ Session::get('work_relation_id') }}"
+
         $('document').ready(function() {
-            var user_id = "{{ Session::get('user_id') }}"
+            var notifSound = document.getElementById("notifSound");
+
+            getNotifications(user_id);
+
             $.ajax({
                 url: '/check-role-id',
                 method: 'GET',
@@ -270,7 +279,6 @@
                 url: '/admin/get-nav/' + user_id,
                 type: 'GET',
                 success: function(data) {
-                    console.log(data)
                     $('#dynamicMenu').append(data.html)
                 }
             }).then(function() {
@@ -279,84 +287,6 @@
 
                 $('#' + id).addClass('active my-2')
             })
-
-            $.ajax({
-                url: '/admin/get-notifications',
-                data: {
-                    'receiver': user_id
-                },
-                type: 'GET',
-                success: function(data) {
-                    if (data.length > 0) {
-                        var is_notif = 0;
-                        data.map((item) => {
-                            if (item.is_read == 0) {
-                                is_notif += 1;
-                            }
-                            var current = new Date();
-
-                            $('#notification-lists').append(`
-                                <div class="list-group-item">
-                                    <a class="notification notification-flush ${item.is_read == 1 ? 'notification' : 'notification-unread' }"
-                                        href="/admin/notification/${item.id}">
-                                        <div class="notification-avatar">
-                                            <div class="avatar avatar-2xl me-3">
-                                                <img class="rounded-circle"
-                                                    src="${item.sender ? item.sender.profile_picture : ''}"
-                                                    alt="" />
-                                            </div>
-                                        </div>
-                                        <div class="notification-body">
-                                            <p class="mb-1">
-                                                <strong>${item.sender ? item.sender.nama_user : ''}</strong> Mengirim anda :
-                                                ${item.notif_message} ${item.notif_title}
-                                            </p>
-                                            <span class="notification-time">
-                                                ${timeDifference(current, new Date(item.created_at))}
-                                            </span>
-                                        </div>
-                                    </a>
-                                </div>
-                            `)
-                        })
-                        if (is_notif > 0) {
-                            $('#navbarDropdownNotification').addClass('notification-indicator')
-                        }
-                    } else {
-                        $('#notification-lists').append(`
-                            <div class="list-group-item">
-                                <div class="notification-body my-3 text-center">
-                                    <strong>Tidak ada Notifikasi</strong>
-                                </div>
-                            </div>
-                        `)
-                    }
-                }
-            })
-
-            function timeDifference(current, previous) {
-                var msPerMinute = 60 * 1000;
-                var msPerHour = msPerMinute * 60;
-                var msPerDay = msPerHour * 24;
-                var msPerMonth = msPerDay * 30;
-                var msPerYear = msPerDay * 365;
-
-                var elapsed = current - previous;
-
-                if (elapsed < msPerMinute) {
-                    return Math.round(elapsed / 1000) + ' seconds ago';
-                } else if (elapsed < msPerHour) {
-                    return Math.round(elapsed / msPerMinute) + ' minutes ago';
-                } else if (elapsed < msPerDay) {
-                    return Math.round(elapsed / msPerHour) + ' hours ago';
-                } else if (elapsed < msPerMonth) {
-                    return Math.round(elapsed / msPerDay) + ' days ago';
-                } else if (elapsed < msPerYear) {
-                    return Math.round(elapsed / msPerMonth) + ' months ago';
-                } else {
-                    return Math.round(elapsed / msPerYear) + ' years ago';
-                }
-            }
         });
 
         function formatRupiah(angka, prefix) {
@@ -379,15 +309,192 @@
         }
     </script>
     <script src="{{ asset('js/app.js') }}"></script>
+
+    <script src="https://www.gstatic.com/firebasejs/7.23.0/firebase.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyCTdiDHuOGNRGU9mCxiOZrmEoFam0_sui4",
+            authDomain: "proapps-indoland.firebaseapp.com",
+            projectId: "proapps-indoland",
+            storageBucket: "proapps-indoland.appspot.com",
+            messagingSenderId: "1022619881265",
+            appId: "1:1022619881265:web:b501044f89e60694d0ea10"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const messaging = firebase.messaging();
+
+        messaging.onMessage(function(payload) {
+
+            const noteTitle = payload.notification.title;
+            const noteOptions = {
+                body: payload.notification.body,
+                icon: payload.notification.icon,
+                sound: "127.0.0.1:8000/assets/audio/notifsound.mp3"
+            };
+            new Notification(noteTitle, noteOptions);
+        });
+    </script>
+
     <script>
         document.addEventListener("DOMContentLoaded", function(event) {
             Echo.channel("hello-channel")
                 .listen('HelloEvent', (e) => {
-                    alert(e.data);
-                    console.log(e.data);
+                    getNewNotifications(user_id);
                 })
+
+            messaging
+                .requestPermission()
+                .then(function() {
+                    return messaging.getToken()
+                })
+                .then(function(token) {
+                    console.log(token);
+
+                    $.ajaxSetup({
+                        headers: {
+                            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                        }
+                    });
+
+                    $.ajax({
+                        url: "{{ route('save-token') }}",
+                        type: 'POST',
+                        data: {
+                            token: token
+                        },
+                        dataType: 'JSON',
+                        error: function(err) {
+                            console.log('User Chat Token Error' + err);
+                        },
+                    });
+
+                }).catch(function(err) {
+                    console.log('User Chat Token Error' + err);
+                });
         });
+
+        function getNotifications(user_id) {
+            $.ajax({
+                url: `/admin/get-notifications/${user_id}`,
+                type: 'GET',
+                success: function(data) {
+                    if (data.length > 0) {
+                        var is_notif = 0;
+                        data.map((item) => {
+                            if (item.is_read == 0) {
+                                is_notif += 1;
+                            }
+                            var current = new Date();
+                            $('#notification-lists').append(`
+                                    <div class="list-group-item">
+                                        <a class="notification notification-flush ${item.is_read == 1 ? 'notification' : 'notification-unread' }"
+                                            href="/admin/notification/${item.id}">
+                                            <div class="notification-avatar">
+                                                <div class="avatar avatar-2xl me-3">
+                                                    <img class="rounded-circle"
+                                                        src="${item.sender ? item.sender.profile_picture : ''}"
+                                                        alt="" />
+                                                </div>
+                                            </div>
+                                            <div class="notification-body">
+                                                <p class="mb-1">
+                                                    <strong>${item.sender ? item.sender.nama_user : ''}</strong> Mengirim anda :
+                                                    ${item.notif_message} ${item.notif_title}
+                                                </p>
+                                                <span class="notification-time">
+                                                    ${timeDifference(current, new Date(item.created_at))}
+                                                </span>
+                                            </div>
+                                        </a>
+                                    </div>
+                                `)
+                        })
+                        if (is_notif > 0) {
+                            $('#navbarDropdownNotification').addClass('notification-indicator')
+                        }
+                    } else {
+                        $('#notification-lists').append(`
+                            <div id="empty_notif">
+                                <div class="list-group-item">
+                                    <div class="notification-body my-3 text-center">
+                                        <strong>Tidak ada Notifikasi</strong>
+                                    </div>
+                                </div>
+                            </div>
+                        `)
+                    }
+                }
+            })
+        }
+
+        function getNewNotifications(user_id) {
+            $.ajax({
+                url: `/admin/get-notifications/${user_id}`,
+                type: 'GET',
+                success: function(resp) {
+                    data = resp[0];
+                    if (data.division_receiver == division_relation || data.receiver == user_id) {
+                        console.log('masuk');
+                        console.log(data.id);
+                        notifSound.play();
+                        var current = new Date();
+                        $('#navbarDropdownNotification').addClass('notification-indicator')
+                        $('#empty_notif').html("");
+                        $('#notification-lists').prepend(`
+                            <div class="list-group-item">
+                                <a class="notification notification-flush ${data.is_read == 1 ? 'notification' : 'notification-unread' }"
+                                    href="/admin/notification/${data.id}">
+                                    <div class="notification-avatar">
+                                        <div class="avatar avatar-2xl me-3">
+                                            <img class="rounded-circle"
+                                                src="${data.sender ? data.sender.profile_picture : ''}"
+                                                alt="" />
+                                        </div>
+                                    </div>
+                                    <div class="notification-body">
+                                        <p class="mb-1">
+                                            <strong>${data.sender ? data.sender.nama_user : ''}</strong> Mengirim anda :
+                                            ${data.notif_message} ${data.notif_title}
+                                        </p>
+                                        <span class="notification-time">
+                                            ${timeDifference(current, new Date(data.created_at))}
+                                        </span>
+                                    </div>
+                                </a>
+                            </div>
+                        `)
+                    }
+                }
+            })
+        }
+
+        function timeDifference(current, previous) {
+            var msPerMinute = 60 * 1000;
+            var msPerHour = msPerMinute * 60;
+            var msPerDay = msPerHour * 24;
+            var msPerMonth = msPerDay * 30;
+            var msPerYear = msPerDay * 365;
+
+            var elapsed = current - previous;
+
+            if (elapsed < msPerMinute) {
+                return Math.round(elapsed / 1000) + ' seconds ago';
+            } else if (elapsed < msPerHour) {
+                return Math.round(elapsed / msPerMinute) + ' minutes ago';
+            } else if (elapsed < msPerDay) {
+                return Math.round(elapsed / msPerHour) + ' hours ago';
+            } else if (elapsed < msPerMonth) {
+                return Math.round(elapsed / msPerDay) + ' days ago';
+            } else if (elapsed < msPerYear) {
+                return Math.round(elapsed / msPerMonth) + ' months ago';
+            } else {
+                return Math.round(elapsed / msPerYear) + ' years ago';
+            }
+        }
     </script>
+
     @yield('script')
 </body>
 

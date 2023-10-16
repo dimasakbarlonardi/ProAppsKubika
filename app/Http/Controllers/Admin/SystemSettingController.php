@@ -11,6 +11,7 @@ use App\Models\Karyawan;
 use App\Models\Login;
 use App\Models\Role;
 use App\Models\System;
+use App\Models\WorkRelation;
 use Illuminate\Http\Request;
 use RealRashid\SweetAlert\Facades\Alert;
 
@@ -67,10 +68,12 @@ class SystemSettingController extends Controller
     {
         $connApprove = ConnectionDB::setConnection(new Approve());
         $connRole = ConnectionDB::setConnection(new Role());
+        $connWorkRelations = ConnectionDB::setConnection(new WorkRelation());
         $connKaryawan = ConnectionDB::setConnection(new Karyawan());
 
         $data['roles'] = $connRole->get();
         $data['karyawans'] = $connKaryawan->get();
+        $data['work_relations'] = $connWorkRelations->get();
         $data['approve'] = $connApprove->find($id);
 
         switch ($id) {

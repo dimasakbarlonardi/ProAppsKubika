@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\HelloEvent;
 use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
 use App\Models\Approve;
@@ -34,14 +35,13 @@ class OpenTicketController extends Controller
     public function index(Request $request)
     {
         $user = $request->session()->get('user');
-        
+
         $connRequest = ConnectionDB::setConnection(new OpenTicket());
-        $connUser = ConnectionDB::setConnection(new User());
         $connTenant = ConnectionDB::setConnection(new Tenant());
 
         if ($user->user_category == 3) {
             $tenant = $connTenant->where('email_tenant', $user->login_user)->first();
-            $data['tickets'] = $connRequest->where('id_tenant', $tenant->id_tenant)->get();
+            $data['tickets'] = $connRequest->where('id_tenant', $tenant->id_tenant)->latest()->get();
         } else {
             $data['tickets'] = $connRequest->get();
         }
@@ -58,10 +58,9 @@ class OpenTicketController extends Controller
         $connJenisReq = ConnectionDB::setConnection(new JenisRequest());
 
         if ($user->user_category == 3) {
-            $data['units'] = $connTU->get();
+            $data['units'] = $connTU->where('id_tenant', $user->Tenant->id_tenant)->get();
             $data['tenants'] = $connTenant->get();
         } else {
-
             $data['units'] = $connTU->get();
             $data['tenants'] = $connTenant->get();
         }
@@ -75,13 +74,14 @@ class OpenTicketController extends Controller
     public function store(Request $request)
     {
         $user = $request->session()->get('user');
+        $connReceiver = ConnectionDB::setConnection(new WorkRelation());
         $connOpenTicket = ConnectionDB::setConnection(new OpenTicket());
         $connSystem = ConnectionDB::setConnection(new System());
         $connUnit = ConnectionDB::setConnection(new Unit());
         $connTenant = ConnectionDB::setConnection(new Tenant());
 
         $tenant = $connTenant->where('email_tenant', $user->login_user)->first();
-
+        $receiver = $connReceiver->find(1);
         $system = $connSystem->find(1);
         $count = $system->sequence_notiket + 1;
 
@@ -113,15 +113,28 @@ class OpenTicketController extends Controller
                 $createTicket->upload_image = $fileName;
             }
 
-            $createTicket->save();
             $system->sequence_notiket = $count;
-            $system->save();
 
+            $dataNotif = [
+                'models' => 'OpenTicket',
+                'notif_title' => $createTicket->no_tiket,
+                'id_data' => $createTicket->id,
+                'sender' => $tenant->User->id_user,
+                'division_receiver' => $receiver->id_work_relation,
+                'notif_message' => 'Tiket sudah dibuat, mohon proses request saya',
+                'receiver' => null,
+            ];
+
+            $system->save();
+            $createTicket->save();
+
+            broadcast(new HelloEvent($dataNotif));
             DB::commit();
 
-            Alert::success('Berhasil', 'Berhasil menambahkan request');
+            Alert::success('Success', 'Success create request');
 
-            return redirect()->route('open-tickets.index');
+            return redirect()->route('open-tickets.index')->with('success', 'Success create request');
+
         } catch (Throwable $e) {
             DB::rollBack();
             dd($e);
@@ -183,7 +196,7 @@ class OpenTicketController extends Controller
                     $createNotif->save();
                 }
             } elseif ($request->status_request == 'PROSES KE GIGO') {
-                $this->createGIGO($connNotif, $user, $ticket);
+                $this->createGIGO($user, $ticket);
             } elseif (!$request->status_request) {
                 $ticket->status_request = 'RESPONDED';
             }
@@ -202,7 +215,7 @@ class OpenTicketController extends Controller
         return redirect()->back();
     }
 
-    public function createGIGO($connNotif, $user, $ticket)
+    public function createGIGO($user, $ticket)
     {
         $connSystem = ConnectionDB::setConnection(new System());
         $nowDate = Carbon::now();
@@ -219,27 +232,21 @@ class OpenTicketController extends Controller
         $createRG->no_request_gigo = $no_gigo;
 
         $system->sequence_no_gigo = $count;
-
-        $notif = $connNotif->where('models', 'GIGO')
-            ->where('is_read', 0)
-            ->where('id_data', $createRG->id)
-            ->first();
-
         $createRG->save();
-
-        if (!$notif) {
-            $createNotif = $connNotif;
-            $createNotif->sender = $user->id_user;
-            $createNotif->receiver = $ticket->Tenant->User->id_user;
-            $createNotif->is_read = 0;
-            $createNotif->models = 'GIGO';
-            $createNotif->id_data = $createRG->id;
-            $createNotif->notif_title = $createRG->no_request_gigo;
-            $createNotif->notif_message = 'Request GIGO disetujui, mohon mengisi formulir GIGO';
-            $createNotif->save();
-        }
-
         $system->save();
+
+        $dataNotif = [
+            'models' => 'GIGO',
+            'notif_title' => $createRG->no_request_gigo,
+            'id_data' => $createRG->id,
+            'sender' => $user->id_user,
+            'division_receiver' => '',
+            'notif_message' => 'Request GIGO disetujui, mohon mengisi formulir GIGO',
+            'receiver' => $ticket->Tenant->User->id_user,
+        ];
+
+        broadcast(new HelloEvent($dataNotif));
+
     }
 
     public function updateRequestTicket(Request $request, $id)

@@ -8,6 +8,7 @@ use App\Models\Approve;
 use App\Models\ApproveRequest;
 use App\Models\BAPP;
 use App\Models\CashReceipt;
+use App\Models\JenisRequest;
 use App\Models\Karyawan;
 use App\Models\MonthlyArTenant;
 use App\Models\Notifikasi;
@@ -21,6 +22,7 @@ use App\Models\Tower;
 use App\Models\Transaction;
 use App\Models\TransactionCenter;
 use App\Models\Unit;
+use App\Models\User;
 use App\Models\WorkOrder;
 use App\Models\WorkPermit;
 use App\Models\WorkRequest;
@@ -76,15 +78,19 @@ class DashboardController extends Controller
         return view('Tenant.Notification.index', $data);
     }
 
-    public function getNotifications(Request $request)
+    public function getNotifications(Request $request, $userID)
     {
-        $user = $request->session()->get('user');
+        $login = $request->session()->get('user');
+        $connUser = ConnectionDB::setConnection(new User());
+        $user = $connUser->where('login_user', $login->login_user)->first();
 
-        $receiver = $request->receiver;
+        $work_relation = $user->RoleH->work_relation_id;
+
         $connNotif = ConnectionDB::setConnection(new Notifikasi());
-        $notifications = $connNotif->where('receiver', $receiver)
+        $notifications = $connNotif->where('receiver', $userID)
+            ->orWhere('division_receiver', $work_relation)
             ->with(['sender'])
-            ->latest()
+            ->orderBy('id', 'DESC')
             ->get();
 
         return response()->json($notifications);
@@ -99,11 +105,10 @@ class DashboardController extends Controller
         $isDivision = false;
         $isPass = false;
 
-        if ($user->RoleH->work_relation_id == 4) {
-            $checkDivision = $user->RoleH->WorkRelation->id_work_relation == $getNotif->division_receiver;
-            if ($checkDivision) {
-                $isDivision = true;
-            }
+
+        $checkDivision = $user->RoleH->WorkRelation->id_work_relation == $getNotif->division_receiver;
+        if ($checkDivision) {
+            $isDivision = true;
         }
 
         $checkUser = $user->id_user == $getNotif->receiver;
@@ -126,10 +131,14 @@ class DashboardController extends Controller
                 return view('Tenant.Notification.WorkOrder', $data);
                 break;
 
+            case ('WorkOrderM'):
+                return redirect()->route('work-orders.show', $getNotif->id_data);
+                break;
+
             case ('WorkRequest'):
                 $data = $this->handleWR($connApprove, $getNotif);
                 $data['user'] = $user;
-                return view('Tenant.Notification.WorkRequest', $data);
+                return redirect()->route('work-requests.show', $getNotif->id_data);
                 break;
 
             case ('MonthlyTenant'):
@@ -140,8 +149,12 @@ class DashboardController extends Controller
 
             case ('OpenTicket'):
                 $data = $this->handleRequest($connApprove, $getNotif);
+                $connJR = ConnectionDB::setConnection(new JenisRequest());
+
                 $data['user'] = $user;
-                return view('Tenant.Notification.Ticket', $data);
+                $data['jenis_requests'] = $connJR->get();
+
+                return view('AdminSite.OpenTicket.show', $data);
                 break;
 
             case ('RequestPermit'):
@@ -163,6 +176,7 @@ class DashboardController extends Controller
 
             case ('Reservation'):
                 $data = $this->handleReservation($getNotif);
+                $data['notif'] = $getNotif;
                 return view('Tenant.Notification.Reservation', $data);
                 break;
 
@@ -172,14 +186,14 @@ class DashboardController extends Controller
                 break;
 
             case ('GIGO'):
-                $data = $this->handleGIGO($getNotif);
+                $data = $this->handleGIGO($connApprove, $getNotif);
+                $data['user'] = $user;
                 return view('Tenant.Notification.GIGO', $data);
                 break;
 
             case ('PaymentWO'):
                 $data = $this->handlePaymentWO($getNotif);
                 $data['user'] = $user;
-
                 return view('Tenant.Notification.Payment', $data);
                 break;
         }
@@ -300,10 +314,11 @@ class DashboardController extends Controller
         return $data;
     }
 
-    public function handleGIGO($getNotif)
+    public function handleGIGO($connApprove, $getNotif)
     {
         $model = new RequestGIGO();
         $getData = ConnectionDB::setConnection($model);
+        $data['sysApprove'] = $connApprove->find(8);
         $gigo =  $getData->find($getNotif->id_data);
         $data['gigo'] = $gigo;
 

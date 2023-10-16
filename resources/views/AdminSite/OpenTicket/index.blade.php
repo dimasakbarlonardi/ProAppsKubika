@@ -9,7 +9,7 @@
                     <div class="d-lg-flex justify-content-between">
                         <div class="row flex-between-center gy-2 px-x1">
                             <div class="col-auto pe-0">
-                                <h6 class="mb-0">All tickets</h6>
+                                <h6 class="mb-0">All requests</h6>
                             </div>
                             <div class="col-auto">
                                 <form>
@@ -86,6 +86,11 @@
                                                             class="badge rounded bg-warning dark__bg-1000">{{ $ticket->status_request }}</small>
                                                     @break
 
+                                                    @case('APPROVED')
+                                                        <small
+                                                            class="badge rounded bg-success dark__bg-1000">{{ $ticket->status_request }}</small>
+                                                    @break
+
                                                     @case('RESPONDED')
                                                         <small
                                                             class="badge rounded bg-info dark__bg-1000">{{ $ticket->status_request }}</small>
@@ -96,7 +101,12 @@
                                                             class="badge rounded bg-info dark__bg-1000">{{ $ticket->status_request }}</small>
                                                     @break
 
-                                                    @case('PROSES KE WR' || 'PROSES KE PERMIT')
+                                                    @case('PROSES KE WR')
+                                                        <small
+                                                            class="badge rounded bg-info dark__bg-1000">{{ $ticket->status_request }}</small>
+                                                    @break
+
+                                                    @case('PROSES KE PERMIT')
                                                         <small
                                                             class="badge rounded bg-info dark__bg-1000">{{ $ticket->status_request }}</small>
                                                     @break
@@ -114,6 +124,11 @@
                                                     @case('DONE')
                                                         <small
                                                             class="badge rounded bg-success dark__bg-1000">{{ $ticket->status_request }}</small>
+                                                    @break
+
+                                                    @case('REJECTED')
+                                                        <small
+                                                            class="badge rounded bg-danger">{{ $ticket->status_request }}</small>
                                                     @break
 
                                                     @case('COMPLETE')
@@ -158,18 +173,17 @@
                     </div>
                     <div class="card-body">
                         <form>
-                            <div class="mb-2 mt-n2"><label class="mb-1">Priority</label><select
+                            <div class="mb-2 mt-n2"><label class="mb-1">Type</label><select
                                     class="form-select form-select-sm">
-                                    <option>None</option>
-                                    <option>Urgent</option>
-                                    <option>High</option>
-                                    <option>Medium</option>
-                                    <option>Low</option>
+                                    <option>Complaint</option>
+                                    <option>Fit Out Permit</option>
+                                    <option>Reservation</option>
+                                    <option>Goods In & Goods Out</option>
                                 </select></div>
                         </form>
                     </div>
                     <div class="card-footer border-top border-200 py-x1"><button
-                            class="btn btn-primary w-100">Update</button></div>
+                            class="btn btn-primary w-100">Submit</button></div>
                 </div>
             </div>
         </div>
@@ -178,8 +192,12 @@
 
 @section('script')
     <script>
-        $('document').ready(function() {
-            $('#time_difference').html('asd')
-        })
+        @if (session()->has('success'))
+            Swal.fire(
+                'Success!',
+                '{{ session('success') }}',
+                'success'
+            )
+        @endif
     </script>
 @endsection
