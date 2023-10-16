@@ -25,7 +25,8 @@
                             class="d-md-flex d-xl-inline-block d-xxl-flex align-items-center justify-content-between mb-x1">
                             <div class="d-flex align-items-center gap-2">
                                 <div class="avatar avatar-2xl">
-                                    <img class="rounded-circle" src="{{ $ticket->Tenant->User->profile_picture ? url($ticket->Tenant->User->profile_picture) : ''  }}"
+                                    <img class="rounded-circle"
+                                        src="{{ $ticket->Tenant->User->profile_picture ? url($ticket->Tenant->User->profile_picture) : '' }}"
                                         alt="" />
                                 </div>
                                 <p class="mb-0"><a class="fw-semi-bold mb-0 text-800"
@@ -98,7 +99,8 @@
                             </span>
                         </div>
                         <div class="border-bottom mb-5 pb-5 text-right">
-                            <form action="{{ route('updateRequestTicket', $ticket->id) }}" method="post" id="form-response">
+                            <form action="{{ route('updateRequestTicket', $ticket->id) }}" method="post"
+                                id="form-response">
                                 @csrf
                                 <textarea class="form-control" name="deskripsi_respon" id="deskripsi_response" cols="30" rows="10"></textarea>
                                 <button type="button" onclick="onSubmit()" class="btn btn-success mt-5">Kirim</button>
@@ -109,109 +111,104 @@
             </div>
         </div>
         @if ($user->user_category == 2)
-            <div class="col-xxl-3 col-xl-4">
-                <div class="row g-3 position-sticky top-0">
-                    <div class="col-md-6 col-xl-12">
-                        <div class="card">
-                            <form action="{{ route('open-tickets.update', $ticket->id) }}" method="post">
-                                @csrf
-                                @method('PUT')
-                                <div class="card-header">
-                                    <h6 class="mb-0">Properties</h6>
-                                </div>
-                                <div class="card-body">
-                                    <div class="mb-2 mt-n2"><label class="mb-1">Jenis Request</label>
-                                        <select name="id_jenis_request" class="form-select form-select-sm"
-                                            {{ $ticket->status_request != 'RESPONDED' ? 'disabled' : '' }}>
-                                            <option disabled selected>--Pilih Jenis Request---</option>
-                                            @foreach ($jenis_requests as $request)
-                                                <option
-                                                    {{ $ticket->id_jenis_request == $request->id_jenis_request ? 'selected' : '' }}
-                                                    value="{{ $request->id_jenis_request }}">
-                                                    {{ $request->jenis_request }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    @if (
-                                        ($ticket->status_request != 'PENDING' || $ticket->status_request == 'RESPONDED') &&
-                                            $ticket->status_request != 'COMPLETE')
-                                        <div class="mb-2"><label class="mb-1 mt-2">Status</label>
-                                            <select name="status_request" class="form-select form-select-sm"
-                                                {{ $ticket->status_request != 'RESPONDED' ? 'disabled' : '' }}>
-                                                <option disabled selected>--Pilih Status---</option>
-                                                <option {{ $ticket->status_request == 'PROSES KE WR' ? 'selected' : '' }}
-                                                    value="PROSES KE WR">Proses ke WR</option>
-                                                <option {{ $ticket->status_request == 'PROSES KE PERMIT' ? 'selected' : '' }}
-                                                    value="PROSES KE PERMIT">Proses ke Permit</option>
-                                                <option {{ $ticket->status_request == 'PROSES KE RESERVASI' ? 'selected' : '' }}
-                                                    value="PROSES KE RESERVASI">Proses ke Reservasi</option>
-                                                <option {{ $ticket->status_request == 'PROSES KE GIGO' ? 'selected' : '' }}
-                                                    value="PROSES KE GIGO">Proses ke GIGO</option>
-                                                <option {{ $ticket->status_request == 'DONE' ? 'selected' : '' }}
-                                                    value="DONE">DONE</option>
-                                            </select>
-                                        </div>
-                                    @elseif ($ticket->status_request == 'COMPLETE')
-                                        <div class="mb-3">
-                                            <div class="mb-2"><label class="mb-1 mt-2">Status</label>
-                                                <input type="text" value="{{ $ticket->status_request }}"
-                                                    class="form-control" disabled>
-                                            </div>
-                                    @endif
-                                </div>
-                                @if ($ticket->status_request == 'RESPONDED')
-                                    <div class="card-footer border-top border-200 py-x1">
-                                        <button class="btn btn-primary w-100">Update</button>
-                                    </div>
-                                @endif
-                            </form>
+            <div class="col-3">
+                <div class="card">
+                    <form action="{{ route('open-tickets.update', $ticket->id) }}" method="post">
+                        @csrf
+                        @method('PUT')
+                        <div class="card-header">
+                            <h6 class="mb-0">Properties</h6>
                         </div>
-                    </div>
-                    <div class="col-12 mt-3">
-                        <div class="card">
-                            <div class="card-header d-flex flex-between-center py-3">
-                                <h6 class="mb-0">Contact Information</h6>
+                        <div class="card-body">
+                            <div class="mb-2 mt-n2"><label class="mb-1">Jenis Request</label>
+                                <select name="id_jenis_request" class="form-select form-select-sm"
+                                    {{ $ticket->status_request != 'RESPONDED' ? 'disabled' : '' }}>
+                                    <option disabled selected>--Pilih Jenis Request---</option>
+                                    @foreach ($jenis_requests as $request)
+                                        <option
+                                            {{ $ticket->id_jenis_request == $request->id_jenis_request ? 'selected' : '' }}
+                                            value="{{ $request->id_jenis_request }}">
+                                            {{ $request->jenis_request }}</option>
+                                    @endforeach
+                                </select>
                             </div>
-                            <div class="card-body">
-                                <div class="row g-0 border-bottom pb-x1 mb-x1 align-items-sm-center align-items-xl-start">
-                                    <div class="col-12 col-sm-auto col-xl-12 me-sm-3 me-xl-0">
-                                        <div class="avatar avatar-3xl">
-                                            <img class="rounded-circle" src="{{ $ticket->Tenant->User->profile_picture ? url($ticket->Tenant->User->profile_picture) : '' }}"
-                                                alt="" />
-                                        </div>
+                            @if (
+                                ($ticket->status_request != 'PENDING' || $ticket->status_request == 'RESPONDED') &&
+                                    $ticket->status_request != 'COMPLETE')
+                                <div class="mb-2"><label class="mb-1 mt-2">Status</label>
+                                    <select name="status_request" class="form-select form-select-sm"
+                                        {{ $ticket->status_request != 'RESPONDED' ? 'disabled' : '' }}>
+                                        <option disabled selected>--Pilih Status---</option>
+                                        <option {{ $ticket->status_request == 'PROSES KE WR' ? 'selected' : '' }}
+                                            value="PROSES KE WR">Proses ke WR</option>
+                                        <option {{ $ticket->status_request == 'PROSES KE PERMIT' ? 'selected' : '' }}
+                                            value="PROSES KE PERMIT">Proses ke Permit</option>
+                                        <option {{ $ticket->status_request == 'PROSES KE RESERVASI' ? 'selected' : '' }}
+                                            value="PROSES KE RESERVASI">Proses ke Reservasi</option>
+                                        <option {{ $ticket->status_request == 'PROSES KE GIGO' ? 'selected' : '' }}
+                                            value="PROSES KE GIGO">Proses ke GIGO</option>
+                                        <option {{ $ticket->status_request == 'DONE' ? 'selected' : '' }} value="DONE">
+                                            DONE</option>
+                                    </select>
+                                </div>
+                            @elseif ($ticket->status_request == 'COMPLETE')
+                                <div class="mb-3">
+                                    <div class="mb-2"><label class="mb-1 mt-2">Status</label>
+                                        <input type="text" value="{{ $ticket->status_request }}" class="form-control"
+                                            disabled>
                                     </div>
-                                    <div class="col-12 col-sm-auto col-xl-12">
-                                        <p class="fw-semi-bold text-800 mb-0">{{ $ticket->Tenant->User->nama_user }}</p><a
-                                            class="btn btn-link btn-sm p-0 fe-medium fs--1" href="#">View more
-                                            details</a>
+                            @endif
+                        </div>
+                        @if ($ticket->status_request == 'RESPONDED')
+                            <div class="card-footer border-top border-200 py-x1">
+                                <button class="btn btn-primary w-100">Update</button>
+                            </div>
+                        @endif
+                    </form>
+                </div>
+                <div class="card mt-4">
+                    <div class="card-header d-flex flex-between-center py-3">
+                        <h6 class="mb-0">Contact Information</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-0 border-bottom pb-x1 mb-x1 align-items-sm-center align-items-xl-start">
+                            <div class="col-12 col-sm-auto col-xl-12 me-sm-3 me-xl-0">
+                                <div class="avatar avatar-3xl">
+                                    <img class="rounded-circle"
+                                        src="{{ $ticket->Tenant->User->profile_picture ? url($ticket->Tenant->User->profile_picture) : '' }}"
+                                        alt="" />
+                                </div>
+                            </div>
+                            <div class="col-12 col-sm-auto col-xl-12">
+                                <p class="fw-semi-bold text-800 mb-0">{{ $ticket->Tenant->User->nama_user }}</p><a
+                                    class="btn btn-link btn-sm p-0 fe-medium fs--1" href="#">View more
+                                    details</a>
+                            </div>
+                        </div>
+                        <div class="row g-0 justify-content-lg-between">
+                            <div class="col-auto col-md-6 col-lg-auto">
+                                <div class="row">
+                                    <div class="col-md-auto mb-4 mb-md-0 mb-xl-4">
+                                        <h6 class="mb-1">Email</h6><a class="fs--1"
+                                            href="mailto:mattrogers@gmail.com">{{ $ticket->Tenant->User->login_user }}</a>
+                                    </div>
+                                    <div class="col-md-auto mb-4 mb-md-0 mb-xl-4">
+                                        <h6 class="mb-1">Phone Number</h6><a class="fs--1" href="tel:+6(855)747677">
+                                            {{ $ticket->no_hp }}
                                     </div>
                                 </div>
-                                <div class="row g-0 justify-content-lg-between">
-                                    <div class="col-auto col-md-6 col-lg-auto">
-                                        <div class="row">
-                                            <div class="col-md-auto mb-4 mb-md-0 mb-xl-4">
-                                                <h6 class="mb-1">Email</h6><a class="fs--1"
-                                                    href="mailto:mattrogers@gmail.com">{{ $ticket->Tenant->User->login_user }}</a>
-                                            </div>
-                                            <div class="col-md-auto mb-4 mb-md-0 mb-xl-4">
-                                                <h6 class="mb-1">Phone Number</h6><a class="fs--1"
-                                                    href="tel:+6(855)747677"> {{ $ticket->no_hp}}
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-auto mb-4 mb-md-0 mb-xl-4">
-                                                <h6 class="mb-1">Unit</h6><a class="fs--1"
-                                                    href="mailto:mattrogers@gmail.com">Lantai :
-                                                    {{ $ticket->Unit->floor->nama_lantai }},
-                                                    {{ $ticket->Unit->nama_unit }}</a>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-auto col-md-6 col-lg-auto ps-md-5 ps-xl-0">
-                                        <div class="border-start position-absolute start-50 d-none d-md-block d-xl-none"
-                                            style="height: 72px"></div>
+                                <div class="row">
+                                    <div class="col-md-auto mb-4 mb-md-0 mb-xl-4">
+                                        <h6 class="mb-1">Unit</h6><a class="fs--1"
+                                            href="mailto:mattrogers@gmail.com">Lantai :
+                                            {{ $ticket->Unit->floor->nama_lantai }},
+                                            {{ $ticket->Unit->nama_unit }}</a>
                                     </div>
                                 </div>
+                            </div>
+                            <div class="col-auto col-md-6 col-lg-auto ps-md-5 ps-xl-0">
+                                <div class="border-start position-absolute start-50 d-none d-md-block d-xl-none"
+                                    style="height: 72px"></div>
                             </div>
                         </div>
                     </div>

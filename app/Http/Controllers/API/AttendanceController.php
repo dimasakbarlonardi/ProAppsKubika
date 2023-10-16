@@ -258,17 +258,18 @@ class AttendanceController extends Controller
         $connUser = ConnectionDB::setConnection(new User());
         $connAttend = ConnectionDB::setConnection(new WorkTimeline());
 
-
         $user = $connUser->where('login_user', $request->user()->email)->first();
 
         $getAttends = $connAttend->where('karyawan_id', $user->Karyawan->id)
             ->with('ShiftType')
-            ->where('date', $request->date)
-            ->where('status_absence', null)
-            ->get();
+            ->where('status_absence', null);
+
+        if ($request->date) {
+            $getAttends = $getAttends->where('date', $request->date);
+        };
 
         return ResponseFormatter::success(
-            $getAttends,
+            $getAttends->get(),
             'Success get site location'
         );
     }

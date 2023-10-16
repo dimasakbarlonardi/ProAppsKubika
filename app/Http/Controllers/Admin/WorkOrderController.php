@@ -274,6 +274,10 @@ class WorkOrderController extends Controller
 
         $wo->status_wo = 'REJECTED';
         $wo->save();
+
+        $wo->WorkRequest->status_request = 'REJECTED';
+        $wo->WorkRequest->save();
+
         $wo->Ticket->status_request = 'REJECTED';
         $wo->Ticket->save();
 

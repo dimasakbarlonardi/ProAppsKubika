@@ -51,7 +51,8 @@
                                         <div class="avatar avatar-xl avatar-3xl">
                                             <div class="avatar-name rounded-circle">
                                                 <img src="{{ $permit->Ticket->Tenant->profile_picture }}"
-                                                    alt="{{ $permit->Ticket->Tenant->profile_picture }}" class="avatar-image" />
+                                                    alt="{{ $permit->Ticket->Tenant->profile_picture }}"
+                                                    class="avatar-image" />
                                             </div>
                                         </div>
                                     </a>
@@ -99,6 +100,16 @@
                                                 @break
 
                                                 @case('APPROVED')
+                                                    <span
+                                                        class="badge rounded bg-success red__bg-1000">{{ $permit->status_request }}</span>
+                                                @break
+
+                                                @case('REJECTED')
+                                                    <span
+                                                        class="badge rounded bg-danger red__bg-1000">{{ $permit->status_request }}</span>
+                                                @break
+
+                                                @case('DONE')
                                                     <span
                                                         class="badge rounded bg-success red__bg-1000">{{ $permit->status_request }}</span>
                                                 @break
