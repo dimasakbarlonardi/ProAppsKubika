@@ -45,7 +45,7 @@ class PaymentController extends Controller
                             'notif_title' => $cr->WorkOrder->no_work_order,
                             'id_data' => $cr->WorkOrder->id,
                             'sender' => $cr->WorkOrder->Ticket->Tenant->User->id_user,
-                            'division_receiver' => 9,
+                            'division_receiver' => $cr->WorkOrder->WorkRequest->id_work_relation,
                             'notif_message' => 'Pembayaran berhasil, mohon approve proses Work Order',
                             'receiver' => null,
                             'connection' => $site->db_name
@@ -59,6 +59,22 @@ class PaymentController extends Controller
                         $cr->WorkPermit->status_bayar = 'PAYED';
                         $cr->WorkPermit->sign_approval_5 = Carbon::now();
                         $cr->WorkPermit->save();
+
+                        $approve = $approve->find(5);
+
+                        $dataNotif = [
+                            'models' => 'WorkPermit',
+                            'notif_title' => $cr->WorkPermit->no_work_permit,
+                            'id_data' => $cr->WorkPermit->id,
+                            'sender' => $cr->WorkPermit->Ticket->Tenant->User->id_user,
+                            'division_receiver' => null,
+                            'notif_message' => 'Pembayaran Work Permit berhasil',
+                            'receiver' => $approve->approval_3,
+                            'connection' => $site->db_name
+                        ];
+
+                        broadcast(new HelloEvent($dataNotif));
+
                         break;
 
                     case ('Reservation'):

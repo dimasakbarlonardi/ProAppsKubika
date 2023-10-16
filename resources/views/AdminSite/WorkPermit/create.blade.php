@@ -128,53 +128,48 @@
         </div>
 
         <div class="col-3">
-            <div class="row g-3 position-sticky top-0">
-                <div class="col-md-6 col-xl-12 rounded-3">
-                    <form action="{{ route('work-permits.store') }}" method="post">
-                        <div class="card">
-                            <div class="card-header">
-                                <h6 class="mb-0">Properties</h6>
-                            </div>
-                            <div class="card-body">
-                                @csrf
-                                <div class="mb-4 mt-n2"><label class="mb-1">Tickets</label>
-                                    <select name="id_rp" class="form-select form-select-sm" id="select_ticket"
-                                        required>
-                                        <option disabled selected>--Pilih Request ---</option>
-                                        @foreach ($request_permits as $rp)
-                                            <option value="{{ $rp->id }}">{{ $rp->no_request_permit }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="mb-4 mt-n2"><label class="mb-1">Nama Project</label>
-                                    <input type="text" class="form-control" name="nama_project" required>
-                                </div>
-                                <div class="mb-4 mt-n2"><label class="mb-1">Work Relation</label>
-                                    <select name="id_work_relation" class="form-select form-select-sm" required>
-                                        <option disabled selected>--Pilih Work Relation ---</option>
-                                        @foreach ($work_relations as $work_relation)
-                                            <option value="{{ $work_relation->id_work_relation }}">
-                                                {{ $work_relation->work_relation }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                                <div class="mb-4 mt-n2"><label class="mb-1">Permit Berbayar</label>
-                                    <select name="id_bayarnon" class="form-select form-select-sm" required>
-                                        <option value="1">Yes</option>
-                                        <option value="0">No</option>
-                                    </select>
-                                </div>
-                                <div class="mb-4 mt-n2"><label class="mb-1">Jumlah Deposit</label>
-                                    <input type="text" class="form-control" name="jumlah_deposit" required>
-                                </div>
-                            </div>
+            <form action="{{ route('work-permits.store') }}" method="post" id="form-create-wp">
+                <div class="card">
+                    <div class="card-header">
+                        <h6 class="mb-0">Properties</h6>
+                    </div>
+                    <div class="card-body">
+                        @csrf
+                        <div class="mb-4 mt-n2"><label class="mb-1">Tickets</label>
+                            <select name="id_rp" class="form-select form-select-sm" id="select_ticket">
+                                <option disabled selected value="">--Pilih Request ---</option>
+                                @foreach ($request_permits as $rp)
+                                    <option value="{{ $rp->id }}">{{ $rp->no_request_permit }}</option>
+                                @endforeach
+                            </select>
                         </div>
-                        <div class="card-footer border-top border-200 py-x1">
-                            <button type="submit" class="btn btn-primary w-100">Submit</button>
+                        <div class="mb-4 mt-n2"><label class="mb-1">Nama Project</label>
+                            <input type="text" class="form-control" name="nama_project" id="nama_project">
                         </div>
-                    </form>
+                        <div class="mb-4 mt-n2"><label class="mb-1">Work Relation</label>
+                            <select name="id_work_relation" class="form-select form-select-sm" id="id_work_relation">
+                                <option disabled selected value="">--Pilih Work Relation ---</option>
+                                @foreach ($work_relations as $work_relation)
+                                    <option value="{{ $work_relation->id_work_relation }}">
+                                        {{ $work_relation->work_relation }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="mb-4 mt-n2"><label class="mb-1">Permit Berbayar</label>
+                            <select name="id_bayarnon" id="id_bayarnon" class="form-select form-select-sm" required disabled>
+                                <option value="1" selected>Yes</option>
+                                <option value="0">No</option>
+                            </select>
+                        </div>
+                        <div class="mb-4 mt-n2"><label class="mb-1">Jumlah Deposit</label>
+                            <input type="text" class="form-control" name="jumlah_deposit" id="jumlah_deposit">
+                        </div>
+                    </div>
                 </div>
-            </div>
+                <div class="card-footer border-top border-200 py-x1">
+                    <button type="button" onclick="onSubmit()" class="btn btn-primary w-100">Submit</button>
+                </div>
+            </form>
         </div>
     </div>
 @endsection
@@ -192,6 +187,50 @@
         });
     </script>
     <script>
+        function onSubmit() {
+            var nama_project = $('#nama_project').val();
+            var id_work_relation = $('#id_work_relation').val();
+            var jumlah_deposit = $('#jumlah_deposit').val();
+            var id_rp = $('#select_ticket').val();
+            var id_bayarnon = $('#id_bayarnon').val();
+
+            if (!nama_project || !id_work_relation || !jumlah_deposit || !select_ticket) {
+                Swal.fire(
+                    'Fail!',
+                    'Please fill all field',
+                    'error'
+                )
+            } else {
+                $.ajax({
+                    url: '/admin/work-permits',
+                    type: 'POST',
+                    data: {
+                        nama_project,
+                        id_work_relation,
+                        jumlah_deposit,
+                        id_rp,
+                        id_bayarnon
+                    },
+                    success: function(data) {
+                        if (data.status === 'ok') {
+                            Swal.fire(
+                                'Berhasil!',
+                                'Berhasil membuat Request Permit!',
+                                'success'
+                            ).then(() => window.history.go(-1))
+                        } else {
+                            Swal.fire(
+                                'Gagal!',
+                                'Gagal membuat Request Permit!',
+                                'failed'
+                            )
+                        }
+                    }
+                })
+            }
+        }
+
+
         $('document').ready(function() {
             $('#select_ticket').select2({
                 theme: 'bootstrap-5'

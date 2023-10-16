@@ -150,72 +150,105 @@
                             </div>
                         </div>
                     </div>
-
                 </div>
 
                 <div class="col-3">
-                    <div class="row g-3 position-sticky top-0">
-                        <div class="col-md-6 col-xl-12 rounded-3">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h6 class="mb-0">Status</h6>
-                                </div>
-                                <div class="card-body">
-                                    <div class="mb-4 mt-n2"><label class="mb-1">Status</label>
-                                        <input type="text" class="form-control" disabled
-                                            value="{{ $permit->status_request }}">
-                                    </div>
-                                    <div class="mb-4 mt-n2"><label class="mb-1">Jenis Pekerjaan</label>
-                                        <input type="text" class="form-control" disabled
-                                            value="{{ $permit->RequestPermit->JenisPekerjaan->jenis_pekerjaan }}">
-                                    </div>
-                                    <div class="mb-4 mt-n2"><label class="mb-1">Request</label>
-                                        <input class="form-control" type="text"
-                                            value="{{ $permit->Ticket->no_tiket }}" disabled>
-                                    </div>
-                                    <div class="mb-4 mt-n2"><label class="mb-1">No Request Permit</label>
-                                        <input class="form-control" type="text"
-                                            value="{{ $permit->RequestPermit->no_request_permit }}" disabled>
-                                    </div>
-                                    <div class="mb-4 mt-n2"><label class="mb-1">Nama Project</label>
-                                        <input type="text" value="{{ $permit->nama_project }}" class="form-control"
-                                            name="nama_project" required disabled>
-                                    </div>
-                                    <div class="mb-4 mt-n2"><label class="mb-1">Work Relation</label>
-                                        <input type="text" value="{{ $permit->WorkRelation->work_relation }}"
-                                            class="form-control" name="nama_project" required disabled>
-                                    </div>
-                                    <div class="mb-4 mt-n2"><label class="mb-1">Permit Berbayar</label>
-                                        <input type="text" value="{{ $permit->id_bayarnon == 1 ? 'Yes' : 'No' }}"
-                                            class="form-control" name="nama_project" required disabled>
-                                    </div>
-                                    <div class="mb-4 mt-n2"><label class="mb-1">Jumlah Deposit</label>
-                                        <input type="text" value="{{ $permit->jumlah_deposit }}" class="form-control"
-                                            name="jumlah_deposit" required disabled>
-                                    </div>
-                                </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="mb-0">Status</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-4 mt-n2"><label class="mb-1">Status</label>
+                                <input type="text" class="form-control" disabled
+                                    value="{{ $permit->status_request }}">
                             </div>
-                            @if (!$permit->sign_approval_1)
-                                <div class="card-footer border-top border-200 py-x1">
-                                    <form action="{{ route('approveWP1', $permit->id) }}" method="post">
-                                        @csrf
-                                        <button type="submit" class="btn btn-primary w-100">Approve</button>
-                                    </form>
-                                </div>
-                            @endif
-                            @if ($sysApprove->approval_4 == $user->id_user && $permit->sign_approval_3 && !$permit->sign_approval_4)
-                                <div class="card-footer border-top border-200 py-x1">
-                                    <button type="button" class="btn btn-primary w-100"
-                                        onclick="approve4({{ $permit->id }})">Approve</button>
-                                </div>
-                            @endif
+                            <div class="mb-4 mt-n2"><label class="mb-1">Jenis Pekerjaan</label>
+                                <input type="text" class="form-control" disabled
+                                    value="{{ $permit->RequestPermit->JenisPekerjaan->jenis_pekerjaan }}">
+                            </div>
+                            <div class="mb-4 mt-n2"><label class="mb-1">Request</label>
+                                <input class="form-control" type="text" value="{{ $permit->Ticket->no_tiket }}"
+                                    disabled>
+                            </div>
+                            <div class="mb-4 mt-n2"><label class="mb-1">No Request Permit</label>
+                                <input class="form-control" type="text"
+                                    value="{{ $permit->RequestPermit->no_request_permit }}" disabled>
+                            </div>
+                            <div class="mb-4 mt-n2"><label class="mb-1">Nama Project</label>
+                                <input type="text" value="{{ $permit->nama_project }}" class="form-control"
+                                    name="nama_project" required disabled>
+                            </div>
+                            <div class="mb-4 mt-n2"><label class="mb-1">Work Relation</label>
+                                <input type="text" value="{{ $permit->WorkRelation->work_relation }}"
+                                    class="form-control" name="nama_project" required disabled>
+                            </div>
+                            <div class="mb-4 mt-n2"><label class="mb-1">Permit Berbayar</label>
+                                <input type="text" value="{{ $permit->id_bayarnon == 1 ? 'Yes' : 'No' }}"
+                                    class="form-control" name="nama_project" required disabled>
+                            </div>
+                            <div class="mb-4 mt-n2"><label class="mb-1">Jumlah Deposit</label>
+                                <input type="text" value="{{ Rupiah($permit->jumlah_deposit) }}" class="form-control"
+                                    name="jumlah_deposit" required disabled>
+                            </div>
                         </div>
                     </div>
+                    @if (!$permit->sign_approval_1 && $permit->Ticket->Tenant->User->id_user == Request::session()->get('user_id'))
+                        <div class="card-footer border-top border-200 py-x1">
+                            <form action="{{ route('approveWP1', $permit->id) }}" method="post">
+                                @csrf
+                                <button type="button" onclick="onApprove({{ $permit->id }})"
+                                    class="btn btn-primary w-100">Approve</button>
+                            </form>
+                            <div class="mt-3">
+                                <form action="{{ route('rejectWP', $permit->id) }}" method="post">
+                                    @csrf
+                                    <button type="button" onclick="onReject({{ $permit->id }})"
+                                        class="btn btn-danger w-100">Reject</button>
+                                </form>
+                            </div>
+                        </div>
+                    @endif
+                    @if (
+                        $permit->id_work_relation == $user->RoleH->WorkRelation->id_work_relation &&
+                            $user->Karyawan->is_can_approve &&
+                            $permit->sign_approval_1 &&
+                            !$permit->sign_approval_2)
+                        <div class="card-footer border-top border-200 py-x1">
+                            <button type="button" class="btn btn-primary w-100"
+                                onclick="approve2({{ $permit->id }})">Approve</button>
+                        </div>
+                    @endif
+                    @if ($sysApprove->approval_3 == $user->id_user && $permit->status_bayar == 'PAYED' && !$permit->sign_approval_3)
+                        <div class="card-footer border-top border-200 py-x1">
+                            <button type="button" class="btn btn-primary w-100"
+                                onclick="approve3({{ $permit->id }})">Approve</button>
+                        </div>
+                    @endif
+                    @if ($sysApprove->approval_4 == $user->id_user && $permit->sign_approval_3 && !$permit->sign_approval_4)
+                        <div class="card-footer border-top border-200 py-x1">
+                            <button type="button" class="btn btn-primary w-100"
+                                onclick="approve4({{ $permit->id }})">Approve</button>
+                        </div>
+                    @endif
+                    @if ($permit->sign_approval_4 && $permit->status_request != 'WORK DONE' && $permit->status_request != 'COMPLETE')
+                        <div class="card-footer border-top border-200 py-x1">
+                            <button type="button" class="btn btn-primary w-100"
+                                onclick="workDoneWP({{ $permit->id }})">Pekerjaan Selesai</button>
+                        </div>
+                    @endif
+                    @if (Request::session()->get('user_id') == $permit->Ticket->Tenant->User->id_user && $permit->status_request == 'WORK DONE')
+                        <div class="card-footer border-top border-200 py-x1">
+                            <button type="button" class="btn btn-primary w-100"
+                                onclick="doneWP({{ $permit->id }})">Done</button>
+                        </div>
+                    @endif
                 </div>
             </div>
 
-
-            @if ($permit->CashReceipt ? $permit->CashReceipt->transaction_status == 'PENDING' : false)
+            @if (
+                $permit->CashReceipt &&
+                    $permit->Ticket->Tenant->User->id_user == Request::session()->get('user_id') &&
+                    $permit->CashReceipt->transaction_status == 'PENDING')
                 <form class="mt-5" action="{{ route('generatePaymentPO', $permit->CashReceipt->id) }}" method="post">
                     @csrf
                     <div class="row g-3 mb-3">
@@ -343,10 +376,12 @@
                     </div>
                     <input type="hidden" id="val_admin_fee" name="admin_fee">
                 </form>
-            @elseif ($permit->CashReceipt ? $permit->CashReceipt->transaction_status == 'VERIFYING' : false)
+            @elseif (
+                $permit->CashReceipt &&
+                    $permit->Ticket->Tenant->User->id_user == Request::session()->get('user_id') &&
+                    $permit->CashReceipt->transaction_status == 'VERIFYING')
                 <div class="text-center mt-5">
-                    <a href="{{ route('paymentPO', $permit->CashReceipt->id) }}"
-                        class="btn btn-success">Lihat
+                    <a href="{{ route('paymentPO', $permit->CashReceipt->id) }}" class="btn btn-success">Lihat
                         VA</a>
                 </div>
             @endif
@@ -367,6 +402,94 @@
             height: "180"
         });
 
+        function onApprove(id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                icon: 'info',
+                confirmButtonText: 'Yes!'
+            }).then((result) => {
+                if (result['isConfirmed']) {
+                    $.ajax({
+                        url: `/admin/work-permit/approve1/${id}`,
+                        type: 'POST',
+                        success: function(data) {
+                            if (data.status === 'ok') {
+                                Swal.fire(
+                                    'Success!',
+                                    'Success approve Work Permit!',
+                                    'success'
+                                ).then(() => window.location.reload())
+                            }
+                        }
+                    })
+                }
+            })
+        }
+
+        function onReject(id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                icon: 'info',
+                confirmButtonText: 'Yes!'
+            }).then((result) => {
+                if (result['isConfirmed']) {
+                    $.ajax({
+                        url: `/admin/work-permit/reject/${id}`,
+                        type: 'POST',
+                        success: function(data) {
+                            if (data.status === 'ok') {
+                                Swal.fire(
+                                    'Success!',
+                                    'Success reject Work Permit!',
+                                    'success'
+                                ).then(() => window.location.reload())
+                            }
+                        }
+                    })
+                }
+            })
+        }
+
+        function approve2(id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                icon: 'info',
+                confirmButtonText: 'Yes!'
+            }).then((result) => {
+                if (result['isConfirmed']) {
+                    $.ajax({
+                        url: `/admin/work-permit/approve2/${id}`,
+                        type: 'POST',
+                        success: function(data) {
+                            if (data.status === 'ok') {
+                                Swal.fire(
+                                    'Success!',
+                                    'Success approve Work Permit!',
+                                    'success'
+                                ).then(() => window.location.reload())
+                            }
+                        }
+                    })
+                }
+            })
+        }
+
+        function approve3(id) {
+            $.ajax({
+                url: `/admin/work-permit/approve3/${id}`,
+                type: 'POST',
+                success: function(data) {
+                    if (data.status === 'ok') {
+                        Swal.fire(
+                            'Success!',
+                            'Success update Work Permit!',
+                            'success'
+                        ).then(() => window.location.reload())
+                    }
+                }
+            })
+        }
+
         function approve4(id) {
             $.ajax({
                 url: `/admin/work-permit/approve4/${id}`,
@@ -374,8 +497,40 @@
                 success: function(data) {
                     if (data.status === 'ok') {
                         Swal.fire(
-                            'Berhasil!',
-                            'Berhasil mengupdate Work Order!',
+                            'Success!',
+                            'Success approve Work Permit!',
+                            'success'
+                        ).then(() => window.location.reload())
+                    }
+                }
+            })
+        }
+
+        function workDoneWP(id) {
+            $.ajax({
+                url: `/admin/work-permit/workDoneWP/${id}`,
+                type: 'POST',
+                success: function(data) {
+                    if (data.status === 'ok') {
+                        Swal.fire(
+                            'Success!',
+                            'Success update Work Permit!',
+                            'success'
+                        ).then(() => window.location.reload())
+                    }
+                }
+            })
+        }
+
+        function doneWP(id) {
+            $.ajax({
+                url: `/admin/work-permit/doneWP/${id}`,
+                type: 'POST',
+                success: function(data) {
+                    if (data.status === 'ok') {
+                        Swal.fire(
+                            'Success!',
+                            'Success update Work Permit!',
                             'success'
                         ).then(() => window.location.reload())
                     }
