@@ -279,12 +279,14 @@ class ToolsController extends Controller
             $histories = DB::connection($site->db_name)
                 ->table('tb_tools_history as th')
                 ->join('tb_tools_housekeeping as eq', 'th.id_data', 'eq.id')
+                ->where('type', 'HK')
                 ->orderBy('th.id', 'DESC')
                 ->get();
         } elseif ($wrID == 8) {
             $histories = DB::connection($site->db_name)
                 ->table('tb_tools_history as th')
                 ->join('tb_tools_engineering as eq', 'th.id_data', 'eq.id')
+                ->where('type', 'ENG')
                 ->orderBy('th.id', 'DESC')
                 ->get();
         }
