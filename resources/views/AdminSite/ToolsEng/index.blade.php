@@ -48,7 +48,7 @@
                             @empty($tools->current_totals)
                                 -
                             @else
-                                {{ $tools->current_totals }} 
+                                {{ $tools->current_totals }}
                             @endempty
                         </td>
                         <td>
@@ -70,34 +70,33 @@
                                             <a class="dropdown-item" href="#">
                                                 <form action="{{ route('return.tool', ['id' => $tools->id]) }}" method="POST">
                                                     @csrf
-                                                    <input type="hidden" name="date_out" value="{{ $tools->date_out }}">
-                                                    <input type="number" name="return_qty"  required>
-                                                    <button type="submit">Return</button>
+                                                    <div class="row">
+                                                        <div class="col-8">
+                                                            <input class="form-control" type="number" name="borrow_qty"
+                                                                required id="borrow_qty">
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <button class="btn btn-success btn-sm"
+                                                                type="submit">Borrow</button>
+                                                        </div>
+                                                    </div>
                                                 </form>
                                             </a>
-                                        @endif
-                                        <a class="dropdown-item text-danger" href="#">
-                                            <form action="{{ route('borrow.tool', ['id' => $tools->id]) }}" method="POST">
-                                                @csrf
-                                                <input type="number" name="borrow_qty" required>
-                                                <button type="submit">Borrow</button>
-                                            </form>
-                                        </a>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
     </div>
-</div>
 @endsection
 
 @section('script')
-<script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
-<script>
-    new DataTable('#table-toolseng');
-</script>
+    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+    <script>
+        new DataTable('#table-toolseng');
+    </script>
 @endsection

@@ -205,7 +205,6 @@ class ToolsController extends Controller
             } catch (\Exception $e) {
                 DB::rollBack();
                 dd($e);
-
                 return ResponseFormatter::error([
                     'message' => 'An error occurred while borrowing the tool.'
                 ], 'Invalid return quantity');
@@ -238,7 +237,7 @@ class ToolsController extends Controller
             $tool->current_totals = $tool->total_tools - $tool->borrow;
             $tool->save();
 
-            $connToolHistory->create([
+            $createHistory = $connToolHistory->create([
                 'type' => 'ENG',
                 'id_data' => $id,
                 'qty' => $returnQty,
@@ -252,15 +251,15 @@ class ToolsController extends Controller
             $countReturn = $connToolHistory->where('borrowed_by', $user->id_user)
                 ->where('action', 'Returning')
                 ->sum('qty');
-            dd($countBorrow == $countReturn);
+
             if ($countBorrow == $countReturn) {
                 $status = 'Returned';
             } else {
                 $status = 'Still On Borrow';
             }
 
-            $connToolHistory->status = $status;
-            $connToolHistory->save();
+            $createHistory->status = $status;
+            $createHistory->save();
 
             return ResponseFormatter::success(
                 $tool,
