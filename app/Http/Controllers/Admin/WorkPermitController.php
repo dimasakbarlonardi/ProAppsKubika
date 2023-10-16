@@ -23,6 +23,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Str;
+use PDF;
 use stdClass;
 use Throwable;
 
@@ -423,5 +424,17 @@ class WorkPermitController extends Controller
         $data['transaction'] = $connTransaction->find($id);
 
         return view('Tenant.Notification.Invoice.payment-monthly', $data);
+    }
+
+    public function printWP()
+    {
+        $data = [
+            'imagePath'    => public_path('img/profile.png'),
+            'name'         => 'John Doe',
+            'address'      => 'USA',
+            'mobileNumber' => '000000000',
+            'email'        => 'john.doe@email.com'
+        ];
+        return view('AdminSite.WorkPermit.printout');
     }
 }

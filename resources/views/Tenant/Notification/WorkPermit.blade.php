@@ -230,13 +230,19 @@
                                 onclick="approve4({{ $permit->id }})">Approve</button>
                         </div>
                     @endif
-                    @if ($permit->sign_approval_4 && $permit->status_request != 'WORK DONE' && $permit->status_request != 'COMPLETE')
+                    @if (
+                        $permit->sign_approval_4 &&
+                            $permit->status_request != 'WORK DONE' &&
+                            $permit->status_request != 'COMPLETE' &&
+                            $permit->id_work_relation == Request::session()->get('work_relation_id'))
                         <div class="card-footer border-top border-200 py-x1">
+                            <a href="{{ route('printWP') }}" target="_blank" class="btn btn-warning w-100 mb-3">Print</a>
                             <button type="button" class="btn btn-primary w-100"
                                 onclick="workDoneWP({{ $permit->id }})">Pekerjaan Selesai</button>
                         </div>
                     @endif
-                    @if (Request::session()->get('user_id') == $permit->Ticket->Tenant->User->id_user && $permit->status_request == 'WORK DONE')
+                    @if (Request::session()->get('user_id') == $permit->Ticket->Tenant->User->id_user &&
+                            $permit->status_request == 'WORK DONE')
                         <div class="card-footer border-top border-200 py-x1">
                             <button type="button" class="btn btn-primary w-100"
                                 onclick="doneWP({{ $permit->id }})">Done</button>
@@ -507,17 +513,25 @@
         }
 
         function workDoneWP(id) {
-            $.ajax({
-                url: `/admin/work-permit/workDoneWP/${id}`,
-                type: 'POST',
-                success: function(data) {
-                    if (data.status === 'ok') {
-                        Swal.fire(
-                            'Success!',
-                            'Success update Work Permit!',
-                            'success'
-                        ).then(() => window.location.reload())
-                    }
+            Swal.fire({
+                title: 'Are you sure?',
+                icon: 'info',
+                confirmButtonText: 'Yes!'
+            }).then((result) => {
+                if (result['isConfirmed']) {
+                    $.ajax({
+                        url: `/admin/work-permit/workDoneWP/${id}`,
+                        type: 'POST',
+                        success: function(data) {
+                            if (data.status === 'ok') {
+                                Swal.fire(
+                                    'Success!',
+                                    'Success update Work Permit!',
+                                    'success'
+                                ).then(() => window.location.reload())
+                            }
+                        }
+                    })
                 }
             })
         }
