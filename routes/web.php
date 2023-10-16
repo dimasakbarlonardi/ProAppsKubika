@@ -374,15 +374,18 @@ Route::prefix('admin')->group(function () {
         // Request Permit
         Route::resource('/request-permits', RequestPermitController::class);
         Route::post('/request-permits/approve1/{id}', [RequestPermitController::class, 'approveRP1'])->name('approveRP1');
+        Route::post('/request-permits/reject/{id}', [RequestPermitController::class, 'rejectRP'])->name('rejectRP');
 
         // Work Permit
         Route::resource('/work-permits', WorkPermitController::class);
         Route::get('/open/request-permits', [WorkPermitController::class, 'openRP'])->name('openRP');
+        Route::post('/work-permit/reject/{id}', [WorkPermitController::class, 'rejectWP'])->name('rejectWP');
         Route::post('/work-permit/approve1/{id}', [WorkPermitController::class, 'approveWP1'])->name('approveWP1');
         Route::post('/work-permit/approve2/{id}', [WorkPermitController::class, 'approveWP2'])->name('approveWP2');
         Route::post('/work-permit/approve3/{id}', [WorkPermitController::class, 'approveWP3'])->name('approveWP3');
         Route::post('/work-permit/approve4/{id}', [WorkPermitController::class, 'approveWP4'])->name('approveWP4');
         Route::post('/work-permit/workDoneWP/{id}', [WorkPermitController::class, 'workDoneWP'])->name('workDoneWP');
+        Route::post('/work-permit/doneWP/{id}', [WorkPermitController::class, 'doneWP'])->name('doneWP');
         Route::post('/work-permit/generate/{id}', [WorkPermitController::class, 'generatePaymentPO'])->name('generatePaymentPO');
         Route::get('/work-permit/payment/{id}', [WorkPermitController::class, 'paymentPO'])->name('paymentPO');
 

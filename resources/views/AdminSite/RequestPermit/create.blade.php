@@ -86,6 +86,17 @@
                         <label class="form-label">Keterangan Pekerjaan</label>
                         <textarea class="form-control" id="keterangan_pekerjaan" cols="20" rows="5"></textarea>
                     </div>
+                    <div class="mb-3">
+                        <div class="row">
+                            <div class="col-6"></div>
+                            <div class="col-6">
+                                <label class="form-label">Paid Permit</label>
+                                <select name="" class="form-control" id="" disabled>
+                                    <option value="Yes">Yes</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div id="ticket_permit" class="mt-3">
                     <div class="card mt-2">
@@ -166,41 +177,35 @@
         </div>
 
         <div class="col-3">
-            <div class="row g-3 position-sticky top-0">
-                <div class="col-md-6 col-xl-12 rounded-3">
-                    <div class="card">
-                        <div class="card-header">
-                            <h6 class="mb-0">Properties</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="mb-4 mt-n2"><label class="mb-1">Request</label>
-                                <select name="no_tiket" class="form-select form-select-sm" id="select_ticket">
-                                    <option disabled selected>-- Select request ---</option>
-                                    @foreach ($tickets as $ticket)
-                                        <option value="{{ $ticket->id }}">{{ $ticket->no_tiket }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="mb-4 mt-n2"><label class="mb-1">Jenis Pekerjaan</label>
-                                <select name="id_jenis_pekerjaan" class="form-select form-select-sm"
-                                    id="id_jenis_pekerjaan">
-                                    <option disabled selected>--Pilih Jenis Pekerjaan ---</option>
-                                    @foreach ($jenis_pekerjaan as $item)
-                                        <option value="{{ $item->id_jenis_pekerjaan }}">
-                                            {{ $item->jenis_pekerjaan }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                        </div>
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0">Properties</h6>
+                </div>
+                <div class="card-body">
+                    <div class="mb-4 mt-n2"><label class="mb-1">Request</label>
+                        <select name="no_tiket" class="form-select form-select-sm" id="select_ticket">
+                            <option disabled selected>-- Select request ---</option>
+                            @foreach ($tickets as $ticket)
+                                <option value="{{ $ticket->id }}">{{ $ticket->no_tiket }}</option>
+                            @endforeach
+                        </select>
                     </div>
-                    <div class="card-footer border-top border-200 py-x1">
-                        <button type="button" class="btn btn-primary w-100" onclick="submitWorkPermit()">Submit</button>
+                    <div class="mb-4 mt-n2"><label class="mb-1">Jenis Pekerjaan</label>
+                        <select name="id_jenis_pekerjaan" class="form-select form-select-sm" id="id_jenis_pekerjaan">
+                            <option disabled selected>--Pilih Jenis Pekerjaan ---</option>
+                            @foreach ($jenis_pekerjaan as $item)
+                                <option value="{{ $item->id_jenis_pekerjaan }}">
+                                    {{ $item->jenis_pekerjaan }}</option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
             </div>
+            <div class="card-footer border-top border-200 py-x1">
+                <button type="button" class="btn btn-primary w-100" onclick="submitWorkPermit()">Submit</button>
+            </div>
         </div>
     </div>
-    {{-- </form> --}}
 @endsection
 
 @section('script')
@@ -215,6 +220,20 @@
             plugins: 'code table lists',
             toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist | code | table'
         });
+        flatpickr("#tanggal_mulai", {
+            dateFormat: "Y-m-d H:i",
+            enableTime: true,
+            minDate: "today",
+            altInput: true,
+            altFormat: "F j, Y - H:i"
+        });
+        flatpickr("#tanggal_akhir", {
+            dateFormat: "Y-m-d H:i",
+            enableTime: true,
+            minDate: "today",
+            altInput: true,
+            altFormat: "F j, Y - H:i"
+        });
     </script>
     <script>
         var personels = [];
@@ -225,6 +244,8 @@
         var idMaterial = 0;
 
         function submitWorkPermit() {
+            tinyMCE.triggerSave();
+
             var no_tiket = $('#select_ticket').val();
             var id_jenis_pekerjaan = $('#id_jenis_pekerjaan').val();
             var keterangan_pekerjaan = $('#keterangan_pekerjaan').val();
@@ -236,40 +257,49 @@
             var tgl_mulai = $('#tanggal_mulai').val();
             var tgl_akhir = $('#tanggal_akhir').val();
 
-            $.ajax({
-                url: '/admin/request-permits',
-                type: 'POST',
-                data: {
-                    personels,
-                    alats,
-                    materials,
-                    no_tiket,
-                    id_jenis_pekerjaan,
-                    keterangan_pekerjaan,
-                    nama_kontraktor,
-                    pic,
-                    alamat,
-                    no_ktp,
-                    no_telp,
-                    tgl_mulai,
-                    tgl_akhir
-                },
-                success: function(data) {
-                    if (data.status === 'ok') {
-                        Swal.fire(
-                            'Berhasil!',
-                            'Berhasil membuat Request Permit!',
-                            'success'
-                        ).then(() => window.history.go(-1))
-                    } else {
-                        Swal.fire(
-                            'Gagal!',
-                            'Gagal membuat Request Permit!',
-                            'failed'
-                        )
+            if (!id_jenis_pekerjaan || !keterangan_pekerjaan || !nama_kontraktor || !pic || !alamat || !no_ktp || !
+                no_telp || !tgl_mulai || !tgl_akhir) {
+                Swal.fire(
+                    'Fail!',
+                    'Please fill all field',
+                    'error'
+                )
+            } else {
+                $.ajax({
+                    url: '/admin/request-permits',
+                    type: 'POST',
+                    data: {
+                        personels,
+                        alats,
+                        materials,
+                        no_tiket,
+                        id_jenis_pekerjaan,
+                        keterangan_pekerjaan,
+                        nama_kontraktor,
+                        pic,
+                        alamat,
+                        no_ktp,
+                        no_telp,
+                        tgl_mulai,
+                        tgl_akhir
+                    },
+                    success: function(data) {
+                        if (data.status === 'ok') {
+                            Swal.fire(
+                                'Berhasil!',
+                                'Berhasil membuat Request Permit!',
+                                'success'
+                            ).then(() => window.history.go(-1))
+                        } else {
+                            Swal.fire(
+                                'Gagal!',
+                                'Gagal membuat Request Permit!',
+                                'failed'
+                            )
+                        }
                     }
-                }
-            })
+                })
+            }
         }
 
         $('document').ready(function() {

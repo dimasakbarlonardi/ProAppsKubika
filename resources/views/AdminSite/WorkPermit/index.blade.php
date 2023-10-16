@@ -95,6 +95,11 @@
                                                         class="badge rounded bg-warning red__bg-1000">{{ $wp->status_request }}</span>
                                                 @break
 
+                                                @case('REJECTED')
+                                                    <span
+                                                        class="badge rounded bg-danger red__bg-1000">{{ $wp->status_request }}</span>
+                                                @break
+
                                                 @case('APPROVED')
                                                     <span
                                                         class="badge rounded bg-success red__bg-1000">{{ $wp->status_request }}</span>

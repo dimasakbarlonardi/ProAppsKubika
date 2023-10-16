@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\HelloEvent;
 use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
 use App\Models\JenisPekerjaan;
@@ -99,27 +100,22 @@ class RequestPermitController extends Controller
 
             DB::commit();
 
-            $connNotif = ConnectionDB::setConnection(new Notifikasi());
-            $checkNotif = $connNotif->where('models', 'RequestPermit')
-                ->where('is_read', 0)
-                ->where('id_data', $request_permit->id)
-                ->first();
+            $dataNotif = [
+                'models' => 'RequestPermit',
+                'notif_title' => $request_permit->no_request_permit,
+                'id_data' => $request_permit->id,
+                'sender' => $user->id_user,
+                'division_receiver' => null,
+                'notif_message' => 'Request Permit berhasil dibuat, berikut rancangannya',
+                'receiver' => $tiket->Tenant->User->id_user
+            ];
 
-            if (!$checkNotif) {
-                $connNotif->create([
-                    'receiver' => $tiket->Tenant->User->id_user,
-                    'sender' => $user->id_user,
-                    'is_read' => 0,
-                    'models' => 'RequestPermit',
-                    'id_data' => $request_permit->id,
-                    'notif_title' => $request_permit->no_request_permit,
-                    'notif_message' => 'Request Permit berhasil dibuat, berikut rancangannya'
-                ]);
-            }
+            broadcast(new HelloEvent($dataNotif));
 
             return response()->json(['status' => 'ok']);
         } catch (Throwable $e) {
             DB::rollBack();
+            dd($e);
             return response()->json(['status' => 'fail']);
         }
     }
@@ -139,7 +135,7 @@ class RequestPermitController extends Controller
         return view('AdminSite.RequestPermit.show', $data);
     }
 
-    public function approveRP1($id)
+    public function approveRP1(Request $request, $id)
     {
         $connRP = ConnectionDB::setConnection(new RequestPermit());
 
@@ -148,8 +144,45 @@ class RequestPermitController extends Controller
         $rp->sign_approval_1 = Carbon::now();
         $rp->save();
 
-        Alert::success('Berjasil', 'Berhasil menerima Request Permit');
+        $dataNotif = [
+            'models' => 'RequestPermit',
+            'notif_title' => $rp->no_request_permit,
+            'id_data' => $rp->id,
+            'sender' => $request->session()->get('user_id'),
+            'division_receiver' => 1,
+            'notif_message' => 'Request Permit disetujui, mohon diproses lebih lanjut..',
+            'receiver' => null,
+        ];
 
-        return redirect()->back();
+        broadcast(new HelloEvent($dataNotif));
+
+        return response()->json(['status' => 'ok']);
+    }
+
+    public function rejectRP(Request $request, $id)
+    {
+        $connRP = ConnectionDB::setConnection(new RequestPermit());
+
+        $rp = $connRP->find($id);
+
+        $rp->status_request = 'REJECTED';
+        $rp->save();
+
+        $rp->Ticket->status_request = 'REJECTED';
+        $rp->Ticket->save();
+
+        $dataNotif = [
+            'models' => 'RequestPermit',
+            'notif_title' => $rp->no_request_permit,
+            'id_data' => $rp->id,
+            'sender' => $request->session()->get('user_id'),
+            'division_receiver' => 1,
+            'notif_message' => 'Maaf request permit saya tolak, terima kasih..',
+            'receiver' => null,
+        ];
+
+        broadcast(new HelloEvent($dataNotif));
+
+        return response()->json(['status' => 'ok']);
     }
 }

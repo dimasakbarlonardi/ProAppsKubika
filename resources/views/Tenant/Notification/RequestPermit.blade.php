@@ -75,23 +75,26 @@
                                         <div class="row gx-card mx-0 bg-200 text-900 fs--1 fw-semi-bold">
                                             <div class="col-9 col-md-8 py-2">Personil</div>
                                         </div>
-                                        @foreach ($personels as $personel)
-                                            <div class="gx-card mx-0 border-bottom border-200">
-                                                <div class='row gx-card mx-0 align-items-center border-bottom border-200'>
-                                                    <div class='py-3'>
-                                                        <div class='d-flex align-items-center'>
-                                                            <div class='flex-1'>
-                                                                <h5 class='fs-0'>
-                                                                    <span class='text-900' href=''>
-                                                                        {{ $personel->nama_personil }}
-                                                                    </span>
-                                                                </h5>
+                                        @if ($personels)
+                                            @foreach ($personels as $personel)
+                                                <div class="gx-card mx-0 border-bottom border-200">
+                                                    <div
+                                                        class='row gx-card mx-0 align-items-center border-bottom border-200'>
+                                                        <div class='py-3'>
+                                                            <div class='d-flex align-items-center'>
+                                                                <div class='flex-1'>
+                                                                    <h5 class='fs-0'>
+                                                                        <span class='text-900' href=''>
+                                                                            {{ $personel->nama_personil }}
+                                                                        </span>
+                                                                    </h5>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        @endforeach
+                                            @endforeach
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -101,23 +104,26 @@
                                         <div class="row gx-card mx-0 bg-200 text-900 fs--1 fw-semi-bold">
                                             <div class="col-9 col-md-8 py-2">Nama Alat</div>
                                         </div>
-                                        @foreach ($alats as $alat)
-                                            <div class="gx-card mx-0 border-bottom border-200">
-                                                <div class='row gx-card mx-0 align-items-center border-bottom border-200'>
-                                                    <div class='py-3'>
-                                                        <div class='d-flex align-items-center'>
-                                                            <div class='flex-1'>
-                                                                <h5 class='fs-0'>
-                                                                    <span class='text-900' href=''>
-                                                                        {{ $alat->nama_alat }}
-                                                                    </span>
-                                                                </h5>
+                                        @if ($alats)
+                                            @foreach ($alats as $alat)
+                                                <div class="gx-card mx-0 border-bottom border-200">
+                                                    <div
+                                                        class='row gx-card mx-0 align-items-center border-bottom border-200'>
+                                                        <div class='py-3'>
+                                                            <div class='d-flex align-items-center'>
+                                                                <div class='flex-1'>
+                                                                    <h5 class='fs-0'>
+                                                                        <span class='text-900' href=''>
+                                                                            {{ $alat->nama_alat }}
+                                                                        </span>
+                                                                    </h5>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        @endforeach
+                                            @endforeach
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -127,63 +133,80 @@
                                         <div class="row gx-card mx-0 bg-200 text-900 fs--1 fw-semi-bold">
                                             <div class="col-9 col-md-8 py-2">Material</div>
                                         </div>
-                                        @foreach ($materials as $material)
-                                            <div class="gx-card mx-0 border-bottom border-200">
-                                                <div class='row gx-card mx-0 align-items-center border-bottom border-200'>
-                                                    <div class='py-3'>
-                                                        <div class='d-flex align-items-center'>
-                                                            <div class='flex-1'>
-                                                                <h5 class='fs-0'>
-                                                                    <span class='text-900' href=''>
-                                                                        {{ $material->material }}
-                                                                    </span>
-                                                                </h5>
+                                        @if ($materials)
+                                            @foreach ($materials as $material)
+                                                <div class="gx-card mx-0 border-bottom border-200">
+                                                    <div
+                                                        class='row gx-card mx-0 align-items-center border-bottom border-200'>
+                                                        <div class='py-3'>
+                                                            <div class='d-flex align-items-center'>
+                                                                <div class='flex-1'>
+                                                                    <h5 class='fs-0'>
+                                                                        <span class='text-900' href=''>
+                                                                            {{ $material->material }}
+                                                                        </span>
+                                                                    </h5>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        @endforeach
+                                            @endforeach
+                                        @endif
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-
                 </div>
 
                 <div class="col-3">
-                    <div class="row g-3 position-sticky top-0">
-                        <div class="col-md-6 col-xl-12 rounded-3">
-                            <div class="card">
-                                <div class="card-header">
-                                    <h6 class="mb-0">Status</h6>
-                                </div>
-                                <div class="card-body">
-                                    <div class="mb-4 mt-n2"><label class="mb-1">Status</label>
-                                        <input type="text" class="form-control" disabled
-                                            value="{{ $permit->status_request }}">
-                                    </div>
-                                    <div class="mb-4 mt-n2"><label class="mb-1">Jenis Pekerjaan</label>
-                                        <input type="text" class="form-control" disabled
-                                            value="{{ $permit->JenisPekerjaan->jenis_pekerjaan }}">
-                                    </div>
-                                </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h6 class="mb-0">Status</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-4 mt-n2"><label class="mb-1">Status</label>
+                                <input type="text" class="form-control" disabled
+                                    value="{{ $permit->status_request }}">
                             </div>
-                            @if (!$permit->sign_approval_1)
-                                <div class="card-footer border-top border-200 py-x1">
-                                    <form action="{{ route('approveRP1', $permit->id) }}" method="post">
-                                        @csrf
-                                        <button type="submit" class="btn btn-primary w-100">Approve</button>
-                                    </form>
-                                </div>
-                            @endif
+                            <div class="mb-4 mt-n2"><label class="mb-1">Jenis Pekerjaan</label>
+                                <input type="text" class="form-control" disabled
+                                    value="{{ $permit->JenisPekerjaan->jenis_pekerjaan }}">
+                            </div>
                         </div>
                     </div>
+                    @if (
+                        !$permit->sign_approval_1 &&
+                            $sysApprove->approval_1 == Request::session()->get('user')->id_role_hdr &&
+                            $permit->status_request != 'REJECTED')
+                        <div class="card-footer border-top">
+                            <div class="">
+                                <form action="{{ route('approveRP1', $permit->id) }}" method="post">
+                                    @csrf
+                                    <button type="button" onclick="onAccept({{ $permit->id }})"
+                                        class="btn btn-primary w-100">Approve</button>
+                                </form>
+                            </div>
+                            <div class="mt-3">
+                                <form action="{{ route('rejectRP', $permit->id) }}" method="post">
+                                    @csrf
+                                    <button type="button" onclick="onReject({{ $permit->id }})"
+                                        class="btn btn-danger w-100">Reject</button>
+                                </form>
+                            </div>
+                        </div>
+                    @endif
+                    @if (
+                        $permit->sign_approval_1 &&
+                            Request::session()->get('work_relation_id') == 1 &&
+                            $permit->status_request != 'REJECTED')
+                        <div class="card-footer border-top">
+                            <a href="{{ route('work-permits.create') }}" type="button" class="btn btn-primary w-100">Buat Work Order</a>
+                        </div>
+                    @endif
                 </div>
             </div>
-
-
         </div>
     </div>
 @endsection
@@ -200,5 +223,37 @@
             readonly: true,
             height: "180"
         });
+
+        function onAccept(id) {
+            $.ajax({
+                url: '/admin/request-permits/approve1/' + id,
+                type: 'POST',
+                success: function(data) {
+                    if (data.status == 'ok') {
+                        Swal.fire(
+                            'Success!',
+                            'Success accept Request Permit!',
+                            'success'
+                        ).then(() => window.location.reload());
+                    }
+                }
+            })
+        }
+
+        function onReject(id) {
+            $.ajax({
+                url: '/admin/request-permits/reject/' + id,
+                type: 'POST',
+                success: function(data) {
+                    if (data.status == 'ok') {
+                        Swal.fire(
+                            'Success!',
+                            'Success reject Request Permit!',
+                            'success'
+                        ).then(() => window.location.reload());
+                    }
+                }
+            })
+        }
     </script>
 @endsection
