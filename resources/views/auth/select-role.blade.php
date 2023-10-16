@@ -16,7 +16,7 @@
                     </div>
                     <select name="role_id" id="" class="form-control">
                         <option value="1">Owner</option>
-                        <option value="2">Management</option>
+                        <option value="2">Building Management</option>
                         <option value="3">Tenant</option>
                     </select>
                 </div>

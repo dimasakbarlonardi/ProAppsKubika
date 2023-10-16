@@ -20,7 +20,7 @@
                 <div class="row">
                 <div class="col-6">
                     <label class="form-label">Site</label>
-                    <input type="text" value="park royale" class="form-control" required>
+                    <input type="text" value="park royale" class="form-control" disabled>
                 </div>
                 <div class="col-6 mb-3">
                     <label class="form-label">Tower</label>

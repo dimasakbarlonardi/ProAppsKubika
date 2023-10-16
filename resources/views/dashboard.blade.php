@@ -107,56 +107,56 @@
                     </form>
                 </div>
             </div>
-        <div class="row" data-bs-theme="light">
-            <div class="col-sm-6 col-lg-6 mb-4">
-                <div class="card text-white bg-primary">
-                    <div class="card-body" style="background-color: #E9F7F5;">
-                        <div class="card-title">Ticket Complete <img height="35" src="{{ asset('assets/img/icons/ticket_complete.png') }}" alt=""> </div>
-                        <h4 class="fs-3 fw-normal text-700 mb-0">
-                            <span>{{ $complete_ticket }}</span>
-                            <span>/</span>
-                            <span>{{ $entry_ticket }}</span>
-                        </h4>
+            <div class="row" data-bs-theme="light">
+                <div class="col-sm-6 col-lg-6 mb-4">
+                    <div class="card text-white bg-primary">
+                        <div class="card-body" style="background-color: #E9F7F5;">
+                            <div class="card-title">Ticket Complete <img class="float-end" height="40" src="{{ asset('assets/img/icons/ticket_complete.png') }}" alt=""> </div>
+                            <h4 class="fs-3 fw-normal text-700 mb-0">
+                                <span>{{ $complete_ticket }}</span>
+                                <span>/</span>
+                                <span>{{ $entry_ticket }}</span>
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-lg-6 mb-4">
+                    <div class="card text-white bg-secondary">
+                        <div class="card-body" style="background-color: #BEE8E1;">
+                            <div class="card-title">Ticket on Progress <img class="float-end" height="40" src="{{ asset('assets/img/icons/ticket_on_progress.png') }}" alt=""></div>
+                            <h4 class="fs-3 fw-normal text-700 mb-0">
+                                <span>{{ $progress_ticket }}</span>
+                                <span>/</span>
+                                <span>{{ $entry_ticket }}</span>
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-lg-6 mb-4">
+                    <div class="card text-white bg-success">
+                        <div class="card-body" style="background-color: #E9F7F5;">
+                            <div class="card-title">Ticket Hold <img class="float-end" height="40" src="{{ asset('assets/img/icons/ticket_hold.png') }}" alt=""></div>
+                            <h4 class="fs-3 fw-normal text-700 mb-0">
+                                <span>0</span>
+                                <span>/</span>
+                                <span>{{ $entry_ticket }}</span>
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-lg-6 mb-4">
+                    <div class="card text-white bg-danger">
+                        <div class="card-body" style="background-color: #BEE8E1;">
+                            <div class="card-title">Ticket Cancel <img class="float-end" height="40" src="{{ asset('assets/img/icons/ticket_cancel.png') }}" alt=""></div>
+                            <h4 class="fs-3 fw-normal text-700 mb-0">
+                                <span>0</span>
+                                <span>/</span>
+                                <span>{{ $entry_ticket }}</span>
+                            </h4>
+                        </div>
                     </div>
                 </div>
             </div>
-            <div class="col-sm-6 col-lg-6 mb-4">
-                <div class="card text-white bg-secondary">
-                    <div class="card-body" style="background-color: #BEE8E1;">
-                        <div class="card-title">Ticket on Progress <img height="35" src="{{ asset('assets/img/icons/ticket_on_progress.png') }}" alt=""></div>
-                        <h4 class="fs-3 fw-normal text-700 mb-0">
-                            <span>{{ $progress_ticket }}</span>
-                            <span>/</span>
-                            <span>{{ $entry_ticket }}</span>
-                        </h4>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-6 col-lg-6 mb-4">
-                <div class="card text-white bg-success">
-                    <div class="card-body" style="background-color: #E9F7F5;">
-                        <div class="card-title">Ticket Hold <img height="35" src="{{ asset('assets/img/icons/ticket_hold.png') }}" alt=""></div>
-                        <h4 class="fs-3 fw-normal text-700 mb-0">
-                            <span>0</span>
-                            <span>/</span>
-                            <span>{{ $entry_ticket }}</span>
-                        </h4>
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-6 col-lg-6 mb-4">
-                <div class="card text-white bg-danger">
-                    <div class="card-body" style="background-color: #BEE8E1;">
-                        <div class="card-title">Ticket Cancel <img height="35" src="{{ asset('assets/img/icons/ticket_cancel.png') }}" alt=""></div>
-                        <h4 class="fs-3 fw-normal text-700 mb-0">
-                            <span>0</span>
-                            <span>/</span>
-                            <span>{{ $entry_ticket }}</span>
-                        </h4>
-                    </div>
-                </div>
-            </div>
-        </div>
         </div>
 
         <div class="card mb-3">
@@ -165,7 +165,8 @@
                     <div class="frame-537">
                         <div class="frame-193">
                             <div class="request-volume-performance">Request Volume Performance</div>
-                            <svg class="icon" width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <svg class="icon" width="24" height="25" viewBox="0 0 24 25" fill="none"
+                                    xmlns="http://www.w3.org/2000/svg">
                                 <g clip-path="url(#clip0_542_36712)">
                                     <path d="M5.33333 8.5H18.6667V16.5H5.33333V8.5ZM22 12.5C22 13.6046 22.8954 14.5 24 14.5V18.5C24 19.6046 23.1046 20.5 22 20.5H2C0.895417 20.5 0 19.6046 0 18.5V14.5C1.10458 14.5 2 13.6046 2 12.5C2 11.3954 1.10458 10.5 0 10.5V6.5C0 5.39542 0.895417 4.5 2 4.5H22C23.1046 4.5 24 5.39542 24 6.5V10.5C22.8954 10.5 22 11.3954 22 12.5ZM20 8.16667C20 7.61437 19.5523 7.16667 19 7.16667H5C4.44771 7.16667 4 7.61437 4 8.16667V16.8333C4 17.3856 4.44771 17.8333 5 17.8333H19C19.5523 17.8333 20 17.3856 20 16.8333V8.16667Z" fill="#3F4045" />
                                 </g>
@@ -236,7 +237,7 @@
                             </defs>
                         </svg>
                     </div>
-                    <div class="col-md-auto p-3">
+                    <div class="col-md-auto p-4">
                         <form class="row align-items-center g-3">
                             <div class="col-auto">
                                 <h6 class="text-primary mb-0">Showing Data For :</h6>

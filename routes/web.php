@@ -636,8 +636,9 @@ Route::prefix('admin')->group(function () {
         Route::post('/tools/borrowHK/{id}', [ToolsHKController::class, 'borrowToolHK'])->name('borrowHK.tool');
         Route::post('/tools/returnHK/{id}', [ToolsHKController::class, 'returnToolHK'])->name('returnHK.tool');
 
-         // ---------------Inspection Tools Engineering-----------------
+         // ---------------Inspection Tools Security-----------------
          Route::resource('tools-security', ToolsSecurityController::class);
+         Route::get('/history-tools-security', [ToolsSecurityController::class, 'History'])->name('history');
          Route::post('tools/borrowSecurity/{id}', [ToolsSecurityController::class, 'borrowToolSecurity'])->name('borrowSecurity.tool');
          Route::post('tools/returnSecurity/{id}', [ToolsSecurityController::class, 'returnToolSecurity'])->name('returnSecurity.tool');
 

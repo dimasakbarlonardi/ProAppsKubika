@@ -14,11 +14,11 @@
                 @csrf
                 <div class="row">
                     <div class="col-6 mb-3">
-                        <label class="form-label">No. Equiqment</label>
+                        <label class="form-label">No. Equipment</label>
                         <input type="text" name="no_equiqment" class="form-control" required>
                     </div>
                     <div class=" col-6 mb-3">
-                        <label class="form-label">Nama Equiqment</label>
+                        <label class="form-label">Nama Equipment</label>
                         <input type="text" name="equiqment" class="form-control" required>
                     </div>
                     <div class="col-6 mb-3">
