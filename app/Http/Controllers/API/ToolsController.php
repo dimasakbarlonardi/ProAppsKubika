@@ -5,11 +5,13 @@ namespace App\Http\Controllers\API;
 use App\Helpers\ConnectionDB;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
+use App\Models\Site;
 use App\Models\ToolHistory;
 use App\Models\ToolsEngineering;
 use App\Models\ToolsHousekeeping;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 
 class ToolsController extends Controller
@@ -89,6 +91,7 @@ class ToolsController extends Controller
                 ], 'Invalid return quantity');
             }
         } elseif ($wrID == 8) {
+
             try {
                 // Menghubungkan ke database dan mencari alat berdasarkan ID
                 $conn = ConnectionDB::setConnection(new ToolsEngineering());
@@ -266,20 +269,25 @@ class ToolsController extends Controller
         }
     }
 
-    public function historyTools($wrID, $userID)
+    public function historyTools(Request $request, $wrID, $userID)
     {
         $connToolHistory = ConnectionDB::setConnection(new ToolHistory());
         $histories = $connToolHistory->where('borrowed_by', $userID);
+        $site = Site::find($request->user()->id_site);
 
         if ($wrID == 9) {
-            $histories = $histories->where('type', 'HK')
-                ->with('HKTool');
+            $histories = DB::connection($site->db_name)
+                ->table('tb_tools_history as th')
+                ->join('tb_tools_housekeeping as eq', 'th.id_data', 'eq.id')
+                ->orderBy('th.id', 'DESC')
+                ->get();
         } elseif ($wrID == 8) {
-            $histories = $histories->where('type', 'ENG')
-                ->with('EngTool');
+            $histories = DB::connection($site->db_name)
+                ->table('tb_tools_history as th')
+                ->join('tb_tools_engineering as eq', 'th.id_data', 'eq.id')
+                ->orderBy('th.id', 'DESC')
+                ->get();
         }
-
-        $histories = $histories->latest()->get();
 
         return ResponseFormatter::success(
             $histories,
