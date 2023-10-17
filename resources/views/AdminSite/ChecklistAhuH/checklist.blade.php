@@ -18,7 +18,8 @@
                             <select name="from[]" id="search" class="form-control" size="8" multiple="multiple">
                                 @foreach ($parameters as $item)
                                     @if (!isset($item->Checklist))
-                                        <option {{ !isset($item->Checklist) ? '' : 'disabled' }} value="{{ $item->id_eng_ahu }}">
+                                        <option {{ !isset($item->Checklist) ? '' : 'disabled' }}
+                                            value="{{ $item->id_eng_ahu }}">
                                             {{ $item->nama_eng_ahu }}
                                         </option>
                                     @endif
@@ -38,11 +39,13 @@
                         </div>
                         <div class="col-5">
                             <select name="to[]" id="search_to" class="form-control" size="8" multiple="multiple">
-                                @foreach ($checklistparameters as $item)
-                                    <option value="{{ $item->ChecklistEng->id_eng_ahu  }}">
-                                        {{ $item->ChecklistEng->nama_eng_ahu }}
-                                    </option>
-                                @endforeach
+                                @if ($checklistparameters)
+                                    @foreach ($checklistparameters as $item)
+                                        <option value="{{ $item->ChecklistEng->id_eng_ahu }}">
+                                            {{ $item->ChecklistEng->nama_eng_ahu }}
+                                        </option>
+                                    @endforeach
+                                @endif
                             </select>
                         </div>
                     </div>

@@ -93,7 +93,7 @@ class ChecklistAhuHController extends Controller
 
         if (isset($parameter)) {
             foreach ($parameter as $param) {
-                $checkParam = $checklistParameter->where('id_equiqment', 2)
+                $checkParam = $checklistParameter->where('id_equiqment', $id)
                     ->where('id_checklist', $param)
                     ->first();
 
@@ -103,7 +103,6 @@ class ChecklistAhuHController extends Controller
                         'id_checklist' => $param,
                         'id_item' => $equiqment->id_equiqment_engineering
                     ]);
-
                 }
             }
         }
