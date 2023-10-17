@@ -121,47 +121,60 @@ class ChecklistToiletHController extends Controller
         return redirect()->route('checklisttoilets.index');
     }
 
+    public function updateSchedulesHK(Request $request, $id)
+    {
+        $equiqmentDetail = ConnectionDB::setConnection(new EquipmentHousekeepingDetail());
+
+        $schedule = $equiqmentDetail->find($id);
+
+        $schedule->update($request->all());
+
+        Alert::success('Success', 'Success update schedule');
+
+        return redirect()->back();
+    }
+
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    
+
      public function store(Request $request)
      {
          $equipmentHK = ConnectionDB::setConnection(new EquiqmentToilet());
-     
+
          try {
              DB::beginTransaction();
              $id_equiqment = 2;
 
              $no_equipment = $request->no_equipment;
-            //  $barcode_room = $this->generateBarcode($no_equipment);
-     
+             $barcode_room = $this->generateBarcode($no_equipment);
+
              $equipmentHK->create([
                  'no_equipment' => $no_equipment,
                  'id_equiqment' => $id_equiqment,
-                //  'barcode_room' => $barcode_room, 
+                 'barcode_room' => $barcode_room,
                  'equipment' => $request->equipment,
                  'id_role' => $request->id_role,
                  'id_room' => $request->id_room,
              ]);
-     
+
              DB::commit();
-     
+
              Alert::success('Berhasil', 'Berhasil menambahkan Inspection HouseKeeping');
-     
+
              return redirect()->route('checklisttoilets.index');
          } catch (\Throwable $e) {
              DB::rollBack();
              dd($e);
              Alert::error('Gagal', 'Gagal menambahkan Inspection HouseKeeping');
-     
+
              return redirect()->route('checklisttoilets.index');
          }
      }
-     
+
     /**
      * Display the specified resource.
      *
@@ -208,6 +221,18 @@ class ChecklistToiletHController extends Controller
         ]);
 
         Alert::success('Success', 'Success add schedule');
+
+        return redirect()->back();
+    }
+
+    public function deleteSchedulesHK($id)
+    {
+        $connSchedule = ConnectionDB::setConnection(new EquipmentHousekeepingDetail());
+
+        $schedule = $connSchedule->find($id);
+        $schedule->delete();
+
+        Alert::success('Success', 'Success remove schedule');
 
         return redirect()->back();
     }
