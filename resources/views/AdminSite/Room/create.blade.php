@@ -31,7 +31,6 @@
                         @endforeach
                     </select>
                 </div>
-
                 <div class="col-6 mb-3">
                     <label class="form-label">Lantai</label>
                     <select class="form-control" name="id_lantai" required>
@@ -40,12 +39,6 @@
                         <option value="{{ $floor->id_lantai }}">{{ $floor->nama_lantai }}</option>
                         @endforeach
                     </select>
-                </div>
-                </div>
-                <div class="row">
-                <div class="col-6 mb-3">
-                    <label class="form-label">Barcode Room</label>
-                    <input type="text" name="barcode_room" class="form-control" required>
                 </div>
                 <div class="col-6 mb-3">
                     <label class="form-label">Nama Room</label>

@@ -137,12 +137,12 @@ class ChecklistToiletHController extends Controller
              $id_equiqment = 2;
 
              $no_equipment = $request->no_equipment;
-             $barcode_room = $this->generateBarcode($no_equipment);
+            //  $barcode_room = $this->generateBarcode($no_equipment);
      
              $equipmentHK->create([
                  'no_equipment' => $no_equipment,
                  'id_equiqment' => $id_equiqment,
-                 'barcode_room' => $barcode_room, 
+                //  'barcode_room' => $barcode_room, 
                  'equipment' => $request->equipment,
                  'id_role' => $request->id_role,
                  'id_room' => $request->id_room,
