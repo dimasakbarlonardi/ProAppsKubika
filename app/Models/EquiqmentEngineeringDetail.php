@@ -29,7 +29,7 @@ use Illuminate\Database\Eloquent\Model;
 
         protected $dates = ['deleted_at'];
 
-        public function equipment()
+        public function Equipment()
         {
             return $this->hasOne(EquiqmentAhu::class, 'id_equiqment_engineering', 'id_equiqment_engineering');
         }
