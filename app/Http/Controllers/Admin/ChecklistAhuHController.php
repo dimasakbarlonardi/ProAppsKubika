@@ -245,17 +245,13 @@ class ChecklistAhuHController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Request $request, $id)
+    public function edit($id)
     {
         $connequiqment = ConnectionDB::setConnection(new EquiqmentAhu());
-        $conndetail = ConnectionDB::setConnection(new ChecklistAhuDetail());
         $connroom = ConnectionDB::setConnection(new Room());
-        $user_id = $request->user()->id;
 
         $data['equipmentengineering'] = $connequiqment->where('id_equiqment_engineering', $id)->first();
-        $data['ahudetail'] = $conndetail->where('no_checklist_ahu', $id)->first();
         $data['rooms'] = $connroom->get();
-        $data['idusers'] = Login::where('id', $user_id)->get();
 
         return view('AdminSite.ChecklistAhuH.edit', $data);
     }
@@ -272,7 +268,10 @@ class ChecklistAhuHController extends Controller
         $conn = ConnectionDB::setConnection(new EquiqmentAhu());
 
         $checklistahu = $conn->find($id);
-        $checklistahu->update($request->all());
+        $checklistahu->no_equiqment = $request->no_equipment;
+        $checklistahu->equiqment = $request->equipment;
+        $checklistahu->id_room = $request->id_room;
+        $checklistahu->save();
 
         Alert::success('Berhasil', 'Berhasil mengupdate Checklis AHU');
 

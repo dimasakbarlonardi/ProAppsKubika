@@ -23,15 +23,6 @@
                     <input type="text" value="{{ $checklisttoilets->equipment}}" name="equipment" class="form-control" required>
                 </div>
                 <div class="col-6 mb-3">
-                    <label class="form-label">PIC</label>
-                    <select class="form-control" name="id_role" required>
-                        <option selected disabled>-- Pilih PIC --</option>
-                        @foreach ($role as $role)
-                        <option value="{{$role->id}}" {{ $role->id == $checklisttoilets->id_role ?  'selected' : ''}}>{{ $role->nama_role }} </option>
-                        @endforeach
-                    </select>
-                </div>
-                <div class="col-6 mb-3">
                     <label class="form-label">Lokasi</label>
                     <select class="form-control" name="id_room" required>
                         <option selected >-- Pilih Lokasi --</option>

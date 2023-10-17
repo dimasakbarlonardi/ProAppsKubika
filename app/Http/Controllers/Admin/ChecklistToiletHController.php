@@ -139,7 +139,10 @@ class ChecklistToiletHController extends Controller
         $connHK = ConnectionDB::setConnection(new EquiqmentToilet());
 
         $equipmentHK = $connHK->find($id);
-        $equipmentHK->update($request->all());
+        $equipmentHK->no_equipment = $request->no_equipment;
+        $equipmentHK->equipment = $request->equipment;
+        $equipmentHK->id_room = $request->id_room;
+        $equipmentHK->save();
 
         Alert::success('Berhasil', 'Berhasil mengupdate Inspection HouseKeeping');
 
