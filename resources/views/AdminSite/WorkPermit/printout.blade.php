@@ -119,6 +119,7 @@
 
                         </div>
                     </div>
+
                 </div>
                 <div class="row align-items-center text-center" style="margin-top: -2%">
                     <div class="col">
