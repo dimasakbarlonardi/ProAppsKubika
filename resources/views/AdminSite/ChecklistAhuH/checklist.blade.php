@@ -10,30 +10,18 @@
             </div>
         </div>
         <div class="p-5">
-            <form action="{{ route('checklistParameter' , $id) }}" method="post">
+            <form action="{{ route('checklistParameter', $id) }}" method="post">
                 @csrf
                 <div class="form-group">
                     <div class="row d-flex justify-content-between">
                         <div class="col-5">
                             <select name="from[]" id="search" class="form-control" size="8" multiple="multiple">
                                 @foreach ($parameters as $item)
-                                    <option value="{{ $item->id_eng_ahu }}">
-                                        {{ $item->nama_eng_ahu }}
-                                    </option>
-                                    @if ($item->subMenus)
-                                        @foreach ($item->subMenus as $subMenu)
-                                            <option value="sub_menus|{{ $subMenu->kode_form }}|{{ $subMenu->id }}">
-                                                {{ $item->caption }} > {{ $subMenu->caption }}
-                                            </option>
-                                            @if ($subMenu->subMenus2)
-                                                @foreach ($subMenu->subMenus2 as $subMenu2)
-                                                    <option value="sub_menus2|{{ $subMenu2->kode_form }}|{{ $subMenu2->id }}">
-                                                        {{ $subMenu->caption }} > {{ $subMenu2->caption }}
-                                                    </option>
-                                                @endforeach
-                                            @endif
-                                        @endforeach
-                                    @endif 
+                                    @if (!isset($item->Checklist))
+                                        <option {{ !isset($item->Checklist) ? '' : 'disabled' }} value="{{ $item->id_eng_ahu }}">
+                                            {{ $item->nama_eng_ahu }}
+                                        </option>
+                                    @endif
                                 @endforeach
                             </select>
                         </div>
@@ -50,25 +38,11 @@
                         </div>
                         <div class="col-5">
                             <select name="to[]" id="search_to" class="form-control" size="8" multiple="multiple">
-                                @foreach ($selected_menus as $item)
-                                <option value="menus|{{ $item->id_eng_ahu }}">
-                                    {{ $item->nama_eng_ahu }}
-                                </option>
-                                    @if ($item->subMenus)
-                                        @foreach ($item->subMenus as $subMenu)
-                                            <option value="sub_menus|{{ $subMenu->kode_form }}|{{ $subMenu->id }}">
-                                                {{ $item->caption }} > {{ $subMenu->caption }}
-                                            </option>
-                                            @if ($subMenu->subMenus2)
-                                                @foreach ($subMenu->subMenus2 as $subMenu2)
-                                                    <option value="sub_menus2|{{ $subMenu2->kode_form }}|{{ $subMenu2->id }}">
-                                                        {{ $subMenu->caption }} > {{ $subMenu2->caption }}
-                                                    </option>
-                                                @endforeach
-                                            @endif
-                                        @endforeach
-                                    @endif
-                                @endforeach 
+                                @foreach ($checklistparameters as $item)
+                                    <option value="{{ $item->ChecklistEng->id_eng_ahu  }}">
+                                        {{ $item->ChecklistEng->nama_eng_ahu }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
                     </div>

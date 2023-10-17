@@ -57,12 +57,12 @@ class ChecklistAhuHController extends Controller
     {
         $connParameter = ConnectionDB::setConnection(new ChecklistParameterEquiqment());
         $inspectionParameter = ConnectionDB::setConnection(new EngAhu());
-        // $user_id = $request->user()->id;
-        $data['checklistparameters'] = $connParameter->get();
-        $data['parameters'] = $inspectionParameter->get();
-        $data['id'] = $id;
 
-        // $data['idusers'] = Login::where('id', $user_id)->get();
+        $data['checklistparameters'] = $connParameter->where('id_equiqment', 2)->get();
+        $data['parameters'] = $inspectionParameter->where('deleted_at', null)
+            ->with('Checklist')
+            ->get();
+        $data['id'] = $id;
 
         return view('AdminSite.ChecklistAhuH.checklist', $data);
     }
@@ -70,24 +70,46 @@ class ChecklistAhuHController extends Controller
     public function checklistParameter(Request $request, $id)
     {
         $parameter = $request->to;
+
         $checklistParameter = ConnectionDB::setConnection(new ChecklistParameterEquiqment());
         $checklistahu = ConnectionDB::setConnection(new EquiqmentAhu());
         $equiqment = $checklistahu->where('id_equiqment_engineering', $id)->first();
-        if (isset($parameter)) {
-            foreach ($parameter as $form) {
-                $checklistParameter->create([
-                    'id_equiqment' => $id,
-                    'id_checklist' => $form,
-                    'id_item' => $equiqment->id_equiqment_engineering
-                ]);
 
-                $checklistParameter->save();
-                DB::commit();
-                Alert::success('Berhasil', 'Berhasil Menambahkan Inspection Engineering');
+        $checklist_id = [];
+
+        foreach ($parameter as $param) {
+            $checklist_id[] = $param;
+        }
+
+        $deletes = $checklistParameter->where('id_equiqment', $id)
+            ->whereNotIn('id_checklist', $checklist_id)
+            ->get();
+
+        if (count($deletes) > 0) {
+            $checklistParameter->where('id_equiqment', $id)
+                ->whereNotIn('id_checklist', $checklist_id)
+                ->delete();
+        }
+
+        if (isset($parameter)) {
+            foreach ($parameter as $param) {
+                $checkParam = $checklistParameter->where('id_equiqment', 2)
+                    ->where('id_checklist', $param)
+                    ->first();
+
+                if (!$checkParam) {
+                    $checklistParameter->create([
+                        'id_equiqment' => $id,
+                        'id_checklist' => $param,
+                        'id_item' => $equiqment->id_equiqment_engineering
+                    ]);
+
+                }
             }
         }
 
-        return redirect()->route('checklistahus.index');
+        Alert::success('Success', 'Success update Inspection Engineering');
+        return redirect()->back();
     }
 
     public function create(Request $request)
@@ -170,14 +192,13 @@ class ChecklistAhuHController extends Controller
             Alert::success('Berhasil', 'Berhasil menambahkan Inspection Engineering');
 
             return redirect()->route('checklistahus.index');
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            dd($e);
+            Alert::error('Gagal', 'Gagal menambahkan Inspection Engineering');
 
-            } catch (\Throwable $e) {
-                DB::rollBack();
-                dd($e);
-                Alert::error('Gagal', 'Gagal menambahkan Inspection Engineering');
-
-                return redirect()->route('checklistahus.index');
-            }
+            return redirect()->route('checklistahus.index');
+        }
     }
 
     public function updateSchedules(Request $request, $id)
@@ -280,8 +301,8 @@ class ChecklistAhuHController extends Controller
 
         $data['eq'] = $connEquiqment->find($id);
         $data['schedules'] = $connSchedules->where('id_equiqment_engineering', $id)
-        ->orderBy('schedule', 'ASC')
-        ->get();
+            ->orderBy('schedule', 'ASC')
+            ->get();
 
         return view('AdminSite.ChecklistAhuH.schedules', $data);
     }
