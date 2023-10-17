@@ -47,7 +47,8 @@
                             <h5 class="mb-2 mb-md-0">Reservation #</h5>
                         </div>
                         <div class="col-auto">
-                            <button id="create_pdf" class="btn btn-falcon-default btn-sm me-1 mb-2 mb-sm-0" type="button">
+                            <button id="create_pdf" class="btn btn-falcon-default btn-sm me-1 mb-2 mb-sm-0"
+                                type="button">
                                 <span class="fas fa-arrow-down me-1"> </span>Download
                                 (.pdf)</button>
                         </div>
@@ -57,130 +58,151 @@
             <div class="card mb-3" id="form-print-out">
                 <div class="card-body">
                     <div class="row align-items-center text-center mb-3">
-                        <div class="col-sm-6 text-sm-start"><img src="/assets/img/icons/spot-illustrations/proapps.png"
-                                alt="invoice" width="150" /></div>
+                        <div class="col text-sm-start">
+                            <img src="/assets/img/icons/spot-illustrations/proapps.png" alt="invoice" width="150" />
+                        </div>
+                        <div class="col text-center mt-3">
+                            <h2 class="mb-3">SURAT IZIN KERJA</h2>
+                            <h4>Park Royale</h4>
+                            <h6>No. #0012/BM/012-01</h6>
+                        </div>
                         <div class="col text-sm-end mt-3 mt-sm-0">
-                            <h2 class="mb-3">Invoice</h2>
-                            <h5>Proapps</h5>
-                            <p class="fs--1 mb-0">
-                                Harton Tower Citihub, 6th floor <br>
-                                Jl. Boulevard Artha Gading Blok D No. 3, <br>
-                                Kelapa Gading Barat
-                                Jakarta Utara, 14240
-                            </p>
-                        </div>
-                        <div class="col-12">
-                            <hr />
+                            <img src="/assets/img/icons/spot-illustrations/proapps.png" alt="invoice" width="150" />
                         </div>
                     </div>
-                    <div class="row align-items-center">
+                    <div class="row align-items-center text-center p-3">
+                        <div class="col-6">
+                            <table>
+                                <tbody>
+                                    <tr>
+                                        <td>NAMA PENGHUNI / PEMILIK</td>
+                                        <td>:</td>
+                                        <td>Akmal</td>
+                                    </tr>
+                                    <tr>
+                                        <td>LOKASI / TOWER / UNIT</td>
+                                        <td>:</td>
+                                        <td>Akmal</td>
+                                    </tr>
+                                    <tr>
+                                        <td>PERIODE</td>
+                                        <td>:</td>
+                                        <td>Akmal</td>
+                                    </tr>
+                                    <tr>
+                                        <td>PERUSAHAAN / KONTRAKTOR</td>
+                                        <td>:</td>
+                                        <td>Akmal</td>
+                                    </tr>
+                                    <tr>
+                                        <td>JUMLAH PERSONIL</td>
+                                        <td>:</td>
+                                        <td>Akmal</td>
+                                    </tr>
+                                    <tr>
+                                        <td>JENIS PEKERJAAN / KEGIATAN</td>
+                                        <td>:</td>
+                                        <td>Akmal</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-6">
+
+                        </div>
+                    </div>
+                    <div class="row align-items-center text-center">
                         <div class="col">
-                            <h6 class="text-500">Invoice to</h6>
-                            <h5></h5>
-                            <p class="fs--1">
 
-                            </p>
-                            <p class="fs--1"><a href="mailto:"></a><br /><a href="tel:444466667777"></a></p>
                         </div>
-                        <div class="col-sm-auto ms-auto">
-                            <div class="table-responsive">
-                                <table class="table table-sm table-borderless fs--1">
-                                    <tbody>
-                                        <tr>
-                                            <th class="text-sm-end">Invoice Date:</th>
-                                            <td>
+                        <div class="col">
 
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
                         </div>
-                    </div>
-                    <div class="table-responsive scrollbar mt-4 fs--1">
-                        <table class="table border-bottom">
-                            <thead data-bs-theme="light">
-                                <tr class="bg-primary text-white dark__bg-1000">
-                                    <th class="border-0">Products</th>
-                                    <th class="border-0 text-center">Quantity</th>
-                                    <th class="border-0 text-end">Rate</th>
-                                    <th class="border-0 text-end">Amount</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr class="alert alert-success my-3">
-                                    <td class="align-middle">
-                                        <h6 class="mb-0 text-nowrap">Reservation Deposit Bills</h6>
-                                    </td>
-                                    <td class="align-middle text-center">
-                                    </td>
-                                    <td class="align-middle text-end"></td>
-                                    <td class="align-middle text-end"></td>
-                                </tr>
-                                <tr>
-                                    <td class="align-middle">
-                                        Room Reservation
-                                    </td>
-                                    <td>:</td>
-                                    <td class="align-middle">
-                                        <p class="mb-0">
-
-                                        </p>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="align-middle">
-                                        Kind Reservation
-                                    </td>
-                                    <td>:</td>
-                                    <td class="align-middle">
-                                        <p class="mb-0">
-
-                                        </p>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="align-middle">
-                                        Event Duration
-                                    </td>
-                                    <td>:</td>
-                                    <td class="align-middle">
-                                        <p class="mb-0">
-
-                                        </p>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td class="align-middle">
-                                        Deposit
-                                    </td>
-                                    <td>:</td>
-                                    <td class="align-middle">
-                                        <p class="mb-0">
-
-                                        </p>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        <div class="col">
+                            <h6>Jakarta, {{ HumanDate(\Carbon\Carbon::now()) }}</h6>
+                        </div>
                     </div>
                 </div>
+                <div class="p-3">
+
+                    <table class="table table-bordered">
+                        <thead>
+                            <div class="row">
+                                <div class="col-4" style="width: 10px">
+                                    <th width="25%" class="text-center border">
+                                        <h6>
+                                            SECURITY
+                                        </h6>
+                                    </th>
+                                </div>
+                                <div class="col-4">
+                                    <th width="25%" class="text-center border">
+                                        <h6>
+                                            FIT OUT
+                                        </h6>
+                                    </th>
+                                </div>
+                                <div width="25%" class="col-4">
+                                    <th class="text-center border">
+                                        <h6>
+                                            ENGINEERING
+                                        </h6>
+                                    </th>
+                                </div>
+                                <div width="25%" class="col-4">
+                                    <th class="text-center border">
+                                        <h6>
+                                            BUILDING MANAGER
+                                        </h6>
+                                    </th>
+                                </div>
+                            </div>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <th style="height: 100px" class="border"></th>
+                                <td style="height: 100px" class="border"></td>
+                                <td style="height: 100px" class="border"></td>
+                                <td style="height: 100px" class="border"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <span class="mb-2"><u><b>Kententuan : </b></u></span> <br>
+                    <div class="ml-3">
+                        <span class="text-muted small">- Ijin pekerjaan perbaikan ini harus dibawa oleh pekerja dan
+                            ditempelkan di pintu utama, badan pengelola berhak menghentikan pekerjaan apabila tidak ada ijin
+                            kerja.</span> <br>
+                        <span class="text-muted small">- Pintu utama unit hunian harus dalam keadaan tertutup selama proses
+                            pekerjaan perbaikan unit.</span> <br>
+                        <span class="text-muted small">- Sampah dan puing pekerjaan perbaikan harus dibuang ke luar spanngkungan
+                            Gading Icon City Apartment dengan menggunakan kantong sampah.</span> <br>
+                        <span class="text-muted small">- Dilarang membuang sampah pekerjaan perbaikan ke ruang sampah unit
+                            hunian.</span> <br>
+                        <span class="text-muted small">- Harap memperpanjang masa ijin kerja kepada badan pengelola, jika
+                            pekerjaan melebihi tanggal masa ijin kerja yang diberikan.</span> <br>
+                        <span class="text-muted small">- Segera laporkan kepada badan pengelola jika pekerjaan telah selesai
+                            dilaksanakan.</span>
+                    </div>
+
+                </div>
+                <hr>
+                <footer class="footer sticky-bottom">
+                    <div class="row g-0 justify-content-between fs--1 mt-4 mb-3">
+                        <div class="col-12 col-sm-auto text-center">
+                            <p class="mb-0 text-600">Thank you for creating with Falcon <span
+                                    class="d-none d-sm-inline-block">|
+                                </span><br class="d-sm-none" /> 2022 &copy; <a
+                                    href="https://themewagon.com">Themewagon</a>
+                            </p>
+                        </div>
+                        <div class="col-12 col-sm-auto text-center">
+                            <p class="mb-0 text-600">v3.14.0</p>
+                        </div>
+                    </div>
+                </footer>
             </div>
         </div>
-        <footer class="footer">
-            <div class="row g-0 justify-content-between fs--1 mt-4 mb-3">
-                <div class="col-12 col-sm-auto text-center">
-                    <p class="mb-0 text-600">Thank you for creating with Falcon <span class="d-none d-sm-inline-block">|
-                        </span><br class="d-sm-none" /> 2022 &copy; <a href="https://themewagon.com">Themewagon</a>
-                    </p>
-                </div>
-                <div class="col-12 col-sm-auto text-center">
-                    <p class="mb-0 text-600">v3.14.0</p>
-                </div>
-            </div>
-        </footer>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.5/jspdf.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.3.5/jspdf.min.js"></script>
     <script>
         var form = $('#form-print-out'),
@@ -197,8 +219,9 @@
                 var
                     img = canvas.toDataURL("image/png"),
                     doc = new jsPDF({
+                        orientation: 'p',
                         unit: 'px',
-                        format: 'a4'
+                        format: 'a4',
                     });
                 doc.addImage(img, 'JPEG', 20, 20);
                 doc.save('work-permit-approval.pdf');
