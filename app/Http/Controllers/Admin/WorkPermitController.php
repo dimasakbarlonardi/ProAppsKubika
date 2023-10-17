@@ -426,15 +426,12 @@ class WorkPermitController extends Controller
         return view('Tenant.Notification.Invoice.payment-monthly', $data);
     }
 
-    public function printWP()
+    public function printWP($id)
     {
-        $data = [
-            'imagePath'    => public_path('img/profile.png'),
-            'name'         => 'John Doe',
-            'address'      => 'USA',
-            'mobileNumber' => '000000000',
-            'email'        => 'john.doe@email.com'
-        ];
-        return view('AdminSite.WorkPermit.printout');
+        $connWP = ConnectionDB::setConnection(new WorkPermit());
+
+        $data['wp'] = $connWP->find($id);
+
+        return view('AdminSite.WorkPermit.printout', $data);
     }
 }

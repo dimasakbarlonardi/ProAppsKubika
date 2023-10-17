@@ -236,7 +236,7 @@
                             $permit->status_request != 'COMPLETE' &&
                             $permit->id_work_relation == Request::session()->get('work_relation_id'))
                         <div class="card-footer border-top border-200 py-x1">
-                            <a href="{{ route('printWP') }}" target="_blank" class="btn btn-warning w-100 mb-3">Print</a>
+                            <a href="{{ route('printWP', $wp->id) }}" target="_blank" class="btn btn-warning w-100 mb-3">Print</a>
                             <button type="button" class="btn btn-primary w-100"
                                 onclick="workDoneWP({{ $permit->id }})">Pekerjaan Selesai</button>
                         </div>
