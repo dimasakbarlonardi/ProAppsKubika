@@ -43,11 +43,14 @@ class ChecklistToiletHController extends Controller
         $connParameter = ConnectionDB::setConnection(new ChecklistParameterEquiqment());
         $inspectionParameter = ConnectionDB::setConnection(new Toilet());
 
-        $data['checklistparameters'] = $connParameter->where('id_equiqment', 1)
+        $data['checklistparameters'] = $connParameter->where('id_equiqment', $id)
             ->get();
         $data['parameters'] = $inspectionParameter->where('deleted_at', null)
-            ->with('Checklist')
+            ->with(['Checklist' => function($q) use ($id) {
+                $q->where('id_item', $id);
+            }])
             ->get();
+        // dd($data);
         $data['id'] = $id;
 
         return view('AdminSite.ChecklistToiletH.checklist', $data);
@@ -172,14 +175,13 @@ class ChecklistToiletHController extends Controller
             $id_equiqment = 2;
 
             $no_equipment = $request->no_equipment;
-            $barcode_room = $this->generateBarcode($no_equipment);
+            // $barcode_room = $this->generateBarcode($no_equipment);
 
             $equipmentHK->create([
                 'no_equipment' => $no_equipment,
                 'id_equiqment' => $id_equiqment,
-                'barcode_room' => $barcode_room,
+                // 'barcode_room' => $barcode_room,
                 'equipment' => $request->equipment,
-                'id_role' => $request->id_role,
                 'id_room' => $request->id_room,
             ]);
 

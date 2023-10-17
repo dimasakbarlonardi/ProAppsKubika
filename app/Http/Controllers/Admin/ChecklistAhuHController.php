@@ -58,9 +58,11 @@ class ChecklistAhuHController extends Controller
         $connParameter = ConnectionDB::setConnection(new ChecklistParameterEquiqment());
         $inspectionParameter = ConnectionDB::setConnection(new EngAhu());
 
-        $data['checklistparameters'] = $connParameter->where('id_equiqment', 2)->get();
+        $data['checklistparameters'] = $connParameter->where('id_equiqment', $id)->get();
         $data['parameters'] = $inspectionParameter->where('deleted_at', null)
-            ->with('Checklist')
+            ->with(['Checklist' => function($q) use ($id) {
+                $q->where('id_item', $id);
+            }])
             ->get();
         $data['id'] = $id;
 
