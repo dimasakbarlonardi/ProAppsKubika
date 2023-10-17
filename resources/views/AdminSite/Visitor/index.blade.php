@@ -32,11 +32,11 @@
                         <tr>
                             <th scope="row">{{ $key + 1 }}</th>
                             <td>{{ $visitor->name_visitor}}</td>
-                            <td>{{ $visitor->arrival_date }} - {{ $visitor->arrival_time}}</td>
+                            <td>{{ $visitor->arrival_time}}</td>
                             <td>{{ $visitor->heading_to }}</td>
                             <td>{{ $visitor->Unit->nama_unit }}</td>
                             <td>{{ $visitor->desc }}</td>
-                            <td>{{ $visitor->arrival_date }} - {{ $visitor->leave_time}}</td>
+                            <td>{{ $visitor->leave_time}}</td>
                         </tr>
                     @endforeach
                 </tbody>

@@ -22,33 +22,28 @@
                 <input type="text" class="form-control" id="reported_name" name="reported_name" required>
             </div>
             <div class="col-6 mb-3">
-                <label for="incident_name" class="form-label">Incident</label>
+                <label for="incident_name" class="form-label">Incident Name</label>
                 <input type="text" class="form-control" id="incident_name" name="incident_name" required>
             </div>
             <div class="col-6 mb-3">
-                <label class="form-label">Location</label>
-                <select class="form-control" name="id_room" required>
-                    <option selected disabled>-- Select Location --</option>
-                    @foreach ($rooms as $room)
-                        <option value="{{ $room->id_room }}">{{ $room->nama_room }} </option>
-                    @endforeach
-                </select>
+                <label for="location" class="form-label">Incident Location</label>
+                <input type="text" class="form-control" id="location" name="location" required>
             </div>
             <div class="col-6 mb-3">
-                <label for="date" class="form-label">Date</label>
-                <input type="date" class="form-control" id="date" name="date" required>
+                <label for="date" class="form-label">Incident Date</label>
+                <input type="date" class="form-control" id="incident_date" name="incident_date" required>
             </div>
             <div class="col-6 mb-3">
-                <label for="time" class="form-label">Time</label>
-                <input type="time" class="form-control" id="time" name="time" required>
+                <label for="time" class="form-label">Incident Time</label>
+                <input type="time" class="form-control" id="incident_time" name="incident_time" required>
             </div>
             <div class="col-6 mb-3">
-                <label for="keterangan" class="form-label">Keterangan</label>
-                <textarea class="form-control" id="keterangan" name="keterangan" rows="3" required></textarea>
+                <label for="keterangan" class="form-label">Description</label>
+                <textarea class="form-control" id="desc" name="desc" rows="3" required></textarea>
             </div>
             <div class="col-6 mb-3">
                 <label for="image" class="form-label">Image</label>
-                <input type="file" class="form-control" id="image" name="image" accept="image/*" required>
+                <input type="file" class="form-control" id="incident_image" name="incident_image" accept="image/*" required>
             </div>
             </div>
             <button type="submit" class="btn btn-primary mt-4">Create</button>

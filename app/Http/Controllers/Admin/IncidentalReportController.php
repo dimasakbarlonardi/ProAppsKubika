@@ -6,6 +6,8 @@ use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
 use App\Models\IncidentalReport;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class IncidentalReportController extends Controller
 {
@@ -30,11 +32,7 @@ class IncidentalReportController extends Controller
      */
     public function create()
     {
-        $room = ConnectionDB::setConnection(new Room());
-
-        $data['rooms'] = $room->get();
-
-        return view('AdminSite.IncidentalReport.create', $data);
+        return view('AdminSite.IncidentalReport.create');
     }
 
     /**
