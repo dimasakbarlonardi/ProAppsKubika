@@ -43,14 +43,17 @@ class ChecklistToiletHController extends Controller
         $connParameter = ConnectionDB::setConnection(new ChecklistParameterEquiqment());
         $inspectionParameter = ConnectionDB::setConnection(new Toilet());
 
-        $data['checklistparameters'] = $connParameter->where('id_equiqment', $id)
+        $data['checklistparameters'] = $connParameter
+            ->where('id_equiqment', 1)
+            ->where('id_item', $id)
             ->get();
+
         $data['parameters'] = $inspectionParameter->where('deleted_at', null)
-            ->with(['Checklist' => function($q) use ($id) {
+            ->with(['Checklist' => function ($q) use ($id) {
                 $q->where('id_item', $id);
             }])
             ->get();
-        // dd($data);
+
         $data['id'] = $id;
 
         return view('AdminSite.ChecklistToiletH.checklist', $data);
@@ -61,43 +64,48 @@ class ChecklistToiletHController extends Controller
         $parameter = $request->to;
 
         $checklistParameter = ConnectionDB::setConnection(new ChecklistParameterEquiqment());
-        $checklistahu = ConnectionDB::setConnection(new EquiqmentToilet());
-        $equipment = $checklistahu->where('id_equipment_housekeeping', $id)->first();
 
         $checklist_id = [];
 
-        foreach ($parameter as $param) {
-            $checklist_id[] = $param;
-        }
-
-        $deletes = $checklistParameter->where('id_equiqment', $id)
-            ->whereNotIn('id_checklist', $checklist_id)
-            ->get();
-
-        if (count($deletes) > 0) {
-            $checklistParameter->where('id_equiqment', $id)
+        if ($parameter) {
+            foreach ($parameter as $param) {
+                $checklist_id[] = $param;
+            }
+            $deletes = $checklistParameter->where('id_equiqment', 1)
+                ->where('id_item', $id)
                 ->whereNotIn('id_checklist', $checklist_id)
+                ->get();
+
+            if (count($deletes) > 0) {
+                $checklistParameter->where('id_equiqment', 1)
+                    ->where('id_item', $id)
+                    ->whereNotIn('id_checklist', $checklist_id)
+                    ->delete();
+            }
+
+            if (isset($parameter)) {
+                foreach ($parameter as $param) {
+                    $checkParam = $checklistParameter->where('id_item', $id)
+                        ->where('id_equiqment', 1)
+                        ->where('id_checklist', $param)
+                        ->first();
+
+                    if (!$checkParam) {
+                        $checklistParameter->create([
+                            'id_equiqment' => 1,
+                            'id_checklist' => $param,
+                            'id_item' => $id
+                        ]);
+                    }
+                }
+            }
+        } else {
+            $checklistParameter->where('id_equiqment', 1)
+                ->where('id_item', $id)
                 ->delete();
         }
 
-        if (isset($parameter)) {
-            foreach ($parameter as $param) {
-                $checkParam = $checklistParameter->where('id_equiqment', $id)
-                    ->where('id_checklist', $param)
-                    ->first();
-
-                if (!$checkParam) {
-                    $checklistParameter->create([
-                        'id_equiqment' => $id,
-                        'id_checklist' => $param,
-                        'id_item' => $equipment->id_equipment_housekeeping
-                    ]);
-                }
-
-                Alert::success('Success', 'Success update Inspection HouseKeeping');
-            }
-        }
-
+        Alert::success('Success', 'Success update Inspection HouseKeeping');
         return redirect()->back();
     }
 

@@ -22,15 +22,6 @@
                         <input type="text" name="equiqment" class="form-control" required>
                     </div>
                     <div class="col-6 mb-3">
-                        <label class="form-label">PIC</label>
-                        <select class="form-control" name="id_role" required>
-                            <option selected disabled>-- Select PIC --</option>
-                            @foreach ($role as $role)
-                                <option value="{{ $role->id }}">{{ $role->nama_role }} </option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-6 mb-3">
                         <label class="form-label">Location</label>
                         <select class="form-control" name="id_room" required>
                             <option selected disabled>-- Select Location --</option>
