@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
 
 class Room extends Model
 {
@@ -23,6 +25,27 @@ class Room extends Model
     ];
 
     protected $dates = ['deleted_at'];
+
+    public function GenerateBarcode()
+    {
+        $barcodeRoom = QrCode::format('png')
+            ->merge(public_path('assets/img/logos/proapps.png'), 0.6, true)
+            ->size(500)
+            ->color(0, 0, 0)
+            ->eyeColor(0, 39, 178, 155, 0, 0, 0)
+            ->eyeColor(1, 39, 178, 155, 0, 0, 0)
+            ->eyeColor(2, 39, 178, 155, 0, 0, 0)
+            ->errorCorrection('H')
+            ->generate(url('') . '/api/v1/rooms/' . $this->id_room);
+
+        $outputBarcode = '/public/' . $this->id_site . '/img/qr-code/room/' . $this->id_room . '-barcode_room.png';
+        $barcode = '/storage/' . $this->id_site . '/img/qr-code/room/' . $this->id_room . '-barcode_room.png';
+
+        Storage::disk('local')->put($outputBarcode, $barcodeRoom);
+
+        $this->barcode_room = $barcode;
+        $this->save();
+    }
 
     public function tower()
     {

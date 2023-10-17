@@ -29,7 +29,7 @@ class RoomController extends Controller
         // $site = $login->site->id_site;
 
 
-        $data ['rooms'] = $conn->get();
+        $data['rooms'] = $conn->get();
 
         return view('AdminSite.Room.index', $data);
     }
@@ -44,8 +44,8 @@ class RoomController extends Controller
         $conntower = ConnectionDB::setConnection(new Tower());
         $connfloor = ConnectionDB::setConnection(new Floor());
 
-        $data ['towers'] = $conntower->get();
-        $data ['floors'] = $connfloor->get();
+        $data['towers'] = $conntower->get();
+        $data['floors'] = $connfloor->get();
 
         return view('AdminSite.Room.create', $data);
     }
@@ -61,14 +61,14 @@ class RoomController extends Controller
         $conn = ConnectionDB::setConnection(new Room());
 
         try {
-            
+
             DB::beginTransaction();
 
             $id_user = $request->user()->id;
             $login = Login::where('id', $id_user)->with('site')->first();
             $site = $login->site->id_site;
 
-            $conn->create([
+            $createRoom = $conn->create([
                 'id_room' => $request->id_room,
                 'id_site' => $site,
                 'id_tower' => $request->id_tower,
@@ -76,6 +76,8 @@ class RoomController extends Controller
                 'barcode_room' => $request->barcode_room,
                 'nama_room' => $request->nama_room,
             ]);
+
+            $createRoom->GenerateBarcode();
 
             DB::commit();
 
@@ -99,7 +101,7 @@ class RoomController extends Controller
      */
     public function show($id)
     {
-    //
+        //
     }
 
     /**
@@ -134,6 +136,7 @@ class RoomController extends Controller
 
         $room = $conn->find($id);
         $room->update($request->all());
+        $room->GenerateBarcode();
 
         Alert::success('Berhasil', 'Berhasil mengupdate Room');
 
@@ -151,7 +154,7 @@ class RoomController extends Controller
         $conn = ConnectionDB::setConnection(new Room());
 
         $conn->find($id)->delete();
-        Alert::success('Berhasil','Berhasil Menghapus Room');
+        Alert::success('Berhasil', 'Berhasil Menghapus Room');
 
         return redirect()->route('rooms.index');
     }
