@@ -133,17 +133,18 @@ class InspectionController extends Controller
         $connEquipment = ConnectionDB::setConnection(new EquiqmentAhu());
 
         $equipment = $connEquipment->where('deleted_at', null)
-        ->with(['Room', 'Schedule' => function ($q) use ($id) {
-            $q->where('id_equiqment_engineering_detail', $id);
-        }])->first();
-
+            ->with(['Room', 'Schedule' => function ($q) use ($id) {
+                $q->where('id_equiqment_engineering_detail', $id);
+            }])->first();
 
         $checklist = [];
+
         foreach ($equipment->InspectionEng as $key => $data) {
             $checklist[$key]['checklist'] = $data->ChecklistEng->nama_eng_ahu;
         }
 
         return ResponseFormatter::success([
+            'id' => (int) $id,
             'equipment' => $equipment,
             'question' => $checklist
         ], 'Berhasil mengambil Equipment dan Data Checklist Parameter');
@@ -277,9 +278,10 @@ class InspectionController extends Controller
     {
         $connEquipment = ConnectionDB::setConnection(new EquiqmentToilet());
 
-        $equipment = $connEquipment->where('id_equipment_housekeeping', $id)
-            ->with(['Inspection.ChecklistHK', 'Room'])
-            ->first();
+        $equipment = $connEquipment->where('deleted_at', null)
+            ->with(['Room', 'Schedule' => function ($q) use ($id) {
+                $q->where('id_equipment_housekeeping_detail', $id);
+            }])->first();
 
         $checklist = [];
         foreach ($equipment->Inspection as $key => $data) {
@@ -287,6 +289,7 @@ class InspectionController extends Controller
         }
 
         return ResponseFormatter::success([
+            'id' => (int) $id,
             'equipment' => $equipment,
             'question' => $checklist
         ], 'Berhasil mengambil Equipment dan Data Checklist Parameter');
