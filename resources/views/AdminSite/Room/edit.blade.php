@@ -7,7 +7,8 @@
                 <div class="col-auto">
                     <nav aria-label="breadcrumb">
                         <ol class="my-3 breadcrumb">
-                            <li class="breadcrumb-item text-white"> <a href="{{ route('rooms.index')}}" class="text-white"> List Room </a></li>
+                            <li class="breadcrumb-item text-white"> <a href="{{ route('rooms.index') }}" class="text-white">
+                                    List Room </a></li>
                             <li class="breadcrumb-item active" aria-current="page">Edit Room</li>
                         </ol>
                     </nav>
@@ -28,7 +29,9 @@
                         <select class="form-control" name="id_tower" required>
                             <option selected disabled>-- Pilih Tower --</option>
                             @foreach ($towers as $tower)
-                            <option value="{{ $tower->id_tower }}" {{ $tower->id_tower == $room->id_tower ? 'selected' : '' }}>{{ $tower->nama_tower }}</option>
+                                <option value="{{ $tower->id_tower }}"
+                                    {{ $tower->id_tower == $room->id_tower ? 'selected' : '' }}>{{ $tower->nama_tower }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
@@ -37,22 +40,21 @@
                         <select class="form-control" name="id_lantai" required>
                             <option selected disabled>-- Pilih Lantai --</option>
                             @foreach ($floors as $floor)
-                            <option value="{{ $floor->id_lantai }}" {{ $floor->id_floor == $room->id_floor ? 'selected' : '' }}>{{ $floor->nama_lantai }}</option>
+                                <option value="{{ $floor->id_lantai }}"
+                                    {{ $floor->id_floor == $room->id_floor ? 'selected' : '' }}>{{ $floor->nama_lantai }}
+                                </option>
                             @endforeach
                         </select>
                     </div>
                     <div class="col-6 mb-3">
-                        <label class="form-label">Barcode Room</label>
-                        <input type="text" name="barcode_room" value="{{ $room->barcode_room }}" class="form-control" required>
-                    </div>
-                         <div class="col-6 mb-3">
                         <label class="form-label">Nama Room</label>
-                        <input type="text" name="nama_room" value="{{ $room->nama_room}}" class="form-control" required>
+                        <input type="text" name="nama_room" value="{{ $room->nama_room }}" class="form-control" required>
                     </div>
-                <div class="mt-5">
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                    <button class="btn btn-danger"><a class="text-white" href="{{ route('rooms.index') }}">Cancel</a></button>
-                </div>
+                    <div class="mt-5">
+                        <button type="submit" class="btn btn-primary">Submit</button>
+                        <button class="btn btn-danger"><a class="text-white"
+                                href="{{ route('rooms.index') }}">Cancel</a></button>
+                    </div>
             </form>
         </div>
     </div>

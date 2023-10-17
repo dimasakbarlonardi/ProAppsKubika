@@ -23,11 +23,6 @@ class RoomController extends Controller
     public function index()
     {
         $conn = ConnectionDB::setConnection(new Room());
-        // $connsite = ConnectionDB::setConnection(new Site());
-        // $id_user = $request->user()->id;
-        // $connsite = $connsite->get();
-        // $site = $login->site->id_site;
-
 
         $data['rooms'] = $conn->get();
 
