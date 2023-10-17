@@ -77,7 +77,7 @@ class ChecklistAhuHController extends Controller
             foreach ($parameter as $form) {
                 $checklistParameter->create([
                     'id_equiqment' => $id,
-                    'id_checklist' => $form,                
+                    'id_checklist' => $form,
                     'id_item' => $equiqment->id_equiqment_engineering
                 ]);
 
@@ -156,7 +156,7 @@ class ChecklistAhuHController extends Controller
             DB::beginTransaction();
 
             $id_equiqment = 1;
-            
+
             $equiqmentAHU->create([
                 'no_equiqment' => $request->no_equiqment,
                 'id_equiqment' => $id_equiqment,
@@ -164,9 +164,9 @@ class ChecklistAhuHController extends Controller
                 'id_role' => $request->id_role,
                 'id_room' => $request->id_room,
             ]);
-            
+
             DB::commit();
-            
+
             Alert::success('Berhasil', 'Berhasil menambahkan Inspection Engineering');
 
             return redirect()->route('checklistahus.index');
@@ -178,6 +178,19 @@ class ChecklistAhuHController extends Controller
 
                 return redirect()->route('checklistahus.index');
             }
+    }
+
+    public function updateSchedules(Request $request, $id)
+    {
+        $equiqmentDetail = ConnectionDB::setConnection(new EquiqmentEngineeringDetail());
+
+        $schedule = $equiqmentDetail->find($id);
+
+        $schedule->update($request->all());
+
+        Alert::success('Success', 'Success update schedule');
+
+        return redirect()->back();
     }
 
     /**

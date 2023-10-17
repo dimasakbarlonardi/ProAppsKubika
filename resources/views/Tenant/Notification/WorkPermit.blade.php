@@ -236,7 +236,8 @@
                             $permit->status_request != 'COMPLETE' &&
                             $permit->id_work_relation == Request::session()->get('work_relation_id'))
                         <div class="card-footer border-top border-200 py-x1">
-                            <a href="{{ route('printWP', $wp->id) }}" target="_blank" class="btn btn-warning w-100 mb-3">Print</a>
+                            <a href="{{ route('printWP', $wp->id) }}" target="_blank"
+                                class="btn btn-warning w-100 mb-3">Print</a>
                             <button type="button" class="btn btn-primary w-100"
                                 onclick="workDoneWP({{ $permit->id }})">Pekerjaan Selesai</button>
                         </div>
@@ -255,7 +256,7 @@
                 $permit->CashReceipt &&
                     $permit->Ticket->Tenant->User->id_user == Request::session()->get('user_id') &&
                     $permit->CashReceipt->transaction_status == 'PENDING')
-                <form class="mt-5" action="{{ route('generatePaymentPO', $permit->CashReceipt->id) }}" method="post">
+                <form class="mt-5" action="{{ route('generatePaymentPO', $permit->CashReceipt->id) }}" method="post" id="generatePaymentPO">
                     @csrf
                     <div class="row g-3 mb-3">
                         <div class="col-lg-8">
@@ -305,7 +306,7 @@
                                                         class="form-label ls text-uppercase text-600 fw-semi-bold mb-0 fs--1"
                                                         for="cardNumber">Card Number
                                                     </label>
-                                                    <input class="form-control" name="card_number"
+                                                    <input class="form-control" name="card_number" id="card_number"
                                                         placeholder="XXXX XXXX XXXX XXXX" type="text" maxlength="16"
                                                         pattern="[0-9]{16}" />
                                                 </div>
@@ -365,7 +366,7 @@
                                     <p class="fs--1 text-600">Once you start your trial, you will have 30 days to use
                                         Falcon
                                         Premium for free. After 30 days you’ll be charged based on your selected plan.</p>
-                                    <button class="btn btn-primary d-block w-100" type="submit">
+                                    <button class="btn btn-primary d-block w-100" type="button" onclick="onPayment()">
                                         <span class="fa fa-lock me-2"></span>Continue Payment
                                     </button>
                                     <div class="text-center mt-2">
@@ -407,6 +408,37 @@
             readonly: true,
             height: "180"
         });
+
+        function onPayment() {
+            var billing = $('input[name="billing"]:checked').val();
+            var card_number = $('#card_number').val();
+            var expDate = $('#expDate').val();
+            var cvv = $('#cvv').val();
+
+            if (!billing) {
+                if (billing == 'credit_card') {
+                    Swal.fire(
+                        'Oppps!',
+                        'Please select payment method',
+                        'info'
+                    )
+                }
+            } else {
+                if (billing == 'credit_card') {
+                    if (!card_number || !expDate || !cvv) {
+                        Swal.fire(
+                            'Oppps!',
+                            'Please fill all field',
+                            'info'
+                        )
+                    } else {
+                        $("#generatePaymentPO").submit();
+                    }
+                } else {
+                    $("#generatePaymentPO").submit();
+                }
+            }
+        }
 
         function onApprove(id) {
             Swal.fire({

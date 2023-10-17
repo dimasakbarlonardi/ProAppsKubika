@@ -539,6 +539,7 @@ Route::prefix('admin')->group(function () {
         Route::post('/inspection-enginerring', [ChecklistAhuHController::class, 'inspectionStore'])->name('inspectionStore');
         Route::get('/inspections/schedules/{id}', [ChecklistAhuHController::class, 'inspectionSchedules'])->name('inspectionSchedules');
         Route::post('/inspections/create-schedules/{id}', [ChecklistAhuHController::class, 'postSchedules'])->name('postSchedules');
+        Route::post('/inspections/update-schedules/{id}', [ChecklistAhuHController::class, 'updateSchedules'])->name('updateSchedulesENG');
         Route::post('/inspections/destroy-schedules/{id}', [ChecklistAhuHController::class, 'destroySchedules'])->name('destroySchedules');
 
         //CRUD Checklist AHU Detail
@@ -566,7 +567,9 @@ Route::prefix('admin')->group(function () {
         Route::get('/inspection-parameter-toilet/{id}', [ChecklistToiletHController::class, 'checklisttoilet'])->name('checklisttoilet');
         Route::post('/checklist-parameter-toilet/{id}', [ChecklistToiletHController::class, 'checklistParameterHK'])->name('checklistParameterHK');
         Route::get('/inspections-hk/schedules/{id}', [ChecklistToiletHController::class, 'inspectionSchedulesHK'])->name('inspectionSchedulesHK');
+        Route::post('/inspections-hk/update-schedules/{id}', [ChecklistToiletHController::class, 'updateSchedulesHK'])->name('updateSchedulesHK');
         Route::post('/inspections-hk/schedules/{id}', [ChecklistToiletHController::class, 'postSchedulesHK'])->name('postSchedulesHK');
+        Route::post('/inspections-hk/delete-schedules/{id}', [ChecklistToiletHController::class, 'deleteSchedulesHK'])->name('deleteSchedulesHK');
 
         //CRUD Checklist Toilet Detail
         Route::resource('toiletdetails', ChecklistToiletDetailController::class);
