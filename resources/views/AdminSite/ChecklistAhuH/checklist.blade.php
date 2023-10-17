@@ -20,7 +20,7 @@
                                     <option value="{{ $item->id_eng_ahu }}">
                                         {{ $item->nama_eng_ahu }}
                                     </option>
-                                    {{-- @if ($item->subMenus)
+                                    @if ($item->subMenus)
                                         @foreach ($item->subMenus as $subMenu)
                                             <option value="sub_menus|{{ $subMenu->kode_form }}|{{ $subMenu->id }}">
                                                 {{ $item->caption }} > {{ $subMenu->caption }}
@@ -33,7 +33,7 @@
                                                 @endforeach
                                             @endif
                                         @endforeach
-                                    @endif --}}
+                                    @endif 
                                 @endforeach
                             </select>
                         </div>
@@ -50,7 +50,7 @@
                         </div>
                         <div class="col-5">
                             <select name="to[]" id="search_to" class="form-control" size="8" multiple="multiple">
-                                {{-- @foreach ($selected_menus as $item)
+                                @foreach ($selected_menus as $item)
                                 <option value="menus|{{ $item->id_eng_ahu }}">
                                     {{ $item->nama_eng_ahu }}
                                 </option>
@@ -68,7 +68,7 @@
                                             @endif
                                         @endforeach
                                     @endif
-                                @endforeach --}}
+                                @endforeach 
                             </select>
                         </div>
                     </div>

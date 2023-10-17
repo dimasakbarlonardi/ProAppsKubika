@@ -102,6 +102,7 @@ use App\Http\Controllers\Admin\ForgotAttendanceController;
 use App\Http\Controllers\Admin\ImportController;
 use App\Http\Controllers\Admin\IncidentalEngController;
 use App\Http\Controllers\Admin\IncidentalHKController;
+use App\Http\Controllers\Admin\IncidentalReportController;
 use App\Http\Controllers\Admin\InspectionSecurityController;
 use App\Http\Controllers\Admin\LeaveTypeHRController;
 use App\Http\Controllers\Admin\InvoiceController;
@@ -643,8 +644,9 @@ Route::prefix('admin')->group(function () {
         Route::post('/tools/borrowHK/{id}', [ToolsHKController::class, 'borrowToolHK'])->name('borrowHK.tool');
         Route::post('/tools/returnHK/{id}', [ToolsHKController::class, 'returnToolHK'])->name('returnHK.tool');
 
-         // ---------------Inspection Tools Engineering-----------------
+         // ---------------Inspection Tools Security-----------------
          Route::resource('tools-security', ToolsSecurityController::class);
+         Route::get('/history-tools-security', [ToolsSecurityController::class, 'History'])->name('history');
          Route::post('tools/borrowSecurity/{id}', [ToolsSecurityController::class, 'borrowToolSecurity'])->name('borrowSecurity.tool');
          Route::post('tools/returnSecurity/{id}', [ToolsSecurityController::class, 'returnToolSecurity'])->name('returnSecurity.tool');
 
@@ -658,6 +660,9 @@ Route::prefix('admin')->group(function () {
 
         // ---------------Incidental Report HK-----------------
         Route::resource('incidentalreporthk',  IncidentalHKController::class);
+
+        // ---------------Incidental Reports----------------
+        Route::resource('incidentalreport',  IncidentalReportController::class);
 
         // -------------------Attendance-----------------------
         // -Schedule Meeting

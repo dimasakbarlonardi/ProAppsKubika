@@ -83,7 +83,7 @@ class ChecklistAhuHController extends Controller
 
                 $checklistParameter->save();
                 DB::commit();
-                Alert::success('Berhasil', 'Berhasil Menambahkan Inspection AHU');
+                Alert::success('Berhasil', 'Berhasil Menambahkan Inspection Engineering');
             }
         }
 

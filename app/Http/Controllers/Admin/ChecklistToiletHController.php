@@ -68,7 +68,7 @@ class ChecklistToiletHController extends Controller
             ]);
             DB::commit();
 
-            Alert::success('Berhasil', 'Berhasil Menambahkan Inspection Toilet');
+            Alert::success('Berhasil', 'Berhasil Menambahkan Inspection HouseKeeping');
         }
 
         }

@@ -13,12 +13,12 @@
                 <h6 class="mb-0 text-white">List Incidental Report</h6>
             </div>
             <div class="col-auto d-flex">
-                <a class="btn btn-falcon-default text-600 btn-sm" href="{{ route('incidentalreporthk.create') }}"><span class="fas fa-plus fs--2 me-1"></span>Create Incident Report</a>
+                <a class="btn btn-falcon-default text-600 btn-sm" href="{{ route('incidentalreport.create') }}"><span class="fas fa-plus fs--2 me-1"></span>Create Incident Report</a>
             </div>
         </div>
     </div>
     <div class="p-5 justify-content-center">
-        <table class="table" id="table-incidentalhk">
+        <table class="table" id="table-incidental">
             <thead>
                 <tr>
                     <th class="sort" data-sort="">No</th>
@@ -32,15 +32,15 @@
                 </tr>
             </thead>
             <tbody id="checklist_body">
-                @foreach ($incidentalhk as $key => $incident)
+                @foreach ($incidental as $key => $incident)
                     <tr>
                         <th scope="row">{{ $key + 1 }}</th>
                         <td>{{ $incident->reported_name }}</td>
                         <td>{{ $incident->incident_name }}</td>
-                        <td>{{ $incident->room->nama_room }}</td>
-                        <td>{{ $incident->date }}</td>
-                        <td>{{ $incident->time }}</td>
-                        <td>{{ $incident->keterangan }}</td>
+                        <td>{{ $incident->location }}</td>
+                        <td>{{\Carbon\Carbon::parse($incident->incident_date)->format('d-M-Y')}}</td>
+                        <td>{{ $incident->incident_time }}</td>
+                        <td>{{ $incident->desc }}</td>
                         <td>
                             <a href="{{ $incident->image ? asset($incident->image) : asset('/assets/img/team/3-thumb.png') }}" data-bs-toggle="modal" data-bs-target="#error-modal" data-image="{{ $incident->image ? asset($incident->image) : asset('/assets/img/team/3-thumb.png') }}">
                                 <img src="{{ $incident->image ? asset($incident->image) : asset('/assets/img/team/3-thumb.png') }}" alt="{{ $incident->image }}" style="max-width: 50px; height: 50px">
@@ -68,7 +68,7 @@
 @section('script')
     <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
     <script>
-        new DataTable('#table-incidentalhk');
+        new DataTable('#table-incidental');
     </script>
     <script>
         const modal = new bootstrap.Modal(document.getElementById('error-modal'));

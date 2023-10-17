@@ -51,6 +51,11 @@ class OpenTicket extends Model
         return $this->hasOne(User::class, 'id_user', 'id_user_resp_request');
     }
 
+    public function User()
+    {
+        return $this->hasOne(User::class, 'id_user', 'id_user_resp_request');
+    }
+
     public function Unit()
     {
         return $this->hasOne(Unit::class, 'id_unit', 'id_unit');

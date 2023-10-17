@@ -14,7 +14,7 @@
                 </div>
                 <div class="col-auto d-flex">
                     <a class="btn btn-falcon-default btn-sm text-600" href="{{ route('checklistahus.create') }}"><span
-                            class="fas fa-plus fs--2 me-1"></span>Create Equiqment Engineering </a>
+                            class="fas fa-plus fs--2 me-1"></span>Create Equipment Engineering </a>
                 </div>
             </div>
         </div>
