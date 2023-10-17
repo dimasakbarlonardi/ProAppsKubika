@@ -76,7 +76,7 @@
                                         <div class="p-4">
                                             <div id="modalListErrors">
                                                 <form
-                                                    action="{{ route('', $item->id_equipment_housekeeping_detail) }}"
+                                                    action="{{ route('updateSchedulesENG', $item->id_equiqment_engineering_detail) }}"
                                                     method="post">
                                                     @csrf
                                                     <input name="schedule"
