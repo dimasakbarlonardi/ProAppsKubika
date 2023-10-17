@@ -464,18 +464,17 @@ class PerubahanUnitController extends Controller
     public function validationPerubahan(Request $request)
     {
         $connTicket = ConnectionDB::setConnection(new OpenTicket());
-        $connUser = ConnectionDB::setConnection(new User());
+        $connTenant = ConnectionDB::setConnection(new Tenant());
 
-        $user = $connUser->find($request->id_user);
-       
-        $tenantID = $user->Tenant->id_tenant;
-       
+        $tenant = $connTenant->find($request->id_tenant);
+        $tenantID = $tenant->id_tenant;
+
         $tickets = $connTicket->where('id_tenant', $tenantID)
             ->where('id_unit', $request->id_unit)
             ->where('status_request', '!=', 'COMPLETE')
             ->get();
         $errors = [];
-        
+
         foreach ($tickets as $ticket) {
 
             $tiket['error_header'] = $ticket->no_tiket;
