@@ -242,7 +242,6 @@ class WorkOrderController extends Controller
                 'notif_message' => 'Harap melakukan pembayaran untuk menselesaikan transaksi',
                 'receiver' => $wo->Ticket->Tenant->User->id_user,
             ];
-
         }
 
         $wo->status_wo = 'APPROVED';
@@ -253,6 +252,38 @@ class WorkOrderController extends Controller
         broadcast(new HelloEvent($dataNotif));
 
         Alert::success('Berhasil', 'Berhasil menerima WO');
+
+        return redirect()->back();
+    }
+
+    public function rejectWO(Request $request, $id)
+    {
+        $connWO = ConnectionDB::setConnection(new WorkOrder());
+
+        $wo = $connWO->find($id);
+
+        $dataNotif = [
+            'models' => 'WorkOrderM',
+            'notif_title' => $wo->no_work_order,
+            'id_data' => $wo->id,
+            'sender' => $request->session()->get('user')->id_user,
+            'division_receiver' => 1,
+            'notif_message' => 'Maaf work request kali ini saya tolak..',
+            'receiver' => null,
+        ];
+
+        $wo->status_wo = 'REJECTED';
+        $wo->save();
+
+        $wo->WorkRequest->status_request = 'REJECTED';
+        $wo->WorkRequest->save();
+
+        $wo->Ticket->status_request = 'REJECTED';
+        $wo->Ticket->save();
+
+        broadcast(new HelloEvent($dataNotif));
+
+        Alert::success('Success', 'Success reject Work Order');
 
         return redirect()->back();
     }
@@ -302,7 +333,7 @@ class WorkOrderController extends Controller
             'notif_title' => $wo->no_work_order,
             'id_data' => $wo->id,
             'sender' => $request->session()->get('user')->id_user,
-            'division_receiver' => 8,
+            'division_receiver' => $wo->Ticket->WorkRequest->id_work_relation,
             'notif_message' => 'Work Order sudah diapprove, selamat bekerja',
             'receiver' => null,
         ];

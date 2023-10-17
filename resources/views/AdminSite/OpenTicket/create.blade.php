@@ -16,7 +16,7 @@
         </div>
         <div class="p-5">
             <form method="post" action="{{ route('open-tickets.store') }}" enctype="multipart/form-data"
-                id="my-awesome-dropzone">
+                id="create-open-request">
                 @csrf
                 <div class="row">
                 <div class="mb-3">
@@ -29,13 +29,13 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Judul Request</label>
-                    <input type="text" maxlength="50" value="{{ old('judul_request') }}" name="judul_request"
+                    <input id="judul_request" type="text" maxlength="50" value="{{ old('judul_request') }}" name="judul_request"
                         class="form-control" required>
                 </div>
                 <!-- <div class="mb-3"> -->
                         <div class="col-6">
                             <label class="form-label">No HP</label>
-                            <input type="text" value="{{ old('no_hp') }}" maxlength="13" name="no_hp"
+                            <input type="text" value="{{ old('no_hp') }}" maxlength="13" id="no_hp" name="no_hp"
                                 class="form-control" required>
                         </div>
                         @if ($user->user_category == 2)
@@ -79,7 +79,7 @@
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Deskripsi Request</label>
-                    <textarea class="form-control" name="deskripsi_request" id="myeditorinstance" cols="30" rows="10"></textarea>
+                    <textarea class="form-control" name="deskripsi_request" id="deskripsi_request" cols="30" rows="10"></textarea>
                 </div>
                 <div class="mb-3">
                     <label class="form-label">Upload Foto</label>
@@ -87,7 +87,7 @@
                 </div>
 
                 <div class="mt-5">
-                    <button type="button" onclick="onSubmit()" class="btn btn-primary">Submit</button>
+                    <button type="submit" class="btn btn-primary">Submit</button>
                 </div>
             </form>
         </div>
@@ -98,13 +98,27 @@
     <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
     <script>
         tinymce.init({
-            selector: 'textarea#myeditorinstance', // Replace this CSS selector to match the placeholder element for TinyMCE
+            selector: 'textarea#deskripsi_request', // Replace this CSS selector to match the placeholder element for TinyMCE
             plugins: 'code table lists',
             toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist | code | table'
         });
 
         function onSubmit() {
-            console.log('asd');
+            tinyMCE.triggerSave();
+
+            var judul_request = $('#judul_request').val();
+            var no_hp = $('#no_hp').val();
+            var deskripsi_request = $('#deskripsi_request').val();
+
+            if (!judul_request || !no_hp || !deskripsi_request) {
+                Swal.fire(
+                    'Failed!',
+                    'Please fill all field',
+                    'error'
+                )
+            } else {
+                $("#create-open-request").submit();
+            }
         }
 
         $('#id_tenant').on('change', function() {

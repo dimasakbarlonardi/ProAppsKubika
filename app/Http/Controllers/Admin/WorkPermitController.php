@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\HelloEvent;
 use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
 use App\Models\Approve;
@@ -22,6 +23,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Str;
+use PDF;
 use stdClass;
 use Throwable;
 
@@ -120,27 +122,19 @@ class WorkPermitController extends Controller
 
             DB::commit();
 
-            $connNotif = ConnectionDB::setConnection(new Notifikasi());
-            $checkNotif = $connNotif->where('models', 'WorkPermit')
-                ->where('is_read', 0)
-                ->where('id_data', $connWP->id)
-                ->first();
+            $dataNotif = [
+                'models' => 'WorkPermit',
+                'notif_title' => $no_po,
+                'id_data' => $connWP->id,
+                'sender' => $user->id_user,
+                'division_receiver' => null,
+                'notif_message' => 'Work Permit berhasil dibuat, berikut rancangannya',
+                'receiver' => $rp->Ticket->Tenant->User->id_user
+            ];
 
-            if (!$checkNotif) {
-                $connNotif->create([
-                    'receiver' => $rp->Ticket->Tenant->User->id_user,
-                    'sender' => $user->id_user,
-                    'is_read' => 0,
-                    'models' => 'WorkPermit',
-                    'id_data' => $connWP->id,
-                    'notif_title' => $no_po,
-                    'notif_message' => 'Work Permit berhasil dibuat, berikut rancangannya'
-                ]);
-            }
+            broadcast(new HelloEvent($dataNotif));
 
-            Alert::success('Berhasil', 'Berhasil membuat Work Permit');
-
-            return redirect()->route('work-permits.index');
+            return response()->json(['status' => 'ok']);
         } catch (Throwable $e) {
             DB::rollback();
             dd($e);
@@ -149,23 +143,65 @@ class WorkPermitController extends Controller
         }
     }
 
-    public function approveWP1($id)
+    public function rejectWP(Request $request, $id)
     {
         $connWP = ConnectionDB::setConnection(new WorkPermit());
 
         $wp = $connWP->find($id);
+
+        $wp->Ticket->status_request = 'REJECTED';
+        $wp->Ticket->save();
+
+        $wp->RequestPermit->status_request = 'REJECTED';
+        $wp->RequestPermit->save();
+
+        $wp->status_request = 'REJECTED';
+        $wp->save();
+
+        $dataNotif = [
+            'models' => 'WorkPermit',
+            'notif_title' => $wp->no_work_permit,
+            'id_data' => $wp->id,
+            'sender' => $request->session()->get('user_id'),
+            'division_receiver' => 1,
+            'notif_message' => 'Maaf work permit saya tolak, terima kasih..',
+            'receiver' => null,
+        ];
+
+        broadcast(new HelloEvent($dataNotif));
+
+        return response()->json(['status' => 'ok']);
+    }
+
+    public function approveWP1(Request $request, $id)
+    {
+        $connWP = ConnectionDB::setConnection(new WorkPermit());
+
+        $wp = $connWP->find($id);
+
         $wp->status_request = 'APPROVED';
         $wp->sign_approval_1 = Carbon::now();
         $wp->save();
 
-        Alert::success('Berjasil', 'Berhasil menerima Work Permit');
+        $dataNotif = [
+            'models' => 'WorkPermit',
+            'notif_title' => $wp->no_work_permit,
+            'id_data' => $wp->id,
+            'sender' => $request->session()->get('user_id'),
+            'division_receiver' => $wp->id_work_relation,
+            'notif_message' => 'Work Permit diterima, mohon diproses lebih lanjut. Terima kasih..',
+            'receiver' => null,
+        ];
 
-        return redirect()->back();
+        broadcast(new HelloEvent($dataNotif));
+
+        return response()->json(['status' => 'ok']);
     }
 
     public function approveWP2(Request $request, $id)
     {
         $connSystem = ConnectionDB::setConnection(new System());
+        $connApprove = ConnectionDB::setConnection(new Approve());
         $system = $connSystem->find(1);
         $connWP = ConnectionDB::setConnection(new WorkPermit());
         $connTransaction = ConnectionDB::setConnection(new CashReceipt());
@@ -173,6 +209,7 @@ class WorkPermitController extends Controller
 
         $wp = $connWP->find($id);
         $wp->sign_approval_2 = Carbon::now();
+        $approve = $connApprove->find(5);
 
         $countCR = $system->sequence_no_cash_receiptment + 1;
         $no_cr = $system->kode_unik_perusahaan . '/' .
@@ -213,65 +250,50 @@ class WorkPermitController extends Controller
         $system->sequence_no_invoice = $count;
         $system->sequence_no_cash_receiptment = $countCR;
         $system->save();
-
-        $connNotif = ConnectionDB::setConnection(new Notifikasi());
-        $checkNotif = $connNotif->where('models', 'WorkPermit')
-            ->where('is_read', 0)
-            ->where('id_data', $id)
-            ->first();
-
-        if (!$checkNotif) {
-            $connNotif->create([
-                'receiver' => $wp->Ticket->Tenant->User->id_user,
-                'sender' => $user->id_user,
-                'is_read' => 0,
-                'models' => 'WorkPermit',
-                'id_data' => $wp->id,
-                'notif_title' => $wp->no_work_permit,
-                'notif_message' => 'Work Permit diterima, mohon lakukan pembayaran untuk memulai pekerjaan'
-            ]);
-        }
-
         $wp->save();
+
+        $dataNotif = [
+            'models' => 'WorkPermit',
+            'notif_title' => $wp->no_work_permit,
+            'id_data' => $wp->id,
+            'sender' => $approve->approval_3,
+            'division_receiver' => null,
+            'notif_message' => 'Work Permit diterima, mohon lakukan pembayaran untuk memulai pekerjaan',
+            'receiver' => $wp->Ticket->Tenant->User->id_user,
+        ];
+
+        broadcast(new HelloEvent($dataNotif));
 
         return response()->json(['status' => 'ok']);
     }
 
-    public function approveWP3(Request $request, $id)
+    public function approveWP3($id)
     {
         $connWP = ConnectionDB::setConnection(new WorkPermit());
-        $connNotif = ConnectionDB::setConnection(new Notifikasi());
         $connApprove = ConnectionDB::setConnection(new Approve());
-
 
         $wp = $connWP->find($id);
         $wp->sign_approval_3 = Carbon::now();
         $wp->save();
 
         $approve = $connApprove->find(5);
-        $user = $request->session()->get('user');
 
-        $checkNotif = $connNotif->where('models', 'WorkPermit')
-            ->where('is_read', 0)
-            ->where('id_data', $id)
-            ->first();
+        $dataNotif = [
+            'models' => 'WorkPermit',
+            'notif_title' => $wp->no_work_permit,
+            'id_data' => $id,
+            'sender' => $approve->approval_3,
+            'division_receiver' => null,
+            'notif_message' => 'Work Permit diterima, pembayaran sudah terverifikasi',
+            'receiver' => $approve->approval_4,
+        ];
 
-        if (!$checkNotif) {
-            $connNotif->create([
-                'receiver' => $approve->approval_4,
-                'sender' => $user->id_user,
-                'is_read' => 0,
-                'models' => 'WorkPermit',
-                'id_data' => $id,
-                'notif_title' => $wp->no_work_permit,
-                'notif_message' => 'Work Permit diterima, pembayaran sudah terverifikasi'
-            ]);
-        }
+        broadcast(new HelloEvent($dataNotif));
 
         return response()->json(['status' => 'ok']);
     }
 
-    public function approveWP4($id)
+    public function approveWP4(Request $request, $id)
     {
         $connWP = ConnectionDB::setConnection(new WorkPermit());
 
@@ -279,10 +301,22 @@ class WorkPermitController extends Controller
         $wp->sign_approval_4 = Carbon::now();
         $wp->save();
 
+        $dataNotif = [
+            'models' => 'WorkPermit',
+            'notif_title' => $wp->no_work_permit,
+            'id_data' => $id,
+            'sender' => $request->session()->get('user_id'),
+            'division_receiver' => $wp->id_work_relation,
+            'notif_message' => 'Work Permit diterima, selamat bekerja',
+            'receiver' => null,
+        ];
+
+        broadcast(new HelloEvent($dataNotif));
+
         return response()->json(['status' => 'ok']);
     }
 
-    public function workDoneWP($id)
+    public function workDoneWP(Request $request, $id)
     {
         $connWP = ConnectionDB::setConnection(new WorkPermit());
 
@@ -293,6 +327,45 @@ class WorkPermitController extends Controller
         $wp->RequestPermit->save();
         $wp->Ticket->status_request = 'WORK DONE';
         $wp->Ticket->save();
+
+        $dataNotif = [
+            'models' => 'WorkPermit',
+            'notif_title' => $wp->no_work_permit,
+            'id_data' => $id,
+            'sender' => $request->session()->get('user_id'),
+            'division_receiver' => null,
+            'notif_message' => 'Work Permit selesai dikerjakan, mohon periksa kembali. Terima kasih..',
+            'receiver' => $wp->Ticket->Tenant->User->id_user,
+        ];
+
+        broadcast(new HelloEvent($dataNotif));
+
+        return response()->json(['status' => 'ok']);
+    }
+
+    public function doneWP(Request $request, $id)
+    {
+        $connWP = ConnectionDB::setConnection(new WorkPermit());
+
+        $wp = $connWP->find($id);
+        $wp->status_request = 'COMPLETE';
+        $wp->save();
+        $wp->RequestPermit->status_request = 'COMPLETE';
+        $wp->RequestPermit->save();
+        $wp->Ticket->status_request = 'COMPLETE';
+        $wp->Ticket->save();
+
+        $dataNotif = [
+            'models' => 'WorkPermit',
+            'notif_title' => $wp->no_work_permit,
+            'id_data' => $id,
+            'sender' => $request->session()->get('user_id'),
+            'division_receiver' => 1,
+            'notif_message' => 'Work Permit telah selesai, terima kasih.',
+            'receiver' => null,
+        ];
+
+        broadcast(new HelloEvent($dataNotif));
 
         return response()->json(['status' => 'ok']);
     }
@@ -351,5 +424,17 @@ class WorkPermitController extends Controller
         $data['transaction'] = $connTransaction->find($id);
 
         return view('Tenant.Notification.Invoice.payment-monthly', $data);
+    }
+
+    public function printWP()
+    {
+        $data = [
+            'imagePath'    => public_path('img/profile.png'),
+            'name'         => 'John Doe',
+            'address'      => 'USA',
+            'mobileNumber' => '000000000',
+            'email'        => 'john.doe@email.com'
+        ];
+        return view('AdminSite.WorkPermit.printout');
     }
 }

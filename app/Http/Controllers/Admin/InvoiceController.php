@@ -18,11 +18,20 @@ class InvoiceController extends Controller
         return view('AdminSite.Invoice.index', $data);
     }
 
-    public function show($id)
+    public function show(Request $request, $id)
     {
         $connCR = ConnectionDB::setConnection(new CashReceipt());
 
-        $data['transaction'] = $connCR->find($id);
+        $user = $request->session()->get('user');
+        $transaction = $connCR->find($id);
+
+        if ($request->session()->get('work_relation_id') != 1) {
+            if ($user->id_user != $transaction->id_user) {
+                return redirect()->back();
+            }
+        }
+
+        $data['transaction'] = $transaction;
 
         return view('AdminSite.Invoice.show', $data);
     }

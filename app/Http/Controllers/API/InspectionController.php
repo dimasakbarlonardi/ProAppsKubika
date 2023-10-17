@@ -92,7 +92,7 @@ class InspectionController extends Controller
 
                 $schedule->image = $inspecImage;
             }
-            $schedule->status = json_encode($request->status);
+            $schedule->status = $request->status;
             $schedule->id_room = $request->id_room;
             $schedule->checklist_datetime = Carbon::now();
             $schedule->user_id = $request->user_id;
@@ -241,7 +241,7 @@ class InspectionController extends Controller
                 $schedule->image = $inspecImage;
             }
             $schedule->id_room = $request->id_room;
-            $schedule->status = json_encode($request->status);
+            $schedule->status = $request->status;
             $schedule->checklist_datetime = Carbon::now();
 
             // Periksa dan perbarui status jadwal jika diperlukan

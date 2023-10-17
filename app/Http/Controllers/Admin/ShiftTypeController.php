@@ -161,7 +161,7 @@ class ShiftTypeController extends Controller
 
         $connWorkTimeline->save();
 
-        Alert::success('Success', 'Successfully Deleted Shift Type');
+        Alert::success('Success', 'Successfully create schedule');
 
         return redirect()->back();
     }

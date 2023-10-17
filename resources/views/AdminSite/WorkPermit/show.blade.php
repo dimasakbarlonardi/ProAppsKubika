@@ -127,78 +127,84 @@
         </div>
 
         <div class="col-3">
-            <div class="row g-3 position-sticky top-0">
-                <div class="col-md-6 col-xl-12 rounded-3">
-                    <div class="card">
-                        <div class="card-header">
-                            <h6 class="mb-0">Properties</h6>
-                        </div>
-                        <div class="card-body">
-                            @csrf
-                            <div class="mb-4 mt-n2"><label class="mb-1">Request</label>
-                                <input class="form-control" type="text" value="{{ $wp->Ticket->no_tiket }}" disabled>
-                            </div>
-                            <div class="mb-4 mt-n2"><label class="mb-1">No Request Permit</label>
-                                <input class="form-control" type="text"
-                                    value="{{ $wp->RequestPermit->no_request_permit }}" disabled>
-                            </div>
-                            <div class="mb-4 mt-n2"><label class="mb-1">Nama Project</label>
-                                <input type="text" value="{{ $wp->nama_project }}" class="form-control"
-                                    name="nama_project" required disabled>
-                            </div>
-                            <div class="mb-4 mt-n2"><label class="mb-1">Work Relation</label>
-                                <select name="id_work_relation" class="form-select form-select-sm" required disabled>
-                                    <option disabled selected>--Pilih Work Relation ---</option>
-                                    @foreach ($work_relations as $work_relation)
-                                        <option
-                                            {{ $wp->id_work_relation == $work_relation->id_work_relation ? 'selected' : '' }}
-                                            value="{{ $work_relation->id_work_relation }}">
-                                            {{ $work_relation->work_relation }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            <div class="mb-4 mt-n2"><label class="mb-1">Permit Berbayar</label>
-                                <select name="id_bayarnon" class="form-select form-select-sm" required disabled>
-                                    <option {{ $wp->id_bayarnon == 1 ? 'selected' : '' }} value="1">Yes</option>
-                                    <option {{ $wp->id_bayarnon == 0 ? 'selected' : '' }} value="0">No</option>
-                                </select>
-                            </div>
-                            <div class="mb-4 mt-n2"><label class="mb-1">Jumlah Deposit</label>
-                                <input type="text" value="{{ $wp->jumlah_deposit }}" class="form-control"
-                                    name="jumlah_deposit" required disabled>
-                            </div>
-                        </div>
+            <div class="card">
+                <div class="card-header">
+                    <h6 class="mb-0">Properties</h6>
+                </div>
+                <div class="card-body">
+                    @csrf
+                    <div class="mb-4 mt-n2"><label class="mb-1">Request</label>
+                        <input class="form-control" type="text" value="{{ $wp->Ticket->no_tiket }}" disabled>
                     </div>
-                    @if (
-                        $wp->id_work_relation == $user->RoleH->WorkRelation->id_work_relation &&
-                            $user->Karyawan->is_can_approve &&
-                            $wp->sign_approval_1 &&
-                            !$wp->sign_approval_2)
-                        <div class="card-footer border-top border-200 py-x1">
-                            <button type="button" class="btn btn-primary w-100"
-                                onclick="approve2({{ $wp->id }})">Submit</button>
-                        </div>
-                    @endif
-                    @if ($approve->approval_3 == $user->id_user && $wp->status_bayar == 'PAYED' && !$wp->sign_approval_3)
-                        <div class="card-footer border-top border-200 py-x1">
-                            <button type="button" class="btn btn-primary w-100"
-                                onclick="approve3({{ $wp->id }})">Approve</button>
-                        </div>
-                    @endif
-                    @if ($wp->sign_approval_4 && $wp->status_request != 'WORK DONE' && $wp->status_request != 'DONE')
-                        <div class="card-footer border-top border-200 py-x1">
-                            <button type="button" class="btn btn-primary w-100"
-                                onclick="workDoneWP({{ $wp->id }})">Pekerjaan Selesai</button>
-                        </div>
-                    @endif
-                    @if ($approve->approval_3 == $user->id_user && $wp->status_request == 'WORK DONE')
-                        <div class="card-footer border-top border-200 py-x1">
-                            <button type="button" class="btn btn-primary w-100"
-                                onclick="workDoneWP({{ $wp->id }})">Sudah Transfer Depo</button>
-                        </div>
-                    @endif
+                    <div class="mb-4 mt-n2"><label class="mb-1">No Request Permit</label>
+                        <input class="form-control" type="text" value="{{ $wp->RequestPermit->no_request_permit }}"
+                            disabled>
+                    </div>
+                    <div class="mb-4 mt-n2"><label class="mb-1">Nama Project</label>
+                        <input type="text" value="{{ $wp->nama_project }}" class="form-control" name="nama_project"
+                            required disabled>
+                    </div>
+                    <div class="mb-4 mt-n2"><label class="mb-1">Work Relation</label>
+                        <select name="id_work_relation" class="form-select form-select-sm" required disabled>
+                            <option disabled selected>--Pilih Work Relation ---</option>
+                            @foreach ($work_relations as $work_relation)
+                                <option {{ $wp->id_work_relation == $work_relation->id_work_relation ? 'selected' : '' }}
+                                    value="{{ $work_relation->id_work_relation }}">
+                                    {{ $work_relation->work_relation }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                    <div class="mb-4 mt-n2"><label class="mb-1">Permit Berbayar</label>
+                        <select name="id_bayarnon" class="form-select form-select-sm" required disabled>
+                            <option {{ $wp->id_bayarnon == 1 ? 'selected' : '' }} value="1">Yes</option>
+                            <option {{ $wp->id_bayarnon == 0 ? 'selected' : '' }} value="0">No</option>
+                        </select>
+                    </div>
+                    <div class="mb-4 mt-n2"><label class="mb-1">Jumlah Deposit</label>
+                        <input type="text" value="{{ $wp->jumlah_deposit }}" class="form-control"
+                            name="jumlah_deposit" required disabled>
+                    </div>
                 </div>
             </div>
+            @if (
+                $wp->id_work_relation == $user->RoleH->WorkRelation->id_work_relation &&
+                    $user->Karyawan->is_can_approve &&
+                    $wp->sign_approval_1 &&
+                    !$wp->sign_approval_2)
+                <div class="card-footer border-top border-200 py-x1">
+                    <button type="button" class="btn btn-primary w-100"
+                        onclick="approve2({{ $wp->id }})">Approve</button>
+                </div>
+            @endif
+            @if ($approve->approval_3 == $user->id_user && $wp->status_bayar == 'PAYED' && !$wp->sign_approval_3)
+                <div class="card-footer border-top border-200 py-x1">
+                    <button type="button" class="btn btn-primary w-100"
+                        onclick="approve3({{ $wp->id }})">Approve</button>
+                </div>
+            @endif
+            @if ($approve->approval_4 == $user->id_user && $wp->sign_approval_3 && !$wp->sign_approval_4)
+                <div class="card-footer border-top border-200 py-x1">
+                    <button type="button" class="btn btn-primary w-100"
+                        onclick="approve4({{ $wp->id }})">Approve</button>
+                </div>
+            @endif
+            @if (
+                $wp->sign_approval_4 &&
+                    $wp->status_request != 'WORK DONE' &&
+                    $wp->status_request != 'DONE' &&
+                    $wp->id_work_relation == Request::session()->get('work_relation_id'))
+                <div class="card-footer border-top border-200 py-x1">
+                    <a href="{{ route('printWP') }}" target="_blank" class="btn btn-warning w-100 mb-3">Print</a>
+                    <button type="button" class="btn btn-primary w-100"
+                        onclick="workDoneWP({{ $wp->id }})">Pekerjaan Selesai</button>
+                </div>
+            @endif
+            @if ($approve->approval_3 == $user->id_user && $wp->status_request == 'WORK DONE')
+                <div class="card-footer border-top border-200 py-x1">
+                    <button type="button" class="btn btn-primary w-100" onclick="">Sudah
+                        Transfer Depo</button>
+                </div>
+            @endif
         </div>
     </div>
 @endsection
@@ -249,17 +255,25 @@
         }
 
         function workDoneWP(id) {
-            $.ajax({
-                url: `/admin/work-permit/workDoneWP/${id}`,
-                type: 'POST',
-                success: function(data) {
-                    if (data.status === 'ok') {
-                        Swal.fire(
-                            'Berhasil!',
-                            'Berhasil mengupdate Work Order!',
-                            'success'
-                        ).then(() => window.location.reload())
-                    }
+            Swal.fire({
+                title: 'Are you sure?',
+                icon: 'info',
+                confirmButtonText: 'Yes!'
+            }).then((result) => {
+                if (result['isConfirmed']) {
+                    $.ajax({
+                        url: `/admin/work-permit/workDoneWP/${id}`,
+                        type: 'POST',
+                        success: function(data) {
+                            if (data.status === 'ok') {
+                                Swal.fire(
+                                    'Success!',
+                                    'Success update Work Permit!',
+                                    'success'
+                                ).then(() => window.location.reload())
+                            }
+                        }
+                    })
                 }
             })
         }
@@ -268,8 +282,6 @@
             $('#select_ticket').select2({
                 theme: 'bootstrap-5'
             });
-
-
 
             $('#select_ticket').on('change', function() {
                 var id = $(this).val()
