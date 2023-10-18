@@ -51,7 +51,6 @@ class InspectionController extends Controller
             ->get();
 
         $inspections = [];
-
         if ($getSchedules) {
             foreach ($getSchedules as $schedule) {
                 $eq = $schedule->Equipment;
@@ -130,23 +129,30 @@ class InspectionController extends Controller
 
     public function showEngineering($id)
     {
-        $connEquipment = ConnectionDB::setConnection(new EquiqmentAhu());
+        $connInspectionENG = ConnectionDB::setConnection(new EquiqmentEngineeringDetail());
 
-        $equipment = $connEquipment->where('deleted_at', null)
-        ->with(['Room', 'Schedule' => function ($q) use ($id) {
-            $q->where('id_equiqment_engineering_detail', $id);
-        }])->first();
+        $inspection = $connInspectionENG->where('id_equiqment_engineering_detail', $id)
+            ->with('Equipment.InspectionEng')
+            ->first();
 
+        $object = new stdClass();
+        $object->id_equipment_engineering = $inspection->id_equiqment_engineering_detail;
+        $object->schedule = $inspection->schedule;
+        $object->equipment = $inspection->equipment->equiqment;
+        $object->status_schedule = $inspection->status_schedule;
+        $object->id_room = $inspection->equipment->Room->id_room;
+        $object->room = $inspection->equipment->Room->nama_room;
+        $checklists = [];
 
-        $checklist = [];
-        foreach ($equipment->InspectionEng as $key => $data) {
-            $checklist[$key]['checklist'] = $data->ChecklistEng->nama_eng_ahu;
+        foreach ($inspection->Equipment->InspectionEng as $data) {
+            $checklists[]['question'] = $data->ChecklistEng->nama_eng_ahu;
         }
+        $object->checklists = $checklists;
 
-        return ResponseFormatter::success([
-            'equipment' => $equipment,
-            'question' => $checklist
-        ], 'Berhasil mengambil Equipment dan Data Checklist Parameter');
+        return ResponseFormatter::success(
+            $object,
+            'Berhasil mengambil Equipment dan Data Checklist Parameter'
+        );
     }
 
     public function showHistoryEngineering($id)
@@ -206,9 +212,8 @@ class InspectionController extends Controller
                 $object = new stdClass();
                 $object->id_equipment_housekeeping = $schedule->id_equipment_housekeeping_detail;
                 $object->schedule = $schedule->schedule;
-                $object->equipment = $eq->equiqment;
+                $object->equipment = $eq->equipment;
                 $object->status_schedule = $schedule->status_schedule;
-
                 $object->room = $eq->Room;
 
                 $inspections[] = $object;
@@ -242,6 +247,7 @@ class InspectionController extends Controller
             }
             $schedule->id_room = $request->id_room;
             $schedule->status = $request->status;
+            $schedule->user_id = $request->user_id;
             $schedule->checklist_datetime = Carbon::now();
 
             // Periksa dan perbarui status jadwal jika diperlukan
@@ -275,21 +281,30 @@ class InspectionController extends Controller
 
     public function showHousekeeping($id)
     {
-        $connEquipment = ConnectionDB::setConnection(new EquiqmentToilet());
+        $connInspectionHK = ConnectionDB::setConnection(new EquipmentHousekeepingDetail());
 
-        $equipment = $connEquipment->where('id_equipment_housekeeping', $id)
-            ->with(['Inspection.ChecklistHK', 'Room'])
+        $inspection = $connInspectionHK->where('id_equipment_housekeeping_detail', $id)
+            ->with('Equipment.Inspection.ChecklistHK')
             ->first();
 
-        $checklist = [];
-        foreach ($equipment->Inspection as $key => $data) {
-            $checklist[$key]['checklist'] = $data->ChecklistHK->nama_hk_toilet;
-        }
+        $object = new stdClass();
+        $object->id_equipment_housekeeping = $inspection->id_equipment_housekeeping_detail;
+        $object->schedule = $inspection->schedule;
+        $object->equipment = $inspection->equipment->equipment;
+        $object->status_schedule = $inspection->status_schedule;
+        $object->id_room = $inspection->equipment->Room->id_room;
+        $object->room = $inspection->equipment->Room->nama_room;
 
-        return ResponseFormatter::success([
-            'equipment' => $equipment,
-            'question' => $checklist
-        ], 'Berhasil mengambil Equipment dan Data Checklist Parameter');
+        $checklists = [];
+        foreach ($inspection->Equipment->Inspection as $data) {
+            $checklists[]['question'] = $data->ChecklistHK->nama_hk_toilet;
+        }
+        $object->checklists = $checklists;
+
+        return ResponseFormatter::success(
+            $object,
+            'Berhasil mengambil Equipment dan Data Checklist Parameter'
+        );
     }
 
     public function showHistoryHK($id)

@@ -17,7 +17,6 @@
             <thead>
                 <tr>
                     <th class="sort" data-sort="">No</th>
-                    {{-- <th class="sort" data-sort="id_site">ID Site</th> --}}
                     <th class="sort" data-sort="id_tower">Tower</th>
                     <th class="sort" data-sort="id_lantai">Lantai</th>
                     <th class="sort" data-sort="barcode_room">Barcode Room</th>
@@ -29,10 +28,11 @@
                 @foreach ($rooms as $key => $room)
                     <tr>
                         <th scope="row">{{ $key + 1 }}</th>
-                        {{-- <td>{{ $room-> }}</td> --}}
                         <td>{{ $room->tower->nama_tower }}</td>
                         <td>{{ $room->floor->nama_lantai }}</td>
-                        <td>{{ $room->barcode_room }}</td>
+                        <td>
+                            <img src=" {{ url($room->barcode_room) }}" width="80">
+                        </td>
                         <td>{{ $room->nama_room }}</td>
                         <td>
                             <a href="{{ route('rooms.edit', $room->id_room) }}" class="btn btn-sm btn-warning"><span class="fas fa-pencil-alt fs--2 me-1"></span>Edit</a>

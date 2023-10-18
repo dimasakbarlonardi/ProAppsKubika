@@ -58,12 +58,8 @@
                                             <th class="align-middle">Water </th>
                                             <th class="align-middle">Electric</th>
                                             <th class="align-middle">Period</th>
-                                            <th class="align-middle">Status</th>
-                                            @if (
-                                                ($user->id_role_hdr == $approve->approval_1 && $user->Karyawan->is_can_approve != null) ||
-                                                    $user->id_user == $approve->approval_3)
-                                                <th class="align-middle">Action</th>
-                                            @endif
+                                            <th class="align-middle text-center">Status</th>
+                                            <th class="align-middle"></th>
                                         </tr>
                                     </thead>
                                     <tbody id="bulk-select-body">
@@ -98,7 +94,7 @@
                                                     @endif
                                                 </th>
                                                 <th>{{ $item->periode_bulan }} - {{ $item->periode_tahun }}</th>
-                                                <th class="align-middle">
+                                                <th class="align-middle text-center">
                                                     @if (!$item->is_approve)
                                                         <h6>
                                                             <span class="badge bg-warning">Pending</span>
@@ -116,22 +112,14 @@
                                                             </small>
                                                         @endif
                                                     @endif
-
                                                     @if ($item->MonthlyUtility)
                                                         <h6>
-                                                            <span class="badge bg-info"
-                                                                onclick="return confirm('are you sure?')">
-                                                                <span class="fas fa-check fs--2 me-1"></span>
+                                                            <a class="badge bg-info"
+                                                                href="{{ route('showInvoices', $item->MonthlyUtility->MonthlyTenant->CashReceipt->id) }}">
+                                                                <span class="fas fa-eye fs--2 me-1"></span>
                                                                 Invoice
-                                                            </span>
+                                                            </a>
                                                         </h6>
-
-                                                        @if (!$item->MonthlyUtility->MonthlyTenant->tgl_jt_invoice)
-                                                            <span class="badge bg-info">
-                                                                <span class="fas fa-check fs--2 me-1"></span>
-                                                                Waiting to send
-                                                            </span>
-                                                        @endif
                                                     @endif
                                                 </th>
                                                 @if ($user->id_role_hdr == $approve->approval_1 && $user->Karyawan->is_can_approve != null && !$item->is_approve)
@@ -149,6 +137,25 @@
                                                             data-bs-target="#approve-modal{{ $item->id }}">Approve
                                                         </button>
                                                     </td>
+                                                @endif
+                                                @if ($item->MonthlyUtility)
+                                                    @if (!$item->MonthlyUtility->MonthlyTenant->tgl_jt_invoice)
+                                                        <td class="align-middle text-center">
+                                                            <span class="badge bg-info">
+                                                                <span class="fas fa-check fs--2 me-1"></span>
+                                                                Waiting to send
+                                                            </span>
+                                                        </td>
+                                                    @else
+                                                        <td class="align-middle text-center">
+                                                            <h6>
+                                                                <span class="badge bg-success">
+                                                                    <span class="fas fa-check fs--2 me-1"></span>
+                                                                    Sended
+                                                                </span>
+                                                            </h6>
+                                                        </td>
+                                                    @endif
                                                 @endif
                                             </tr>
 

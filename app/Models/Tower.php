@@ -30,4 +30,9 @@ class Tower extends Model
     {
         return $this->hasOne(Site::class, 'id_site', 'id_site');
     }
+
+    public function Unit()
+    {
+        return $this->hasOne(Unit::class, 'id_tower', 'id_tower');
+    }
 }

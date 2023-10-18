@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\HelloEvent;
 use App\Helpers\ConnectionDB;
 use App\Helpers\HelpNotifikasi;
 use App\Http\Controllers\Controller;
@@ -9,6 +10,7 @@ use App\Models\Approve;
 use App\Models\CashReceipt;
 use App\Models\CashReceiptDetail;
 use App\Models\ElectricUUS;
+use App\Models\Role;
 use App\Models\Site;
 use App\Models\System;
 use App\Models\Unit;
@@ -148,7 +150,9 @@ class ElectricUUSController extends Controller
     public function update(Request $request, $id)
     {
         $connElectric = ConnectionDB::setConnection(new ElectricUUS());
+        $connApprove = ConnectionDB::setConnection(new Approve());
 
+        $approve = $connApprove->find(9);
         $elec = $connElectric->find($id);
 
         $elec->is_updated = '1';
@@ -161,6 +165,18 @@ class ElectricUUSController extends Controller
         $elec->usage = $request->nomor_listrik_akhir - $request->nomor_listrik_awal;
         $elec->save();
 
+        $dataNotif = [
+            'models' => 'UpdateElectricRecording',
+            'notif_title' => 'Update Utility Usage Recording',
+            'id_data' => null,
+            'sender' => $request->session()->get('user')->id_user,
+            'division_receiver' => null,
+            'notif_message' => 'Terjadi kesalahan penginputan meter listrik',
+            'receiver' => $approve->approval_3
+        ];
+
+        broadcast(new HelloEvent($dataNotif));
+
         Alert::success('Success', 'Success update data');
 
         return redirect()->back();
@@ -169,11 +185,27 @@ class ElectricUUSController extends Controller
     public function approveUpdate($id)
     {
         $connElectric = ConnectionDB::setConnection(new ElectricUUS());
+        $connApprove = ConnectionDB::setConnection(new Approve());
+        $connRole = ConnectionDB::setConnection(new Role());
 
+        $approve = $connApprove->find(9);
+        $role = $connRole->find($approve->approval_1);
         $elec = $connElectric->find($id);
 
         $elec->is_updated = null;
         $elec->save();
+
+        $dataNotif = [
+            'models' => 'UpdateElectricRecording',
+            'notif_title' => 'Update Utility Usage Recording',
+            'id_data' => null,
+            'sender' => $approve->approval_3,
+            'division_receiver' => $role->WorkRelation->id_work_relation,
+            'notif_message' => 'Perubahan data recording sudah di approve',
+            'receiver' => null
+        ];
+
+        broadcast(new HelloEvent($dataNotif));
 
         Alert::success('Success', 'Success update data');
 

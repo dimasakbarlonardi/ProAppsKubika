@@ -39,7 +39,7 @@
                 </div>
                 <div class="mb-3">
                     <div class="col-6">
-                        <label class="form-label">Approve 3</label>
+                        <label class="form-label">Edit Data Aprrover</label>
                         <select name="approval_3" class="form-control">
                             @foreach ($karyawans as $karyawan)
                                 @if ($karyawan->User)

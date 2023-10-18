@@ -16,6 +16,7 @@ use App\Models\User;
 // use App\Models\Login;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use PhpParser\Node\Stmt\TryCatch;
@@ -75,6 +76,22 @@ class AuthenticatedSessionController extends Controller
                 if (Auth::check()) {
                     if (!Hash::check($request->password, $user->password, [])) {
                         throw new \Exception('Invalid Credentials');
+                    }
+
+                    if ($getUser->Karyawan) {
+                        $checkIsResign = $getUser->Karyawan->tgl_keluar;
+
+                        if ($checkIsResign < Carbon::now()->format('Y-m-d')) {
+                            Auth::guard('web')->logout();
+
+                            $request->session()->invalidate();
+
+                            $request->session()->regenerateToken();
+
+                            Alert::error('Sorry', 'You can not access this app anymore');
+
+                            return redirect()->route('login');
+                        }
                     }
 
                     if (isset($getUser)) {
@@ -158,6 +175,8 @@ class AuthenticatedSessionController extends Controller
 
                 return redirect()->route('open-tickets.index');
             }
+
+            return redirect()->back();
         } catch (Exception $error) {
             dd($error);
             return redirect()->route('dashboard');

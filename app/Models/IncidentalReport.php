@@ -18,10 +18,16 @@ class IncidentalReport extends Model
         'incident_time',
         'incident_image',
         'desc',
+        'user_id'
     ];
 
     public function Room()
     {
         return $this->hasOne(Room::class, 'id_room', 'room_id');
+    }
+
+    public function User()
+    {
+        return $this->hasOne(User::class, 'id_user', 'user_id');
     }
 }

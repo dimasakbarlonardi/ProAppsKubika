@@ -42,38 +42,71 @@ class ChecklistToiletHController extends Controller
     {
         $connParameter = ConnectionDB::setConnection(new ChecklistParameterEquiqment());
         $inspectionParameter = ConnectionDB::setConnection(new Toilet());
-        // $user_id = $request->user()->id;
-        $data['checklistparameters'] = $connParameter->get();
-        $data['parameters'] = $inspectionParameter->get();
-        $data['id'] = $id;
 
-        // $data['idusers'] = Login::where('id', $user_id)->get();
+        $data['checklistparameters'] = $connParameter
+            ->where('id_equiqment', 1)
+            ->where('id_item', $id)
+            ->get();
+
+        $data['parameters'] = $inspectionParameter->where('deleted_at', null)
+            ->with(['Checklist' => function ($q) use ($id) {
+                $q->where('id_item', $id);
+            }])
+            ->get();
+
+        $data['id'] = $id;
 
         return view('AdminSite.ChecklistToiletH.checklist', $data);
     }
 
     public function checklistParameterHK(Request $request, $id)
     {
-    $parameter = $request->to;
-    $checklistParameter = ConnectionDB::setConnection(new ChecklistParameterEquiqment());
-    $checklistahu = ConnectionDB::setConnection(new EquiqmentToilet());
-    $equipment = $checklistahu->where('id_equipment_housekeeping', $id)->first();
+        $parameter = $request->to;
 
-    if (isset($parameter)) {
-        foreach ($parameter as $form) {
-            $checklistParameter->create([
-                'id_equiqment'=>$id,
-                'id_checklist'=>$form,
-                'id_item'=>$equipment->id_equipment_housekeeping
-            ]);
-            DB::commit();
+        $checklistParameter = ConnectionDB::setConnection(new ChecklistParameterEquiqment());
 
-            Alert::success('Berhasil', 'Berhasil Menambahkan Inspection HouseKeeping');
+        $checklist_id = [];
+
+        if ($parameter) {
+            foreach ($parameter as $param) {
+                $checklist_id[] = $param;
+            }
+            $deletes = $checklistParameter->where('id_equiqment', 1)
+                ->where('id_item', $id)
+                ->whereNotIn('id_checklist', $checklist_id)
+                ->get();
+
+            if (count($deletes) > 0) {
+                $checklistParameter->where('id_equiqment', 1)
+                    ->where('id_item', $id)
+                    ->whereNotIn('id_checklist', $checklist_id)
+                    ->delete();
+            }
+
+            if (isset($parameter)) {
+                foreach ($parameter as $param) {
+                    $checkParam = $checklistParameter->where('id_item', $id)
+                        ->where('id_equiqment', 1)
+                        ->where('id_checklist', $param)
+                        ->first();
+
+                    if (!$checkParam) {
+                        $checklistParameter->create([
+                            'id_equiqment' => 1,
+                            'id_checklist' => $param,
+                            'id_item' => $id
+                        ]);
+                    }
+                }
+            }
+        } else {
+            $checklistParameter->where('id_equiqment', 1)
+                ->where('id_item', $id)
+                ->delete();
         }
 
-        }
-
-    return redirect()->route('checklisttoilets.index');
+        Alert::success('Success', 'Success update Inspection HouseKeeping');
+        return redirect()->back();
     }
 
     /**
@@ -114,7 +147,10 @@ class ChecklistToiletHController extends Controller
         $connHK = ConnectionDB::setConnection(new EquiqmentToilet());
 
         $equipmentHK = $connHK->find($id);
-        $equipmentHK->update($request->all());
+        $equipmentHK->no_equipment = $request->no_equipment;
+        $equipmentHK->equipment = $request->equipment;
+        $equipmentHK->id_room = $request->id_room;
+        $equipmentHK->save();
 
         Alert::success('Berhasil', 'Berhasil mengupdate Inspection HouseKeeping');
 
@@ -141,39 +177,38 @@ class ChecklistToiletHController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-     public function store(Request $request)
-     {
-         $equipmentHK = ConnectionDB::setConnection(new EquiqmentToilet());
+    public function store(Request $request)
+    {
+        $equipmentHK = ConnectionDB::setConnection(new EquiqmentToilet());
 
-         try {
-             DB::beginTransaction();
-             $id_equiqment = 2;
+        try {
+            DB::beginTransaction();
+            $id_equiqment = 2;
 
-             $no_equipment = $request->no_equipment;
-             $barcode_room = $this->generateBarcode($no_equipment);
+            $no_equipment = $request->no_equipment;
+            // $barcode_room = $this->generateBarcode($no_equipment);
 
-             $equipmentHK->create([
-                 'no_equipment' => $no_equipment,
-                 'id_equiqment' => $id_equiqment,
-                 'barcode_room' => $barcode_room,
-                 'equipment' => $request->equipment,
-                 'id_role' => $request->id_role,
-                 'id_room' => $request->id_room,
-             ]);
+            $equipmentHK->create([
+                'no_equipment' => $no_equipment,
+                'id_equiqment' => $id_equiqment,
+                // 'barcode_room' => $barcode_room,
+                'equipment' => $request->equipment,
+                'id_room' => $request->id_room,
+            ]);
 
-             DB::commit();
+            DB::commit();
 
-             Alert::success('Berhasil', 'Berhasil menambahkan Inspection HouseKeeping');
+            Alert::success('Berhasil', 'Berhasil menambahkan Inspection HouseKeeping');
 
-             return redirect()->route('checklisttoilets.index');
-         } catch (\Throwable $e) {
-             DB::rollBack();
-             dd($e);
-             Alert::error('Gagal', 'Gagal menambahkan Inspection HouseKeeping');
+            return redirect()->route('checklisttoilets.index');
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            dd($e);
+            Alert::error('Gagal', 'Gagal menambahkan Inspection HouseKeeping');
 
-             return redirect()->route('checklisttoilets.index');
-         }
-     }
+            return redirect()->route('checklisttoilets.index');
+        }
+    }
 
     /**
      * Display the specified resource.
@@ -186,7 +221,7 @@ class ChecklistToiletHController extends Controller
         $conn = ConnectionDB::setConnection(new ChecklistToiletH());
         $conndetail = ConnectionDB::setConnection(new ChecklistToiletDetail());
         $parameter = ConnectionDB::setConnection(new Toilet());
-        $checklist= ConnectionDB::setConnection(new ChecklistParameterEquiqment());
+        $checklist = ConnectionDB::setConnection(new ChecklistParameterEquiqment());
         $user_id = $request->user()->id;
 
         $data['checklisttoilet'] = $conn->where('no_checklist_toilet', $id)->first();
@@ -204,8 +239,8 @@ class ChecklistToiletHController extends Controller
 
         $data['eq'] = $connEquiqment->find($id);
         $data['schedules'] = $connSchedules->where('id_equipment_housekeeping', $id)
-        ->orderBy('schedule', 'ASC')
-        ->get();
+            ->orderBy('schedule', 'ASC')
+            ->get();
 
         return view('AdminSite.ChecklistToiletH.schedules', $data);
     }
