@@ -27,7 +27,7 @@
                 <div class="mb-3">
                     <div class="row">
                         <div class="col-6">
-                            <label class="form-label">Approve 3</label>
+                            <label class="form-label">Approve Finance</label>
                             <select name="approval_3" class="form-control">
                                 @foreach ($karyawans as $karyawan)
                                     @if ($karyawan->User)
@@ -38,7 +38,7 @@
                             </select>
                         </div>
                         <div class="col-6">
-                            <label class="form-label">Complete WO</label>
+                            <label class="form-label">Approve 3 & Complete WO</label>
                             <select name="approval_4" class="form-control">
                                 @foreach ($karyawans as $karyawan)
                                     @if ($karyawan->User)

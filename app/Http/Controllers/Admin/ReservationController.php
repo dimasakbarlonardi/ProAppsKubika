@@ -197,77 +197,25 @@ class ReservationController extends Controller
     public function approve2(Request $request, $id)
     {
         $connReservation = ConnectionDB::setConnection(new Reservation());
-        $connSystem = ConnectionDB::setConnection(new System());
-        $connTransaction = ConnectionDB::setConnection(new CashReceipt());
         $connApprove = ConnectionDB::setConnection(new Approve());
 
         $rsv = $connReservation->find($id);
-        $system = $connSystem->find(1);
-        $count = $system->sequence_no_invoice + 1;
         $approve = $connApprove->find(7);
-        $user = $rsv->Ticket->Tenant->User;
-
-        $no_invoice = $system->kode_unik_perusahaan . '/' .
-            $system->kode_unik_invoice . '/' .
-            Carbon::now()->format('m') . Carbon::now()->format('Y') . '/' .
-            sprintf("%06d", $count);
-
-        $countCR = $system->sequence_no_cash_receiptment + 1;
-        $no_cr = $system->kode_unik_perusahaan . '/' .
-            $system->kode_unik_cash_receipt . '/' .
-            Carbon::now()->format('m') . Carbon::now()->format('Y') . '/' .
-            sprintf("%06d", $countCR);
-
-        $order_id = $user->id_site . '-' . $no_cr;
 
         try {
             DB::beginTransaction();
 
-            if ($rsv->is_deposit) {
-                $createTransaction = $connTransaction;
-                $createTransaction->order_id = $order_id;
-                $createTransaction->id_site = $user->id_site;
-                $createTransaction->no_reff = $rsv->no_request_reservation;
-                $createTransaction->no_invoice = $no_invoice;
-                $createTransaction->no_draft_cr = $no_cr;
-                $createTransaction->ket_pembayaran = 'INV/' . $user->id_user . '/' . $rsv->Ticket->Unit->nama_unit;
-                $createTransaction->sub_total = $rsv->jumlah_deposit;
-                $createTransaction->transaction_status = 'PENDING';
-                $createTransaction->id_user = $user->id_user;
-                $createTransaction->transaction_type = 'Reservation';
-                $createTransaction->save();
+            $dataNotif = [
+                'models' => 'Reservation',
+                'notif_title' => $rsv->no_request_reservation,
+                'id_data' => $rsv->id,
+                'sender' => $request->session()->get('user')->id_user,
+                'division_receiver' => null,
+                'notif_message' => 'Request Reservation diterima, mohon approve reservasi',
+                'receiver' => $approve->approval_3,
+            ];
 
-                $system->sequence_no_cash_receiptment = $countCR;
-                $system->sequence_no_invoice = $count;
-                $system->save();
-
-                $dataNotif = [
-                    'models' => 'PaymentReservation',
-                    'notif_title' => $createTransaction->no_invoice,
-                    'id_data' => $rsv->id,
-                    'sender' => $approve->approval_3,
-                    'division_receiver' => null,
-                    'notif_message' => 'Request Reservation diterima, mohon membayar deposit untuk melanjutkan proses reservasi',
-                    'receiver' => $rsv->Ticket->Tenant->User->id_user,
-                ];
-
-                broadcast(new HelloEvent($dataNotif));
-            } else {
-                $dataNotif = [
-                    'models' => 'Reservation',
-                    'notif_title' => $rsv->no_request_reservation,
-                    'id_data' => $rsv->id,
-                    'sender' => $request->session()->get('user')->id_user,
-                    'division_receiver' => null,
-                    'notif_message' => 'Request Reservation diterima, mohon approve reservasi',
-                    'receiver' => $rsv->Ticket->Tenant->User->id_user,
-                ];
-                $rsv->sign_approval_3 = Carbon::now();
-                $rsv->sign_approval_5 = Carbon::now();
-                $rsv->status_bayar = 'PAYED';
-
-                broadcast(new HelloEvent($dataNotif));
-            }
+            broadcast(new HelloEvent($dataNotif));
 
             $rsv->sign_approval_2 = Carbon::now();
             $rsv->save();
@@ -289,8 +237,77 @@ class ReservationController extends Controller
     public function approve3($id)
     {
         $connReservation = ConnectionDB::setConnection(new Reservation());
+        $connSystem = ConnectionDB::setConnection(new System());
+        $connTransaction = ConnectionDB::setConnection(new CashReceipt());
+        $connApprove = ConnectionDB::setConnection(new Approve());
+
+        $approve = $connApprove->find(7);
+        $system = $connSystem->find(1);
+        $count = $system->sequence_no_invoice + 1;
 
         $rsv = $connReservation->find($id);
+
+        if ($rsv->is_deposit) {
+            $user = $rsv->Ticket->Tenant->User;
+
+            $no_invoice = $system->kode_unik_perusahaan . '/' .
+                $system->kode_unik_invoice . '/' .
+                Carbon::now()->format('m') . Carbon::now()->format('Y') . '/' .
+                sprintf("%06d", $count);
+
+            $countCR = $system->sequence_no_cash_receiptment + 1;
+            $no_cr = $system->kode_unik_perusahaan . '/' .
+                $system->kode_unik_cash_receipt . '/' .
+                Carbon::now()->format('m') . Carbon::now()->format('Y') . '/' .
+                sprintf("%06d", $countCR);
+
+            $order_id = $user->id_site . '-' . $no_cr;
+
+            $createTransaction = $connTransaction;
+            $createTransaction->order_id = $order_id;
+            $createTransaction->id_site = $user->id_site;
+            $createTransaction->no_reff = $rsv->no_request_reservation;
+            $createTransaction->no_invoice = $no_invoice;
+            $createTransaction->no_draft_cr = $no_cr;
+            $createTransaction->ket_pembayaran = 'INV/' . $user->id_user . '/' . $rsv->Ticket->Unit->nama_unit;
+            $createTransaction->sub_total = $rsv->jumlah_deposit;
+            $createTransaction->transaction_status = 'PENDING';
+            $createTransaction->id_user = $user->id_user;
+            $createTransaction->transaction_type = 'Reservation';
+            $createTransaction->save();
+
+            $system->sequence_no_cash_receiptment = $countCR;
+            $system->sequence_no_invoice = $count;
+
+            $system->save();
+            $dataNotif = [
+                'models' => 'PaymentReservation',
+                'notif_title' => $createTransaction->no_invoice,
+                'id_data' => $rsv->id,
+                'sender' => $approve->approval_3,
+                'division_receiver' => null,
+                'notif_message' => 'Request Reservation diterima, mohon membayar deposit untuk melanjutkan proses reservasi',
+                'receiver' => $rsv->Ticket->Tenant->User->id_user,
+            ];
+
+            broadcast(new HelloEvent($dataNotif));
+        } else {
+            $dataNotif = [
+                'models' => 'PaymentReservation',
+                'notif_title' => $createTransaction->no_invoice,
+                'id_data' => $rsv->id,
+                'sender' => $approve->approval_3,
+                'division_receiver' => 1,
+                'notif_message' => 'Request Reservation diterima, mohon membayar deposit untuk melanjutkan proses reservasi',
+                'receiver' => null,
+            ];
+
+            broadcast(new HelloEvent($dataNotif));
+
+            $rsv->sign_approval_3 = Carbon::now();
+            $rsv->sign_approval_5 = Carbon::now();
+            $rsv->status_bayar = 'PAYED';
+        }
 
         $rsv->sign_approval_3 = Carbon::now();
         $rsv->save();

@@ -46,12 +46,25 @@ class PaymentController extends Controller
                             'id_data' => $cr->WorkOrder->id,
                             'sender' => $cr->WorkOrder->Ticket->Tenant->User->id_user,
                             'division_receiver' => $cr->WorkOrder->WorkRequest->id_work_relation,
-                            'notif_message' => 'Pembayaran berhasil, mohon approve proses Work Order',
+                            'notif_message' => 'Pembayaran Work Order berhasil, terima kasih',
                             'receiver' => null,
                             'connection' => $site->db_name
                         ];
 
                         broadcast(new HelloEvent($dataNotif));
+
+                        $dataNotifTR = [
+                            'models' => 'WorkOrder',
+                            'notif_title' => $cr->WorkOrder->no_work_order,
+                            'id_data' => $cr->WorkOrder->id,
+                            'sender' => $cr->WorkOrder->Ticket->Tenant->User->id_user,
+                            'division_receiver' => 1,
+                            'notif_message' => 'Pembayaran Work Order berhasil, terima kasih',
+                            'receiver' => null,
+                            'connection' => $site->db_name
+                        ];
+
+                        broadcast(new HelloEvent($dataNotifTR));
 
                         break;
 
@@ -87,13 +100,14 @@ class PaymentController extends Controller
                             'notif_title' => $cr->Reservation->no_reservation,
                             'id_data' => $cr->Reservation->id,
                             'sender' => $cr->Reservation->Ticket->Tenant->User->id_user,
-                            'division_receiver' => null,
+                            'division_receiver' => 1,
                             'notif_message' => 'Pembayaran berhasil, mohon approve proses reservasi',
                             'receiver' => $approve->approval_3,
                             'connection' => $site->db_name
                         ];
 
                         broadcast(new HelloEvent($dataNotif));
+
                         break;
 
                     case ('MonthlyTenant'):
