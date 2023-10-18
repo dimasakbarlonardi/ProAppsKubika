@@ -156,7 +156,7 @@ Route::post('/save-token', [AgamaController::class, 'saveToken'])->name('save-to
 Route::get('/check-role-id', [RoleController::class, 'checkRoleID']);
 
 Route::get('/invoice/{id}', [PaymentController::class, 'invoice'])->name('invoice');
-Route::get('/view-room/{id}', [RoomController::class, 'viewRoom']);
+Route::get('/view-room/{idSite}/{id}', [RoomController::class, 'viewRoom']);
 
 Route::prefix('admin')->group(function () {
     Route::middleware(['auth'])->group(function () {

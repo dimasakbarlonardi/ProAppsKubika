@@ -154,8 +154,16 @@ class RoomController extends Controller
         return redirect()->route('rooms.index');
     }
 
-    public function viewRoom($id)
+    public function viewRoom($idSite, $id)
     {
-        return view('AdminSite.Room.view-room');
+        $site = Site::find($idSite);
+
+
+        $room = new Room();
+        $room = $room->setConnection($site->db_name);
+        $room = $room->where('id_room', $id)->with('InspectionEng')->first();
+        $data['room'] = $room;
+
+        return view('AdminSite.Room.view-room', $data);
     }
 }

@@ -36,7 +36,7 @@ class Room extends Model
             ->eyeColor(1, 39, 178, 155, 0, 0, 0)
             ->eyeColor(2, 39, 178, 155, 0, 0, 0)
             ->errorCorrection('H')
-            ->generate(url('') . '/api/v1/rooms/' . $this->id_room);
+            ->generate(url('') . '/view-room/' . $this->id_site . '/' .  $this->id_room);
 
         $outputBarcode = '/public/' . $this->id_site . '/img/qr-code/room/' . $this->id_room . '-barcode_room.png';
         $barcode = '/storage/' . $this->id_site . '/img/qr-code/room/' . $this->id_room . '-barcode_room.png';
@@ -60,5 +60,10 @@ class Room extends Model
     public function site()
     {
         return $this->hasOne(Site::class, 'id_site', 'id_site');
+    }
+
+    public function InspectionEng()
+    {
+        return $this->hasMany(EquiqmentEngineeringDetail::class, 'id_room', 'id_room');
     }
 }

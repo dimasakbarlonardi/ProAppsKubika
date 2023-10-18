@@ -34,58 +34,60 @@
     <!--    Main Content-->
     <!-- ===============================================-->
     <main class="main" id="top">
-        <div class="container" data-layout="container">
-            <div class="row flex-center min-vh-100 py-6">
-                <div class="col-sm-12 col-md-10 col-lg-8 col-xl-10 col-xxl-4 mb-5">
-                    <div class="mb-5">
-                        <span class="font-sans-serif fw-bolder fs-5 d-inline-block text-primary">Utility Usage Recording
-                            - Water</span>
-                    </div>
-                    <div class="card">
-                        <div class="card-body p-4 p-sm-5">
-
-                            <form action="">
-                                <div class="mb-3">
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <label class="form-label">Unit</label>
-                                            <input class="form-control" value="" type="text"
-                                                readonly />
-                                        </div>
-                                        <div class="col-6">
-                                            <label class="form-label">Period</label>
-                                            <select class="form-control" name="periode_bulan">
-
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="mb-5">
-                                    <div class="row">
-                                        <div class="col-6">
-                                            <label class="form-label">Previous</label>
-                                            <input class="form-control" name="previous" type="number"
-                                                value="" />
-                                        </div>
-                                        <div class="col-6">
-                                            <label class="form-label">Current</label>
-                                            <input class="form-control"
-                                                min=""
-                                                name="current" type="number" placeholder="111" />
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="mb-3 mt-5">
-                                    <button class="btn btn-primary d-block w-100 mt-3" type="submit">
-                                        Submit
-                                    </button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
+        <div class="container" data-layout="container">                                              
+            <div class="card mb-3">
+                <div class="mb-5">
+                    <span class="font-sans-serif fw-bolder fs-5 d-inline-block text-primary p-2">Room {{ $room->nama_room }}</span>
                 </div>
-            </div>
+                <div class="card-body p-4 p-sm-5">                            
+                    <div class="mb-3">
+                        <div class="row">
+                            <div class="col-6">
+                                <label class="form-label">Tower</label>
+                                <input class="form-control" value="{{ $room->Tower->nama_tower }}" type="text"
+                                    readonly />
+                            </div>
+                            <div class="col-6">
+                            <label class="form-label">Floor</label>
+                                <input class="form-control" value="{{ $room->Floor->nama_lantai }}" type="text"
+                                    readonly />
+                            </div>
+                        </div>
+                    </div>                                                          
+                </div>
+            </div>                
+            
+            <div class="card">
+                <div class="mb-5">
+                    <span class="font-sans-serif fw-bolder fs-2 d-inline-block text-primary p-2">Inspection Engineering</span>
+                </div>
+                <div class="card-body p-sm-5">                            
+                    <table class="table-striped table-responsive">
+                        <thead>
+                            <tr>
+                                <th class="sort" data-sort="">No</th>
+                                <th class="sort" data-sort="nama_room">Equipment</th>
+                                <th class="sort" data-sort="nama_room">Schedule</th>
+                                <th class="text-center">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach ($room->InspectionEng as $key => $inspection)
+                                <tr>
+                                    <th scope="row">{{ $key + 1 }}</th>
+                                    <td>{{ $inspection->Equipment->equiqment }}</td>
+                                    <td>{{ HumanDate($inspection->schedule) }}</td>
+                                    <td class="text-center">
+                                        <a href="" class="btn btn-sm btn-warning">
+                                            <span class="fas fa-pencil-alt fs--2 me-1"></span>
+                                        </a>                                        
+                                    </td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>                                                       
+                </div>
+            </div>  
         </div>
     </main><!-- ===============================================-->
     <!--    End of Main Content-->
