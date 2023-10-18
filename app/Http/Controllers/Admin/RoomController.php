@@ -153,4 +153,9 @@ class RoomController extends Controller
 
         return redirect()->route('rooms.index');
     }
+
+    public function viewRoom($id)
+    {
+        return view('AdminSite.Room.view-room');
+    }
 }
