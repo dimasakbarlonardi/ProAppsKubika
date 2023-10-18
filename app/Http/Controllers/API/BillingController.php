@@ -357,23 +357,25 @@ class BillingController extends Controller
             $connElecUUS = new ElectricUUS();
             $connElecUUS = $connElecUUS->setConnection($site->db_name);
 
-            $connElecUUS->firstOrCreate(
-                [
-                    'periode_bulan' => $request->periode_bulan,
-                    'periode_tahun' => Carbon::now()->format('Y')
-                ],
-                [
-                    'periode_bulan' => $request->periode_bulan,
-                    'periode_tahun' => Carbon::now()->format('Y'),
-                    'id_unit' => $unitID,
-                    'nomor_listrik_awal' => $request->previous,
-                    'nomor_listrik_akhir' => $request->current,
-                    'usage' => $usage,
-                    'ppj' => $ppj,
-                    'total' => $total,
-                    'id_user' => $user->id_user
-                ]
-            );
+            if (Carbon::now()->format('m') == $request->periode_bulan) {
+                $connElecUUS->firstOrCreate(
+                    [
+                        'periode_bulan' => $request->periode_bulan,
+                        'periode_tahun' => Carbon::now()->format('Y')
+                    ],
+                    [
+                        'periode_bulan' => $request->periode_bulan,
+                        'periode_tahun' => Carbon::now()->format('Y'),
+                        'id_unit' => $unitID,
+                        'nomor_listrik_awal' => $request->previous,
+                        'nomor_listrik_akhir' => $request->current,
+                        'usage' => $usage,
+                        'ppj' => $ppj,
+                        'total' => $total,
+                        'id_user' => $user->id_user
+                    ]
+                );
+            }
 
             Alert::success('Berhasil', 'Berhasil menambahkan data');
 
@@ -436,20 +438,22 @@ class BillingController extends Controller
                 $connWaterUUS = new WaterUUS();
                 $connWaterUUS = $connWaterUUS->setConnection($site->db_name);
 
-                $connWaterUUS->firstOrCreate([
-                    'periode_bulan' => $request->periode_bulan,
-                    'periode_tahun' => Carbon::now()->format('Y'),
-                ], [
-                    'periode_bulan' => $request->periode_bulan,
-                    'periode_tahun' => Carbon::now()->format('Y'),
-                    'id_unit' => $unitID,
-                    'nomor_air_awal' => $request->previous,
-                    'abodemen' => $water->biaya_abodemen,
-                    'total' => $total,
-                    'nomor_air_akhir' => $request->current,
-                    'usage' => $usage,
-                    'id_user' => $user->id_user
-                ]);
+                if (Carbon::now()->format('m') == $request->periode_bulan) {
+                    $connWaterUUS->firstOrCreate([
+                        'periode_bulan' => $request->periode_bulan,
+                        'periode_tahun' => Carbon::now()->format('Y'),
+                    ], [
+                        'periode_bulan' => $request->periode_bulan,
+                        'periode_tahun' => Carbon::now()->format('Y'),
+                        'id_unit' => $unitID,
+                        'nomor_air_awal' => $request->previous,
+                        'abodemen' => $water->biaya_abodemen,
+                        'total' => $total,
+                        'nomor_air_akhir' => $request->current,
+                        'usage' => $usage,
+                        'id_user' => $user->id_user
+                    ]);
+                }
 
                 Alert::success('Berhasil', 'Berhasil menambahkan data');
 

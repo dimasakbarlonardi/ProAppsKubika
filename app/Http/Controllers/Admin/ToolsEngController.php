@@ -87,7 +87,6 @@ class ToolsEngController extends Controller
 
                 // Validasi jumlah peminjaman
                 if ($borrowQty <= 0 || $borrowQty > ($tool->total_tools - $tool->borrow)) {
-                    dd($borrowQty <= 0, $borrowQty, ($tool->total_tools - $tool->borrow));
                     Alert::error('error', 'Invalid borrow quantity');
                     return redirect()->back();
                 }
