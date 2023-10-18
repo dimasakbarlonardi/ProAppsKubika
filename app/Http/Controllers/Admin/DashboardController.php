@@ -99,7 +99,9 @@ class DashboardController extends Controller
     public function getNewNotifications(Request $request, $notifID)
     {
         $connNotif = ConnectionDB::setConnection(new Notifikasi());
-        $notifications = $connNotif->find($notifID);
+        $notifications = $connNotif->where('deleted_at', null)
+            ->with('Sender')
+            ->find($notifID);
 
         return response()->json($notifications);
     }
@@ -209,6 +211,14 @@ class DashboardController extends Controller
                 $data = $this->handlePaymentWO($getNotif);
                 $data['user'] = $user;
                 return view('Tenant.Notification.Payment', $data);
+                break;
+
+            case ('UpdateWaterRecording'):
+                return redirect()->route('uus-water');
+                break;
+
+            case ('UpdateElectricRecording'):
+                return redirect()->route('usr-electric');
                 break;
         }
     }

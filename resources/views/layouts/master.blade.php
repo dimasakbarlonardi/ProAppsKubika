@@ -431,6 +431,7 @@
                 url: `/admin/get-new-notifications/${notif_id}`,
                 type: 'GET',
                 success: function(resp) {
+                    console.log(resp.division_receiver, division_relation);
                     if (resp.division_receiver == division_relation || resp.receiver == user_id) {
                         notifSound.play();
                         var current = new Date();
@@ -438,22 +439,22 @@
                         $('#empty_notif').html("");
                         $('#notification-lists').prepend(`
                             <div class="list-group-item">
-                                <a class="notification notification-flush ${data.is_read == 1 ? 'notification' : 'notification-unread' }"
-                                    href="/admin/notification/${data.id}">
+                                <a class="notification notification-flush ${resp.is_read == 1 ? 'notification' : 'notification-unread' }"
+                                    href="/admin/notification/${resp.id}">
                                     <div class="notification-avatar">
                                         <div class="avatar avatar-2xl me-3">
                                             <img class="rounded-circle"
-                                                src="${data.sender ? data.sender.profile_picture : ''}"
+                                                src="${resp.sender ? resp.sender.profile_picture : ''}"
                                                 alt="" />
                                         </div>
                                     </div>
                                     <div class="notification-body">
                                         <p class="mb-1">
-                                            <strong>${data.sender ? data.sender.nama_user : ''}</strong> Mengirim anda :
-                                            ${data.notif_message} ${data.notif_title}
+                                            <strong>${resp.sender ? resp.sender.nama_user : ''}</strong> Mengirim anda :
+                                            ${resp.notif_message} ${resp.notif_title}
                                         </p>
                                         <span class="notification-time">
-                                            ${timeDifference(current, new Date(data.created_at))}
+                                            ${timeDifference(current, new Date(resp.created_at))}
                                         </span>
                                     </div>
                                 </a>
