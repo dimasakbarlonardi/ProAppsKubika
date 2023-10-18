@@ -357,7 +357,6 @@ class BillingController extends Controller
             $connElecUUS = new ElectricUUS();
             $connElecUUS = $connElecUUS->setConnection($site->db_name);
 
-<<<<<<< HEAD
             if (Carbon::now()->format('m') == $request->periode_bulan) {
                 $connElecUUS->firstOrCreate(
                     [
@@ -377,29 +376,6 @@ class BillingController extends Controller
                     ]
                 );
             }
-=======
-            $connElecUUS = $connElecUUS->where('periode_bulan', Carbon::now()->format('d'))
-                ->where('periode_tahun', Carbon::now()->format('Y'))
-                ->first();
-            dd($connElecUUS);
-            $connElecUUS->firstOrCreate(
-                [
-                    'periode_bulan' => $request->periode_bulan,
-                    'periode_tahun' => Carbon::now()->format('Y')
-                ],
-                [
-                    'periode_bulan' => $request->periode_bulan,
-                    'periode_tahun' => Carbon::now()->format('Y'),
-                    'id_unit' => $unitID,
-                    'nomor_listrik_awal' => $request->previous,
-                    'nomor_listrik_akhir' => $request->current,
-                    'usage' => $usage,
-                    'ppj' => $ppj,
-                    'total' => $total,
-                    'id_user' => $user->id_user
-                ]
-            );
->>>>>>> 8843ba5b6a3a0ffb0a3755ffb89ba60e05838da0
 
             Alert::success('Berhasil', 'Berhasil menambahkan data');
 
