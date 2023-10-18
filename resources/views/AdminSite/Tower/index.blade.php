@@ -2,18 +2,18 @@
 
 @section('content')
 <div class="card">
-    <div class="card-header bg-light py-2">
+<div class="card-header ">
         <div class="row flex-between-center">
             <div class="col-auto">
-                <h6 class="mb-0">List Tower</h6>
+                <h6 class="mb-0 text-light">List Tower</h6>
             </div>
             <div class="col-auto d-flex">
-                <a class="btn btn-primary" href="{{ route('towers.create') }}">Tambah Tower</a>
+                <a class="btn btn-falcon-default btn-sm text-600" href="{{ route('towers.create') }}">Tambah Tower</a>
             </div>
         </div>
     </div>
     <div class="p-5">
-        <table class="table">
+        <table class="table table-striped">
             <thead>
                 <tr>
                     <th class="sort" data-sort="id_tower">No</th>

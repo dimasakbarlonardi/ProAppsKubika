@@ -45,27 +45,30 @@
             <div class="form-check d-none">
                 <input class="form-check-input" id="checkbox-bulk-card-tickets-select" type="checkbox" data-bulk-select='{"body":"card-ticket-body","actions":"table-ticket-actions","replacedElement":"table-ticket-replace-element"}' />
             </div>
-
             <div class="row">
                 @foreach ($tenants as $tenant)
                 <div class="col-sm-6 col-lg-4 mb-4 mt-4">
                     <div class="card border h-100 border-success">
                         <div class="card-body">
-                        <div class="d-flex align-items-start align-items-sm-center">
-                            <div class="avatar avatar-xl avatar-3xl">
-                                <img src="{{ $tenant->profile_picture ? url($tenant->profile_picture) : '/assets/img/team/3-thumb.png' }}" class="avatar-image" />
+                            <div class="d-flex align-items-start align-items-sm-center">
+                                <div class="avatar avatar-xl avatar-3xl">
+                                    <img src="{{ $tenant->profile_picture ? url($tenant->profile_picture) : '/assets/img/team/3-thumb.png' }}" class="avatar-image" />
+                                </div>
+                                <div class="ms-1 ms-sm-3">
+                                    <p class="fw-semi-bold mb-3 mb-sm-2 mt-3">
+                                        <a class="text-primary">
+                                            Tenant
+                                        </a>
+                                    </p>
+                                    <p class="client fw-semi-bold mb-3 mb-sm-2">
+                                        <a class="client text-black" href="{{ route('tenants.show', $tenant->id_tenant) }}">
+                                            {{ $tenant->nama_tenant }}
+                                        </a>
+                                    </p>
+                                    <hr>
+                                    <a href="{{ route('getTenantUnit', $tenant->id_tenant) }}" class="btn btn-primary btn-sm">Tenant Unit</a>
+                                </div>
                             </div>
-                            <div class="ms-1 ms-sm-3">
-                            <p class="fw-semi-bold mb-3 mb-sm-2 mt-3">
-                                <a class="text-primary">
-                                    Tenant
-                                </a>
-                            </p>
-                            <div class="card-title">{{ $tenant->nama_tenant }}</div>
-                            <hr>
-                            <a href="{{ route('getTenantUnit', $tenant->id_tenant) }}" class="btn btn-primary btn-sm">Tenant Unit</a>
-                            </div>
-                        </div>
                         </div>
                     </div>
                 </div>

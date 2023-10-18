@@ -77,18 +77,18 @@ class OwnerHController extends Controller
     {
         $conn = ConnectionDB::setConnection(new OwnerH());
 
-        $checkNIK = $conn->where('nik_pemilik', $request->nik_pemilik)->first();
-        $checkEmail = $conn->where('email_owner', $request->email_owner)->first();
+        // $checkNIK = $conn->where('nik_pemilik', $request->nik_pemilik)->first();
+        // $checkEmail = $conn->where('email_owner', $request->email_owner)->first();
 
-        if (isset($checkNIK)) {
-            Alert::error('Maaf', 'NIK sudah terdaftar');
-            return redirect()->back()->withInput();
-        }
+        // if (isset($checkNIK)) {
+        //     Alert::error('Maaf', 'NIK sudah terdaftar');
+        //     return redirect()->back()->withInput();
+        // }
 
-        if (isset($checkEmail)) {
-            Alert::error('Maaf', 'Email sudah terdaftar');
-            return redirect()->back()->withInput();
-        }
+        // if (isset($checkEmail)) {
+        //     Alert::error('Maaf', 'Email sudah terdaftar');
+        //     return redirect()->back()->withInput();
+        // }
 
         try {
             DB::beginTransaction();
@@ -136,7 +136,10 @@ class OwnerHController extends Controller
                 'alamat_tinggal_kontak_pic'=> $request->alamat_tinggal_kontak_pic,
                 'email_kontak_pic'=> $request->email_kontak_pic,
                 'no_telp_kontak_pic'=> $request->no_telp_kontak_pic,
-                'hubungan_kontak_pic' => $request->hubungan_kontak_pic
+                'hubungan_kontak_pic' => $request->hubungan_kontak_pic,
+                'nama_kepengurusan' => $request->nama_kepengurusan,
+                'nama_building' => $request->nama_building,
+                'alamat_building' => $request->alamat_building
             ]);
 
             DB::commit();

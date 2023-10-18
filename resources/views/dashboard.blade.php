@@ -233,7 +233,7 @@
                 </div>
             </div>
 
-        <div class="card mb-3">
+        <div class="card mb-3 py-3">
             <div class="row" data-bs-theme="light">
                 <div class="frame-537">
                     <div class="frame-193">

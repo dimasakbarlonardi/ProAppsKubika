@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="card">
-    <div class="card-header py-2">
+    <div class="card-header">
         <div class="row flex-between-center">
             <div class="col-auto">
                 <h6 class="mb-0 text-light">List Floor</h6>
@@ -13,7 +13,7 @@
         </div>
     </div>
     <div class="p-5">
-        <table class="table">
+        <table class="table table-striped">
             <thead>
                 <tr>
                     <th class="sort" data-sort="">No</th>

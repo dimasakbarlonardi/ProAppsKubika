@@ -18,6 +18,7 @@
         </div>
     </div>
     <div class="p-5 justify-content-center">
+    <a href="{{ route('ahudetails.index') }}" class="btn btn-primary float-right mb-4">History</a>
         <table class="table table-striped" id="table-toolseng">
             <thead>
                 <tr>
@@ -26,7 +27,6 @@
                     <th class="sort" data-sort="status">Stock</th>
                     <th class="sort" data-sort="status">Out</th>
                     <th class="sort" data-sort="date_out">Current Stock</th>
-                    <th class="sort" data-sort="borrower">Borrower</th>
                     <th class="sort" data-sort="status">Status</th>
                     <th class="sort" data-sort="action">Action</th>
                 </tr>
@@ -50,15 +50,6 @@
                             @else
                                 {{ $tools->current_totals }} 
                             @endempty
-                        </td>
-                        <td>
-                            @foreach ($idusers as $iduser)
-                            @empty($tools->borrow)
-                                -
-                            @else
-                                {{ $iduser->name }}
-                            @endempty
-                            @endforeach
                         </td>
                         <td>
                             @if ($tools->status == 0)

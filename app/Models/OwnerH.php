@@ -59,7 +59,10 @@ class OwnerH extends Model
         'alamat_tinggal_kontak_pic',
         'email_kontak_pic',
         'no_telp_kontak_pic',
-        'hubungan_kontak_pic'
+        'hubungan_kontak_pic',
+        'nama_kepengurusan',
+        'nama_building',
+        'alamat_building',
 
     ];
 

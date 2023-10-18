@@ -8,7 +8,7 @@
                 <div class="d-lg-flex justify-content-between">
                     <div class="row flex-between-center gy-2 px-x1 text-light">
                         <div class="col-auto pe-0">
-                            <h6 class="mb-0 text-light">All Owner</h6>
+                            <h6 class="mb-0 text-light">All Landlord</h6>
                         </div>
                         <div class="col-auto pe-0">
                             <span class="nav-link-icon">
@@ -38,7 +38,7 @@
                             </div>
                         </div>
                         <div class="d-flex align-items-center" id="table-ticket-replace-element">
-                            <a class="btn btn-falcon-default text-600 btn-sm" href="{{ route('owners.create') }}">Tambah Owner</a>
+                            <a class="btn btn-falcon-default text-600 btn-sm" href="{{ route('owners.create') }}">Create Landlord</a>
                         </div>
                     </div>
                 </div>
@@ -50,51 +50,36 @@
                 </div>
                 <div class="list bg-light p-x1 d-flex flex-column gap-3" id="card-ticket-body">
 
-                    <div class="row">
-                        @foreach ($owners as $owner)
-                            <div class="col-3">
-                                <div class="bg-white dark__bg-1100 d-md-flex d-xl-inline-block d-xxl-flex align-items-center p-x1 rounded-3 shadow-sm card-view-height">
-                                    <div class="d-flex align-items-start align-items-sm-center">
-                                        <a class="d-none d-sm-block" href="../../app/support-desk/contact-details.html">
-                                            <div class=" avatar avatar-xl avatar-3xl">
-                                                <img src="{{ $owner->profile_picture ? '/' . $owner->profile_picture : '/assets/img/team/3-thumb.png' }}" alt="akmal"
-                                                class="avatar-image" />
-                                            </div>
+                <div class="row">
+                @foreach ($owners as $owner)
+                <div class="col-sm-6 col-lg-4 mb-4 mt-4">
+                    <div class="card border h-100 border-success">
+                        <div class="card-body">
+                            <div class="d-flex align-items-start align-items-sm-center">
+                                <div class="avatar avatar-xl avatar-3xl">
+                                    <img src="{{ $owner->profile_picture ? '/' . $owner->profile_picture : '/assets/img/team/3-thumb.png' }}" class="avatar-image" />
+                                </div>
+                                <div class="ms-1 ms-sm-3">
+                                    <p class="fw-semi-bold mb-3 mb-sm-2 mt-3">
+                                        <a class="text-primary">
+                                            Landlord
                                         </a>
-                                        <div class="ms-2 ms-sm-4">
-                                            <p class="fw-semi-bold mb-3 mb-sm-2">
-                                                <a class="text-primary" >
-                                                    Owner
-                                                </a>
-                                            </p>
-                                            <p class="fw-semi-bold mb-3 ">
-                                                <a class="text-black" href="{{ route('owners.show', $owner->id_pemilik) }}">
-                                                    {{ $owner->nama_pemilik }}
-                                                </a>
-                                            </p>
-                                            <div class="row align-items-center gx-0 gy-2">
-                                                <div class="col-auto me-2">
-                                                    <h6 class="client mb-2">
-                                                        <a class="text-800 d-flex align-items-center gap-1"
-                                                            href="../../app/support-desk/contact-details.html">
-                                                            @foreach ($idusers as $iduser)
-                                                            <span class="fas fa-user" data-fa-transform="shrink-3 up-1"></span><span>{{$iduser->name}} </span></a>
-                                                            @endforeach
-                                                    </h6>
-                                                </div>
-
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <hr>
-                                        <button class="btn btn-outline-primary mb-2" href={{ route('kepemilikans.index') }} type="button">
-                                                <a class="text-black" href={{ route('kepemilikans.index', $owner->id_pemilik) }}>Kepemilikan Unit</a></button>
-                                    </div>
+                                    </p>
+                                    <p class="client fw-semi-bold mb-3 mb-sm-2">
+                                        <a class="client text-black" href="{{ route('owners.show', $owner->id_pemilik) }}">
+                                        {{ $owner->nama_kepengurusan }}
+                                        </a>
+                                    </p>
+                                    <hr>
+                                    <!-- <a href="{{ route('kepemilikans.index', $owner->id_pemilik) }}" class="btn btn-primary btn-sm">Kepemilikan Unit</a> -->
                                 </div>
                             </div>
-                        @endforeach
+                        </div>
                     </div>
+                </div>
+                @endforeach
+            </div>
+
 
                 </div>
                 <div class="text-center d-none" id="tickets-card-fallback">

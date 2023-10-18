@@ -5,7 +5,7 @@
         <div class="card-header py-2">
             <div class="row flex-between-center">
                 <div class="col-auto">
-                    <h6 class="my-3 text-white">Tambah Owner</h6>
+                    <h6 class="my-3 text-white">Create Landlord</h6>
                 </div>
             </div>
         </div>
@@ -13,9 +13,23 @@
             <form method="post" action="{{ route('owners.store') }}">
                 @csrf
                 <div class="owner">
-                    <h5>Owner</h5>
+                    <h5>Landlord</h5>
                     <hr>
                     <div class="row mb-3">
+                        <div class="col-6">
+                            <label class="form-label">Management Name</label>
+                            <input type="text" name="nama_kepengurusan" class="form-control" required>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">Building Name</label>
+                            <input type="text"  name="nama_building" class="form-control" required>
+                        </div>
+                        <div class="col-6">
+                            <label class="form-label">Building Address</label>
+                            <input type="text"  name="alamat_building" class="form-control" required>
+                        </div>
+                    </div>
+                    <!-- <div class="row mb-3">
                         <div class="col-6">
                             <label class="form-label">Nama Site</label>
                             <input type="text" value="Park Royale" class="form-control" readonly>
@@ -244,6 +258,7 @@
                             <input type="text" value="{{ old('hubungan_kontak_pic') }}" name="hubungan_kontak_pic" class="form-control" required>
                         </div>
                     </div>
+                </div> -->
                 </div>
                 <div class="mt-5">
                     <button type="submit" class="btn btn-primary">Submit</button>

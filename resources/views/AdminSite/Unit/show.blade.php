@@ -27,20 +27,12 @@
                         <input type="text" value="{{ $units->floor->nama_lantai }}" class="form-control" readonly>
                     </div>
                     <div class="col-6 mb-3">
-                        <label class="form-label">Barcode Unit</label>
-                        <input type="text" value="{{ $units->barcode_unit }}" class="form-control" readonly>
-                    </div>
-                    <div class="col-6 mb-3">
                         <label class="form-label">Nama Unit</label>
                         <input type="text" value="{{ $units->nama_unit }}" class="form-control" readonly>
                     </div>
                     <div class="col-6 mb-3">
                         <label class="form-label">Luas Unit</label>
                         <input type="text" value="{{ $units->luas_unit }}" class="form-control" readonly>
-                    </div>
-                    <div class="col-6">
-                        <label class="form-label">Barcode Meter Gas</label>
-                        <input type="text" value="{{ $units->barcode_meter_gas }}" class="form-control" required>
                     </div>
                     <div class="col-6">
                         <label class="form-label">No Meter Air</label>
@@ -52,33 +44,15 @@
                         <input type="text" value="{{ $units->no_meter_listrik }}" class="form-control" required>
                     </div>
                     <div class="col-6">
-                        <label class="form-label">No Meter Gas</label>
-                        <input type="text" value="{{ $units->no_meter_gas }}" class="form-control" required>
-                    </div>
-                    <div class="col-6">
                         <label class="form-label">Meter Air Awal</label>
                         <input type="text" value="{{ $units->meter_air_awal }}" class="form-control" required>
                     </div>
-                    <div class="col-6">
-                        <label class="form-label">Meter Air Akhir</label>
-                        <input type="text" value="{{ $units->meter_air_akhir }}" class="form-control" required>
-                    </div>
+                   
                     <div class="col-6">
                         <label class="form-label">Meter Listrik Awal</label>
                         <input type="text" value="{{ $units->meter_listrik_awal }}" class="form-control" required>
                     </div>
-                    <div class="col-6">
-                        <label class="form-label">Meter Listrik Akhir</label>
-                        <input type="text" value="{{ $units->meter_listrik_akhir }}" class="form-control" required>
-                    </div>
-                    <div class="col-6">
-                        <label class="form-label">Meter Gas Awal</label>
-                        <input type="text" value="{{ $units->meter_gas_awal }}" class="form-control" required>
-                    </div>
-                    <div class="col-6">
-                        <label class="form-label">Meter Gas Akhir</label>
-                        <input type="text" value="{{ $units->meter_gas_akhir }}" class="form-control" required>
-                    </div>
+                  
                     <div class="col-6">
                         <label class="form-label">Keterangan</label>
                         <input type="text" value="{{ $units->keterangan }}" class="form-control">
