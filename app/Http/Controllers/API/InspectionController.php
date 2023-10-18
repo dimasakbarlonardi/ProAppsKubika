@@ -247,6 +247,7 @@ class InspectionController extends Controller
             }
             $schedule->id_room = $request->id_room;
             $schedule->status = $request->status;
+            $schedule->user_id = $request->user_id;
             $schedule->checklist_datetime = Carbon::now();
 
             // Periksa dan perbarui status jadwal jika diperlukan
