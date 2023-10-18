@@ -7,6 +7,7 @@ use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Models\Package;
 use App\Models\Site;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
@@ -95,15 +96,21 @@ class PackageController extends Controller
         );
     }
 
-    public function pickupPackage($id, $token)
+    public function pickupPackage($id, $token, Request $request)
     {
         $getToken = str_replace("RA164-", "|", $token);
         $tokenable = PersonalAccessToken::findToken($getToken);
         $connPackage = ConnectionDB::setConnection(new Package());
+        $connUser = ConnectionDB::setConnection(new User());
 
         if ($tokenable) {
+            $login = $tokenable->tokenable;
+            $user = $connUser->where('login_user', $login->email)->first();
+
             $package = $connPackage->find($id);
+            $package->picked_by = $user->id_user;
             $package->status = 'Picked Up';
+            $package->picked_time = Carbon::now();
             $package->save();
 
             return ResponseFormatter::success(
