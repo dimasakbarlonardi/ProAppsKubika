@@ -78,18 +78,20 @@ class AuthenticatedSessionController extends Controller
                         throw new \Exception('Invalid Credentials');
                     }
 
-                    $checkIsResign = $getUser->Karyawan->tgl_keluar;
+                    if ($getUser->Karyawan) {
+                        $checkIsResign = $getUser->Karyawan->tgl_keluar;
 
-                    if ($checkIsResign < Carbon::now()->format('Y-m-d')) {
-                        Auth::guard('web')->logout();
+                        if ($checkIsResign < Carbon::now()->format('Y-m-d')) {
+                            Auth::guard('web')->logout();
 
-                        $request->session()->invalidate();
+                            $request->session()->invalidate();
 
-                        $request->session()->regenerateToken();
+                            $request->session()->regenerateToken();
 
-                        Alert::error('Sorry', 'You can not access this app anymore');
+                            Alert::error('Sorry', 'You can not access this app anymore');
 
-                        return redirect()->route('login');
+                            return redirect()->route('login');
+                        }
                     }
 
                     if (isset($getUser)) {

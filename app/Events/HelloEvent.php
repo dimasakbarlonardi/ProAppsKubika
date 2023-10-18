@@ -68,5 +68,6 @@ class HelloEvent implements ShouldBroadcast
             $notif->models = $dataNotif['models'];
             $notif->save();
         }
+        $this->dataNotif['id'] = $notif->id;
     }
 }

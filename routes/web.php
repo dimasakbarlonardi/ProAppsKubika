@@ -148,7 +148,7 @@ Route::get('/delete/midtrans', [PaymentController::class, 'delete']);
 Route::get('/check/midtrans', [PaymentController::class, 'check']);
 
 //dev
-Route::post('/send-event', [AgamaController::class, 'testFCM'])->name('testFCM');
+Route::get('/send-event', function () { });
 Route::get('/notification', [AgamaController::class, 'notification']);
 Route::post('/save-token', [AgamaController::class, 'saveToken'])->name('save-token');
 
@@ -406,6 +406,7 @@ Route::prefix('admin')->group(function () {
         // Notification
         Route::get('/notifications', [DashboardController::class, 'notifications'])->name('notifications');  // Get all notifications list
         Route::get('/get-notifications/{userID}', [DashboardController::class, 'getNotifications'])->name('getNotifications');  // Get all notifications by user_id
+        Route::get('/get-new-notifications/{notifID}', [DashboardController::class, 'getNewNotifications'])->name('getNewNotifications');  // Get all notifications by user_id
         Route::get('/notification/{id}', [DashboardController::class, 'showNotification'])->name('showNotification'); // Show all notification by user_id
 
         // CRUD Work Order
@@ -645,11 +646,11 @@ Route::prefix('admin')->group(function () {
         Route::post('/tools/borrowHK/{id}', [ToolsHKController::class, 'borrowToolHK'])->name('borrowHK.tool');
         Route::post('/tools/returnHK/{id}', [ToolsHKController::class, 'returnToolHK'])->name('returnHK.tool');
 
-         // ---------------Inspection Tools Security-----------------
-         Route::resource('tools-security', ToolsSecurityController::class);
-         Route::get('/history-tools-security', [ToolsSecurityController::class, 'History'])->name('history');
-         Route::post('tools/borrowSecurity/{id}', [ToolsSecurityController::class, 'borrowToolSecurity'])->name('borrowSecurity.tool');
-         Route::post('tools/returnSecurity/{id}', [ToolsSecurityController::class, 'returnToolSecurity'])->name('returnSecurity.tool');
+        // ---------------Inspection Tools Security-----------------
+        Route::resource('tools-security', ToolsSecurityController::class);
+        Route::get('/history-tools-security', [ToolsSecurityController::class, 'History'])->name('history');
+        Route::post('tools/borrowSecurity/{id}', [ToolsSecurityController::class, 'borrowToolSecurity'])->name('borrowSecurity.tool');
+        Route::post('tools/returnSecurity/{id}', [ToolsSecurityController::class, 'returnToolSecurity'])->name('returnSecurity.tool');
 
         // ---------------Inspection Security-----------------
         Route::resource('checklistsecurity', ChecklistSecurityController::class);

@@ -342,7 +342,11 @@
         document.addEventListener("DOMContentLoaded", function(event) {
             Echo.channel("hello-channel")
                 .listen('HelloEvent', (e) => {
-                    getNewNotifications(user_id);
+                    var receiver = e.dataNotif.receiver
+                    var division_receiver = e.dataNotif.division_receiver
+                    var notif_id = e.dataNotif.id
+
+                    getNewNotifications(user_id, receiver, division_receiver, notif_id);
                 })
             messaging
                 .requestPermission()
@@ -421,15 +425,13 @@
             })
         }
 
-        function getNewNotifications(user_id) {
+        function getNewNotifications(user_id, receiver, division_receiver, notif_id) {
+            console.log(notif_id);
             $.ajax({
-                url: `/admin/get-notifications/${user_id}`,
+                url: `/admin/get-new-notifications/${notif_id}`,
                 type: 'GET',
                 success: function(resp) {
-                    data = resp[0];
-                    if (data.division_receiver == division_relation || data.receiver == user_id) {
-                        console.log('masuk');
-                        console.log(data.id);
+                    if (resp.division_receiver == division_relation || resp.receiver == user_id) {
                         notifSound.play();
                         var current = new Date();
                         $('#navbarDropdownNotification').addClass('notification-indicator')

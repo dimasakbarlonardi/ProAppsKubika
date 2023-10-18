@@ -96,6 +96,14 @@ class DashboardController extends Controller
         return response()->json($notifications);
     }
 
+    public function getNewNotifications(Request $request, $notifID)
+    {
+        $connNotif = ConnectionDB::setConnection(new Notifikasi());
+        $notifications = $connNotif->find($notifID);
+
+        return response()->json($notifications);
+    }
+
     public function showNotification(Request $request, $id)
     {
         $connNotif = ConnectionDB::setConnection(new Notifikasi());
