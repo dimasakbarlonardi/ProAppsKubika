@@ -357,6 +357,10 @@ class BillingController extends Controller
             $connElecUUS = new ElectricUUS();
             $connElecUUS = $connElecUUS->setConnection($site->db_name);
 
+            $connElecUUS = $connElecUUS->where('periode_bulan', Carbon::now()->format('d'))
+                ->where('periode_tahun', Carbon::now()->format('Y'))
+                ->first();
+            dd($connElecUUS);
             $connElecUUS->firstOrCreate(
                 [
                     'periode_bulan' => $request->periode_bulan,
