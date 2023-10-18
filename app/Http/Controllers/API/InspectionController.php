@@ -140,6 +140,7 @@ class InspectionController extends Controller
         $object->schedule = $inspection->schedule;
         $object->equipment = $inspection->equipment->equiqment;
         $object->status_schedule = $inspection->status_schedule;
+        $object->id_room = $inspection->equipment->Room->id_room;
         $object->room = $inspection->equipment->Room->nama_room;
         $checklists = [];
 
@@ -290,6 +291,7 @@ class InspectionController extends Controller
         $object->schedule = $inspection->schedule;
         $object->equipment = $inspection->equipment->equipment;
         $object->status_schedule = $inspection->status_schedule;
+        $object->id_room = $inspection->equipment->Room->id_room;
         $object->room = $inspection->equipment->Room->nama_room;
 
         $checklists = [];
