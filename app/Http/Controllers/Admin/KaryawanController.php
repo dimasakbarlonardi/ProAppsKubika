@@ -257,13 +257,21 @@ class KaryawanController extends Controller
     public function update(Request $request, $id)
     {
         $conn = ConnectionDB::setConnection(new Karyawan());
-
         $karyawan = $conn->find($id);
+
+        $login = Login::where('email', $karyawan->email_karyawan)->first();
+
+        $login->email = $request->email_karyawan;
+        $login->save();
+
+        $karyawan->User->login_user = $request->email_karyawan;
+        $karyawan->User->save();
+
         $karyawan->update($request->all());
 
-        Alert::success('Berhasil', 'Berhasil mengupdate karyawan');
+        Alert::success('Success', 'Success update employee');
 
-        return redirect()->route('karyawans.index');
+        return redirect()->back();
     }
 
     /**

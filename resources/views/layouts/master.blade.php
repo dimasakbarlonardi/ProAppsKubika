@@ -342,7 +342,11 @@
         document.addEventListener("DOMContentLoaded", function(event) {
             Echo.channel("hello-channel")
                 .listen('HelloEvent', (e) => {
-                    getNewNotifications(user_id);
+                    var receiver = e.dataNotif.receiver
+                    var division_receiver = e.dataNotif.division_receiver
+                    var notif_id = e.dataNotif.id
+
+                    getNewNotifications(user_id, receiver, division_receiver, notif_id);
                 })
             messaging
                 .requestPermission()
@@ -421,37 +425,36 @@
             })
         }
 
-        function getNewNotifications(user_id) {
+        function getNewNotifications(user_id, receiver, division_receiver, notif_id) {
+            console.log(notif_id);
             $.ajax({
-                url: `/admin/get-notifications/${user_id}`,
+                url: `/admin/get-new-notifications/${notif_id}`,
                 type: 'GET',
                 success: function(resp) {
-                    data = resp[0];
-                    if (data.division_receiver == division_relation || data.receiver == user_id) {
-                        console.log('masuk');
-                        console.log(data.id);
+                    console.log(resp.division_receiver, division_relation);
+                    if (resp.division_receiver == division_relation || resp.receiver == user_id) {
                         notifSound.play();
                         var current = new Date();
                         $('#navbarDropdownNotification').addClass('notification-indicator')
                         $('#empty_notif').html("");
                         $('#notification-lists').prepend(`
                             <div class="list-group-item">
-                                <a class="notification notification-flush ${data.is_read == 1 ? 'notification' : 'notification-unread' }"
-                                    href="/admin/notification/${data.id}">
+                                <a class="notification notification-flush ${resp.is_read == 1 ? 'notification' : 'notification-unread' }"
+                                    href="/admin/notification/${resp.id}">
                                     <div class="notification-avatar">
                                         <div class="avatar avatar-2xl me-3">
                                             <img class="rounded-circle"
-                                                src="${data.sender ? data.sender.profile_picture : ''}"
+                                                src="${resp.sender ? resp.sender.profile_picture : ''}"
                                                 alt="" />
                                         </div>
                                     </div>
                                     <div class="notification-body">
                                         <p class="mb-1">
-                                            <strong>${data.sender ? data.sender.nama_user : ''}</strong> Mengirim anda :
-                                            ${data.notif_message} ${data.notif_title}
+                                            <strong>${resp.sender ? resp.sender.nama_user : ''}</strong> Mengirim anda :
+                                            ${resp.notif_message} ${resp.notif_title}
                                         </p>
                                         <span class="notification-time">
-                                            ${timeDifference(current, new Date(data.created_at))}
+                                            ${timeDifference(current, new Date(resp.created_at))}
                                         </span>
                                     </div>
                                 </a>

@@ -21,15 +21,11 @@
                     <label class="form-label">Email</label>
                     <input type="text" name="login_user" value="{{ $user->login_user }}" class="form-control" required>
                 </div>
-                {{-- <div class="mb-3">
-                    <label class="form-label">ID Status User</label>
-                    <input type="text" name="id_status_user" value="" class="form-control">
-                </div> --}}
                 <div class="mb-3">
                     <label class="form-label">ID Role HDR</label>
                     <select class="form-control" name="id_role_hdr">
                         @foreach ($roles as $role)
-                            <option value="{{ $role->id }}">{{ $role->nama_role }}</option>
+                            <option {{ $user->id_role_hdr == $role->id ? 'selected' : '' }} value="{{ $role->id }}">{{ $role->nama_role }}</option>
                         @endforeach
                     </select>
                 </div>

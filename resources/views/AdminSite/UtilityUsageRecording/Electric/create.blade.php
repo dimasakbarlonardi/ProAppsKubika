@@ -67,9 +67,13 @@
                                             <select class="form-control" name="periode_bulan">
                                                 @foreach ($months as $month)
                                                     <option id="pb-January" value="{{ $month['value'] }}"
-                                                        {{ $month['isDisabled'] ? 'disabled' : '' }}>
+                                                        {{ $month['value'] != \Carbon\Carbon::now()->format('m') ? 'disabled' : '' }}>
                                                         {{ $month['name'] }}
                                                     </option>
+                                                    <!-- <option id="pb-January" value="{{ $month['value'] }}"
+                                                        {{ $month['isDisabled'] ? 'disabled' : '' }}>
+                                                        {{ $month['name'] }}
+                                                    </option> -->
                                                 @endforeach
                                             </select>
                                         </div>

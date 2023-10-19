@@ -28,7 +28,7 @@
                     </div>
                     <div class="col-4 mb-3">
                         <label class="form-label">Owner</label>
-                        <input type="text" value="{{ $tenantunits->Owner->nama_pemilik }}" class="form-control" readonly>
+                        <input type="text" value="{{ $tenantunits->Owner($tenantunits->unit->id_unit)->nama_tenant }}" class="form-control" readonly>
                     </div>
                     <div class="col-4 mb-3">
                         <label class="form-label">Sewa Ke</label>
@@ -200,7 +200,7 @@
 @section('script')
     <script>
         $('#btnPerpanjangSewa').on('click', function() {
-            var id_tenant = '{{ $tenantunits->Tenant->User->id_user }}';
+            var id_tenant = '{{ $tenantunits->Tenant->id_tenant }}';
             var id_unit = '{{ $tenantunits->id_unit }}';
             var id_tenant_unit = '{{ $tenantunits->id_tenant_unit }}';
 
@@ -209,7 +209,7 @@
                 url: `/admin/validation/perubahan`,
                 type: 'GET',
                 data: {
-                    'id_user': id_tenant,
+                    'id_tenant': id_tenant,
                     'id_unit':id_unit
                 },
                 success: function(resp) {

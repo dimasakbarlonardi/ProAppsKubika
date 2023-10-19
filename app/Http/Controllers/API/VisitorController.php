@@ -70,17 +70,17 @@ class VisitorController extends Controller
         );
     }
 
-    // public function arrive($id)
-    // {
-    //     $connVisitor = ConnectionDB::setConnection(new Visitor());
+    public function arrive($id)
+    {
+        $connVisitor = ConnectionDB::setConnection(new Visitor());
 
-    //     $visitor = $connVisitor->find($id);
-    //     $visitor->status = 'Arrive';
-    //     $visitor->save();
+        $visitor = $connVisitor->find($id);
+        $visitor->status = 'Arrive';
+        $visitor->save();
 
-    //     return ResponseFormatter::success(
-    //         $visitor,
-    //         'Success visitors detail'
-    //     );
-    // }
+        return ResponseFormatter::success(
+            $visitor,
+            'Success visitors detail'
+        );
+    }
 }

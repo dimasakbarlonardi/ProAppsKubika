@@ -16,11 +16,20 @@ class IncidentalReportController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
         $conn = ConnectionDB::setConnection(new IncidentalReport());
+        $work_relation_id = $request->session()->get('work_relation_id');
 
-        $data['incidental'] = $conn->get();
+        if ($work_relation_id == 1 || $work_relation_id == 2) {
+            $data['incidentals'] = $conn->where('deleted_at', null)
+            ->with('User')
+            ->get();
+        } else {
+            $data['incidentals'] = $conn->where('user_id', $request->session()->get('user_id'))
+            ->with('User')
+            ->get();
+        }
 
         return view('AdminSite.IncidentalReport.index', $data);
     }
@@ -53,6 +62,7 @@ class IncidentalReportController extends Controller
                 'location' => $request->location,
                 'incident_date' => $request->incident_date,
                 'incident_time' => $request->incident_time,
+                'user_id' => $request->user_id,
                 'desc' => $request->desc,
             ];
 

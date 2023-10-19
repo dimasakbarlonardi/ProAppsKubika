@@ -21,6 +21,7 @@ class IncidentalReport extends Model
         'incident_time',
         'incident_image',
         'desc',
+        'user_id'
     ];
 
     public function Room()
@@ -30,6 +31,6 @@ class IncidentalReport extends Model
 
     public function User()
     {
-        return $this->hasOne(User::class, 'id_user', 'id_user');
+        return $this->hasOne(User::class, 'id_user', 'user_id');
     }
 }

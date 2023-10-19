@@ -57,12 +57,18 @@ class ChecklistAhuHController extends Controller
     {
         $connParameter = ConnectionDB::setConnection(new ChecklistParameterEquiqment());
         $inspectionParameter = ConnectionDB::setConnection(new EngAhu());
-        // $user_id = $request->user()->id;
-        $data['checklistparameters'] = $connParameter->get();
-        $data['parameters'] = $inspectionParameter->get();
-        $data['id'] = $id;
 
-        // $data['idusers'] = Login::where('id', $user_id)->get();
+        $data['checklistparameters'] = $connParameter
+            ->where('id_equiqment', 2)
+            ->where('id_item', $id)
+            ->get();
+
+        $data['parameters'] = $inspectionParameter->where('deleted_at', null)
+            ->with(['Checklist' => function ($q) use ($id) {
+                $q->where('id_item', $id);
+            }])
+            ->get();
+        $data['id'] = $id;
 
         return view('AdminSite.ChecklistAhuH.checklist', $data);
     }
@@ -70,24 +76,52 @@ class ChecklistAhuHController extends Controller
     public function checklistParameter(Request $request, $id)
     {
         $parameter = $request->to;
-        $checklistParameter = ConnectionDB::setConnection(new ChecklistParameterEquiqment());
-        $checklistahu = ConnectionDB::setConnection(new EquiqmentAhu());
-        $equiqment = $checklistahu->where('id_equiqment_engineering', $id)->first();
-        if (isset($parameter)) {
-            foreach ($parameter as $form) {
-                $checklistParameter->create([
-                    'id_equiqment' => $id,
-                    'id_checklist' => $form,                
-                    'id_item' => $equiqment->id_equiqment_engineering
-                ]);
 
-                $checklistParameter->save();
-                DB::commit();
-                Alert::success('Berhasil', 'Berhasil Menambahkan Inspection Engineering');
+        $checklistParameter = ConnectionDB::setConnection(new ChecklistParameterEquiqment());
+
+        $checklist_id = [];
+
+        if ($parameter) {
+            foreach ($parameter as $param) {
+                $checklist_id[] = $param;
             }
+
+            $deletes = $checklistParameter->where('id_equiqment', 2)
+                ->where('id_item', $id)
+                ->whereNotIn('id_checklist', $checklist_id)
+                ->get();
+
+            if (count($deletes) > 0) {
+                $checklistParameter->where('id_equiqment', 2)
+                    ->where('id_item', $id)
+                    ->whereNotIn('id_checklist', $checklist_id)
+                    ->delete();
+            }
+
+            if (isset($parameter)) {
+                foreach ($parameter as $param) {
+                    $checkParam = $checklistParameter->where('id_item', $id)
+                        ->where('id_equiqment', 2)
+                        ->where('id_checklist', $param)
+                        ->first();
+
+                    if (!$checkParam) {
+                        $checklistParameter->create([
+                            'id_equiqment' => 2,
+                            'id_checklist' => $param,
+                            'id_item' => $id
+                        ]);
+                    }
+                }
+            }
+        } else {
+            $checklistParameter->where('id_equiqment', 2)
+                ->where('id_item', $id)
+                ->delete();
         }
 
-        return redirect()->route('checklistahus.index');
+        Alert::success('Success', 'Success update Inspection Engineering');
+        return redirect()->back();
     }
 
     public function create(Request $request)
@@ -156,7 +190,7 @@ class ChecklistAhuHController extends Controller
             DB::beginTransaction();
 
             $id_equiqment = 1;
-            
+
             $equiqmentAHU->create([
                 'no_equiqment' => $request->no_equiqment,
                 'id_equiqment' => $id_equiqment,
@@ -164,20 +198,32 @@ class ChecklistAhuHController extends Controller
                 'id_role' => $request->id_role,
                 'id_room' => $request->id_room,
             ]);
-            
+
             DB::commit();
-            
+
             Alert::success('Berhasil', 'Berhasil menambahkan Inspection Engineering');
 
             return redirect()->route('checklistahus.index');
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            dd($e);
+            Alert::error('Gagal', 'Gagal menambahkan Inspection Engineering');
 
-            } catch (\Throwable $e) {
-                DB::rollBack();
-                dd($e);
-                Alert::error('Gagal', 'Gagal menambahkan Inspection Engineering');
+            return redirect()->route('checklistahus.index');
+        }
+    }
 
-                return redirect()->route('checklistahus.index');
-            }
+    public function updateSchedules(Request $request, $id)
+    {
+        $equiqmentDetail = ConnectionDB::setConnection(new EquiqmentEngineeringDetail());
+
+        $schedule = $equiqmentDetail->find($id);
+
+        $schedule->update($request->all());
+
+        Alert::success('Success', 'Success update schedule');
+
+        return redirect()->back();
     }
 
     /**
@@ -210,17 +256,13 @@ class ChecklistAhuHController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit(Request $request, $id)
+    public function edit($id)
     {
         $connequiqment = ConnectionDB::setConnection(new EquiqmentAhu());
-        $conndetail = ConnectionDB::setConnection(new ChecklistAhuDetail());
         $connroom = ConnectionDB::setConnection(new Room());
-        $user_id = $request->user()->id;
 
         $data['equipmentengineering'] = $connequiqment->where('id_equiqment_engineering', $id)->first();
-        $data['ahudetail'] = $conndetail->where('no_checklist_ahu', $id)->first();
         $data['rooms'] = $connroom->get();
-        $data['idusers'] = Login::where('id', $user_id)->get();
 
         return view('AdminSite.ChecklistAhuH.edit', $data);
     }
@@ -237,7 +279,10 @@ class ChecklistAhuHController extends Controller
         $conn = ConnectionDB::setConnection(new EquiqmentAhu());
 
         $checklistahu = $conn->find($id);
-        $checklistahu->update($request->all());
+        $checklistahu->no_equiqment = $request->no_equipment;
+        $checklistahu->equiqment = $request->equipment;
+        $checklistahu->id_room = $request->id_room;
+        $checklistahu->save();
 
         Alert::success('Berhasil', 'Berhasil mengupdate Checklis AHU');
 
@@ -267,8 +312,8 @@ class ChecklistAhuHController extends Controller
 
         $data['eq'] = $connEquiqment->find($id);
         $data['schedules'] = $connSchedules->where('id_equiqment_engineering', $id)
-        ->orderBy('schedule', 'ASC')
-        ->get();
+            ->orderBy('schedule', 'ASC')
+            ->get();
 
         return view('AdminSite.ChecklistAhuH.schedules', $data);
     }

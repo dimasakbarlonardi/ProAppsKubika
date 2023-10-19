@@ -49,6 +49,6 @@ class EquiqmentToilet extends Model
     public function Inspection()
     {
         return $this->hasMany(ChecklistParameterEquiqment::class, 'id_item', 'id_equipment_housekeeping')
-            ->where('id_equiqment', 2);
+            ->where('id_equiqment', 1);
     }
 }

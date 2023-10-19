@@ -2,10 +2,13 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\HelloEvent;
 use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
 use App\Models\Approve;
+use App\Models\Role;
 use App\Models\Site;
+use App\Models\Tower;
 use App\Models\Unit;
 use App\Models\User;
 use App\Models\WaterUUS;
@@ -19,7 +22,7 @@ class WaterUUSController extends Controller
     public function index(Request $request)
     {
         $connWatercUUS = ConnectionDB::setConnection(new WaterUUS());
-        $connUnit = ConnectionDB::setConnection(new Unit());
+        $connTower = ConnectionDB::setConnection(new Tower());
         $connApprove = ConnectionDB::setConnection(new Approve());
 
         $data['approve'] = $connApprove->find(9);
@@ -66,7 +69,7 @@ class WaterUUSController extends Controller
         }
 
         $data['waterUSS'] = $record->get();
-        $data['units'] = $connUnit->get();
+        $data['towers'] = $connTower->get();
 
         return view('AdminSite.UtilityUsageRecording.Water.index', $data);
     }
@@ -143,7 +146,9 @@ class WaterUUSController extends Controller
     public function update(Request $request, $id)
     {
         $connWater = ConnectionDB::setConnection(new WaterUUS());
+        $connApprove = ConnectionDB::setConnection(new Approve());
 
+        $approve = $connApprove->find(9);
         $water = $connWater->find($id);
 
         $water->is_updated = '1';
@@ -156,6 +161,18 @@ class WaterUUSController extends Controller
         $water->usage = $request->nomor_air_akhir - $request->nomor_air_awal;
         $water->save();
 
+        $dataNotif = [
+            'models' => 'UpdateWaterRecording',
+            'notif_title' => 'Update Utility Usage Recording',
+            'id_data' => null,
+            'sender' => $request->session()->get('user')->id_user,
+            'division_receiver' => null,
+            'notif_message' => 'Terjadi kesalahan penginputan meter air',
+            'receiver' => $approve->approval_3
+        ];
+
+        broadcast(new HelloEvent($dataNotif));
+
         Alert::success('Success', 'Success update data');
 
         return redirect()->back();
@@ -164,11 +181,27 @@ class WaterUUSController extends Controller
     public function approveUpdate($id)
     {
         $connWater = ConnectionDB::setConnection(new WaterUUS());
+        $connApprove = ConnectionDB::setConnection(new Approve());
+        $connRole = ConnectionDB::setConnection(new Role());
 
+        $approve = $connApprove->find(9);
         $water = $connWater->find($id);
+        $role = $connRole->find($approve->approval_1);
 
         $water->is_updated = null;
         $water->save();
+
+        $dataNotif = [
+            'models' => 'UpdateWaterRecording',
+            'notif_title' => 'Update Utility Usage Recording',
+            'id_data' => null,
+            'sender' => $approve->approval_3,
+            'division_receiver' => $role->WorkRelation->id_work_relation,
+            'notif_message' => 'Perubahan data recording sudah di approve',
+            'receiver' => null
+        ];
+
+        broadcast(new HelloEvent($dataNotif));
 
         Alert::success('Success', 'Success update data');
 

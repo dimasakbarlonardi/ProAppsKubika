@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\HelloEvent;
 use App\Helpers\ConnectionDB;
 use App\Helpers\HelpNotifikasi;
 use App\Helpers\ResponseFormatter;
@@ -42,6 +43,15 @@ class BillingController extends Controller
     {
         $connElecUUS = ConnectionDB::setConnection(new ElectricUUS());
         $connWaterUUS = ConnectionDB::setConnection(new WaterUUS());
+        $connSystem = ConnectionDB::setConnection(new System());
+        $system = $connSystem->find(1);
+
+        $countINV = $system->sequence_no_invoice + 1;
+
+        $no_inv = $system->kode_unik_perusahaan . '/' .
+            $system->kode_unik_invoice . '/' .
+            Carbon::now()->format('m') . Carbon::now()->format('Y') . '/' .
+            sprintf("%06d", $countINV);
 
         foreach ($request->IDs as $id) {
             if ($request->type == 'electric') {
@@ -75,9 +85,17 @@ class BillingController extends Controller
                     $waterUSS->save();
 
                     $createMonthlyTenant->id_monthly_utility = $createUtilityBill->id;
-                    $createMonthlyTenant->save();
+                    $createMonthlyTenant->no_monthly_invoice = $no_inv;
                     $createMonthlyTenant->id_monthly_ipl = $createIPLbill->id;
                     $createMonthlyTenant->save();
+
+                    $transaction = $this->createTransaction($createMonthlyTenant);
+                    $transaction->no_reff = $no_inv;
+                    $transaction->no_invoice = $no_inv;
+                    $transaction->save();
+
+                    $system->sequence_no_invoice = $countINV;
+                    $system->save();
 
                     DB::commit();
                 } catch (Throwable $e) {
@@ -200,8 +218,6 @@ class BillingController extends Controller
 
         $order_id = $user->id_site . '-' . $no_cr;
 
-        $admin_fee = 5000;
-
         try {
             DB::beginTransaction();
 
@@ -232,7 +248,6 @@ class BillingController extends Controller
             $createTransaction->no_invoice = $mt->no_monthly_invoice;
             $createTransaction->no_draft_cr = $no_cr;
             $createTransaction->ket_pembayaran = 'INV/' . $user->id_user . '/' . $mt->Unit->nama_unit;
-            $createTransaction->admin_fee = $admin_fee;
             $createTransaction->sub_total = $subtotal;
             $createTransaction->transaction_status = 'PENDING';
             $createTransaction->id_user = $user->id_user;
@@ -275,12 +290,9 @@ class BillingController extends Controller
 
     public function blastMonthlyInvoice(Request $request)
     {
-        $connSystem = ConnectionDB::setConnection(new System());
         $connReminder = ConnectionDB::setConnection(new ReminderLetter());
         $connElec = ConnectionDB::setConnection(new ElectricUUS());
         $connWater = ConnectionDB::setConnection(new WaterUUS());
-
-        $system = $connSystem->find(1);
 
         foreach ($request->IDs as $id) {
             try {
@@ -296,22 +308,11 @@ class BillingController extends Controller
                         ->first();
                 }
 
-                if (!$util->MonthlyUtility->MonthlyTenant->CashReceipt) {
-
-                    $countINV = $system->sequence_no_invoice + 1;
-
-                    $no_inv = $system->kode_unik_perusahaan . '/' .
-                        $system->kode_unik_invoice . '/' .
-                        Carbon::now()->format('m') . Carbon::now()->format('Y') . '/' .
-                        sprintf("%06d", $countINV);
-
-                    $transaction = $this->createTransaction($util->MonthlyUtility->MonthlyTenant);
-
+                if (!$util->MonthlyUtility->MonthlyTenant->tgl_jt_invoice) {
                     $jatuh_tempo_1 = $connReminder->find(1)->durasi_reminder_letter;
                     $jatuh_tempo_1 = Carbon::now()->addDays($jatuh_tempo_1);
 
                     $util->MonthlyUtility->MonthlyTenant->tgl_jt_invoice = $jatuh_tempo_1;
-                    $util->MonthlyUtility->MonthlyTenant->no_monthly_invoice = $no_inv;
                     $util->MonthlyUtility->MonthlyTenant->save();
 
                     $util->MonthlyUtility->MonthlyTenant->MonthlyIPL->sign_approval_2 = Carbon::now();
@@ -319,35 +320,21 @@ class BillingController extends Controller
 
                     $util->MonthlyUtility->sign_approval_2 = Carbon::now();
                     $util->MonthlyUtility->save();
-
-                    $system->sequence_no_invoice = $countINV;
-                    $system->save();
-
-                    $transaction->no_reff = $no_inv;
-                    $transaction->save();
-
-                    $connNotif = ConnectionDB::setConnection(new Notifikasi());
-                    $request = Request();
-
-                    $notif = $connNotif->where('models', 'MonthlyTenant')
-                        ->where('is_read', 0)
-                        ->where('id_data', $util->MonthlyUtility->id_monthly_ar_tenant)
-                        ->first();
-
-                    if (!$notif) {
-                        $createNotif = $connNotif;
-                        $createNotif->sender = $request->session()->get('user')->id_user;
-                        $createNotif->receiver = $util->MonthlyUtility->Unit->TenantUnit->Tenant->User->id_user;
-                        $createNotif->is_read = 0;
-                        $createNotif->id_data = $util->MonthlyUtility->id_monthly_ar_tenant;
-                        $createNotif->notif_title = 'Invoice Bulanan';
-                        $createNotif->notif_message = 'Harap melakukan pembayaran tagihan bulanan anda';
-                        $createNotif->models = 'MonthlyTenant';
-                        $createNotif->save();
-                    }
-
-                    DB::commit();
                 }
+
+                $dataNotif = [
+                    'models' => 'MonthlyTenant',
+                    'notif_title' => 'Monthly Invoice',
+                    'id_data' => $util->MonthlyUtility->MonthlyTenant->id_monthly_ar_tenant,
+                    'sender' => $request->session()->get('user')->id_user,
+                    'division_receiver' => null,
+                    'notif_message' => 'Harap melakukan pembayaran tagihan bulanan anda',
+                    'receiver' => $util->MonthlyUtility->Unit->TenantUnit->Tenant->User->id_user
+                ];
+
+                broadcast(new HelloEvent($dataNotif));
+
+                DB::commit();
             } catch (Throwable $e) {
                 DB::rollBack();
                 dd($e);
