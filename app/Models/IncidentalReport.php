@@ -11,7 +11,10 @@ class IncidentalReport extends Model
 
     protected $table = 'tb_incidental_reports';
 
+    protected $primaryKey = 'id';
+
     protected $fillable = [
+        'id_user',
         'incident_name',
         'location',
         'incident_date',
@@ -23,5 +26,10 @@ class IncidentalReport extends Model
     public function Room()
     {
         return $this->hasOne(Room::class, 'id_room', 'room_id');
+    }
+
+    public function User()
+    {
+        return $this->hasOne(User::class, 'id_user', 'id_user');
     }
 }

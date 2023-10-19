@@ -2,13 +2,25 @@
 
 @section('content')
 <div class="card">
-    <div class="card-header py-2">
+    <!-- <div class="card-header py-2">
         <div class="row flex-between-center">
             <div class="col-auto">
                 <h6 class="my-3">Employee Data</h6>
             </div>
         </div>
-    </div>
+    </div> -->
+    <div class="card-header py-2">
+            <div class="row flex-between-center">
+                <div class="col-auto">
+                    <nav aria-label="breadcrumb">
+                        <ol class="my-3 breadcrumb">
+                            <li class="breadcrumb-item text-white"> <a href="{{ route('karyawans.index')}}" class="text-white">Back Employee Data </a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Detail Employee</li>
+                        </ol>
+                    </nav>
+                </div>
+            </div>
+        </div>
     <div class="p-5">
         <form method="post" action="{{ route('karyawans.update', $karyawan->id) }}">
             @method('PUT')
@@ -46,11 +58,9 @@
                             <input type="text" maxlength="16" name="nik_karyawan" value="{{ $karyawan->nik_karyawan }}" class="form-control" readonly disabled>
                         </div>
                         <div class="col-6">
-                            <label class="form-label">Domicile</label>
+                            <label class="form-label">Domicile ID Card</label>
                             <input type="text" name="alamat_ktp_karyawan" value="{{ $karyawan->alamat_ktp_karyawan }}" class="form-control" readonly>
                         </div>
-                    </div>
-                    <div class="row">
                         <div class="col-6">
                             <label class="form-label">Date Of Birth</label>
                             <input type="date" name="tgl_lahir" value="{{$karyawan->tgl_lahir}}" class="form-control" required>
@@ -67,13 +77,6 @@
                             <label class="form-label">Call Number</label>
                             <input type="text" name="no_telp_karyawan" value="{{ $karyawan->no_telp_karyawan }}" class="form-control" readonly>
                         </div>
-                        {{-- <div class="col-6">
-                                <label class="form-label">Masa Berlaku ID</label>
-                                <input type="date" name="masa_berlaku_id" value="{{ $karyawan->masa_berlaku_id }}"
-                        class="form-control" required disabled>
-                    </div> --}}
-                </div>
-                <div class="row">
                     <div class="col-6">
                         <label class="form-label">Date In</label>
                         <input type="date" name="tgl_masuk" value="{{ $karyawan->tgl_masuk }}" class="form-control">

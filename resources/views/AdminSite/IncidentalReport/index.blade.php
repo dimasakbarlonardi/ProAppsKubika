@@ -22,7 +22,6 @@
             <thead>
                 <tr>
                     <th class="sort" data-sort="">No</th>
-                    <th class="sort" data-sort="reported_name">Reported By</th>
                     <th class="sort" data-sort="incident_name">Incident</th>
                     <th class="sort" data-sort="location">Location</th>
                     <th class="sort" data-sort="date">Date</th>
@@ -35,14 +34,13 @@
                 @foreach ($incidental as $key => $incident)
                     <tr>
                         <th scope="row">{{ $key + 1 }}</th>
-                        <td>{{ $incident->reported_name }}</td>
                         <td>{{ $incident->incident_name }}</td>
                         <td>{{ $incident->location }}</td>
                         <td>{{\Carbon\Carbon::parse($incident->incident_date)->format('d-M-Y')}}</td>
                         <td>{{ $incident->incident_time }}</td>
                         <td>{{ $incident->desc }}</td>
                         <td>
-                            <a href="{{ $incident->image ? asset($incident->image) : asset('/assets/img/team/3-thumb.png') }}" data-bs-toggle="modal" data-bs-target="#error-modal" data-image="{{ $incident->image ? asset($incident->image) : asset('/assets/img/team/3-thumb.png') }}">
+                            <a href="{{ $incident->incident_image ? asset($incident->image) : asset('/assets/img/team/3-thumb.png') }}" data-bs-toggle="modal" data-bs-target="#error-modal" data-image="{{ $incident->image ? asset($incident->image) : asset('/assets/img/team/3-thumb.png') }}">
                                 <img src="{{ $incident->image ? asset($incident->image) : asset('/assets/img/team/3-thumb.png') }}" alt="{{ $incident->incident_image }}" style="max-width: 50px; height: 50px">
                             </a>
                         </td>
