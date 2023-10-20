@@ -168,8 +168,8 @@ class AttendanceController extends Controller
             ], 'Authentication Failed', 401);
         }
 
-        $lat = $request->latitude;
-        $long = $request->longitude;
+        $lat = $request->my_lat;
+        $long = $request->my_long;
 
         $distance = $this->getDistance($lat, $long);
         if ($distance < 0.03) {
