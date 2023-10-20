@@ -16,8 +16,8 @@ class Coordinate extends Model
     protected $fillable = [
         'id_site',
         'site_name',
-        'lat',
-        'long',
+        'latitude',
+        'longitude',
         'radius',
         'barcode_image',
     ];
