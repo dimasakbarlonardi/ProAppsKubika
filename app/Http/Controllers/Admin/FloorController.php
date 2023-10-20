@@ -51,7 +51,7 @@ class FloorController extends Controller
             DB::beginTransaction();
 
             $conn->create([
-                'id_lantai' => $request->id_lantai,
+                'id_lantai' => rand(100, 200),
                 'nama_lantai' => $request->nama_lantai,
             ]);
 

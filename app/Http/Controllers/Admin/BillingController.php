@@ -523,7 +523,7 @@ class BillingController extends Controller
                 $payment['transaction_details']['order_id'] = $transaction->order_id;
                 $payment['transaction_details']['gross_amount'] = $transaction->gross_amount;
                 $payment['bank_transfer']['bank'] = $billing[1];
-
+                
                 $response = $client->request('POST', 'https://api.sandbox.midtrans.com/v2/charge', [
                     'body' => json_encode($payment),
                     'headers' => [
@@ -538,7 +538,7 @@ class BillingController extends Controller
                     ]
                 ]);
                 $response = json_decode($response->getBody());
-
+                
                 $connSystem = ConnectionDB::setConnection(new System());
                 $system = $connSystem->find(1);
 
@@ -548,22 +548,27 @@ class BillingController extends Controller
                     $system->kode_unik_invoice . '/' .
                     Carbon::now()->format('m') . Carbon::now()->format('Y') . '/' .
                     sprintf("%06d", $countINV);
-
-                $transaction->va_number = $response->va_numbers[0]->va_number;
-                $transaction->expiry_time = $response->expiry_time;
-                $transaction->transaction_id = $response->transaction_id;
-                $transaction->no_invoice = $no_inv;
-                $transaction->transaction_status = 'VERIFYING';
-
-                $system->sequence_no_invoice = $countINV;
-
-                $transaction->WorkOrder->Ticket->no_invoice = $no_inv;
-                $transaction->WorkOrder->Ticket->save();
-
-                $system->save();
-                $transaction->save();
-
-                return redirect()->route('paymentWO', [$transaction->WorkOrder->id, $transaction->id]);
+              
+                if ($response->status_code != 406) {
+                    $transaction->va_number = $response->va_numbers[0]->va_number;
+                    $transaction->expiry_time = $response->expiry_time;
+                    $transaction->transaction_id = $response->transaction_id;
+                    $transaction->no_invoice = $no_inv;
+                    $transaction->transaction_status = 'VERIFYING';
+    
+                    $system->sequence_no_invoice = $countINV;
+    
+                    $transaction->WorkOrder->Ticket->no_invoice = $no_inv;
+                    $transaction->WorkOrder->Ticket->save();
+    
+                    $system->save();
+                    $transaction->save();
+    
+                    return redirect()->route('paymentWO', [$transaction->WorkOrder->id, $transaction->id]);
+                } else {
+                    Alert::info('Sorry', 'Our server is busy');
+                    return redirect()->back();
+                }
             } elseif ($request->billing == 'credit_card') {
                 $transaction->payment_type = 'credit_card';
                 $transaction->admin_fee = $admin_fee;

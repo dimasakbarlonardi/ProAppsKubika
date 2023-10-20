@@ -80,124 +80,120 @@
             </div>
 
             @if ($user->id_role_hdr != 8)
-                <div class="col-3">
-                    <div class="row g-3 position-sticky top-0">
-                        <div class="col-md-6 col-xl-12 rounded-3">
-                            <div class="card">
-                                <div class="card-header d-flex flex-between-center py-3">
-                                    <h6 class="mb-0">Contact Information</h6>
+                <div class="col-3">                                            
+                    <div class="card">
+                        <div class="card-header d-flex flex-between-center py-3">
+                            <h6 class="mb-0">Contact Information</h6>
+                        </div>
+                        <div class="card-body">
+                            <div
+                                class="row g-0 border-bottom pb-x1 mb-x1 align-items-sm-center align-items-xl-start">
+                                <div class="col-3">
+                                    <div class="avatar avatar-3xl">
+                                        <img class="rounded-circle"
+                                            src="{{ $wr->Ticket->Tenant->profile_picture ? url($wr->Ticket->Tenant->profile_picture) : '' }}"
+                                            alt="" />
+                                    </div>
                                 </div>
-                                <div class="card-body">
-                                    <div
-                                        class="row g-0 border-bottom pb-x1 mb-x1 align-items-sm-center align-items-xl-start">
-                                        <div class="col-3">
-                                            <div class="avatar avatar-3xl">
-                                                <img class="rounded-circle"
-                                                    src="{{ $wr->Ticket->Tenant->profile_picture ? url($wr->Ticket->Tenant->profile_picture) : '' }}"
-                                                    alt="" />
-                                            </div>
+                                <div class="col-6">
+                                    <p class="fw-semi-bold text-800 mb-0">{{ $wr->Ticket->Tenant->nama_tenant }}</p>
+                                    <a class="btn btn-link btn-sm p-0 fe-medium fs--1" href="#">View more
+                                        details
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="row g-0 justify-content-lg-between">
+                                <div class="col-auto col-md-6 col-lg-auto">
+                                    <div class="row">
+                                        <div class="col-md-auto mb-4 mb-md-0 mb-xl-4">
+                                            <h6 class="mb-1">Email</h6>
+                                            <a class="fs--1"
+                                                href="mailto:{{ $wr->Ticket->Tenant->email_tenant }}">{{ $wr->Ticket->Tenant->email_tenant }}
+                                            </a>
                                         </div>
-                                        <div class="col-6">
-                                            <p class="fw-semi-bold text-800 mb-0">{{ $wr->Ticket->Tenant->nama_tenant }}</p>
-                                            <a class="btn btn-link btn-sm p-0 fe-medium fs--1" href="#">View more
-                                                details
+                                        <div class="col-md-auto mb-4 mb-md-0 mb-xl-4">
+                                            <h6 class="mb-1">Phone Number</h6>
+                                            <a class="fs--1"
+                                                href="tel:+{{ $wr->Ticket->Tenant->no_telp_tenant }}">{{ $wr->Ticket->Tenant->no_telp_tenant }}
                                             </a>
                                         </div>
                                     </div>
-                                    <div class="row g-0 justify-content-lg-between">
-                                        <div class="col-auto col-md-6 col-lg-auto">
-                                            <div class="row">
-                                                <div class="col-md-auto mb-4 mb-md-0 mb-xl-4">
-                                                    <h6 class="mb-1">Email</h6>
-                                                    <a class="fs--1"
-                                                        href="mailto:{{ $wr->Ticket->Tenant->email_tenant }}">{{ $wr->Ticket->Tenant->email_tenant }}
-                                                    </a>
-                                                </div>
-                                                <div class="col-md-auto mb-4 mb-md-0 mb-xl-4">
-                                                    <h6 class="mb-1">Phone Number</h6>
-                                                    <a class="fs--1"
-                                                        href="tel:+{{ $wr->Ticket->Tenant->no_telp_tenant }}">{{ $wr->Ticket->Tenant->no_telp_tenant }}
-                                                    </a>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-auto mb-4 mb-md-0 mb-xl-4">
-                                                    <h6 class="mb-1">Unit</h6>
-                                                    <a class="fs--1" href="mailto:mattrogers@gmail.com">Lantai :
-                                                        {{ $wr->Ticket->Unit->floor->nama_lantai }},
-                                                        {{ $wr->Ticket->Unit->nama_unit }}
-                                                    </a>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-auto col-md-6 col-lg-auto ps-md-5 ps-xl-0">
-                                            <div class="border-start position-absolute start-50 d-none d-md-block d-xl-none"
-                                                style="height: 72px"></div>
+                                    <div class="row">
+                                        <div class="col-md-auto mb-4 mb-md-0 mb-xl-4">
+                                            <h6 class="mb-1">Unit</h6>
+                                            <a class="fs--1" href="mailto:mattrogers@gmail.com">Lantai :
+                                                {{ $wr->Ticket->Unit->floor->nama_lantai }},
+                                                {{ $wr->Ticket->Unit->nama_unit }}
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="card mt-2">
-                                <div class="card-header">
-                                    <h6 class="mb-0">Properties</h6>
+                                <div class="col-auto col-md-6 col-lg-auto ps-md-5 ps-xl-0">
+                                    <div class="border-start position-absolute start-50 d-none d-md-block d-xl-none"
+                                        style="height: 72px"></div>
                                 </div>
-                                <div class="card-body">
-                                    <div class="mb-4 mt-n2"><label class="mb-1">Work Relation</label>
-                                        <select name="id_work_relation" class="form-select form-select-sm" disabled>
-                                            <option disabled selected>--Pilih Work Relation ---</option>
-                                            @foreach ($work_relations as $work_relation)
-                                                <option
-                                                    {{ $work_relation->id_work_relation == $wr->id_work_relation ? 'selected' : '' }}
-                                                    value="{{ $work_relation->id_work_relation }}">
-                                                    {{ $work_relation->work_relation }}</option>
-                                            @endforeach
-                                        </select>
-                                    </div>
-                                    @if ($wr->status_request != 'PENDING')
-                                        <div class="mb-4 mt-n2"><label class="mb-1">Status</label>
-                                            <select name="status_request" class="form-select form-select-sm"
-                                                id="select_status">
-                                                <option {{ $wr->status_request == 'ON WORK' ? 'selected' : '' }}
-                                                    value="ON WORK">ON WORK</option>
-                                                <option {{ $wr->status_request == 'WORK ORDER' ? 'selected' : '' }}
-                                                    value="WORK ORDER">Ajukan Work Order</option>
-                                            </select>
-                                        </div>
-                                        <div class="mb-4 mt-n2" id="select_id_bayarnon" style="display: none">
-                                            <label class="mb-1">Status Berbayar WO</label>
-                                            <select name="id_bayarnon" class="form-select form-select-sm"
-                                                id="id_bayarnon">
-                                                <option value="1">Berbayar</option>
-                                                <option value="0">Non Berbayar</option>
-                                            </select>
-                                        </div>
-                                        <div class="mb-4 mt-n2" id="select_estimasi_pengerjaan" style="display: none">
-                                            <label class="mb-1">Estimasi Pengerjaan</label>
-                                            <div class="input-group">
-                                                <input class="form-control"
-                                                    value="{{ $wr->WorkOrder ? $wr->WorkOrder->estimasi_pengerjaan : '' }}"
-                                                    type="text" name="estimasi_pengerjaan"
-                                                    id="estimasi_pengerjaan" /><span class="input-group-text">Jam</span>
-                                            </div>
-                                        </div>
-                                    @endif
-                                </div>
-                            </div>
-                            <div class="card-footer border-top border-200 py-x1">
-                                @if ($wr->status_request == 'PENDING')
-                                    <button type="button" onclick="onSubmit('ON WORK')"
-                                        class="btn btn-primary w-100">Kerjakan</button>
-                                @elseif ($wr->status_request == 'ON WORK')
-                                    <button type="button" onclick="onSubmit('WORK DONE')" class="btn btn-primary w-100"
-                                        id="btn_pekerjaan_selesai">Pekerjaan Selesai</button>
-                                @endif
-                                @if ($wr->status_request != 'WORK ORDER')
-                                    <button type="button" class="btn btn-primary w-100" id="btn_request_wo">Ajukan Work
-                                        Order</button>
-                                @endif
                             </div>
                         </div>
                     </div>
+                    <div class="card mt-2">
+                        <div class="card-header">
+                            <h6 class="mb-0">Properties</h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-4 mt-n2"><label class="mb-1">Work Relation</label>
+                                <select name="id_work_relation" class="form-select form-select-sm" disabled>
+                                    <option disabled selected>--Pilih Work Relation ---</option>
+                                    @foreach ($work_relations as $work_relation)
+                                        <option
+                                            {{ $work_relation->id_work_relation == $wr->id_work_relation ? 'selected' : '' }}
+                                            value="{{ $work_relation->id_work_relation }}">
+                                            {{ $work_relation->work_relation }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                            @if ($wr->status_request != 'PENDING')
+                                <div class="mb-4 mt-n2"><label class="mb-1">Status</label>
+                                    <select name="status_request" class="form-select form-select-sm"
+                                        id="select_status">
+                                        <option {{ $wr->status_request == 'ON WORK' ? 'selected' : '' }}
+                                            value="ON WORK">ON WORK</option>
+                                        <option {{ $wr->status_request == 'WORK ORDER' ? 'selected' : '' }}
+                                            value="WORK ORDER">Ajukan Work Order</option>
+                                    </select>
+                                </div>
+                                <div class="mb-4 mt-n2" id="select_id_bayarnon" style="display: none">
+                                    <label class="mb-1">Status Berbayar WO</label>
+                                    <select name="id_bayarnon" class="form-select form-select-sm"
+                                        id="id_bayarnon">
+                                        <option value="1">Berbayar</option>
+                                        <option value="0">Non Berbayar</option>
+                                    </select>
+                                </div>
+                                <div class="mb-4 mt-n2" id="select_estimasi_pengerjaan" style="display: none">
+                                    <label class="mb-1">Estimasi Pengerjaan</label>
+                                    <div class="input-group">
+                                        <input class="form-control"
+                                            value="{{ $wr->WorkOrder ? $wr->WorkOrder->estimasi_pengerjaan : '' }}"
+                                            type="text" name="estimasi_pengerjaan"
+                                            id="estimasi_pengerjaan" /><span class="input-group-text">Jam</span>
+                                    </div>
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+                    <div class="card-footer border-top border-200 py-x1">
+                        @if ($wr->status_request == 'PENDING')
+                            <button type="button" onclick="onSubmit('ON WORK')"
+                                class="btn btn-primary w-100">Kerjakan</button>
+                        @elseif ($wr->status_request == 'ON WORK')
+                            <button type="button" onclick="onSubmit('WORK DONE')" class="btn btn-primary w-100"
+                                id="btn_pekerjaan_selesai">Pekerjaan Selesai</button>
+                        @endif
+                        @if ($wr->status_request != 'WORK ORDER')
+                            <button type="button" class="btn btn-primary w-100" id="btn_request_wo">Ajukan Work
+                                Order</button>
+                        @endif
+                    </div>                                            
                 </div>
             @endif
         </div>
