@@ -48,8 +48,8 @@ class AttendanceController extends Controller
         if ($tokenable) {
             $coor = $conCoordinate->find($id);
             $data = [
-                'lat' => $coor->lat,
-                'long' => $coor->long,
+                'lat' => $coor->latitude,
+                'long' => $coor->longitude,
             ];
 
             return ResponseFormatter::success(
@@ -168,8 +168,8 @@ class AttendanceController extends Controller
             ], 'Authentication Failed', 401);
         }
 
-        $lat = $request->lat;
-        $long = $request->long;
+        $lat = $request->latitude;
+        $long = $request->longitude;
 
         $distance = $this->getDistance($lat, $long);
         if ($distance < 0.03) {
@@ -262,8 +262,8 @@ class AttendanceController extends Controller
         $coordinates = $conCoordinates->get();
 
         foreach ($coordinates as $item) {
-            $latitude1 = $item->lat;
-            $longitude1 = $item->long;
+            $latitude1 = $item->latitude;
+            $longitude1 = $item->longitude;
         }
 
         if ($latitude1 && $longitude1) {
