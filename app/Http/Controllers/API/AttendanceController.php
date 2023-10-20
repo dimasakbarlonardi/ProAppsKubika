@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Helpers\ConnectionDB;
 use App\Helpers\ResponseFormatter;
+use App\Helpers\SaveImage;
 use App\Http\Controllers\Controller;
 use App\Models\Attendance;
 use App\Models\Karyawan;
@@ -15,8 +16,13 @@ use App\Models\User;
 use App\Models\WorkTimeline;
 use Carbon\Carbon;
 use DateTime;
+use Image;
+use File;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\PersonalAccessToken;
+use stdClass;
 
 class AttendanceController extends Controller
 {
@@ -113,9 +119,26 @@ class AttendanceController extends Controller
                             $status_absence = 'On Time';
                         }
 
-                        $karyawan->NowSchedule->check_in = Carbon::now();
-                        $karyawan->NowSchedule->status_absence = $status_absence;
-                        $karyawan->NowSchedule->save();
+                        try {
+                            DB::beginTransaction();
+                            $karyawan->NowSchedule->check_in = Carbon::now();
+                            $karyawan->NowSchedule->checkin_lat = $request->my_lat;
+                            $karyawan->NowSchedule->checkin_long = $request->my_long;
+                            $karyawan->NowSchedule->status_absence = $status_absence;
+
+                            $file = $request->file('photo');
+
+                            if ($file) {
+                                $storagePath = SaveImage::saveToStorage($request->user()->id_site, 'checkin', $file);
+                                $karyawan->NowSchedule->checkin_photo = $storagePath;
+                            }
+
+                            $karyawan->NowSchedule->save();
+                            DB::commit();
+                        } catch (\Throwable $e) {
+                            DB::rollBack();
+                            dd($e);
+                        }
 
                         return response()->json([
                             'status' => 'OK',
@@ -190,6 +213,12 @@ class AttendanceController extends Controller
                     }
 
                     if ($distance < 10) {
+                        $file = $request->file('photo');
+                        if ($file) {
+                            $storagePath = SaveImage::saveToStorage($request->user()->id_site, 'checkin', $file);
+                            $karyawan->NowSchedule->checkout_photo = $storagePath;
+                        }
+
                         $karyawan->NowSchedule->work_hour = $work_hour;
                         $karyawan->NowSchedule->check_out = $checkout;
                         $karyawan->NowSchedule->save();
@@ -338,6 +367,71 @@ class AttendanceController extends Controller
         return ResponseFormatter::success(
             $schedules,
             'Success get all schedules'
+        );
+    }
+
+    public function attendanceReports(Request $request)
+    {
+        $connWorkSchedule = ConnectionDB::setConnection(new WorkTimeline());
+        $connKaryawan = ConnectionDB::setConnection(new Karyawan());
+
+        $user = $request->user();
+        $karyawan = $connKaryawan->where('email_karyawan', $user->email)->first();
+
+        $reports = $connWorkSchedule->where('status_absence', '!=', null)
+            ->where('karyawan_id', $karyawan->id)
+            ->orderBy('id', 'DESC')
+            ->get();
+
+        return ResponseFormatter::success(
+            $reports,
+            'Success get all reports'
+        );
+    }
+
+    public function showAttendanceReport(Request $request, $id)
+    {
+        $connWorkSchedule = ConnectionDB::setConnection(new WorkTimeline());
+        $connKaryawan = ConnectionDB::setConnection(new Karyawan());
+        $connCoor = ConnectionDB::setConnection(new Coordinate());
+
+        $user = $request->user();
+        $karyawan = $connKaryawan->where('email_karyawan', $user->email)->first();
+
+        $report = $connWorkSchedule->where('id', $id)
+            ->select('check_in', 'check_out', 'checkin_lat', 'checkin_long', 'work_hour', 'checkin_photo', 'checkout_photo')
+            ->where('status_absence', '!=', null)
+            ->where('karyawan_id', $karyawan->id)
+            ->orderBy('id', 'DESC')
+            ->first();
+
+        $report['work_break'] = '1 Hour';
+
+        $siteLoc = $connCoor->select(
+            "site_name",
+            "barcode_image",
+            DB::raw(
+                "
+                    (6371 * acos(
+                            cos(radians($report->checkin_lat)) *
+                            cos(radians(latitude)) *
+                            cos(radians(longitude) - radians($report->checkin_long)) +
+                            sin(radians($report->checkin_lat)) *
+                            sin(radians(latitude))
+                            )
+                    ) as distance
+                    "
+            )
+        )
+            ->having("distance", '<', 10)
+            ->first();
+
+        $report->attendace_location = $siteLoc->site_name;
+        $report->attendace_barcode = $siteLoc->barcode_image;
+
+        return ResponseFormatter::success(
+            $report,
+            'Success get report'
         );
     }
 }

@@ -108,7 +108,7 @@ Route::prefix('v1')->group(function () {
         Route::post('/gigo/remove/{id}', [GIGOController::class, 'removeGood']);
         Route::post('/gigo/{id}', [GIGOController::class, 'update']);
 
-        // Attendance
+        // ================== Attendance ========================
         Route::get('/site-location', [AttendanceController::class, 'siteLocation']);
         Route::get('/site-location/{id}/{token}', [AttendanceController::class, 'showLocation']);
         Route::post('/attendance/checkin/{token}', [AttendanceController::class, 'checkin']);
@@ -118,6 +118,13 @@ Route::prefix('v1')->group(function () {
         Route::get('/attendance/recent-activity/{userID}', [AttendanceController::class, 'recentData']);
         Route::get('/attendance/shift-types', [AttendanceController::class, 'getShiftType']);
         Route::get('/attendance/work-schedule/{id}', [AttendanceController::class, 'getScheduleByShift']);
+
+        // Report
+        Route::get('/attendance/reports', [AttendanceController::class, 'attendanceReports']);
+        Route::get('/attendance/report/{id}', [AttendanceController::class, 'showAttendanceReport']);
+
+        // ================= End Attendance =====================
+
 
         // Package
         Route::post('/package', [PackageController::class, 'store']);
