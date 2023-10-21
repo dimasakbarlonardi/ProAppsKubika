@@ -143,6 +143,11 @@ Route::get('/', function () {
 Route::get('/gis', [AttendanceController::class, 'index']);
 Route::post('/absence', [AttendanceController::class, 'absence']);
 
+Route::get('pdf', function () {
+    $file = "/storage/004212/file/permit-attendance/permit-attendance-2023-10-20-kewirausahaan.pdf";
+    return Response::download($file);
+});
+
 Route::post('/payments/midtrans-notifications', [PaymentController::class, 'receive']);
 Route::get('/delete/midtrans', [PaymentController::class, 'delete']);
 Route::get('/check/midtrans', [PaymentController::class, 'check']);
@@ -698,6 +703,7 @@ Route::prefix('admin')->group(function () {
 
         // --------------- Attendance ------------------
         Route::resource('requestattendance', RequestAttendanceController::class);
+        Route::post('/permit-attendance/approve/{id}', [RequestAttendanceController::class, 'approvePermitAttendance'])->name('approvePermitAttendance');
 
 
         // ---------------Package------------------

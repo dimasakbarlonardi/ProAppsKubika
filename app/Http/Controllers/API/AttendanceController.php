@@ -4,12 +4,13 @@ namespace App\Http\Controllers\API;
 
 use App\Helpers\ConnectionDB;
 use App\Helpers\ResponseFormatter;
-use App\Helpers\SaveImage;
+use App\Helpers\SaveFile;
 use App\Http\Controllers\Controller;
 use App\Models\Attendance;
 use App\Models\Karyawan;
 use App\Models\Site;
 use App\Models\Coordinate;
+use App\Models\PermitAttendance;
 use App\Models\ShiftType;
 use App\Models\Unit;
 use App\Models\User;
@@ -129,7 +130,7 @@ class AttendanceController extends Controller
                             $file = $request->file('photo');
 
                             if ($file) {
-                                $storagePath = SaveImage::saveToStorage($request->user()->id_site, 'checkin', $file);
+                                $storagePath = SaveFile::saveToStorage($request->user()->id_site, 'checkin', $file);
                                 $karyawan->NowSchedule->checkin_photo = $storagePath;
                             }
 
@@ -215,7 +216,7 @@ class AttendanceController extends Controller
                     if ($distance < 10) {
                         $file = $request->file('photo');
                         if ($file) {
-                            $storagePath = SaveImage::saveToStorage($request->user()->id_site, 'checkin', $file);
+                            $storagePath = SaveFile::saveToStorage($request->user()->id_site, 'checkin', $file);
                             $karyawan->NowSchedule->checkout_photo = $storagePath;
                         }
 
@@ -380,6 +381,9 @@ class AttendanceController extends Controller
 
         $reports = $connWorkSchedule->where('status_absence', '!=', null)
             ->where('karyawan_id', $karyawan->id)
+            ->with(['ShiftType' => function ($q) {
+                $q->select('id', 'shift');
+            }])
             ->orderBy('id', 'DESC')
             ->get();
 
@@ -399,7 +403,10 @@ class AttendanceController extends Controller
         $karyawan = $connKaryawan->where('email_karyawan', $user->email)->first();
 
         $report = $connWorkSchedule->where('id', $id)
-            ->select('check_in', 'check_out', 'checkin_lat', 'checkin_long', 'work_hour', 'checkin_photo', 'checkout_photo')
+            ->select('check_in', 'check_out', 'checkin_lat', 'checkin_long', 'work_hour', 'checkin_photo', 'checkout_photo', 'shift_type_id')
+            ->with(['ShiftType' => function($q) {
+                $q->select('id', 'shift');
+            }])
             ->where('status_absence', '!=', null)
             ->where('karyawan_id', $karyawan->id)
             ->orderBy('id', 'DESC')
@@ -432,6 +439,39 @@ class AttendanceController extends Controller
         return ResponseFormatter::success(
             $report,
             'Success get report'
+        );
+    }
+
+    public function permitAttendance(Request $request)
+    {
+        $connPermit = ConnectionDB::setConnection(new PermitAttendance());
+        $connKaryawan = ConnectionDB::setConnection(new Karyawan());
+
+        $karyawan = $connKaryawan->where('email_karyawan', $request->user()->email)->first();
+
+        $connPermit->karyawan_id = $karyawan->id;
+        $connPermit->work_date = $request->work_date;
+        $connPermit->permit_type = $request->permit_type;
+        $connPermit->permit_title = $request->permit_title;
+        $connPermit->permit_desc = $request->permit_desc;
+        $connPermit->status_permit = 'PENDING';
+
+        $photo = $request->file('photo');
+        if ($photo) {
+            $storagePath = SaveFile::saveToStorage($request->user()->id_site, 'permit-attendance', $photo);
+            $connPermit->permit_photo = $storagePath;
+        }
+        $file = $request->file('file');
+        if ($file) {
+            $storagePathFile = SaveFile::saveFileToStorage($request->user()->id_site, 'permit-attendance', $file);
+            $connPermit->permit_file = $storagePathFile;
+        }
+
+        $connPermit->save();
+
+        return ResponseFormatter::success(
+            $connPermit,
+            'Success create ' . $request->permit_type . ' report'
         );
     }
 }

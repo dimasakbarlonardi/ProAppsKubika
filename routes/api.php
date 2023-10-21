@@ -123,6 +123,9 @@ Route::prefix('v1')->group(function () {
         Route::get('/attendance/reports', [AttendanceController::class, 'attendanceReports']);
         Route::get('/attendance/report/{id}', [AttendanceController::class, 'showAttendanceReport']);
 
+        // Permit Attendance
+        Route::post('/attendance/permit-attendance', [AttendanceController::class, 'permitAttendance']);
+
         // ================= End Attendance =====================
 
 

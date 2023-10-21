@@ -53,7 +53,7 @@
             "app/Helpers/Persenan.php",
             "app/Helpers/Notifikasi.php",
             "app/Helpers/ConnectionDB.php",
-            "app/Helpers/SaveImage.php"
+            "app/Helpers/SaveFile.php"
         ]
     },
     "autoload-dev": {

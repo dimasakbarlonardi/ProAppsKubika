@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
 use App\Models\Login;
+use App\Models\PermitAttendance;
 use App\Models\RequestAttendance;
 use Illuminate\Http\Request;
 
@@ -17,13 +18,27 @@ class RequestAttendanceController extends Controller
      */
     public function index(Request $request)
     {
-        $conn = ConnectionDB::setConnection(new RequestAttendance());
-        $user_id = $request->user()->id;
+        $conn = ConnectionDB::setConnection(new PermitAttendance());
 
-        $data['requestattendance'] = $conn->get();
-        $data['idusers'] = Login::where('id', $user_id)->get();
-        
+        $data['permit_attendances'] = $conn->get();
+
         return view('AdminSite.RequestAttendance.index', $data);
+    }
+
+    public function approvePermitAttendance($id)
+    {
+        $conn = ConnectionDB::setConnection(new PermitAttendance());
+
+        $permit = $conn->find($id);
+        $work_schedule = $permit->WorkTimeline($permit->work_date);
+
+        $permit->status_permit = 'APPROVED';
+        $permit->save();
+
+        $work_schedule->status_absence = $permit->permit_type;
+        $work_schedule->save();
+
+        return response()->json(['status' => 'ok']);
     }
 
     /**
