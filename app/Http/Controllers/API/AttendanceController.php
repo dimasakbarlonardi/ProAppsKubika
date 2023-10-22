@@ -401,9 +401,18 @@ class AttendanceController extends Controller
         $karyawan = $connKaryawan->where('email_karyawan', $user->email)->first();
 
         $report = $connWorkSchedule->where('id', $id)
-            ->select('check_in', 'check_out', 'checkin_lat', 'checkin_long', 'work_hour', 'checkin_photo', 'checkout_photo', 'shift_type_id')
+            ->select(
+                'check_in',
+                'check_out',
+                'checkin_lat',
+                'checkin_long',
+                'work_hour',
+                'checkin_photo',
+                'checkout_photo',
+                'shift_type_id'
+            )
             ->with(['ShiftType' => function ($q) {
-                $q->select('id', 'shift');
+                $q->select('id', 'shift', 'checkin', 'checkout');
             }])
             ->where('status_absence', '!=', null)
             ->where('karyawan_id', $karyawan->id)
