@@ -191,7 +191,6 @@ class AttendanceController extends Controller
         $user = $tokenable->tokenable;
         $karyawan = $connKaryawan->where('email_karyawan', $user->email)->first();
         $attend = $this->attendCheckout($karyawan);
-        $site = Site::find($user->id_site);
 
         if ($tokenable) {
             if ($attend && !$attend->checkout) {
@@ -205,7 +204,6 @@ class AttendanceController extends Controller
                     $checkout = Carbon::now();
 
                     $work_hour = $checkin->diff(new DateTime($checkout));
-
 
                     if ($work_hour->format('%h') == 0) {
                         $work_hour = $work_hour->format('%i') . " Minutes";
@@ -404,7 +402,7 @@ class AttendanceController extends Controller
 
         $report = $connWorkSchedule->where('id', $id)
             ->select('check_in', 'check_out', 'checkin_lat', 'checkin_long', 'work_hour', 'checkin_photo', 'checkout_photo', 'shift_type_id')
-            ->with(['ShiftType' => function($q) {
+            ->with(['ShiftType' => function ($q) {
                 $q->select('id', 'shift');
             }])
             ->where('status_absence', '!=', null)
@@ -445,15 +443,44 @@ class AttendanceController extends Controller
     public function permitAttendance(Request $request)
     {
         $connPermit = ConnectionDB::setConnection(new PermitAttendance());
+        $connSchedule = ConnectionDB::setConnection(new WorkTimeline());
         $connKaryawan = ConnectionDB::setConnection(new Karyawan());
 
         $karyawan = $connKaryawan->where('email_karyawan', $request->user()->email)->first();
+        $schedule = $connSchedule->where('date', $request->work_date)
+            ->where('karyawan_id', $karyawan->id)
+            ->first();
+
+        if ($schedule) {
+            if (
+                !$schedule->status_absence &&
+                $request->permit_type != 'Sick' &&
+                $request->permit_type != 'Forgot Clock In' &&
+                $request->permit_type != 'Anual Leave' &&
+                $request->permit_type != 'Special Leave' &&
+                $request->permit_type != 'Change Shift'
+            ) {
+                return ResponseFormatter::error(
+                    null,
+                    "Sorry, you haven't chock in yet"
+                );
+            }
+        } else {
+            return ResponseFormatter::error(
+                null,
+                "Sorry, you dont have schedule on selected date"
+            );
+        }
 
         $connPermit->karyawan_id = $karyawan->id;
         $connPermit->work_date = $request->work_date;
         $connPermit->permit_type = $request->permit_type;
         $connPermit->permit_title = $request->permit_title;
         $connPermit->permit_desc = $request->permit_desc;
+        $connPermit->request_time = $request->request_time;
+        $connPermit->previous_shift_id = $request->previous_shift_id;
+        $connPermit->replace_shift_id = $request->replace_shift_id;
+        $connPermit->replacement_id = $request->replacement_id;
         $connPermit->status_permit = 'PENDING';
 
         $photo = $request->file('photo');

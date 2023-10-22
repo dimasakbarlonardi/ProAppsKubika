@@ -32,11 +32,27 @@
                             <th scope="row">{{ $key + 1 }}</th>
                             <td>{{ $permit->Karyawan->nama_karyawan }}</td>
                             <td>
-                                <b>{{ $permit->WorkTimeline($permit->work_date)->ShiftType->shift }}</b><br>
+                                @if (!isset($permit->replacement_id))
+                                    <b>{{ $permit->WorkTimeline($permit->work_date)->ShiftType->shift }}</b><br>
+                                @elseif (isset($permit->previous_shift_id))
+                                    <b>{{ $permit->CurrentShift->shift }}</b><br>
+                                @endif
                                 {{ HumanDate($permit->work_date) }}
                             </td>
                             <td>
-                                {{ $permit->permit_type }} <br>
+                                <b>{{ $permit->permit_type }}</b> <br>
+                                @if (isset($permit->previous_shift_id))
+                                    <span>Current shift : {{ $permit->CurrentShift->shift }}</span> <br>
+                                @endif
+                                @if (isset($permit->replace_shift_id))
+                                    <span>Request change to : {{ $permit->RequestShift->shift }}</span> <br>
+                                @endif
+                                @if (isset($permit->replacement_id))
+                                    <span>Replacement Employee : {{ $permit->Replacement->nama_karyawan }}</span>
+                                @endif
+                                @if ($permit->request_time)
+                                    <span>{{ HumanTime($permit->request_time) }}</span>
+                                @endif
                                 @if ($permit->permit_photo)
                                     <a href="{{ url($permit->permit_photo) }}" target="_blank">Image</a> <br>
                                 @endif
