@@ -380,7 +380,7 @@ class AttendanceController extends Controller
         $reports = $connWorkSchedule->where('status_absence', '!=', null)
             ->where('karyawan_id', $karyawan->id)
             ->with(['ShiftType' => function ($q) {
-                $q->select('id', 'shift');
+                $q->select('id', 'shift', 'checkin', 'checkout');
             }])
             ->orderBy('id', 'DESC')
             ->get();
