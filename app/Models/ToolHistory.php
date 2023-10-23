@@ -29,4 +29,9 @@ class ToolHistory extends Model
     {
         return $this->hasOne(ToolsHousekeeping::class, 'id', 'id_data');
     }
+
+    public function Borrower()
+    {
+        return $this->hasOne(User::class, 'id_user', 'borrowed_by');
+    }
 }

@@ -644,11 +644,13 @@ Route::prefix('admin')->group(function () {
 
         // ---------------Inspection Tools Engineering-----------------
         Route::resource('toolsengineering', ToolsEngController::class);
+        Route::get('/tools-eng/histories', [ToolsEngController::class, 'historyToolEng'])->name('historyToolEng');
         Route::post('/tools/borrow/{id}', [ToolsEngController::class, 'borrowTool'])->name('borrow.tool');
         Route::post('/tools/return/{id}', [ToolsEngController::class, 'returnTool'])->name('return.tool');
 
-        // ---------------Inspection Tools Engineering-----------------
+        // ---------------Inspection Tools Housekeeping-----------------
         Route::resource('toolshousekeeping', ToolsHKController::class);
+        Route::get('/tools-hk/histories', [ToolsHKController::class, 'historyToolHK'])->name('historyToolHK');
         Route::post('/tools/borrowHK/{id}', [ToolsHKController::class, 'borrowToolHK'])->name('borrowHK.tool');
         Route::post('/tools/returnHK/{id}', [ToolsHKController::class, 'returnToolHK'])->name('returnHK.tool');
 

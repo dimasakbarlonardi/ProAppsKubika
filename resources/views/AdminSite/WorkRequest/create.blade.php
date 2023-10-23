@@ -36,8 +36,8 @@
             </div>
 
             <div class="col-3">
-                
-                    
+
+
                         <div class="card">
                             <div class="card-header">
                                 <h6 class="mb-0">Properties</h6>
@@ -65,8 +65,8 @@
                         <div class="card-footer border-top border-200 py-x1">
                             <button type="submit" class="btn btn-primary w-100">Submit</button>
                         </div>
-                    
-                
+
+
             </div>
         </div>
     </form>
