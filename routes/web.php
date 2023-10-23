@@ -19,6 +19,7 @@ use App\Http\Controllers\Admin\SiteController;
 use App\Http\Controllers\Admin\UnitController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AgamaController;
+use App\Http\Controllers\Admin\AnnouncementController;
 use App\Http\Controllers\Admin\AttendanceController;
 use App\Http\Controllers\Admin\FloorController;
 use App\Http\Controllers\Admin\GroupController;
@@ -167,6 +168,8 @@ Route::prefix('admin')->group(function () {
     Route::middleware(['auth'])->group(function () {
 
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+        Route::resource('announcements', AnnouncementController::class);
 
         // Tracking ticket
         Route::get('tracking-tickets', [MainFormController::class, 'index'])->name('trackingTickets');
