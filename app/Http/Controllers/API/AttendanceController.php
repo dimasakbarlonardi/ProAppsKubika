@@ -410,7 +410,8 @@ class AttendanceController extends Controller
                 'checkin_photo',
                 'checkout_photo',
                 'shift_type_id',
-                'status_absence'
+                'status_absence',
+                'date'
             )
             ->with(['ShiftType' => function ($q) {
                 $q->select('id', 'shift', 'checkin', 'checkout');
