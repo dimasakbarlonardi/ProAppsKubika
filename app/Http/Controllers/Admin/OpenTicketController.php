@@ -205,6 +205,7 @@ class OpenTicketController extends Controller
         $connRequest = ConnectionDB::setConnection(new OpenTicket());
         $connNotif = ConnectionDB::setConnection(new Notifikasi());
         $user = $request->session()->get('user');
+        $connWorkRelation = ConnectionDB::setConnection(new WorkRelation());
 
         try {
             DB::beginTransaction();
