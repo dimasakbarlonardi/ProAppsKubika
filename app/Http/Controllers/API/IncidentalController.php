@@ -19,6 +19,9 @@ class IncidentalController extends Controller
         $connIncident = ConnectionDB::setConnection(new IncidentalReport());
 
         $reports = $connIncident->where('deleted_at', null)
+            ->with(['User' => function($q) {
+                $q->select('id_user', 'nama_user');
+            }])
             ->get();
 
         return ResponseFormatter::success(
