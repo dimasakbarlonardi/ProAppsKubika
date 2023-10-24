@@ -19,7 +19,7 @@ class IncidentalController extends Controller
         $connIncident = ConnectionDB::setConnection(new IncidentalReport());
 
         $reports = $connIncident->where('deleted_at', null)
-            ->with(['User' => function($q) {
+            ->with(['User' => function ($q) {
                 $q->select('id_user', 'nama_user');
             }])
             ->get();
@@ -78,11 +78,14 @@ class IncidentalController extends Controller
         $connIncident = ConnectionDB::setConnection(new IncidentalReport());
 
         $report = $connIncident->where('id', $id)
+            ->with(['User' => function ($q) {
+                $q->select('id_user', 'nama_user');
+            }])
             ->first();
 
         return ResponseFormatter::success(
             $report,
-            'Success get all reports'
+            'Success get report'
         );
     }
 }
