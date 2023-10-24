@@ -11,6 +11,7 @@ use App\Models\Notifikasi;
 use App\Models\OpenTicket;
 use App\Models\System;
 use App\Models\User;
+use App\Models\WorkPriority;
 use App\Models\WorkRelation;
 use App\Models\WorkRequest;
 use Carbon\Carbon;
@@ -25,6 +26,7 @@ class WorkRequestController extends Controller
     public function index(Request $request)
     {
         $conn = ConnectionDB::setConnection(new WorkRequest());
+        $connWorkPrior = ConnectionDB::setConnection(new WorkPriority());
 
         $user = $request->session()->get('user');
         if ($user->id_role_hdr != 8) {
@@ -35,8 +37,49 @@ class WorkRequestController extends Controller
         }
 
         $data['user'] = $user;
+        $data['priorities'] = $connWorkPrior->get();
 
         return view('AdminSite.WorkRequest.index', $data);
+    }
+
+    public function filteredData(Request $request)
+    {
+
+        $conn = ConnectionDB::setConnection(new WorkRequest());
+        $user = $request->session()->get('user');
+
+        if ($user->id_role_hdr != 8) {
+            $role = $user->RoleH->WorkRelation->id_work_relation;
+            $work_requests = $conn->where('id_work_relation', $role);
+        } else {
+            $work_requests = $conn->where('deleted_at', null);
+        }
+
+        if ($request->valueString) {
+            $valueString = $request->valueString;
+            $work_requests = $work_requests->where('no_work_request', 'like', '%' . $valueString . '%')
+                ->orWhereHas('Ticket.Tenant', function ($q) use ($valueString) {
+                    $q->where('nama_tenant', 'like', '%' . $valueString . '%');
+                });
+        }
+
+        if ($request->status != 'all') {
+            $work_requests = $work_requests->where('status_request', $request->status);
+        }
+        if ($request->priority != 'all') {
+            $priority = $request->priority;
+            $work_requests = $work_requests->whereHas('Ticket', function($q) use ($priority) {
+                $q->where('priority', $priority);
+            });
+        }
+
+
+        $data['work_requests'] = $work_requests->get();
+        $data['user'] = $user;
+
+        return response()->json([
+            'html' => view('AdminSite.WorkRequest.table-data', $data)->render()
+        ]);
     }
 
     public function create(Request $request)

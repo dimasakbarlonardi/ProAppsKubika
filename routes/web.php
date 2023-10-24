@@ -377,12 +377,14 @@ Route::prefix('admin')->group(function () {
 
         // CRUD Open Ticket
         Route::resource('/open-tickets', OpenTicketController::class);
+        Route::get('/request/get-filter-data', [OpenTicketController::class, 'filteredData']);
         Route::post('/open-ticket/update-response/{id}', [OpenTicketController::class, 'updateRequestTicket'])->name('updateRequestTicket');
         Route::post('/open-ticket/approve1/{id}', [OpenTicketController::class, 'ticketApprove1'])->name('ticketApprove1');
         Route::post('/open-ticket/approve2/{id}', [OpenTicketController::class, 'ticketApprove2'])->name('ticketApprove2');
 
         // CRUD Work Request
         Route::resource('/work-requests', WorkRequestController::class);
+        Route::get('/work-request/get-filter-data', [WorkRequestController::class, 'filteredData']);
         Route::post('/done/work-request/{id}', [WorkRequestController::class, 'done'])->name('doneWR'); // done wo from tenant
         Route::post('/complete/work-request/{id}', [WorkRequestController::class, 'complete'])->name('completeWR'); // done wo from tenant
 
