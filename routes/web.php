@@ -1,6 +1,7 @@
 <?php
 
 use App\Events\HelloEvent;
+use App\Events\PaymentEvent;
 use App\Models\ChecklistPutrH;
 use App\Models\MonthlyArTenant;
 use App\Models\ChecklistGensetH;
@@ -144,9 +145,13 @@ Route::get('/', function () {
 Route::get('/gis', [AttendanceController::class, 'index']);
 Route::post('/absence', [AttendanceController::class, 'absence']);
 
-Route::get('pdf', function () {
-    $file = "/storage/004212/file/permit-attendance/permit-attendance-2023-10-20-kewirausahaan.pdf";
-    return Response::download($file);
+Route::get('payment-event', function () {
+    $datanotif = [
+        'id_site' => '004212',
+        'id' => 122,
+        'status' => 'settlement',
+    ];
+    broadcast(new PaymentEvent($datanotif));
 });
 
 Route::post('/payments/midtrans-notifications', [PaymentController::class, 'receive']);
@@ -166,6 +171,7 @@ Route::get('/view-room/{idSite}/{id}', [RoomController::class, 'viewRoom']);
 
 Route::prefix('admin')->group(function () {
     Route::middleware(['auth'])->group(function () {
+        Route::post('payment/check-payment-status/{id}', [PaymentController::class, 'checkStatus']);
 
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 

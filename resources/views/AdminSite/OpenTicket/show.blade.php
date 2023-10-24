@@ -164,6 +164,11 @@
                                 <button class="btn btn-primary w-100">Update</button>
                             </div>
                         @endif
+                        @if ($ticket->status_request == 'PROSES KE WR')
+                            <div class="card-footer border-top border-200 py-x1">
+                                <button class="btn btn-primary w-100">Create Work Request</button>
+                            </div>
+                        @endif
                     </form>
                 </div>
                 <div class="card mt-4">

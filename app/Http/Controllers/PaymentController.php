@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Events\HelloEvent;
+use App\Events\PaymentEvent;
 use App\Helpers\ConnectionDB;
 use App\Models\Approve;
 use App\Models\CashReceipt;
@@ -65,6 +66,14 @@ class PaymentController extends Controller
                         ];
 
                         broadcast(new HelloEvent($dataNotifTR));
+
+                        $dataPayment = [
+                            'id_site' => $site->id_site,
+                            'id' => $cr->id,
+                            'status' => 'settlement',
+                        ];
+
+                        broadcast(new PaymentEvent($dataPayment));
 
                         break;
 
@@ -146,6 +155,20 @@ class PaymentController extends Controller
                     'message' => 'Signature key not verified',
                 ], 403);
         }
+    }
+
+    public function checkStatus($id)
+    {
+        $connTransaction = ConnectionDB::setConnection(new CashReceipt());
+
+        $transaction = $connTransaction->find($id);
+
+        if ($transaction->transaction_status == 'VERIFYING' || $transaction->transaction_status == 'PENDING') {
+            $status = 'no';
+        } else {
+            $status = 'ok';
+        }
+        return response()->json(['status' => $status]);
     }
 
     public function invoice($id)

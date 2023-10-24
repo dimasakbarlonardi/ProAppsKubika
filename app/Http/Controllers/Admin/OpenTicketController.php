@@ -134,7 +134,6 @@ class OpenTicketController extends Controller
             Alert::success('Success', 'Success create request');
 
             return redirect()->route('open-tickets.index')->with('success', 'Success create request');
-
         } catch (Throwable $e) {
             DB::rollBack();
             dd($e);
@@ -172,6 +171,7 @@ class OpenTicketController extends Controller
         $connRequest = ConnectionDB::setConnection(new OpenTicket());
         $connNotif = ConnectionDB::setConnection(new Notifikasi());
         $user = $request->session()->get('user');
+        $connWorkRelation = ConnectionDB::setConnection(new WorkRelation());
 
         try {
             DB::beginTransaction();
@@ -200,8 +200,13 @@ class OpenTicketController extends Controller
             } elseif (!$request->status_request) {
                 $ticket->status_request = 'RESPONDED';
             }
+
             $ticket->save();
             DB::commit();
+
+            if ($request->status_request == 'PROSES KE WR') {
+                return redirect()->route('work-requests.create', ['id_tiket' => $ticket->id]);
+            }
         } catch (Throwable $e) {
             DB::rollBack();
             dd($e);
@@ -209,10 +214,6 @@ class OpenTicketController extends Controller
 
             return redirect()->back();
         }
-
-        Alert::success('Berhasil', 'Berhasil mengupdate tiket');
-
-        return redirect()->back();
     }
 
     public function createGIGO($user, $ticket)
@@ -246,7 +247,6 @@ class OpenTicketController extends Controller
         ];
 
         broadcast(new HelloEvent($dataNotif));
-
     }
 
     public function updateRequestTicket(Request $request, $id)
