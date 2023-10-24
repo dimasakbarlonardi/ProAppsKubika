@@ -17,6 +17,7 @@ use App\Models\Site;
 use App\Models\System;
 use App\Models\Tenant;
 use App\Models\OwnerH;
+use App\Models\RequestType;
 use App\Models\TenantUnit;
 use App\Models\Unit;
 use App\Models\User;
@@ -34,20 +35,52 @@ class OpenTicketController extends Controller
 {
     public function index(Request $request)
     {
-        $user = $request->session()->get('user');
+        $connTypeReq = ConnectionDB::setConnection(new JenisRequest());
+        $connWorkPrior = ConnectionDB::setConnection(new WorkPriority());
 
+        $data['types'] = $connTypeReq->get();
+        $data['priorities'] = $connWorkPrior->get();
+
+        return view('AdminSite.OpenTicket.index', $data);
+    }
+
+    public function filteredData(Request $request)
+    {
         $connRequest = ConnectionDB::setConnection(new OpenTicket());
+        $user = $request->session()->get('user');
         $connTenant = ConnectionDB::setConnection(new Tenant());
 
         if ($user->user_category == 3) {
             $tenant = $connTenant->where('email_tenant', $user->login_user)->first();
-            $data['tickets'] = $connRequest->where('id_tenant', $tenant->id_tenant)->latest()->get();
+            $tickets = $connRequest->where('id_tenant', $tenant->id_tenant)->latest();
         } else {
-            $data['tickets'] = $connRequest->get();
+            $tickets = $connRequest->where('deleted_at', null);
         }
-        $data['user'] = $user;
 
-        return view('AdminSite.OpenTicket.index', $data);
+        if ($request->valueString) {
+            $valueString = $request->valueString;
+            $tickets = $tickets->where('judul_request', 'like', '%' . $valueString . '%')
+                ->orWhereHas('Tenant', function($q) use ($valueString) {
+                    $q->where('nama_tenant', 'like', '%' . $valueString . '%');
+                });
+        }
+
+        if ($request->type != 'all') {
+            $tickets = $tickets->where('id_jenis_request', $request->type);
+        }
+        if ($request->status != 'all') {
+            $tickets = $tickets->where('status_request', $request->status);
+        }
+        if ($request->priority != 'all') {
+            $tickets = $tickets->where('priority', $request->priority);
+        }
+
+
+        $data['tickets'] = $tickets->get();
+
+        return response()->json([
+            'html' => view('AdminSite.OpenTicket.table-data', $data)->render()
+        ]);
     }
 
     public function create(Request $request)
@@ -149,6 +182,7 @@ class OpenTicketController extends Controller
         $connJenisReq = ConnectionDB::setConnection(new JenisRequest());
         $connTenant = ConnectionDB::setConnection(new Tenant());
         $connOwner = ConnectionDB::setConnection(new OwnerH());
+        $connPriority = ConnectionDB::setConnection(new WorkPriority());
 
         $ticket = $connRequest->where('id', $id)->with('Tenant')->first();
         $user = $request->session()->get('user');
@@ -158,6 +192,7 @@ class OpenTicketController extends Controller
         $data['user'] = $user;
         $data['Tenant'] = $connTenant->get();
         $data['Owner'] = $connOwner->get();
+        $data['work_priorities'] = $connPriority->get();
 
         if ($request->data_type == 'json') {
             return response()->json(['data' => $ticket]);
@@ -171,13 +206,14 @@ class OpenTicketController extends Controller
         $connRequest = ConnectionDB::setConnection(new OpenTicket());
         $connNotif = ConnectionDB::setConnection(new Notifikasi());
         $user = $request->session()->get('user');
-        $connWorkRelation = ConnectionDB::setConnection(new WorkRelation());
 
         try {
             DB::beginTransaction();
             $ticket = $connRequest->find($id);
             $ticket->id_jenis_request = $request->id_jenis_request;
             $ticket->status_request = $request->status_request;
+            $ticket->priority = $request->priority;
+
             if ($request->status_request == 'DONE') {
                 $notif = $connNotif->where('models', 'OpenTicket')
                     ->where('is_read', 0)

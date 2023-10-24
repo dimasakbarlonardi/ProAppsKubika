@@ -379,7 +379,7 @@ class WorkOrderController extends Controller
                 'notif_title' => $wo->no_work_order,
                 'id_data' => $createTransaction->id,
                 'sender' => $connApprove->find(3)->approval_3,
-                'division_receiver' => $wo->WorkRequest->id_work_relation,
+                'division_receiver' => null,
                 'notif_message' => 'Harap melakukan pembayaran untuk menselesaikan transaksi',
                 'receiver' => $wo->WorkRequest->Ticket->Tenant->User->id_user,
             ];

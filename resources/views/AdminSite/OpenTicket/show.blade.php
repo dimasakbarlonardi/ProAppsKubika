@@ -135,7 +135,8 @@
                             @if (
                                 ($ticket->status_request != 'PENDING' || $ticket->status_request == 'RESPONDED') &&
                                     $ticket->status_request != 'COMPLETE')
-                                <div class="mb-2"><label class="mb-1 mt-2">Status</label>
+                                <div class="mb-2">
+                                    <label class="mb-1 mt-2">Status</label>
                                     <select name="status_request" class="form-select form-select-sm"
                                         {{ $ticket->status_request != 'RESPONDED' ? 'disabled' : '' }}>
                                         <option disabled selected>--Pilih Status---</option>
@@ -149,6 +150,17 @@
                                             value="PROSES KE GIGO">Proses ke GIGO</option>
                                         <option {{ $ticket->status_request == 'DONE' ? 'selected' : '' }} value="DONE">
                                             DONE</option>
+                                    </select>
+                                </div>
+                                <div class="mb-2">
+                                    <label class="mb-1 mt-2">Priority</label>
+                                    <select name="priority" class="form-select form-select-sm"
+                                        {{ $ticket->status_request != 'RESPONDED' ? 'disabled' : '' }}>
+                                        <option disabled selected>--Pilih Prioritas---</option>
+                                        @foreach ($work_priorities as $priority)
+                                            <option {{ $ticket->priority == $priority->work_priority ? 'selected' : '' }}
+                                                value="{{ $priority->work_priority }}">{{ $priority->work_priority }}</option>
+                                        @endforeach
                                     </select>
                                 </div>
                             @elseif ($ticket->status_request == 'COMPLETE')
@@ -166,7 +178,7 @@
                         @endif
                         @if ($ticket->status_request == 'PROSES KE WR')
                             <div class="card-footer border-top border-200 py-x1">
-                                <button class="btn btn-primary w-100">Create Work Request</button>
+                                <a href="{{ route('work-requests.create', ['id_tiket' => $ticket->id]) }}" class="btn btn-primary w-100">Create Work Request</a>
                             </div>
                         @endif
                     </form>

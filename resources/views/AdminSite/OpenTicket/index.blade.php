@@ -3,8 +3,7 @@
 @section('content')
     <div class="row">
         <div class="col-xxl-10 col-xl-9">
-            <div class="card" id="ticketsTable"
-                data-list='{"valueNames":["client","subject","status","priority","agent"],"page":7,"pagination":true,"fallback":"tickets-card-fallback"}'>
+            <div class="card" id="ticketsTable">
                 <div class="card-header border-bottom border-200 px-0">
                     <div class="d-lg-flex justify-content-between">
                         <div class="row flex-between-center gy-2 px-x1">
@@ -12,13 +11,10 @@
                                 <h6 class="mb-0">All requests</h6>
                             </div>
                             <div class="col-auto">
-                                <form>
-                                    <div class="input-group input-search-width"><input
-                                            class="form-control form-control-sm shadow-none search" type="search"
-                                            placeholder="Search by name" aria-label="search" />
-
-                                    </div>
-                                </form>
+                                <div class="input-group input-search-width">
+                                    <input class="form-control form-control-sm shadow-none"
+                                        placeholder="Search by name" id="search-request" aria-label="search" />
+                                </div>
                             </div>
                         </div>
                         <div class="border-bottom border-200 my-3"></div>
@@ -43,120 +39,9 @@
                     </div>
                 </div>
                 <div class="card-body p-0">
-                    @foreach ($tickets as $ticket)
-                        <div class="list bg-light p-x1 d-flex flex-column gap-3" id="card-ticket-body">
-                            <div
-                                class="d-md-flex d-xl-inline-block d-xxl-flex align-items-center p-x1 rounded-3 shadow-sm card-view-height">
-                                <div class="d-flex align-items-start align-items-sm-center">
-                                    <a class="d-none d-sm-block" href="">
-                                        <div class="avatar avatar-xl avatar-3xl">
-                                            <div class="avatar-name rounded-circle">
-                                                <img src="{{ $ticket->Tenant->profile_picture ? url($ticket->Tenant->profile_picture) : '/assets/img/team/3-thumb.png' }}"
-                                                    alt="image" class="avatar-image" />
-                                            </div>
-                                        </div>
-                                    </a>
+                    <div id="data-requests">
 
-                                    <div class="ms-1 ms-sm-3">
-                                        <p class="fw-semi-bold mb-3 mb-sm-2">
-                                            <a href="{{ route('open-tickets.show', $ticket->id) }}" class="mr-5">Ticket
-                                                #{{ $ticket->no_tiket }}</a>
-                                            <span class="badge bg-info ml-">
-                                                {{ $ticket->jenisRequest->jenis_request }}
-                                            </span>
-                                        </p>
-                                        <div class="d-flex justify-content-between">
-                                            <div class="my-1">
-                                                <h5>{{ $ticket->judul_request }}</h5>
-                                            </div>
-                                        </div>
-                                        <div class="row align-items-center gx-0 gy-2">
-                                            <div class="col-auto me-2">
-                                                <h6 class="client mb-0">
-                                                    <a class="text-800 d-flex align-items-center gap-1" href="">
-                                                        <span class="fas fa-user" data-fa-transform="shrink-3 up-1"></span>
-                                                        <span>{{ $ticket->Tenant->nama_tenant }}</span>
-                                                    </a>
-                                                </h6>
-                                            </div>
-                                            <div class="col-auto lh-1 me-3">
-                                                @switch($ticket->status_request)
-                                                    @case('PENDING')
-                                                        <small
-                                                            class="badge rounded bg-warning dark__bg-1000">{{ $ticket->status_request }}</small>
-                                                    @break
-
-                                                    @case('APPROVED')
-                                                        <small
-                                                            class="badge rounded bg-success dark__bg-1000">{{ $ticket->status_request }}</small>
-                                                    @break
-
-                                                    @case('RESPONDED')
-                                                        <small
-                                                            class="badge rounded bg-info dark__bg-1000">{{ $ticket->status_request }}</small>
-                                                    @break
-
-                                                    @case('PROSES')
-                                                        <small
-                                                            class="badge rounded bg-info dark__bg-1000">{{ $ticket->status_request }}</small>
-                                                    @break
-
-                                                    @case('PROSES KE WR')
-                                                        <small
-                                                            class="badge rounded bg-info dark__bg-1000">{{ $ticket->status_request }}</small>
-                                                    @break
-
-                                                    @case('PROSES KE PERMIT')
-                                                        <small
-                                                            class="badge rounded bg-info dark__bg-1000">{{ $ticket->status_request }}</small>
-                                                    @break
-
-                                                    @case('WORK DONE')
-                                                        <small
-                                                            class="badge rounded bg-info dark__bg-1000">{{ $ticket->status_request }}</small>
-                                                    @break
-
-                                                    @case('ON WORK')
-                                                        <small
-                                                            class="badge rounded bg-info dark__bg-1000">{{ $ticket->status_request }}</small>
-                                                    @break
-
-                                                    @case('DONE')
-                                                        <small
-                                                            class="badge rounded bg-success dark__bg-1000">{{ $ticket->status_request }}</small>
-                                                    @break
-
-                                                    @case('REJECTED')
-                                                        <small
-                                                            class="badge rounded bg-danger">{{ $ticket->status_request }}</small>
-                                                    @break
-
-                                                    @case('COMPLETE')
-                                                        <small
-                                                            class="badge rounded bg-success dark__bg-1000">{{ $ticket->status_request }}</small>
-                                                    @break
-                                                @endswitch
-                                            </div>
-                                            <div class="col-auto">
-                                                <h6 class="mb-0 text-500">
-                                                    <!-- {{ \Carbon\Carbon::createFromTimeStamp(strtotime($ticket->created_at))->diffForHumans() }} -->
-                                                </h6>
-                                            </div>
-                                            <div class="col-auto">
-                                                @if ($ticket->CashReceipt)
-                                                    Status payment :
-                                                    <a class="mb-0" href="{{ route('showInvoices', $ticket->CashReceipt->id) }}">
-                                                        <span
-                                                            class="badge bg-{{ $ticket->CashReceipt->transaction_status == 'PAYED' ? 'success' : 'warning' }}">{{ $ticket->CashReceipt->transaction_status }}</span>
-                                                    </a>
-                                                @endif
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    @endforeach
+                    </div>
                 </div>
                 <div class="card-footer">
                     <div class="d-flex justify-content-center"><button class="btn btn-sm btn-falcon-default me-1"
@@ -181,18 +66,34 @@
                         <h6 class="mb-0">Filter</h6>
                     </div>
                     <div class="card-body">
-                        <form>
-                            <div class="mb-2 mt-n2"><label class="mb-1">Type</label><select
-                                    class="form-select form-select-sm">
-                                    <option>Complaint</option>
-                                    <option>Fit Out Permit</option>
-                                    <option>Reservation</option>
-                                    <option>Goods In & Goods Out</option>
-                                </select></div>
-                        </form>
+                        <div class="mb-3 mt-n2">
+                            <label class="mb-1">Type</label>
+                            <select class="form-select form-select-sm" id="select-type">
+                                <option value="all">All</option>
+                                @foreach ($types as $type)
+                                    <option value="{{ $type->id_jenis_request }}">{{ $type->jenis_request }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                        <div class="mb-3 mt-n2">
+                            <label class="mb-1">Status</label>
+                            <select class="form-select form-select-sm" id="select-status">
+                                <option value="all">All</option>
+                                <option value="PENDING">PENDING</option>
+                                <option value="RESPONDED">RESPONDED</option>
+                                <option value="PROSES KE WR">PROSES KE WR</option>
+                            </select>
+                        </div>
+                        <div class="mb-3 mt-n2">
+                            <label class="mb-1">Priority</label>
+                            <select class="form-select form-select-sm" id="select-priority">
+                                <option value="all">All</option>
+                                @foreach ($priorities as $priority)
+                                    <option value="{{ $priority->work_priority }}">{{ $priority->work_priority }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
-                    <div class="card-footer border-top border-200 py-x1"><button
-                            class="btn btn-primary w-100">Submit</button></div>
                 </div>
             </div>
         </div>
@@ -208,5 +109,65 @@
                 'success'
             )
         @endif
+
+        $('document').ready(function() {
+            getData('all', 'all', 'all', '')
+        })
+
+        $('#select-type').on('change', function() {
+            var type = $(this).val();
+            var status = $('#select-status').val();
+            var priority = $('#select-priority').val();
+            var valueString = $('#search-request').val();
+
+            getData(type, status, priority, valueString)
+        });
+
+        $('#select-status').on('change', function() {
+            var type = $('#select-type').val();
+            var status = $(this).val();
+            var priority = $('#select-priority').val();
+            var valueString = $('#search-request').val();
+
+            getData(type, status, priority, valueString)
+        });
+
+        $('#select-priority').on('change', function() {
+            var type = $('#select-type').val();
+            var status = $('#select-status').val();
+            var priority = $(this).val();
+            var valueString = $('#search-request').val();
+
+            getData(type, status, priority, valueString);
+        });
+
+        $('#search-request').keyup(function() {
+            var type = $('#select-type').val();
+            var status = $('#select-status').val();
+            var priority = $('#select-priority').val();
+            var valueString = $(this).val();
+
+            if (valueString.length > 2) {
+                getData(type, status, priority, valueString);
+            } else if (valueString.length < 2) {
+                getData(type, status, priority, '');
+            }
+        })
+
+        function getData(type, status, priority, valueString) {
+            $.ajax({
+                url: '/admin/request/get-filter-data',
+                type: 'GET',
+                data: {
+                    type,
+                    status,
+                    priority,
+                    valueString
+                },
+                success: function(resp) {
+                    $('#data-requests').html(resp.html);
+                }
+            })
+        }
     </script>
 @endsection
