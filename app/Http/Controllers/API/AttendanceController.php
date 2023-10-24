@@ -409,7 +409,8 @@ class AttendanceController extends Controller
                 'work_hour',
                 'checkin_photo',
                 'checkout_photo',
-                'shift_type_id'
+                'shift_type_id',
+                'status_absence'
             )
             ->with(['ShiftType' => function ($q) {
                 $q->select('id', 'shift', 'checkin', 'checkout');
@@ -421,27 +422,35 @@ class AttendanceController extends Controller
 
         $report['work_break'] = '1 Hour';
 
-        $siteLoc = $connCoor->select(
-            "site_name",
-            "barcode_image",
-            DB::raw(
-                "
-                    (6371 * acos(
-                            cos(radians($report->checkin_lat)) *
-                            cos(radians(latitude)) *
-                            cos(radians(longitude) - radians($report->checkin_long)) +
-                            sin(radians($report->checkin_lat)) *
-                            sin(radians(latitude))
-                            )
-                    ) as distance
+        if ($report->checkin_lat && $report->checkin_long) {
+            $siteLoc = $connCoor->select(
+                "site_name",
+                "barcode_image",
+                DB::raw(
                     "
+                        (6371 * acos(
+                                cos(radians($report->checkin_lat)) *
+                                cos(radians(latitude)) *
+                                cos(radians(longitude) - radians($report->checkin_long)) +
+                                sin(radians($report->checkin_lat)) *
+                                sin(radians(latitude))
+                                )
+                        ) as distance
+                        "
+                )
             )
-        )
-            ->having("distance", '<', 10)
-            ->first();
+                ->having("distance", '<', 10)
+                ->first();
 
-        $report->attendace_location = $siteLoc->site_name;
-        $report->attendace_barcode = $siteLoc->barcode_image;
+            $report->attendance_location = $siteLoc->site_name;
+            $report->attendance_barcode = $siteLoc->barcode_image;
+            $report->status_absence = 'Present';
+        } else {
+            $report->attendance_location = $connCoor->find(1)->site_name;
+            $report->attendance_barcode = $connCoor->find(1)->barcode_image;
+            $report->status_absence = $report->status_absence;
+        }
+
 
         return ResponseFormatter::success(
             $report,
