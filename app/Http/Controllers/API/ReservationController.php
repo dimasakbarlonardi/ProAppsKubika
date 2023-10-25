@@ -47,7 +47,7 @@ class ReservationController extends Controller
         $object->notes_by = $reservation->Ticket->ResponseBy->nama_user;
 
         if ($reservation->is_deposit) {
-            $object->total = $reservation->CashReceipt->sub_total;
+            $object->total = $reservation->jumlah_deposit;
         }
 
         return ResponseFormatter::success(
