@@ -175,7 +175,7 @@ class ReservationController extends Controller
 
         $user = $request->session()->get('user');
         $approve = $connApprove->find(7);
-        dd($approve);
+
         $rsv = $connReservation->find($id);
 
         $rsv->sign_approval_1 = Carbon::now();
@@ -186,7 +186,7 @@ class ReservationController extends Controller
             'notif_title' => $rsv->no_request_reservation,
             'id_data' => $rsv->id,
             'sender' => $user->id_user,
-            'division_receiver' => 10,
+            'division_receiver' => $approve->approval_2,
             'notif_message' => 'Request Reservation diterima, mohon approve reservasi',
             'receiver' => null,
         ];
