@@ -8,7 +8,7 @@
                 <h6 class="mb-0 text-light">List Floor</h6>
             </div>
             <div class="col-auto d-flex">
-                <a class="btn btn-falcon-default btn-sm text-600" href="{{ route('floors.create') }}">Tambah Lantai</a>
+                <a class="btn btn-falcon-default btn-sm text-600" href="{{ route('floors.create') }}">Create Floor</a>
             </div>
         </div>
     </div>
@@ -17,7 +17,7 @@
             <thead>
                 <tr>
                     <th class="sort" data-sort="">No</th>
-                    <th class="sort" data-sort="nama_lantai">Nama Lantai</th>
+                    <th class="sort" data-sort="nama_lantai">Floor Name</th>
                     <th class="sort">Action</th>
                 </tr>
             </thead>

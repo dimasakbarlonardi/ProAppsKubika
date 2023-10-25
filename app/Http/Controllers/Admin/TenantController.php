@@ -230,4 +230,6 @@ class TenantController extends Controller
 
         return redirect()->route('tenants.index');
     }
+
+    
 }

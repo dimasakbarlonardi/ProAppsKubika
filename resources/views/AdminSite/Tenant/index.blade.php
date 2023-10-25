@@ -36,7 +36,7 @@
                         </div>
                     </div>
                     <div class="d-flex align-items-center" id="table-ticket-replace-element">
-                        <a class="btn btn-falcon-default text-600 btn-sm" href="{{ route('tenants.create') }}">Tambah Tenant</a>
+                        <a class="btn btn-falcon-default text-600 btn-sm" href="{{ route('tenants.create') }}">Create Tenant</a>
                     </div>
                 </div>
             </div>
