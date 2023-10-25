@@ -13,6 +13,7 @@ use App\Http\Controllers\API\UnitController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\InspectionController;
 use App\Http\Controllers\API\PackageController;
+use App\Http\Controllers\API\ReservationController;
 use App\Http\Controllers\API\RoomController;
 use App\Http\Controllers\API\ToolsController;
 use App\Http\Controllers\API\VisitorController;
@@ -157,5 +158,9 @@ Route::prefix('v1')->group(function () {
         Route::post('/borrow-tool/{wrID}/{id}', [ToolsController::class, 'borrowTool']);
         Route::post('/return-tool/{wrID}/{id}', [ToolsController::class, 'returnTool']);
         Route::get('/history-tools/{wrID}/{id}', [ToolsController::class, 'historyTools']);
+
+        // Reservation
+        Route::get('/reservations', [ReservationController::class, 'index']);
+        Route::get('/reservation/{id}', [ReservationController::class, 'show']);
     });
 });
