@@ -2,13 +2,16 @@
 
 @section('content')
     <div class="card">
-        <div class="card-header py-2">
-            <div class="row flex-between-center">
-                <div class="col-auto">
-                    <h6 class="my-3 text-light">Detail Unit</h6>
-                </div>
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <a href="{{ route('units.index') }}" class="btn btn-falcon-default btn-sm">
+                    <i class="fas fa-arrow-left"></i> Back
+                </a>
+                <div class="ml-3">Detail Unit</div>
             </div>
         </div>
+    </div>
         <div class="p-5">
             <div class="mb-3">
                 <div class="row">
@@ -27,7 +30,7 @@
                         <input type="text" value="{{ $units->floor->nama_lantai }}" class="form-control" readonly>
                     </div>
                     <div class="col-6 mb-3">
-                        <label class="form-label">Nama Unit</label>
+                        <label class="form-label">Unit Name</label>
                         <input type="text" value="{{ $units->nama_unit }}" class="form-control" readonly>
                     </div>
                     <div class="col-6 mb-3">
@@ -54,7 +57,7 @@
                     </div>
                   
                     <div class="col-6">
-                        <label class="form-label">Keterangan</label>
+                        <label class="form-label">Description</label>
                         <input type="text" value="{{ $units->keterangan }}" class="form-control">
                     </div>
                 </div>
@@ -76,9 +79,7 @@
             </div>
             <div class="mt-5">
                 <a class="btn btn-sm btn-warning" href="{{ route('units.edit', $units->id_unit) }}">Edit</a>
-                <a class="btn btn-sm btn-danger" href="{{ route('units.index') }}">Back</a>
             </div>
-
         </div>
     </div>
 @endsection

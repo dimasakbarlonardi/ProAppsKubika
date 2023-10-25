@@ -1,123 +1,123 @@
 @extends('layouts.master')
 
 @section('css')
-    <script src="https://cdn.tiny.cloud/1/zqt3b05uqsuxthyk5xvi13srgf4ru0l5gcvuxltlpgm6rcki/tinymce/6/tinymce.min.js"
-        referrerpolicy="origin"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" />
-    <link rel="stylesheet"
-        href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+<script src="https://cdn.tiny.cloud/1/zqt3b05uqsuxthyk5xvi13srgf4ru0l5gcvuxltlpgm6rcki/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" />
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
 @endsection
 
 @section('content')
-    <div class="row g-3">
-        <div class="col-9">
-            <div class="card">
-                <div class="card-header d-flex flex-between-center">
-                    <button class="btn btn-falcon-default btn-sm" type="button">
-                        <span class="fas fa-arrow-left"></span>
-                    </button>
+<div class="row g-3">
+    <div class="col-9">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <a href="{{ route('work-permits.index') }}" class="btn btn-falcon-default btn-sm">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                    <div class="ml-3">Work Permit</div>
                 </div>
             </div>
-            <div class="card mt-3" style="display: none" id="ticket_detail">
-                <div class="card-body">
-                    <div class="request" id="ticket_head">
+        </div>
+        <div class="card mt-3" style="display: none" id="ticket_detail">
+            <div class="card-body">
+                <div class="request" id="ticket_head">
 
-                    </div>
-                    <div class="pt-4">
-                        <h6 class="mb-3 fw-semi-bold text-1000" id="ticket_detail_heading"></h6>
-                        <div id="ticket_detail_desc">
+                </div>
+                <div class="pt-4">
+                    <h6 class="mb-3 fw-semi-bold text-1000" id="ticket_detail_heading"></h6>
+                    <div id="ticket_detail_desc">
 
-                        </div>
                     </div>
                 </div>
             </div>
-            <div class="card mt-3" style="display: none" id="rp_detail">
-                <div class="card-body">
+        </div>
+        <div class="card mt-3" style="display: none" id="rp_detail">
+            <div class="card-body">
 
-                    <div class="card mt-3" id="permit_detail">
-                        <div class="card-header">
-                            <h6 class="mb-0">Detail Request Permit</h6>
-                        </div>
-                        <div class="px-5">
-                            <div class="my-3">
-                                <div class="row">
-                                    <div class="col-6">
-                                        <label class="form-label">Nama Kontraktor</label>
-                                        <input type="text" class="form-control" id="nama_kontraktor" disabled>
-                                    </div>
-                                    <div class="col-6">
-                                        <label class="form-label">Penanggung Jawab</label>
-                                        <input type="text" class="form-control" id="pic" disabled>
-                                    </div>
+                <div class="card mt-3" id="permit_detail">
+                    <div class="card-header">
+                        <h6 class="mb-0">Detail Request Permit</h6>
+                    </div>
+                    <div class="px-5">
+                        <div class="my-3">
+                            <div class="row">
+                                <div class="col-6">
+                                    <label class="form-label">Nama Kontraktor</label>
+                                    <input type="text" class="form-control" id="nama_kontraktor" disabled>
                                 </div>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Alamat</label>
-                                <textarea class="form-control" id="alamat" cols="20" rows="5" disabled></textarea>
-                            </div>
-                            <div class="mb-3">
-                                <div class="row">
-                                    <div class="col-6">
-                                        <label class="form-label">No KTP</label>
-                                        <input type="text" class="form-control" id="no_ktp" disabled>
-                                    </div>
-                                    <div class="col-6">
-                                        <label class="form-label">No Telp</label>
-                                        <input type="text" class="form-control" id="no_telp" disabled>
-                                    </div>
+                                <div class="col-6">
+                                    <label class="form-label">Penanggung Jawab</label>
+                                    <input type="text" class="form-control" id="pic" disabled>
                                 </div>
-                            </div>
-                            <div class="mb-3">
-                                <div class="row">
-                                    <div class="col-6">
-                                        <label class="mb-1">Mulai Pengerjaan</label>
-                                        <input class="form-control" id="tgl_mulai" disabled />
-                                    </div>
-                                    <div class="col-6">
-                                        <label class="mb-1">Tanggal Akhir Pengerjaan</label>
-                                        <input class="form-control" id="tgl_akhir" disabled />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label class="form-label">Keterangan Pekerjaan</label>
-                                <textarea class="form-control" id="keterangan_pekerjaan" cols="20" rows="5" disabled></textarea>
                             </div>
                         </div>
-                        <div id="ticket_permit" class="mt-3">
-                            <div class="card mt-2">
-                                <div class="card-body">
-                                    <div class="card-body p-0">
-                                        <div class="row gx-card mx-0 bg-200 text-900 fs--1 fw-semi-bold">
-                                            <div class="col-9 col-md-8 py-2">Personil</div>
-                                        </div>
-                                        <div id="detailPersonels">
+                        <div class="mb-3">
+                            <label class="form-label">Alamat</label>
+                            <textarea class="form-control" id="alamat" cols="20" rows="5" disabled></textarea>
+                        </div>
+                        <div class="mb-3">
+                            <div class="row">
+                                <div class="col-6">
+                                    <label class="form-label">No KTP</label>
+                                    <input type="text" class="form-control" id="no_ktp" disabled>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label">No Telp</label>
+                                    <input type="text" class="form-control" id="no_telp" disabled>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <div class="row">
+                                <div class="col-6">
+                                    <label class="mb-1">Mulai Pengerjaan</label>
+                                    <input class="form-control" id="tgl_mulai" disabled />
+                                </div>
+                                <div class="col-6">
+                                    <label class="mb-1">Tanggal Akhir Pengerjaan</label>
+                                    <input class="form-control" id="tgl_akhir" disabled />
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Keterangan Pekerjaan</label>
+                            <textarea class="form-control" id="keterangan_pekerjaan" cols="20" rows="5" disabled></textarea>
+                        </div>
+                    </div>
+                    <div id="ticket_permit" class="mt-3">
+                        <div class="card mt-2">
+                            <div class="card-body">
+                                <div class="card-body p-0">
+                                    <div class="row gx-card mx-0 bg-200 text-900 fs--1 fw-semi-bold">
+                                        <div class="col-9 col-md-8 py-2">Personil</div>
+                                    </div>
+                                    <div id="detailPersonels">
 
-                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="card mt-2">
-                                <div class="card-body">
-                                    <div class="card-body p-0">
-                                        <div class="row gx-card mx-0 bg-200 text-900 fs--1 fw-semi-bold">
-                                            <div class="col-9 col-md-8 py-2">Nama Alat</div>
-                                        </div>
-                                        <div id="detailItems">
+                        </div>
+                        <div class="card mt-2">
+                            <div class="card-body">
+                                <div class="card-body p-0">
+                                    <div class="row gx-card mx-0 bg-200 text-900 fs--1 fw-semi-bold">
+                                        <div class="col-9 col-md-8 py-2">Nama Alat</div>
+                                    </div>
+                                    <div id="detailItems">
 
-                                        </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="card mt-2">
-                                <div class="card-body">
-                                    <div class="card-body p-0">
-                                        <div class="row gx-card mx-0 bg-200 text-900 fs--1 fw-semi-bold">
-                                            <div class="col-9 col-md-8 py-2">Material</div>
-                                        </div>
-                                        <div id="detailMaterials">
+                        </div>
+                        <div class="card mt-2">
+                            <div class="card-body">
+                                <div class="card-body p-0">
+                                    <div class="row gx-card mx-0 bg-200 text-900 fs--1 fw-semi-bold">
+                                        <div class="col-9 col-md-8 py-2">Material</div>
+                                    </div>
+                                    <div id="detailMaterials">
 
-                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -126,6 +126,7 @@
                 </div>
             </div>
         </div>
+    </div>
 
         <div class="col-3">
             <form action="{{ route('work-permits.store') }}" method="post" id="form-create-wp">
@@ -177,24 +178,23 @@
 @endsection
 
 @section('script')
-    <script src="https://cdn.tiny.cloud/1/zqt3b05uqsuxthyk5xvi13srgf4ru0l5gcvuxltlpgm6rcki/tinymce/6/tinymce.min.js"
-        referrerpolicy="origin"></script>
-    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.full.min.js"></script>
+<script src="https://cdn.tiny.cloud/1/zqt3b05uqsuxthyk5xvi13srgf4ru0l5gcvuxltlpgm6rcki/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.full.min.js"></script>
 
-    <script>
-        tinymce.init({
-            selector: 'textarea#myeditorinstance', // Replace this CSS selector to match the placeholder element for TinyMCE
-            plugins: 'code table lists',
-            toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist | code | table'
-        });
-    </script>
-    <script>
-        function onSubmit() {
-            var nama_project = $('#nama_project').val();
-            var id_work_relation = $('#id_work_relation').val();
-            var jumlah_deposit = $('#jumlah_deposit').val();
-            var id_rp = $('#select_ticket').val();
-            var id_bayarnon = $('#id_bayarnon').val();
+<script>
+    tinymce.init({
+        selector: 'textarea#myeditorinstance', // Replace this CSS selector to match the placeholder element for TinyMCE
+        plugins: 'code table lists',
+        toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist | code | table'
+    });
+</script>
+<script>
+    function onSubmit() {
+        var nama_project = $('#nama_project').val();
+        var id_work_relation = $('#id_work_relation').val();
+        var jumlah_deposit = $('#jumlah_deposit').val();
+        var id_rp = $('#select_ticket').val();
+        var id_bayarnon = $('#id_bayarnon').val();
 
             if (!nama_project || !id_work_relation || !jumlah_deposit || !select_ticket) {
                 Swal.fire(

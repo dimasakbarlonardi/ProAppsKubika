@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="card">
-<div class="card-header ">
+<div class="card-header">
         <div class="row flex-between-center">
             <div class="col-auto">
                 <h6 class="mb-0 text-light">List Tower</h6>
@@ -17,8 +17,6 @@
             <thead>
                 <tr>
                     <th class="sort" data-sort="id_tower">No</th>
-                    <th class="sort" data-sort="id_tower">ID Tower</th>
-                    <th class="sort" data-sort="id_site">ID Site</th>
                     <th class="sort" data-sort="id_tower">Nama Tower</th>
                     <th class="sort" data-sort="jumlah_lantai">Jumlah lantai</th>
                     <th class="sort" data-sort="jumlah_unit">Jumlah Unit</th>
@@ -30,8 +28,6 @@
                 @foreach ($towers as $key => $tower)
                     <tr>
                         <th scope="row">{{ $key + 1 }}</th>
-                        <td>{{ $tower->id_tower }}</td>
-                        <td>{{ $tower->id_site }}</td>
                         <td>{{ $tower->nama_tower }}</td>
                         <td>{{ $tower->jumlah_lantai }}</td>
                         <td>{{ $tower->jumlah_unit }}</td>

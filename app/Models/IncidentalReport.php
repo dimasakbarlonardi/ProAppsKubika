@@ -11,7 +11,10 @@ class IncidentalReport extends Model
 
     protected $table = 'tb_incidental_reports';
 
+    protected $primaryKey = 'id';
+
     protected $fillable = [
+        'id_user',
         'incident_name',
         'location',
         'incident_date',

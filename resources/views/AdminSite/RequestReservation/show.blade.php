@@ -53,7 +53,7 @@
                             <div class="mb-3">
                                 <div class="row">
                                     <div class="col-6">
-                                        <label class="mb-1">Tipe reservasi</label>
+                                        <label class="mb-1">Waktu acara awal</label>
                                         <input type="text" class="form-control" disabled
                                             value="{{ HumanDateTime($reservation->waktu_mulai) }}">
                                     </div>

@@ -1,7 +1,7 @@
 <div class="list bg-light p-x1 d-flex flex-column gap-3" id="card-ticket-body">
     <div class="mb-3">
         <div class="text-end my-3">
-            <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#tambah-unit">Tambah
+            <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#tambah-unit">Create
                 Unit</button>
         </div>
     </div>

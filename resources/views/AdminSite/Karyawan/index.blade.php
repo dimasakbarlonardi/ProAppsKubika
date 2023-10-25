@@ -35,8 +35,8 @@
                         </div>
                     </div>
                     <div class="d-flex align-items-center" id="table-ticket-replace-element">
-                        <a class="btn btn-falcon-default text-600 btn-sm" href="{{ route('karyawans.create') }}">Tambah
-                            Karyawan</a>
+                        <a class="btn btn-falcon-default text-600 btn-sm" href="{{ route('karyawans.create') }}">Create
+                            Employee</a>
                     </div>
                 </div>
             </div>

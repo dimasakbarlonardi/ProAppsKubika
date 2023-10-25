@@ -36470,7 +36470,7 @@ html[dir="rtl"] .img-dropdown {
 .avatar img {
     -o-object-fit: cover;
     object-fit: fill;
-    aspect-ratio: 3/2;
+    aspect-ratio: auto;
 }
 
 .avatar[class*="status-"]:before {
@@ -41701,6 +41701,11 @@ td {
     font: 600 14px/32px "Montserrat", sans-serif;
     position: relative;
 }
+
+.ml-3 {
+    margin-left: 15px; 
+}
+
 
 /*  */
 

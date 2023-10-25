@@ -88,8 +88,7 @@
                     </div>
                     <div class="mb-3">
                         <div class="row">
-                            <div class="col-6"></div>
-                            <div class="col-6">
+                        <div class="col-6">
                                 <label class="form-label">Paid Permit</label>
                                 <select name="" class="form-control" id="" disabled>
                                     <option value="Yes">Yes</option>

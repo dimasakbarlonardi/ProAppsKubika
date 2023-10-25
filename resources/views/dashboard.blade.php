@@ -1,100 +1,89 @@
 @extends('layouts.master')
 
 @section('css')
-    <link rel="stylesheet" href="{{ asset('assets/vendors/flatpickr/flatpickr.min.css') }}">
+<link rel="stylesheet" href="{{ asset('assets/vendors/flatpickr/flatpickr.min.css') }}">
 @endsection
 
 
 @section('content')
-    <div class="row g-0 my-4">
-        <div class="container">
-            <div class="card mb-3 p-3">
-                <div class="card-body px-xxl-0 pt-4">
-                    <div class="frame-537">
-                        <div class="frame-193">
-                            <div class="request-volume-performance">Building Information</div>
-                            <svg class="icon" width="24" height="25" viewBox="0 0 24 25" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <g clip-path="url(#clip0_563_37579)">
-                                    <path
-                                        d="M12 0.875C5.58014 0.875 0.375 6.08202 0.375 12.5C0.375 18.9217 5.58014 24.125 12 24.125C18.4199 24.125 23.625 18.9217 23.625 12.5C23.625 6.08202 18.4199 0.875 12 0.875ZM12 6.03125C13.0873 6.03125 13.9688 6.91269 13.9688 8C13.9688 9.08731 13.0873 9.96875 12 9.96875C10.9127 9.96875 10.0312 9.08731 10.0312 8C10.0312 6.91269 10.9127 6.03125 12 6.03125ZM14.625 17.9375C14.625 18.2481 14.3731 18.5 14.0625 18.5H9.9375C9.62686 18.5 9.375 18.2481 9.375 17.9375V16.8125C9.375 16.5019 9.62686 16.25 9.9375 16.25H10.5V13.25H9.9375C9.62686 13.25 9.375 12.9981 9.375 12.6875V11.5625C9.375 11.2519 9.62686 11 9.9375 11H12.9375C13.2481 11 13.5 11.2519 13.5 11.5625V16.25H14.0625C14.3731 16.25 14.625 16.5019 14.625 16.8125V17.9375Z"
-                                        fill="#3F4045" />
-                                </g>
-                                <defs>
-                                    <clipPath id="clip0_542_36712">
-                                        <rect width="24" height="24" fill="white" transform="translate(0 0.5)" />
-                                    </clipPath>
-                                </defs>
-                            </svg>
-                        </div>
-                        <div class="col-md-auto p-3">
-                            <form class="row align-items-center g-3">
-                                <div class="col-auto">
-                                    <h6 class="text-700 mb-0">Showing Data For: </h6>
-                                </div>
-                                <div class="col-md-auto position-relative"><input
-                                        class="form-control form-control-sm datetimepicker ps-4" id="CRMDateRange"
-                                        type="text" placeholder="Choose Date"> <span
-                                        class="fas fa-calendar-alt text-primary position-absolute top-50 translate-middle-y ms-2">
-                                    </span></div>
-                            </form>
+<div class="row g-0 my-4">
+    <div class="container">
+        <div class="card mb-3 p-3">
+            <div class="card-body px-xxl-0 pt-4">
+                <div class="frame-537">
+                    <div class="frame-193">
+                        <div class="request-volume-performance">Building Information</div>
+                        <svg class="icon" width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <g clip-path="url(#clip0_563_37579)">
+                                <path d="M12 0.875C5.58014 0.875 0.375 6.08202 0.375 12.5C0.375 18.9217 5.58014 24.125 12 24.125C18.4199 24.125 23.625 18.9217 23.625 12.5C23.625 6.08202 18.4199 0.875 12 0.875ZM12 6.03125C13.0873 6.03125 13.9688 6.91269 13.9688 8C13.9688 9.08731 13.0873 9.96875 12 9.96875C10.9127 9.96875 10.0312 9.08731 10.0312 8C10.0312 6.91269 10.9127 6.03125 12 6.03125ZM14.625 17.9375C14.625 18.2481 14.3731 18.5 14.0625 18.5H9.9375C9.62686 18.5 9.375 18.2481 9.375 17.9375V16.8125C9.375 16.5019 9.62686 16.25 9.9375 16.25H10.5V13.25H9.9375C9.62686 13.25 9.375 12.9981 9.375 12.6875V11.5625C9.375 11.2519 9.62686 11 9.9375 11H12.9375C13.2481 11 13.5 11.2519 13.5 11.5625V16.25H14.0625C14.3731 16.25 14.625 16.5019 14.625 16.8125V17.9375Z" fill="#3F4045" />
+                            </g>
+                            <defs>
+                                <clipPath id="clip0_542_36712">
+                                    <rect width="24" height="24" fill="white" transform="translate(0 0.5)" />
+                                </clipPath>
+                            </defs>
+                        </svg>
+                    </div>
+                    <div class="col-md-auto p-3">
+                        <form class="row align-items-center g-3">
+                            <div class="col-auto">
+                                <h6 class="text-primary mb-0">Showing Data For :</h6>
+                            </div>
+                            <div class="col-md-auto position-relative"><input class="form-control form-control-sm datetimepicker ps-4" id="CRMDateRange" type="text" placeholder="Choose date" /><span class="fas fa-calendar-alt text-primary position-absolute top-50 translate-middle-y ms-2"> </span></div>
+                        </form>
+                    </div>
+                </div>
+                <div class="row g-0">
+                    <div class="col-xxl-3 col-md-6 px-3 text-center border-end-md border-bottom border-bottom-xxl-0 pb-3 p-xxl-0 ps-md-0">
+                        <div class="card-body">
+                            <div class="col d-lg-block flex-between-center text-start">
+                                <h6 class="mb-2 text-900">Tenant</h6>
+                                <h4 class="fs-3 fw-normal text-700 mb-0">
+                                    <span class="text-primary">{{ $tenant }}</span>
+                                    <div class="icon-background float-end"> <i class=" icon-background float-end fas fa-calendar-alt float-end"></i></div>
+                                </h4>
+                            </div>
                         </div>
                     </div>
-                    <div class="row g-0">
-                        <div
-                            class="col-xxl-3 col-md-6 px-3 text-center border-end-md border-bottom border-bottom-xxl-0 pb-3 p-xxl-0 ps-md-0">
-                            <div class="card-body">
-                                <div class="col d-lg-block flex-between-center text-start">
-                                    <h6 class="mb-2 text-900">Tenant</h6>
-                                    <h4 class="fs-3 fw-normal text-700 mb-0">
-                                        <span class="text-primary">{{ $tenant }}</span>
-                                        <div class="icon-background float-end"> <i
-                                                class=" icon-background float-end fas fa-calendar-alt float-end"></i></div>
-                                    </h4>
-                                </div>
+                    <div class="col-xxl-3 col-md-6 px-3 text-center border-end-xxl border-bottom border-bottom-xxl-0 pb-3 pt-4 pt-md-0 pe-md-0 p-xxl-0">
+                        <div class="card-body">
+                            <div class="col d-lg-block flex-between-center text-start">
+                                <h6 class="mb-2 text-900">Unit</h6>
+                                <h4 class="fs-3 fw-normal text-700 mb-0">
+                                    <span>{{ $unit }}</span>
+                                    <div class="icon-background-2 float-end"> <i class="fas fa-home float-end"></i>
+                                    </div>
+                                </h4>
                             </div>
                         </div>
-                        <div
-                            class="col-xxl-3 col-md-6 px-3 text-center border-end-xxl border-bottom border-bottom-xxl-0 pb-3 pt-4 pt-md-0 pe-md-0 p-xxl-0">
-                            <div class="card-body">
-                                <div class="col d-lg-block flex-between-center text-start">
-                                    <h6 class="mb-2 text-900">Unit</h6>
-                                    <h4 class="fs-3 fw-normal text-700 mb-0">
-                                        <span>{{ $unit }}</span>
-                                        <div class="icon-background-2 float-end"> <i class="fas fa-home float-end"></i>
-                                        </div>
-                                    </h4>
-                                </div>
+                    </div>
+                    <div class="col-xxl-3 col-md-6 px-3 text-center border-end-md border-bottom border-bottom-md-0 pb-3 pt-4 p-xxl-0 pb-md-0 ps-md-0">
+                        <div class="card-body">
+                            <div class="col d-lg-block flex-between-center text-start">
+                                <h6 class="mb-2 text-900">Employee</h6>
+                                <h4 class="fs-3 fw-normal text-700 mb-0">
+                                    <span>{{ $karyawan }}</span>
+                                    <div class="icon-background-2 float-end"> <i class="fas fa-user float-end"></i>
+                                    </div>
+                                </h4>
                             </div>
                         </div>
-                        <div
-                            class="col-xxl-3 col-md-6 px-3 text-center border-end-md border-bottom border-bottom-md-0 pb-3 pt-4 p-xxl-0 pb-md-0 ps-md-0">
-                            <div class="card-body">
-                                <div class="col d-lg-block flex-between-center text-start">
-                                    <h6 class="mb-2 text-900">Employee</h6>
-                                    <h4 class="fs-3 fw-normal text-700 mb-0">
-                                        <span>{{ $karyawan }}</span>
-                                        <div class="icon-background-2 float-end"> <i class="fas fa-user float-end"></i>
-                                        </div>
-                                    </h4>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-xxl-3 col-md-6 px-3 text-center pt-4 p-xxl-0 pb-0 pe-md-0">
-                            <div class="card-body">
-                                <div class="col d-lg-block flex-between-center text-start">
-                                    <h6 class="mb-2 text-900">Tower</h6>
-                                    <h4 class="fs-3 fw-normal text-700 mb-0">
-                                        <span class="text-primary">{{ $tower }}</span>
-                                        <div class="icon-background float-end"> <i class="fas fa-building float-end"></i>
-                                        </div>
-                                    </h4>
-                                </div>
+                    </div>
+                    <div class="col-xxl-3 col-md-6 px-3 text-center pt-4 p-xxl-0 pb-0 pe-md-0">
+                        <div class="card-body">
+                            <div class="col d-lg-block flex-between-center text-start">
+                                <h6 class="mb-2 text-900">Tower</h6>
+                                <h4 class="fs-3 fw-normal text-700 mb-0">
+                                    <span class="text-primary">{{ $tower }}</span>
+                                    <div class="icon-background float-end"> <i class="fas fa-building float-end"></i>
+                                    </div>
+                                </h4>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
 
         <div class="card mb-3 p-3">
             <div class="frame-537">
@@ -230,8 +219,8 @@
                     </div>
                 </div>
 
-                </div>
             </div>
+        </div>
 
         <div class="card mb-3 py-3">
             <div class="row" data-bs-theme="light">
@@ -266,11 +255,127 @@
         </div>
 
 
+        <div class="card mb-3 p-3">
+            <div class="frame-537">
+                <div class="frame-193">
+                    <div class="request-volume-performance">Invoice in Rupiah</div>
+                    <svg class="icon" width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g clip-path="url(#clip0_485_36291)">
+                            <path d="M0 12.5C0 9.3174 1.26428 6.26516 3.51472 4.01472C5.76516 1.76428 8.8174 0.5 12 0.5C15.1826 0.5 18.2348 1.76428 20.4853 4.01472C22.7357 6.26516 24 9.3174 24 12.5C24 15.6826 22.7357 18.7348 20.4853 20.9853C18.2348 23.2357 15.1826 24.5 12 24.5C8.8174 24.5 5.76516 23.2357 3.51472 20.9853C1.26428 18.7348 0 15.6826 0 12.5ZM13.5 5C13.5 4.60218 13.342 4.22064 13.0607 3.93934C12.7794 3.65804 12.3978 3.5 12 3.5C11.6022 3.5 11.2206 3.65804 10.9393 3.93934C10.658 4.22064 10.5 4.60218 10.5 5C10.5 5.39782 10.658 5.77936 10.9393 6.06066C11.2206 6.34196 11.6022 6.5 12 6.5C12.3978 6.5 12.7794 6.34196 13.0607 6.06066C13.342 5.77936 13.5 5.39782 13.5 5ZM12 20C13.6547 20 15 18.6547 15 17C15 16.1844 14.6766 15.4484 14.1516 14.9094L17.1562 8.07969C17.4047 7.5125 17.1469 6.84688 16.5797 6.59844C16.0125 6.35 15.3469 6.60781 15.0984 7.175L12.0891 14C12.0609 14 12.0281 14 12 14C10.3453 14 9 15.3453 9 17C9 18.6547 10.3453 20 12 20ZM8.25 7.25C8.25 6.85218 8.09196 6.47064 7.81066 6.18934C7.52936 5.90804 7.14782 5.75 6.75 5.75C6.35218 5.75 5.97064 5.90804 5.68934 6.18934C5.40804 6.47064 5.25 6.85218 5.25 7.25C5.25 7.64782 5.40804 8.02936 5.68934 8.31066C5.97064 8.59196 6.35218 8.75 6.75 8.75C7.14782 8.75 7.52936 8.59196 7.81066 8.31066C8.09196 8.02936 8.25 7.64782 8.25 7.25ZM4.5 14C4.89782 14 5.27936 13.842 5.56066 13.5607C5.84196 13.2794 6 12.8978 6 12.5C6 12.1022 5.84196 11.7206 5.56066 11.4393C5.27936 11.158 4.89782 11 4.5 11C4.10218 11 3.72064 11.158 3.43934 11.4393C3.15804 11.7206 3 12.1022 3 12.5C3 12.8978 3.15804 13.2794 3.43934 13.5607C3.72064 13.842 4.10218 14 4.5 14ZM21 12.5C21 12.1022 20.842 11.7206 20.5607 11.4393C20.2794 11.158 19.8978 11 19.5 11C19.1022 11 18.7206 11.158 18.4393 11.4393C18.158 11.7206 18 12.1022 18 12.5C18 12.8978 18.158 13.2794 18.4393 13.5607C18.7206 13.842 19.1022 14 19.5 14C19.8978 14 20.2794 13.842 20.5607 13.5607C20.842 13.2794 21 12.8978 21 12.5Z" fill="#3F4045" />
+                        </g>
+                        <defs>
+                            <clipPath id="clip0_542_36712">
+                                <rect width="24" height="24" fill="white" transform="translate(0 0.5)" />
+                            </clipPath>
+                        </defs>
+                    </svg>
+                </div>
+                <div class="col-md-auto p-3">
+                    <form class="row align-items-center g-3">
+                        <div class="col-auto">
+                            <h6 class="text-primary mb-0">Showing Data For :</h6>
+                        </div>
+                        <div class="col-md-auto position-relative"><input class="form-control form-control-sm datetimepicker ps-4" id="CRMDateRange" type="text" placeholder="Choose date" /><span class="fas fa-calendar-alt text-primary position-absolute top-50 translate-middle-y ms-2"> </span></div>
+                    </form>
+                </div>
+            </div>
+            <div class="row" data-bs-theme="light">
+                <div class="col-sm-6 col-lg-6 mb-4">
+                    <div class="card text-white bg-primary">
+                        <div class="card-body" style="background-color: #E9F7F5;">
+                            <div class="card-title"> <img class="float-end" height="40" src="{{ asset('assets/img/icons/ticket_complete.png') }}" alt=""> </div>
+                            <h5 class="fs fw-normal text-700 mb-0">
+                                <span class="text-primary">RP. 150.000.000</span>
+                                <span>/</span>
+                                <span>RP. 250.000.000</span>
+                            </h5>
+                            <h6 class="mt-3">
+                                <span>Already Paid</span>
+                            </h6>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-lg-6 mb-4">
+                    <div class="card text-white bg-secondary">
+                        <div class="card-body" style="background-color: #BEE8E1;">
+                            <div class="card-title"> <img class="float-end" height="40" src="{{ asset('assets/img/icons/ticket_cancel.png') }}" alt=""></div>
+                            <h5 class="fs fw-normal text-700 mb-0">
+                                <span class="text-primary">RP. 50.000.000</span>
+                                <span>/</span>
+                                <span>RP. 250.000.000</span>
+                            </h5>
+                            <h6 class="mt-3">
+                                <span>Not Yet Paid</span>
+                            </h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="card mb-3 p-3">
+            <div class="frame-537">
+                <div class="frame-193">
+                    <div class="request-volume-performance">Invoice in Paper Form</div>
+                    <svg class="icon" width="24" height="25" viewBox="0 0 24 25" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <g clip-path="url(#clip0_485_36291)">
+                            <path d="M0 12.5C0 9.3174 1.26428 6.26516 3.51472 4.01472C5.76516 1.76428 8.8174 0.5 12 0.5C15.1826 0.5 18.2348 1.76428 20.4853 4.01472C22.7357 6.26516 24 9.3174 24 12.5C24 15.6826 22.7357 18.7348 20.4853 20.9853C18.2348 23.2357 15.1826 24.5 12 24.5C8.8174 24.5 5.76516 23.2357 3.51472 20.9853C1.26428 18.7348 0 15.6826 0 12.5ZM13.5 5C13.5 4.60218 13.342 4.22064 13.0607 3.93934C12.7794 3.65804 12.3978 3.5 12 3.5C11.6022 3.5 11.2206 3.65804 10.9393 3.93934C10.658 4.22064 10.5 4.60218 10.5 5C10.5 5.39782 10.658 5.77936 10.9393 6.06066C11.2206 6.34196 11.6022 6.5 12 6.5C12.3978 6.5 12.7794 6.34196 13.0607 6.06066C13.342 5.77936 13.5 5.39782 13.5 5ZM12 20C13.6547 20 15 18.6547 15 17C15 16.1844 14.6766 15.4484 14.1516 14.9094L17.1562 8.07969C17.4047 7.5125 17.1469 6.84688 16.5797 6.59844C16.0125 6.35 15.3469 6.60781 15.0984 7.175L12.0891 14C12.0609 14 12.0281 14 12 14C10.3453 14 9 15.3453 9 17C9 18.6547 10.3453 20 12 20ZM8.25 7.25C8.25 6.85218 8.09196 6.47064 7.81066 6.18934C7.52936 5.90804 7.14782 5.75 6.75 5.75C6.35218 5.75 5.97064 5.90804 5.68934 6.18934C5.40804 6.47064 5.25 6.85218 5.25 7.25C5.25 7.64782 5.40804 8.02936 5.68934 8.31066C5.97064 8.59196 6.35218 8.75 6.75 8.75C7.14782 8.75 7.52936 8.59196 7.81066 8.31066C8.09196 8.02936 8.25 7.64782 8.25 7.25ZM4.5 14C4.89782 14 5.27936 13.842 5.56066 13.5607C5.84196 13.2794 6 12.8978 6 12.5C6 12.1022 5.84196 11.7206 5.56066 11.4393C5.27936 11.158 4.89782 11 4.5 11C4.10218 11 3.72064 11.158 3.43934 11.4393C3.15804 11.7206 3 12.1022 3 12.5C3 12.8978 3.15804 13.2794 3.43934 13.5607C3.72064 13.842 4.10218 14 4.5 14ZM21 12.5C21 12.1022 20.842 11.7206 20.5607 11.4393C20.2794 11.158 19.8978 11 19.5 11C19.1022 11 18.7206 11.158 18.4393 11.4393C18.158 11.7206 18 12.1022 18 12.5C18 12.8978 18.158 13.2794 18.4393 13.5607C18.7206 13.842 19.1022 14 19.5 14C19.8978 14 20.2794 13.842 20.5607 13.5607C20.842 13.2794 21 12.8978 21 12.5Z" fill="#3F4045" />
+                        </g>
+                        <defs>
+                            <clipPath id="clip0_542_36712">
+                                <rect width="24" height="24" fill="white" transform="translate(0 0.5)" />
+                            </clipPath>
+                        </defs>
+                    </svg>
+                </div>
+                <div class="col-md-auto p-3">
+                    <form class="row align-items-center g-3">
+                        <div class="col-auto">
+                            <h6 class="text-primary mb-0">Showing Data For :</h6>
+                        </div>
+                        <div class="col-md-auto position-relative"><input class="form-control form-control-sm datetimepicker ps-4" id="CRMDateRange" type="text" placeholder="Choose date" /><span class="fas fa-calendar-alt text-primary position-absolute top-50 translate-middle-y ms-2"> </span></div>
+                    </form>
+                </div>
+            </div>
+            <div class="row" data-bs-theme="light">
+                <div class="col-sm-6 col-lg-6 mb-4">
+                    <div class="card text-white bg-primary">
+                        <div class="card-body" style="background-color: #E9F7F5;">
+                            <div class="card-title"> <img class="float-end" height="40" src="{{ asset('assets/img/icons/ticket_complete.png') }}" alt=""> </div>
+                            <h4 class="fs fw-normal text-700 mb-0">
+                                <span class="text-primary">150</span>
+                                <span>/</span>
+                                <span>200 Paper</span>
+                            </h4>
+                            <h6 class="mt-3">
+                                <span>Already Paid</span>
+                            </h6>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6 col-lg-6 mb-4">
+                    <div class="card text-white bg-secondary">
+                        <div class="card-body" style="background-color: #BEE8E1;">
+                            <div class="card-title"> <img class="float-end" height="40" src="{{ asset('assets/img/icons/ticket_cancel.png') }}" alt=""></div>
+                            <h4 class="fs fw-normal text-700 mb-0">
+                                <span class="text-primary">50</span>
+                                <span>/</span>
+                                <span>200 Paper</span>
+                            </h4>
+                            <h6 class="mt-3">
+                                <span>Not Yet Paid</span>
+                            </h6>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
 
     </div>
-@endsection
+    @endsection
 
-@section('script')
+    @section('script')
     <script src="{{ asset('assets/js/flatpickr.js') }}"></script>
     <script src="https://cdn.jsdelivr.net/npm/echarts@5.0.1/dist/echarts.min.js"></script>
-@endsection
+    @endsection

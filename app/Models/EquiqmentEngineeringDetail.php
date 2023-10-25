@@ -25,6 +25,7 @@ use Illuminate\Database\Eloquent\Model;
             'schedule',
             'status_schedule',
             'user_id',
+            'notes',
         ];
 
         protected $dates = ['deleted_at'];
