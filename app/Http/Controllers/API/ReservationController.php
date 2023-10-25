@@ -48,6 +48,7 @@ class ReservationController extends Controller
         $object->jenis_acara = $reservation->JenisAcara->jenis_acara;
         $object->notes = strip_tags($reservation->keterangan);
         $object->notes_by = $reservation->Ticket->ResponseBy->nama_user;
+        $object->status_reservation = $reservation->sign_approval_1 ? 'APPROVED' : 'PENDING';
 
         if ($reservation->is_deposit) {
             $object->total = $reservation->jumlah_deposit;
@@ -85,6 +86,21 @@ class ReservationController extends Controller
         return ResponseFormatter::success(
             $rsv,
             'Success approve reservation'
+        );
+    }
+
+    public function reject($id)
+    {
+        $connReservation = ConnectionDB::setConnection(new Reservation());
+
+        $rsv = $connReservation->find($id);
+
+        $rsv->Ticket->status_request = 'REJECTED';
+        $rsv->Ticket->save();
+
+        return ResponseFormatter::success(
+            $rsv,
+            'Success reject reservation'
         );
     }
 }
