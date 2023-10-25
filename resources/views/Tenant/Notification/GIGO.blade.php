@@ -67,11 +67,6 @@
                                         <input {{ $gigo->gigo_type ? 'disabled' : '' }} class="form-control datetimepicker" required value="{{ $gigo->date_request_gigo ? $gigo->date_request_gigo : '' }}" name="date_request_gigo" id="date_request_gigo" type="text" placeholder="d/m/y H:i" data-options='{"enableTime":true,"dateFormat":"Y-m-d H:i","disableMobile":true}' />
                                     </div>
                                     <div class="col-6">
-                                        <label class="mb-1">Tanggal & Jam bawa barang</label>
-                                        <input {{ $gigo->gigo_type ? 'disabled' : '' }} class="form-control datetimepicker" required value="{{ $gigo->date_request_gigo ? $gigo->date_request_gigo : '' }}" name="date_request_gigo" id="date_request_gigo" type="text" placeholder="yyyy-mm-dd HH:ii" data-enable-time="true" data-date-format="Y-m-d H:i" data-disable-mobile="true" />
-                                    </div>
-
-                                    <div class="col-6">
                                         <label class="mb-1">GIGO Type</label>
                                         <select name="gigo_type" class="form-control" required {{ $gigo->gigo_type ? 'disabled' : '' }} id="gigo_type">
                                             <option value="In">In</option>
