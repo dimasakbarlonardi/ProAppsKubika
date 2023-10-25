@@ -86,4 +86,9 @@ class OpenTicket extends Model
     {
         return $this->hasOne(Tower::class, 'id_tower', 'id_tower');
     }
+
+    public function ResponseBy()
+    {
+        return $this->hasOne(User::class, 'id_user', 'id_user_resp_request');
+    }
 }
