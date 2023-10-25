@@ -4,19 +4,26 @@ namespace App\Http\Controllers\API;
 
 use App\Helpers\ConnectionDB;
 use App\Helpers\ResponseFormatter;
+use App\Helpers\SaveFile;
 use App\Http\Controllers\Controller;
 use App\Models\Attendance;
 use App\Models\Karyawan;
 use App\Models\Site;
 use App\Models\Coordinate;
+use App\Models\PermitAttendance;
 use App\Models\ShiftType;
 use App\Models\Unit;
 use App\Models\User;
 use App\Models\WorkTimeline;
 use Carbon\Carbon;
 use DateTime;
+use Image;
+use File;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Laravel\Sanctum\PersonalAccessToken;
+use stdClass;
 
 class AttendanceController extends Controller
 {
@@ -42,8 +49,8 @@ class AttendanceController extends Controller
         if ($tokenable) {
             $coor = $conCoordinate->find($id);
             $data = [
-                'lat' => $coor->lat,
-                'long' => $coor->long,
+                'lat' => $coor->latitude,
+                'long' => $coor->longitude,
             ];
 
             return ResponseFormatter::success(
@@ -113,9 +120,26 @@ class AttendanceController extends Controller
                             $status_absence = 'On Time';
                         }
 
-                        $karyawan->NowSchedule->check_in = Carbon::now();
-                        $karyawan->NowSchedule->status_absence = $status_absence;
-                        $karyawan->NowSchedule->save();
+                        try {
+                            DB::beginTransaction();
+                            $karyawan->NowSchedule->check_in = Carbon::now();
+                            $karyawan->NowSchedule->checkin_lat = $request->my_lat;
+                            $karyawan->NowSchedule->checkin_long = $request->my_long;
+                            $karyawan->NowSchedule->status_absence = $status_absence;
+
+                            $file = $request->file('photo');
+
+                            if ($file) {
+                                $storagePath = SaveFile::saveToStorage($request->user()->id_site, 'checkin', $file);
+                                $karyawan->NowSchedule->checkin_photo = $storagePath;
+                            }
+
+                            $karyawan->NowSchedule->save();
+                            DB::commit();
+                        } catch (\Throwable $e) {
+                            DB::rollBack();
+                            dd($e);
+                        }
 
                         return response()->json([
                             'status' => 'OK',
@@ -145,8 +169,8 @@ class AttendanceController extends Controller
             ], 'Authentication Failed', 401);
         }
 
-        $lat = $request->lat;
-        $long = $request->long;
+        $lat = $request->my_lat;
+        $long = $request->my_long;
 
         $distance = $this->getDistance($lat, $long);
         if ($distance < 0.03) {
@@ -167,7 +191,6 @@ class AttendanceController extends Controller
         $user = $tokenable->tokenable;
         $karyawan = $connKaryawan->where('email_karyawan', $user->email)->first();
         $attend = $this->attendCheckout($karyawan);
-        $site = Site::find($user->id_site);
 
         if ($tokenable) {
             if ($attend && !$attend->checkout) {
@@ -182,7 +205,6 @@ class AttendanceController extends Controller
 
                     $work_hour = $checkin->diff(new DateTime($checkout));
 
-
                     if ($work_hour->format('%h') == 0) {
                         $work_hour = $work_hour->format('%i') . " Minutes";
                     } else {
@@ -190,6 +212,12 @@ class AttendanceController extends Controller
                     }
 
                     if ($distance < 10) {
+                        $file = $request->file('photo');
+                        if ($file) {
+                            $storagePath = SaveFile::saveToStorage($request->user()->id_site, 'checkin', $file);
+                            $karyawan->NowSchedule->checkout_photo = $storagePath;
+                        }
+
                         $karyawan->NowSchedule->work_hour = $work_hour;
                         $karyawan->NowSchedule->check_out = $checkout;
                         $karyawan->NowSchedule->save();
@@ -233,8 +261,8 @@ class AttendanceController extends Controller
         $coordinates = $conCoordinates->get();
 
         foreach ($coordinates as $item) {
-            $latitude1 = $item->lat;
-            $longitude1 = $item->long;
+            $latitude1 = $item->latitude;
+            $longitude1 = $item->longitude;
         }
 
         if ($latitude1 && $longitude1) {
@@ -338,6 +366,148 @@ class AttendanceController extends Controller
         return ResponseFormatter::success(
             $schedules,
             'Success get all schedules'
+        );
+    }
+
+    public function attendanceReports(Request $request)
+    {
+        $connWorkSchedule = ConnectionDB::setConnection(new WorkTimeline());
+        $connKaryawan = ConnectionDB::setConnection(new Karyawan());
+
+        $user = $request->user();
+        $karyawan = $connKaryawan->where('email_karyawan', $user->email)->first();
+
+        $reports = $connWorkSchedule->where('status_absence', '!=', null)
+            ->where('karyawan_id', $karyawan->id)
+            ->with(['ShiftType' => function ($q) {
+                $q->select('id', 'shift', 'checkin', 'checkout');
+            }])
+            ->orderBy('id', 'DESC')
+            ->get();
+
+        return ResponseFormatter::success(
+            $reports,
+            'Success get all reports'
+        );
+    }
+
+    public function showAttendanceReport(Request $request, $id)
+    {
+        $connWorkSchedule = ConnectionDB::setConnection(new WorkTimeline());
+        $connKaryawan = ConnectionDB::setConnection(new Karyawan());
+        $connCoor = ConnectionDB::setConnection(new Coordinate());
+
+        $user = $request->user();
+        $karyawan = $connKaryawan->where('email_karyawan', $user->email)->first();
+
+        $report = $connWorkSchedule->where('id', $id)
+            ->select(
+                'check_in',
+                'check_out',
+                'checkin_lat',
+                'checkin_long',
+                'work_hour',
+                'checkin_photo',
+                'checkout_photo',
+                'shift_type_id'
+            )
+            ->with(['ShiftType' => function ($q) {
+                $q->select('id', 'shift', 'checkin', 'checkout');
+            }])
+            ->where('status_absence', '!=', null)
+            ->where('karyawan_id', $karyawan->id)
+            ->orderBy('id', 'DESC')
+            ->first();
+
+        $report['work_break'] = '1 Hour';
+
+        $siteLoc = $connCoor->select(
+            "site_name",
+            "barcode_image",
+            DB::raw(
+                "
+                    (6371 * acos(
+                            cos(radians($report->checkin_lat)) *
+                            cos(radians(latitude)) *
+                            cos(radians(longitude) - radians($report->checkin_long)) +
+                            sin(radians($report->checkin_lat)) *
+                            sin(radians(latitude))
+                            )
+                    ) as distance
+                    "
+            )
+        )
+            ->having("distance", '<', 10)
+            ->first();
+
+        $report->attendace_location = $siteLoc->site_name;
+        $report->attendace_barcode = $siteLoc->barcode_image;
+
+        return ResponseFormatter::success(
+            $report,
+            'Success get report'
+        );
+    }
+
+    public function permitAttendance(Request $request)
+    {
+        $connPermit = ConnectionDB::setConnection(new PermitAttendance());
+        $connSchedule = ConnectionDB::setConnection(new WorkTimeline());
+        $connKaryawan = ConnectionDB::setConnection(new Karyawan());
+
+        $karyawan = $connKaryawan->where('email_karyawan', $request->user()->email)->first();
+        $schedule = $connSchedule->where('date', $request->work_date)
+            ->where('karyawan_id', $karyawan->id)
+            ->first();
+
+        if ($schedule) {
+            if (
+                !$schedule->status_absence &&
+                $request->permit_type != 'Sick' &&
+                $request->permit_type != 'Forgot Clock In' &&
+                $request->permit_type != 'Anual Leave' &&
+                $request->permit_type != 'Special Leave' &&
+                $request->permit_type != 'Change Shift'
+            ) {
+                return ResponseFormatter::error(
+                    null,
+                    "Sorry, you haven't chock in yet"
+                );
+            }
+        } else {
+            return ResponseFormatter::error(
+                null,
+                "Sorry, you dont have schedule on selected date"
+            );
+        }
+
+        $connPermit->karyawan_id = $karyawan->id;
+        $connPermit->work_date = $request->work_date;
+        $connPermit->permit_type = $request->permit_type;
+        $connPermit->permit_title = $request->permit_title;
+        $connPermit->permit_desc = $request->permit_desc;
+        $connPermit->request_time = $request->request_time;
+        $connPermit->previous_shift_id = $request->previous_shift_id;
+        $connPermit->replace_shift_id = $request->replace_shift_id;
+        $connPermit->replacement_id = $request->replacement_id;
+        $connPermit->status_permit = 'PENDING';
+
+        $photo = $request->file('photo');
+        if ($photo) {
+            $storagePath = SaveFile::saveToStorage($request->user()->id_site, 'permit-attendance', $photo);
+            $connPermit->permit_photo = $storagePath;
+        }
+        $file = $request->file('file');
+        if ($file) {
+            $storagePathFile = SaveFile::saveFileToStorage($request->user()->id_site, 'permit-attendance', $file);
+            $connPermit->permit_file = $storagePathFile;
+        }
+
+        $connPermit->save();
+
+        return ResponseFormatter::success(
+            $connPermit,
+            'Success create ' . $request->permit_type . ' report'
         );
     }
 }

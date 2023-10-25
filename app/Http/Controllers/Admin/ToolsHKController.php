@@ -263,13 +263,24 @@ class ToolsHKController extends Controller
     public function store(Request $request)
     {
         $conn = ConnectionDB::setConnection(new ToolsHousekeeping());
+        $connToolHistory = ConnectionDB::setConnection(new ToolHistory());
 
         try {
             DB::beginTransaction();
-            $conn->create([
+            $createTools = $conn->create([
                 'name_tools' => $request->name_tools,
                 'total_tools' => $request->total_tools,
                 'current_totals' => $request->total_tools,
+                'unity' => $request->unity
+            ]);
+
+            $connToolHistory->create([
+                'type' => 'HK',
+                'id_data' => $createTools->id,
+                'qty' => $request->total_tools,
+                'borrowed_by' => $request->session()->get('user')->id_user,
+                'action' => 'Create',
+                'status' => 'Create Tools'
             ]);
 
             DB::commit();
@@ -284,6 +295,15 @@ class ToolsHKController extends Controller
 
             return redirect()->route('toolshousekeeping.index');
         }
+    }
+
+    public function historyToolHK()
+    {
+        $connHistories = ConnectionDB::setConnection(new ToolHistory());
+
+        $data['histories'] = $connHistories->where('type', 'HK')->get();
+
+        return view('AdminSite.ToolsHK.history', $data);
     }
 
     /**
@@ -317,7 +337,38 @@ class ToolsHKController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $connToolsHK = ConnectionDB::setConnection(new ToolsHousekeeping());
+        $connToolHistory = ConnectionDB::setConnection(new ToolHistory());
+
+        $tool = $connToolsHK->find($id);
+
+        try {
+            DB::beginTransaction();
+
+            $editQty = (int) abs($request->total_tools - $tool->total_tools);
+
+            $tool->total_tools = $request->total_tools;
+            $tool->current_totals = $editQty;
+            $tool->save();
+
+            $connToolHistory->create([
+                'type' => 'HK',
+                'id_data' => $id,
+                'qty' => $editQty,
+                'borrowed_by' => $request->session()->get('user')->id_user,
+                'action' => 'Update',
+                'status' => 'Update Tools'
+            ]);
+
+            DB::commit();
+
+            Alert::success('success', 'Tool Borrowed successfully');
+            return redirect()->back();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            dd($e);
+            return redirect()->back()->with('error', 'An error occurred while borrowing the tool.');
+        }
     }
 
     /**

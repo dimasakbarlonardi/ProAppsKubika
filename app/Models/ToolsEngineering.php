@@ -13,7 +13,7 @@ class ToolsEngineering extends Model
     use SoftDeletes;
 
     protected $table = 'tb_tools_engineering';
-    
+
     protected $primaryKey = 'id';
 
     protected $fillable = [
@@ -25,14 +25,14 @@ class ToolsEngineering extends Model
         'date_in',
         'date_out,',
         'current_totals',
-        'id_user'
-
+        'id_user',
+        'unity'
     ];
 
     protected $dates = ['deleted_at'];
 
     public function User()
     {
-        return $this->belongsTo(Login::class, 'id', 'id_user'); 
+        return $this->belongsTo(Login::class, 'id', 'id_user');
     }
 }

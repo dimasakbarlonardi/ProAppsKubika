@@ -13,6 +13,15 @@ class Coordinate extends Model
 
     protected $table = 'tb_coordinates';
 
+    protected $fillable = [
+        'id_site',
+        'site_name',
+        'latitude',
+        'longitude',
+        'radius',
+        'barcode_image',
+    ];
+
     public function GenerateBarcode()
     {
         $barcodeCoordinate = QrCode::format('png')

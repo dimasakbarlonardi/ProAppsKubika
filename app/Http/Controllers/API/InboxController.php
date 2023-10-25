@@ -30,9 +30,10 @@ class InboxController extends Controller
         $connNotif = ConnectionDB::setConnection(new Notifikasi());
 
         $notif = $connNotif->where('receiver', $user->id_user)
-        ->with('Sender')
-        ->orderBy('created_at', 'DESC')
-        ->get();
+            ->orWhere('type', 'Announcement')
+            ->with('Sender')
+            ->orderBy('created_at', 'DESC')
+            ->get();
 
         return ResponseFormatter::success(
             $notif,

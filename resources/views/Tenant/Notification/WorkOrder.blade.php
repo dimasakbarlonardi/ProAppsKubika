@@ -118,8 +118,8 @@
                                     <div class="mb-4">
                                         <label class="mb-1">Jadwal Pengerjaan</label>
                                         <input value="{{ $wo->jadwal_pengerjaan }}" disabled
-                                            class="form-control datetimepicker" name="jadwal_pengerjaan" id="jadwal_pengerjaan"
-                                            type="text" placeholder="d/m/y H:i"
+                                            class="form-control datetimepicker" name="jadwal_pengerjaan"
+                                            id="jadwal_pengerjaan" type="text" placeholder="d/m/y H:i"
                                             data-options='{"enableTime":true,"dateFormat":"Y-m-d H:i","disableMobile":true}' />
                                     </div>
                                 </div>
@@ -157,6 +157,17 @@
                                     </form>
                                 </div>
                             </div>
+                        </div>
+                    @endif
+                    @if (
+                        $wo->status_wo == 'APPROVED' &&
+                            $wo->sign_approve_3 &&
+                            $user->RoleH->work_relation_id == $wo->WorkRequest->id_work_relation)
+                        <div class="text-center">
+                            <button type="button" class="btn btn-success btn-lg my-4"
+                                onclick="workDone({{ $wo->id }})">
+                                PEKERJAAN SELESAI
+                            </button>
                         </div>
                     @endif
                     @if ($wo->status_wo == 'WORK DONE' && $user->id_role_hdr == $approve->approval_1)
@@ -200,6 +211,22 @@
         function approve3(id) {
             $.ajax({
                 url: `/admin/approve3/work-order/${id}`,
+                type: 'POST',
+                success: function(data) {
+                    if (data.status === 'ok') {
+                        Swal.fire(
+                            'Berhasil!',
+                            'Berhasil mengupdate Work Order!',
+                            'success'
+                        ).then(() => window.location.reload())
+                    }
+                }
+            })
+        }
+
+        function workDone(id) {
+            $.ajax({
+                url: `/admin/work-done/work-order/${id}`,
                 type: 'POST',
                 success: function(data) {
                     if (data.status === 'ok') {

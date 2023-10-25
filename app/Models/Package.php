@@ -28,7 +28,9 @@ class Package extends Model
         'receive_time',
         'status',
         'description',
-        
+        'id_site',
+        'picked_by',
+        'picked_time'
     ];
 
     public function GenerateBarcode()
@@ -41,7 +43,7 @@ class Package extends Model
             ->eyeColor(1, 39, 178, 155, 0, 0, 0)
             ->eyeColor(2, 39, 178, 155, 0, 0, 0)
             ->errorCorrection('H')
-            ->generate(url('') . '/api/v1/pickup/package/');
+            ->generate(url('') . '/api/v1/pickup/package/' . $this->id);
 
         $outputPackage = '/public/' . $this->id_site . '/img/qr-code/package/' . $this->package_receipt_number . '-barcode_package.png';
         $package = '/storage/' . $this->id_site . '/img/qr-code/package/' . $this->package_receipt_number . '-barcode_package.png';

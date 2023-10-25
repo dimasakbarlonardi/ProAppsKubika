@@ -19,6 +19,7 @@ use App\Http\Controllers\Admin\SiteController;
 use App\Http\Controllers\Admin\UnitController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\AgamaController;
+use App\Http\Controllers\Admin\AnnouncementController;
 use App\Http\Controllers\Admin\AttendanceController;
 use App\Http\Controllers\Admin\FloorController;
 use App\Http\Controllers\Admin\GroupController;
@@ -143,6 +144,11 @@ Route::get('/', function () {
 Route::get('/gis', [AttendanceController::class, 'index']);
 Route::post('/absence', [AttendanceController::class, 'absence']);
 
+Route::get('pdf', function () {
+    $file = "/storage/004212/file/permit-attendance/permit-attendance-2023-10-20-kewirausahaan.pdf";
+    return Response::download($file);
+});
+
 Route::post('/payments/midtrans-notifications', [PaymentController::class, 'receive']);
 Route::get('/delete/midtrans', [PaymentController::class, 'delete']);
 Route::get('/check/midtrans', [PaymentController::class, 'check']);
@@ -162,6 +168,8 @@ Route::prefix('admin')->group(function () {
     Route::middleware(['auth'])->group(function () {
 
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+        Route::resource('announcements', AnnouncementController::class);
 
         // Tracking ticket
         Route::get('tracking-tickets', [MainFormController::class, 'index'])->name('trackingTickets');
@@ -415,6 +423,7 @@ Route::prefix('admin')->group(function () {
         Route::post('/accept/work-order/{id}', [WorkOrderController::class, 'acceptWO'])->name('acceptWO'); // accept wo from tenant
         Route::post('/reject/work-order/{id}', [WorkOrderController::class, 'rejectWO'])->name('rejectWO'); // reject wo from tenant
         Route::post('/approve2/work-order/{id}', [WorkOrderController::class, 'approve2'])->name('approve2'); // approve wo from engineering
+        Route::post('/approveBM/work-order/{id}', [WorkOrderController::class, 'approveBM'])->name('approveBM'); // approve wo from bm
         Route::post('/approve3/work-order/{id}', [WorkOrderController::class, 'approve3'])->name('approve3'); // approve wo from engineering
         Route::post('/work-done/work-order/{id}', [WorkOrderController::class, 'workDone'])->name('workDone'); // update wo from engineering
         Route::post('/complete/work-order/{id}', [WorkOrderController::class, 'complete'])->name('completeWO'); // update wo to complete from finance
@@ -638,11 +647,13 @@ Route::prefix('admin')->group(function () {
 
         // ---------------Inspection Tools Engineering-----------------
         Route::resource('toolsengineering', ToolsEngController::class);
+        Route::get('/tools-eng/histories', [ToolsEngController::class, 'historyToolEng'])->name('historyToolEng');
         Route::post('/tools/borrow/{id}', [ToolsEngController::class, 'borrowTool'])->name('borrow.tool');
         Route::post('/tools/return/{id}', [ToolsEngController::class, 'returnTool'])->name('return.tool');
 
-        // ---------------Inspection Tools Engineering-----------------
+        // ---------------Inspection Tools Housekeeping-----------------
         Route::resource('toolshousekeeping', ToolsHKController::class);
+        Route::get('/tools-hk/histories', [ToolsHKController::class, 'historyToolHK'])->name('historyToolHK');
         Route::post('/tools/borrowHK/{id}', [ToolsHKController::class, 'borrowToolHK'])->name('borrowHK.tool');
         Route::post('/tools/returnHK/{id}', [ToolsHKController::class, 'returnToolHK'])->name('returnHK.tool');
 
@@ -697,6 +708,7 @@ Route::prefix('admin')->group(function () {
 
         // --------------- Attendance ------------------
         Route::resource('requestattendance', RequestAttendanceController::class);
+        Route::post('/permit-attendance/approve/{id}', [RequestAttendanceController::class, 'approvePermitAttendance'])->name('approvePermitAttendance');
 
 
         // ---------------Package------------------

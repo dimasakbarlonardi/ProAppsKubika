@@ -39,7 +39,7 @@
                             <th class="sort" data-sort="equipment">Equipment</th>
                             <th class="sort" data-sort="room">Location</th>
                             <th class="sort" data-sort="inspection">Inspection Engineering</th>
-                            <th class="sort" data-sort="pic">Status</th>
+                            {{-- <th class="sort" data-sort="pic">Status</th> --}}
                             <th class="sort" data-sort="pic">CheckBy</th>
                             <th class="sort" data-sort="tgl_checklist">Check Date</th>
                             <th class="sort" data-sort="tgl_checklist">Status Checklist</th>
@@ -65,15 +65,10 @@
                                 <td>{{ $detail->Equipment->equiqment }}</td>
                                 <td>{{ $detail->Room->nama_room }}</td>
                                 <td scope="row">
-                                    @foreach ($status as $item)
-                                        <span>{{ $item->id_eq }}</span> <br>
-                                    @endforeach
+                                    <button class="btn btn-warning btn-sm" data-bs-toggle="modal"
+                                        data-bs-target="#status-modal{{ $detail->id_equiqment_engineering_detail }}">See Result</button>
                                 </td>
-                                <td>
-                                    @foreach ($status as $item)
-                                        <span>{{ $item->status }}</span> <br>
-                                    @endforeach
-                                </td>
+
                                 <td>{{ $detail->CheckedBy->nama_user }}</td>
                                 <td>
                                     {{ HumanDate($detail->checklist_datetime) }}
@@ -89,6 +84,45 @@
                                         <img id="modal-image"
                                             src="{{ $detail->image ? asset($detail->image) : asset('/assets/img/team/3-thumb.png') }}"
                                             alt="{{ $detail->image }}" class="img-thumbnail">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal fade" id="status-modal{{ $detail->id_equiqment_engineering_detail }}"
+                                tabindex="-1" role="dialog" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Inspection
+                                                {{ $detail->Equipment->equiqment }} result
+                                            </h5>
+                                        </div>
+                                        <div class="modal-body">
+                                            @foreach ($status as $item)
+                                                <div class="mb-3">
+                                                    <div class="row">
+                                                        <div class="col-6">
+                                                            <label class="form-label">Question</label>
+                                                            <input type="text" value="{{ $item->id_eq }}"
+                                                                class="form-control" readonly>
+                                                        </div>
+                                                        <div class=" col-6">
+                                                            <label class="form-label">Status</label>
+                                                            <div class="input-group">
+                                                                <input type="text" value="{{ $item->status }}"
+                                                                    class="form-control" readonly>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="p-3">
+                                                        <label class="form-label">Notes</label>
+                                                        <div class="input-group">
+                                                            <textarea name="" id="" cols="auto" rows="5" class="form-control" readonly>{{ $item->notes }}</textarea>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <hr>
+                                            @endforeach
+                                        </div>
                                     </div>
                                 </div>
                             </div>

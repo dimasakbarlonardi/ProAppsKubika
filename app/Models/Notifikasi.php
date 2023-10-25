@@ -20,7 +20,10 @@ class Notifikasi extends Model
         'models',
         'id_data',
         'notif_title',
-        'notif_message'
+        'notif_message',
+        'type',
+        'photo',
+        'file'
     ];
 
     public function Receiver()

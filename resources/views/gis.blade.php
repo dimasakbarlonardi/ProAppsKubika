@@ -68,8 +68,8 @@
             }
         });
 
-        var lat = '{{ $site->lat }}';
-        var long = '{{ $site->long }}';
+        var lat = '{{ $site->latitude }}';
+        var long = '{{ $site->longitude }}';
         var my_lat = 0;
         var my_long = 0;
         mapboxgl.accessToken =

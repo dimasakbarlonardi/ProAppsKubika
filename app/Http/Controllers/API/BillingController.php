@@ -357,11 +357,13 @@ class BillingController extends Controller
             $connElecUUS = new ElectricUUS();
             $connElecUUS = $connElecUUS->setConnection($site->db_name);
 
-            if (Carbon::now()->format('m') == $request->periode_bulan) {
+            // if (Carbon::now()->format('m') == $request->periode_bulan) {
                 $connElecUUS->firstOrCreate(
                     [
                         'periode_bulan' => $request->periode_bulan,
-                        'periode_tahun' => Carbon::now()->format('Y')
+                        'periode_tahun' => Carbon::now()->format('Y'),
+                        'id_unit' =>  $unitID,
+
                     ],
                     [
                         'periode_bulan' => $request->periode_bulan,
@@ -375,7 +377,7 @@ class BillingController extends Controller
                         'id_user' => $user->id_user
                     ]
                 );
-            }
+            // }
 
             Alert::success('Berhasil', 'Berhasil menambahkan data');
 
@@ -438,10 +440,11 @@ class BillingController extends Controller
                 $connWaterUUS = new WaterUUS();
                 $connWaterUUS = $connWaterUUS->setConnection($site->db_name);
 
-                if (Carbon::now()->format('m') == $request->periode_bulan) {
+                // if (Carbon::now()->format('m') == $request->periode_bulan) {
                     $connWaterUUS->firstOrCreate([
                         'periode_bulan' => $request->periode_bulan,
                         'periode_tahun' => Carbon::now()->format('Y'),
+                        'id_unit' =>  $unitID,
                     ], [
                         'periode_bulan' => $request->periode_bulan,
                         'periode_tahun' => Carbon::now()->format('Y'),
@@ -453,7 +456,7 @@ class BillingController extends Controller
                         'usage' => $usage,
                         'id_user' => $user->id_user
                     ]);
-                }
+                // }
 
                 Alert::success('Berhasil', 'Berhasil menambahkan data');
 

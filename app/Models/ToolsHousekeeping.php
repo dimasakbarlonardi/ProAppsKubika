@@ -24,7 +24,8 @@ class ToolsHousekeeping extends Model
         'date_in',
         'date_out,',
         'current_totals',
-        'id_user'
+        'id_user',
+        'unity'
     ];
 
     protected $dates = ['deleted_at'];

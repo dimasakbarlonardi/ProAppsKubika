@@ -207,37 +207,71 @@
             var startTime = $('#timeStartEvent').val();
             var endTime = $('#timeEndEvent').val();
 
-            if (!selectdate || !durasiAcara || !jenisAcara || !ruangReservasi || !isDeposit || !jumlahDeposit || !
-                startTime || !endTime) {
-                Swal.fire(
-                    'Failed!',
-                    'Please fill all field',
-                    'error'
-                )
-            } else {
-                $.ajax({
-                    url: '/admin/reservation/get/booked-date',
-                    type: 'GET',
-                    data: {
-                        startdate: `${selectdate}`,
-                        startdatetime: `${selectdate} ${startTime}`,
-                        enddatetime: `${selectdate} ${endTime}`
-                    },
-                    success: function(resp) {
-                        var data = resp.data;
-                        if (data.length > 0) {
-                            $('#event-lists').html("");
-                            data.map((event, i) => {
-                                $('#event-lists').append(`
-                                    <p>Event start ${formatDate(event.waktu_mulai)}, event end ${formatDate(event.waktu_akhir)}</p>
-                                `)
-                            })
-                            $('#modalInfo').modal('show');
-                        } else {
-                            $("#create-reservation-form").submit();
+            if (isDeposit == 1) {
+                if (!selectdate || !durasiAcara || !jenisAcara || !ruangReservasi || !isDeposit || !jumlahDeposit || !
+                    startTime || !endTime) {
+                    Swal.fire(
+                        'Failed!',
+                        'Please fill all field',
+                        'error'
+                    )
+                } else {
+                    $.ajax({
+                        url: '/admin/reservation/get/booked-date',
+                        type: 'GET',
+                        data: {
+                            startdate: `${selectdate}`,
+                            startdatetime: `${selectdate} ${startTime}`,
+                            enddatetime: `${selectdate} ${endTime}`
+                        },
+                        success: function(resp) {
+                            var data = resp.data;
+                            if (data.length > 0) {
+                                $('#event-lists').html("");
+                                data.map((event, i) => {
+                                    $('#event-lists').append(`
+                                        <p>Event start ${formatDate(event.waktu_mulai)}, event end ${formatDate(event.waktu_akhir)}</p>
+                                    `)
+                                })
+                                $('#modalInfo').modal('show');
+                            } else {
+                                $("#create-reservation-form").submit();
+                            }
                         }
-                    }
-                })
+                    })
+                }
+            } else {
+                if (!selectdate || !durasiAcara || !jenisAcara || !ruangReservasi || !startTime || !endTime) {
+                    Swal.fire(
+                        'Failed!',
+                        'Please fill all field',
+                        'error'
+                    )
+                } else {
+                    $.ajax({
+                        url: '/admin/reservation/get/booked-date',
+                        type: 'GET',
+                        data: {
+                            startdate: `${selectdate}`,
+                            startdatetime: `${selectdate} ${startTime}`,
+                            enddatetime: `${selectdate} ${endTime}`
+                        },
+                        success: function(resp) {
+                            var data = resp.data;
+                            if (data.length > 0) {
+                                $('#event-lists').html("");
+                                data.map((event, i) => {
+                                    $('#event-lists').append(`
+                                        <p>Event start ${formatDate(event.waktu_mulai)}, event end ${formatDate(event.waktu_akhir)}</p>
+                                    `)
+                                })
+                                $('#modalInfo').modal('show');
+                            } else {
+                                $("#create-reservation-form").submit();
+                            }
+                        }
+                    })
+                }
             }
         }
 

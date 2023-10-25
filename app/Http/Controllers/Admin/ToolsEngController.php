@@ -265,13 +265,24 @@ class ToolsEngController extends Controller
     public function store(Request $request)
     {
         $conn = ConnectionDB::setConnection(new ToolsEngineering());
+        $connToolHistory = ConnectionDB::setConnection(new ToolHistory());
 
         try {
             DB::beginTransaction();
-            $conn->create([
+            $createTools = $conn->create([
                 'name_tools' => $request->name_tools,
                 'total_tools' => $request->total_tools,
                 'current_totals' => $request->total_tools,
+                'unity' => $request->unity,
+            ]);
+
+            $connToolHistory->create([
+                'type' => 'ENG',
+                'id_data' => $createTools->id,
+                'qty' => $request->total_tools,
+                'borrowed_by' => $request->session()->get('user')->id_user,
+                'action' => 'Create',
+                'status' => 'Create Tools'
             ]);
 
             DB::commit();
@@ -286,6 +297,15 @@ class ToolsEngController extends Controller
 
             return redirect()->route('toolsrngineering.index');
         }
+    }
+
+    public function historyToolEng()
+    {
+        $connHistories = ConnectionDB::setConnection(new ToolHistory());
+
+        $data['histories'] = $connHistories->where('type', 'ENG')->get();
+
+        return view('AdminSite.ToolsEng.history', $data);
     }
 
     /**

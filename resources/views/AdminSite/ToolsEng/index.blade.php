@@ -13,8 +13,13 @@
                     <h6 class="mb-0 text-white">List Tools Engineering</h6>
                 </div>
                 <div class="col-auto d-flex">
-                    <a class="btn btn-falcon-default text-600 btn-sm" href="{{ route('toolsengineering.create') }}"><span
-                            class="fas fa-plus fs--2 me-1"></span>Create Tools Engineering</a>
+                    <a class="btn btn-falcon-default text-600 btn-sm" style="margin-right: 10px" href="{{ route('toolsengineering.create') }}">
+                        <span class="fas fa-plus fs--2 me-1"></span>Create Tools Engineering
+                    </a>
+                    <a class="btn btn-falcon-default text-600 btn-sm" href="{{ route('historyToolEng') }}">
+                        <span class="fas fa-receipt fs--2 me-1"></span>
+                        History
+                    </a>
                 </div>
             </div>
         </div>
@@ -49,7 +54,7 @@
                                 @empty($tools->current_totals)
                                     -
                                 @else
-                                    {{ $tools->current_totals }}
+                                    {{ $tools->current_totals }} {{ $tools->unity }}
                                 @endempty
                             </td>
                             <td>
