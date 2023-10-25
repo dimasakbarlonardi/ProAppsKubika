@@ -181,6 +181,11 @@
                                 <a href="{{ route('work-requests.create', ['id_tiket' => $ticket->id]) }}" class="btn btn-primary w-100">Create Work Request</a>
                             </div>
                         @endif
+                        @if ($ticket->status_request == 'PROSES KE PERMIT')
+                            <div class="card-footer border-top border-200 py-x1">
+                                <a href="{{ route('request-permits.create', ['id_tiket' => $ticket->id]) }}" class="btn btn-primary w-100">Create Work Permit</a>
+                            </div>
+                        @endif
                     </form>
                 </div>
                 <div class="card mt-4">

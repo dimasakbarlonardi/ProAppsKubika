@@ -13,7 +13,7 @@ class DetailBAPP extends Model
 
     protected $fillable = [
         'no_bapp',
-        'id_eng_bapp',
+        'name',
         'catatan'
     ];
 }

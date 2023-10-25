@@ -139,7 +139,8 @@
                             <select name="id_rp" class="form-select form-select-sm" id="select_ticket">
                                 <option disabled selected value="">--Pilih Request ---</option>
                                 @foreach ($request_permits as $rp)
-                                    <option value="{{ $rp->id }}">{{ $rp->no_request_permit }}</option>
+                                    <option {{ isset($id_rp) ? ($id_rp == $rp->id ? 'selected' : '') : '' }}
+                                        value="{{ $rp->id }}">{{ $rp->no_request_permit }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -156,7 +157,8 @@
                             </select>
                         </div>
                         <div class="mb-4 mt-n2"><label class="mb-1">Permit Berbayar</label>
-                            <select name="id_bayarnon" id="id_bayarnon" class="form-select form-select-sm" required disabled>
+                            <select name="id_bayarnon" id="id_bayarnon" class="form-select form-select-sm" required
+                                disabled>
                                 <option value="1" selected>Yes</option>
                                 <option value="0">No</option>
                             </select>
@@ -217,7 +219,7 @@
                                 'Berhasil!',
                                 'Berhasil membuat Request Permit!',
                                 'success'
-                            ).then(() => window.history.go(-1))
+                            ).then(() => window.location.href('/admin/work-permits'))
                         } else {
                             Swal.fire(
                                 'Gagal!',
@@ -236,32 +238,43 @@
                 theme: 'bootstrap-5'
             });
 
+            var id = '{{ isset($id_rp) }}';
+            if (id) {
+                id = '{{ $id_rp }}'
+                showPermit(id)
+            }
+
             $('#select_ticket').on('change', function() {
                 var id = $(this).val()
-                $.ajax({
-                    url: '/admin/work-permits/' + id,
-                    data: {
-                        'data_type': 'json'
-                    },
-                    type: 'GET',
-                    success: function(resp) {
-                        var rp = resp.data;
-                        $('#ticket_detail').css('display', 'block')
-                        $('#rp_detail').css('display', 'block')
-                        $('#ticket_detail_desc').html(rp.ticket.deskripsi_request)
-                        $('#ticket_detail_heading').html(rp.ticket.judul_request)
-                        $('#nama_kontraktor').val(rp.nama_kontraktor)
-                        $('#pic').val(rp.pic)
-                        $('#alamat').val(rp.alamat)
-                        $('#no_telp').val(rp.no_telp)
-                        $('#no_ktp').val(rp.no_ktp)
-                        $('#keterangan_pekerjaan').val(rp.keterangan_pekerjaan)
-                        $('#tgl_mulai').val(new Date(rp.tgl_mulai).toDateString() + ' - ' +
-                            new Date(rp.tgl_mulai).toLocaleTimeString())
-                        $('#tgl_akhir').val(new Date(rp.tgl_akhir).toDateString() + ' - ' +
-                            new Date(rp.tgl_akhir).toLocaleTimeString())
-                        $('#no_ktp').val(rp.no_ktp)
-                        $('#ticket_head').html(`
+                showPermit(id);
+            })
+        })
+
+        function showPermit(id) {
+            $.ajax({
+                url: '/admin/work-permits/' + id,
+                data: {
+                    'data_type': 'json'
+                },
+                type: 'GET',
+                success: function(resp) {
+                    var rp = resp.data;
+                    $('#ticket_detail').css('display', 'block')
+                    $('#rp_detail').css('display', 'block')
+                    $('#ticket_detail_desc').html(rp.ticket.deskripsi_request)
+                    $('#ticket_detail_heading').html(rp.ticket.judul_request)
+                    $('#nama_kontraktor').val(rp.nama_kontraktor)
+                    $('#pic').val(rp.pic)
+                    $('#alamat').val(rp.alamat)
+                    $('#no_telp').val(rp.no_telp)
+                    $('#no_ktp').val(rp.no_ktp)
+                    $('#keterangan_pekerjaan').val(rp.keterangan_pekerjaan)
+                    $('#tgl_mulai').val(new Date(rp.tgl_mulai).toDateString() + ' - ' +
+                        new Date(rp.tgl_mulai).toLocaleTimeString())
+                    $('#tgl_akhir').val(new Date(rp.tgl_akhir).toDateString() + ' - ' +
+                        new Date(rp.tgl_akhir).toLocaleTimeString())
+                    $('#no_ktp').val(rp.no_ktp)
+                    $('#ticket_head').html(`
                             <div class="d-md-flex d-xl-inline-block d-xxl-flex align-items-center justify-content-between">
                                 <div class="d-flex align-items-center gap-2">
                                     <div class="avatar avatar-2xl">
@@ -278,51 +291,50 @@
                                     <span class="mx-1">|</span><span class="fst-italic">${new Date(rp.ticket.created_at).toLocaleTimeString()} (${timeDifference(new Date(), new Date(rp.ticket.created_at))})</span></p>
                             </div>
                         `)
-                        var data = JSON.parse(rp.rpdetail.data)
-                        dataJSON = JSON.parse(data)
-                        dataJSON.personels.map((item) => {
-                            $('#detailPersonels').append(`
+                    var data = JSON.parse(rp.rpdetail.data)
+                    dataJSON = JSON.parse(data)
+                    dataJSON.personels.map((item) => {
+                        $('#detailPersonels').append(`
                                 <input class="form-control my-3" type="text" value="${item.nama_personil}" disabled>
                             `)
-                        })
+                    })
 
-                        dataJSON.alats.map((item) => {
-                            $('#detailItems').append(`
+                    dataJSON.alats.map((item) => {
+                        $('#detailItems').append(`
                                 <input class="form-control my-3" type="text" value="${item.nama_alat}" disabled>
                             `)
-                        })
-                        dataJSON.materials.map((item) => {
-                            $('#detailMaterials').append(`
+                    })
+                    dataJSON.materials.map((item) => {
+                        $('#detailMaterials').append(`
                                 <input class="form-control my-3" type="text" value="${item.material}" disabled>
                             `)
-                        })
-                    }
-                })
-            })
-
-            function timeDifference(current, previous) {
-                var msPerMinute = 60 * 1000;
-                var msPerHour = msPerMinute * 60;
-                var msPerDay = msPerHour * 24;
-                var msPerMonth = msPerDay * 30;
-                var msPerYear = msPerDay * 365;
-
-                var elapsed = current - previous;
-
-                if (elapsed < msPerMinute) {
-                    return Math.round(elapsed / 1000) + ' seconds ago';
-                } else if (elapsed < msPerHour) {
-                    return Math.round(elapsed / msPerMinute) + ' minutes ago';
-                } else if (elapsed < msPerDay) {
-                    return Math.round(elapsed / msPerHour) + ' hours ago';
-                } else if (elapsed < msPerMonth) {
-                    return Math.round(elapsed / msPerDay) + ' days ago';
-                } else if (elapsed < msPerYear) {
-                    return Math.round(elapsed / msPerMonth) + ' months ago';
-                } else {
-                    return Math.round(elapsed / msPerYear) + ' years ago';
+                    })
                 }
+            })
+        }
+
+        function timeDifference(current, previous) {
+            var msPerMinute = 60 * 1000;
+            var msPerHour = msPerMinute * 60;
+            var msPerDay = msPerHour * 24;
+            var msPerMonth = msPerDay * 30;
+            var msPerYear = msPerDay * 365;
+
+            var elapsed = current - previous;
+
+            if (elapsed < msPerMinute) {
+                return Math.round(elapsed / 1000) + ' seconds ago';
+            } else if (elapsed < msPerHour) {
+                return Math.round(elapsed / msPerMinute) + ' minutes ago';
+            } else if (elapsed < msPerDay) {
+                return Math.round(elapsed / msPerHour) + ' hours ago';
+            } else if (elapsed < msPerMonth) {
+                return Math.round(elapsed / msPerDay) + ' days ago';
+            } else if (elapsed < msPerYear) {
+                return Math.round(elapsed / msPerMonth) + ' months ago';
+            } else {
+                return Math.round(elapsed / msPerYear) + ' years ago';
             }
-        })
+        }
     </script>
 @endsection
