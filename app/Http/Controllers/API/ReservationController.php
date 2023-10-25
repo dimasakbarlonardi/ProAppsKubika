@@ -30,6 +30,7 @@ class ReservationController extends Controller
         $reservation = $connReservation->find($id);
 
         $object = new stdClass();
+        $object->id = $reservation->id;
         $object->request_number = $reservation->no_tiket;
         $object->request_date = $reservation->tgl_request_reservation;
         $object->tenant = $reservation->Ticket->Tenant->nama_tenant;
@@ -42,10 +43,10 @@ class ReservationController extends Controller
         $object->event_duration = $reservation->durasi_acara;
         $object->reservation_room = $reservation->RuangReservation->ruang_reservation;
         $object->jenis_acara = $reservation->JenisAcara->jenis_acara;
-        $object->notes = strip_tags($reservation->Ticket->deskripsi_respon);
+        $object->notes = strip_tags($reservation->keterangan);
         $object->notes_by = $reservation->Ticket->ResponseBy->nama_user;
 
-        if ($reservation->CashReceipt) {
+        if ($reservation->is_deposit) {
             $object->total = $reservation->CashReceipt->sub_total;
         }
 
