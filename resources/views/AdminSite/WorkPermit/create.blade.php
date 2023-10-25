@@ -137,25 +137,42 @@
                     <div class="card-body">
                         @csrf
                         <div class="mb-4 mt-n2"><label class="mb-1">Tickets</label>
-                            <select name="id_rp" class="form-select form-select-sm" id="select_ticket">
-                                <option disabled selected value="">--Pilih Request ---</option>
-                                @foreach ($request_permits as $rp)
-                                    <option {{ isset($id_rp) ? ($id_rp == $rp->id ? 'selected' : '') : '' }}
-                                        value="{{ $rp->id }}">{{ $rp->no_request_permit }}</option>
-                                @endforeach
-                            </select>
+                            @if (isset($request_permit->WorkPermit))
+                                <input type="text" class="form-control" value="{{ $request_permit->no_request_permit }}" disabled>
+                            @else
+                                <select name="id_rp" class="form-select form-select-sm" id="select_ticket">
+                                    <option disabled selected value="">--Pilih Request ---</option>
+                                    @foreach ($request_permits as $rp)
+                                        <option {{ isset($id_rp) ? ($id_rp == $rp->id ? 'selected' : '') : '' }}
+                                            value="{{ $rp->id }}">{{ $rp->no_request_permit }}</option>
+                                    @endforeach
+                                </select>
+                            @endif
                         </div>
                         <div class="mb-4 mt-n2"><label class="mb-1">Nama Project</label>
-                            <input type="text" class="form-control" name="nama_project" id="nama_project">
+                            @if (isset($request_permit->WorkPermit))
+                                <input type="text" class="form-control" value="{{ $request_permit->WorkPermit->nama_project }}" disabled>
+                            @else
+                                <input type="text" class="form-control" name="nama_project" id="nama_project">
+                            @endif
                         </div>
                         <div class="mb-4 mt-n2"><label class="mb-1">Work Relation</label>
-                            <select name="id_work_relation" class="form-select form-select-sm" id="id_work_relation">
-                                <option disabled selected value="">--Pilih Work Relation ---</option>
-                                @foreach ($work_relations as $work_relation)
-                                    <option value="{{ $work_relation->id_work_relation }}">
-                                        {{ $work_relation->work_relation }}</option>
-                                @endforeach
-                            </select>
+                            @if (isset($request_permit->WorkPermit))
+                                <select name="id_work_relation" class="form-select form-select-sm" id="id_work_relation" disabled>
+                                    @foreach ($work_relations as $work_relation)
+                                        <option {{ $request_permit->WorkPermit->id_work_relation == $work_relation->id_work_relation ? 'selected' : '' }} value="{{ $work_relation->id_work_relation }}">
+                                            {{ $work_relation->work_relation }}</option>
+                                    @endforeach
+                                </select>
+                            @else                                
+                                <select name="id_work_relation" class="form-select form-select-sm" id="id_work_relation">
+                                    <option disabled selected value="">--Pilih Work Relation ---</option>
+                                    @foreach ($work_relations as $work_relation)
+                                        <option value="{{ $work_relation->id_work_relation }}">
+                                            {{ $work_relation->work_relation }}</option>
+                                    @endforeach
+                                </select>
+                            @endif
                         </div>
                         <div class="mb-4 mt-n2"><label class="mb-1">Permit Berbayar</label>
                             <select name="id_bayarnon" id="id_bayarnon" class="form-select form-select-sm" required
@@ -165,13 +182,19 @@
                             </select>
                         </div>
                         <div class="mb-4 mt-n2"><label class="mb-1">Jumlah Deposit</label>
-                            <input type="text" class="form-control" name="jumlah_deposit" id="jumlah_deposit">
+                            @if (isset($request_permit->WorkPermit))
+                                <input type="text" class="form-control" value="{{ $request_permit->WorkPermit->jumlah_deposit }}" disabled>
+                            @else
+                                <input type="text" class="form-control" name="jumlah_deposit" id="jumlah_deposit">
+                            @endif
                         </div>
                     </div>
                 </div>
-                <div class="card-footer border-top border-200 py-x1">
-                    <button type="button" onclick="onSubmit()" class="btn btn-primary w-100">Submit</button>
-                </div>
+                @if(!isset($request_permit->WorkPermit))
+                    <div class="card-footer border-top border-200 py-x1">
+                        <button type="button" onclick="onSubmit()" class="btn btn-primary w-100">Submit</button>
+                    </div>
+                @endif
             </form>
         </div>
     </div>
@@ -219,7 +242,7 @@
                                 'Berhasil!',
                                 'Berhasil membuat Request Permit!',
                                 'success'
-                            ).then(() => window.location.href('/admin/work-permits'))
+                            ).then(() => window.location.replace('/admin/work-permits'))
                         } else {
                             Swal.fire(
                                 'Gagal!',
