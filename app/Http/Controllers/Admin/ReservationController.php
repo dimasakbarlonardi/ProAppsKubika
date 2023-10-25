@@ -60,13 +60,14 @@ class ReservationController extends Controller
         return response()->json(['data' => $rsv]);
     }
 
-    public function create()
+    public function create(Request $request)
     {
         $connTicket = ConnectionDB::setConnection(new OpenTicket());
         $connTypeRsv = ConnectionDB::setConnection(new TypeReservation());
         $connRuangRsv = ConnectionDB::setConnection(new RuangReservation());
         $connJenisAcara = ConnectionDB::setConnection(new JenisAcara());
 
+        $data['id_tiket'] = $request->id_tiket;
         $data['typeRsv'] = $connTypeRsv->get();
         $data['ruangRsv'] = $connRuangRsv->get();
         $data['jenisAcara'] = $connJenisAcara->get();
@@ -170,8 +171,11 @@ class ReservationController extends Controller
     public function approve1(Request $request, $id)
     {
         $connReservation = ConnectionDB::setConnection(new Reservation());
-        $user = $request->session()->get('user');
+        $connApprove = ConnectionDB::setConnection(new Approve());
 
+        $user = $request->session()->get('user');
+        $approve = $connApprove->find(7);
+        dd($approve);
         $rsv = $connReservation->find($id);
 
         $rsv->sign_approval_1 = Carbon::now();

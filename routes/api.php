@@ -162,5 +162,6 @@ Route::prefix('v1')->group(function () {
         // Reservation
         Route::get('/reservations', [ReservationController::class, 'index']);
         Route::get('/reservation/{id}', [ReservationController::class, 'show']);
+        Route::post('/reservation/approve/{id}', [ReservationController::class, 'approve']);
     });
 });

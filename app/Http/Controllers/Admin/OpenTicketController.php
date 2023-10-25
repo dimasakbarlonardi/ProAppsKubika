@@ -247,6 +247,10 @@ class OpenTicketController extends Controller
                 return redirect()->route('request-permits.create', ['id_tiket' => $ticket->id]);
             }
 
+            if ($request->status_request == 'PROSES KE RESERVASI') {
+                return redirect()->route('request-reservations.create', ['id_tiket' => $ticket->id]);
+            }
+
             Alert::success('Success', 'Success update request');
 
             return redirect()->route('open-tickets.index');
