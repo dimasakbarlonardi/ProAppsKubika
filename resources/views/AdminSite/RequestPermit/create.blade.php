@@ -50,7 +50,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="mb-3">
+                    <div class="mb-3 p-3">
                         <label class="form-label">Alamat</label>
                         <textarea class="form-control" id="alamat" cols="20" rows="5"></textarea>
                     </div>
@@ -185,7 +185,7 @@
                         <select name="no_tiket" class="form-select form-select-sm" id="select_ticket">
                             <option disabled selected>-- Select request ---</option>
                             @foreach ($tickets as $ticket)
-                                <option value="{{ $ticket->id }}">{{ $ticket->no_tiket }}</option>
+                                <option {{ isset($id_tiket) ? ($id_tiket == $ticket->id ? 'selected' : '') : '' }} value="{{ $ticket->id }}">{{ $ticket->no_tiket }}</option>
                             @endforeach
                         </select>
                     </div>
@@ -242,6 +242,13 @@
         var materials = [];
         var idMaterial = 0;
 
+        var id = '{{ isset($id_tiket) }}';
+        if (id) {
+            id = '{{ $id_tiket }}'
+            console.log(id);
+            showTicket(id)
+        }
+
         function submitWorkPermit() {
             tinyMCE.triggerSave();
 
@@ -288,7 +295,7 @@
                                 'Berhasil!',
                                 'Berhasil membuat Request Permit!',
                                 'success'
-                            ).then(() => window.history.go(-1))
+                            ).then(() => window.location.replace('/admin/request-permits'))
                         } else {
                             Swal.fire(
                                 'Gagal!',
@@ -308,36 +315,7 @@
 
             $('#select_ticket').on('change', function() {
                 var id = $(this).val()
-                $.ajax({
-                    url: '/admin/open-tickets/' + id,
-                    data: {
-                        'data_type': 'json'
-                    },
-                    type: 'GET',
-                    success: function(data) {
-                        $('#ticket_detail').css('display', 'block')
-                        $('#permit_detail').css('display', 'block')
-                        $('#ticket_detail_desc').html(data.data.deskripsi_request)
-                        $('#ticket_detail_heading').html(data.data.judul_request)
-                        $('#ticket_head').html(`
-                            <div class="d-md-flex d-xl-inline-block d-xxl-flex align-items-center justify-content-between">
-                                <div class="d-flex align-items-center gap-2">
-                                    <div class="avatar avatar-2xl">
-                                        <img class="rounded-circle" src="${data.data.tenant.profile_picture}" alt="${data.data.tenant.profile_picture}" />
-                                    </div>
-                                    <p class="mb-0"><a class="fw-semi-bold mb-0 text-800"
-                                            href="#">${data.data.tenant.nama_tenant}</a>
-                                        <a class="mb-0 fs--1 d-block text-500"
-                                            href="mailto:${data.data.tenant.email_tenant}">${data.data.tenant.email_tenant}</a>
-                                    </p>
-                                </div>
-                                <p class="mb-0 fs--2 fs-sm--1 fw-semi-bold mt-2 mt-md-0 mt-xl-2 mt-xxl-0 ms-5">
-                                    ${new Date(data.data.created_at).toDateString()}
-                                    <span class="mx-1">|</span><span class="fst-italic">${new Date(data.data.created_at).toLocaleTimeString()} (${timeDifference(new Date(), new Date(data.data.created_at))})</span></p>
-                            </div>
-                        `)
-                    }
-                })
+
             })
 
             function timeDifference(current, previous) {
@@ -364,6 +342,39 @@
                 }
             }
         })
+
+        function showTicket(id) {
+            $.ajax({
+                url: '/admin/open-tickets/' + id,
+                data: {
+                    'data_type': 'json'
+                },
+                type: 'GET',
+                success: function(data) {
+                    $('#ticket_detail').css('display', 'block')
+                    $('#permit_detail').css('display', 'block')
+                    $('#ticket_detail_desc').html(data.data.deskripsi_request)
+                    $('#ticket_detail_heading').html(data.data.judul_request)
+                    $('#ticket_head').html(`
+                            <div class="d-md-flex d-xl-inline-block d-xxl-flex align-items-center justify-content-between">
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="avatar avatar-2xl">
+                                        <img class="rounded-circle" src="${data.data.tenant.profile_picture}" alt="${data.data.tenant.profile_picture}" />
+                                    </div>
+                                    <p class="mb-0"><a class="fw-semi-bold mb-0 text-800"
+                                            href="#">${data.data.tenant.nama_tenant}</a>
+                                        <a class="mb-0 fs--1 d-block text-500"
+                                            href="mailto:${data.data.tenant.email_tenant}">${data.data.tenant.email_tenant}</a>
+                                    </p>
+                                </div>
+                                <p class="mb-0 fs--2 fs-sm--1 fw-semi-bold mt-2 mt-md-0 mt-xl-2 mt-xxl-0 ms-5">
+                                    ${new Date(data.data.created_at).toDateString()}
+                                    <span class="mx-1">|</span><span class="fst-italic">${new Date(data.data.created_at).toLocaleTimeString()} (${timeDifference(new Date(), new Date(data.data.created_at))})</span></p>
+                            </div>
+                        `)
+                }
+            })
+        }
 
         function onAddPersonel() {
             var lastID = 0;

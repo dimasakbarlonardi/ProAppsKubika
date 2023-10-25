@@ -19,9 +19,10 @@
                             <hr />
                             <p>Make sure the address is correct and that the page hasn't moved. If you think this is a
                                 mistake, <a href="mailto:info@exmaple.com">contact us</a>.</p>
-                            <button onclick="checkPaymentStatus('{{ $transaction->transaction_id }}')"
-                                class="btn btn-primary btn-sm mt-3" href="">
-                                <span class="fas fa-home me-2"></span>Check payment status</button>
+                            <button class="btn btn-primary btn-sm mt-3"
+                                onclick="checkPaymentStatus('{{ $transaction->id }}')">
+                                Check payment status
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -31,7 +32,56 @@
 @endsection
 
 @section('script')
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="{{ asset('js/app.js') }}"></script>
     <script>
+        $.ajaxSetup({
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        document.addEventListener("DOMContentLoaded", function(event) {
+            var id_site = '{{ Request::session()->get('user')->id_site }}'
+            var id = '{{ $transaction->id }}'
+
+            Echo.channel("payment-channel")
+                .listen('PaymentEvent', (e) => {
+                    if (e.id_site == id_site && e.id == id && e.status == 'settlement') {
+                        Swal.fire(
+                            'Success!',
+                            'Thank you, your payment is success',
+                            'success'
+                        ).then(() => {
+                            window.location.replace(`/admin/invoice/${id}`)
+                        });
+                    }
+                })
+        });
+
+        function checkPaymentStatus(id) {
+            $.ajax({
+                url: `/admin/payment/check-payment-status/${id}`,
+                type: 'POST',
+                success: function(resp) {
+                    if (resp.status == 'ok') {
+                        Swal.fire(
+                            'Success!',
+                            '',
+                            'success'
+                        );
+                    } else {
+                        Swal.fire(
+                            'Oppps!',
+                            'We still waiting your payment',
+                            'info'
+                        );
+                    }
+                }
+            })
+        }
+
         var expiry = '{{ $transaction->expiry_time }}'
 
         // Set the date we're counting down to
@@ -62,22 +112,5 @@
                 document.getElementById("demo").innerHTML = "EXPIRED";
             }
         }, 1000);
-
-        function checkPaymentStatus(transaction_id) {
-            console.log(transaction_id);
-            $.ajax({
-                url: `https://api.sandbox.midtrans.com/v2/${transaction_id}/status`,
-                headers: {
-                    'Accept': 'application/json',
-                    'Authorization': 'Basic U0ItTWlkLXNlcnZlci1VQkJEOVpMcUdRRFBPd2VpekdkSGFnTFo6',
-                    'Content-Type': 'application/json'
-                },
-                type: 'GET',
-                dataType: "jsonp",
-                success: function(resp) {
-                    console.log(resp);
-                }
-            })
-        }
     </script>
 @endsection

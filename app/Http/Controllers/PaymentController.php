@@ -91,11 +91,19 @@ class PaymentController extends Controller
                             'sender' => $cr->WorkPermit->Ticket->Tenant->User->id_user,
                             'division_receiver' => null,
                             'notif_message' => 'Pembayaran Work Permit berhasil',
-                            'receiver' => $approve->approval_3,
+                            'receiver' => $approve->approval_4,
                             'connection' => $site->db_name
                         ];
 
                         broadcast(new HelloEvent($dataNotif));
+
+                        $dataPayment = [
+                            'id_site' => $site->id_site,
+                            'id' => $cr->id,
+                            'status' => 'settlement',
+                        ];
+
+                        broadcast(new PaymentEvent($dataPayment));
 
                         break;
 

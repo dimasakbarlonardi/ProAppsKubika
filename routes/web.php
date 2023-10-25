@@ -396,6 +396,7 @@ Route::prefix('admin')->group(function () {
         // Work Permit
         Route::resource('/work-permits', WorkPermitController::class);
         Route::get('/open/request-permits', [WorkPermitController::class, 'openRP'])->name('openRP');
+        Route::get('/work-permit/show/{id}', [BAPPController::class, 'showWP']);
         Route::post('/work-permit/reject/{id}', [WorkPermitController::class, 'rejectWP'])->name('rejectWP');
         Route::post('/work-permit/approve1/{id}', [WorkPermitController::class, 'approveWP1'])->name('approveWP1');
         Route::post('/work-permit/approve2/{id}', [WorkPermitController::class, 'approveWP2'])->name('approveWP2');

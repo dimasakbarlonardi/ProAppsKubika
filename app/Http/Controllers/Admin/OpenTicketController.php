@@ -75,7 +75,6 @@ class OpenTicketController extends Controller
             $tickets = $tickets->where('priority', $request->priority);
         }
 
-
         $data['tickets'] = $tickets->get();
 
         return response()->json([
@@ -243,6 +242,15 @@ class OpenTicketController extends Controller
             if ($request->status_request == 'PROSES KE WR') {
                 return redirect()->route('work-requests.create', ['id_tiket' => $ticket->id]);
             }
+
+            if ($request->status_request == 'PROSES KE PERMIT') {
+                return redirect()->route('request-permits.create', ['id_tiket' => $ticket->id]);
+            }
+
+            Alert::success('Success', 'Success update request');
+
+            return redirect()->route('open-tickets.index');
+
         } catch (Throwable $e) {
             DB::rollBack();
             dd($e);
@@ -289,7 +297,6 @@ class OpenTicketController extends Controller
     {
         $connRequest = ConnectionDB::setConnection(new OpenTicket());
         $user = $request->session()->get('user');
-
         $ticket = $connRequest->find($id);
         $ticket->status_respon = 'Responded';
         $ticket->status_request = 'RESPONDED';

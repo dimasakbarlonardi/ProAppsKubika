@@ -30,12 +30,13 @@ class RequestPermitController extends Controller
         return view('AdminSite.RequestPermit.index', $data);
     }
 
-    public function create()
+    public function create(Request $request)
     {
         $connWorkRelation = ConnectionDB::setConnection(new WorkRelation());
         $connTicket = ConnectionDB::setConnection(new OpenTicket());
         $connJenisPekerjaan = ConnectionDB::setConnection(new JenisPekerjaan());
 
+        $data['id_tiket'] = $request->id_tiket;
         $data['jenis_pekerjaan'] = $connJenisPekerjaan->get();
         $data['work_relations'] = $connWorkRelation->get();
         $data['tickets'] = $connTicket->where('status_request', 'PROSES KE PERMIT')->get();
