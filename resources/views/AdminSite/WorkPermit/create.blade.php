@@ -39,6 +39,7 @@
                     <div class="card-header">
                         <h6 class="mb-0">Detail Request Permit</h6>
                     </div>
+<<<<<<< HEAD
                     <div class="px-5">
                         <div class="my-3">
                             <div class="row">
@@ -51,6 +52,18 @@
                                     <input type="text" class="form-control" id="pic" disabled>
                                 </div>
                             </div>
+=======
+                    <div class="card-body">
+                        @csrf
+                        <div class="mb-4 mt-n2"><label class="mb-1">Tickets</label>
+                            <select name="id_rp" class="form-select form-select-sm" id="select_ticket">
+                                <option disabled selected value="">--Pilih Request ---</option>
+                                @foreach ($request_permits as $rp)
+                                    <option {{ isset($id_rp) ? ($id_rp == $rp->id ? 'selected' : '') : '' }}
+                                        value="{{ $rp->id }}">{{ $rp->no_request_permit }}</option>
+                                @endforeach
+                            </select>
+>>>>>>> 121ce1783c6cc67a462a61f7a57989a5523bdd61
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Alamat</label>
@@ -68,6 +81,7 @@
                                 </div>
                             </div>
                         </div>
+<<<<<<< HEAD
                         <div class="mb-3">
                             <div class="row">
                                 <div class="col-6">
@@ -79,6 +93,14 @@
                                     <input class="form-control" id="tgl_akhir" disabled />
                                 </div>
                             </div>
+=======
+                        <div class="mb-4 mt-n2"><label class="mb-1">Permit Berbayar</label>
+                            <select name="id_bayarnon" id="id_bayarnon" class="form-select form-select-sm" required
+                                disabled>
+                                <option value="1" selected>Yes</option>
+                                <option value="0">No</option>
+                            </select>
+>>>>>>> 121ce1783c6cc67a462a61f7a57989a5523bdd61
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Keterangan Pekerjaan</label>
@@ -194,6 +216,7 @@
         var id_rp = $('#select_ticket').val();
         var id_bayarnon = $('#id_bayarnon').val();
 
+<<<<<<< HEAD
         if (!nama_project || !id_work_relation || !jumlah_deposit || !select_ticket) {
             Swal.fire(
                 'Fail!',
@@ -224,6 +247,39 @@
                             'Gagal membuat Request Permit!',
                             'failed'
                         )
+=======
+            if (!nama_project || !id_work_relation || !jumlah_deposit || !select_ticket) {
+                Swal.fire(
+                    'Fail!',
+                    'Please fill all field',
+                    'error'
+                )
+            } else {
+                $.ajax({
+                    url: '/admin/work-permits',
+                    type: 'POST',
+                    data: {
+                        nama_project,
+                        id_work_relation,
+                        jumlah_deposit,
+                        id_rp,
+                        id_bayarnon
+                    },
+                    success: function(data) {
+                        if (data.status === 'ok') {
+                            Swal.fire(
+                                'Berhasil!',
+                                'Berhasil membuat Request Permit!',
+                                'success'
+                            ).then(() => window.location.href('/admin/work-permits'))
+                        } else {
+                            Swal.fire(
+                                'Gagal!',
+                                'Gagal membuat Request Permit!',
+                                'failed'
+                            )
+                        }
+>>>>>>> 121ce1783c6cc67a462a61f7a57989a5523bdd61
                     }
                 }
             })
@@ -236,8 +292,24 @@
             theme: 'bootstrap-5'
         });
 
+<<<<<<< HEAD
         $('#select_ticket').on('change', function() {
             var id = $(this).val()
+=======
+            var id = '{{ isset($id_rp) }}';
+            if (id) {
+                id = '{{ $id_rp }}'
+                showPermit(id)
+            }
+
+            $('#select_ticket').on('change', function() {
+                var id = $(this).val()
+                showPermit(id);
+            })
+        })
+
+        function showPermit(id) {
+>>>>>>> 121ce1783c6cc67a462a61f7a57989a5523bdd61
             $.ajax({
                 url: '/admin/work-permits/' + id,
                 data: {
@@ -298,7 +370,11 @@
                     })
                 }
             })
+<<<<<<< HEAD
         })
+=======
+        }
+>>>>>>> 121ce1783c6cc67a462a61f7a57989a5523bdd61
 
         function timeDifference(current, previous) {
             var msPerMinute = 60 * 1000;
@@ -323,6 +399,11 @@
                 return Math.round(elapsed / msPerYear) + ' years ago';
             }
         }
+<<<<<<< HEAD
     })
 </script>
 @endsection
+=======
+    </script>
+@endsection
+>>>>>>> 121ce1783c6cc67a462a61f7a57989a5523bdd61

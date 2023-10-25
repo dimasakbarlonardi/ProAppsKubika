@@ -31,6 +31,15 @@ class BAPPController extends Controller
         return view('AdminSite.BAPP.index', $data);
     }
 
+    public function showWP($id)
+    {
+        $connWP = ConnectionDB::setConnection(new WorkPermit());
+
+        $wp = $connWP->find($id);
+
+        return response()->json(['wp' => $wp]);
+    }
+
     public function create()
     {
         $connTiket = ConnectionDB::setConnection(new OpenTicket());
@@ -48,6 +57,7 @@ class BAPPController extends Controller
 
     public function store(Request $request)
     {
+        $connWP = ConnectionDB::setConnection(new WorkPermit());
         $connBAPP = ConnectionDB::setConnection(new BAPP());
         $connSystem = ConnectionDB::setConnection(new System());
         $connDetailBAPP = ConnectionDB::setConnection(new DetailBAPP());
@@ -55,24 +65,28 @@ class BAPPController extends Controller
         $system = $connSystem->find(1);
         $count = $system->sequence_no_bapp + 1;
 
+        $wp = $connWP->find($request->no_work_permit);
+
         $no_bapp = $system->kode_unik_perusahaan . '/' .
             $system->kode_unik_invoice . '/' .
             Carbon::now()->format('m') . Carbon::now()->format('Y') . '/' .
             sprintf("%06d", $count);
 
-        $connDetailBAPP->create([
-            'no_bapp' => $no_bapp,
-            'id_eng_bapp' => json_encode($request->detail_bapp),
-            'keterangan' => $request->keterangan
-        ]);
+        foreach(json_decode($request->detail_bapp) as $detail) {
+            $connDetailBAPP->create([
+                'no_bapp' => $no_bapp,
+                'name' => $detail->name,
+                'catatan' => $detail->catatan
+            ]);
+        }
 
         $connBAPP->create([
-            'no_tiket' => $request->no_tiket,
-            'no_request_permit' => $request->no_request_permit,
+            'no_tiket' => $wp->no_tiket,
+            'no_request_permit' => $wp->no_request_permit,
             'no_work_permit' => $request->no_work_permit,
             'no_bapp' => $no_bapp,
             'tgl_penyelesaian' => $request->tanggal_penyelesaian,
-            'jumlah_deposit' => $request->jumlah_deposit,
+            'jumlah_deposit' => $wp->jumlah_deposit,
             'jumlah_potongan' => $request->jumlah_potongan,
             'jumlah_kembali_deposit' => $request->jumlah_kembali_deposit,
             'bank_pemohon' => $request->bank_pemohon,

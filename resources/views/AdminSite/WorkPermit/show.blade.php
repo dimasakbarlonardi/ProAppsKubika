@@ -176,7 +176,7 @@
                         onclick="approve2({{ $wp->id }})">Approve</button>
                 </div>
             @endif
-            @if ($approve->approval_3 == $user->id_user && $wp->status_bayar == 'PAYED' && !$wp->sign_approval_3)
+            @if ($approve->approval_3 == $user->id_user && !$wp->sign_approval_3)
                 <div class="card-footer border-top border-200 py-x1">
                     <button type="button" class="btn btn-primary w-100"
                         onclick="approve3({{ $wp->id }})">Approve</button>

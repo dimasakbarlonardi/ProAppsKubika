@@ -1,6 +1,7 @@
 <?php
 
 use App\Events\HelloEvent;
+use App\Events\PaymentEvent;
 use App\Models\ChecklistPutrH;
 use App\Models\MonthlyArTenant;
 use App\Models\ChecklistGensetH;
@@ -144,9 +145,13 @@ Route::get('/', function () {
 Route::get('/gis', [AttendanceController::class, 'index']);
 Route::post('/absence', [AttendanceController::class, 'absence']);
 
-Route::get('pdf', function () {
-    $file = "/storage/004212/file/permit-attendance/permit-attendance-2023-10-20-kewirausahaan.pdf";
-    return Response::download($file);
+Route::get('payment-event', function () {
+    $datanotif = [
+        'id_site' => '004212',
+        'id' => 122,
+        'status' => 'settlement',
+    ];
+    broadcast(new PaymentEvent($datanotif));
 });
 
 Route::post('/payments/midtrans-notifications', [PaymentController::class, 'receive']);
@@ -166,6 +171,7 @@ Route::get('/view-room/{idSite}/{id}', [RoomController::class, 'viewRoom']);
 
 Route::prefix('admin')->group(function () {
     Route::middleware(['auth'])->group(function () {
+        Route::post('payment/check-payment-status/{id}', [PaymentController::class, 'checkStatus']);
 
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
@@ -371,12 +377,14 @@ Route::prefix('admin')->group(function () {
 
         // CRUD Open Ticket
         Route::resource('/open-tickets', OpenTicketController::class);
+        Route::get('/request/get-filter-data', [OpenTicketController::class, 'filteredData']);
         Route::post('/open-ticket/update-response/{id}', [OpenTicketController::class, 'updateRequestTicket'])->name('updateRequestTicket');
         Route::post('/open-ticket/approve1/{id}', [OpenTicketController::class, 'ticketApprove1'])->name('ticketApprove1');
         Route::post('/open-ticket/approve2/{id}', [OpenTicketController::class, 'ticketApprove2'])->name('ticketApprove2');
 
         // CRUD Work Request
         Route::resource('/work-requests', WorkRequestController::class);
+        Route::get('/work-request/get-filter-data', [WorkRequestController::class, 'filteredData']);
         Route::post('/done/work-request/{id}', [WorkRequestController::class, 'done'])->name('doneWR'); // done wo from tenant
         Route::post('/complete/work-request/{id}', [WorkRequestController::class, 'complete'])->name('completeWR'); // done wo from tenant
 
@@ -388,6 +396,7 @@ Route::prefix('admin')->group(function () {
         // Work Permit
         Route::resource('/work-permits', WorkPermitController::class);
         Route::get('/open/request-permits', [WorkPermitController::class, 'openRP'])->name('openRP');
+        Route::get('/work-permit/show/{id}', [BAPPController::class, 'showWP']);
         Route::post('/work-permit/reject/{id}', [WorkPermitController::class, 'rejectWP'])->name('rejectWP');
         Route::post('/work-permit/approve1/{id}', [WorkPermitController::class, 'approveWP1'])->name('approveWP1');
         Route::post('/work-permit/approve2/{id}', [WorkPermitController::class, 'approveWP2'])->name('approveWP2');

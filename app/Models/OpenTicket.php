@@ -34,6 +34,7 @@ class OpenTicket extends Model
         'date_approve_1',
         'sign_approve_2',
         'date_approve_2',
+        'priority'
     ];
 
     public function jenisRequest()

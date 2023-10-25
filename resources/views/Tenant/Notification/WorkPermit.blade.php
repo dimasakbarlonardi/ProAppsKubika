@@ -218,7 +218,7 @@
                                 onclick="approve2({{ $permit->id }})">Approve</button>
                         </div>
                     @endif
-                    @if ($sysApprove->approval_3 == $user->id_user && $permit->status_bayar == 'PAYED' && !$permit->sign_approval_3)
+                    @if ($sysApprove->approval_3 == $user->id_user && !$permit->sign_approval_3)
                         <div class="card-footer border-top border-200 py-x1">
                             <button type="button" class="btn btn-primary w-100"
                                 onclick="approve3({{ $permit->id }})">Approve</button>
@@ -236,7 +236,7 @@
                             $permit->status_request != 'COMPLETE' &&
                             $permit->id_work_relation == Request::session()->get('work_relation_id'))
                         <div class="card-footer border-top border-200 py-x1">
-                            <a href="{{ route('printWP', $wp->id) }}" target="_blank"
+                            <a href="{{ route('printWP', $permit->id) }}" target="_blank"
                                 class="btn btn-warning w-100 mb-3">Print</a>
                             <button type="button" class="btn btn-primary w-100"
                                 onclick="workDoneWP({{ $permit->id }})">Pekerjaan Selesai</button>

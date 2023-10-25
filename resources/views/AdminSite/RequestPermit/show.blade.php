@@ -186,7 +186,7 @@
                         </div>
                         @if ($rp->status_request == 'APPROVED' && $rp->sign_approval_1)
                             <div class="card-footer border-top border-200 py-x1">
-                                <a href="{{ route('work-permits.create') }}" class="btn btn-primary w-100">Buat Work Permit</a>
+                                <a href="{{ route('work-permits.create', ['id_rp' => $rp->id]) }}" class="btn btn-primary w-100">Buat Work Permit</a>
                             </div>
                         @endif
                     </div>
