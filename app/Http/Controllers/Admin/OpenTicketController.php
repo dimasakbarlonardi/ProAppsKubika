@@ -308,7 +308,7 @@ class OpenTicketController extends Controller
 
         Alert::success('Berhasil', 'Berhasil merespon tiket');
 
-        return redirect()->back();
+        return redirect()->route('open-tickets.show', $ticket->id);
     }
 
     public function ticketApprove1(Request $request, $id)

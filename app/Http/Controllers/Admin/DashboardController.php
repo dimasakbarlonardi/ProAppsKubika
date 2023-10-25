@@ -25,6 +25,7 @@ use App\Models\Unit;
 use App\Models\User;
 use App\Models\WorkOrder;
 use App\Models\WorkPermit;
+use App\Models\WorkPriority;
 use App\Models\WorkRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\App;
@@ -227,8 +228,11 @@ class DashboardController extends Controller
     {
         $model = new OpenTicket();
         $getData = ConnectionDB::setConnection($model);
+        $connPriority = ConnectionDB::setConnection(new WorkPriority());
+
         $data['sysApprove'] = $connApprove->find(1);
         $data['ticket'] = $getData->find($getNotif->id_data);
+        $data['work_priorities'] = $connPriority->get();
 
         return $data;
     }
