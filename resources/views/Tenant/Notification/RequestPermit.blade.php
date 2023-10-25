@@ -201,7 +201,7 @@
                         $permit->sign_approval_1 &&
                             Request::session()->get('work_relation_id') == 1 &&
                             $permit->status_request != 'REJECTED' &&
-                            isset($permit->WorkPermit))
+                            !isset($permit->WorkPermit))
                         <div class="card-footer border-top">
                             <a href="{{ route('work-permits.create', ['id_rp' => $permit->id]) }}" type="button"
                                 class="btn btn-primary w-100">Buat Work Permit</a>

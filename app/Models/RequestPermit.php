@@ -51,5 +51,10 @@ class RequestPermit extends Model
         return $this->hasOne(RequestPermitDetail::class, 'no_tiket', 'no_tiket');
     }
 
+    public function WorkPermit()
+    {
+        return $this->hasOne(WorkPermit::class, 'no_request_permit', 'no_request_permit');
+    }
+
     protected $dates = ['deleted_at'];
 }

@@ -48,6 +48,7 @@ class WorkPermitController extends Controller
             ->where('sign_approval_1', '!=', null)
             ->get();
 
+        $data['request_permit'] = $connRP->find($request->id_rp);
         $data['work_relations'] = $connWorkRelation->get();
         $data['id_rp'] = $request->id_rp;
 
