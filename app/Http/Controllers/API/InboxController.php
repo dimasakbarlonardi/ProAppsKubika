@@ -31,6 +31,7 @@ class InboxController extends Controller
 
         $notif = $connNotif->where('receiver', $user->id_user)
             ->orWhere('type', 'Announcement')
+            ->orWhere('division_receiver', $user->RoleH->work_relation_id)
             ->with('Sender')
             ->orderBy('created_at', 'DESC')
             ->get();
