@@ -97,7 +97,7 @@
                                     </div>
                                 </div>
                             </div>
-                            @if ($reservation->status_bayar == 'PAYED' && $reservation->is_deposit)
+                            @if ($reservation->status_bayar == 'PAID' && $reservation->is_deposit)
                                 <div class="mb-3">
                                     <div class="row">
                                         <div class="col-6">

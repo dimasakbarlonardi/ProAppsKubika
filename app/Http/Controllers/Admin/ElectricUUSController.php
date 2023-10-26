@@ -53,7 +53,7 @@ class ElectricUUSController extends Controller
                     })
                     ->with('MonthlyUtility.MonthlyTenant');
                 break;
-            case ('PAYED'):
+            case ('PAID'):
                 $record = $connElecUUS->where('id_unit', $request->id_unit)
                     ->whereHas('MonthlyUtility.MonthlyTenant', function ($query) {
                         $query->where('tgl_bayar_invoice', '!=', '');

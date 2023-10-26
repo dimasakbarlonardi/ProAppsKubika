@@ -16,62 +16,9 @@
                         </div>
                     </div>
                 </div>
-                <table class="table table-striped">
-                    <thead>
-                        <tr>
-                            <th>No</th>
-                            <th>No Tiket</th>
-                            <th>No Request Reservation</th>
-                            <th>Tenant</th>
-                            <th class="text-center">Status</th>
-                            <th class="text-center">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach ($reservations as $key => $req)
-                            <tr>
-                                <th scope="row">{{ $key + 1 }}</th>
-                                <td class="align-middle">{{ $req->no_tiket }}</td>
-                                <td class="align-middle">{{ $req->no_request_reservation }}</td>
-                                <td class="align-middle">{{ $req->Ticket->Tenant->nama_tenant }}</td>
-                                <td class="align-middle text-center">
-                                    {{ $req->is_deposit == 1 ? 'Berbayar' : 'Tidak Berbayar' }} <br>
-                                    @if ($req->CashReceipt && $req->CashReceipt->transaction_status == 'PAYED')
-                                        <h6>
-                                            <span
-                                                class="badge bg-success mt-2">{{ $req->CashReceipt->transaction_status }}</span>
-                                        </h6>
-                                    @elseif ($req->CashReceipt && $req->CashReceipt->transaction_status == 'VERIFYING')
-                                        <h6>
-                                            <span
-                                                class="badge bg-info mt-2">{{ $req->CashReceipt->transaction_status }}</span>
-                                        </h6>
-                                    @elseif ($req->CashReceipt && $req->CashReceipt->transaction_status == 'PENDING')
-                                        <h6>
-                                            <span
-                                                class="badge bg-warning mt-2">{{ $req->CashReceipt->transaction_status }}</span>
-                                        </h6>
-                                    @endif
-                                </td>
-                                <td class="text-center">
-                                    <a href="{{ route('request-reservations.show', $req->id) }}"
-                                        class="btn btn-sm btn-warning mb-2">View</a>
-                                    @if (
-                                        $req->sign_approval_3 &&
-                                            $req->Ticket->status_request != 'DONE' &&
-                                            $req->Ticket->status_request != 'COMPLETE' &&
-                                            Request::session()->get('work_relation_id') == 1)
-                                        <form action="{{ route('rsvDone', $req->id) }}" method="post">
-                                            @csrf
-                                            <button type="submit" class="btn btn-primary btn-sm w-100">Acara
-                                                Selesai</button>
-                                        </form>
-                                    @endif
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
+               <div id="data-requests">
+
+               </div>
             </div>
         </div>
         <div class="col-xxl-3 col-xl-3">
@@ -87,21 +34,63 @@
                         <h6 class="mb-0">Filter</h6>
                     </div>
                     <div class="card-body">
-                        <form>
-                            <div class="mb-2 mt-n2"><label class="mb-1">Priority</label><select
-                                    class="form-select form-select-sm">
-                                    <option>None</option>
-                                    <option>Urgent</option>
-                                    <option>High</option>
-                                    <option>Medium</option>
-                                    <option>Low</option>
-                                </select></div>
-                        </form>
+                        <div class="mb-3 mt-n2">
+                            <label class="mb-1">Status</label>
+                            <select class="form-select form-select-sm" id="select-status">
+                                <option value="all">All</option>
+                                <option value="PENDING">APPROVED</option>
+                                <option value="PROSES">PROSES</option>
+                                <option value="DONE">DONE</option>
+                                <option value="COMPLETE">COMPLETE</option>
+                                <option value="REJECTED">REJECTED</option>
+                            </select>
+                        </div>
+                        <div class="mb-3 mt-n2">
+                            <label class="mb-1">Status Bayar</label>
+                            <select class="form-select form-select-sm" id="select-status-bayar">
+                                <option value="all">All</option>
+                                <option value="PENDING">PENDING</option>
+                                <option value="RESPONDED">PAID</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="card-footer border-top border-200 py-x1"><button
-                            class="btn btn-primary w-100">Search</button></div>
                 </div>
             </div>
         </div>
     </div>
+@endsection
+
+@section('script')
+    <script>
+        $('document').ready(function() {
+            getData('all', 'all')
+        })
+
+        $('#select-status').on('change', function() {
+            var status = $(this).val();
+            var statusBayar = $('#select-status-bayar').val();
+
+            getData(status, statusBayar)
+        });
+        $('#select-status-bayar').on('change', function() {
+            var status = $('#select-status').val();
+            var statusBayar = $(this).val();
+
+            getData(status, statusBayar)
+        });
+
+        function getData(status, statusBayar) {
+            $.ajax({
+                url: '/admin/request-rsv/get-filter-data',
+                type: 'GET',
+                data: {
+                    status,
+                    statusBayar
+                },
+                success: function(resp) {
+                    $('#data-requests').html(resp.html);
+                }
+            })
+        }
+    </script>
 @endsection

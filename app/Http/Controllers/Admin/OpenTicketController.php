@@ -62,7 +62,7 @@ class OpenTicketController extends Controller
             $tickets = $tickets->where('judul_request', 'like', '%' . $valueString . '%')
                 ->orWhereHas('Tenant', function($q) use ($valueString) {
                     $q->where('nama_tenant', 'like', '%' . $valueString . '%');
-                });
+                })->orWhere('no_tiket', 'like', '%' . $valueString . '%');
         }
 
         if ($request->type != 'all') {
