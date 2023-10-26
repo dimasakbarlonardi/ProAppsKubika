@@ -25,7 +25,8 @@
                             </p>
                             <p class="fw-semi-bold mb-3 mb-sm-2">
                                 <a class="text-black" href="{{ route('tenantunits.show', $tu->id_tenant_unit) }}">
-                                    {{ $tu->unit->nama_unit }}
+                                    {{ $tu->unit->nama_unit }} <br>
+                                    {{ $tu->unit->Tower->nama_tower }}
                                 </a>
                             </p>
                             <div class="row align-items-center gx-0 gy-2">
