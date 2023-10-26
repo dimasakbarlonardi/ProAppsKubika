@@ -243,6 +243,8 @@ class ReservationController extends Controller
                     'receiver' => null,
                 ];
 
+                broadcast(new HelloEvent($dataNotif));
+
                 $rsv->sign_approval_3 = Carbon::now();
                 $rsv->sign_approval_5 = Carbon::now();
                 $rsv->status_bayar = 'PAID';
@@ -256,9 +258,10 @@ class ReservationController extends Controller
                     'notif_message' => 'Request Reservation diterima, mohon approve reservasi',
                     'receiver' => $approve->approval_3,
                 ];
+
+                broadcast(new HelloEvent($dataNotif));
             }
 
-            broadcast(new HelloEvent($dataNotif));
 
             $rsv->sign_approval_2 = Carbon::now();
             $rsv->save();
