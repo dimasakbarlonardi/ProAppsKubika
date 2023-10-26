@@ -51,7 +51,7 @@ class ReservationController extends Controller
 
         if ($request->status != 'all') {
             $status = $request->status;
-            $reservations = $reservations->whereHas('Ticket', function($q) use ($status) {
+            $reservations = $reservations->whereHas('Ticket', function ($q) use ($status) {
                 $q->where('status_request', $status);
             });
         }
@@ -232,16 +232,31 @@ class ReservationController extends Controller
 
         try {
             DB::beginTransaction();
+            if (!$rsv->is_deposit) {
+                $dataNotif = [
+                    'models' => 'Reservation',
+                    'notif_title' => $rsv->no_request_reservation,
+                    'id_data' => $rsv->id,
+                    'sender' => $request->session()->get('user')->id_user,
+                    'division_receiver' => '1',
+                    'notif_message' => 'Request Reservation diterima, terima kasih',
+                    'receiver' => null,
+                ];
 
-            $dataNotif = [
-                'models' => 'Reservation',
-                'notif_title' => $rsv->no_request_reservation,
-                'id_data' => $rsv->id,
-                'sender' => $request->session()->get('user')->id_user,
-                'division_receiver' => null,
-                'notif_message' => 'Request Reservation diterima, mohon approve reservasi',
-                'receiver' => $approve->approval_3,
-            ];
+                $rsv->sign_approval_3 = Carbon::now();
+                $rsv->sign_approval_5 = Carbon::now();
+                $rsv->status_bayar = 'PAID';
+            } else {
+                $dataNotif = [
+                    'models' => 'PaymentReservation',
+                    'notif_title' => $rsv->no_request_reservation,
+                    'id_data' => $rsv->id,
+                    'sender' => $request->session()->get('user')->id_user,
+                    'division_receiver' => null,
+                    'notif_message' => 'Request Reservation diterima, mohon approve reservasi',
+                    'receiver' => $approve->approval_3,
+                ];
+            }
 
             broadcast(new HelloEvent($dataNotif));
 
@@ -319,22 +334,6 @@ class ReservationController extends Controller
             ];
 
             broadcast(new HelloEvent($dataNotif));
-        } else {
-            $dataNotif = [
-                'models' => 'PaymentReservation',
-                'notif_title' => $createTransaction->no_invoice,
-                'id_data' => $rsv->id,
-                'sender' => $approve->approval_3,
-                'division_receiver' => 1,
-                'notif_message' => 'Request Reservation diterima, mohon membayar deposit untuk melanjutkan proses reservasi',
-                'receiver' => null,
-            ];
-
-            broadcast(new HelloEvent($dataNotif));
-
-            $rsv->sign_approval_3 = Carbon::now();
-            $rsv->sign_approval_5 = Carbon::now();
-            $rsv->status_bayar = 'PAID';
         }
 
         $rsv->sign_approval_3 = Carbon::now();
