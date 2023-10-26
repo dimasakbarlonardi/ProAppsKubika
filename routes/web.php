@@ -395,6 +395,7 @@ Route::prefix('admin')->group(function () {
 
         // Work Permit
         Route::resource('/work-permits', WorkPermitController::class);
+        Route::get('/work-permit/get-filter-data', [WorkPermitController::class, 'filteredData']);
         Route::get('/open/request-permits', [WorkPermitController::class, 'openRP'])->name('openRP');
         Route::get('/work-permit/show/{id}', [BAPPController::class, 'showWP']);
         Route::post('/work-permit/reject/{id}', [WorkPermitController::class, 'rejectWP'])->name('rejectWP');
@@ -410,6 +411,7 @@ Route::prefix('admin')->group(function () {
 
         // Reservation
         Route::resource('request-reservations', ReservationController::class);
+        Route::get('/request-rsv/get-filter-data', [ReservationController::class, 'filteredData']);
         Route::get('/reservation/get/booked-date', [ReservationController::class, 'getBookedDate']);
         Route::post('rsvReject/{id}', [ReservationController::class, 'reject'])->name('rsvReject');
         Route::post('rsvApprove1/{id}', [ReservationController::class, 'approve1'])->name('rsvApprove1');

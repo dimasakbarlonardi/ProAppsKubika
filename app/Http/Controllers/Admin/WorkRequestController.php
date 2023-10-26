@@ -60,7 +60,7 @@ class WorkRequestController extends Controller
             $work_requests = $work_requests->where('no_work_request', 'like', '%' . $valueString . '%')
                 ->orWhereHas('Ticket.Tenant', function ($q) use ($valueString) {
                     $q->where('nama_tenant', 'like', '%' . $valueString . '%');
-                });
+                })->orWhere('no_work_request', 'like', '%' . $valueString . '%');
         }
 
         if ($request->status != 'all') {

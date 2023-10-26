@@ -47,7 +47,7 @@ class WaterUUSController extends Controller
                     })
                     ->with('MonthlyUtility.MonthlyTenant');
                 break;
-            case ('PAYED'):
+            case ('PAID'):
                 $record = $connWatercUUS->where('id_unit', $request->id_unit)
                     ->whereHas('MonthlyUtility.MonthlyTenant', function ($query) {
                         $query->where('tgl_bayar_invoice', '!=', null);

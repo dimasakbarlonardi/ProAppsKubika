@@ -91,7 +91,7 @@
                                 Status payment :
                                 <a class="mb-0" href="{{ route('showInvoices', $ticket->CashReceipt->id) }}">
                                     <span
-                                        class="badge bg-{{ $ticket->CashReceipt->transaction_status == 'PAYED' ? 'success' : 'warning' }}">{{ $ticket->CashReceipt->transaction_status }}</span>
+                                        class="badge bg-{{ $ticket->CashReceipt->transaction_status == 'PAID' ? 'success' : 'warning' }}">{{ $ticket->CashReceipt->transaction_status }}</span>
                                 </a>
                             @endif
                         </div>

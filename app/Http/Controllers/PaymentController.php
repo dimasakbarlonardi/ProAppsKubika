@@ -33,7 +33,7 @@ class PaymentController extends Controller
             $approve = $approve->find(7);
 
             if ($callback->isSuccess()) {
-                $cr->transaction_status = 'PAYED';
+                $cr->transaction_status = 'PAID';
 
                 switch ($cr->transaction_type) {
                     case ('WorkOrder'):
@@ -78,7 +78,7 @@ class PaymentController extends Controller
                         break;
 
                     case ('WorkPermit'):
-                        $cr->WorkPermit->status_bayar = 'PAYED';
+                        $cr->WorkPermit->status_bayar = 'PAID';
                         $cr->WorkPermit->sign_approval_5 = Carbon::now();
                         $cr->WorkPermit->save();
 
@@ -108,7 +108,7 @@ class PaymentController extends Controller
                         break;
 
                     case ('Reservation'):
-                        $cr->Reservation->status_bayar = 'PAYED';
+                        $cr->Reservation->status_bayar = 'PAID';
                         $cr->Reservation->sign_approval_5 = Carbon::now();
                         $cr->Reservation->save();
 

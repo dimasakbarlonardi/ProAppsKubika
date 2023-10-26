@@ -15,6 +15,7 @@ use App\Models\System;
 use App\Models\Transaction;
 use App\Models\TransactionCenter;
 use App\Models\WorkPermit;
+use App\Models\WorkPriority;
 use App\Models\WorkRelation;
 use App\Services\Midtrans\CreateSnapTokenService;
 use Carbon\Carbon;
@@ -31,12 +32,44 @@ class WorkPermitController extends Controller
 {
     public function index(Request $request)
     {
-        $connWP = ConnectionDB::setConnection(new WorkPermit());
+        $connWorkPrior = ConnectionDB::setConnection(new WorkPriority());
 
         $data['user'] = $request->session()->get('user');
-        $data['work_permits'] = $connWP->orderBy('no_work_permit', 'desc')->get();
+        $data['priorities'] = $connWorkPrior->get();
 
         return view('AdminSite.WorkPermit.index', $data);
+    }
+
+    public function filteredData(Request $request)
+    {
+        $connWP = ConnectionDB::setConnection(new WorkPermit());
+
+        $permits = $connWP->where('deleted_at', null);
+
+        if ($request->valueString) {
+            $valueString = $request->valueString;
+            $permits = $permits->whereHas('Ticket.Tenant', function($q) use ($valueString) {
+                    $q->where('nama_tenant', 'like', '%' . $valueString . '%');
+                })->orWhere('no_work_permit', 'like', '%' . $valueString . '%');
+        }
+
+        if ($request->status != 'all') {
+            $permits = $permits->where('status_request', $request->status);
+        }
+        if ($request->priority != 'all') {
+            $priority = $request->priority;
+            $permits = $permits->whereHas('Ticket', function($q) use ($priority) {
+                $q->where('priority', $priority);
+            });
+        }
+
+        $permits = $permits->orderBy('no_work_permit', 'desc');
+
+        $data['work_permits'] = $permits->get();
+
+        return response()->json([
+            'html' => view('AdminSite.WorkPermit.table-data', $data)->render()
+        ]);
     }
 
     public function create(Request $request)

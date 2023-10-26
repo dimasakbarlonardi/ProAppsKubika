@@ -38,6 +38,11 @@ class WorkOrderController extends Controller
         return view('AdminSite.WorkOrder.index', $data);
     }
 
+    public function filteredData(Request $request)
+    {
+
+    }
+
     public function store(Request $request)
     {
         $request->validate([

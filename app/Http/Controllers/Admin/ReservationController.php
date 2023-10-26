@@ -43,12 +43,36 @@ class ReservationController extends Controller
         return view('AdminSite.RequestReservation.index', $data);
     }
 
+    public function filteredData(Request $request)
+    {
+        $connReqRev = ConnectionDB::setConnection(new Reservation());
+
+        $reservations = $connReqRev->where('deleted_at', null);
+
+        if ($request->status != 'all') {
+            $status = $request->status;
+            $reservations = $reservations->whereHas('Ticket', function($q) use ($status) {
+                $q->where('status_request', $status);
+            });
+        }
+
+        if ($request->statusBayar != 'all') {
+            $statusBayar = $request->statusBayar;
+            $reservations = $reservations->where('status_bayar', $statusBayar);
+        }
+
+        $data['reservations'] = $reservations->get();
+
+        return response()->json([
+            'html' => view('AdminSite.RequestReservation.table-data', $data)->render()
+        ]);
+    }
+
     public function getBookedDate(Request $request)
     {
         $startdate = $request->startdate;
         $startdatetime = $request->startdatetime;
         $enddatetime = $request->enddatetime;
-        $enddate = $request->enddate;
 
         $connReqRev = ConnectionDB::setConnection(new Reservation());
 
@@ -310,7 +334,7 @@ class ReservationController extends Controller
 
             $rsv->sign_approval_3 = Carbon::now();
             $rsv->sign_approval_5 = Carbon::now();
-            $rsv->status_bayar = 'PAYED';
+            $rsv->status_bayar = 'PAID';
         }
 
         $rsv->sign_approval_3 = Carbon::now();

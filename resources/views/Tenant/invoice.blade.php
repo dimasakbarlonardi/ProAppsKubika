@@ -69,7 +69,7 @@
                                             <tr>
                                                 <th class="text-sm-end">Payment Status:</th>
                                                 <td>
-                                                    @if ($cr->transaction_status == 'PAYED')
+                                                    @if ($cr->transaction_status == 'PAID')
                                                         <span class="badge bg-success">Payed</span>
                                                     @else
                                                         <span class="badge bg-warning">Pending</span>

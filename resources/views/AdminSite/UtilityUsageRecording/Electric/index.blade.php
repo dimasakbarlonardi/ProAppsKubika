@@ -351,7 +351,7 @@
                                     Waiting
                                     to Send
                                 </option>
-                                <option {{ request()->get('status') == 'PAYED' ? 'selected' : '' }} value="PAYED">Paid
+                                <option {{ request()->get('status') == 'PAID' ? 'selected' : '' }} value="PAID">Paid
                                 </option>
                                 <option {{ request()->get('status') == 'UNPAID' ? 'selected' : '' }} value="UNPAID">
                                     Unpaid</option>
