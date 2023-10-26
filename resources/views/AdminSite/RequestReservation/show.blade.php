@@ -145,6 +145,18 @@
                                     value="{{ $reservation->Ticket->status_request }}" disabled>
                             </div>
                         </div>
+                        @if (
+                            $reservation->sign_approval_1 &&
+                            !$reservation->sign_approval_2 &&                                
+                            $reservation->Ticket->status_request != 'REJECTED'
+                            )
+                            <div class="card-footer border-top border-200 py-x1">
+                                <form action="{{ route('rsvApprove2', $reservation->id) }}" method="post">
+                                    @csrf
+                                    <button type="submit" class="btn btn-primary w-100">Approve</button>
+                                </form>
+                            </div>
+                        @endif
                     </div>
                 </div>
             </div>
