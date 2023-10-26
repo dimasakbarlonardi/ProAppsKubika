@@ -164,5 +164,6 @@ Route::prefix('v1')->group(function () {
         Route::get('/reservation/{id}', [ReservationController::class, 'show']);
         Route::post('/reservation/approve/{id}', [ReservationController::class, 'approve']);
         Route::post('/reservation/reject/{id}', [ReservationController::class, 'reject']);
+        Route::get('/reservation/show-billing/{id}', [ReservationController::class, 'showBilling']);
     });
 });
