@@ -8,6 +8,7 @@ use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Models\Approve;
 use App\Models\Reservation;
+use App\Models\Site;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use stdClass;
@@ -101,6 +102,32 @@ class ReservationController extends Controller
         return ResponseFormatter::success(
             $rsv,
             'Success reject reservation'
+        );
+    }
+
+    public function showBilling($id, Request $request)
+    {
+        $connReservation = ConnectionDB::setConnection(new Reservation());
+        $site = Site::find($request->user()->id_site);
+
+        $rsv = $connReservation->find($id);
+
+        $object = new stdClass();
+        $object->reservation_id = $rsv->id;
+        $object->transaction_id = $rsv->CashReceipt->id;
+        $object->no_invoice = $rsv->CashReceipt->no_invoice;
+        $object->issue_date = $rsv->CashReceipt->created_at;
+        $object->due_date = $rsv->CashReceipt->created_at->addDays(1);
+        $object->invoice_to = $rsv->Ticket->Tenant->nama_tenant;
+        $object->site = $site->nama_site;
+        $object->unit = $rsv->Ticket->Unit->nama_unit;
+        $object->province = $site->provinsi;
+        $object->postal_code = $site->kode_pos;
+        $object->deposit = $rsv->jumlah_deposit;
+
+        return ResponseFormatter::success(
+            $object,
+            'Success billing reservation'
         );
     }
 }

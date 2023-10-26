@@ -236,7 +236,8 @@ return [
         'View' => Illuminate\Support\Facades\View::class,
         'ConnectionDB' => App\Helpers\ConnectionDB::class,
         'QrCode' => SimpleSoftwareIO\QrCode\Facades\QrCode::class,
-        'Image' => Intervention\Image\Facades\Image::class
+        'Image' => Intervention\Image\Facades\Image::class,
+        'PDF' => Barryvdh\DomPDF\Facade::class,
     ],
 
 ];
