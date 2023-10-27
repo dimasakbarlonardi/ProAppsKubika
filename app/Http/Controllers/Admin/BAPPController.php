@@ -40,17 +40,14 @@ class BAPPController extends Controller
         return response()->json(['wp' => $wp]);
     }
 
-    public function create()
+    public function create(Request $request)
     {
-        $connTiket = ConnectionDB::setConnection(new OpenTicket());
-        $connRP = ConnectionDB::setConnection(new RequestPermit());
         $connWPS = ConnectionDB::setConnection(new WorkPermit());
-        $connEngBAPP = ConnectionDB::setConnection(new EngBAPP());
 
-        $data['engs'] = $connEngBAPP->get();
-        $data['tickets'] = $connTiket->get();
-        $data['rps'] = $connRP->get();
-        $data['wps'] = $connWPS->get();
+        $data['wps'] = $connWPS->where('deleted_at', null)
+            ->doesntHave('BAPP')
+            ->get();
+        $data['id_wp'] = $request->id_wp;
 
         return view('AdminSite.BAPP.create', $data);
     }
@@ -72,7 +69,7 @@ class BAPPController extends Controller
             Carbon::now()->format('m') . Carbon::now()->format('Y') . '/' .
             sprintf("%06d", $count);
 
-        foreach(json_decode($request->detail_bapp) as $detail) {
+        foreach (json_decode($request->detail_bapp) as $detail) {
             $connDetailBAPP->create([
                 'no_bapp' => $no_bapp,
                 'name' => $detail->name,
@@ -198,6 +195,4 @@ class BAPPController extends Controller
 
         return redirect()->back();
     }
-
-
 }

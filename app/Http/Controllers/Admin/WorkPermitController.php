@@ -297,6 +297,9 @@ class WorkPermitController extends Controller
         $createTransaction->id_user = $wp->Ticket->Tenant->User->id_user;
         $createTransaction->transaction_type = 'WorkPermit';
 
+        $wp->Ticket->no_invoice = $no_invoice;
+        $wp->Ticket->save();
+
         $items = [];
         $item = new stdClass();
         $item->id = 1;

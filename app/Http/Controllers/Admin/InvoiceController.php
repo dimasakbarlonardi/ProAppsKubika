@@ -25,7 +25,7 @@ class InvoiceController extends Controller
         $user = $request->session()->get('user');
         $transaction = $connCR->find($id);
 
-        if ($request->session()->get('work_relation_id') != 1) {
+        if ($request->session()->get('work_relation_id') != 1 && $request->session()->get('work_relation_id') != 6) {
             if ($user->id_user != $transaction->id_user) {
                 return redirect()->back();
             }

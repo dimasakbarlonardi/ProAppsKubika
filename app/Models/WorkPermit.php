@@ -50,5 +50,10 @@ class WorkPermit extends Model
         return $this->hasOne(CashReceipt::class, 'no_reff', 'no_work_permit');
     }
 
+    public function BAPP()
+    {
+        return $this->hasOne(BAPP::class, 'no_request_permit', 'no_request_permit');
+    }
+
     protected $dates = ['deleted_at'];
 }
