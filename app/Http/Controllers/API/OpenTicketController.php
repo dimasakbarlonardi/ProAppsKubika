@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Events\HelloEvent;
 use App\Helpers\ConnectionDB;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
@@ -118,6 +119,20 @@ class OpenTicketController extends Controller
             $createTicket->save();
             $system->sequence_notiket = $count;
             $system->save();
+            $dataNotif = [
+                'models' => 'OpenTicket',
+                'notif_title' => $createTicket->no_tiket,
+                'id_data' => $createTicket->id,
+                'sender' => $this->user()->id_user,
+                'division_receiver' => 1,
+                'notif_message' => 'Tiket sudah dibuat, mohon proses request saya',
+                'receiver' => null,
+            ];
+
+            $system->save();
+            $createTicket->save();
+
+            broadcast(new HelloEvent($dataNotif));
 
             DB::commit();
 
