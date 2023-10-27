@@ -2,13 +2,16 @@
 
 @section('content')
 <div class="card">
-    <div class="card-header">
-        <div class="row flex-between-center">
-            <div class="col-auto">
-                <h6 class="my-3 text-white">Detail Landlord</h6>
-            </div>
+<div class="card">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+            <a href="{{ route('owners.index') }}" class="btn btn-falcon-default btn-sm">
+                <i class="fas fa-arrow-left"></i> Back
+            </a>
+            <div class="ml-3">Detail Landlord</div>
         </div>
     </div>
+</div>
     <div class="p-5">
         <div class="mb-3">
             <div class="row">

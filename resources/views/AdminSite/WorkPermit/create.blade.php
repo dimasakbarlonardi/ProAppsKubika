@@ -164,7 +164,7 @@
                                             {{ $work_relation->work_relation }}</option>
                                     @endforeach
                                 </select>
-                            @else                                
+                            @else
                                 <select name="id_work_relation" class="form-select form-select-sm" id="id_work_relation">
                                     <option disabled selected value="">--Pilih Work Relation ---</option>
                                     @foreach ($work_relations as $work_relation)

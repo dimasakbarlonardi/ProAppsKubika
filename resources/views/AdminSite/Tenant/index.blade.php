@@ -1,5 +1,10 @@
 @extends('layouts.master')
 
+@section('css')
+    <link rel="stylesheet" href="{{ asset('assets/vendors/flatpickr/flatpickr.min.css') }}">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
+@endsection
+
 @section('content')
 <div class="content">
     <div class="card" id="ticketsTable" data-list='{"valueNames":["client","subject","status","priority","agent"],"page":7,"pagination":true,"fallback":"tickets-card-fallback"}'>
@@ -7,13 +12,12 @@
             <div class="d-lg-flex justify-content-between">
                 <div class="row flex-between-center gy-2 px-x1 text-light">
                     <div class="col-auto pe-0">
-                        <h6 class="mb-0 text-light">All Tenants</h6>
+                        <h6 class="mb-0 text-light">All Tenant</h6>
                     </div>
-                    <div class="col-auto">
-                        <form>
-                            <div class="input-group input-search-width"><input class="form-control form-control-sm shadow-none search" type="search" placeholder="Search by name" aria-label="search" />
-                            </div>
-                        </form>
+                    <div class="col-auto pe-0">
+                        <span class="nav-link-icon">
+                            <span class="fas fa-users"></span>
+                        </span>
                     </div>
                 </div>
                 <div class="border-bottom border-200 my-3"></div>
@@ -41,56 +45,46 @@
                 </div>
             </div>
         </div>
-        <div class="card-body p-0">
-            <div class="form-check d-none">
-                <input class="form-check-input" id="checkbox-bulk-card-tickets-select" type="checkbox" data-bulk-select='{"body":"card-ticket-body","actions":"table-ticket-actions","replacedElement":"table-ticket-replace-element"}' />
-            </div>
-            <div class="row">
-                @foreach ($tenants as $tenant)
-                <div class="col-sm-6 col-lg-4 mb-4 mt-4">
-                    <div class="card border h-100 border-success">
-                        <div class="card-body">
-                            <div class="d-flex align-items-start align-items-sm-center">
-                                <div class="avatar avatar-xl avatar-3xl">
-                                    <img src="{{ $tenant->profile_picture ? url($tenant->profile_picture) : '/assets/img/team/3-thumb.png' }}" class="avatar-image" />
-                                </div>
-                                <div class="ms-1 ms-sm-3">
-                                    <p class="fw-semi-bold mb-3 mb-sm-2 mt-3">
-                                        <a class="text-primary">
-                                            Tenant
-                                        </a>
-                                    </p>
-                                    <p class="client fw-semi-bold mb-3 mb-sm-2">
-                                        <a class="client text-black" href="{{ route('tenants.show', $tenant->id_tenant) }}">
-                                            {{ $tenant->nama_tenant }}
-                                        </a>
-                                    </p>
-                                    <hr>
-                                    <a href="{{ route('getTenantUnit', $tenant->id_tenant) }}" class="btn btn-primary btn-sm">Tenant Unit</a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                @endforeach
-            </div>
-
-
-            <div class="text-center d-none" id="tickets-card-fallback">
-                <p class="fw-bold fs-1 mt-3">Data Tidak Ditemukan</p>
-            </div>
-        </div>
-        <div class="card-footer">
-            <div class="d-flex justify-content-center">
-                <button class="btn btn-sm btn-falcon-default me-1" type="button" title="Previous" data-list-pagination="prev">
-                    <span class="fas fa-chevron-left"></span>
-                </button>
-                <ul class="pagination mb-0"></ul>
-                <button class="btn btn-sm btn-falcon-default ms-1" type="button" title="Next" data-list-pagination="next">
-                    <span class="fas fa-chevron-right"></span>
-                </button>
-            </div>
+        <div class="card-body pt-4">
+            <table class="table table-striped alternating-rows" id="table-tenant">
+                <thead>
+                    <tr>
+                        <th scope="col">No</th>
+                        <th></th>
+                        <th class="sort" data-sort="equipment">Tenant</th>
+                        <th class="text-center">Action</th>
+                    </tr>
+                </thead>
+                <tbody id="checklist_body">
+                    @foreach ($tenants as $key => $tenant)
+                    <tr>
+                        <th scope="row">{{ $key + '1' }}</th>
+                        <td>
+                            <img src="{{ $tenant->User ? asset($tenant->profile_picture) : asset('/assets/img/team/3-thumb.png') }}" class="rounded-circle" style="max-width: 50px; height: 50px">
+                        </td> 
+                        <td>
+                            {{ $tenant->nama_tenant }} <br>
+                        </td>
+                        <td class="text-center">
+                            <a href="{{ route('tenants.show', $tenant->id_tenant) }}" class="btn btn-outline-info btn-sm mb-2" type="button">
+                                Detail
+                            </a>
+                            <a href="{{ route('getTenantUnit', $tenant->id_tenant) }}" class="btn btn-outline-success btn-sm mb-2" type="button">
+                                Tenant Unit
+                            </a>
+                        </td>
+                    </tr>
+                    @endforeach
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
+@endsection
+
+@section('script')
+    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+    <script>
+        new DataTable('#table-tenant');
+    </script>
 @endsection

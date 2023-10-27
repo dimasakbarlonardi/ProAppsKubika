@@ -1,36 +1,30 @@
-<x-guest-layout>
-    <x-auth-card>
-        <x-slot name="logo">
-            <a href="/">
-                <x-application-logo class="w-20 h-20 fill-current text-gray-500" />
-            </a>
-        </x-slot>
+@extends('auth.layout')
 
-        <div class="mb-4 text-sm text-gray-600">
-            {{ __('Forgot your password? No problem. Just let us know your email address and we will email you a password reset link that will allow you to choose a new one.') }}
+@section('content')
+<div class="col-md-7 d-flex flex-center">
+    <div class="p-4 p-md-5 flex-grow-1">
+        <!-- <div class="row flex-between-center"> -->
+        <div class="image mb-3"><img class="logo-colored" src="{{ asset('/assets/img/logo_colored.png') }}" /></div>
+        <div class="col-auto mb-5">
+            <h3 class="text-primary">Reset Password</h3>
+            <div class="label">
+                <p class="text-wrapper">Please fill in your E-Mail</p>
+            </div>
         </div>
-
-        <!-- Session Status -->
-        <x-auth-session-status class="mb-4" :status="session('status')" />
-
-        <!-- Validation Errors -->
-        <x-auth-validation-errors class="mb-4" :errors="$errors" />
-
+        <!-- </div> -->
         <form method="POST" action="{{ route('password.email') }}">
             @csrf
-
-            <!-- Email Address -->
-            <div>
-                <x-label for="email" :value="__('Email')" />
-
-                <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus />
+            <div class="mb-3">
+                <label class="form-label" for="card-email">Email
+                    address
+                </label>
+                <input class="form-control" id="card-email" type="email" name="email" value="" required />
             </div>
-
-            <div class="flex items-center justify-end mt-4">
-                <x-button>
-                    {{ __('Email Password Reset Link') }}
-                </x-button>
+            <div class="my-5">
+                <button class="btn btn-primary d-block w-100 mt-3" type="submit">Password Reset</button>
             </div>
         </form>
-    </x-auth-card>
-</x-guest-layout>
+    </div>
+</div>
+@endsection
+
