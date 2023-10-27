@@ -228,8 +228,7 @@
     </main>
 
     <audio id="notifSound" allow="autoplay">
-        <source src="{{ url('/assets/audio/notifsound.ogg') }}" type="audio/ogg">
-        <source src="{{ url('/assets/audio/notifsound.mp3') }}" type="audio/mpeg">
+        <source src="{{ url('/assets/audio/notifsound2.mp3') }}" type="audio/mpeg">
     </audio>
 
 
@@ -332,7 +331,7 @@
             const noteOptions = {
                 body: payload.notification.body,
                 icon: payload.notification.icon,
-                sound: "127.0.0.1:8000/assets/audio/notifsound.mp3"
+                sound: "127.0.0.1:8000/assets/audio/notifsound2.mp3"
             };
             new Notification(noteTitle, noteOptions);
         });

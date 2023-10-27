@@ -84,6 +84,9 @@
                                     <div class="row gx-card mx-0 bg-200 text-900 fs--1 fw-semi-bold">
                                         <div class="col-9 col-md-8 py-2">List Barang</div>
                                     </div>
+                                    <div id="detailGoods">
+
+                                    </div>
                                     @foreach ($gigo->DetailGIGO as $good)
                                     <div class='row gx-card mx-0 align-items-center border-bottom border-200' id="good{{ $good->id }}">
                                         <div class='col-8 py-3'>
@@ -187,8 +190,9 @@
 
 <script>
     flatpickr("#date_request_gigo", {
-        dateFormat: "Y-m-d H;i",
+        dateFormat: "Y-m-d H:i",
         minDate: "today",
+        enableTime: true,
         altInput: true,
         altFormat: "F j, Y - H:i"
     });
@@ -288,6 +292,7 @@
 
     function detailGoods() {
         $('#detailGoods').html('');
+        console.log(goods);
         goods.map((item, i) => {
             $('#detailGoods').append(
                 `<div class='row gx-card mx-0 align-items-center border-bottom border-200'>

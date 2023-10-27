@@ -75,6 +75,8 @@ class OpenTicketController extends Controller
             $tickets = $tickets->where('priority', $request->priority);
         }
 
+        $tickets = $tickets->orderBy('id', 'DESC');
+
         $data['tickets'] = $tickets->get();
 
         return response()->json([
