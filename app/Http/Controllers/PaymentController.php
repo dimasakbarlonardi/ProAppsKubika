@@ -125,6 +125,14 @@ class PaymentController extends Controller
 
                         broadcast(new HelloEvent($dataNotif));
 
+                        $dataPayment = [
+                            'id_site' => $site->id_site,
+                            'id' => $cr->id,
+                            'status' => 'settlement',
+                        ];
+
+                        broadcast(new PaymentEvent($dataPayment));
+
                         break;
 
                     case ('MonthlyTenant'):
@@ -136,6 +144,14 @@ class PaymentController extends Controller
                             $bill->tgl_bayar_invoice = Carbon::now();
                             $bill->save();
                         }
+
+                        $dataPayment = [
+                            'id_site' => $site->id_site,
+                            'id' => $cr->id,
+                            'status' => 'settlement',
+                        ];
+
+                        broadcast(new PaymentEvent($dataPayment));
 
                         break;
                 }
