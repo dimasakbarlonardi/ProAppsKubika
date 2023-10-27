@@ -114,7 +114,7 @@ class PaymentController extends Controller
 
                         $dataNotif = [
                             'models' => 'Reservation',
-                            'notif_title' => $cr->Reservation->no_reservation,
+                            'notif_title' => $cr->Reservation->no_request_reservation,
                             'id_data' => $cr->Reservation->id,
                             'sender' => $cr->Reservation->Ticket->Tenant->User->id_user,
                             'division_receiver' => 1,

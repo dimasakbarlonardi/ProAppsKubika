@@ -79,6 +79,8 @@ class ReservationController extends Controller
         $rsv = $connReqRev->whereDate('waktu_mulai', $startdate)
             ->whereBetween('waktu_mulai', [$startdatetime, $enddatetime])
             ->orWhereBetween('waktu_akhir', [$startdatetime, $enddatetime])
+            ->where('id_ruang_reservation', $request->id_ruang_reservation)
+            ->where('id_jenis_acara', $request->id_jenis_acara)
             ->get(['id', 'waktu_mulai', 'waktu_akhir']);
 
         return response()->json(['data' => $rsv]);
@@ -250,7 +252,7 @@ class ReservationController extends Controller
                 $rsv->status_bayar = 'PAID';
             } else {
                 $dataNotif = [
-                    'models' => 'PaymentReservation',
+                    'models' => 'Reservation',
                     'notif_title' => $rsv->no_request_reservation,
                     'id_data' => $rsv->id,
                     'sender' => $request->session()->get('user')->id_user,
@@ -322,10 +324,13 @@ class ReservationController extends Controller
             $createTransaction->transaction_type = 'Reservation';
             $createTransaction->save();
 
+            $rsv->Ticket->no_invoice = $no_invoice;
+            $rsv->Ticket->save();
+
             $system->sequence_no_cash_receiptment = $countCR;
             $system->sequence_no_invoice = $count;
-
             $system->save();
+
             $dataNotif = [
                 'models' => 'PaymentReservation',
                 'notif_title' => $createTransaction->no_invoice,
@@ -528,7 +533,6 @@ class ReservationController extends Controller
         $connTransaction = ConnectionDB::setConnection(new CashReceipt());
         $connRSV = ConnectionDB::setConnection(new Reservation());
 
-        $mt = $connRSV->find($rsv);
         $transaction = $connTransaction->find($id);
 
         $data['rsv'] = $rsv;
