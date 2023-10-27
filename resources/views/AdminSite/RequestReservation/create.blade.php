@@ -46,12 +46,9 @@
                                     <label class="mb-1">Durasi Acara</label>
                                     <div class="input-group">
                                         <input class="form-control" id="durasi_acara" name="durasi_acara" type="number">
-                                        <select class="form-control" name="satuan_durasi_acara">
-                                            <option value="Jam">
+                                        <select class="form-control" name="satuan_durasi_acara" readonly>
+                                            <option selected value="Jam">
                                                 <span class="input-group-text">Jam</span>
-                                            </option>
-                                            <option value="Hari">
-                                                <span class="input-group-text">Hari</span>
                                             </option>
                                         </select>
                                     </div>
@@ -68,9 +65,8 @@
                                 </div>
                                 <div class="col-6">
                                     <label class="mb-1">Waktu acara berakhir</label>
-                                    <input class="form-control datetimepicker" name="waktu_akhir" id="timeEndEvent"
-                                        type="text" placeholder="Hour : Minute"
-                                        data-options='{"enableTime":true,"dateFormat":"Y-m-d H:i","disableMobile":false}' />
+                                    <input class="form-control" name="waktu_akhir" readonly type="text"
+                                        placeholder="Hour : Minute" id="timeEndEvent" />
                                 </div>
                             </div>
                         </div>
@@ -134,7 +130,8 @@
                             <select name="no_tiket" class="form-select form-select-sm" id="select_ticket">
                                 <option disabled selected>-- Select request ---</option>
                                 @foreach ($tickets as $ticket)
-                                    <option {{ isset($id_tiket) ? ($id_tiket == $ticket->id ? 'selected' : '') : '' }} value="{{ $ticket->id }}">{{ $ticket->no_tiket }}</option>
+                                    <option {{ isset($id_tiket) ? ($id_tiket == $ticket->id ? 'selected' : '') : '' }}
+                                        value="{{ $ticket->id }}">{{ $ticket->no_tiket }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -183,12 +180,32 @@
             dateFormat: "H:i",
         });
 
-        flatpickr("#timeEndEvent", {
-            enableTime: true,
-            noCalendar: true,
-            dateFormat: "H:i",
-        });
+        $('#timeStartEvent').on('change', function() {
+            var durasiAcara = $('#durasi_acara').val();
+            var requestDate = $('#startDateReservation').val();
+            var startEvent = $(this).val();
 
+            setEndEvent(requestDate, startEvent, durasiAcara)
+        })
+
+        $('#durasi_acara').on('change', function() {
+            var requestDate = $('#startDateReservation').val();
+            var startEvent = $('#timeStartEvent').val();
+            var durasiAcara = $(this).val();
+
+            setEndEvent(requestDate, startEvent, durasiAcara)
+        })
+
+        function setEndEvent(requestDate, startEvent, durasiAcara) {
+            var setDate = new Date(requestDate + ' ' + startEvent);
+
+            newDate = setDate.setHours(setDate.getHours() + parseInt(durasiAcara));
+            newDate = new Date(newDate)
+
+            var endEvent = newDate.getHours() + ':' + (newDate.getMinutes() < 10 ? '0' : '') + newDate.getMinutes();
+            console.log(requestDate, startEvent, durasiAcara, newDate, endEvent);
+            $('#timeEndEvent').val(endEvent);
+        }
 
         tinyMCE.init({
             selector: 'textarea#keterangan_reservation',

@@ -108,7 +108,7 @@
                                                 case 'VERIFYING':
                                                     echo '<span class="badge bg-info">Verifying</span>';
                                                     break;
-                                                case 'PAYED':
+                                                case 'PAID':
                                                     echo '<span class="badge bg-success">PAID</span>';
                                                     break;
 

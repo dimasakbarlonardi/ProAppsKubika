@@ -105,8 +105,8 @@
                                             <label class="mb-1">Admin Fee</label>
                                             <div class="input-group flex-nowrap">
                                                 <span class="input-group-text" id="addon-wrapping">Rp</span>
-                                                <input class="form-control"
-                                                    value="{{ $reservation->CashReceipt->admin_fee }}" name="jumlah_deposit"
+                                                <input style="text-align: right" class="form-control"
+                                                    value="{{ number_format($reservation->CashReceipt->admin_fee, 0, ',', '.') }}" name="jumlah_deposit"
                                                     disabled />
                                             </div>
                                         </div>
@@ -114,8 +114,8 @@
                                             <label class="mb-1">Grand Total</label>
                                             <div class="input-group flex-nowrap">
                                                 <span class="input-group-text" id="addon-wrapping">Rp</span>
-                                                <input class="form-control"
-                                                    value="{{ $reservation->CashReceipt->gross_amount }}"
+                                                <input style="text-align: right" class="form-control"
+                                                    value="{{ number_format($reservation->CashReceipt->gross_amount, 0, ',', '.') }}"
                                                     name="jumlah_deposit" disabled />
                                             </div>
                                         </div>

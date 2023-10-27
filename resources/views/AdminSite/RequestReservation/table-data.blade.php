@@ -12,7 +12,7 @@
     <tbody>
         @foreach ($reservations as $key => $req)
             <tr>
-                <th scope="row">{{ $key + 1 }}</th>
+                <th scope="row" class="align-middle">{{ $key + 1 }}</th>
                 <td class="align-middle">{{ $req->no_tiket }}</td>
                 <td class="align-middle">{{ $req->no_request_reservation }}</td>
                 <td class="align-middle">{{ $req->Ticket->Tenant->nama_tenant }}</td>
@@ -39,16 +39,20 @@
                 <td class="text-center">
                     <a href="{{ route('request-reservations.show', $req->id) }}"
                         class="btn btn-sm btn-warning mb-2">View</a>
+
                     @if (
                         $req->sign_approval_3 &&
-                            $req->Ticket->status_request != 'DONE' &&
-                            $req->Ticket->status_request != 'COMPLETE' &&
-                            Request::session()->get('work_relation_id') == 1)
-                        <form action="{{ route('rsvDone', $req->id) }}" method="post">
-                            @csrf
-                            <button type="submit" class="btn btn-primary btn-sm w-100">Acara
-                                Selesai</button>
-                        </form>
+                        $req->Ticket->status_request != 'DONE' &&
+                        $req->Ticket->status_request != 'COMPLETE' &&
+                        Request::session()->get('work_relation_id') == 1
+                        )
+                        @if ($req->is_deposit && $req->status_bayar == 'PAID' || !$req->is_deposit && $req->status_bayar == 'PAID')
+                            <form action="{{ route('rsvDone', $req->id) }}" method="post">
+                                @csrf
+                                <button type="submit" class="btn btn-primary btn-sm w-100">Acara
+                                    Selesai</button>
+                            </form>
+                        @endif
                     @endif
                 </td>
             </tr>
