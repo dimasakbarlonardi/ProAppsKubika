@@ -40,8 +40,8 @@
                     <div class="card-body">
                         <div class="card-body p-0">
                             <div class="row gx-card mx-0 bg-200 text-900 fs--1 fw-semi-bold">
-                                <div class="col-9 col-md-8 py-2">Detil Pekerjaan</div>
-                                <div class="col-3 col-md-4 py-2 text-end">Detil Biaya Alat</div>
+                                <div class="col-9 col-md-8 py-2">Detail Pekerjaan</div>
+                                <div class="col-3 col-md-4 py-2 text-end">Detail Biaya Alat</div>
                             </div>
                             @foreach ($wo->WODetail as $wod)
                                 <div class="row gx-card mx-0 border-bottom border-200">

@@ -2,18 +2,16 @@
 
 @section('content')
     <div class="card">
-        <div class="card-header py-2">
-            <div class="row flex-between-center">
-                <div class="my-3 col-auto">
-                    <nav aria-label="breadcrumb">
-                        <ol class="my-3 breadcrumb">
-                            <li class="breadcrumb-item text-white"> <a href="{{ route('checklistahus.index')}}" class="text-white"> List Check List AHU </a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Edit Equipment Engineering</li>
-                        </ol>
-                    </nav>
-                </div>
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <a href="{{ route('checklistahus.index') }}" class="btn btn-falcon-default btn-sm">
+                    <i class="fas fa-arrow-left"></i> Back
+                </a>
+                <div class="ml-3">Edit Equipment Engineering</div>
             </div>
         </div>
+    </div>
         <div class="p-5">
             <form method="post" action="{{ route('checklistahus.update', $equipmentengineering->id_equiqment_engineering) }}">
                 @method('PUT')

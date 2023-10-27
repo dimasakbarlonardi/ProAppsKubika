@@ -174,8 +174,10 @@ class GIGOController extends Controller
     public function show($id)
     {
         $conn = ConnectionDB::setConnection(new RequestGIGO());
+        $connApprove = ConnectionDB::setConnection(new Approve());
 
         $data['gigo'] = $conn->where('id', $id)->first();
+        $data['approve'] = $connApprove->find(8);
 
         return view('AdminSite.GIGO.show', $data);
     }

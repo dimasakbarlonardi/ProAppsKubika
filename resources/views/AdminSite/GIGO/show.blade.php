@@ -156,12 +156,6 @@
                                                 value="{{ $gigo->status_request ? $gigo->status_request : 'PROSES' }}">
                                         </div>
                                     </div>
-                                    {{-- @if (!$gigo->sign_approval_1)
-                                        <div class="card-footer border-top border-200 py-x1" id="gigoSubmit"
-                                            style="display: none">
-                                            <button type="submit" class="btn btn-primary w-100">Submit</button>
-                                        </div>
-                                    @endif --}}
 
                                     {{-- @if (
                                     !$gigo->sign_approval_1 &&

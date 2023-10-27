@@ -15,11 +15,7 @@
                 <div class="card-header position-relative min-vh-25 mb-8">
                     <div class="avatar avatar-5xl avatar-profile shadow-sm img-thumbnail rounded-circle">
                         <div class="h-100 w-100 rounded-circle overflow-hidden position-relative">
-                            <div id="image-container">
                                 <img id="newavatar" src="" width="200" alt="Upload Foto">
-                                <p id="image-text">Upload Foto</p>
-                            </div>
-
                             <input class="d-none" name="profile_picture" id="input-file" type="file">
                             <label class="mb-0 overlay-icon d-flex flex-center" for="input-file">
                                 <span class="bg-holder overlay overlay-0"></span>

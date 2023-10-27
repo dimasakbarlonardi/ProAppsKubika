@@ -187,6 +187,7 @@ class TenantController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $site = $request->user()->id_site;
         $connTenant = ConnectionDB::setConnection(new Tenant());
         $connTenant->where('id_tenant', $id)->update([
             'id_site' => $request->id_site,
@@ -209,6 +210,19 @@ class TenantController extends Controller
             'hubungan_penjamin' => $request->hubungan_penjamin,
             'no_telp_penjamin' => $request->no_telp_penjamin
         ]);
+
+        $file = $request->file('profile_picture');
+
+        if ($file) {
+            $fileName = $connTenant->id_tenant . '-' .   $file->getClientOriginalName();
+            $outputTenantImage = '/public/' . $site . '/img/profile_picture/' . $fileName;
+            $tenantImage = '/storage/' . $site . '/img/profile_picture/' . $fileName;
+
+            Storage::disk('local')->put($outputTenantImage, File::get($file));
+
+            $connTenant->profile_picture = $tenantImage;
+            $connTenant->save();
+        }
 
         Alert::success('Berhasil', 'Berhasil mengupdate tenant');
 

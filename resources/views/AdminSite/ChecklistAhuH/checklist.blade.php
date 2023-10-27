@@ -2,13 +2,16 @@
 
 @section('content')
     <div class="card">
-        <div class="card-header">
-            <div class="row flex-between-center">
-                <div class="col-auto">
-                    <h6 class="mb-0">Detail Parameter</h6>
-                </div>
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <a href="{{ route('checklistahus.index') }}" class="btn btn-falcon-default btn-sm">
+                    <i class="fas fa-arrow-left"></i> Back
+                </a>
+                <div class="ml-3">Detail Parameter</div>
             </div>
         </div>
+    </div>
         <div class="p-5">
             <form action="{{ route('checklistParameter', $id) }}" method="post">
                 @csrf

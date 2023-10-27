@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="card">
- 
+
     <div class="p-5">
         <form method="post" action="{{ route('tenants.update', $tenant->id_tenant) }}">
             @method('PUT')
@@ -13,11 +13,8 @@
                         <div class="card-header position-relative min-vh-25 mb-8">
                             <div class="avatar avatar-5xl avatar-profile shadow-sm img-thumbnail rounded-circle">
                                 <div class="h-100 w-100 rounded-circle overflow-hidden position-relative">
-                                    <div id="image-container">
-                                        <img id="newavatar" src="{{ $tenant->profile_picture }}" width="400" alt="Upload Foto">
-                                    </div>
-
-                                    <input class="d-none" value="{{ $tenant->profile_picture }}" name="profile_picture" id="input-file" type="file">
+                                    <img id="newavatar" src="{{ $tenant->profile_picture }}" width="200" alt="Upload Foto">
+                                    <input class="d-none" name="profile_picture" id="input-file" type="file">
                                     <label class="mb-0 overlay-icon d-flex flex-center" for="input-file">
                                         <span class="bg-holder overlay overlay-0"></span>
                                         <span class="z-1 text-white dark__text-white text-center fs--1">
@@ -32,6 +29,7 @@
                     </div>
                 </div>
             </div>
+
 
             <div class="row">
                 <div class="col-6 mb-4">
@@ -133,4 +131,46 @@
     </form>
 </div>
 </div>
+@endsection
+
+
+@section('script')
+<script>
+    $('#input-file').change(function() {
+        const file = this.files[0];
+        console.log(file);
+        if (file) {
+            let reader = new FileReader();
+            reader.onload = function(event) {
+                console.log(event.target.result);
+                $('#newavatar').attr('src', event.target.result);
+            }
+            reader.readAsDataURL(file);
+        }
+    });
+
+    $(document).ready(function() {
+        // var status = $('#id_status_kawin').val();
+
+        // if (status == 1) {
+        //     $('#penjamin').css('display', 'none')
+        //     $('#pasangan').css('display', 'block')
+        // } else {
+        //     $('#penjamin').css('display', 'block')
+        //     $('#pasangan').css('display', 'none')
+        // }
+
+        // $('#id_status_kawin').on('change', function() {
+        //     var status = $(this).val();
+
+        //     if (status == 1) {
+        //         $('#penjamin').css('display', 'block')
+        //         $('#pasangan').css('display', 'none')
+        //     } else {
+        //         $('#penjamin').css('display', 'none')
+        //         $('#pasangan').css('display', 'block')
+        //     }
+        // })
+    })
+</script>
 @endsection

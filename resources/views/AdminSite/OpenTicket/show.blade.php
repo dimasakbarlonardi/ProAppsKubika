@@ -100,7 +100,6 @@
                 </div>
             </div>
         </div>
-<<<<<<< HEAD
     </div>
     @if ($user->user_category == 2)
     <div class="col-3">
@@ -110,85 +109,6 @@
                 @method('PUT')
                 <div class="card-header">
                     <h6 class="mb-0">Properties</h6>
-=======
-        @if ($user->user_category == 2)
-            <div class="col-3">
-                <div class="card">
-                    <form action="{{ route('open-tickets.update', $ticket->id) }}" method="post">
-                        @csrf
-                        @method('PUT')
-                        <div class="card-header">
-                            <h6 class="mb-0">Properties</h6>
-                        </div>
-                        <div class="card-body">
-                            <div class="mb-2 mt-n2"><label class="mb-1">Jenis Request</label>
-                                <select name="id_jenis_request" class="form-select form-select-sm"
-                                    {{ $ticket->status_request != 'RESPONDED' ? 'disabled' : '' }}>
-                                    <option disabled selected>--Pilih Jenis Request---</option>
-                                    @foreach ($jenis_requests as $request)
-                                        <option
-                                            {{ $ticket->id_jenis_request == $request->id_jenis_request ? 'selected' : '' }}
-                                            value="{{ $request->id_jenis_request }}">
-                                            {{ $request->jenis_request }}</option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            @if (
-                                ($ticket->status_request != 'PENDING' || $ticket->status_request == 'RESPONDED') &&
-                                    $ticket->status_request != 'COMPLETE')
-                                <div class="mb-2">
-                                    <label class="mb-1 mt-2">Status</label>
-                                    <select name="status_request" class="form-select form-select-sm"
-                                        {{ $ticket->status_request != 'RESPONDED' ? 'disabled' : '' }}>
-                                        <option disabled selected>--Pilih Status---</option>
-                                        <option {{ $ticket->status_request == 'PROSES KE WR' ? 'selected' : '' }}
-                                            value="PROSES KE WR">Proses ke WR</option>
-                                        <option {{ $ticket->status_request == 'PROSES KE PERMIT' ? 'selected' : '' }}
-                                            value="PROSES KE PERMIT">Proses ke Permit</option>
-                                        <option {{ $ticket->status_request == 'PROSES KE RESERVASI' ? 'selected' : '' }}
-                                            value="PROSES KE RESERVASI">Proses ke Reservasi</option>
-                                        <option {{ $ticket->status_request == 'PROSES KE GIGO' ? 'selected' : '' }}
-                                            value="PROSES KE GIGO">Proses ke GIGO</option>
-                                        <option {{ $ticket->status_request == 'DONE' ? 'selected' : '' }} value="DONE">
-                                            DONE</option>
-                                    </select>
-                                </div>
-                                <div class="mb-2">
-                                    <label class="mb-1 mt-2">Priority</label>
-                                    <select name="priority" class="form-select form-select-sm"
-                                        {{ $ticket->status_request != 'RESPONDED' ? 'disabled' : '' }}>
-                                        <option disabled selected>--Pilih Prioritas---</option>
-                                        @foreach ($work_priorities as $priority)
-                                            <option {{ $ticket->priority == $priority->work_priority ? 'selected' : '' }}
-                                                value="{{ $priority->work_priority }}">{{ $priority->work_priority }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            @elseif ($ticket->status_request == 'COMPLETE')
-                                <div class="mb-3">
-                                    <div class="mb-2"><label class="mb-1 mt-2">Status</label>
-                                        <input type="text" value="{{ $ticket->status_request }}" class="form-control"
-                                            disabled>
-                                    </div>
-                            @endif
-                        </div>
-                        @if ($ticket->status_request == 'RESPONDED')
-                            <div class="card-footer border-top border-200 py-x1">
-                                <button class="btn btn-primary w-100">Update</button>
-                            </div>
-                        @endif
-                        @if ($ticket->status_request == 'PROSES KE WR')
-                            <div class="card-footer border-top border-200 py-x1">
-                                <a href="{{ route('work-requests.create', ['id_tiket' => $ticket->id]) }}" class="btn btn-primary w-100">Create Work Request</a>
-                            </div>
-                        @endif
-                        @if ($ticket->status_request == 'PROSES KE PERMIT')
-                            <div class="card-footer border-top border-200 py-x1">
-                                <a href="{{ route('request-permits.create', ['id_tiket' => $ticket->id]) }}" class="btn btn-primary w-100">Create Work Permit</a>
-                            </div>
-                        @endif
-                    </form>
->>>>>>> 121ce1783c6cc67a462a61f7a57989a5523bdd61
                 </div>
                 <div class="card-body">
                     <div class="mb-2 mt-n2"><label class="mb-1">Jenis Request</label>

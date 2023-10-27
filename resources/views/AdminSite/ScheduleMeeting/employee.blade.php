@@ -1,19 +1,22 @@
 @extends('layouts.master')
 
 @section('css')
-    <link rel="stylesheet" href="{{ asset('assets/vendors/flatpickr/flatpickr.min.css') }}">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="{{ asset('assets/vendors/flatpickr/flatpickr.min.css') }}">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
 @endsection
 
 @section('content')
 <div class="card">
-    <div class="card-header py-2">
-        <div class="row flex-between-center">
-            <div class="my-3 col-auto">
-                @if(isset($employee[0])) 
-                    <h6 class="mb-0 text-white">List Participants {{ $employee[0]->Meeting->meeting }}</h6>
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <a href="{{ route('schedulemeeting.index') }}" class="btn btn-falcon-default btn-sm">
+                    <i class="fas fa-arrow-left"></i> Back
+                </a>
+                @if(isset($employee[0]))
+                <h6 class="mb-0 text-white ml-3">List Participants {{ $employee[0]->Meeting->meeting }}</h6>
                 @else
-                    <h6 class="mb-0 text-white">List Participants</h6>
+                <h6 class="mb-0 text-white">List Participants</h6>
                 @endif
             </div>
         </div>
@@ -29,11 +32,11 @@
             </thead>
             <tbody id="checklist_body">
                 @foreach ($employee as $key => $meeting)
-                    <tr>
-                        <th scope="row">{{ $key + 1 }}</th>
-                        <td> {{ $meeting->Karyawan->nama_karyawan }}</td>
-                        <td> {{ $meeting->Karyawan->Divisi->nama_divisi}}</td>
-                        <!-- <td>
+                <tr>
+                    <th scope="row">{{ $key + 1 }}</th>
+                    <td> {{ $meeting->Karyawan->nama_karyawan }}</td>
+                    <td> {{ $meeting->Karyawan->Divisi->nama_divisi}}</td>
+                    <!-- <td>
                             <a href="{{ route('shifttype.edit', $meeting->id) }}" class="btn btn-sm btn-warning"><span
                                     class="fas fa-pencil-alt fs--2 me-1"></span>Edit</a>
                             <form class="d-inline" action="{{ route('shifttype.destroy', $meeting->id) }}" method="post">
@@ -44,7 +47,7 @@
                                         class="fas fa-trash-alt fs--2 me-1"></span>Hapus</button>
                             </form>
                         </td> -->
-                    </tr>
+                </tr>
                 @endforeach
             </tbody>
         </table>

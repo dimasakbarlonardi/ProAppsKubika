@@ -6,13 +6,16 @@
 
 @section('content')
     <div class="card">
-        <div class="card-header py-2">
-            <div class="row flex-between-center">
-                <div class="my-3 col-auto">
-                    <h6 class="my-3 text-light">List Inspection HouseKeeping</h6>
-                </div>
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+                <a href="{{ route('checklisttoilets.index') }}" class="btn btn-falcon-default btn-sm">
+                    <i class="fas fa-arrow-left"></i> Back
+                </a>
+                <div class="ml-3">List Inspection HouseKeeping</div>
             </div>
         </div>
+    </div>
         <div class="p-5">
             <div class="row">
                 <div class="p-5">
