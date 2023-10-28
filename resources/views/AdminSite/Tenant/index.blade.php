@@ -76,14 +76,6 @@
                                 @endforeach
                             </select>
                         </div>
-                        <div class="mb-3 mt-n2">
-                            <label class="mb-1">Status</label>
-                            <select class="form-select form-select-sm" id="select-status">
-                                <option value="all">All</option>
-                                <option value="1">PEMILIK</option>
-                                <option value="0">PENYEWA</option>
-                            </select>
-                        </div>
                     </div>
                 </div>
             </div>
@@ -104,7 +96,7 @@
         $('#select-tower').on('change', function() {
             var tower = $(this).val();
             var status = $('#select_status').val();
-
+            console.log(tower, status)
             getData(tower, status)
         });
 
