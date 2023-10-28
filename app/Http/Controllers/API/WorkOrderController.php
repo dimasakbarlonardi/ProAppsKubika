@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Events\HelloEvent;
 use Carbon\Carbon;
 use App\Models\Site;
 use Midtrans\CoreApi;
@@ -36,7 +37,7 @@ class WorkOrderController extends Controller
         );
     }
 
-    public function acceptWO($id)
+    public function acceptWO($id, Request $request)
     {
         $connWorkOrder = ConnectionDB::setConnection(new WorkOrder());
 
@@ -47,9 +48,17 @@ class WorkOrderController extends Controller
         $wo->date_approve_1 = Carbon::now();
         $wo->save();
 
-        $createTransaction = $this->createTransaction($wo);
+        $dataNotif = [
+            'models' => 'WorkOrderM',
+            'notif_title' => $wo->no_work_order,
+            'id_data' => $wo->id,
+            'sender' => $request->session()->get('user')->id_user,
+            'division_receiver' => $wo->WorkRequest->id_work_relation,
+            'notif_message' => 'Work order telah di terima, terima kasih..',
+            'receiver' => null,
+        ];
 
-        HelpNotifikasi::paymentWO($id, $createTransaction);
+        broadcast(new HelloEvent($dataNotif));
 
         return ResponseFormatter::success(
             $wo,
