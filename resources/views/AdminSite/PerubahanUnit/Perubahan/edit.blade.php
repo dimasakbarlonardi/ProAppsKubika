@@ -38,29 +38,6 @@
                                 @endforeach
                             </select>
                         </div>
-
-                        {{-- <div class="col-6 mb-3">
-                        <label class="form-label">Unit</label>
-                        <input type="text" value="{{ $tenantunit->unit->nama_unit}}" class="form-control" readonly>
-                    </div> --}}
-                        {{-- <div class="col-6">
-                        <label class="form-label">Unit :</label>
-                        <select class="form-control" name="id_unit" required>
-                            <option selected disabled>-- Pilih Unit --</option>
-                            @foreach ($getCreateUnits as $unit)
-                                <option value="{{ $unit->id_unit }}">{{ $unit->nama_unit }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div class="col-6">
-                        <label class="col-form-label">Owner :</label>
-                        <select class="form-control" name="id_pemilik" required>
-                            @foreach ($owners as $owner)
-                                <option value="{{ $owner->id_pemilik }}">
-                                    {{ $owner->nama_pemilik }}</option>
-                            @endforeach
-                        </select>
-                    </div> --}}
                         <div class="row">
                             <div class="col-6 mb-3">
                                 <label class="col-form-label">Periode

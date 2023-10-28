@@ -211,6 +211,7 @@ Route::prefix('admin')->group(function () {
 
         // CRUD Tenant
         Route::resource('tenants', TenantController::class);
+        Route::get('/filter-tenants/get-filter-data', [TenantController::class, 'filteredData']);
 
         // CRUD TenantUnit
         Route::resource('tenantunits', TenantUnitController::class);

@@ -40,9 +40,43 @@ class TenantController extends Controller
         return view('AdminSite.Tenant.index', $data);
     }
 
-    public function filteredDate(Request $request)
+    public function filteredData(Request $request)
     {
+        $connTenant = ConnectionDB::setConnection(new Tenant());
 
+        $tenants = $connTenant->where('deleted_at', null)->with('TenantUnit.Unit');
+        // if ($user->user_category == 3) {
+        //     $tenant = $connTenant->where('email_tenant', $user->login_user)->first();
+        //     $tickets = $connRequest->where('id_tenant', $tenant->id_tenant)->latest();
+        // } else {
+        //     $tickets = $connRequest->where('deleted_at', null);
+        // }
+
+        // if ($request->valueString) {
+        //     $valueString = $request->valueString;
+        //     $tickets = $tickets->where('judul_request', 'like', '%' . $valueString . '%')
+        //         ->orWhereHas('Tenant', function($q) use ($valueString) {
+        //             $q->where('nama_tenant', 'like', '%' . $valueString . '%');
+        //         })->orWhere('no_tiket', 'like', '%' . $valueString . '%');
+        // }
+
+        // if ($request->tower != 'all') {
+        //     $tenants = $tenants->where('id_jenis_request', $request->type);
+        // }
+        // if ($request->status != 'all') {
+        //     $tickets = $tickets->where('status_request', $request->status);
+        // }
+        // if ($request->priority != 'all') {
+        //     $tickets = $tickets->where('priority', $request->priority);
+        // }
+
+        // $tickets = $tickets->orderBy('id', 'DESC');
+
+        $data['tenants'] = $tenants->get();
+
+        return response()->json([
+            'html' => view('AdminSite.Tenant.table-data', $data)->render()
+        ]);
     }
 
     /**
@@ -256,6 +290,4 @@ class TenantController extends Controller
 
         return redirect()->route('tenants.index');
     }
-
-
 }
