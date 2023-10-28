@@ -46,6 +46,18 @@ class TenantUnit extends Model
         return $tu->Tenant;
     }
 
+    public function Penyewa($unitID)
+    {
+        $connTU = ConnectionDB::setConnection(new TenantUnit());
+
+        $tu = $connTU->where('id_unit', $unitID)
+        ->where('is_owner', 0)
+        ->with('Tenant')
+        ->first();
+
+        return $tu->Tenant;
+    }
+
     public function tenant()
     {
         return $this->hasOne(Tenant::class, 'id_tenant', 'id_tenant');
