@@ -31,8 +31,8 @@
                 @method('PUT')
                 @csrf
                 <div class="row">
-                    <div class="col-8">
-                        <div class="card" id="permit_detail">
+                    <div class="col-9">
+                        <div class="card">
                             <div class="card-header">
                                 <h6 class="mb-0">Detail GIGO</h6>
                             </div>
@@ -90,7 +90,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div id="ticket_permit" class="mt-3">
+                        <div class="mt-3">
                             <div class="card mt-2">
                                 <div class="card-body">
                                     <div class="card-body p-0">
@@ -134,7 +134,7 @@
                                                 </div>
                                             </div>
                                         @endforeach
-                                        @if (!$gigo->sign_approval_1 && !$gigo->gigo_type)
+                                        @if ((!$gigo->sign_approval_1 && !$gigo->gigo_type) || ($gigo->status_request == 'APPROVED' && $gigo->sign_approval_2 && $sysApprove->approval_2 == Request::session()->get('work_relation_id')))
                                             <div class="row gx-card mx-0">
                                                 <div class="col-8 py-3">
                                                     <label class="mb-1">Nama barang</label>

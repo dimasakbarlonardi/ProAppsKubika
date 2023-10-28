@@ -78,9 +78,8 @@
                                     <div class="row gx-card mx-0 bg-200 text-900 fs--1 fw-semi-bold">
                                         <div class="col-9 col-md-8 py-2">List Items</div>
                                     </div>
-                                    <div id="detailGoods">
-                                    </div>
                                     @foreach ($gigo->DetailGIGO as $good)
+                                        <hr>
                                         <div class="row gx-card mx-0">
                                             <div class="col-8 py-3">
                                                 <label class="mb-1">Name of Goods</label>
@@ -99,6 +98,33 @@
                                             </div>
                                         </div>
                                     @endforeach
+                                    <div id="detailGoods">
+                                    </div>
+                                    @if (
+                                        (!$gigo->sign_approval_1 && !$gigo->gigo_type) ||
+                                            ($gigo->status_request == 'APPROVED' &&
+                                                $gigo->sign_approval_2 &&
+                                                $approve->approval_2 == Request::session()->get('work_relation_id')))
+                                        <hr>
+                                        <div class="row gx-card mx-0">
+                                            <div class="col-8 py-3">
+                                                <label class="mb-1">Nama barang</label>
+                                                <input class="form-control" type="text" id="input_nama_barang">
+                                            </div>
+                                            <div class="col-4 mt-3">
+                                                <label class="mb-1">Jumlah barang</label>
+                                                <input class="form-control" type="number" id="jumlah_barang">
+                                            </div>
+                                            <div class="col-12 gx-card mx-0 mb-3">
+                                                <label class="mb-1">Keterangan</label>
+                                                <input class="form-control" type="text" id="keterangan">
+                                            </div>
+                                        </div>
+                                        <div class="text-end mr-5">
+                                            <button type="button" class="btn btn-primary mt-3"
+                                                onclick="onAddBarang({{ $gigo->id }})">Tambah</button>
+                                        </div>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -132,10 +158,7 @@
                                     $gigo->status_request != 'DONE' &&
                                     $approve->approval_2 == $user->RoleH->WorkRelation->id_work_relation &&
                                     $user->Karyawan->is_can_approve)
-                                <form action="{{ route('gigoDone', $gigo->id) }}" class="d-inline" method="post">
-                                    @csrf
-                                    <button class="btn btn-success btn-lg btn-block" type="submit">Done</button>
-                                </form>
+                                <button class="btn btn-success btn-lg btn-block" type="button" onclick="actionGigoDone({{ $gigo->id }})">Done</button>
                             @endif
                             @if ($gigo->status_request == 'DONE' && $approve->approval_3 == $user->id_user)
                                 <form action="{{ route('gigoComplete', $gigo->id) }}" class="d-inline" method="post">
@@ -167,14 +190,14 @@
 
         function onAddBarang(gigo_id) {
             var lastID = 0;
-            var namaBarang = $('#nama_barang').val();
+            var namaBarang = $('#input_nama_barang').val();
             var jumlahBarang = parseInt($('#jumlah_barang').val());
             var keterangan = $('#keterangan').val();
 
             lastID += 1;
 
             if (namaBarang !== '' && jumlahBarang !== null) {
-                $('#nama_barang').val('');
+                $('#input_nama_barang').val('');
                 $('#jumlah_barang').val('');
                 $('#keterangan').val('');
 
@@ -207,7 +230,9 @@
             $('#detailGoods').html('');
             goods.map((item, i) => {
                 $('#detailGoods').append(
-                    `<div class='row gx-card mx-0 align-items-center border-bottom border-200'>
+                    `
+                    <hr>
+                    <div class='row gx-card mx-0 align-items-center border-bottom border-200'>
                         <div class='col-8 py-3'>
                             <div class='d-flex align-items-center'>
                                 <div class='flex-1'>
@@ -251,6 +276,22 @@
                     if (resp.status === 'ok') {
                         $(`#good${id}`).html('');
                         window.location.reload()
+                    }
+                }
+            })
+        }
+
+        function actionGigoDone(id) {
+            $.ajax({
+                url: `/admin/gigo/done/${id}`,
+                type: 'POST',
+                success: function(data) {
+                    if (data.status === 'ok') {
+                        Swal.fire(
+                            'Success!',
+                            'Success approve GIGO!',
+                            'success'
+                        ).then(() => window.location.reload())
                     }
                 }
             })
