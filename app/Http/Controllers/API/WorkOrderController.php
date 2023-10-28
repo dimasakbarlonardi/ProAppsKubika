@@ -52,7 +52,7 @@ class WorkOrderController extends Controller
             'models' => 'WorkOrderM',
             'notif_title' => $wo->no_work_order,
             'id_data' => $wo->id,
-            'sender' => $request->session()->get('user')->id_user,
+            'sender' => $wo->Ticket->Tenant->User->id_user,
             'division_receiver' => $wo->WorkRequest->id_work_relation,
             'notif_message' => 'Work order telah di terima, terima kasih..',
             'receiver' => null,
