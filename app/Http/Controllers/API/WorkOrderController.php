@@ -102,55 +102,10 @@ class WorkOrderController extends Controller
     public function showBilling($id, Request $request)
     {
         $connCR = ConnectionDB::setConnection(new CashReceipt());
-        $site = Site::find($request->user()->id_site);
 
-        $cr = $connCR->find($id);
-
-        $object = new stdClass();
-
-        if ($cr->WorkOrder) {
-            $object->work_order_id = $cr->WorkOrder->id;
-            $object->tenant_name = $cr->WorkOrder->Ticket->Tenant->nama_tenant;
-            $object->tower = $cr->WorkOrder->Ticket->Unit->Tower->nama_tower;
-            $object->tower = $cr->WorkOrder->Ticket->Unit->nama_unit;
-            $object->tenant_email = $cr->WorkOrder->Ticket->Tenant->email_tenant;
-            $object->phone_number_tenant = $cr->WorkOrder->Ticket->Tenant->no_telp_tenant;
-
-            $request_details = [];
-            foreach ($cr->WorkOrder->WODetail as $itemWO) {
-                $item = new stdClass();
-                $item->billing = $itemWO->detil_pekerjaan;
-                $item->price = $itemWO->detil_biaya_alat;
-
-                $request_details[] = $item;
-            }
-
-            $object->request_details = $request_details;
-            $object->total = $cr->sub_total;
-        }
-        
-        if ($cr->Reservation) {
-            $object->reservation_id = $cr->Reservation->id;
-            $object->tenant_name = $cr->Reservation->Ticket->Tenant->nama_tenant;
-            $object->tower = $cr->Reservation->Ticket->Unit->Tower->nama_tower;
-            $object->tower = $cr->Reservation->Ticket->Unit->nama_unit;
-            $object->tenant_email = $cr->Reservation->Ticket->Tenant->email_tenant;
-            $object->phone_number_tenant = $cr->Reservation->Ticket->Tenant->no_telp_tenant;
-        }
-
-        $object->transaction_id = $cr->id;
-        $object->no_invoice = $cr->no_invoice;
-        $object->issued_date = $cr->created_at;
-        $object->site = $site->province;
-        $object->site = $site->kode_pos;
-        $object->bank = $cr->bank;
-        $object->transaction_status = $cr->transaction_status;
-        $object->payment_type = $cr->payment_type;
-        $object->va_number = $cr->va_number;
-        $object->expiry_time = $cr->expiry_time;
-        $object->admin_fee = $cr->admin_fee;
-        $object->gross_amount = $cr->gross_amount;
-        $object->tax = $cr->tax;
+        $cr = $connCR->where('id', $id)
+        ->with(['WorkOrder.WODetail', 'WorkOrder.Ticket.Tenant', 'WorkOrder.Ticket.Unit'])
+        ->first();
 
         return ResponseFormatter::success(
             $object,
@@ -273,7 +228,7 @@ class WorkOrderController extends Controller
                 $cr->save();
 
                 return ResponseFormatter::success(
-                    $response,
+                    $object,
                     'Authenticated'
                 );
             } elseif ($type == 'credit_card') {
