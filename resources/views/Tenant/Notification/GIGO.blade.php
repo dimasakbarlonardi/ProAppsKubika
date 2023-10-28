@@ -5,137 +5,155 @@
 @endsection
 
 @section('content')
-<div class="card">
-    <div class="card-header">
-        <div class="row">
-            <div class="col-md d-flex">
-                <div class="avatar avatar-2xl">
-                    <img class="rounded-circle" src="../../assets/img/team/1.jpg" alt="" />
+    <div class="card">
+        <div class="card-header">
+            <div class="row">
+                <div class="col-md d-flex">
+                    <div class="avatar avatar-2xl">
+                        <img class="rounded-circle" src="../../assets/img/team/1.jpg" alt="" />
+                    </div>
+                    <div class="flex-1 ms-2">
+                        <h5 class="mb-0 text-light">Women work wonders… on your marketing skills</h5><a
+                            class="text-800 fs--1" href="#!"><span class="fw-semi-bold text-light">Emma
+                                Watson</span>
+                            <span class="ms-1 text-light">&lt;emma@watson.com&gt;</span>
+                        </a>
+                    </div>
                 </div>
-                <div class="flex-1 ms-2">
-                    <h5 class="mb-0 text-light">Women work wonders… on your marketing skills</h5><a class="text-800 fs--1" href="#!"><span class="fw-semi-bold text-light">Emma
-                            Watson</span>
-                        <span class="ms-1 text-light">&lt;emma@watson.com&gt;</span>
-                    </a>
+                <div class="col-md-auto ms-auto d-flex align-items-center ps-6 ps-md-3">
+                    <small class="text-light">8:40 AM (9 hours
+                        ago)</small><span class="fas fa-star text-warning fs--1 ms-2"></span>
                 </div>
-            </div>
-            <div class="col-md-auto ms-auto d-flex align-items-center ps-6 ps-md-3">
-                <small class="text-light">8:40 AM (9 hours
-                    ago)</small><span class="fas fa-star text-warning fs--1 ms-2"></span>
             </div>
         </div>
-    </div>
-    <div class="card-body bg-light">
-        <form action="{{ route('gigo.update', $gigo->id) }}" method="post" class="d-inline" id="form-update-gigo">
-            @method('PUT')
-            @csrf
-            <div class="row">
-                <div class="col-8">
-                    <div class="card" id="permit_detail">
-                        <div class="card-header">
-                            <h6 class="mb-0">Detail GIGO</h6>
+        <div class="card-body bg-light">
+            <form action="{{ route('gigo.update', $gigo->id) }}" method="post" class="d-inline" id="form-update-gigo">
+                @method('PUT')
+                @csrf
+                <div class="row">
+                    <div class="col-8">
+                        <div class="card" id="permit_detail">
+                            <div class="card-header">
+                                <h6 class="mb-0">Detail GIGO</h6>
+                            </div>
+                            <div class="px-5">
+                                <div class="my-3">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <label class="form-label">No Tiket</label>
+                                            <input {{ $gigo->gigo_type ? 'disabled' : '' }} type="text"
+                                                class="form-control" value="{{ $gigo->Ticket->no_tiket }}" disabled>
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="form-label">No Request GIGO</label>
+                                            <input {{ $gigo->gigo_type ? 'disabled' : '' }} type="text"
+                                                class="form-control" value="{{ $gigo->no_request_gigo }}" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <label class="mb-1">Nama pembawa</label>
+                                            <input {{ $gigo->gigo_type ? 'disabled' : '' }} type="text" required
+                                                value="{{ $gigo->nama_pembawa ? $gigo->nama_pembawa : '' }}"
+                                                name="nama_pembawa" class="form-control" id="nama_pembawa" />
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="mb-1">No Polisi Pembawa</label>
+                                            <input {{ $gigo->gigo_type ? 'disabled' : '' }} type="text" required
+                                                value="{{ $gigo->no_pol_pembawa ? $gigo->no_pol_pembawa : '' }}"
+                                                name="no_pol_pembawa" class="form-control" id="no_pol_pembawa" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <label class="mb-1">Tanggal & Jam bawa barang</label>
+                                            <input {{ $gigo->gigo_type ? 'disabled' : '' }}
+                                                class="form-control datetimepicker" required
+                                                value="{{ $gigo->date_request_gigo ? $gigo->date_request_gigo : '' }}"
+                                                name="date_request_gigo" id="date_request_gigo" type="text"
+                                                placeholder="d/m/y H:i"
+                                                data-options='{"enableTime":true,"dateFormat":"Y-m-d H:i","disableMobile":true}' />
+                                        </div>
+                                        <div class="col-6">
+                                            <label class="mb-1">GIGO Type</label>
+                                            <select name="gigo_type" class="form-control" required
+                                                {{ $gigo->gigo_type ? 'disabled' : '' }} id="gigo_type">
+                                                <option value="In">In</option>
+                                                <option value="Out">Out</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="px-5">
-                            <div class="my-3">
-                                <div class="row">
-                                    <div class="col-6">
-                                        <label class="form-label">No Tiket</label>
-                                        <input {{ $gigo->gigo_type ? 'disabled' : '' }} type="text" class="form-control" value="{{ $gigo->Ticket->no_tiket }}" disabled>
-                                    </div>
-                                    <div class="col-6">
-                                        <label class="form-label">No Request GIGO</label>
-                                        <input {{ $gigo->gigo_type ? 'disabled' : '' }} type="text" class="form-control" value="{{ $gigo->no_request_gigo }}" disabled>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <div class="row">
-                                    <div class="col-6">
-                                        <label class="mb-1">Nama pembawa</label>
-                                        <input {{ $gigo->gigo_type ? 'disabled' : '' }} type="text" required value="{{ $gigo->nama_pembawa ? $gigo->nama_pembawa : '' }}" name="nama_pembawa" class="form-control" id="nama_pembawa" />
-                                    </div>
-                                    <div class="col-6">
-                                        <label class="mb-1">No Polisi Pembawa</label>
-                                        <input {{ $gigo->gigo_type ? 'disabled' : '' }} type="text" required value="{{ $gigo->no_pol_pembawa ? $gigo->no_pol_pembawa : '' }}" name="no_pol_pembawa" class="form-control" id="no_pol_pembawa" />
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <div class="row">
-                                    <div class="col-6">
-                                        <label class="mb-1">Tanggal & Jam bawa barang</label>
-                                        <input {{ $gigo->gigo_type ? 'disabled' : '' }} class="form-control datetimepicker" required value="{{ $gigo->date_request_gigo ? $gigo->date_request_gigo : '' }}" name="date_request_gigo" id="date_request_gigo" type="text" placeholder="d/m/y H:i" data-options='{"enableTime":true,"dateFormat":"Y-m-d H:i","disableMobile":true}' />
-                                    </div>
-                                    <div class="col-6">
-                                        <label class="mb-1">GIGO Type</label>
-                                        <select name="gigo_type" class="form-control" required {{ $gigo->gigo_type ? 'disabled' : '' }} id="gigo_type">
-                                            <option value="In">In</option>
-                                            <option value="Out">Out</option>
-                                        </select>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="ticket_permit" class="mt-3">
-                        <div class="card mt-2">
-                            <div class="card-body">
-                                <div class="card-body p-0">
-                                    <div class="row gx-card mx-0 bg-200 text-900 fs--1 fw-semi-bold">
-                                        <div class="col-9 col-md-8 py-2">List Barang</div>
-                                    </div>
-                                    <div id="detailGoods">
+                        <div id="ticket_permit" class="mt-3">
+                            <div class="card mt-2">
+                                <div class="card-body">
+                                    <div class="card-body p-0">
+                                        <div class="row gx-card mx-0 bg-200 text-900 fs--1 fw-semi-bold">
+                                            <div class="col-9 col-md-8 py-2">List Barang</div>
+                                        </div>
+                                        <div id="detailGoods">
 
-                                    </div>
-                                    @foreach ($gigo->DetailGIGO as $good)
-                                    <div class='row gx-card mx-0 align-items-center border-bottom border-200' id="good{{ $good->id }}">
-                                        <div class='col-8 py-3'>
-                                            <div class='d-flex align-items-center'>
-                                                <div class='flex-1'>
-                                                    <table>
-                                                        <tr>
-                                                            <td><b>Nama barang</b></td>
-                                                            <td class="mr-5">&ensp;:&ensp;</td>
-                                                            <td>{{ $good->nama_barang }}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td><b>Jumlah barang</b></td>
-                                                            <td class="mr-5">&ensp;:&ensp;</td>
-                                                            <td>{{ $good->jumlah_barang }}</td>
-                                                        </tr>
-                                                        <tr>
-                                                            <td><b>Keterangan barang</b></td>
-                                                            <td class="mr-5">&ensp;:&ensp;</td>
-                                                            <td>{{ $good->keterangan }}</td>
-                                                        </tr>
-                                                    </table>
-                                                    @if (!$gigo->sign_approval_1 && !$gigo->gigo_type)
-                                                    <div class='fs--2 fs-md--1'>
-                                                        <a class='text-danger' onclick='onRemoveGood({{ $good->id }})'>Remove</a>
+                                        </div>
+                                        @foreach ($gigo->DetailGIGO as $good)
+                                            <div class='row gx-card mx-0 align-items-center border-bottom border-200'
+                                                id="good{{ $good->id }}">
+                                                <div class='col-8 py-3'>
+                                                    <div class='d-flex align-items-center'>
+                                                        <div class='flex-1'>
+                                                            <table>
+                                                                <tr>
+                                                                    <td><b>Nama barang</b></td>
+                                                                    <td class="mr-5">&ensp;:&ensp;</td>
+                                                                    <td>{{ $good->nama_barang }}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>Jumlah barang</b></td>
+                                                                    <td class="mr-5">&ensp;:&ensp;</td>
+                                                                    <td>{{ $good->jumlah_barang }}</td>
+                                                                </tr>
+                                                                <tr>
+                                                                    <td><b>Keterangan barang</b></td>
+                                                                    <td class="mr-5">&ensp;:&ensp;</td>
+                                                                    <td>{{ $good->keterangan }}</td>
+                                                                </tr>
+                                                            </table>
+                                                            @if (!$gigo->sign_approval_1 && !$gigo->gigo_type)
+                                                                <div class='fs--2 fs-md--1'>
+                                                                    <a class='text-danger'
+                                                                        onclick='onRemoveGood({{ $good->id }})'>Remove</a>
+                                                                </div>
+                                                            @endif
+                                                        </div>
                                                     </div>
-                                                    @endif
                                                 </div>
                                             </div>
-                                        </div>
-                                    </div>
-                                    @endforeach
-                                    @if (!$gigo->sign_approval_1 && !$gigo->gigo_type)
-                                    <div class="row gx-card mx-0">
-                                        <div class="col-8 py-3">
-                                            <label class="mb-1">Nama barang</label>
-                                            <input class="form-control" type="text" id="nama_barang">
-                                        </div>
-                                        <div class="col-4 mt-3">
-                                            <label class="mb-1">Jumlah barang</label>
-                                            <input class="form-control" type="number" id="jumlah_barang">
-                                        </div>
-                                        <div class="col-12 gx-card mx-0 mb-3">
-                                            <label class="mb-1">Keterangan</label>
-                                            <input class="form-control" type="text" id="keterangan">
-                                        </div>
-                                    </div>
-                                    <div class="text-end mr-5">
-                                        <button type="button" class="btn btn-primary mt-3" onclick="onAddBarang({{ $gigo->id }})">Tambah</button>
+                                        @endforeach
+                                        @if (!$gigo->sign_approval_1 && !$gigo->gigo_type)
+                                            <div class="row gx-card mx-0">
+                                                <div class="col-8 py-3">
+                                                    <label class="mb-1">Nama barang</label>
+                                                    <input class="form-control" type="text" id="nama_barang">
+                                                </div>
+                                                <div class="col-4 mt-3">
+                                                    <label class="mb-1">Jumlah barang</label>
+                                                    <input class="form-control" type="number" id="jumlah_barang">
+                                                </div>
+                                                <div class="col-12 gx-card mx-0 mb-3">
+                                                    <label class="mb-1">Keterangan</label>
+                                                    <input class="form-control" type="text" id="keterangan">
+                                                </div>
+                                            </div>
+                                            <div class="text-end mr-5">
+                                                <button type="button" class="btn btn-primary mt-3"
+                                                    onclick="onAddBarang({{ $gigo->id }})">Tambah</button>
+                                            </div>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -153,6 +171,7 @@
                                         value="{{ $gigo->status_request ? $gigo->status_request : 'PROSES' }}">
                                 </div>
                             </div>
+
                             @if (!$gigo->sign_approval_1 && !$gigo->gigo_type)
                                 <div class="card-footer border-top border-200 py-x1" id="gigoSubmit"
                                     style="display: none">
@@ -175,6 +194,15 @@
                                         onclick="approve2({{ $gigo->id }})">Approve</button>
                                 </div>
                             @endif
+                            @if (
+                                $gigo->sign_approval_2 &&
+                                    $gigo->status_request != 'DONE' &&
+                                    $sysApprove->approval_2 == $user->RoleH->WorkRelation->id_work_relation &&
+                                    $user->Karyawan->is_can_approve)
+                                <div class="card-footer border-top border-200 py-x1">
+                                    <button onclick="actionGigoDone({{ $gigo->id }})" class="btn btn-success w-100" type="button">Done</button>
+                                </div>
+                            @endif
                             @if (!$gigo->sign_approval_3 && $gigo->status_request == 'DONE' && $user->id_user == $sysApprove->approval_3)
                                 <div class="card-footer border-top border-200 py-x1">
                                     <button type="button" id="gigoComplete" class="btn btn-primary w-100"
@@ -183,7 +211,6 @@
                             @endif
                         </div>
                     </div>
-                </div>
             </form>
         </div>
     </div>
@@ -192,14 +219,14 @@
 @section('script')
     <script src="{{ asset('assets/js/flatpickr.js') }}"></script>
 
-<script>
-    flatpickr("#date_request_gigo", {
-        dateFormat: "Y-m-d H:i",
-        minDate: "today",
-        enableTime: true,
-        altInput: true,
-        altFormat: "F j, Y - H:i"
-    });
+    <script>
+        flatpickr("#date_request_gigo", {
+            dateFormat: "Y-m-d H:i",
+            minDate: "today",
+            enableTime: true,
+            altInput: true,
+            altFormat: "F j, Y - H:i"
+        });
 
         var goods = [];
         var idGood = 0;
@@ -294,12 +321,12 @@
             }
         }
 
-    function detailGoods() {
-        $('#detailGoods').html('');
-        console.log(goods);
-        goods.map((item, i) => {
-            $('#detailGoods').append(
-                `<div class='row gx-card mx-0 align-items-center border-bottom border-200'>
+        function detailGoods() {
+            $('#detailGoods').html('');
+            console.log(goods);
+            goods.map((item, i) => {
+                $('#detailGoods').append(
+                    `<div class='row gx-card mx-0 align-items-center border-bottom border-200'>
                         <div class='col-8 py-3'>
                             <div class='d-flex align-items-center'>
                                 <div class='flex-1'>
@@ -367,6 +394,22 @@
         function approve2(id) {
             $.ajax({
                 url: `/admin/gigo/approve2/${id}`,
+                type: 'POST',
+                success: function(data) {
+                    if (data.status === 'ok') {
+                        Swal.fire(
+                            'Success!',
+                            'Success approve GIGO!',
+                            'success'
+                        ).then(() => window.location.reload())
+                    }
+                }
+            })
+        }
+
+        function actionGigoDone(id) {
+            $.ajax({
+                url: `/admin/gigo/done/${id}`,
                 type: 'POST',
                 success: function(data) {
                     if (data.status === 'ok') {

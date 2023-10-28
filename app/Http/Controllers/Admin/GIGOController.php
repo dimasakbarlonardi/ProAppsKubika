@@ -151,9 +151,7 @@ class GIGOController extends Controller
 
         broadcast(new HelloEvent($dataNotif));
 
-        Alert::success('Berhasil', 'Berhasil approve GIGO');
-
-        return redirect()->back();
+        return response()->json(['status' => 'ok']);
     }
 
     public function gigoComplete($id)
@@ -171,13 +169,14 @@ class GIGOController extends Controller
         return response()->json(['status' => 'ok']);
     }
 
-    public function show($id)
+    public function show($id, Request $request)
     {
         $conn = ConnectionDB::setConnection(new RequestGIGO());
         $connApprove = ConnectionDB::setConnection(new Approve());
 
         $data['gigo'] = $conn->where('id', $id)->first();
         $data['approve'] = $connApprove->find(8);
+        $data['user'] = $request->session()->get('user');
 
         return view('AdminSite.GIGO.show', $data);
     }
