@@ -103,7 +103,7 @@
                                                 </div>
                                             </div>
                                         @endforeach
-                                        @if (!$gigo->sign_approval_1 && !$gigo->gigo_type)
+                                        @if ((!$gigo->sign_approval_1 && !$gigo->gigo_type) || ($gigo->status_request == 'APPROVED' && $gigo->sign_approval_2 && $sysApprove->approval_2 == Request::session()->get('work_relation_id')))
                                             <div class="row gx-card mx-0">
                                                 <div class="col-8 py-3">
                                                     <label class="mb-1">Nama barang</label>
