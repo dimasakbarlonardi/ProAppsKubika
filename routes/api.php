@@ -102,6 +102,7 @@ Route::prefix('v1')->group(function () {
 
         // Inbox
         Route::get('/inboxes', [InboxController::class, 'index']);
+        Route::post('/inbox/{id}', [InboxController::class, 'read']);
 
         // GIGO
         Route::get('/gigo/{id}', [GIGOController::class, 'show']);

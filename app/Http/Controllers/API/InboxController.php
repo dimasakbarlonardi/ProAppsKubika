@@ -41,4 +41,16 @@ class InboxController extends Controller
             'Success get notifications'
         );
     }
+
+    public function read($id)
+    {
+        $connNotif = ConnectionDB::setConnection(new Notifikasi());
+
+        $notif = $connNotif->find($id);
+
+        $notif->is_read = 1;
+        $notif->save();
+
+        return response()->json(['status' => 'ok']);
+    }
 }
