@@ -54,7 +54,7 @@
                     <select name="id_unit" class="form-control" id="id_unit">
                         @if ($user->user_category != 2)
                         @foreach ($units as $unit)
-                        <option value="{{ $unit->unit->id_unit }}">{{ $unit->unit->nama_unit }}</option>
+                        <option value="{{ $unit->unit->id_unit }}">{{ $unit->unit->nama_unit }} - {{ $unit->unit->Tower->nama_tower }}</option>
                         @endforeach
                         @endif
                     </select>
