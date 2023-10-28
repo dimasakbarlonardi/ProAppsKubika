@@ -55,7 +55,7 @@ class TenantUnit extends Model
         ->with('Tenant')
         ->first();
 
-        return $tu->Tenant;
+        return $tu;
     }
 
     public function tenant()

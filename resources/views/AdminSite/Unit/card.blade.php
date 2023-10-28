@@ -19,8 +19,11 @@
                                         <span>{{ $unit->floor->nama_lantai }}</span>
                                     </a>
                                 </h6>
-                                Pemilik : {{ $unit->TenantUnit ? $unit->TenantUnit->Owner($unit->id_unit)->nama_tenant : '-' }} <br>
-                                Penyewa : {{ $unit->TenantUnit ? 'asd' : '-' }}
+                                Pemilik :
+                                {{ $unit->TenantUnit ? $unit->TenantUnit->Owner($unit->id_unit)->nama_tenant : '-' }}
+                                <br>
+                                Penyewa :
+                                {{ $unit->TenantUnit ? ($unit->TenantUnit->Penyewa($unit->id_unit) ? $unit->TenantUnit->Penyewa($unit->id_unit)->Tenant->nama_tenant : '-') : '-' }}
                             </div>
                         </div>
                     </div>
