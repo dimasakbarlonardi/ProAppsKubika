@@ -44,7 +44,9 @@ class TenantController extends Controller
     {
         $connTenant = ConnectionDB::setConnection(new Tenant());
 
-        $tenants = $connTenant->where('deleted_at', null);
+        $tenants = $connTenant->where('deleted_at', null)->whereHas('TenantUnit', function($q) {
+            $q->where('is_owner', true);
+        });
         // if ($user->user_category == 3) {
         //     $tenant = $connTenant->where('email_tenant', $user->login_user)->first();
         //     $tickets = $connRequest->where('id_tenant', $tenant->id_tenant)->latest();
@@ -62,15 +64,9 @@ class TenantController extends Controller
 
         if ($request->tower != 'all') {
             $tower_id = $request->tower;
-            $tenants = $tenants->whereHas('TenantUnit.Unit.Tower', function($q) use ($tower_id) {
+
+            $tenants = $tenants->whereHas('TenantUnit.Unit.Tower', function ($q) use ($tower_id) {
                 $q->where('id_tower', $tower_id);
-            });
-        }
-        if ($request->status != 'all') {
-            $status = $request->status;
-            $tenants = $tenants->whereHas('TenantUnit', function($q) use($status) {
-                $q->where('is_owner', $status);
-                dd($q);
             });
         }
         // if ($request->priority != 'all') {
@@ -78,7 +74,7 @@ class TenantController extends Controller
         // }
 
         // $tickets = $tickets->orderBy('id', 'DESC');
-
+        // dd($tenants->get());
         $data['tenants'] = $tenants->get();
 
         return response()->json([

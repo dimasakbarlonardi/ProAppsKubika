@@ -22,9 +22,12 @@
                 <td>
                     @if (count($tenant->TenantUnit) > 0)
                         @foreach ($tenant->TenantUnit as $tu)
-                            @foreach ($tu->Unit as $unit)
-                                {{ $unit->nama_unit }} - {{ $unit->Tower->nama_tower }} <br>
-                            @endforeach
+                            @if ($tu->is_owner)
+                                <span class="badge bg-info mb-2">Pemilik</span>
+                            @else
+                                <span class="badge bg-warning mb-2">Penyewa</span>
+                            @endif
+                            {{ $tu->Unit->nama_unit }} - {{ $tu->Unit->Tower->nama_tower }} <br>
                         @endforeach
                     @endif
                 </td>

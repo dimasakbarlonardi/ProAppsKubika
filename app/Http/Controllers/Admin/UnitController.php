@@ -28,13 +28,11 @@ class UnitController extends Controller
      */
     public function index(Request $request)
     {
-        $connUnit = ConnectionDB::setConnection(new Unit());
         $connTower = ConnectionDB::setConnection(new Tower());
         $connFloor = ConnectionDB::setConnection(new Floor());
 
         $data['floors'] = $connFloor->get();
         $data['towers'] = $connTower->get();
-        $data['units'] = $connUnit->get();
 
         return view('AdminSite.Unit.index', $data);
     }
