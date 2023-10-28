@@ -26,6 +26,7 @@ use RealRashid\SweetAlert\Facades\Alert;
 use Laravel\Sanctum\PersonalAccessToken;
 use Midtrans\CoreApi;
 use App\Models\Utility;
+use stdClass;
 use Throwable;
 
 class BillingController extends Controller
@@ -128,10 +129,23 @@ class BillingController extends Controller
                 $transaction->no_invoice = $mt->no_monthly_invoice;
                 $transaction->admin_fee = $admin_fee;
                 $transaction->transaction_status = 'VERIFYING';
+
+                $object = new stdClass();
+                $object->due_date = $transaction->expiry_time;
+                $object->va_number = $transaction->va_number;
+                $object->total_bill_request = $transaction->sub_total;
+                $object->admin_fee = $transaction->admin_fee;
+
+                $tax = (int) $transaction->gross_amount * 0.11;
+                $object->tax = $tax;
+                $object->gross_amount = $transaction->gross_amount + $tax;
+
+                $transaction->tax;
+                $transaction->gross_amount;
                 $transaction->save();
 
                 return ResponseFormatter::success(
-                    $response,
+                    $object,
                     'Authenticated'
                 );
             } elseif ($type == 'credit_card') {
