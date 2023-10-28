@@ -31,7 +31,7 @@ class TenantUnit extends Model
 
     public function Unit()
     {
-        return $this->hasMany(Unit::class, 'id_unit', 'id_unit');
+        return $this->hasOne(Unit::class, 'id_unit', 'id_unit');
     }
 
     public function Owner($unitID)
