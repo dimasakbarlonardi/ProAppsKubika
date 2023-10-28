@@ -16,7 +16,7 @@ use App\Helpers\HelpNotifikasi;
 use App\Helpers\ResponseFormatter;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
-
+use stdClass;
 
 class WorkOrderController extends Controller
 {
@@ -25,8 +25,8 @@ class WorkOrderController extends Controller
         $connWorkOrder = ConnectionDB::setConnection(new WorkOrder());
 
         $wo = $connWorkOrder->where('id', $id)
-        ->with(['Ticket.Tenant', 'WODetail', 'Ticket.CashReceipt', 'Ticket.Unit'])
-        ->first();
+            ->with(['Ticket.Tenant', 'WODetail', 'Ticket.CashReceipt', 'Ticket.Unit'])
+            ->first();
         $wo->Ticket->deskripsi_request = strip_tags($wo->Ticket->deskripsi_request);
         $wo->Ticket->deskripsi_respon = strip_tags($wo->Ticket->deskripsi_respon);
 
@@ -57,16 +57,42 @@ class WorkOrderController extends Controller
         );
     }
 
-    public function showBilling($id)
+    public function showBilling($id, Request $request)
     {
         $connCR = ConnectionDB::setConnection(new CashReceipt());
+        $site = Site::find($request->user()->id_site);
 
         $cr = $connCR->where('id', $id)
-        ->with(['WorkOrder.WODetail', 'WorkOrder.Ticket.Tenant', 'WorkOrder.Ticket.Unit'])
-        ->first();
+            ->with(['WorkOrder.WODetail', 'WorkOrder.Ticket.Tenant', 'WorkOrder.Ticket.Unit'])
+            ->first();
+
+        $object = new stdClass();
+        $object->work_order_id = $cr->WorkOrder->id;
+        $object->transaction_id = $cr->id;
+        $object->no_invoice = $cr->no_invoice;
+        $object->issued_date = $cr->created_at;
+        $object->tenant_name = $cr->WorkOrder->Ticket->Tenant->nama_tenant;
+        $object->tower = $cr->WorkOrder->Ticket->Unit->Tower->nama_tower;
+        $object->tower = $cr->WorkOrder->Ticket->Unit->nama_unit;
+        $object->site = $site->province;
+        $object->site = $site->kode_pos;
+        $object->tenant_email = $cr->WorkOrder->Ticket->Tenant->email_tenant;
+        $object->phone_number_tenant = $cr->WorkOrder->Ticket->Tenant->no_telp_tenant;
+
+        $request_details = [];
+        foreach ($cr->WorkOrder->WODetail as $itemWO) {
+            $item = new stdClass();
+            $item->billing = $itemWO->detil_pekerjaan;
+            $item->price = $itemWO->detil_biaya_alat;
+
+            $request_details[] = $item;
+        }
+
+        $object->request_details = $request_details;
+        $object->total = $cr->sub_total;
 
         return ResponseFormatter::success(
-            $cr,
+            $object,
             'Success get billing'
         );
     }
@@ -176,10 +202,23 @@ class WorkOrderController extends Controller
                 $transaction->expiry_time = $response->expiry_time;
                 $transaction->admin_fee = $admin_fee;
                 $transaction->transaction_status = 'VERIFYING';
+
+                $object = new stdClass();
+                $object->due_date = $transaction->expiry_time;
+                $object->va_number = $transaction->va_number;
+                $object->total_bill_request = $transaction->sub_total;
+                $object->admin_fee = $transaction->admin_fee;
+
+                $tax = (int) $transaction->gross_amount * 0.11;
+                $object->tax = $tax;
+                $object->gross_amount = $transaction->gross_amount + $tax;
+
+                $transaction->tax;
+                $transaction->gross_amount;
                 $transaction->save();
 
                 return ResponseFormatter::success(
-                    $response,
+                    $object,
                     'Authenticated'
                 );
             } elseif ($type == 'credit_card') {

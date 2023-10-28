@@ -30,6 +30,7 @@ class CashReceipt extends Model
         'payment_amounts',
         'merchant_id',
         'admin_fee',
+        'tax',
         'subtotal',
         'gross_amount',
         'fraud_status',
