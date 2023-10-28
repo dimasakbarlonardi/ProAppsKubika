@@ -39,9 +39,10 @@ class UnitController extends Controller
                 ->with('Unit')
                 ->get();
 
-            return ResponseFormatter::success([
-                'units' => $units
-            ], 'Berhasil mengambil units');
+            return ResponseFormatter::success(
+                $units,
+                'Berhasil mengambil units'
+            );
         } catch (Throwable $e) {
             return ResponseFormatter::error([
                 'message' => 'Tidak ada unit',
@@ -107,7 +108,7 @@ class UnitController extends Controller
             ->orderBy('tb_fin_monthly_utility.id', 'DESC')
             ->get();
 
-        foreach($data as $item) {
+        foreach ($data as $item) {
             $item['type'] = 'Water';
             $item['periode_bulan'] = $this->getMonthName($item->periode_bulan);
         }
@@ -129,7 +130,7 @@ class UnitController extends Controller
             ->orderBy('tb_fin_monthly_utility.id', 'DESC')
             ->get();
 
-        foreach($data as $item) {
+        foreach ($data as $item) {
             $item['type'] = 'Electric';
             $item['periode_bulan'] = $this->getMonthName($item->periode_bulan);
         }
