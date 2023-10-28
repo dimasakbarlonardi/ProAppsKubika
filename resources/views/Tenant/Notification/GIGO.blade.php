@@ -6,7 +6,7 @@
 
 @section('content')
 <div class="card">
-    
+
     <div class="card-body bg-light">
         <form action="{{ route('gigo.update', $gigo->id) }}" method="post" class="d-inline" id="form-update-gigo">
             @method('PUT')

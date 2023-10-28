@@ -6,7 +6,7 @@
 
 @section('content')
     <div class="card">
-      
+
         <div class="card-body bg-light">
             @method('PUT')
             @csrf
@@ -125,7 +125,7 @@
                         </div>
                         <div class="card-footer text-center">
                             @if (
-                                !$gigo->sign_approval_1 &&                                    
+                                !$gigo->sign_approval_1 &&
                                     $approve->approval_1 == $user->RoleH->WorkRelation->id_work_relation
                                 )
                                 <form action="{{ route('gigoApprove1', $gigo->id) }}" class="d-inline" method="post">
