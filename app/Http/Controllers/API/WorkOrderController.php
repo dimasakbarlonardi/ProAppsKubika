@@ -78,6 +78,8 @@ class WorkOrderController extends Controller
         $object->site = $site->kode_pos;
         $object->tenant_email = $cr->WorkOrder->Ticket->Tenant->email_tenant;
         $object->phone_number_tenant = $cr->WorkOrder->Ticket->Tenant->no_telp_tenant;
+        $object->bank = $cr->bank;
+        $object->transaction_status = $cr->transaction_status;
 
         $request_details = [];
         foreach ($cr->WorkOrder->WODetail as $itemWO) {
