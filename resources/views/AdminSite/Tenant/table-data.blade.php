@@ -4,6 +4,7 @@
             <th scope="col">No</th>
             <th></th>
             <th class="sort" data-sort="equipment">Tenant</th>
+            <th class="sort" data-sort="equipment">Unit</th>
             <th class="text-center">Action</th>
         </tr>
     </thead>
@@ -16,7 +17,16 @@
                         class="rounded-circle" style="max-width: 50px; height: 50px">
                 </td>
                 <td>
-                    {{ $tenant->nama_tenant }} {{ count($tenant->TenantUnit) > 0 ? $tenant->TenantUnit : '' }} <br>
+                    {{ $tenant->nama_tenant }}
+                </td>
+                <td>
+                    @if (count($tenant->TenantUnit) > 0)
+                        @foreach ($tenant->TenantUnit as $tu)
+                            @foreach ($tu->Unit as $unit)
+                                {{ $unit->nama_unit }} - {{ $unit->Tower->nama_tower }} <br>
+                            @endforeach
+                        @endforeach
+                    @endif
                 </td>
                 <td class="text-center">
                     <a href="{{ route('tenants.show', $tenant->id_tenant) }}" class="btn btn-outline-info btn-sm mb-2"

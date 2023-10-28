@@ -44,7 +44,7 @@ class TenantController extends Controller
     {
         $connTenant = ConnectionDB::setConnection(new Tenant());
 
-        $tenants = $connTenant->where('deleted_at', null)->with('TenantUnit.Unit');
+        $tenants = $connTenant->where('deleted_at', null);
         // if ($user->user_category == 3) {
         //     $tenant = $connTenant->where('email_tenant', $user->login_user)->first();
         //     $tickets = $connRequest->where('id_tenant', $tenant->id_tenant)->latest();
@@ -60,12 +60,19 @@ class TenantController extends Controller
         //         })->orWhere('no_tiket', 'like', '%' . $valueString . '%');
         // }
 
-        // if ($request->tower != 'all') {
-        //     $tenants = $tenants->where('id_jenis_request', $request->type);
-        // }
-        // if ($request->status != 'all') {
-        //     $tickets = $tickets->where('status_request', $request->status);
-        // }
+        if ($request->tower != 'all') {
+            $tower_id = $request->tower;
+            $tenants = $tenants->whereHas('TenantUnit.Unit.Tower', function($q) use ($tower_id) {
+                $q->where('id_tower', $tower_id);
+            });
+        }
+        if ($request->status != 'all') {
+            $status = $request->status;
+            $tenants = $tenants->whereHas('TenantUnit', function($q) use($status) {
+                $q->where('is_owner', $status);
+                dd($q);
+            });
+        }
         // if ($request->priority != 'all') {
         //     $tickets = $tickets->where('priority', $request->priority);
         // }
