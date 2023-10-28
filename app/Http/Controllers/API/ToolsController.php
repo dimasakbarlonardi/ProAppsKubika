@@ -13,30 +13,42 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use stdClass;
 
 class ToolsController extends Controller
 {
     public function index($wrID)
     {
+        $items = [];
+        $item = new stdClass();
+
         if ($wrID == 9) {
             $connToolsHK = ConnectionDB::setConnection(new ToolsHousekeeping());
 
             $tools = $connToolsHK->get();
+            $type = 'House Keeping';
 
-            return ResponseFormatter::success(
-                $tools,
-                'Success get all house keeping tools'
-            );
         } elseif ($wrID == 8) {
             $connToolsEng = ConnectionDB::setConnection(new ToolsEngineering());
 
             $tools = $connToolsEng->get();
-
-            return ResponseFormatter::success(
-                $tools,
-                'Success get all house keeping tools'
-            );
+            $type = 'Engineering';
         }
+
+        foreach ($tools as $tool) {
+            $item->id = $tool->id;
+            $item->name_tools = $tool->name_tools;
+            $item->status = $tool->status == null ? 0 : 1;
+            $item->total_tools = $tool->total_tools;
+            $item->borrow = $tool->borrow == null ? 0 : 1;
+            $item->current_totals = $tool->current_totals;
+            array_push($items, $item);
+        }
+
+        return ResponseFormatter::success(
+            $items,
+            'Success get all ' . $type . ' tools'
+        );
     }
 
     public function borrowTool(Request $request, $wrID, $id)
