@@ -13,6 +13,7 @@ use App\Models\OwnerH;
 use App\Models\Site;
 use App\Models\StatusHunianTenant;
 use App\Models\StatusKawin;
+use App\Models\Tower;
 use App\Models\User;
 use FTP\Connection;
 use File;
@@ -31,10 +32,17 @@ class TenantController extends Controller
     public function index(Request $request)
     {
         $conn = ConnectionDB::setConnection(new Tenant());
+        $connTower = ConnectionDB::setConnection(new Tower());
 
         $data['tenants'] = $conn->get();
+        $data['towers'] = $connTower->get();
 
         return view('AdminSite.Tenant.index', $data);
+    }
+
+    public function filteredDate(Request $request)
+    {
+
     }
 
     /**
@@ -245,5 +253,5 @@ class TenantController extends Controller
         return redirect()->route('tenants.index');
     }
 
-    
+
 }
