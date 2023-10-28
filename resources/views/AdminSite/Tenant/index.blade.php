@@ -48,37 +48,9 @@
                     </div>
                 </div>
                 <div class="card-body pt-4">
-                    <table class="table table-striped alternating-rows" id="table-tenant">
-                        <thead>
-                            <tr>
-                                <th scope="col">No</th>
-                                <th></th>
-                                <th class="sort" data-sort="equipment">Tenant</th>
-                                <th class="text-center">Action</th>
-                            </tr>
-                        </thead>
-                        <tbody id="checklist_body">
-                            @foreach ($tenants as $key => $tenant)
-                            <tr>
-                                <th scope="row">{{ $key + '1' }}</th>
-                                <td>
-                                    <img src="{{ $tenant->User ? asset($tenant->profile_picture) : asset('/assets/img/team/3-thumb.png') }}" class="rounded-circle" style="max-width: 50px; height: 50px">
-                                </td>
-                                <td>
-                                    {{ $tenant->nama_tenant }} <br>
-                                </td>
-                                <td class="text-center">
-                                    <a href="{{ route('tenants.show', $tenant->id_tenant) }}" class="btn btn-outline-info btn-sm mb-2" type="button">
-                                        Detail
-                                    </a>
-                                    <a href="{{ route('getTenantUnit', $tenant->id_tenant) }}" class="btn btn-outline-success btn-sm mb-2" type="button">
-                                        Tenant Unit
-                                    </a>
-                                </td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
+                    <div id="data-tenants">
+
+                    </div>
                 </div>
             </div>
         </div>
@@ -124,5 +96,29 @@
     <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
     <script>
         new DataTable('#table-tenant');
+
+        $('document').ready(function() {
+            getData('all', 'all')
+        })
+
+        $('#select-tower').on('change', function() {
+            var tower = $(this).val();
+
+            getData(tower, status)
+        });
+
+        function getData(tower, status) {
+            $.ajax({
+                url: '/admin/filter-tenants/get-filter-data',
+                type: 'GET',
+                data: {
+                    tower,
+                    status
+                },
+                success: function(resp) {
+                    $('#data-tenants').html(resp.html);
+                }
+            })
+        }
     </script>
 @endsection

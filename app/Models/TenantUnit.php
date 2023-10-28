@@ -29,9 +29,9 @@ class TenantUnit extends Model
         'is_owner'
     ];
 
-    public function unit()
+    public function Unit()
     {
-        return $this->hasOne(Unit::class, 'id_unit', 'id_unit');
+        return $this->hasMany(Unit::class, 'id_unit', 'id_unit');
     }
 
     public function Owner($unitID)
