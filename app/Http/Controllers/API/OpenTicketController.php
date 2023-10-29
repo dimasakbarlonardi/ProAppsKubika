@@ -171,8 +171,8 @@ class OpenTicketController extends Controller
             ->with('CashReceipt')
             ->get();
 
-        return ResponseFormatter::success([
+        return ResponseFormatter::success(
             $tickets
-        ], 'Success get transactions');
+        , 'Success get transactions');
     }
 }
