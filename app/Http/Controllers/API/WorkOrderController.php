@@ -170,28 +170,30 @@ class WorkOrderController extends Controller
 
     public function generatePaymentWO(Request $request, $id)
     {
-        $connWO = ConnectionDB::setConnection(new WorkOrder());
+        // $connWO = ConnectionDB::setConnection(new WorkOrder());
+        $connTransaction = ConnectionDB::setConnection(new CashReceipt());
+
         $client = new Client();
 
-        $wo = $connWO->find($id);
-        $transaction = $wo->Ticket->CashReceipt;
-        $site = Site::find($wo->Ticket->id_site);
+        $cr = $connTransaction->find($id);
+        // $wo = $connWO->find($id);
+
+        $site = Site::find($cr->WorkOrder->Ticket->id_site);
 
         $client = new Client();
         $admin_fee = (int) $request->admin_fee;
         $type = $request->type;
         $bank = $request->bank;
-        $transaction = $wo->Ticket->CashReceipt;
 
-        if ($transaction->transaction_status == 'PENDING') {
+        if ($cr->transaction_status == 'PENDING') {
             if ($type == 'bank_transfer') {
-                $transaction->gross_amount = $transaction->sub_total + $admin_fee;
-                $transaction->payment_type = 'bank_transfer';
-                $transaction->bank = Str::upper($bank);
+                $cr->gross_amount = $cr->sub_total + $admin_fee;
+                $cr->payment_type = 'bank_transfer';
+                $cr->bank = Str::upper($bank);
                 $payment = [];
                 $payment['payment_type'] = $type;
-                $payment['transaction_details']['order_id'] = $transaction->order_id;
-                $payment['transaction_details']['gross_amount'] = $transaction->gross_amount;
+                $payment['transaction_details']['order_id'] = $cr->order_id;
+                $payment['transaction_details']['gross_amount'] = $cr->gross_amount;
                 $payment['bank_transfer']['bank'] = $bank;
 
                 $response = $client->request('POST', 'https://api.sandbox.midtrans.com/v2/charge', [
@@ -209,40 +211,40 @@ class WorkOrderController extends Controller
                 ]);
                 $response = json_decode($response->getBody());
 
-                $transaction->va_number = $response->va_numbers[0]->va_number;
-                $transaction->transaction_id = $response->transaction_id;
-                $transaction->expiry_time = $response->expiry_time;
-                $transaction->admin_fee = $admin_fee;
-                $transaction->transaction_status = 'VERIFYING';
+                $cr->va_number = $response->va_numbers[0]->va_number;
+                $cr->transaction_id = $response->transaction_id;
+                $cr->expiry_time = $response->expiry_time;
+                $cr->admin_fee = $admin_fee;
+                $cr->transaction_status = 'VERIFYING';
 
                 $object = new stdClass();
-                $object->due_date = $transaction->expiry_time;
-                $object->va_number = $transaction->va_number;
-                $object->total_bill_request = $transaction->sub_total;
-                $object->admin_fee = $transaction->admin_fee;
+                $object->due_date = $cr->expiry_time;
+                $object->va_number = $cr->va_number;
+                $object->total_bill_request = $cr->sub_total;
+                $object->admin_fee = $cr->admin_fee;
 
-                $tax = (int) $transaction->gross_amount * 0.11;
+                $tax = (int) $cr->gross_amount * 0.11;
                 $object->tax = $tax;
-                $object->gross_amount = $transaction->gross_amount + $tax;
+                $object->gross_amount = $cr->gross_amount + $tax;
 
-                $transaction->tax;
-                $transaction->gross_amount;
-                $transaction->save();
+                $cr->tax;
+                $cr->gross_amount;
+                $cr->save();
 
                 return ResponseFormatter::success(
                     $object,
                     'Authenticated'
                 );
             } elseif ($type == 'credit_card') {
-                $transaction->payment_type = 'credit_card';
-                $transaction->admin_fee = $admin_fee;
-                $transaction->gross_amount = round($transaction->sub_total + $admin_fee);
-                $transaction->transaction_status = 'VERIFYING';
+                $cr->payment_type = 'credit_card';
+                $cr->admin_fee = $admin_fee;
+                $cr->gross_amount = round($cr->sub_total + $admin_fee);
+                $cr->transaction_status = 'VERIFYING';
 
                 $getTokenCC = $this->TransactionCC($request, $site);
-                $chargeCC = $this->ChargeTransactionCC($getTokenCC->token_id, $transaction, $site);
+                $chargeCC = $this->ChargeTransactionCC($getTokenCC->token_id, $cr, $site);
 
-                $transaction->save();
+                $cr->save();
 
                 return ResponseFormatter::success(
                     $chargeCC
