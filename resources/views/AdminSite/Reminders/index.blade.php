@@ -37,11 +37,10 @@
                             <td> <b>{{ $reminder->remind_before }}</b> Days before event</td>
                             <td> {{ $reminder->WorkRelation->work_relation }}</td>
                             <td>
-                                <a href="{{ route('reminders.edit', $reminder->id) }}"
-                                    class="btn btn-sm btn-warning"><span
-                                        class="fas fa-pencil-alt fs--2 me-1   "></span>Edit</a>
-                                <form class="d-inline"
-                                    action="{{ route('reminders.destroy', $reminder->id) }}" method="post">
+                                <a href="{{ route('reminders.show', $reminder->id) }}" class="btn btn-sm btn-warning">
+                                    <span class="fas fa-pencil-alt fs--2 me-1   "></span>Show</a>
+                                <form class="d-inline" action="{{ route('reminders.destroy', $reminder->id) }}"
+                                    method="post">
                                     @method('DELETE')
                                     @csrf
                                     <button type="submit" class="btn btn-danger btn-sm"

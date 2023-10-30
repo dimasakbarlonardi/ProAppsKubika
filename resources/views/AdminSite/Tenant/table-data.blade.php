@@ -13,7 +13,7 @@
             <tr>
                 <th scope="row">{{ $key + '1' }}</th>
                 <td>
-                    <img src="{{ $tenant->User ? asset($tenant->profile_picture) : asset('/assets/img/team/3-thumb.png') }}"
+                    <img src="{{ asset($tenant->profile_picture) }}"
                         class="rounded-circle" style="max-width: 50px; height: 50px">
                 </td>
                 <td>
