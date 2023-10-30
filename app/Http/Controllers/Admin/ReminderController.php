@@ -39,4 +39,13 @@ class ReminderController extends Controller
 
         return redirect()->route('reminders.index');
     }
+
+    public function show($id)
+    {
+        $connReminder = ConnectionDB::setConnection(new Reminder());
+
+        $data['reminder'] = $connReminder->find($id);
+
+        return view('AdminSite.Reminders.show', $data);
+    }
 }
