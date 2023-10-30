@@ -339,6 +339,7 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function(event) {
+            console.log('wr' ,division_relation);
             Echo.channel("hello-channel")
                 .listen('HelloEvent', (e) => {
                     var receiver = e.dataNotif.receiver
@@ -389,13 +390,13 @@
                                             <div class="notification-avatar">
                                                 <div class="avatar avatar-2xl me-3">
                                                     <img class="rounded-circle"
-                                                        src="${item.sender ? item.sender.profile_picture : ''}"
+                                                        src="${item.sender ? item.sender.profile_picture : 'https://dev.pro-apps.xyz/assets/img/icons/spot-illustrations/proapps.png'}"
                                                         alt="" />
                                                 </div>
                                             </div>
                                             <div class="notification-body">
                                                 <p class="mb-1">
-                                                    <strong>${item.sender ? item.sender.nama_user : ''}</strong> Mengirim anda :
+                                                    <strong>${item.sender ? item.sender.nama_user : ''}</strong> ${item.sender ? 'Mengirim anda' : 'System '}  :
                                                     ${item.notif_message} ${item.notif_title}
                                                 </p>
                                                 <span class="notification-time">
@@ -425,7 +426,6 @@
         }
 
         function getNewNotifications(user_id, receiver, division_receiver, notif_id) {
-            console.log(notif_id);
             $.ajax({
                 url: `/admin/get-new-notifications/${notif_id}`,
                 type: 'GET',
@@ -443,13 +443,13 @@
                                     <div class="notification-avatar">
                                         <div class="avatar avatar-2xl me-3">
                                             <img class="rounded-circle"
-                                                src="${resp.sender ? resp.sender.profile_picture : ''}"
+                                                src="${resp.sender ? resp.sender.profile_picture : 'https://dev.pro-apps.xyz/assets/img/icons/spot-illustrations/proapps.png'}"
                                                 alt="" />
                                         </div>
                                     </div>
                                     <div class="notification-body">
                                         <p class="mb-1">
-                                            <strong>${resp.sender ? resp.sender.nama_user : ''}</strong> Mengirim anda :
+                                            <strong>${resp.sender ? resp.sender.nama_user : ''}</strong> ${item.sender ? 'Mengirim anda' : 'System '} :
                                             ${resp.notif_message} ${resp.notif_title}
                                         </p>
                                         <span class="notification-time">

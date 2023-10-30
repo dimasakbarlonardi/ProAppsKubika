@@ -112,6 +112,7 @@ use App\Http\Controllers\Admin\OffBoardingKepemilikanUnitController;
 use App\Http\Controllers\Admin\PackageController;
 use App\Http\Controllers\Admin\PermitHRController;
 use App\Http\Controllers\Admin\PPNController;
+use App\Http\Controllers\Admin\ReminderController;
 use App\Http\Controllers\Admin\RequestAttendanceController;
 use App\Http\Controllers\Admin\RequestTypeController;
 use App\Http\Controllers\Admin\ScheduleMeetingController;
@@ -176,6 +177,7 @@ Route::prefix('admin')->group(function () {
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
         Route::resource('announcements', AnnouncementController::class);
+        Route::resource('reminders', ReminderController::class);
 
         // Tracking ticket
         Route::get('tracking-tickets', [MainFormController::class, 'index'])->name('trackingTickets');
@@ -545,7 +547,7 @@ Route::prefix('admin')->group(function () {
         Route::resource('perhitdendas', PerhitDendaController::class);
 
         //CRUD Reminder Letter
-        Route::resource('reminders', ReminderLetterController::class);
+        Route::resource('reminders-latter', ReminderLetterController::class);
 
         //CRUD PPN
         Route::resource('ppns', PPNController::class);
