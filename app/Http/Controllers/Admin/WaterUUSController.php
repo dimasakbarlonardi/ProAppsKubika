@@ -21,7 +21,6 @@ class WaterUUSController extends Controller
 {
     public function index(Request $request)
     {
-        $connWatercUUS = ConnectionDB::setConnection(new WaterUUS());
         $connTower = ConnectionDB::setConnection(new Tower());
         $connApprove = ConnectionDB::setConnection(new Approve());
 
