@@ -12,7 +12,6 @@
             </div>
         </div>
     </div>
-
     <div class="p-5">
         <form method="post" action="{{ route('tenants.update', $tenant->id_tenant) }}">
             @method('PUT')
@@ -108,36 +107,36 @@
             </div>
 
             <div class="penjamin mt-5">
-            <h5>Emergency Contact <small class="text-danger">(optional)</small></h5>
+                <h5>Emergency Contact <small class="text-danger">(optional)</small></h5>
                 <hr>
-            <div class="row">
-                <div class="col-6 mb-2">
-                    <label class="form-label">Contact Name</label>
-                    <input type="text" name="nama_pasangan_penjamin" value="{{$tenant->nama_pasangan_penjamin}}" class="form-control">
+                <div class="row">
+                    <div class="col-6 mb-2">
+                        <label class="form-label">Contact Name</label>
+                        <input type="text" name="nama_pasangan_penjamin" value="{{$tenant->nama_pasangan_penjamin}}" class="form-control">
+                    </div>
+                    <div class="col-6 mb-2">
+                        <label class="form-label">NIK Contact</label>
+                        <input type="text" name="nik_pasangan_penjamin" value="{{$tenant->nik_pasangan_penjamin}}" class="form-control">
+                    </div>
+                    <div class="col-6 mb-2">
+                        <label class="form-label">KTP Address Contact</label>
+                        <input type="text" name="alamat_ktp_pasangan_penjamin" value="{{$tenant->alamat_ktp_pasangan_penjamin}}" class="form-control">
+                    </div>
+                    <div class="col-6 mb-2">
+                        <label class="form-label">Contact Address</label>
+                        <input type="text" name="alamat_tinggal_pasangan_penjamin" value="{{$tenant->alamat_tinggal_pasangan_penjamin}}" class="form-control">
+                    </div>
+                    <div class="col-6 mb-2">
+                        <label class="form-label">Contact Relationship</label>
+                        <input type="text" name="hubungan_penjamin" value="{{$tenant->hubungan_penjamin}}" class="form-control">
+                    </div>
+                    <div class="col-6 mb-2">
+                        <label class="form-label">Contact Phone</label>
+                        <input type="text" name="no_telp_penjamin" value="{{$tenant->no_telp_penjamin}}" class="form-control">
+                    </div>
                 </div>
-                <div class="col-6 mb-2">
-                    <label class="form-label">NIK Contact</label>
-                    <input type="text" name="nik_pasangan_penjamin" value="{{$tenant->nik_pasangan_penjamin}}" class="form-control">
-                </div>
-                <div class="col-6 mb-2">
-                    <label class="form-label">KTP Address Contact</label>
-                    <input type="text" name="alamat_ktp_pasangan_penjamin" value="{{$tenant->alamat_ktp_pasangan_penjamin}}" class="form-control">
-                </div>
-                <div class="col-6 mb-2">
-                    <label class="form-label">Contact Address</label>
-                    <input type="text" name="alamat_tinggal_pasangan_penjamin" value="{{$tenant->alamat_tinggal_pasangan_penjamin}}" class="form-control">
-                </div>
-                <div class="col-6 mb-2">
-                    <label class="form-label">Contact Relationship</label>
-                    <input type="text" name="hubungan_penjamin" value="{{$tenant->hubungan_penjamin}}" class="form-control">
-                </div>
-                <div class="col-6 mb-2">
-                    <label class="form-label">Contact Phone</label>
-                    <input type="text" name="no_telp_penjamin" value="{{$tenant->no_telp_penjamin}}" class="form-control">
-                </div>
-            </div>
 
-            <button type="submit" class="btn btn-primary mt-3">Submit</button>
+                <button type="submit" class="btn btn-primary mt-3">Submit</button>
         </form>
     </div>
 </div>

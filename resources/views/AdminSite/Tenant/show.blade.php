@@ -1,18 +1,6 @@
 @extends('layouts.master')
 
 @section('content')
-<div class="card mb-3 btn-reveal-trigger">
-    <div class="card-header position-relative min-vh-25 mb-8">
-        <div class="avatar avatar-5xl avatar-profile shadow-sm img-thumbnail rounded-circle">
-            <div class="h-100 w-100 rounded-circle overflow-hidden position-relative">
-                <div id="image-container">
-                    <img id="newavatar" src="{{ $tenant->profile_picture }}" width="400" alt="Upload Foto">
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
 <div class="card">
     <div class="card">
         <div class="card-header d-flex justify-content-between align-items-center">
@@ -25,9 +13,24 @@
             <a href="{{ route('tenants.edit', $tenant->id_tenant) }}" class="btn btn-sm btn-warning">Edit</a>
         </div>
     </div>
+
+    
+    
     <div class="p-5">
-        <div class="mb-3">
-            <div class="row">
+        <div class="col-12">
+                <div class="card mb-3 btn-reveal-trigger">
+                    <div class="card-header position-relative min-vh-25 mb-8">
+                        <div class="avatar avatar-5xl avatar-profile shadow-sm img-thumbnail rounded-circle">
+                            <div class="h-100 w-100 rounded-circle overflow-hidden position-relative">
+                                <div id="image-container">
+                                    <img id="newavatar" src="{{ $tenant->profile_picture }}" width="400" alt="Upload Foto">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+        </div>
+        <div class="row">
                 <div class="col-6 mb-3">
                     <label class="form-label">Site</label>
                     <input type="text" value="Park Royale" class="form-control" readonly>
