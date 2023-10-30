@@ -32,6 +32,39 @@ class WaterUUSController extends Controller
         return view('AdminSite.UtilityUsageRecording.Water.index', $data);
     }
 
+    public function filteredData(Request $request)
+    {
+        $connWaterUUS = ConnectionDB::setConnection(new WaterUUS());
+        $connApprove = ConnectionDB::setConnection(new Approve());
+
+        $records = $connWaterUUS->where('deleted_at', null);
+
+        $data['approve'] = $connApprove->find(9);
+        $data['user'] = $request->session()->get('user');
+
+        if ($request->tower != 'all') {
+            $id_tower = $request->tower;
+            $records = $records->whereHas('Unit.Tower', function ($q) use ($id_tower) {
+                $q->where('id_tower', $id_tower);
+            });
+        }
+
+        if ($request->status != 'all') {
+            $status = $request->status == '0' ? null : $request->status;
+            $records = $records->where('is_approve', $status);
+        }
+
+
+        $records = $records->where('periode_bulan', $request->period);
+        $records = $records->where('periode_tahun', $request->year);
+
+        $data['waterUSS'] = $records->get();
+
+        return response()->json([
+            'html' => view('AdminSite.UtilityUsageRecording.Water.table-data', $data)->render()
+        ]);
+    }
+
     public function create()
     {
         $id_unit = '0042120104';
@@ -83,12 +116,12 @@ class WaterUUSController extends Controller
 
         $approve = $connApprove->find(9);
 
-        foreach($request->IDs as $id) {
+        foreach ($request->IDs as $id) {
             try {
                 DB::beginTransaction();
                 $waterUSS = $connWaterUUS->where('id', $id)
-                ->where('is_updated', null)
-                ->first();
+                    ->where('is_updated', null)
+                    ->first();
 
                 if ($waterUSS) {
                     $waterUSS->is_approve = '1';
