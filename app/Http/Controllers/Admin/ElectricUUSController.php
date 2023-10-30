@@ -30,7 +30,9 @@ class ElectricUUSController extends Controller
     {
         $connTower = ConnectionDB::setConnection(new Tower());
         $connApprove = ConnectionDB::setConnection(new Approve());
+        $connElecUUS = ConnectionDB::setConnection(new ElectricUUS());
 
+        $data['elecUSS'] = $connElecUUS->get();
         $data['approve'] = $connApprove->find(9);
         $data['user'] = $request->session()->get('user');
         $data['towers'] = $connTower->get();
