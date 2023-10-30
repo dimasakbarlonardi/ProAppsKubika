@@ -274,7 +274,7 @@ class WorkOrderController extends Controller
                 $cr->save();
 
                 return ResponseFormatter::success(
-                    $object,
+                    $response,
                     'Authenticated'
                 );
             } elseif ($type == 'credit_card') {
