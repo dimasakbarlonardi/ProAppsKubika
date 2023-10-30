@@ -74,7 +74,7 @@ Route::prefix('v1')->group(function () {
 
         // Work Order
         Route::get('/work-order/{id}', [WorkOrderController::class, 'show']);
-        Route::get('/accept/work-order/{id}', [WorkOrderController::class, 'acceptWO']);
+        Route::post('/accept/work-order/{id}', [WorkOrderController::class, 'acceptWO']);
         Route::post('/generate/payment-wo/{id}', [WorkOrderController::class, 'generatePaymentWO']);
         Route::get('/show/billing/{id}', [WorkOrderController::class, 'showBilling']);
 
@@ -102,12 +102,14 @@ Route::prefix('v1')->group(function () {
 
         // Inbox
         Route::get('/inboxes', [InboxController::class, 'index']);
+        Route::post('/inbox/{id}', [InboxController::class, 'read']);
 
         // GIGO
         Route::get('/gigo/{id}', [GIGOController::class, 'show']);
         Route::post('/gigo/add/{id}', [GIGOController::class, 'addGood']);
         Route::post('/gigo/remove/{id}', [GIGOController::class, 'removeGood']);
         Route::post('/gigo/{id}', [GIGOController::class, 'update']);
+        Route::post('/gigo/approve2/{id}', [GIGOController::class, 'approve2']);
 
         // ================== Attendance ========================
         Route::get('/site-location', [AttendanceController::class, 'siteLocation']);

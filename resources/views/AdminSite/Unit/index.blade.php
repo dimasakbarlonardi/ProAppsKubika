@@ -139,9 +139,6 @@
 
                             </form>
                         </div>
-                        <div class="card-footer border-top border-200 py-x1">
-                            <button class="btn btn-primary w-100">Update</button>
-                        </div>
                     </div>
                 </div>
             </div>

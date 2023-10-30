@@ -211,6 +211,7 @@ Route::prefix('admin')->group(function () {
 
         // CRUD Tenant
         Route::resource('tenants', TenantController::class);
+        Route::get('/filter-tenants/get-filter-data', [TenantController::class, 'filteredData']);
 
         // CRUD TenantUnit
         Route::resource('tenantunits', TenantUnitController::class);
@@ -472,6 +473,7 @@ Route::prefix('admin')->group(function () {
         Route::resource('offtenants', OffBoardingTenantController::class);
         Route::get('tenant-unit-by-id/{id}', [OffBoardingTenantController::class, 'tenantByID'])->name('tenant-by-id');
         Route::get('penjamin-by-id/{id}', [OffBoardingTenantController::class, 'penjaminByID'])->name('penjamin-by-id');
+        Route::get('tenant-unit-by-tenant/{IDTenant}/{IDUnit}', [OffBoardingTenantController::class, 'TUByTenantID']);
         Route::post('/update/tenantunits-offtenant', [OffBoardingTenantController::class, 'offdeleteTenantUnit'])->name('offdeleteTenantUnit');
 
         //CRUD OffBoarding Owner
@@ -609,7 +611,7 @@ Route::prefix('admin')->group(function () {
 
         // ---------------Start UUS Electric ----------------
         Route::get('uus-electric', [ElectricUUSController::class, 'index'])->name('usr-electric');
-        Route::get('/get/uss-electric', [ElectricUUSController::class, 'getRecords']);
+        Route::get('uus-electric-filtered', [ElectricUUSController::class, 'filteredData']);
         Route::get('/create/usr-electric', [ElectricUUSController::class, 'create'])->name('create-usr-electric');
         Route::post('approve/usr-electric', [ElectricUUSController::class, 'approve']);
         Route::post('update/usr-electric/{id}', [ElectricUUSController::class, 'update'])->name('updateElectric');
@@ -618,6 +620,7 @@ Route::prefix('admin')->group(function () {
 
         // ---------------Start UUS Water -------------------
         Route::get('uus-water', [WaterUUSController::class, 'index'])->name('uus-water');
+        Route::get('uus-water-filtered', [WaterUUSController::class, 'filteredData']);
         Route::get('create/usr-water', [WaterUUSController::class, 'create'])->name('create-usr-water');
         Route::post('approve/usr-water', [WaterUUSController::class, 'approve'])->name('approve-usr-water');
         Route::post('update/usr-water/{id}', [WaterUUSController::class, 'update'])->name('updateWater');

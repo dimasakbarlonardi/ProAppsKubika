@@ -36,15 +36,15 @@ class OffBoardingTenantController extends Controller
 
         $tenant = $tenant->where('id_tenant', $id)->first();
 
-        $nama_unit = [];
+        $units = [];
 
-        foreach ($tenant->TenantUnit as $unit) {
-            $nama_unit[] = $unit->Unit->nama_unit;
+        foreach ($tenant->OffTenant as $unit) {
+            $units[] = $unit->Unit;
         };
 
         return response()->json([
             'tenant' => $tenant,
-            'nama_unit' => $nama_unit
+            'units' => $units
         ]);
     }
 
@@ -114,6 +114,19 @@ class OffBoardingTenantController extends Controller
         //
     }
 
+    public function TUByTenantID($IDTenant, $IDUnit)
+    {
+        $connTU = ConnectionDB::setConnection(new TenantUnit());
+
+        $tu = $connTU->where('id_tenant', $IDTenant)
+            ->where('id_unit', $IDUnit)
+            ->where('is_owner', 0)->first();
+
+        $tu->delete();
+
+        return response()->json(['status' => 'ok']);
+    }
+
     /**
      * Remove the specified resource from storage.
      *
@@ -124,27 +137,32 @@ class OffBoardingTenantController extends Controller
     {
         $conn = ConnectionDB::setConnection(new Tenant());
         $connTUOFF = ConnectionDB::setConnection(new TenantOFF());
+        $connTU = ConnectionDB::setConnection(new TenantUnit());
 
         $nowDate = Carbon::now();
 
-        $conn = $conn->where('id_tenant', $request->id_tenant_modal)->first();
-        dd($conn);
-        $conn->delete();
+        $conn = $conn->where('id_tenant', $request->id_tenant_modal)
+            ->first();
 
         $connTUOFF->create([
             'id_tenant' => $conn->id_tenant,
             'id_site' => $conn->id_site,
-            'id_unit' => $conn->id_unit,
+            'id_unit' => $request->id_unit_modal,
             'tgl_sys' => $nowDate,
             'tgl_masuk' => $conn->created_at,
             'tgl_keluar' => $request->tgl_keluar,
             'keterangan' => $request->keterangan,
         ]);
-        DB::commit();
+
+        $tu = $connTU->where('id_tenant', $request->id_tenant_modal)
+            ->where('id_unit', $request->id_unit_modal)
+            ->where('is_owner', 0)
+            ->first();
+
+        $tu->delete();
 
         Alert::success('Berhasil', 'Berhasil menghapus tenant');
 
         return redirect()->route('offtenants.index');
     }
-
 }

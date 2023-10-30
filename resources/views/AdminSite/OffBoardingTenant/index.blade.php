@@ -14,10 +14,11 @@
             </div>
         </div>
         <div class="p-5">
-            <label for="organizerSingle">tenant</label><select class="form-select js-choice" id="id_tenant" size="1" name="organizerSingle" data-options='{"removeItemButton":true,"placeholder":true}'>
+            <label for="organizerSingle">tenant</label><select class="form-select js-choice" id="id_tenant" size="1"
+                name="organizerSingle" data-options='{"removeItemButton":true,"placeholder":true}'>
                 <option selected disabled>-- Pilih Tenant --</option>
                 @foreach ($tenants as $item)
-                <option value="{{$item->id_tenant}}">{{$item->nama_tenant}}</option>
+                    <option value="{{ $item->id_tenant }}">{{ $item->nama_tenant }}</option>
                 @endforeach
             </select>
 
@@ -62,8 +63,8 @@
                 </div>
                 <div class="mb-3">
                     <div class=" my-3">
-                        <button class="btn btn-danger" type="button" onclick="submitOffTenant()">Off Tenant
-                        </button>
+                        {{-- <button class="btn btn-danger" type="button" onclick="submitOffTenant()">Off Tenant
+                        </button> --}}
                     </div>
                 </div>
             </div>
@@ -103,6 +104,7 @@
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </div>
                     <input type="hidden" name="id_tenant_modal" id="id_tenant_modal">
+                    <input type="hidden" name="id_unit_modal" id="id_unit_modal">
                 </form>
             </div>
         </div>
@@ -160,17 +162,22 @@
                     url: '/admin/penjamin-by-id/' + id_tenant,
                     type: 'GET',
                     success: function(data) {
-                        units = data.nama_unit.length
+                        console.log(data);
+                        units = data.units.length
                         $('#nama_pasangan_penjamin').val(data.tenant.nama_pasangan_penjamin)
                         $('#nik_pasangan_penjamin').val(data.tenant.nik_pasangan_penjamin)
                         $('#no_telp_penjamin').val(data.tenant.no_telp_penjamin)
-                        data.nama_unit.map((unit) => {
+                        data.units.map((unit) => {
                             $('#unit-list').append(`
                             <tr>
                                 <th scope="col">Unit</th>
                                 <td scope="col">
-                                    <input type="text" value="${unit}" name="id_unit" class="form-control"
+                                    <input type="text" value="${unit.nama_unit}" name="id_unit" class="form-control"
                                         readonly>
+                                </td>
+                                <td scope="col">
+                                    <button class="btn btn-danger text-dark" type="button" onclick="submitOffTenant('${id_tenant}', '${unit.id_unit}')">Off Tenant
+                                    </button>
                                 </td>
                             </tr>
                         `)
@@ -180,16 +187,17 @@
             })
         })
 
-        function submitOffTenant() {
-            if (units === 0) {
+        function submitOffTenant(id_tenant, id_unit) {
+            Swal.fire({
+                title: 'Are you sure?',
+                icon: 'info',
+                confirmButtonText: 'Yes!'
+            }).then((result) => {
                 $('#off-modal-form').modal('show')
-                id_tenant = $('#id_tenant').val();
 
                 $('#id_tenant_modal').val(id_tenant);
-            } else {
-                $('#modalValidation').modal('show')
-            }
-
+                $('#id_unit_modal').val(id_unit);
+            })
         }
     </script>
 @endsection

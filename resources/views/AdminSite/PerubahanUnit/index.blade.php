@@ -9,7 +9,7 @@
         <div class="col">
 
             <ul class="nav nav-pills justify-content-around bg-white p-3 rounded" id="pill-myTab" role="tablist">
-               
+
                 <li class="nav-item"  role="presentation">
                     <button class="nav-link {{ Session::get('active') == 'perpanjang' || Session::get('active') == null ? 'active' : '' }}" data-bs-toggle="pill" data-bs-target="#pill-tab-home" type="button" role="tab">
                         <span class=""></span>
@@ -24,15 +24,9 @@
                 </li>
 
                 <li class="nav-item" role="presentation">
-                    <button class="nav-link {{ Session::get('active') == 'tidakperpanjang' ? 'active' : '' }}" data-bs-toggle="pill" data-bs-target="#pill-tab-profiles" 
-                        type="button" role="tab"><span class=""></span><span 
+                    <button class="nav-link {{ Session::get('active') == 'tidakperpanjang' ? 'active' : '' }}" data-bs-toggle="pill" data-bs-target="#pill-tab-profiles"
+                        type="button" role="tab"><span class=""></span><span
                             class="d-none d-md-inline-block fs--1">Tidak Perpanjang Unit</span></button></li>
-
-
-                <li class="nav-item" role="presentation"><button class="nav-link {{ Session::get('active') == 'pindahkepemilikan' ? 'active' : '' }}" data-bs-toggle="pill"
-                        data-bs-target="#pill-tab-kendaraan" type="button" role="tab"><span
-                            class=""></span><span class="d-none d-md-inline-block fs--1">Pindah Kepemilikan
-                            Unit</span></button></li>
             </ul>
 
             <div class="container bg-white rounded">
@@ -48,10 +42,6 @@
                     <div class="tab-pane fade {{ Session::get('active') == 'tidakperpanjang' | Session::get('active') == null ? 'show active' : '' }}}}"
                     id="pill-tab-profiles" role="tabpanel" aria-labelledby="profiles-tab">
                     @include('AdminSite.PerubahanUnit.TidakPerpanjangUnit.tidakperpanjang')
-                    </div>
-                    <div class="tab-pane fade {{ Session::get('active') == 'pindahkepemilikan' ? 'show active' : '' }}"
-                        id="pill-tab-kendaraan" role="tabpanel" aria-labelledby="contact-tab">
-                        @include('AdminSite.PerubahanUnit.PindahKepemilikan.pindahkepemilikan')
                     </div>
                 </div>
             </div>

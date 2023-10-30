@@ -29,7 +29,7 @@ class TenantUnit extends Model
         'is_owner'
     ];
 
-    public function unit()
+    public function Unit()
     {
         return $this->hasOne(Unit::class, 'id_unit', 'id_unit');
     }
@@ -44,6 +44,18 @@ class TenantUnit extends Model
         ->first();
 
         return $tu->Tenant;
+    }
+
+    public function Penyewa($unitID)
+    {
+        $connTU = ConnectionDB::setConnection(new TenantUnit());
+
+        $tu = $connTU->where('id_unit', $unitID)
+        ->where('is_owner', 0)
+        ->with('Tenant')
+        ->first();
+
+        return $tu;
     }
 
     public function tenant()

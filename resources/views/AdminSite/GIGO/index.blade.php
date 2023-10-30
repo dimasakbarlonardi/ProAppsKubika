@@ -7,9 +7,6 @@
                 <div class="col-auto">
                     <h6 class="mb-0 text-white">List GIGO</h6>
                 </div>
-                <div class="col-auto d-flex">
-                    {{-- <a class="btn btn-falcon-default text-600 btn-sm" href="{{ route('agamas.create') }}">Tambah Agama</a> --}}
-                </div>
             </div>
         </div>
         <div class="p-5">
@@ -18,6 +15,7 @@
                     <tr>
                         <th class="sort" data-sort="">No</th>
                         <th class="sort" data-sort="nama_agama">No GIGO</th>
+                        <th class="sort" data-sort="nama_agama">Status</th>
                         <th class="sort">Action</th>
                     </tr>
                 </thead>
@@ -26,14 +24,9 @@
                         <tr>
                             <th scope="row">{{ $key + 1 }}</th>
                             <td>{{ $gigo->no_request_gigo }}</td>
+                            <td>{{ $gigo->status_request }}</td>
                             <td>
                                 <a href="{{ route('gigo.show', $gigo->id) }}" class="btn btn-sm btn-warning">View</a>
-                                @if ($gigo->sign_approval_2 && $gigo->status_request != 'DONE')
-                                    <form action="{{ route('gigoDone', $gigo->id) }}" class="d-inline" method="post">
-                                        @csrf
-                                        <button type="submit" class="btn btn-info btn-sm">Done</button>
-                                    </form>
-                                @endif
                             </td>
                         </tr>
                     @endforeach
