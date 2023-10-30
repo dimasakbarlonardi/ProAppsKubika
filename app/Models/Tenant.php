@@ -25,7 +25,7 @@ class Tenant extends Model
     public $incrementing = false;
     protected $table = 'tb_tenant';
 
-    protected $fillable =[
+    protected $fillable = [
         'id_tenant',
         'email_tenant',
         'id_site',
@@ -86,5 +86,11 @@ class Tenant extends Model
     public function Tenant()
     {
         return $this->hasMany(OpenTicket::class, 'id_user', 'id_user');
+    }
+
+    public function OffTenant()
+    {
+        return $this->hasMany(TenantUnit::class, 'id_tenant', 'id_tenant')
+            ->where('is_owner', 0);
     }
 }

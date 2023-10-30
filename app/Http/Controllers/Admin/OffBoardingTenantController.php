@@ -36,15 +36,15 @@ class OffBoardingTenantController extends Controller
 
         $tenant = $tenant->where('id_tenant', $id)->first();
 
-        $nama_unit = [];
+        $units = [];
 
-        foreach ($tenant->TenantUnit as $unit) {
-            $nama_unit[] = $unit->Unit->nama_unit;
+        foreach ($tenant->OffTenant as $unit) {
+            $units[] = $unit->Unit;
         };
 
         return response()->json([
             'tenant' => $tenant,
-            'nama_unit' => $nama_unit
+            'units' => $units
         ]);
     }
 
@@ -114,6 +114,19 @@ class OffBoardingTenantController extends Controller
         //
     }
 
+    public function TUByTenantID($IDTenant, $IDUnit)
+    {
+        $connTU = ConnectionDB::setConnection(new TenantUnit());
+
+        $tu = $connTU->where('id_tenant', $IDTenant)
+            ->where('id_unit', $IDUnit)
+            ->where('is_owner', 0)->first();
+
+        $tu->delete();
+
+        return response()->json(['status' => 'ok']);
+    }
+
     /**
      * Remove the specified resource from storage.
      *
@@ -127,8 +140,10 @@ class OffBoardingTenantController extends Controller
 
         $nowDate = Carbon::now();
 
-        $conn = $conn->where('id_tenant', $request->id_tenant_modal)->first();
-        dd($conn);
+        $conn = $conn->where('id_tenant', $request->id_tenant_modal)
+            ->where('is_owner', 0)
+            ->first();
+
         $conn->delete();
 
         $connTUOFF->create([
@@ -146,5 +161,4 @@ class OffBoardingTenantController extends Controller
 
         return redirect()->route('offtenants.index');
     }
-
 }
