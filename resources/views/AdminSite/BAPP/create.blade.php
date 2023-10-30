@@ -25,7 +25,7 @@
                             <select name="no_work_permit" class="form-control" id="select-permit">
                                 <option selected disabled value="">-- Select Work Permit ---</option>
                                 @foreach ($wps as $wp)
-                                    <option value="{{ $wp->id }}">{{ $wp->no_work_permit }}</option>
+                                    <option {{ isset($id_wp) ? ($id_wp == $wp->id ? 'selected' : '') : '' }} value="{{ $wp->id }}">{{ $wp->no_work_permit }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -40,18 +40,6 @@
                     <h5 class="mt-5">Detail BAPP 1</h5>
                     <hr>
                     <div class="mb-3">
-                        {{-- <div class="row">
-                            @foreach ($engs as $eng)
-                                <div class="col-4">
-                                    <div class="input-group mb-3">
-                                        <div class="input-group-text">
-                                            <input type="checkbox" name="detail_bapp[]" value="{{ $eng->id }}" />
-                                        </div>
-                                        <input class="form-control" type="text" readonly value="{{ $eng->subject }}">
-                                    </div>
-                                </div>
-                            @endforeach
-                        </div> --}}
                         <div class="card mt-2" id="detail_work_order">
                             <div class="card-body">
                                 <div class="card-body p-0">
@@ -159,6 +147,36 @@
             theme: 'bootstrap-5'
         });
 
+        $('document').ready(function() {
+            var id = '{{ isset($id_wp) }}';
+            if (id) {
+                id = '{{ $id_wp }}'
+                console.log(id);
+                showPermit(id)
+            }
+
+            $('#select-permit').on('change', function() {
+                id = $(this).val()
+
+                console.log(id);
+                showPermit(id);
+            })
+        })
+
+        function showPermit(id) {
+            $.ajax({
+                url: `/admin/work-permit/show/${id}`,
+                type: 'GET',
+                success: function(resp) {
+                    $('#jumlah_deposit').val(resp.wp.jumlah_deposit)
+
+                    var jumlah_deposit = resp.wp.jumlah_deposit.toString();
+                    jumlah_deposit = jumlah_deposit.slice(0, -3);
+                    $('#show_jumlah_deposit').val(formatRupiah(jumlah_deposit))
+                }
+            })
+        }
+
         var detail_bapp = []
 
         $('#show_jumlah_potongan').keyup(function() {
@@ -183,22 +201,6 @@
 
             $('#jumlah_deposit').val(newJumlahDeposit)
             $('#jumlah_potongan').val(newValue)
-        })
-
-        $('#select-permit').on('change', function() {
-            const id = $(this).val();
-
-            $.ajax({
-                url: `/admin/work-permit/show/${id}`,
-                type: 'GET',
-                success: function(resp) {
-                    $('#jumlah_deposit').val(resp.wp.jumlah_deposit)
-
-                    var jumlah_deposit = resp.wp.jumlah_deposit.toString();
-                    jumlah_deposit = jumlah_deposit.slice(0, -3);
-                    $('#show_jumlah_deposit').val(formatRupiah(jumlah_deposit))
-                }
-            })
         })
 
         function addDetailBAPP() {

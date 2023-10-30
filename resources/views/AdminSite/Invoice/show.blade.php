@@ -373,7 +373,7 @@
                                         </div>
                                         <hr />
                                         <h5 class="d-flex justify-content-between"><span>Grand Total</span><span
-                                                id="grand_total">{{ Rupiah($transaction->gross_amount) }}</span>
+                                                id="grand_total">{{ $transaction->gross_amount ? Rupiah($transaction->gross_amount) : rupiah($transaction->sub_total) }}</span>
                                         </h5>
                                     @endif
                                 </div>
