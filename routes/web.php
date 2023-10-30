@@ -610,7 +610,7 @@ Route::prefix('admin')->group(function () {
 
         // ---------------Start UUS Electric ----------------
         Route::get('uus-electric', [ElectricUUSController::class, 'index'])->name('usr-electric');
-        Route::get('/get/uss-electric', [ElectricUUSController::class, 'getRecords']);
+        Route::get('uus-electric-filtered', [ElectricUUSController::class, 'filteredData']);
         Route::get('/create/usr-electric', [ElectricUUSController::class, 'create'])->name('create-usr-electric');
         Route::post('approve/usr-electric', [ElectricUUSController::class, 'approve']);
         Route::post('update/usr-electric/{id}', [ElectricUUSController::class, 'update'])->name('updateElectric');
@@ -619,6 +619,7 @@ Route::prefix('admin')->group(function () {
 
         // ---------------Start UUS Water -------------------
         Route::get('uus-water', [WaterUUSController::class, 'index'])->name('uus-water');
+        Route::get('uus-water-filtered', [WaterUUSController::class, 'index'])->name('uus-water');
         Route::get('create/usr-water', [WaterUUSController::class, 'create'])->name('create-usr-water');
         Route::post('approve/usr-water', [WaterUUSController::class, 'approve'])->name('approve-usr-water');
         Route::post('update/usr-water/{id}', [WaterUUSController::class, 'update'])->name('updateWater');

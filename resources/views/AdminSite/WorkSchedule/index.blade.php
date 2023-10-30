@@ -9,7 +9,7 @@
 <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center">
-            <a href="{{ route('work-schedules.index') }}" class="btn btn-falcon-default btn-sm">
+            <a href="" class="btn btn-falcon-default btn-sm">
                 <i class="fas fa-arrow-left"></i> Back
             </a>
             <div class="ml-3">Create Tower</div>
