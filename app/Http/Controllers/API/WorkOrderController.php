@@ -66,6 +66,39 @@ class WorkOrderController extends Controller
         );
     }
 
+    public function rejectWO($id)
+    {
+        $connWO = ConnectionDB::setConnection(new WorkOrder());
+
+        $wo = $connWO->find($id);
+
+        $dataNotif = [
+            'models' => 'WorkOrderM',
+            'notif_title' => $wo->no_work_order,
+            'id_data' => $wo->id,
+            'sender' => $wo->Ticket->Tenant->User->id_user,
+            'division_receiver' => 1,
+            'notif_message' => 'Maaf work request kali ini saya tolak..',
+            'receiver' => null,
+        ];
+
+        $wo->status_wo = 'REJECTED';
+        $wo->save();
+
+        $wo->WorkRequest->status_request = 'REJECTED';
+        $wo->WorkRequest->save();
+
+        $wo->Ticket->status_request = 'REJECTED';
+        $wo->Ticket->save();
+
+        broadcast(new HelloEvent($dataNotif));
+
+        return ResponseFormatter::success(
+            $wo,
+            'Success reject WO'
+        );
+    }
+
     public function showBilling($id, Request $request)
     {
         $connCR = ConnectionDB::setConnection(new CashReceipt());

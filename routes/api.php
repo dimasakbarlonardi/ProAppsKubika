@@ -75,6 +75,7 @@ Route::prefix('v1')->group(function () {
         // Work Order
         Route::get('/work-order/{id}', [WorkOrderController::class, 'show']);
         Route::post('/accept/work-order/{id}', [WorkOrderController::class, 'acceptWO']);
+        Route::post('/reject/work-order/{id}', [WorkOrderController::class, 'rejectWO']);
         Route::post('/generate/payment-wo/{id}', [WorkOrderController::class, 'generatePaymentWO']);
         Route::get('/show/billing/{id}', [WorkOrderController::class, 'showBilling']);
 
