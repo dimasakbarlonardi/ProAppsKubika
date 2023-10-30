@@ -85,7 +85,9 @@ class TenantUnitController extends Controller
             foreach ($tenant_units as $unit) {
                 $idUnit[] = $unit->id_unit;
             }
-            $units = $units->whereIn('id_unit', $idUnit)->get();
+            $units = $units->whereIn('id_unit', $idUnit)
+                ->with('Tower')
+                ->get();
         }
 
         return response()->json([
@@ -122,6 +124,15 @@ class TenantUnitController extends Controller
     public function storeTenantUnit(Request $request)
     {
         $connTenantUnit = $this->setConnection(new TenantUnit());
+
+        $tu = $connTenantUnit->where('id_unit', $request->id_unit)->where('is_owner', 0)
+            ->first();
+
+        if ($tu) {
+            Alert::info('Sorry!', 'Unit already occupied');
+
+            return redirect()->back();
+        }
 
         $id_tenant_unit = $this->generateTenantUnitID($connTenantUnit);
 
