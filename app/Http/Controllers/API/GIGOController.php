@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Events\HelloEvent;
 use App\Helpers\ConnectionDB;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
@@ -56,6 +57,18 @@ class GIGOController extends Controller
 
         $gigo = $connGIGO->find($id);
         $gigo->update($request->all());
+
+        $dataNotif = [
+            'models' => 'GIGO',
+            'notif_title' => $gigo->no_request_gigo,
+            'id_data' => $gigo->id,
+            'sender' => $gigo->Ticket->Tenant->User->id_user,
+            'division_receiver' => 1,
+            'notif_message' => 'Form GIGO sudah dilengkapi, terima kasih',
+            'receiver' => null,
+        ];
+
+        broadcast(new HelloEvent($dataNotif));
 
         return ResponseFormatter::success([
             $gigo
