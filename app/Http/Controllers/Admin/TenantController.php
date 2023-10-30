@@ -157,7 +157,9 @@ class TenantController extends Controller
                 'alamat_ktp_pasangan_penjamin' => $request->alamat_ktp_pasangan_penjamin,
                 'alamat_tinggal_pasangan_penjamin' => $request->alamat_tinggal_pasangan_penjamin,
                 'hubungan_penjamin' => $request->hubungan_penjamin,
-                'no_telp_penjamin' => $request->no_telp_penjamin
+                'no_telp_penjamin' => $request->no_telp_penjamin,
+                'id_status_kawin' => $request->id_status_kawin,
+                'profile_picture' => '/storage/img/proapps.png',
             ]);
 
             $file = $request->file('profile_picture');
@@ -241,6 +243,7 @@ class TenantController extends Controller
             'nik_tenant' => $request->nik_tenant,
             'nama_tenant' => $request->nama_tenant,
             'id_statushunian_tenant' => $request->id_statushunian_tenant,
+            'id_status_kawin' => $request->id_status_kawin,
             'kewarganegaraan' => $request->kewarganegaraan,
             'masa_berlaku_id' => $request->masa_berlaku_id,
             'alamat_ktp_tenant' => $request->alamat_ktp_tenant,

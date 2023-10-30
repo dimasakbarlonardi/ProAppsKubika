@@ -36,6 +36,7 @@ class Tenant extends Model
         'nama_tenant',
         'id_statushunian_tenant',
         'kewarganegaraan',
+        'id_status_kawin',
         'masa_berlaku_id',
         'alamat_ktp_tenant',
         'provinsi',
@@ -48,7 +49,7 @@ class Tenant extends Model
         'alamat_tinggal_pasangan_penjamin',
         'hubungan_penjamin',
         'no_telp_penjamin',
-
+        'profile_picture'
     ];
 
     protected $dates = ['deleted_at'];

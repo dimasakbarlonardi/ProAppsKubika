@@ -229,6 +229,10 @@ class DashboardController extends Controller
             case ('UURWater'):
                 return redirect()->route('uus-water');
                 break;
+
+            case ('Reminder'):
+                return redirect()->route('reminders.show', $getNotif->id_data);
+                break;
         }
     }
 
