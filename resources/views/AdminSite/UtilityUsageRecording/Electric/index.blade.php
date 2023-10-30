@@ -11,44 +11,8 @@
                         </div>
                     </div>
                 </div>
-                <div class="p-3">
-                    <div class="card shadow-none">
-                        <div class="card-body p-0 pb-3">
-                            <div class="d-flex row mb-4">
-                                <div class="col">
-                                    <div class="justify-content-start my-3">
-                                        <h5>Total selected : <span id="totalSelected">0</span></h5>
-                                    </div>
-                                </div>
-                                <div class="col-4">
-                                    <div class="justify-content-end my-3">
-                                        <div class="d-none ms-3" id="bulk-select-actions">
-                                            <div class="d-flex">
-                                                <select class="form-select form-select-sm" aria-label="Bulk actions"
-                                                    id="valueAction">
-                                                    @if (Request::session()->get('work_relation_id') == $approve->approval_1 && $user->Karyawan->is_can_approve != null)
-                                                        <option class="can-select" value="approve" selected="selected">
-                                                            Approve</option>
-                                                    @elseif (Request::session()->get('work_relation_id') == $approve->approval_2)
-                                                        <option class="can-select" value="calculate">Calculate Invoice
-                                                        </option>
-                                                        <option class="can-select" value="send">Send Invoice</option>
-                                                    @else
-                                                        <option disabled selected>No Action</option>
-                                                    @endif
-                                                </select>
-                                                <button class="btn btn-falcon-success btn-sm ms-2" type="button"
-                                                    id="applyBulk">Apply</button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="uur-data">
+                <div id="uur-data">
 
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
