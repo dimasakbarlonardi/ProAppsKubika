@@ -137,25 +137,29 @@ class OffBoardingTenantController extends Controller
     {
         $conn = ConnectionDB::setConnection(new Tenant());
         $connTUOFF = ConnectionDB::setConnection(new TenantOFF());
+        $connTU = ConnectionDB::setConnection(new TenantUnit());
 
         $nowDate = Carbon::now();
 
         $conn = $conn->where('id_tenant', $request->id_tenant_modal)
-            ->where('is_owner', 0)
             ->first();
-
-        $conn->delete();
 
         $connTUOFF->create([
             'id_tenant' => $conn->id_tenant,
             'id_site' => $conn->id_site,
-            'id_unit' => $conn->id_unit,
+            'id_unit' => $request->id_unit_modal,
             'tgl_sys' => $nowDate,
             'tgl_masuk' => $conn->created_at,
             'tgl_keluar' => $request->tgl_keluar,
             'keterangan' => $request->keterangan,
         ]);
-        DB::commit();
+
+        $tu = $connTU->where('id_tenant', $request->id_tenant_modal)
+            ->where('id_unit', $request->id_unit_modal)
+            ->where('is_owner', 0)
+            ->first();
+
+        $tu->delete();
 
         Alert::success('Berhasil', 'Berhasil menghapus tenant');
 

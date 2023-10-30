@@ -104,6 +104,7 @@
                         <button type="submit" class="btn btn-primary">Submit</button>
                     </div>
                     <input type="hidden" name="id_tenant_modal" id="id_tenant_modal">
+                    <input type="hidden" name="id_unit_modal" id="id_unit_modal">
                 </form>
             </div>
         </div>
@@ -192,13 +193,10 @@
                 icon: 'info',
                 confirmButtonText: 'Yes!'
             }).then((result) => {
-                $.ajax({
-                    url: `/admin/tenant-unit-by-tenant/${id_tenant}/${id_unit}`,
-                    type: 'GET',
-                    success: function(resp) {
-                        window.location.reload();
-                    }
-                })
+                $('#off-modal-form').modal('show')
+
+                $('#id_tenant_modal').val(id_tenant);
+                $('#id_unit_modal').val(id_unit);
             })
         }
     </script>
