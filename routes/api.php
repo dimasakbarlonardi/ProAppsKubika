@@ -109,6 +109,7 @@ Route::prefix('v1')->group(function () {
         Route::post('/gigo/add/{id}', [GIGOController::class, 'addGood']);
         Route::post('/gigo/remove/{id}', [GIGOController::class, 'removeGood']);
         Route::post('/gigo/{id}', [GIGOController::class, 'update']);
+        Route::post('/gigo/approve2/{id}', [GIGOController::class, 'approve2']);
 
         // ================== Attendance ========================
         Route::get('/site-location', [AttendanceController::class, 'siteLocation']);

@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\DetailGIGO;
 use App\Models\RequestGIGO;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 
 class GIGOController extends Controller
 {
@@ -59,5 +60,18 @@ class GIGOController extends Controller
         return ResponseFormatter::success([
             $gigo
       ], 'Berhasil submit GIGO');
+    }
+
+    public function approve2($id)
+    {
+        $connGIGO = ConnectionDB::setConnection(new RequestGIGO());
+
+        $gigo = $connGIGO->find($id);
+        $gigo->sign_approval_1(Carbon::now());
+        $gigo->save();
+
+        return ResponseFormatter::success([
+            $gigo
+      ], 'Success approve 2 GIGO');
     }
 }
