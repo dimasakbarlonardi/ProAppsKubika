@@ -122,6 +122,11 @@ class WorkOrderController extends Controller
         $object->bank = $cr->bank;
         $object->transaction_status = $cr->transaction_status;
         $object->payment_type = $cr->payment_type;
+        $object->va_number = $cr->va_number;
+        $object->expiry_time = $cr->expiry_time;
+        $object->admin_fee = $cr->admin_fee;
+        $object->gross_amount = $cr->gross_amount;
+        $object->tax = $cr->tax;
 
         $request_details = [];
         foreach ($cr->WorkOrder->WODetail as $itemWO) {
@@ -256,7 +261,7 @@ class WorkOrderController extends Controller
                 $cr->save();
 
                 return ResponseFormatter::success(
-                    $object,
+                    $response,
                     'Authenticated'
                 );
             } elseif ($type == 'credit_card') {
