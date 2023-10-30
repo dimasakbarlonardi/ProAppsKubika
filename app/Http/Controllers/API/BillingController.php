@@ -534,20 +534,22 @@ class BillingController extends Controller
         if ($request->method == 'credit_card') {
             $admin_fee = 2000 + (0.029 * $subtotal);
             $tax_fee = 0.11 * $admin_fee;
-            $admin_fee_tax = $admin_fee + $tax_fee;
             $grand_total = $subtotal + $admin_fee_tax;
         } else {
             $admin_fee = 4000;
             $tax_fee = 0.11 * $admin_fee;
-            $admin_fee_tax = $admin_fee + $tax_fee;
-            $grand_total = $subtotal + $admin_fee_tax;
+            $admin_fee = $admin_fee + $tax_fee;
+
+            $total = $subtotal + $admin_fee;
+            $tax = 0.11 * $total;
+            $grand_total = $total + $tax;
         }
 
         return response()->json([
             'sub_total' => round($subtotal),
             'admin_fee' => round($admin_fee),
-            'tax_fee' => round($tax_fee),
-            'admin_fee_plus_tax' => round($admin_fee_tax),
+            'total' => round($total),
+            'tax' => round($tax),
             'grand_total' => round($grand_total)
         ]);
     }

@@ -90,6 +90,11 @@ class WorkOrderController extends Controller
         $object->bank = $cr->bank;
         $object->transaction_status = $cr->transaction_status;
         $object->payment_type = $cr->payment_type;
+        $object->va_number = $cr->va_number;
+        $object->expiry_time = $cr->expiry_time;
+        $object->admin_fee = $cr->admin_fee;
+        $object->gross_amount = $cr->gross_amount;
+        $object->tax = $cr->tax;
 
         $request_details = [];
         foreach ($cr->WorkOrder->WODetail as $itemWO) {
@@ -170,13 +175,11 @@ class WorkOrderController extends Controller
 
     public function generatePaymentWO(Request $request, $id)
     {
-        // $connWO = ConnectionDB::setConnection(new WorkOrder());
         $connTransaction = ConnectionDB::setConnection(new CashReceipt());
 
         $client = new Client();
 
         $cr = $connTransaction->find($id);
-        // $wo = $connWO->find($id);
 
         $site = Site::find($cr->WorkOrder->Ticket->id_site);
 
@@ -190,10 +193,14 @@ class WorkOrderController extends Controller
                 $cr->gross_amount = $cr->sub_total + $admin_fee;
                 $cr->payment_type = 'bank_transfer';
                 $cr->bank = Str::upper($bank);
+
+                $tax = $request->tax;
+                $gross_amount = $cr->sub_total + $tax + $admin_fee;
+
                 $payment = [];
                 $payment['payment_type'] = $type;
                 $payment['transaction_details']['order_id'] = $cr->order_id;
-                $payment['transaction_details']['gross_amount'] = $cr->gross_amount;
+                $payment['transaction_details']['gross_amount'] = $gross_amount;
                 $payment['bank_transfer']['bank'] = $bank;
 
                 $response = $client->request('POST', 'https://api.sandbox.midtrans.com/v2/charge', [
@@ -217,22 +224,12 @@ class WorkOrderController extends Controller
                 $cr->admin_fee = $admin_fee;
                 $cr->transaction_status = 'VERIFYING';
 
-                $object = new stdClass();
-                $object->due_date = $cr->expiry_time;
-                $object->va_number = $cr->va_number;
-                $object->total_bill_request = $cr->sub_total;
-                $object->admin_fee = $cr->admin_fee;
-
-                $tax = (int) $cr->gross_amount * 0.11;
-                $object->tax = $tax;
-                $object->gross_amount = $cr->gross_amount + $tax;
-
-                $cr->tax;
-                $cr->gross_amount;
+                $cr->tax = $tax;
+                $cr->gross_amount = $gross_amount;
                 $cr->save();
 
                 return ResponseFormatter::success(
-                    $object,
+                    $response,
                     'Authenticated'
                 );
             } elseif ($type == 'credit_card') {
