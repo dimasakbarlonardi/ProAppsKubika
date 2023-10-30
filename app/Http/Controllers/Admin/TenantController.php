@@ -100,6 +100,7 @@ class TenantController extends Controller
                 'nik_tenant' => $request->nik_tenant,
                 'nama_tenant' => $request->nama_tenant,
                 'id_statushunian_tenant' => $request->id_statushunian_tenant,
+                'id_status_kawin' => $request->id_status_kawin,
                 'kewarganegaraan' => $request->kewarganegaraan,
                 'masa_berlaku_id' => $request->masa_berlaku_id,
                 'alamat_ktp_tenant' => $request->alamat_ktp_tenant,
@@ -169,10 +170,12 @@ class TenantController extends Controller
         $connTenant =  ConnectionDB::setConnection(new Tenant());
         $connIdCard = ConnectionDB::setConnection(new IdCard());
         $connStatusHunian = ConnectionDB::setConnection(new StatusHunianTenant());
+        $connStatusKawin = ConnectionDB::setConnection(new StatusKawin());
 
         $data['tenant'] = $connTenant->where('id_tenant', $id)->first();
         $data['idcards'] = $connIdCard->get();
         $data['statushunians'] = $connStatusHunian->get();
+        $data['statuskawins'] = $connStatusKawin->get();
 
 
         return view('AdminSite.Tenant.edit', $data);
@@ -196,6 +199,7 @@ class TenantController extends Controller
             'nik_tenant' => $request->nik_tenant,
             'nama_tenant' => $request->nama_tenant,
             'id_statushunian_tenant' => $request->id_statushunian_tenant,
+            'id_status_kawin' => $request->id_status_kawin,
             'kewarganegaraan' => $request->kewarganegaraan,
             'masa_berlaku_id' => $request->masa_berlaku_id,
             'alamat_ktp_tenant' => $request->alamat_ktp_tenant,

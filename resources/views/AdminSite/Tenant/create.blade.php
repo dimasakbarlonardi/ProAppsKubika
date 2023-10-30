@@ -15,7 +15,7 @@
                 <div class="card-header position-relative min-vh-25 mb-8">
                     <div class="avatar avatar-5xl avatar-profile shadow-sm img-thumbnail rounded-circle">
                         <div class="h-100 w-100 rounded-circle overflow-hidden position-relative">
-                                <img id="newavatar" src="" width="200" alt="Upload Foto">
+                            <img id="newavatar" src="" width="200" alt="Upload Foto">
                             <input class="d-none" name="profile_picture" id="input-file" type="file">
                             <label class="mb-0 overlay-icon d-flex flex-center" for="input-file">
                                 <span class="bg-holder overlay overlay-0"></span>
@@ -32,16 +32,16 @@
         </div>
     </div>
     <div class="card">
-    <div class="card">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <div class="d-flex align-items-center">
-                <a href="{{ route('tenants.index') }}" class="btn btn-falcon-default btn-sm">
-                    <i class="fas fa-arrow-left"></i> Back
-                </a>
-                <div class="ml-3">Create Tenant</div>
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <div class="d-flex align-items-center">
+                    <a href="{{ route('tenants.index') }}" class="btn btn-falcon-default btn-sm">
+                        <i class="fas fa-arrow-left"></i> Back
+                    </a>
+                    <div class="ml-3">Create Tenant</div>
+                </div>
             </div>
         </div>
-    </div>
         <div class="p-5">
             <div class="tenant">
                 <h5>Tenant</h5>
@@ -81,14 +81,13 @@
                     <div class="col-6">
                         <label class="form-label">Status Hunian Tenant</label>
                         <select class="form-control" name="id_statushunian_tenant" required>
-                            <option selected disabled>-- Pilih Status Hunian --</option>
+                            <option selected disabled>-- Select Status Hunian --</option>
                             @foreach ($statushunians as $statushunian)
                             <option value="{{ $statushunian->id_statushunian_tenant }}" @if (old('id_statushunian_tenant')==$statushunian->id_statushunian_tenant) selected @endif>
                                 {{ $statushunian->status_hunian_tenant }}</option>
                             @endforeach
                         </select>
                     </div>
-
                 </div>
                 <div class="row mb-3">
                     <div class="col-6">
@@ -105,8 +104,6 @@
                         <label class="form-label">KTP Address Tenant</label>
                         <textarea type="text" rows="10" name="alamat_ktp_tenant" class="form-control" required>{{ old('alamat_ktp_tenant') }}</textarea>
                     </div>
-
-
                 </div>
                 <div class="row mb-3">
                     <div class="col-6">
@@ -120,7 +117,6 @@
                 </div>
             </div>
             <div class="row mb-3">
-
                 <div class="col-6">
                     <label class="form-label">Marriage Status</label>
                     <select class="form-control" name="id_status_kawin" id="id_status_kawin" required>
