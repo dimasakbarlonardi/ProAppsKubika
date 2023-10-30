@@ -17,6 +17,9 @@ class Kernel extends ConsoleKernel
     {
         // $schedule->command('attendance:cron')->daily();
         $schedule->command('attendance:cron')->everyMinute(); //dev
+
+        // Reminder
+        $schedule->command('reminder:cron')->everyMinute();
     }
 
     /**
@@ -26,7 +29,7 @@ class Kernel extends ConsoleKernel
      */
     protected function commands()
     {
-        $this->load(__DIR__.'/Commands');
+        $this->load(__DIR__ . '/Commands');
 
         require base_path('routes/console.php');
     }
