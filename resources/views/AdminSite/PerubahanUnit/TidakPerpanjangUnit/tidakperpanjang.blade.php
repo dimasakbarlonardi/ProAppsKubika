@@ -1,5 +1,5 @@
 <div class="table-responsive scrollbar">
-    <table class="table" id="table-tidakperpanjang">
+    <table class="table table-striped" id="table-tidakperpanjang">
         <thead>
             <tr>
                 <th scope="col">Unit</th>
@@ -18,9 +18,9 @@
                     <td>{{ $tu->unit->nama_unit }}</td>
                     <td>{{ $tu->Owner($tu->unit->id_unit)->nama_tenant }}</td>
                     <td>{{ $tu->tenant->nama_tenant }}</td>
-                    <td>
-                        {{ \Carbon\Carbon::parse($tu->tgl_masuk)->format(' d-M-Y') }} -
-                        {{ \Carbon\Carbon::parse($tu->tgl_keluar)->format(' d-M-Y') }}
+                    <td class="text-center">
+                        {{ !$tu->is_owner ? HumanDate($tu->tgl_masuk) : '-' }} <br>
+                        {{ !$tu->is_owner ? HumanDate($tu->tgl_keluar) : '' }}
                     </td>
                     <td>{{ $tu->sewa_ke }}</td>
                     <td>
