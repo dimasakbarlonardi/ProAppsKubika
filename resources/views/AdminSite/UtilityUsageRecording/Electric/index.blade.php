@@ -76,6 +76,36 @@
                                 <option value="1">Approved</option>
                             </select>
                         </div>
+                        <div class="mb-3">
+                            <label class="mb-1">Periode</label>
+                            <div class="row">
+                                <div class="col-6">
+                                    <select class="form-control" id="select_period">
+                                        <option value="01">January</option>
+                                        <option value="02">February</option>
+                                        <option value="03">March</option>
+                                        <option value="04">April</option>
+                                        <option value="05">May</option>
+                                        <option value="06">June</option>
+                                        <option value="07">July</option>
+                                        <option value="08">August</option>
+                                        <option value="09">September</option>
+                                        <option value="10">October</option>
+                                        <option value="11">November</option>
+                                        <option value="12">December</option>
+                                    </select>
+                                </div>
+                                <div class="col-6">
+                                    <select class="form-control" id="select_year">
+                                        <option value="2023">2023</option>
+                                        <option value="2022">2022</option>
+                                        <option value="2021">2021</option>
+                                        <option value="2020">2020</option>
+                                        <option value="2019">2019</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </form>
             </div>
@@ -152,24 +182,48 @@
         $('#select_status').on('change', function() {
             var status = $(this).val();
             var tower = $('#id_tower').val();
+            var period = $('#select_period').val();
+            var year = $('#select_year').val();
 
-            getData(tower, status);
+            getData(tower, status, period, year);
         })
 
         $('#id_tower').on('change', function() {
             var tower = $(this).val();
             var status = $('#select_status').val();
+            var period = $('#select_period').val();
+            var year = $('#select_year').val();
 
-            getData(tower, status);
+            getData(tower, status, period, year);
         })
 
-        function getData(tower, status) {
+        $('#select_period').on('change', function() {
+            var tower = $('#id_tower').val();
+            var period = $(this).val();
+            var status = $('#select_status').val();
+            var year = $('#select_year').val();
+
+            getData(tower, status, period, year);
+        })
+
+        $('#select_year').on('change', function() {
+            var tower = $('#id_tower').val();
+            var period = $('#select_period').val();
+            var status = $('#select_status').val();
+            var year = $(this).val();
+
+            getData(tower, status, period, year);
+        })
+
+        function getData(tower, status, period, year) {
             $.ajax({
                 url: '/admin/uus-electric-filtered',
                 type: 'GET',
                 data: {
                     tower,
-                    status
+                    status,
+                    period,
+                    year
                 },
                 success: function(resp) {
                     $('#uur-data').html(resp.html);

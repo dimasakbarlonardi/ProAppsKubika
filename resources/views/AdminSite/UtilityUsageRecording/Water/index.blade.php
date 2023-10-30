@@ -61,7 +61,8 @@
                     <div class="card-body">
                         <div class="mb-3">
                             <label class="mb-1">Tower</label>
-                            <select name="id_tower" class="form-control" id="id_tower">
+                            <select class="form-control" id="id_tower">
+                                <option value="all">All</option>
                                 @foreach ($towers as $tower)
                                     <option {{ request()->get('id_tower') == $tower->id_tower ? 'selected' : '' }}
                                         value="{{ $tower->id_tower }}">{{ $tower->nama_tower }}</option>
@@ -70,11 +71,41 @@
                         </div>
                         <div class="mb-3">
                             <label class="mb-1">Status</label>
-                            <select name="unit_id" class="form-control" id="select_status">
+                            <select class="form-control" id="select_status">
                                 <option value="all">All</option>
                                 <option value="0">Pending</option>
-                                <option value="APPROVED">Approved</option>
+                                <option value="1">Approved</option>
                             </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="mb-1">Periode</label>
+                            <div class="row">
+                                <div class="col-6">
+                                    <select class="form-control" id="select_period">
+                                        <option value="01">January</option>
+                                        <option value="02">February</option>
+                                        <option value="03">March</option>
+                                        <option value="04">April</option>
+                                        <option value="05">May</option>
+                                        <option value="06">June</option>
+                                        <option value="07">July</option>
+                                        <option value="08">August</option>
+                                        <option value="09">September</option>
+                                        <option value="10">October</option>
+                                        <option value="11">November</option>
+                                        <option value="12">December</option>
+                                    </select>
+                                </div>
+                                <div class="col-6">
+                                    <select class="form-control" id="select_year">
+                                        <option value="2023">2023</option>
+                                        <option value="2022">2022</option>
+                                        <option value="2021">2021</option>
+                                        <option value="2020">2020</option>
+                                        <option value="2019">2019</option>
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </form>
@@ -93,9 +124,11 @@
             }
 
             var status = $('#select_status').val();
-            var id_tower = $('#id_tower').val();
+            var tower = $('#id_tower').val();
+            var period = $('#select_period').val();
+            var year = $('#select_year').val();
 
-            // window.location.replace(`/admin/uus-water?status=${status}&id_tower=${id_tower}`)
+            getData(tower, status, period, year);
         })
         $('#applyBulk').on('click', function() {
             if (confirm('Are you sure?')) {
@@ -157,17 +190,55 @@
         })
 
         $('#select_status').on('change', function() {
-            var value = $(this).val();
-            var id_tower = $('#id_tower').val();
+            var status = $(this).val();
+            var tower = $('#id_tower').val();
+            var period = $('#select_period').val();
+            var year = $('#select_year').val();
 
-            // window.location.replace(`/admin/uus-water?status=${value}&id_tower=${id_tower}`)
+            getData(tower, status, period, year);
         })
 
         $('#id_tower').on('change', function() {
-            var value = $(this).val();
+            var tower = $(this).val();
             var status = $('#select_status').val();
+            var period = $('#select_period').val();
+            var year = $('#select_year').val();
 
-            // window.location.replace(`/admin/uus-water?status=${status}&id_tower=${value}`)
+            getData(tower, status, period, year);
         })
+
+        $('#select_period').on('change', function() {
+            var tower = $('#id_tower').val();
+            var period = $(this).val();
+            var status = $('#select_status').val();
+            var year = $('#select_year').val();
+
+            getData(tower, status, period, year);
+        })
+
+        $('#select_year').on('change', function() {
+            var tower = $('#id_tower').val();
+            var period = $('#select_period').val();
+            var status = $('#select_status').val();
+            var year = $(this).val();
+
+            getData(tower, status, period, year);
+        })
+
+        function getData(tower, status, period, year) {
+            $.ajax({
+                url: '/admin/uus-water-filtered',
+                type: 'GET',
+                data: {
+                    tower,
+                    status,
+                    period,
+                    year
+                },
+                success: function(resp) {
+                    $('#uur-data').html(resp.html);
+                }
+            })
+        }
     </script>
 @endsection

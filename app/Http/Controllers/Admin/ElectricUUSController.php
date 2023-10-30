@@ -60,6 +60,9 @@ class ElectricUUSController extends Controller
             $records = $records->where('is_approve', $status);
         }
 
+        $records = $records->where('periode_bulan', $request->period);
+        $records = $records->where('periode_tahun', $request->year);
+
         $data['elecUSS'] = $records->get();
 
         return response()->json([
