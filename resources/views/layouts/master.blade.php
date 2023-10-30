@@ -333,7 +333,6 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function(event) {
-            console.log('wr' ,division_relation);
             Echo.channel("hello-channel")
                 .listen('HelloEvent', (e) => {
                     var receiver = e.dataNotif.receiver
