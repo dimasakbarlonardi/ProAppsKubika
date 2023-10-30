@@ -108,17 +108,42 @@ class WorkOrderController extends Controller
         ->first();
 
         $object = new stdClass();
-        $object->work_order_id = $cr->WorkOrder->id;
+
+        if ($cr->WorkOrder) {
+            $object->work_order_id = $cr->WorkOrder->id;
+            $object->tenant_name = $cr->WorkOrder->Ticket->Tenant->nama_tenant;
+            $object->tower = $cr->WorkOrder->Ticket->Unit->Tower->nama_tower;
+            $object->tower = $cr->WorkOrder->Ticket->Unit->nama_unit;
+            $object->tenant_email = $cr->WorkOrder->Ticket->Tenant->email_tenant;
+            $object->phone_number_tenant = $cr->WorkOrder->Ticket->Tenant->no_telp_tenant;
+
+            $request_details = [];
+            foreach ($cr->WorkOrder->WODetail as $itemWO) {
+                $item = new stdClass();
+                $item->billing = $itemWO->detil_pekerjaan;
+                $item->price = $itemWO->detil_biaya_alat;
+
+                $request_details[] = $item;
+            }
+
+            $object->request_details = $request_details;
+            $object->total = $cr->sub_total;
+        }
+
+        if ($cr->Reservation) {
+            $object->reservation_id = $cr->Reservation->id;
+            $object->tenant_name = $cr->Reservation->Ticket->Tenant->nama_tenant;
+            $object->tower = $cr->Reservation->Ticket->Unit->Tower->nama_tower;
+            $object->tower = $cr->Reservation->Ticket->Unit->nama_unit;
+            $object->tenant_email = $cr->Reservation->Ticket->Tenant->email_tenant;
+            $object->phone_number_tenant = $cr->Reservation->Ticket->Tenant->no_telp_tenant;
+        }
+
         $object->transaction_id = $cr->id;
         $object->no_invoice = $cr->no_invoice;
         $object->issued_date = $cr->created_at;
-        $object->tenant_name = $cr->WorkOrder->Ticket->Tenant->nama_tenant;
-        $object->tower = $cr->WorkOrder->Ticket->Unit->Tower->nama_tower;
-        $object->tower = $cr->WorkOrder->Ticket->Unit->nama_unit;
         $object->site = $site->province;
         $object->site = $site->kode_pos;
-        $object->tenant_email = $cr->WorkOrder->Ticket->Tenant->email_tenant;
-        $object->phone_number_tenant = $cr->WorkOrder->Ticket->Tenant->no_telp_tenant;
         $object->bank = $cr->bank;
         $object->transaction_status = $cr->transaction_status;
         $object->payment_type = $cr->payment_type;
@@ -127,18 +152,6 @@ class WorkOrderController extends Controller
         $object->admin_fee = $cr->admin_fee;
         $object->gross_amount = $cr->gross_amount;
         $object->tax = $cr->tax;
-
-        $request_details = [];
-        foreach ($cr->WorkOrder->WODetail as $itemWO) {
-            $item = new stdClass();
-            $item->billing = $itemWO->detil_pekerjaan;
-            $item->price = $itemWO->detil_biaya_alat;
-
-            $request_details[] = $item;
-        }
-
-        $object->request_details = $request_details;
-        $object->total = $cr->sub_total;
 
         return ResponseFormatter::success(
             $object,
