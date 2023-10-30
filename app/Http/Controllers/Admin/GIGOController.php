@@ -171,13 +171,14 @@ class GIGOController extends Controller
         return response()->json(['status' => 'ok']);
     }
 
-    public function show($id)
+    public function show(Request $request, $id)
     {
         $conn = ConnectionDB::setConnection(new RequestGIGO());
         $connApprove = ConnectionDB::setConnection(new Approve());
 
         $data['gigo'] = $conn->where('id', $id)->first();
         $data['approve'] = $connApprove->find(8);
+        $data['user'] = $request->session()->get('user');
 
         return view('AdminSite.GIGO.show', $data);
     }

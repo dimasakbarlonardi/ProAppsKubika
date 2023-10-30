@@ -8,26 +8,7 @@
 
 @section('content')
     <div class="card">
-        <div class="card-header">
-            <div class="row">
-                <div class="col-md d-flex">
-                    <div class="avatar avatar-2xl">
-                        <img class="rounded-circle" src="../../assets/img/team/1.jpg" alt="" />
-                    </div>
-                    <div class="flex-1 ms-2">
-                        <h5 class="mb-0 text-light">Women work wonders… on your marketing skills</h5><a
-                            class="text-800 fs--1" href="#!"><span class="fw-semi-bold text-light">Emma
-                                Watson</span>
-                            <span class="ms-1 text-light">&lt;emma@watson.com&gt;</span>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-md-auto ms-auto d-flex align-items-center ps-6 ps-md-3">
-                    <small class="text-light">8:40 AM (9 hours
-                        ago)</small><span class="fas fa-star text-warning fs--1 ms-2"></span>
-                </div>
-            </div>
-        </div>
+       
         <div class="card-body bg-light">
             <div class="row">
                 <div class="col-8">

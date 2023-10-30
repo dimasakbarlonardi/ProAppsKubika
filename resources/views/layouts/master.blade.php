@@ -40,9 +40,7 @@
     <!--    Stylesheets-->
     <!-- ===============================================-->
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link
-        href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700%7cPoppins:300,400,500,600,700,800,900&amp;display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700%7cPoppins:300,400,500,600,700,800,900&amp;display=swap" rel="stylesheet">
     <link href="{{ url('assets/vendors/simplebar/simplebar.min.css') }}" rel="stylesheet">
 
     <link href="{{ url('assets/css/theme.min.css') }}" rel="stylesheet" id="style-default">
@@ -73,13 +71,10 @@
             <nav class="navbar navbar-light navbar-vertical navbar-expand-xl navbar-card">
                 <div class="d-flex align-items-center">
                     <div class="toggle-icon-wrapper">
-                        <button class="btn navbar-toggler-humburger-icon navbar-vertical-toggle"
-                            data-bs-toggle="tooltip" data-bs-placement="left" title="Toggle Navigation"><span
-                                class="navbar-toggle-icon"><span class="toggle-line"></span></span></button>
+                        <button class="btn navbar-toggler-humburger-icon navbar-vertical-toggle" data-bs-toggle="tooltip" data-bs-placement="left" title="Toggle Navigation"><span class="navbar-toggle-icon"><span class="toggle-line"></span></span></button>
                     </div>
                     <a class="navbar-brand" href="{{ route('dashboard') }}">
-                        <div class="d-flex align-items-center py-3"><img class="me-2"
-                                src="/assets/img/icons/spot-illustrations/proapps.png" alt="proapps" width="150" />
+                        <div class="d-flex align-items-center py-3"><img class="me-2" src="/assets/img/icons/spot-illustrations/proapps.png" alt="proapps" width="150" />
                         </div>
                     </a>
                 </div>
@@ -94,47 +89,33 @@
 
             <div class="content">
                 <nav class="navbar navbar-light navbar-glass navbar-top navbar-expand" style="display: none;">
-                    <button class="btn navbar-toggler-humburger-icon navbar-toggler me-1 me-sm-3" type="button"
-                        data-bs-toggle="collapse" data-bs-target="#navbarVerticalCollapse"
-                        aria-controls="navbarVerticalCollapse" aria-expanded="false"
-                        aria-label="Toggle   Navigation"><span class="navbar-toggle-icon"><span
-                                class="toggle-line"></span></span></button>
+                    <button class="btn navbar-toggler-humburger-icon navbar-toggler me-1 me-sm-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalCollapse" aria-controls="navbarVerticalCollapse" aria-expanded="false" aria-label="Toggle   Navigation"><span class="navbar-toggle-icon"><span class="toggle-line"></span></span></button>
                     <a class="navbar-brand me-1 me-sm-3" href="{{ route('dashboard') }}">
-                        <div class="d-flex align-items-center"><img class="me-2"
-                                src="/assets/img/icons/spot-illustrations/proapps.png" alt="" width="150" />
+                        <div class="d-flex align-items-center"><img class="me-2" src="/assets/img/icons/spot-illustrations/proapps.png" alt="" width="150" />
                         </div>
                     </a>
                     <ul class="navbar-nav align-items-center d-none d-lg-block">
                         <li class="nav-item">
                             <div class="search-box" data-list='{"valueNames":["title"]}'>
                                 <form class="position-relative" data-bs-toggle="search" data-bs-display="static">
-                                    <input class="form-control search-input fuzzy-search" type="search"
-                                        placeholder="Search..." aria-label="Search" />
+                                    <input class="form-control search-input fuzzy-search" type="search" placeholder="Search..." aria-label="Search" />
                                     <span class="fas fa-search search-box-icon"></span>
                                 </form>
-                                <div class="btn-close-falcon-container position-absolute end-0 top-50 translate-middle shadow-none"
-                                    data-bs-dismiss="search"><button class="btn btn-link btn-close-falcon p-0"
-                                        aria-label="Close"></button></div>
+                                <div class="btn-close-falcon-container position-absolute end-0 top-50 translate-middle shadow-none" data-bs-dismiss="search"><button class="btn btn-link btn-close-falcon p-0" aria-label="Close"></button></div>
                                 <div class="dropdown-menu border font-base start-0 mt-2 py-0 overflow-hidden w-100">
                                     <div class="scrollbar list py-3" style="max-height: 24rem;">
                                         <h6 class="dropdown-header fw-medium text-uppercase px-x1 fs--2 pt-0 pb-2">
                                             Recently Browsed</h6>
-                                        <a class="dropdown-item fs--1 px-x1 py-1 hover-primary"
-                                            href="app/events/event-detail.html">
+                                        <a class="dropdown-item fs--1 px-x1 py-1 hover-primary" href="app/events/event-detail.html">
                                             <div class="d-flex align-items-center">
                                                 <span class="fas fa-circle me-2 text-300 fs--2"></span>
-                                                <div class="fw-normal title">Pages <span
-                                                        class="fas fa-chevron-right mx-1 text-500 fs--2"
-                                                        data-fa-transform="shrink-2"></span> Events</div>
+                                                <div class="fw-normal title">Pages <span class="fas fa-chevron-right mx-1 text-500 fs--2" data-fa-transform="shrink-2"></span> Events</div>
                                             </div>
                                         </a>
-                                        <a class="dropdown-item fs--1 px-x1 py-1 hover-primary"
-                                            href="app/e-commerce/customers.html">
+                                        <a class="dropdown-item fs--1 px-x1 py-1 hover-primary" href="app/e-commerce/customers.html">
                                             <div class="d-flex align-items-center">
                                                 <span class="fas fa-circle me-2 text-300 fs--2"></span>
-                                                <div class="fw-normal title">E-commerce <span
-                                                        class="fas fa-chevron-right mx-1 text-500 fs--2"
-                                                        data-fa-transform="shrink-2"></span> Customers</div>
+                                                <div class="fw-normal title">E-commerce <span class="fas fa-chevron-right mx-1 text-500 fs--2" data-fa-transform="shrink-2"></span> Customers</div>
                                             </div>
                                         </a>
                                         <hr class="text-200 dark__text-900" />
@@ -148,13 +129,10 @@
                     </ul>
                     <ul class="navbar-nav navbar-nav-icons ms-auto flex-row align-items-center">
                         <li class="nav-item dropdown">
-                            <a class="nav-link notification-indicator-danger px-0 fa-icon-wait"
-                                id="navbarDropdownNotification" role="button" data-bs-toggle="dropdown">
-                                <span class="fas fa-bell" data-fa-transform="shrink-6"
-                                    style="font-size: 33px"></span>
+                            <a class="nav-link notification-indicator-danger px-0 fa-icon-wait" id="navbarDropdownNotification" role="button" data-bs-toggle="dropdown">
+                                <span class="fas fa-bell" data-fa-transform="shrink-6" style="font-size: 33px"></span>
                             </a>
-                            <div class="dropdown-menu dropdown-caret dropdown-caret dropdown-menu-end dropdown-menu-card dropdown-menu-notification dropdown-caret-bg"
-                                aria-labelledby="navbarDropdownNotification">
+                            <div class="dropdown-menu dropdown-caret dropdown-caret dropdown-menu-end dropdown-menu-card dropdown-menu-notification dropdown-caret-bg" aria-labelledby="navbarDropdownNotification">
                                 <div class="card card-notification shadow-none">
                                     <div class="card-header">
                                         <div class="row justify-content-between align-items-center">
@@ -181,14 +159,12 @@
                             </div>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link pe-0 ps-2" id="navbarDropdownUser" role="button"
-                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <a class="nav-link pe-0 ps-2" id="navbarDropdownUser" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <div class="avatar avatar-xl">
                                     <img class="rounded-circle" src="/assets/img/team/3-thumb.png" alt="" />
                                 </div>
                             </a>
-                            <div class="dropdown-menu dropdown-caret dropdown-caret dropdown-menu-end py-0"
-                                aria-labelledby="navbarDropdownUser">
+                            <div class="dropdown-menu dropdown-caret dropdown-caret dropdown-menu-end py-0" aria-labelledby="navbarDropdownUser">
                                 <div class="bg-white dark__bg-1000 rounded-2 py-2">
                                     <form action="{{ route('logout') }}" method="post">
                                         @csrf
@@ -212,10 +188,10 @@
                 <footer class="footer">
                     <div class="row g-0 justify-content-between fs--1 mt-4 mb-3">
                         <div class="col-12 col-sm-auto text-center">
-                            <p class="mb-0 text-600">Thank you for creating with Falcon <span
-                                    class="d-none d-sm-inline-block">|
-                                </span><br class="d-sm-none" /> 2022 &copy; <a
-                                    href="https://themewagon.com">Themewagon</a></p>
+                            <p class="mb-0 text-600">
+                                <span class="d-none d-sm-inline-block"> </span><br class="d-sm-none" />
+                                2022 &copy; <a href="https://indoland-group.co.id/">Indoland Property Management</a>
+                            </p>
                         </div>
                         <div class="col-12 col-sm-auto text-center">
                             <p class="mb-0 text-600">v3.14.0</p>
