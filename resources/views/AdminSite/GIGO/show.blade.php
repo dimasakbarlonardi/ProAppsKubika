@@ -144,6 +144,15 @@
                         </div>
                         <div class="card-footer text-center">
                             @if (
+                                !$gigo->sign_approval_1 &&                                    
+                                    $approve->approval_1 == $user->RoleH->WorkRelation->id_work_relation
+                                )
+                                <form action="{{ route('gigoApprove1', $gigo->id) }}" class="d-inline" method="post">
+                                    @csrf
+                                    <button class="btn btn-lg btn-block btn-success" onclick="approveGigo1({{ $gigo->id }})" type="button">Approve</button>
+                                </form>
+                            @endif
+                            @if (
                                 $gigo->sign_approval_1 &&
                                     !$gigo->sign_approval_2 &&
                                     $approve->approval_2 == $user->RoleH->WorkRelation->id_work_relation &&
@@ -276,6 +285,22 @@
                     if (resp.status === 'ok') {
                         $(`#good${id}`).html('');
                         window.location.reload()
+                    }
+                }
+            })
+        }
+
+        function approveGigo1(id) {
+            $.ajax({
+                url: `/admin/gigo/approve1/${id}`,
+                type: 'POST',
+                success: function(data) {
+                    if (data.status === 'ok') {
+                        Swal.fire(
+                            'Success!',
+                            'Success approve GIGO!',
+                            'success'
+                        ).then(() => window.location.reload())
                     }
                 }
             })
