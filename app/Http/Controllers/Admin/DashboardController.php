@@ -221,6 +221,14 @@ class DashboardController extends Controller
             case ('UpdateElectricRecording'):
                 return redirect()->route('usr-electric');
                 break;
+
+            case ('UURElectric'):
+                return redirect()->route('usr-electric');
+                break;
+
+            case ('UURWater'):
+                return redirect()->route('uus-water');
+                break;
         }
     }
 

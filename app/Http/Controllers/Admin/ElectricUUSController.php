@@ -13,6 +13,7 @@ use App\Models\ElectricUUS;
 use App\Models\Role;
 use App\Models\Site;
 use App\Models\System;
+use App\Models\Tower;
 use App\Models\Unit;
 use App\Models\User;
 use App\Services\Midtrans\CreateSnapTokenService;
@@ -27,57 +28,43 @@ class ElectricUUSController extends Controller
 {
     public function index(Request $request)
     {
-        $connElecUUS = ConnectionDB::setConnection(new ElectricUUS());
-        $connUnit = ConnectionDB::setConnection(new Unit());
+        $connTower = ConnectionDB::setConnection(new Tower());
         $connApprove = ConnectionDB::setConnection(new Approve());
 
         $data['approve'] = $connApprove->find(9);
         $data['user'] = $request->session()->get('user');
-
-        switch ($request->status) {
-            case ('PENDING'):
-                $record = $connElecUUS->where('is_approve', null)
-                    ->where('id_unit', $request->id_unit);
-                break;
-            case ('APPROVED'):
-                $record = $connElecUUS->where('is_approve', "1")
-                    ->where('no_refrensi', null)
-                    ->where('id_unit', $request->id_unit);
-                break;
-            case ('WAITING'):
-                $record = $connElecUUS->where('is_approve', "1")
-                    ->where('no_refrensi', '!=', null)
-                    ->where('id_unit', $request->id_unit)
-                    ->whereHas('MonthlyUtility.MonthlyTenant', function ($query) {
-                        $query->where('tgl_jt_invoice', null);
-                    })
-                    ->with('MonthlyUtility.MonthlyTenant');
-                break;
-            case ('PAID'):
-                $record = $connElecUUS->where('id_unit', $request->id_unit)
-                    ->whereHas('MonthlyUtility.MonthlyTenant', function ($query) {
-                        $query->where('tgl_bayar_invoice', '!=', '');
-                    })
-                    ->with('MonthlyUtility.MonthlyTenant');
-                break;
-
-            case ('UNPAID'):
-                $record = $connElecUUS->where('id_unit', $request->id_unit)
-                    ->whereHas('MonthlyUtility.MonthlyTenant', function ($query) {
-                        $query->where('tgl_bayar_invoice', null);
-                        $query->where('tgl_jt_invoice', '!=', null);
-                    })
-                    ->with('MonthlyUtility.MonthlyTenant');
-                break;
-            default:
-                $record = $connElecUUS;
-                break;
-        }
-
-        $data['units'] = $connUnit->get();
-        $data['elecUSS'] = $record->get();
+        $data['towers'] = $connTower->get();
 
         return view('AdminSite.UtilityUsageRecording.Electric.index', $data);
+    }
+
+    public function filteredData(Request $request)
+    {
+        $connElecUUS = ConnectionDB::setConnection(new ElectricUUS());
+        $connApprove = ConnectionDB::setConnection(new Approve());
+
+        $records = $connElecUUS->where('deleted_at', null);
+
+        $data['approve'] = $connApprove->find(9);
+        $data['user'] = $request->session()->get('user');
+
+        if ($request->tower != 'all') {
+            $id_tower = $request->tower;
+            $records = $records->whereHas('Unit.Tower', function($q) use ($id_tower) {
+                $q->where('id_tower', $id_tower);
+            });
+        }
+
+        if ($request->status != 'all') {
+            $status = $request->status == '0' ? null : $request->status;
+            $records = $records->where('is_approve', $status);
+        }
+
+        $data['elecUSS'] = $records->get();
+
+        return response()->json([
+            'html' => view('AdminSite.UtilityUsageRecording.Electric.table-data', $data)->render()
+        ]);
     }
 
     public function create()
@@ -125,12 +112,16 @@ class ElectricUUSController extends Controller
     public function approve(Request $request)
     {
         $connElecUUS = ConnectionDB::setConnection(new ElectricUUS());
+        $connApprove = ConnectionDB::setConnection(new Approve());
+
+        $approve = $connApprove->find(9);
+
         foreach ($request->IDs as $id) {
             try {
                 DB::beginTransaction();
                 $elecUSS = $connElecUUS->where('id', $id)
-                ->where('is_updated', null)
-                ->first();
+                    ->where('is_updated', null)
+                    ->first();
 
                 if ($elecUSS) {
                     $elecUSS->is_approve = '1';
@@ -144,6 +135,19 @@ class ElectricUUSController extends Controller
                 return response()->json(['status' => 'failed']);
             }
         }
+
+        $dataNotifTR = [
+            'models' => 'UURElectric',
+            'notif_title' => null,
+            'id_data' => null,
+            'sender' => $request->session()->get('user')->id_user,
+            'division_receiver' => $approve->approval_2,
+            'notif_message' => 'Utility usage recording listrik sudah di approve, terima kasih',
+            'receiver' => null,
+        ];
+
+        broadcast(new HelloEvent($dataNotifTR));
+
         return response()->json(['status' => 'ok']);
     }
 
