@@ -2,14 +2,11 @@
     <div class="list bg-light p-x1 d-flex flex-column gap-3" id="card-ticket-body">
         <div class="d-md-flex d-xl-inline-block d-xxl-flex align-items-center p-x1 rounded-3 shadow-sm card-view-height">
             <div class="d-flex align-items-start align-items-sm-center">
-                <a class="d-none d-sm-block" href="">
-                    <div class="avatar avatar-xl avatar-3xl">
-                        <div class="avatar-name rounded-circle">
-                            <img src="{{ $ticket->Tenant->profile_picture ? url($ticket->Tenant->profile_picture) : '/assets/img/team/3-thumb.png' }}"
-                                alt="image" class="avatar-image" />
-                        </div>
+                <div class="avatar avatar-xl avatar-3xl">
+                    <div class="avatar-name rounded-circle">
+                        <img src="{{ url($ticket->Tenant->profile_picture) }}" alt="image" class="avatar-image" />
                     </div>
-                </a>
+                </div>
 
                 <div class="ms-1 ms-sm-3">
                     <p class="fw-semi-bold mb-3 mb-sm-2">

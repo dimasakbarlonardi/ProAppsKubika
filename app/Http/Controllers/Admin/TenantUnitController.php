@@ -71,13 +71,14 @@ class TenantUnitController extends Controller
         $units = $this->setConnection(new Unit());
 
         $idUnit = [];
-
+       
         if ($request->is_owner == 1) {
             $tenant_units = $tenant_units->get();
             foreach ($tenant_units as $unit) {
                 $idUnit[] = $unit->id_unit;
             }
-            $units = $units->whereNotIn('id_unit', $idUnit)->get();
+            
+            $units = $units->whereNotIn('id_unit', $idUnit)->with('Tower')->get();
         } else {
             $tenant_units = $tenant_units->where('id_tenant', '!=', $request->id_tenant)
                 ->where('is_owner', 1)
@@ -89,6 +90,8 @@ class TenantUnitController extends Controller
                 ->with('Tower')
                 ->get();
         }
+
+        // $units = $units->where('deleted_at', null)->with('Tower')->get();
 
         return response()->json([
             "data" => $units
