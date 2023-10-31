@@ -19,7 +19,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('attendance:cron')->everyMinute(); //dev
 
         // Reminder
-        $schedule->command('reminder:cron')->everyMinute();
+        // $schedule->command('reminder:cron')->everyMinute();
+        $schedule->command('reminder:cron')->daily();
     }
 
     /**
