@@ -76,23 +76,25 @@
                                         <div class="row gx-card mx-0 bg-200 text-900 fs--1 fw-semi-bold">
                                             <div class="col-9 col-md-8 py-2">Personil</div>
                                         </div>
-                                        @foreach ($personels as $personel)
-                                            <div class="gx-card mx-0 border-bottom border-200">
-                                                <div class='row gx-card mx-0 align-items-center border-bottom border-200'>
-                                                    <div class='py-3'>
-                                                        <div class='d-flex align-items-center'>
-                                                            <div class='flex-1'>
-                                                                <h5 class='fs-0'>
-                                                                    <span class='text-900' href=''>
-                                                                        {{ $personel->nama_personil }}
-                                                                    </span>
-                                                                </h5>
+                                        @if($personels)
+                                            @foreach ($personels as $personel)
+                                                <div class="gx-card mx-0 border-bottom border-200">
+                                                    <div class='row gx-card mx-0 align-items-center border-bottom border-200'>
+                                                        <div class='py-3'>
+                                                            <div class='d-flex align-items-center'>
+                                                                <div class='flex-1'>
+                                                                    <h5 class='fs-0'>
+                                                                        <span class='text-900' href=''>
+                                                                            {{ $personel->nama_personil }}
+                                                                        </span>
+                                                                    </h5>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        @endforeach
+                                            @endforeach
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -102,23 +104,25 @@
                                         <div class="row gx-card mx-0 bg-200 text-900 fs--1 fw-semi-bold">
                                             <div class="col-9 col-md-8 py-2">Nama Alat</div>
                                         </div>
-                                        @foreach ($alats as $alat)
-                                            <div class="gx-card mx-0 border-bottom border-200">
-                                                <div class='row gx-card mx-0 align-items-center border-bottom border-200'>
-                                                    <div class='py-3'>
-                                                        <div class='d-flex align-items-center'>
-                                                            <div class='flex-1'>
-                                                                <h5 class='fs-0'>
-                                                                    <span class='text-900' href=''>
-                                                                        {{ $alat->nama_alat }}
-                                                                    </span>
-                                                                </h5>
+                                        @if($alats)
+                                            @foreach ($alats as $alat)
+                                                <div class="gx-card mx-0 border-bottom border-200">
+                                                    <div class='row gx-card mx-0 align-items-center border-bottom border-200'>
+                                                        <div class='py-3'>
+                                                            <div class='d-flex align-items-center'>
+                                                                <div class='flex-1'>
+                                                                    <h5 class='fs-0'>
+                                                                        <span class='text-900' href=''>
+                                                                            {{ $alat->nama_alat }}
+                                                                        </span>
+                                                                    </h5>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        @endforeach
+                                            @endforeach
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -128,23 +132,25 @@
                                         <div class="row gx-card mx-0 bg-200 text-900 fs--1 fw-semi-bold">
                                             <div class="col-9 col-md-8 py-2">Material</div>
                                         </div>
-                                        @foreach ($materials as $material)
-                                            <div class="gx-card mx-0 border-bottom border-200">
-                                                <div class='row gx-card mx-0 align-items-center border-bottom border-200'>
-                                                    <div class='py-3'>
-                                                        <div class='d-flex align-items-center'>
-                                                            <div class='flex-1'>
-                                                                <h5 class='fs-0'>
-                                                                    <span class='text-900' href=''>
-                                                                        {{ $material->material }}
-                                                                    </span>
-                                                                </h5>
+                                        @if($materials)
+                                            @foreach ($materials as $material)
+                                                <div class="gx-card mx-0 border-bottom border-200">
+                                                    <div class='row gx-card mx-0 align-items-center border-bottom border-200'>
+                                                        <div class='py-3'>
+                                                            <div class='d-flex align-items-center'>
+                                                                <div class='flex-1'>
+                                                                    <h5 class='fs-0'>
+                                                                        <span class='text-900' href=''>
+                                                                            {{ $material->material }}
+                                                                        </span>
+                                                                    </h5>
+                                                                </div>
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </div>
-                                            </div>
-                                        @endforeach
+                                            @endforeach
+                                        @endif
                                     </div>
                                 </div>
                             </div>
