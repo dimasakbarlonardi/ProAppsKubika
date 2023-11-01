@@ -188,7 +188,7 @@ class ReservationController extends Controller
                 Carbon::now()->format('m') . Carbon::now()->format('Y') . '/' .
                 sprintf("%06d", $count);
 
-            $createRsv = $connReservation->create([
+            $connReservation->create([
                 'no_tiket' => $ticket->no_tiket,
 
                 'no_request_reservation' => $no_reservation,
@@ -204,9 +204,9 @@ class ReservationController extends Controller
             ]);
 
             $dataNotif = [
-                'models' => 'Reservation',
-                'notif_title' => $createRsv->no_request_reservation,
-                'id_data' => $createRsv->id,
+                'models' => 'OpenTicket',
+                'notif_title' => $ticket->no_tiket,
+                'id_data' => $ticket->id,
                 'sender' => $user->id_user,
                 'division_receiver' => 1,
                 'notif_message' => 'Request reservation sudah dibuat, mohon proses request saya',
@@ -220,9 +220,7 @@ class ReservationController extends Controller
 
             DB::commit();
 
-            Alert::success('Berhasil', 'Berhasil menambahkan request');
-
-            return redirect()->route('request-reservations.index');
+            return response()->json(['status' => 'ok']);
         } catch (Throwable $e) {
             DB::rollBack();
             dd($e);
