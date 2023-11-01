@@ -96,4 +96,9 @@ class OpenTicket extends Model
     {
         return $this->hasOne(Reservation::class, 'no_tiket', 'no_tiket');
     }
+
+    public function TenantUnit()
+    {
+        return $this->hasMany(TenantUnit::class, 'id_unit', 'id_unit');
+    }
 }

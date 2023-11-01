@@ -78,15 +78,30 @@
             <div class="row align-items-center">
                 <div class="col">
                     <h6 class="text-500">Invoice to</h6>
-                    <h5>{{ $tenant->nama_tenant }}</h5>
+                    <h5>{{ $unit->nama_unit }}</h5>
                     <p class="fs--1">
                         {{ $site->nama_site }},
                         {{ $unit->Tower->nama_tower }}
-                        {{ $unit->nama_unit }}<br />
+                        <br />
                         {{ $site->provinsi }}, {{ $site->kode_pos }}
                     </p>
-                    <p class="fs--1"><a href="mailto:{{ $tenant->email_tenant }}">{{ $tenant->email_tenant }}</a><br /><a
-                            href="tel:444466667777">{{ $tenant->no_telp_tenant }}</a></p>
+                    @foreach ($transaction->Ticket->TenantUnit as $tu)
+                        @if ($tu->is_owner == 1)
+                            <h6 class="text-500">Unit Owner</h6>
+                            <p class="fs--1">
+                                <a href="mailto:{{ $tu->Tenant->email_tenant }}">{{ $tu->Tenant->email_tenant }}</a><br />
+                                <a href="tel:{{ $tu->Tenant->no_telp_tenant }}">{{ $tu->Tenant->no_telp_tenant }}</a>
+                        @endif
+                    @endforeach
+                    @foreach ($transaction->Ticket->TenantUnit as $tu)
+                        @if ($tu->is_owner == 0)
+                            <h6 class="text-500">Tenant</h6>
+                            <p class="fs--1">
+                                <a href="mailto:{{ $tu->Tenant->email_tenant  }}">{{ $tu->Tenant->email_tenant  }}</a><br />
+                                <a href="tel:{{ $tu->Tenant->no_telp_tenant }}">{{ $tu->Tenant->no_telp_tenant }}</a>
+                        @endif
+                    @endforeach
+                    </p>
                 </div>
                 <div class="col-sm-auto ms-auto">
                     <div class="table-responsive">

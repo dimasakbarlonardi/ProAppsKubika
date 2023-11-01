@@ -31,6 +31,8 @@ class InvoiceController extends Controller
             }
         }
 
+        // dd($transaction->Ticket);
+
         $data['transaction'] = $transaction;
 
         return view('AdminSite.Invoice.show', $data);

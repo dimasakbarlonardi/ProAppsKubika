@@ -66,4 +66,9 @@ class CashReceipt extends Model
     {
         return $this->hasOne(MonthlyArTenant::class, 'no_monthly_invoice', 'no_reff');
     }
+
+    public function Ticket()
+    {
+        return $this->hasOne(OpenTicket::class, 'no_invoice', 'no_invoice');
+    }
 }
