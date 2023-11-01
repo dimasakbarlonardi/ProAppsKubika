@@ -35,6 +35,7 @@ class Tenant extends Model
         'nik_tenant',
         'nama_tenant',
         'id_statushunian_tenant',
+        'id_status_kawin',
         'kewarganegaraan',
         'id_status_kawin',
         'masa_berlaku_id',
@@ -57,6 +58,11 @@ class Tenant extends Model
     public function StatusHunian()
     {
         return $this->hasOne(StatusHunianTenant::class, 'id_statushunian_tenant', 'id_statushunian_tenant');
+    }
+
+    public function StatusKawin()
+    {
+        return $this->hasOne(StatusKawin::class, 'id_status_kawin', 'id_status_kawin');
     }
 
     public function User()
