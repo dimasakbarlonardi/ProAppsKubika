@@ -51,7 +51,7 @@
 @endsection
 
 @section('script')
-    <script src="https://cdn.tiny.cloud/1/no-api-key/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+<script src="https://cdn.tiny.cloud/1/mugoo4p5wbijt8fzvzj0042pz1zw9brcq34tenfqnw6wsro6/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
     <script>
         tinymce.init({
             selector: 'textarea#notif_message', // Replace this CSS selector to match the placeholder element for TinyMCE

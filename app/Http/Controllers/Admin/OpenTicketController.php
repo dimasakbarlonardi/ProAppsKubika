@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Approve;
 use App\Models\ApproveRequest;
 use App\Models\Divisi;
+use App\Models\JenisAcara;
 use App\Models\JenisRequest;
 use App\Models\Login;
 use App\Models\Notifikasi;
@@ -18,6 +19,7 @@ use App\Models\System;
 use App\Models\Tenant;
 use App\Models\OwnerH;
 use App\Models\RequestType;
+use App\Models\RuangReservation;
 use App\Models\TenantUnit;
 use App\Models\Unit;
 use App\Models\User;
@@ -90,6 +92,8 @@ class OpenTicketController extends Controller
         $connTenant = ConnectionDB::setConnection(new Tenant());
         $connTU = ConnectionDB::setConnection(new TenantUnit());
         $connJenisReq = ConnectionDB::setConnection(new JenisRequest());
+        $connRuangRsv = ConnectionDB::setConnection(new RuangReservation());
+        $connJenisAcara = ConnectionDB::setConnection(new JenisAcara());
 
         if ($user->user_category == 3) {
             $data['units'] = $connTU->where('id_tenant', $user->Tenant->id_tenant)->get();
@@ -101,6 +105,8 @@ class OpenTicketController extends Controller
 
         $data['user'] = $user;
         $data['jenis_requests'] = $connJenisReq->get();
+        $data['ruangRsv'] = $connRuangRsv->get();
+        $data['jenisAcara'] = $connJenisAcara->get();
 
         return view('AdminSite.OpenTicket.create', $data);
     }
