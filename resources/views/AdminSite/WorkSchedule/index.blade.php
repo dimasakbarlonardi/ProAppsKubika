@@ -9,26 +9,14 @@
 <div class="card">
     <div class="card-header d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center">
-            <a href="" class="btn btn-falcon-default btn-sm">
+            <a href="{{ route('karyawans.index') }}" class="btn btn-falcon-default btn-sm">
                 <i class="fas fa-arrow-left"></i> Back
             </a>
-            <div class="ml-3">Create Tower</div>
+            <div class="ml-3">Create Work Schedule</div>
         </div>
     </div>
 </div>
-    <!-- <div class="card-header py-2">
-        <div class="row flex-between-center">
-                    <div class="d-flex align-items-center">
-                        <a href="{{ route('towers.index') }}" class="btn btn-falcon-default btn-sm">
-                            <i class="fas fa-arrow-left"></i> Back
-                        </a>
-                        <div class="ml-3">Create Tower</div>
-                    </div>
-                <div class="col-auto d-flex">
-                <a class="btn btn-falcon-default btn-sm text-600 " href="{{ route('shifttype.create') }}"><span class="fas fa-plus fs--2 me-1"></span>Add Work Schedule</a>
-            </div>
-        </div>
-    </div> -->
+
     <div class="p-5">
         <table class="table">
             <thead>

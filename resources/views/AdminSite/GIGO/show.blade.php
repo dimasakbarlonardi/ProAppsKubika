@@ -6,26 +6,7 @@
 
 @section('content')
     <div class="card">
-        <div class="card-header">
-            <div class="row">
-                <div class="col-md d-flex ">Nama pembawa
-                    <div class="avatar avatar-2xl ms-2">
-                        <img class="rounded-circle" src="../../assets/img/team/1.jpg" alt="" />
-                    </div>
-                    <div class="flex-1 ms-2">
-                        <h5 class="mb-0 text-light">Women work wonders… on your marketing skills</h5><a
-                            class="text-800 fs--1" href="#!"><span class="fw-semi-bold text-light">Emma
-                                Watson</span>
-                            <span class="ms-1 text-light">&lt;emma@watson.com&gt;</span>
-                        </a>
-                    </div>
-                </div>
-                <div class="col-md-auto ms-auto d-flex align-items-center ps-6 ps-md-3">
-                    <small class="text-light">8:40 AM (9 hours
-                        ago)</small><span class="fas fa-star text-warning fs--1 ms-2"></span>
-                </div>
-            </div>
-        </div>
+
         <div class="card-body bg-light">
             @method('PUT')
             @csrf
@@ -144,7 +125,7 @@
                         </div>
                         <div class="card-footer text-center">
                             @if (
-                                !$gigo->sign_approval_1 &&                                    
+                                !$gigo->sign_approval_1 &&
                                     $approve->approval_1 == $user->RoleH->WorkRelation->id_work_relation
                                 )
                                 <form action="{{ route('gigoApprove1', $gigo->id) }}" class="d-inline" method="post">
