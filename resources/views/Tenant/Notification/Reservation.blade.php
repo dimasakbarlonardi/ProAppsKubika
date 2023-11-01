@@ -85,19 +85,21 @@
                                     {{ $reservation->keterangan }}
                                 </textarea>
                             </div>
-                            <div class="mb-3">
-                                <div class="row">
-                                    <div class="col-6">
-                                        <label class="mb-1">Jumlah deposit</label>
-                                        <div class="input-group flex-nowrap">
-                                            <span class="input-group-text" id="addon-wrapping">Rp</span>
-                                            <input style="text-align: right" class="form-control"
-                                                value="{{ number_format($reservation->jumlah_deposit, 0, ',', '.') }}"
-                                                name="jumlah_deposit" disabled />
+                            @if ($reservation->is_deposit)
+                                <div class="mb-3">
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <label class="mb-1">Jumlah deposit</label>
+                                            <div class="input-group flex-nowrap">
+                                                <span class="input-group-text" id="addon-wrapping">Rp</span>
+                                                <input style="text-align: right" class="form-control"
+                                                    value="{{ number_format($reservation->jumlah_deposit, 0, ',', '.') }}"
+                                                    name="jumlah_deposit" disabled />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            @endif
                             @if ($reservation->status_bayar == 'PAID' && $reservation->is_deposit)
                                 <div class="mb-3">
                                     <div class="row">
@@ -106,8 +108,8 @@
                                             <div class="input-group flex-nowrap">
                                                 <span class="input-group-text" id="addon-wrapping">Rp</span>
                                                 <input style="text-align: right" class="form-control"
-                                                    value="{{ number_format($reservation->CashReceipt->admin_fee, 0, ',', '.') }}" name="jumlah_deposit"
-                                                    disabled />
+                                                    value="{{ number_format($reservation->CashReceipt->admin_fee, 0, ',', '.') }}"
+                                                    name="jumlah_deposit" disabled />
                                             </div>
                                         </div>
                                         <div class="col-6">
@@ -156,7 +158,8 @@
                                 <div class="col">
                                     <form action="{{ route('rsvReject', $reservation->id) }}" method="post">
                                         @csrf
-                                        <button type="submit" onclick="return confirm('are you sure?')" class="btn btn-danger w-100">Reject</button>
+                                        <button type="submit" onclick="return confirm('are you sure?')"
+                                            class="btn btn-danger w-100">Reject</button>
                                     </form>
                                 </div>
                                 <div class="col">
