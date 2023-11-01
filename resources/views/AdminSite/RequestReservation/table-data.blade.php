@@ -19,20 +19,20 @@
                 <td class="align-middle text-center">
                     Status Request : {{ $req->Ticket->status_request }} <br>
                     {{ $req->is_deposit == 1 ? 'Berbayar' : 'Tidak Berbayar' }} <br>
-                    @if ($req->status_bayar == 'PAID')
+                    @if ($req->status_bayar == 'PAID' && $req->is_deposit)
                         <h6>
-                            <span
-                                class="badge bg-success mt-2">PAID</span>
+                            <span class="badge bg-success mt-2">PAID</span>
                         </h6>
-                    @elseif ($req->CashReceipt && $req->CashReceipt->transaction_status == 'VERIFYING' && $req->Ticket->status_request != 'REJECTED')
+                    @elseif (
+                        $req->CashReceipt &&
+                            $req->CashReceipt->transaction_status == 'VERIFYING' &&
+                            $req->Ticket->status_request != 'REJECTED')
                         <h6>
-                            <span
-                                class="badge bg-info mt-2">{{ $req->CashReceipt->transaction_status }}</span>
+                            <span class="badge bg-info mt-2">{{ $req->CashReceipt->transaction_status }}</span>
                         </h6>
                     @elseif ($req->status_bayar == 'PENDING' && $req->Ticket->status_request != 'REJECTED')
                         <h6>
-                            <span
-                                class="badge bg-warning mt-2">PENDING</span>
+                            <span class="badge bg-warning mt-2">PENDING</span>
                         </h6>
                     @endif
                 </td>
@@ -42,11 +42,10 @@
 
                     @if (
                         $req->sign_approval_3 &&
-                        $req->Ticket->status_request != 'DONE' &&
-                        $req->Ticket->status_request != 'COMPLETE' &&
-                        Request::session()->get('work_relation_id') == 1
-                        )
-                        @if ($req->is_deposit && $req->status_bayar == 'PAID' || !$req->is_deposit && $req->status_bayar == 'PAID')
+                            $req->Ticket->status_request != 'DONE' &&
+                            $req->Ticket->status_request != 'COMPLETE' &&
+                            Request::session()->get('work_relation_id') == 1)
+                        @if (($req->is_deposit && $req->status_bayar == 'PAID') || (!$req->is_deposit && $req->status_bayar == 'PAID'))
                             <form action="{{ route('rsvDone', $req->id) }}" method="post">
                                 @csrf
                                 <button type="submit" class="btn btn-primary btn-sm w-100">Acara
