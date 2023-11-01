@@ -1,13 +1,11 @@
 @extends('layouts.master')
 
 @section('css')
-    <script src="https://cdn.tiny.cloud/1/zqt3b05uqsuxthyk5xvi13srgf4ru0l5gcvuxltlpgm6rcki/tinymce/6/tinymce.min.js"
-        referrerpolicy="origin"></script>
     <link href="{{ asset('assets/vendors/flatpickr/flatpickr.min.css') }}" rel="stylesheet" />
 @endsection
 
 @section('content')
-    <form action="{{ route('request-reservations.store') }}" method="post" id="create-reservation-form">
+    <form action="{{ route('submit-reservation') }}" method="post" id="submit-reservation-form">
         @csrf
         <div class="row g-3">
             <div class="col-9">
@@ -38,19 +36,15 @@
                             <div class="row">
                                 <div class="col-6">
                                     <label class="mb-1">Tanggal request reservasi</label>
-                                    <input class="form-control datetimepicker" name="tgl_request_reservation"
-                                        id="startDateReservation" type="text" placeholder="d/m/y"
-                                        data-options='{"dateFormat":"Y-m-d","disableMobile":true}' />
+                                    <input class="form-control" id="startDateReservation" type="text"
+                                        data-options='{"enableTime":true,"dateFormat":"Y-m-d H:i","disableMobile":true}'
+                                        readonly />
                                 </div>
                                 <div class="col-6">
                                     <label class="mb-1">Durasi Acara</label>
                                     <div class="input-group">
-                                        <input class="form-control" id="durasi_acara" name="durasi_acara" type="number">
-                                        <select class="form-control" name="satuan_durasi_acara" readonly>
-                                            <option selected value="Jam">
-                                                <span class="input-group-text">Jam</span>
-                                            </option>
-                                        </select>
+                                        <input class="form-control" id="durasi_acara" type="text"
+                                            readonly>
                                     </div>
                                 </div>
                             </div>
@@ -59,14 +53,13 @@
                             <div class="row">
                                 <div class="col-6">
                                     <label class="mb-1">Waktu mulai acara</label>
-                                    <input class="form-control datetimepicker" name="waktu_mulai" id="timeStartEvent"
-                                        type="text" placeholder="Hour : Minute"
-                                        data-options='{"enableTime":true,"dateFormat":"Y-m-d H:i","disableMobile":true}' />
+                                    <input class="form-control" id="timeStartEvent" type="text"
+                                        readonly />
                                 </div>
                                 <div class="col-6">
                                     <label class="mb-1">Waktu acara berakhir</label>
-                                    <input class="form-control" name="waktu_akhir" readonly type="text"
-                                        placeholder="Hour : Minute" id="timeEndEvent" />
+                                    <input class="form-control" readonly type="text"
+                                        id="timeEndEvent" />
                                 </div>
                             </div>
                         </div>
@@ -74,28 +67,17 @@
                             <div class="row">
                                 <div class="col-6">
                                     <label class="mb-1">Ruang reservasi</label>
-                                    <select class="form-control" name="id_ruang_reservation" id="id_ruang_reservation">
-                                        <option selected disable>--- Ruang reservasi ---</option>
-                                        @foreach ($ruangRsv as $ruang)
-                                            <option value="{{ $ruang->id_ruang_reservation }}">
-                                                {{ $ruang->ruang_reservation }}</option>
-                                        @endforeach
-                                    </select>
+                                    <input class="form-control" id="ruang_reservasi" readonly type="text">
                                 </div>
                                 <div class="col-6">
                                     <label class="mb-1">Jenis acara</label>
-                                    <select class="form-control" name="id_jenis_acara" id="id_jenis_acara">
-                                        <option selected disable>--- Pilih jenis acara ---</option>
-                                        @foreach ($jenisAcara as $acara)
-                                            <option value="{{ $acara->id_jenis_acara }}">{{ $acara->jenis_acara }}</option>
-                                        @endforeach
-                                    </select>
+                                    <input class="form-control" id="jenis_acara" readonly type="text">
                                 </div>
                             </div>
                         </div>
                         <div class="mb-3">
                             <label class="mb-1">Keterangan</label>
-                            <textarea class="form-control" name="keterangan" id="keterangan_reservation"></textarea>
+                            <textarea class="form-control" id="keterangan_reservation"></textarea>
                         </div>
                         <div class="mb-3">
                             <div class="row">
@@ -107,7 +89,7 @@
                                     </select>
                                 </div>
                                 <div class="col-6">
-                                    <label class="mb-1">Jumlah deposit</label>
+                                    <label class="mb-1">Jumlah pembayaran</label>
                                     <div class="input-group flex-nowrap">
                                         <span class="input-group-text" id="addon-wrapping">Rp</span>
                                         <input class="form-control" id="jumlah_deposit" type="number"
@@ -167,49 +149,9 @@
         referrerpolicy="origin"></script>
     <script src="{{ asset('assets/js/flatpickr.js') }}"></script>
     <script>
-        flatpickr("#startDateReservation", {
-            dateFormat: "Y-m-d",
-            minDate: "today",
-            altInput: true,
-            altFormat: "F j, Y"
-        });
-
-        flatpickr("#timeStartEvent", {
-            enableTime: true,
-            noCalendar: true,
-            dateFormat: "H:i",
-        });
-
-        $('#timeStartEvent').on('change', function() {
-            var durasiAcara = $('#durasi_acara').val();
-            var requestDate = $('#startDateReservation').val();
-            var startEvent = $(this).val();
-
-            setEndEvent(requestDate, startEvent, durasiAcara)
-        })
-
-        $('#durasi_acara').on('change', function() {
-            var requestDate = $('#startDateReservation').val();
-            var startEvent = $('#timeStartEvent').val();
-            var durasiAcara = $(this).val();
-
-            setEndEvent(requestDate, startEvent, durasiAcara)
-        })
-
-        function setEndEvent(requestDate, startEvent, durasiAcara) {
-            var setDate = new Date(requestDate + ' ' + startEvent);
-
-            newDate = setDate.setHours(setDate.getHours() + parseInt(durasiAcara));
-            newDate = new Date(newDate)
-
-            var endEvent = newDate.getHours() + ':' + (newDate.getMinutes() < 10 ? '0' : '') + newDate.getMinutes();
-            console.log(requestDate, startEvent, durasiAcara, newDate, endEvent);
-            $('#timeEndEvent').val(endEvent);
-        }
-
         tinyMCE.init({
             selector: 'textarea#keterangan_reservation',
-
+            readonly: true,
             height: "280"
         });
 
@@ -251,82 +193,42 @@
             })
         }
 
+        // $.ajax({
+        //     url: '/admin/reservation/get/booked-date',
+        //     type: 'GET',
+        //     data: {
+        //         startdate: `${selectdate}`,
+        //         startdatetime: `${selectdate} ${startTime}`,
+        //         enddatetime: `${selectdate} ${endTime}`
+        //     },
+        //     success: function(resp) {
+        //         var data = resp.data;
+        //         if (data.length > 0) {
+        //             $('#event-lists').html("");
+        //             data.map((event, i) => {
+        //                 $('#event-lists').append(`
+    //                                 <p>Event start ${formatDate(event.waktu_mulai)}, event end ${formatDate(event.waktu_akhir)}</p>
+    //                             `)
+        //             })
+        //             $('#modalInfo').modal('show');
+        //         } else {
+        //             $("#submit-reservation-form").submit();
+        //         }
+        //     }
+        // })
+
         function onSubmit() {
-            var selectdate = $('#startDateReservation').val();
-            var durasiAcara = $('#durasi_acara').val();
-            var ruangReservasi = $('#id_ruang_reservation').val();
-            var jenisAcara = $('#id_jenis_acara').val();
             var isDeposit = $('#is_deposit').val();
             var jumlahDeposit = $('#jumlah_deposit').val();
 
-            var startTime = $('#timeStartEvent').val();
-            var endTime = $('#timeEndEvent').val();
-
-            if (isDeposit == 1) {
-                if (!selectdate || !durasiAcara || !jenisAcara || !ruangReservasi || !isDeposit || !jumlahDeposit || !
-                    startTime || !endTime) {
-                    Swal.fire(
-                        'Failed!',
-                        'Please fill all field',
-                        'error'
-                    )
-                } else {
-                    $.ajax({
-                        url: '/admin/reservation/get/booked-date',
-                        type: 'GET',
-                        data: {
-                            startdate: `${selectdate}`,
-                            startdatetime: `${selectdate} ${startTime}`,
-                            enddatetime: `${selectdate} ${endTime}`
-                        },
-                        success: function(resp) {
-                            var data = resp.data;
-                            if (data.length > 0) {
-                                $('#event-lists').html("");
-                                data.map((event, i) => {
-                                    $('#event-lists').append(`
-                                        <p>Event start ${formatDate(event.waktu_mulai)}, event end ${formatDate(event.waktu_akhir)}</p>
-                                    `)
-                                })
-                                $('#modalInfo').modal('show');
-                            } else {
-                                $("#create-reservation-form").submit();
-                            }
-                        }
-                    })
-                }
+            if (isDeposit == 1 && !jumlahDeposit) {
+                Swal.fire(
+                    'Failed!',
+                    'Please fill all field',
+                    'error'
+                )
             } else {
-                if (!selectdate || !durasiAcara || !jenisAcara || !ruangReservasi || !startTime || !endTime) {
-                    Swal.fire(
-                        'Failed!',
-                        'Please fill all field',
-                        'error'
-                    )
-                } else {
-                    $.ajax({
-                        url: '/admin/reservation/get/booked-date',
-                        type: 'GET',
-                        data: {
-                            startdate: `${selectdate}`,
-                            startdatetime: `${selectdate} ${startTime}`,
-                            enddatetime: `${selectdate} ${endTime}`
-                        },
-                        success: function(resp) {
-                            var data = resp.data;
-                            if (data.length > 0) {
-                                $('#event-lists').html("");
-                                data.map((event, i) => {
-                                    $('#event-lists').append(`
-                                        <p>Event start ${formatDate(event.waktu_mulai)}, event end ${formatDate(event.waktu_akhir)}</p>
-                                    `)
-                                })
-                                $('#modalInfo').modal('show');
-                            } else {
-                                $("#create-reservation-form").submit();
-                            }
-                        }
-                    })
-                }
+                $("#submit-reservation-form").submit();
             }
         }
 
@@ -343,12 +245,23 @@
 
         function showTicket(id) {
             $.ajax({
-                url: '/admin/open-tickets/' + id,
+                url: '/admin/open-ticket-rsv/' + id,
                 data: {
                     'data_type': 'json'
                 },
                 type: 'GET',
                 success: function(data) {
+                    $('#startDateReservation').val(data.data.request_reservation.tgl_request_reservation);
+                    $('#durasi_acara').val(data.data.request_reservation.durasi_acara);
+                    $('#timeStartEvent').val(data.data.request_reservation.waktu_mulai);
+                    $('#timeEndEvent').val(data.data.request_reservation.waktu_akhir);
+                    $('#ruang_reservasi').val(data.data.request_reservation.ruang_reservation
+                        .ruang_reservation);
+                    $('#jenis_acara').val(data.data.request_reservation.jenis_acara.jenis_acara);
+
+                    $(tinymce.get('keterangan_reservation').getBody()).html(data.data.request_reservation
+                        .keterangan);
+
                     $('#ticket_detail').css('display', 'block')
                     $('#reservation_detail').css('display', 'block')
                     $('#ticket_detail_desc').html(data.data.deskripsi_request)
