@@ -200,21 +200,14 @@
                             id_unit: id_unit,
                         },
                         success: function(resp) {
-
+                            if (resp.status === 'ok') {
+                                window.location.href('/admin/open-tickets');
+                            }
                         }
                     })
                     console.log(value);
                 }
             }
-            // if (!judul_request || !no_hp || !deskripsi_request) {
-            //     Swal.fire(
-            //         'Failed!',
-            //         'Please fill all field',
-            //         'error'
-            //     )
-            // } else {
-            //     $("#create-open-request").submit();
-            // }
         }
 
         $('#id_tenant').on('change', function() {
