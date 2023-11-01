@@ -91,4 +91,9 @@ class OpenTicket extends Model
     {
         return $this->hasOne(User::class, 'id_user', 'id_user_resp_request');
     }
+
+    public function RequestReservation()
+    {
+        return $this->hasOne(Reservation::class, 'no_tiket', 'no_tiket');
+    }
 }
