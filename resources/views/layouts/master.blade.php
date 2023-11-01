@@ -344,7 +344,7 @@
                     var receiver = e.dataNotif.receiver
                     var division_receiver = e.dataNotif.division_receiver
                     var notif_id = e.dataNotif.id
-
+                    console.log(user_id, receiver, division_receiver, notif_id);
                     getNewNotifications(user_id, receiver, division_receiver, notif_id);
                 })
             messaging
@@ -425,11 +425,12 @@
         }
 
         function getNewNotifications(user_id, receiver, division_receiver, notif_id) {
+            console.log(user_id, receiver, division_receiver, notif_id);
             $.ajax({
                 url: `/admin/get-new-notifications/${notif_id}`,
                 type: 'GET',
                 success: function(resp) {
-                    console.log(resp.division_receiver, division_relation);
+                    console.log(resp.division_receiver, division_relation, resp.receiver, user_id);
                     if (resp.division_receiver == division_relation || resp.receiver == user_id) {
                         notifSound.play();
                         var current = new Date();
@@ -448,7 +449,7 @@
                                     </div>
                                     <div class="notification-body">
                                         <p class="mb-1">
-                                            <strong>${resp.sender ? resp.sender.nama_user : ''}</strong> ${item.sender ? 'Mengirim anda' : 'System '} :
+                                            <strong>${resp.sender ? resp.sender.nama_user : ''}</strong> ${resp.sender ? 'Mengirim anda' : 'System '} :
                                             ${resp.notif_message} ${resp.notif_title}
                                         </p>
                                         <span class="notification-time">

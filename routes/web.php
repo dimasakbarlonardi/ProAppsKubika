@@ -414,6 +414,8 @@ Route::prefix('admin')->group(function () {
 
         // Reservation
         Route::resource('request-reservations', ReservationController::class);
+        Route::post('submit-reservations', [ReservationController::class, 'update'])->name('submit-reservation');
+        Route::get('/open-ticket-rsv/{id}', [ReservationController::class, 'showRSVTicket']);
         Route::get('/request-rsv/get-filter-data', [ReservationController::class, 'filteredData']);
         Route::get('/reservation/get/booked-date', [ReservationController::class, 'getBookedDate']);
         Route::post('rsvReject/{id}', [ReservationController::class, 'reject'])->name('rsvReject');
