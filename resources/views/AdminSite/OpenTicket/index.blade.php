@@ -82,6 +82,7 @@
                                 <option value="PENDING">PENDING</option>
                                 <option value="RESPONDED">RESPONDED</option>
                                 <option value="PROSES KE WR">PROSES KE WR</option>
+                                <option value="PROSES KE RESERVASI">PROSES KE RESERVASI</option>
                             </select>
                         </div>
                         <div class="mb-3 mt-n2">

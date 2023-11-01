@@ -201,7 +201,11 @@
                         },
                         success: function(resp) {
                             if (resp.status === 'ok') {
-                                window.location.href('/admin/open-tickets');
+                                Swal.fire(
+                                    'Success!',
+                                    'Success create Request!',
+                                    'success'
+                                ).then(() => window.location.replace('/admin/open-tickets'))
                             }
                         }
                     })

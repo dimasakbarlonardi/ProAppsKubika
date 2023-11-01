@@ -43,8 +43,7 @@
                                 <div class="col-6">
                                     <label class="mb-1">Durasi Acara</label>
                                     <div class="input-group">
-                                        <input class="form-control" id="durasi_acara" type="text"
-                                            readonly>
+                                        <input class="form-control" id="durasi_acara" type="text" readonly>
                                     </div>
                                 </div>
                             </div>
@@ -53,13 +52,11 @@
                             <div class="row">
                                 <div class="col-6">
                                     <label class="mb-1">Waktu mulai acara</label>
-                                    <input class="form-control" id="timeStartEvent" type="text"
-                                        readonly />
+                                    <input class="form-control" id="timeStartEvent" type="text" readonly />
                                 </div>
                                 <div class="col-6">
                                     <label class="mb-1">Waktu acara berakhir</label>
-                                    <input class="form-control" readonly type="text"
-                                        id="timeEndEvent" />
+                                    <input class="form-control" readonly type="text" id="timeEndEvent" />
                                 </div>
                             </div>
                         </div>
@@ -251,6 +248,8 @@
                 },
                 type: 'GET',
                 success: function(data) {
+                    var descRsv = data.data.request_reservation.keterangan
+
                     $('#startDateReservation').val(data.data.request_reservation.tgl_request_reservation);
                     $('#durasi_acara').val(data.data.request_reservation.durasi_acara);
                     $('#timeStartEvent').val(data.data.request_reservation.waktu_mulai);
@@ -264,7 +263,13 @@
 
                     $('#ticket_detail').css('display', 'block')
                     $('#reservation_detail').css('display', 'block')
-                    $('#ticket_detail_desc').html(data.data.deskripsi_request)
+
+                    if (descRsv) {
+                        $('#ticket_detail_desc').html(descRsv);
+                    } else {
+                        $('#ticket_detail_desc').html(data.data.deskripsi_request);
+                    }
+
                     $('#ticket_detail_heading').html(data.data.judul_request)
                     $('#ticket_head').html(`
                             <div class="d-md-flex d-xl-inline-block d-xxl-flex align-items-center justify-content-between">
