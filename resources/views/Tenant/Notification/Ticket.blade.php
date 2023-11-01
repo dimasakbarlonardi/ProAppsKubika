@@ -8,7 +8,7 @@
 
 @section('content')
     <div class="card">
-        
+
         <div class="card-body bg-light">
             <div class="row justify-content-center">
                 <div class="col-lg-12 col-xxl-6">

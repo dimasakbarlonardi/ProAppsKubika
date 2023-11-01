@@ -112,6 +112,9 @@ class PaymentController extends Controller
                         $cr->Reservation->sign_approval_5 = Carbon::now();
                         $cr->Reservation->save();
 
+                        $cr->Reservation->Ticket->status_request = 'APPROVED';
+                        $cr->Reservation->Ticket->save();
+
                         $dataNotif = [
                             'models' => 'Reservation',
                             'notif_title' => $cr->Reservation->no_request_reservation,

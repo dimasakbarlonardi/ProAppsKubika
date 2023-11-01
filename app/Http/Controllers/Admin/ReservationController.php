@@ -259,7 +259,7 @@ class ReservationController extends Controller
 
         Alert::success('Berhasil', 'Berhasil approve reservasi');
 
-        return redirect()->back();
+        return redirect()->route('request-reservations.index');
     }
 
     public function show($id)
