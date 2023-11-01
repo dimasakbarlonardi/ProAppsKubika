@@ -47,7 +47,7 @@ class InspectionController extends Controller
         $nowMonth = Carbon::now()->format('m');
         $getSchedules = $connSchedules->whereMonth('schedule', $nowMonth)
             ->where('status_schedule', 'Not Done')
-            ->with('Equipment.Room')
+            ->with('Equipment.Room.Tower')
             ->get();
 
         $inspections = [];
@@ -180,7 +180,7 @@ class InspectionController extends Controller
         $connInspectionHK = ConnectionDB::setConnection(new EquipmentHousekeepingDetail());
 
         $inspection = $connInspectionHK->where('status_schedule', '!=', 'Not Done')
-            ->with(['Room', 'Schedule', 'equipment'])
+            ->with(['Room.Tower', 'Schedule', 'equipment'])
             ->get();
 
         foreach ($inspection as $key => $data) {
@@ -200,7 +200,7 @@ class InspectionController extends Controller
         $nowMonth = Carbon::now()->format('m');
         $getSchedules = $connInspectionHK->whereMonth('schedule', $nowMonth)
             ->where('status_schedule', 'Not Done')
-            ->with('Equipment.Room')
+            ->with('Equipment.Room.Floor')
             ->get();
 
         $inspections = [];

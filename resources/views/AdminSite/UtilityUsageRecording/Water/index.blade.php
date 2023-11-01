@@ -125,7 +125,7 @@
                                                             </h6>
                                                         @endif
                                                     </th>
-                                                    @if ($user->id_role_hdr == $approve->approval_1 && $user->Karyawan->is_can_approve != null && !$item->is_approve)
+                                                    @if (Request::session()->get('work_relation_id') == $approve->approval_1 && $user->Karyawan->is_can_approve != null && !$item->is_approve)
                                                         <td class="align-middle text-center">
                                                             <button class="btn btn-warning btn-sm" type="button"
                                                                 data-bs-toggle="modal"
