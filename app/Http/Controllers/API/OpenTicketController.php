@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Events\HelloEvent;
 use App\Helpers\ConnectionDB;
 use App\Helpers\ResponseFormatter;
+use App\Helpers\SaveFile;
 use App\Http\Controllers\Controller;
 use App\Models\CashReceipt;
 use App\Models\JenisRequest;
@@ -107,13 +108,8 @@ class OpenTicketController extends Controller
             $file = $request->file('upload_image');
 
             if ($file) {
-                $fileName = $createTicket->id . '-' .   $file->getClientOriginalName();
-                $outputTicketImage = '/public/' . $unit->id_site . '/img/ticket/' . $fileName;
-                $ticketImage = '/storage/' . $unit->id_site . '/img/ticket/' . $fileName;
-
-                Storage::disk('local')->put($outputTicketImage, File::get($file));
-
-                $createTicket->upload_image = $ticketImage;
+                $storagePath = SaveFile::saveToStorage($request->user()->id_site, 'request', $file);
+                $createTicket->upload_image = $storagePath;
             }
 
             $createTicket->save();
@@ -172,7 +168,8 @@ class OpenTicketController extends Controller
             ->get();
 
         return ResponseFormatter::success(
-            $tickets
-        , 'Success get transactions');
+            $tickets,
+            'Success get transactions'
+        );
     }
 }

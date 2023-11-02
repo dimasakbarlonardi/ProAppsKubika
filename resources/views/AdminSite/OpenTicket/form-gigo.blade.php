@@ -4,11 +4,11 @@
             <div class="row">
                 <div class="col-6">
                     <label class="form-label">Driver</label>
-                    <input type="text" class="form-control" value="">
+                    <input type="text" class="form-control" id="nama_pembawa">
                 </div>
                 <div class="col-6">
                     <label class="form-label">No Car Plate</label>
-                    <input ßtype="text" class="form-control" value="">
+                    <input type="text" class="form-control" id="no_pol_pembawa">
                 </div>
             </div>
         </div>
@@ -16,11 +16,16 @@
             <div class="row">
                 <div class="col-6">
                     <label class="form-label">Gigo Time</label>
-                    <input type="text" class="form-control" value="">
+                    <input class="form-control datetimepicker" required value="" name="date_request_gigo"
+                        id="date_request_gigo" type="text" placeholder="d/m/y H:i"
+                        data-options='{"enableTime":true,"dateFormat":"Y-m-d H:i","disableMobile":true}' />
                 </div>
                 <div class="col-6">
                     <label class="form-label">Gigo Type</label>
-                    <input type="text" class="form-control" value="">
+                    <select name="gigo_type" class="form-control" id="gigo_type">
+                        <option value="In">In</option>
+                        <option value="Out">Out</option>
+                    </select>
                 </div>
             </div>
         </div>
@@ -60,8 +65,19 @@
     </div>
 </div>
 
-
 <script>
+    flatpickr("#date_request_gigo", {
+        dateFormat: "Y-m-d H:i",
+        minDate: "today",
+        enableTime: true,
+        altInput: true,
+        altFormat: "F j, Y - H:i"
+    });
+
+    var lastID = 0;
+    var goods = [];
+    var idGood = 0;
+
     function onAddBarang() {
         var namaBarang = $('#input_nama_barang').val();
         var jumlahBarang = parseInt($('#input_jumlah_barang').val());
@@ -100,7 +116,6 @@
         console.log(id);
         idGood -= 1;
         goods.splice(id, 1);
-        // $(`#good${id}`).html('');
         detailGoods();
     }
 
@@ -109,34 +124,55 @@
         goods.map((item, i) => {
             $('#detailGoods').append(
                 `<div class='row gx-card mx-0 align-items-center border-bottom border-200' id="good${item.id}">
-                        <div class='col-8 py-3'>
-                            <div class='d-flex align-items-center'>
-                                <div class='flex-1'>
-                                    <table>
-                                        <tr>
-                                            <td><b>Nama barang</b></td>
-                                            <td class="mr-5">&ensp;:&ensp;</td>
-                                            <td>${item.nama_barang}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><b>Jumlah barang</b></td>
-                                            <td class="mr-5">&ensp;:&ensp;</td>
-                                            <td>${item.jumlah_barang}</td>
-                                        </tr>
-                                        <tr>
-                                            <td><b>Keterangan barang</b></td>
-                                            <td class="mr-5">&ensp;:&ensp;</td>
-                                            <td>${item.keterangan}</td>
-                                        </tr>
-                                    </table>
-                                    <div class='fs--2 fs-md--1'>
-                                        <a class='text-danger' onclick='onRemoveGood(${i})'>Remove</a>
-                                    </div>
+                    <div class='col-8 py-3'>
+                        <div class='d-flex align-items-center'>
+                            <div class='flex-1'>
+                                <table>
+                                    <tr>
+                                        <td><b>Nama barang</b></td>
+                                        <td class="mr-5">&ensp;:&ensp;</td>
+                                        <td>${item.nama_barang}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Jumlah barang</b></td>
+                                        <td class="mr-5">&ensp;:&ensp;</td>
+                                        <td>${item.jumlah_barang}</td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Keterangan barang</b></td>
+                                        <td class="mr-5">&ensp;:&ensp;</td>
+                                        <td>${item.keterangan}</td>
+                                    </tr>
+                                </table>
+                                <div class='fs--2 fs-md--1'>
+                                    <a class='text-danger' onclick='onRemoveGood(${i})'>Remove</a>
                                 </div>
                             </div>
                         </div>
-                    </div>`
+                    </div>
+                </div>`
             )
         })
+    }
+
+    function gigoValue() {
+        dateRequestGigo = $('#date_request_gigo').val();
+        noPolPembawa = $('#no_pol_pembawa').val();
+        namaPembawa = $('#nama_pembawa').val();
+        gigoType = $('#gigo_type').val();
+
+        var value = {
+            'dateRequestGigo': dateRequestGigo,
+            'noPolPembawa': noPolPembawa,
+            'namaPembawa': namaPembawa,
+            'gigoType': gigoType,
+        }
+
+        if (!dateRequestGigo || !noPolPembawa ||
+            !namaPembawa || !gigoType) {
+            return;
+        } else {
+            return value;
+        }
     }
 </script>

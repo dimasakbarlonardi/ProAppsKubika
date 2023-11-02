@@ -129,7 +129,8 @@
                             <h6 class="mb-0">Properties</h6>
                         </div>
                         <div class="card-body">
-                            <div class="mb-2 mt-n2"><label class="mb-1">Jenis Request</label>
+                            <div class="mb-2 mt-n2">
+                                <label class="mb-1">Jenis Request</label>
                                 <select name="id_jenis_request" class="form-select form-select-sm"
                                     {{ $ticket->status_request != 'RESPONDED' ? 'disabled' : '' }}>
                                     <option disabled selected>--Pilih Jenis Request---</option>
@@ -144,7 +145,8 @@
                             @if (
                                 ($ticket->status_request != 'PENDING' || $ticket->status_request == 'RESPONDED') &&
                                     $ticket->status_request != 'COMPLETE')
-                                <div class="mb-2"><label class="mb-1 mt-2">Status</label>
+                                <div class="mb-3">
+                                    <label class="mb-1 mt-2">Status</label>
                                     <select name="status_request" class="form-select form-select-sm"
                                         {{ $ticket->status_request != 'RESPONDED' ? 'disabled' : '' }}>
                                         <option disabled selected>--Pilih Status---</option>
@@ -167,6 +169,18 @@
                                             disabled>
                                     </div>
                             @endif
+                            <div class="mb-2 mt-n2">
+                                <label class="mb-1">Priority</label>
+                                <select name="priority" class="form-select form-select-sm"
+                                    {{ $ticket->status_request != 'RESPONDED' ? 'disabled' : '' }}>
+                                    <option disabled selected>-- Priority ---</option>
+                                    @foreach ($work_priorities as $priority)
+                                        <option {{ $ticket->priority == $priority->work_priority ? 'selected' : '' }}
+                                            value="{{ $priority->work_priority }}">{{ $priority->work_priority }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
                         </div>
                         @if ($ticket->status_request == 'RESPONDED')
                             <div class="card-footer border-top border-200 py-x1">
