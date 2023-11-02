@@ -110,10 +110,6 @@
     <script src="https://cdn.tiny.cloud/1/mugoo4p5wbijt8fzvzj0042pz1zw9brcq34tenfqnw6wsro6/tinymce/6/tinymce.min.js"
         referrerpolicy="origin"></script>
     <script>
-        var lastID = 0;
-        var goods = [];
-        var idGood = 0;
-
         tinymce.init({
             selector: 'textarea#deskripsi_request', // Replace this CSS selector to match the placeholder element for TinyMCE
             plugins: 'code table lists',
@@ -208,8 +204,41 @@
                                 ).then(() => window.location.replace('/admin/open-tickets'))
                             }
                         }
-                    })
-                    console.log(value);
+                    });
+                }
+            }
+
+            if (id_jenis_request == 5) {
+                gigo = gigoValue();
+                if (!gigo || goods.length === 0) {
+                    Swal.fire(
+                        'Failed!',
+                        'Please fill all field',
+                        'error'
+                    )
+                } else {
+                    console.log(gigo, goods.length);
+                    $.ajax({
+                        url: '/admin/gigo',
+                        type: 'POST',
+                        data: {
+                            gigo,
+                            goods,
+                            judul_request: judul_request,
+                            no_hp: no_hp,
+                            id_jenis_request: id_jenis_request,
+                            id_unit: id_unit,
+                        },
+                        success: function(resp) {
+                            if (resp.status === 'ok') {
+                                Swal.fire(
+                                    'Success!',
+                                    'Success create Request!',
+                                    'success'
+                                ).then(() => window.location.replace('/admin/open-tickets'))
+                            }
+                        }
+                    });
                 }
             }
         }

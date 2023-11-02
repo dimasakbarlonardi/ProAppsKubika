@@ -62,7 +62,7 @@ class OpenTicketController extends Controller
         if ($request->valueString) {
             $valueString = $request->valueString;
             $tickets = $tickets->where('judul_request', 'like', '%' . $valueString . '%')
-                ->orWhereHas('Tenant', function($q) use ($valueString) {
+                ->orWhereHas('Tenant', function ($q) use ($valueString) {
                     $q->where('nama_tenant', 'like', '%' . $valueString . '%');
                 })->orWhere('no_tiket', 'like', '%' . $valueString . '%');
         }
@@ -211,7 +211,6 @@ class OpenTicketController extends Controller
     public function update(Request $request, $id)
     {
         $connRequest = ConnectionDB::setConnection(new OpenTicket());
-        $connNotif = ConnectionDB::setConnection(new Notifikasi());
         $user = $request->session()->get('user');
 
         try {
@@ -222,24 +221,17 @@ class OpenTicketController extends Controller
             $ticket->priority = $request->priority;
 
             if ($request->status_request == 'DONE') {
-                $notif = $connNotif->where('models', 'OpenTicket')
-                    ->where('is_read', 0)
-                    ->where('id_data', $id)
-                    ->first();
+                $dataNotif = [
+                    'models' => 'OpenTicket',
+                    'notif_title' => $ticket->no_tiket,
+                    'id_data' => $ticket->id,
+                    'sender' => $user->id_user,
+                    'division_receiver' => null,
+                    'notif_message' => 'Keluhan sudah dikerjakan, mohon periksa kembali pekerjaan kami',
+                    'receiver' => $ticket->Tenant->User->id_user,
+                ];
 
-                if (!$notif) {
-                    $createNotif = $connNotif;
-                    $createNotif->sender = $user->id_user;
-                    $createNotif->receiver = $ticket->Tenant->User->id_user;
-                    $createNotif->is_read = 0;
-                    $createNotif->models = 'OpenTicket';
-                    $createNotif->id_data = $id;
-                    $createNotif->notif_title = $ticket->no_tiket;
-                    $createNotif->notif_message = 'Keluhan sudah dikerjakan, mohon periksa kembali pekerjaan kami';
-                    $createNotif->save();
-                }
-            } elseif ($request->status_request == 'PROSES KE GIGO') {
-                $this->createGIGO($user, $ticket);
+                broadcast(new HelloEvent($dataNotif));
             } elseif (!$request->status_request) {
                 $ticket->status_request = 'RESPONDED';
             }
@@ -259,10 +251,14 @@ class OpenTicketController extends Controller
                 return redirect()->route('request-reservations.create', ['id_tiket' => $ticket->id]);
             }
 
+            if ($request->status_request == 'PROSES KE GIGO') {
+                $this->approveGIGO($ticket, $request);
+                return redirect()->route('open-tickets.index', ['id_tiket' => $ticket->id]);
+            }
+
             Alert::success('Success', 'Success update request');
 
             return redirect()->route('open-tickets.index');
-
         } catch (Throwable $e) {
             DB::rollBack();
             dd($e);
@@ -272,34 +268,24 @@ class OpenTicketController extends Controller
         }
     }
 
-    public function createGIGO($user, $ticket)
+    public function approveGIGO($ticket, $request)
     {
-        $connSystem = ConnectionDB::setConnection(new System());
-        $nowDate = Carbon::now();
-        $system = $connSystem->find(1);
-        $count = $system->sequence_no_gigo + 1;
+        $connApprove = ConnectionDB::setConnection(new Approve());
 
-        $no_gigo = $system->kode_unik_perusahaan . '/' .
-            $system->kode_unik_gigo . '/' .
-            Carbon::now()->format('m') . $nowDate->year . '/' .
-            sprintf("%06d", $count);
+        $approve = $connApprove->find(8);
 
-        $createRG = ConnectionDB::setConnection(new RequestGIGO());
-        $createRG->no_tiket = $ticket->no_tiket;
-        $createRG->no_request_gigo = $no_gigo;
-
-        $system->sequence_no_gigo = $count;
-        $createRG->save();
-        $system->save();
+        $ticket->RequestGIGO->status_request = 'APPROVED';
+        $ticket->RequestGIGO->sign_approval_1 = Carbon::now();
+        $ticket->RequestGIGO->save();
 
         $dataNotif = [
             'models' => 'GIGO',
-            'notif_title' => $createRG->no_request_gigo,
-            'id_data' => $createRG->id,
-            'sender' => $user->id_user,
-            'division_receiver' => '',
-            'notif_message' => 'Request GIGO disetujui, mohon mengisi formulir GIGO',
-            'receiver' => $ticket->Tenant->User->id_user,
+            'notif_title' => $ticket->RequestGIGO->no_request_gigo,
+            'id_data' => $ticket->RequestGIGO->id,
+            'sender' => $request->session()->get('user_id'),
+            'division_receiver' => $approve->approval_2,
+            'notif_message' => 'Form GIGO sudah diapprove, mohon di tindak lanjuti',
+            'receiver' => null,
         ];
 
         broadcast(new HelloEvent($dataNotif));

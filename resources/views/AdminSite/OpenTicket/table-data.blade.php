@@ -60,6 +60,10 @@
                                     <small class="badge rounded bg-info dark__bg-1000">{{ $ticket->status_request }}</small>
                                 @break
 
+                                @case('PROSES KE GIGO')
+                                    <small class="badge rounded bg-info dark__bg-1000">{{ $ticket->status_request }}</small>
+                                @break
+
                                 @case('WORK DONE')
                                     <small class="badge rounded bg-info dark__bg-1000">{{ $ticket->status_request }}</small>
                                 @break

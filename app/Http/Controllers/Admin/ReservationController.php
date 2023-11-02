@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Events\HelloEvent;
 use App\Helpers\ConnectionDB;
+use App\Helpers\SaveFile;
 use App\Http\Controllers\Controller;
 use App\Models\Approve;
 use App\Models\CashReceipt;
@@ -142,15 +143,6 @@ class ReservationController extends Controller
             $createTicket->id_tenant = $tenant->id_tenant;
             $createTicket->no_tiket = $no_tiket;
             $createTicket->status_request = 'PENDING';
-
-            $file = $request->file('upload_image');
-
-            if ($file) {
-                $fileName = $createTicket->id . '-' .   $file->getClientOriginalName();
-                $file->move('uploads/image/ticket', $fileName);
-                $createTicket->upload_image = $fileName;
-            }
-
             $system->sequence_notiket = $count;
 
             $system->save();
