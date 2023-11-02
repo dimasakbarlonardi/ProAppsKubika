@@ -53,4 +53,18 @@ class InboxController extends Controller
 
         return response()->json(['status' => 'ok']);
     }
+
+    public function banners()
+    {
+        $connNotif = ConnectionDB::setConnection(new Notifikasi());
+
+        $notif = $connNotif->where('type', 'Announcement')
+            ->where('photo', '!=', null)
+            ->get(['id', 'photo']);
+
+        return ResponseFormatter::success(
+            $notif,
+            'Success get banners'
+        );
+    }
 }

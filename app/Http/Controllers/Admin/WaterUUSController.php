@@ -21,12 +21,14 @@ class WaterUUSController extends Controller
 {
     public function index(Request $request)
     {
+        $connWatercUUS = ConnectionDB::setConnection(new WaterUUS());
         $connTower = ConnectionDB::setConnection(new Tower());
         $connApprove = ConnectionDB::setConnection(new Approve());
 
         $data['approve'] = $connApprove->find(9);
         $data['user'] = $request->session()->get('user');
 
+        $data['waterUSS'] = $connWatercUUS->get();
         $data['towers'] = $connTower->get();
 
         return view('AdminSite.UtilityUsageRecording.Water.index', $data);
