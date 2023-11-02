@@ -419,7 +419,6 @@
         }
 
         function getNewNotifications(user_id, receiver, division_receiver, notif_id) {
-            console.log(user_id, receiver, division_receiver, notif_id);
             $.ajax({
                 url: `/admin/get-new-notifications/${notif_id}`,
                 type: 'GET',
