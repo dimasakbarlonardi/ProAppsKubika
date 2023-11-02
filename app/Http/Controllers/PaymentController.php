@@ -31,7 +31,7 @@ class PaymentController extends Controller
             $approve = new Approve();
             $approve = $approve->setConnection($site->db_name);
             $approve = $approve->find(7);
-
+            
             if ($callback->isSuccess()) {
                 $cr->transaction_status = 'PAID';
 
