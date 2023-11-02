@@ -2,7 +2,7 @@
 
 @section('content')
 <div class="card">
-<div class="card-header">
+    <div class="card-header">
         <div class="row flex-between-center">
             <div class="col-auto">
                 <h6 class="mb-0 text-light">List Tower</h6>
@@ -13,39 +13,53 @@
         </div>
     </div>
     <div class="p-5">
-        <table class="table table-striped">
-            <thead>
-                <tr>
-                    <th class="sort" data-sort="id_tower">No</th>
-                    <th class="sort" data-sort="id_tower">Nama Tower</th>
-                    <th class="sort" data-sort="jumlah_lantai">Jumlah lantai</th>
-                    <th class="sort" data-sort="jumlah_unit">Jumlah Unit</th>
-                    <th class="sort" data-sort="keterangan">Keterangan</th>
-                    <th class="sort">Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach ($towers as $key => $tower)
-                    <tr>
-                        <th scope="row">{{ $key + 1 }}</th>
-                        <td>{{ $tower->nama_tower }}</td>
-                        <td>{{ $tower->jumlah_lantai }}</td>
-                        <td>{{ $tower->jumlah_unit }}</td>
-                        <td>{{ $tower->keterangan }}</td>
-                        <td>
-                            <a href="{{ route('towers.edit', $tower->id_tower) }}" class="btn btn-sm btn-warning">Edit</a>
-                            <form class="d-inline" action="{{ route('towers.destroy', $tower->id_tower) }}" method="post">
-                                @method('DELETE')
-                                @csrf
-                                <button type="submit" class="btn btn-danger btn-sm"
-                                    onclick="return confirm('are you sure?')">Hapus</button>
-                            </form>
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
+        <div id="tableExample3" data-list='{"valueNames":["nama_role", "jumlah_lantai", "email"],"page":5,"pagination":true}'>
+            <div class="row justify-content-end g-0">
+                <div class="col-auto col-sm-5 mb-3">
+                    <form>
+                        <div class="input-group"><input class="form-control form-control-sm shadow-none search" type="search" placeholder="Search..." aria-label="search" />
+                            <div class="input-group-text bg-transparent"><span class="fa fa-search fs--1 text-600"></span></div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <div class="table-responsive scrollbar">
+                <table class="table table-bordered table-striped fs--1 mb-0">
+                    <thead>
+                        <tr>
+                            <th >No</th>
+                            <th>Nama Tower</th>
+                            <th>Jumlah lantai</th>
+                            <th>Jumlah Unit</th>
+                            <th>Keterangan</th>
+                            <th class="text-center">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody class="list">
+                        @foreach ($towers as $key => $tower)
+                        <tr>
+                            <th scope="row">{{ $key + 1 }}</th>
+                            <td class="nama_tower">{{ $tower->nama_tower }}</td>
+                            <td class="jumlah_lantai">{{ $tower->jumlah_lantai }}</td>
+                            <td>{{ $tower->jumlah_unit }}</td>
+                            <td>{{ $tower->keterangan }}</td>
+                            <td>
+                                <a href="{{ route('towers.edit', $tower->id_tower) }}" class="btn btn-sm btn-warning">Edit</a>
+                                <form class="d-inline" action="{{ route('towers.destroy', $tower->id_tower) }}" method="post">
+                                    @method('DELETE')
+                                    @csrf
+                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('are you sure?')">Hapus</button>
+                                </form>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            <div class="d-flex justify-content-center mt-3"><button class="btn btn-sm btn-falcon-default me-1" type="button" title="Previous" data-list-pagination="prev"><span class="fas fa-chevron-left"></span></button>
+                <ul class="pagination mb-0"></ul><button class="btn btn-sm btn-falcon-default ms-1" type="button" title="Next" data-list-pagination="next"><span class="fas fa-chevron-right"> </span></button>
+            </div>
+        </div>
     </div>
 </div>
 @endsection
-

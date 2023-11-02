@@ -5,7 +5,7 @@
     <div class="card-header py-2">
         <div class="row flex-between-center">
             <div class="my-3 col-auto">
-                <h6 class="mb-0 text-light">List OffBoarding Perubahan Unit</h6>
+                <h6 class="mb-0 text-light">List OffBoarding Tenant Unit</h6>
             </div>
         </div>
     </div>
@@ -16,23 +16,19 @@
                     <th class="sort" data-sort="">No</th>
                     <th class="sort" data-sort="id_tenant">Tenant</th>
                     <th class="sort" data-sort="id_unit">Unit</th>
-                    <th class="sort" data-sort="id_periode_sewa">Periode Sewa</th>
                     <th class="sort" data-sort="tgl_masuk">Tanggal Masuk</th>
                     <th class="sort" data-sort="tgl_keluar">Tanggal Keluar</th>
-                    <th class="sort" data-sort="sewa_ke">Sewa Ke</th>
                     <th class="sort" data-sort="keterangan">Keterangan</th>
                 </tr>
             </thead>
             <tbody>
-                @foreach ($offtenantunits as $key => $offtenantunit)
+                @foreach ($offtenant as $key => $offtenantunit)
                     <tr>
                         <th scope="row">{{ $key + 1 }}</th>
                         <td>{{ $offtenantunit->Tenant->nama_tenant }}</td>
                         <td>{{ $offtenantunit->Unit->nama_unit }}</td>
-                        <td>{{ $offtenantunit->id_periode_sewa }}</td>
-                        <td>{{ $offtenantunit->tgl_masuk }}</td>
-                        <td>{{ $offtenantunit->tgl_keluar }}</td>
-                        <td>{{ $offtenantunit->sewa_ke }}</td>
+                        <td>{{ HumanDate($offtenantunit->tgl_masuk) }}</td>
+                        <td>{{ HumanDate($offtenantunit->tgl_keluar) }}</td>
                         <td>{{ $offtenantunit->keterangan }}</td>
                     </tr>
                 @endforeach
