@@ -48,6 +48,8 @@
                             <h6 class="mb-3 fw-semi-bold text-1000">{{ $ticket->judul_request }}</h6>
                             @if ($ticket->RequestReservation)
                                 {!! $ticket->RequestReservation->keterangan !!}
+                            @elseif ($ticket->RequestPermit)
+                                {!! $ticket->RequestPermit->keterangan_pekerjaan !!}
                             @else
                                 {!! $ticket->deskripsi_request !!}
                             @endif
@@ -185,6 +187,11 @@
                         @if ($ticket->status_request == 'RESPONDED')
                             <div class="card-footer border-top border-200 py-x1">
                                 <button class="btn btn-primary w-100">Update</button>
+                            </div>
+                        @endif
+                        @if ($ticket->status_request == 'PROSES KE PERMIT')
+                            <div class="card-footer border-top border-200 py-x1">
+                                <a href="{{ route('request-permits.create', ['id_tiket' => $ticket->id]) }}" class="btn btn-primary w-100">Approve Permit</a>
                             </div>
                         @endif
                     </form>

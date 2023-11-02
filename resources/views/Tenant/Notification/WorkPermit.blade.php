@@ -8,7 +8,7 @@
 
 @section('content')
     <div class="card">
-       
+
         <div class="card-body bg-light">
             <div class="row">
                 <div class="col-9">
@@ -161,10 +161,6 @@
                                 <input class="form-control" type="text"
                                     value="{{ $permit->RequestPermit->no_request_permit }}" disabled>
                             </div>
-                            <div class="mb-4 mt-n2"><label class="mb-1">Nama Project</label>
-                                <input type="text" value="{{ $permit->nama_project }}" class="form-control"
-                                    name="nama_project" required disabled>
-                            </div>
                             <div class="mb-4 mt-n2"><label class="mb-1">Work Relation</label>
                                 <input type="text" value="{{ $permit->WorkRelation->work_relation }}"
                                     class="form-control" name="nama_project" required disabled>
@@ -172,6 +168,10 @@
                             <div class="mb-4 mt-n2"><label class="mb-1">Permit Berbayar</label>
                                 <input type="text" value="{{ $permit->id_bayarnon == 1 ? 'Yes' : 'No' }}"
                                     class="form-control" name="nama_project" required disabled>
+                            </div>
+                            <div class="mb-4 mt-n2"><label class="mb-1">Jumlah Supervisi</label>
+                                <input type="text" value="{{ Rupiah($permit->jumlah_supervisi) }}" class="form-control"
+                                    name="jumlah_deposit" required disabled>
                             </div>
                             <div class="mb-4 mt-n2"><label class="mb-1">Jumlah Deposit</label>
                                 <input type="text" value="{{ Rupiah($permit->jumlah_deposit) }}" class="form-control"

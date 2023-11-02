@@ -132,6 +132,5 @@
         } else {
             return value;
         }
-
     }
 </script>

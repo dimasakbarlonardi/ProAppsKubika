@@ -92,11 +92,13 @@
                 @include('AdminSite.OpenTicket.reservation-form')
                 {{-- =============== End Reservation Form ================ --}}
 
-
                 {{-- ================= Gigo Form =============== --}}
                 @include('AdminSite.OpenTicket.form-gigo')
                 {{-- ================= End Gigo Form =============== --}}
 
+                {{-- ================= Work Permit Form =============== --}}
+                @include('AdminSite.OpenTicket.request-permit-form')
+                {{-- ================= End Work Permit Form =============== --}}
 
                 <div class="mt-5 modal-footer">
                     <button type="button" onclick="onSubmit()" class="btn btn-primary">Submit</button>
@@ -123,8 +125,28 @@
 
         $('#id_jenis_request').on('change', function() {
             var id_jenis_request = $(this).val();
+            console.log(id_jenis_request);
 
-            if (id_jenis_request == 4) {
+            if (id_jenis_request == 2) {
+                $('#request-permit-form').css({
+                    'display': 'block'
+                });
+                $('#reservation_form').css({
+                    'display': 'none'
+                });
+                $('#gigo_form').css({
+                    'display': 'none'
+                });
+                $('#div_deskripsi_request').css({
+                    'display': 'none'
+                });
+                $('#upload_image').css({
+                    'display': 'none'
+                });
+            } else if (id_jenis_request == 4) {
+                $('#work-permit-form').css({
+                    'display': 'none'
+                });
                 $('#reservation_form').css({
                     'display': 'block'
                 });
@@ -138,6 +160,9 @@
                     'display': 'none'
                 });
             } else if (id_jenis_request == 5) {
+                $('#work-permit-form').css({
+                    'display': 'none'
+                });
                 $('#gigo_form').css({
                     'display': 'block'
                 });
@@ -174,6 +199,42 @@
             var deskripsi_request = $('#deskripsi_request').val();
             var id_jenis_request = $('#id_jenis_request').val();
             var id_unit = $('#id_unit').val();
+
+            if (id_jenis_request == 2) {
+                requestPermit = valueRequestPermit();
+                console.log(requestPermit, personels, alats, materials);
+                if (!requestPermit || personels.length == 0 || alats.length == 0  || materials.length == 0) {
+                    Swal.fire(
+                        'Failed!',
+                        'Please fill all field',
+                        'error'
+                    )
+                } else {
+                    $.ajax({
+                        url: '/admin/request-permits',
+                        type: 'POST',
+                        data: {
+                            requestPermit,
+                            personels,
+                            alats,
+                            materials,
+                            judul_request: judul_request,
+                            no_hp: no_hp,
+                            id_jenis_request: id_jenis_request,
+                            id_unit: id_unit,
+                        },
+                        success: function(resp) {
+                            if (resp.status === 'ok') {
+                                Swal.fire(
+                                    'Success!',
+                                    'Success create Request!',
+                                    'success'
+                                ).then(() => window.location.replace('/admin/open-tickets'))
+                            }
+                        }
+                    });
+                }
+            }
 
             if (id_jenis_request == 4) {
                 value = reservationValue();

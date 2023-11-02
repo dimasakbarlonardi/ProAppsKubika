@@ -140,10 +140,6 @@
                         <input class="form-control" type="text" value="{{ $wp->RequestPermit->no_request_permit }}"
                             disabled>
                     </div>
-                    <div class="mb-4 mt-n2"><label class="mb-1">Nama Project</label>
-                        <input type="text" value="{{ $wp->nama_project }}" class="form-control" name="nama_project"
-                            required disabled>
-                    </div>
                     <div class="mb-4 mt-n2"><label class="mb-1">Work Relation</label>
                         <select name="id_work_relation" class="form-select form-select-sm" required disabled>
                             <option disabled selected>--Pilih Work Relation ---</option>

@@ -10,7 +10,17 @@
 @endsection
 
 @section('content')
-    @csrf
+    @if ($tiket)
+        @php
+            $rp = json_decode($tiket->RequestPermit->RPDetail->data);
+            $data = json_decode($rp);
+
+            foreach ($data->personels as $personel) {
+                // dd($personel);
+            }
+        @endphp
+    @endif
+
     <div class="row g-3">
         <div class="col-9">
             <div class="card">
@@ -42,27 +52,27 @@
                         <div class="row">
                             <div class="col-6">
                                 <label class="form-label">Nama Kontraktor</label>
-                                <input type="text" class="form-control" id="nama_kontraktor">
+                                <input type="text" class="form-control" id="nama_kontraktor" readonly>
                             </div>
                             <div class="col-6">
                                 <label class="form-label">Penanggung Jawab</label>
-                                <input type="text" class="form-control" id="pic">
+                                <input type="text" class="form-control" id="pic" readonly>
                             </div>
                         </div>
                     </div>
                     <div class="mb-3 p-3">
                         <label class="form-label">Alamat</label>
-                        <textarea class="form-control" id="alamat" cols="20" rows="5"></textarea>
+                        <textarea class="form-control" id="alamat" cols="20" rows="5" readonly></textarea>
                     </div>
                     <div class="mb-3">
                         <div class="row">
                             <div class="col-6">
                                 <label class="form-label">No KTP</label>
-                                <input type="text" class="form-control" id="no_ktp" maxlength="16">
+                                <input type="text" class="form-control" id="no_ktp" maxlength="16" readonly>
                             </div>
                             <div class="col-6">
                                 <label class="form-label">No Telp</label>
-                                <input type="text" class="form-control" id="no_telp" maxlength="13">
+                                <input type="text" class="form-control" id="no_telp" maxlength="13" readonly>
                             </div>
                         </div>
                     </div>
@@ -70,25 +80,21 @@
                         <div class="row">
                             <div class="col-6">
                                 <label class="mb-1">Mulai Pengerjaan</label>
-                                <input class="form-control datetimepicker" id="tanggal_mulai" id="datetimepicker"
-                                    type="text" placeholder="d/m/y H:i"
-                                    data-options='{"enableTime":true,"dateFormat":"Y-m-d H:i","disableMobile":true}' />
+                                <input class="form-control" id="tanggal_mulai" type="text" readonly />
                             </div>
                             <div class="col-6">
                                 <label class="mb-1">Tanggal Akhir Pengerjaan</label>
-                                <input class="form-control datetimepicker" id="tanggal_akhir" id="datetimepicker"
-                                    type="text" placeholder="d/m/y H:i"
-                                    data-options='{"enableTime":true,"dateFormat":"Y-m-d H:i","disableMobile":true}' />
+                                <input class="form-control" id="tanggal_akhir" type="text" readonly />
                             </div>
                         </div>
                     </div>
                     <div class="mb-3">
                         <label class="form-label">Keterangan Pekerjaan</label>
-                        <textarea class="form-control" id="keterangan_pekerjaan" cols="20" rows="5"></textarea>
+                        <textarea class="form-control" id="keterangan_pekerjaan" cols="20" rows="5" readonly></textarea>
                     </div>
                     <div class="mb-3">
                         <div class="row">
-                        <div class="col-6">
+                            <div class="col-6">
                                 <label class="form-label">Paid Permit</label>
                                 <select name="" class="form-control" id="" disabled>
                                     <option value="Yes">Yes</option>
@@ -104,18 +110,28 @@
                                 <div class="row gx-card mx-0 bg-200 text-900 fs--1 fw-semi-bold">
                                     <div class="col-9 col-md-8 py-2">Personil</div>
                                 </div>
-                                <div id="detailPersonels">
+                                @if ($tiket)
+                                    @foreach ($data->personels as $personel)
+                                        <div class='row gx-card mx-0 align-items-center border-bottom border-200'>
+                                            <div class='col-8 py-3'>
+                                                <div class='d-flex align-items-center'>
+                                                    <div class='flex-1'>
+                                                        <h5 class='fs-0'>
+                                                            <h5 class='fs-0'>
+                                                                <span class='text-900' href=''>
+                                                                    {{ $personel->nama_personil }}
+                                                                </span>
+                                                            </h5>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @else
+                                    <div id="detailPersonels">
 
-                                </div>
-                                <div class="row gx-card mx-0 border-bottom border-200">
-                                    <div class="col-9 py-3">
-                                        <input class="form-control" type="text" id="nama_personil">
                                     </div>
-                                    <div class="col-3 ">
-                                        <button type="button" class="btn btn-primary mt-3"
-                                            onclick="onAddPersonel()">Tambah</button>
-                                    </div>
-                                </div>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -125,23 +141,28 @@
                                 <div class="row gx-card mx-0 bg-200 text-900 fs--1 fw-semi-bold">
                                     <div class="col-9 col-md-8 py-2">Nama Alat</div>
                                 </div>
-                                <div id="detailAlats">
+                                @if ($tiket)
+                                    @foreach ($data->alats as $alat)
+                                        <div class='row gx-card mx-0 align-items-center border-bottom border-200'>
+                                            <div class='col-8 py-3'>
+                                                <div class='d-flex align-items-center'>
+                                                    <div class='flex-1'>
+                                                        <h5 class='fs-0'>
+                                                            <h5 class='fs-0'>
+                                                                <span class='text-900' href=''>
+                                                                    {{ $alat->nama_alat }}
+                                                                </span>
+                                                            </h5>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @else
+                                    <div id="detailAlats">
 
-                                </div>
-                                <div class="row gx-card mx-0 border-bottom border-200">
-                                    <div class="col-9 py-3">
-                                        <input class="form-control" type="text" id="nama_alat">
-                                        <small class="text-danger">
-                                            <i>
-                                                *Harap masukan nama beserta jumlah banyaknya barang
-                                            </i>
-                                        </small>
                                     </div>
-                                    <div class="col-3 ">
-                                        <button type="button" class="btn btn-primary mt-3"
-                                            onclick="onAddAlat()">Tambah</button>
-                                    </div>
-                                </div>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -151,23 +172,28 @@
                                 <div class="row gx-card mx-0 bg-200 text-900 fs--1 fw-semi-bold">
                                     <div class="col-9 col-md-8 py-2">Material</div>
                                 </div>
-                                <div id="detailMaterials">
+                                @if ($tiket)
+                                    @foreach ($data->materials as $material)
+                                        <div class='row gx-card mx-0 align-items-center border-bottom border-200'>
+                                            <div class='col-8 py-3'>
+                                                <div class='d-flex align-items-center'>
+                                                    <div class='flex-1'>
+                                                        <h5 class='fs-0'>
+                                                            <h5 class='fs-0'>
+                                                                <span class='text-900' href=''>
+                                                                    {{ $material->material }}
+                                                                </span>
+                                                            </h5>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                @else
+                                    <div id="detailMaterials">
 
-                                </div>
-                                <div class="row gx-card mx-0 border-bottom border-200">
-                                    <div class="col-9 py-3">
-                                        <input class="form-control" type="text" id="material">
-                                        <small class="text-danger">
-                                            <i>
-                                                *Harap masukan nama beserta jumlah banyaknya barang
-                                            </i>
-                                        </small>
                                     </div>
-                                    <div class="col-3 ">
-                                        <button type="button" class="btn btn-primary mt-3"
-                                            onclick="onAddMaterial()">Tambah</button>
-                                    </div>
-                                </div>
+                                @endif
                             </div>
                         </div>
                     </div>
@@ -185,18 +211,56 @@
                         <select name="no_tiket" class="form-select form-select-sm" id="select_ticket">
                             <option disabled selected>-- Select request ---</option>
                             @foreach ($tickets as $ticket)
-                                <option {{ isset($id_tiket) ? ($id_tiket == $ticket->id ? 'selected' : '') : '' }} value="{{ $ticket->id }}">{{ $ticket->no_tiket }}</option>
+                                <option {{ isset($id_tiket) ? ($id_tiket == $ticket->id ? 'selected' : '') : '' }}
+                                    value="{{ $ticket->id }}">{{ $ticket->no_tiket }}</option>
                             @endforeach
                         </select>
                     </div>
-                    <div class="mb-4 mt-n2"><label class="mb-1">Jenis Pekerjaan</label>
+                    <div class="mb-3 mt-n2"><label class="mb-1">Jenis Pekerjaan</label>
                         <select name="id_jenis_pekerjaan" class="form-select form-select-sm" id="id_jenis_pekerjaan">
                             <option disabled selected>--Pilih Jenis Pekerjaan ---</option>
                             @foreach ($jenis_pekerjaan as $item)
-                                <option value="{{ $item->id_jenis_pekerjaan }}">
+                                <option
+                                    {{ $tiket ? ($ticket->RequestPermit->id_jenis_pekerjaan == $item->id_jenis_pekerjaan ? 'selected' : '') : '' }}
+                                    value="{{ $item->id_jenis_pekerjaan }}" disabled>
                                     {{ $item->jenis_pekerjaan }}</option>
                             @endforeach
                         </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="mb-1">Supervisi</label>
+                        <div class="input-group flex-nowrap">
+                            <span class="input-group-text">Rp</span>
+                            <input style="text-align: right" type="text" class="form-control"
+                                id="show_jumlah_supervisi" />
+                            <input type="hidden" id="jumlah_supervisi" name="jumlah_supervisi" />
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="mb-1">Deposit</label>
+                        <div class="input-group flex-nowrap">
+                            <span class="input-group-text">Rp</span>
+                            <input style="text-align: right" class="form-control" id="show_jumlah_deposit" />
+                            <input type="hidden" id="jumlah_deposit" name="jumlah_deposit" />
+                        </div>
+                    </div>
+                    <div class="mb-4 mt-n2"><label class="mb-1">Work Relation</label>
+                        @if (isset($request_permit->WorkPermit))
+                            <select name="id_work_relation" class="form-select form-select-sm" id="id_work_relation" disabled>
+                                @foreach ($work_relations as $work_relation)
+                                    <option {{ $request_permit->WorkPermit->id_work_relation == $work_relation->id_work_relation ? 'selected' : '' }} value="{{ $work_relation->id_work_relation }}">
+                                        {{ $work_relation->work_relation }}</option>
+                                @endforeach
+                            </select>
+                        @else
+                            <select name="id_work_relation" class="form-select form-select-sm" id="id_work_relation">
+                                <option disabled selected value="">--Pilih Work Relation ---</option>
+                                @foreach ($work_relations as $work_relation)
+                                    <option value="{{ $work_relation->id_work_relation }}">
+                                        {{ $work_relation->work_relation }}</option>
+                                @endforeach
+                            </select>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -214,26 +278,27 @@
     <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.full.min.js"></script>
 
     <script>
-        tinymce.init({
-            selector: 'textarea#myeditorinstance', // Replace this CSS selector to match the placeholder element for TinyMCE
-            plugins: 'code table lists',
-            toolbar: 'undo redo | blocks | bold italic | alignleft aligncenter alignright | indent outdent | bullist numlist | code | table'
-        });
-        flatpickr("#tanggal_mulai", {
-            dateFormat: "Y-m-d H:i",
-            enableTime: true,
-            minDate: "today",
-            altInput: true,
-            altFormat: "F j, Y - H:i"
-        });
-        flatpickr("#tanggal_akhir", {
-            dateFormat: "Y-m-d H:i",
-            enableTime: true,
-            minDate: "today",
-            altInput: true,
-            altFormat: "F j, Y - H:i"
-        });
+        $('#show_jumlah_supervisi').keyup(function() {
+            var value = $(this).val();
+            var jumlah_supervisi = $('#jumlah_supervisi');
+
+            var newJumlahSupervisi = value.replace(".", "")
+            $('#jumlah_supervisi').val(newJumlahSupervisi);
+
+            $(this).val(formatRupiah(value.toString()));
+        })
+
+        $('#show_jumlah_deposit').keyup(function() {
+            var value = $(this).val();
+            var jumlah_deposit = $('#jumlah_deposit');
+
+            var newJumlahDeposit = value.replace(".", "")
+            $('#jumlah_deposit').val(newJumlahDeposit);
+
+            $(this).val(formatRupiah(value.toString()));
+        })
     </script>
+
     <script>
         var personels = [];
         var idPersonel = 0;
@@ -245,7 +310,6 @@
         var id = '{{ isset($id_tiket) }}';
         if (id) {
             id = '{{ $id_tiket }}'
-            console.log(id);
             showTicket(id)
         }
 
@@ -253,18 +317,11 @@
             tinyMCE.triggerSave();
 
             var no_tiket = $('#select_ticket').val();
-            var id_jenis_pekerjaan = $('#id_jenis_pekerjaan').val();
-            var keterangan_pekerjaan = $('#keterangan_pekerjaan').val();
-            var nama_kontraktor = $('#nama_kontraktor').val();
-            var pic = $('#pic').val();
-            var alamat = $('#alamat').val();
-            var no_ktp = $('#no_ktp').val();
-            var no_telp = $('#no_telp').val();
-            var tgl_mulai = $('#tanggal_mulai').val();
-            var tgl_akhir = $('#tanggal_akhir').val();
+            var jumlah_supervisi = $('#jumlah_supervisi').val();
+            var jumlah_deposit = $('#jumlah_deposit').val();
+            var id_work_relation = $('#id_work_relation').val();
 
-            if (!id_jenis_pekerjaan || !keterangan_pekerjaan || !nama_kontraktor || !pic || !alamat || !no_ktp || !
-                no_telp || !tgl_mulai || !tgl_akhir) {
+            if (!no_tiket || !jumlah_supervisi || !jumlah_deposit || !id_work_relation) {
                 Swal.fire(
                     'Fail!',
                     'Please fill all field',
@@ -272,34 +329,25 @@
                 )
             } else {
                 $.ajax({
-                    url: '/admin/request-permits',
+                    url: '/admin/work-permits',
                     type: 'POST',
                     data: {
-                        personels,
-                        alats,
-                        materials,
                         no_tiket,
-                        id_jenis_pekerjaan,
-                        keterangan_pekerjaan,
-                        nama_kontraktor,
-                        pic,
-                        alamat,
-                        no_ktp,
-                        no_telp,
-                        tgl_mulai,
-                        tgl_akhir
+                        jumlah_supervisi,
+                        jumlah_deposit,
+                        id_work_relation
                     },
                     success: function(data) {
                         if (data.status === 'ok') {
                             Swal.fire(
-                                'Berhasil!',
-                                'Berhasil membuat Request Permit!',
+                                'Success!',
+                                'Success approve Request Permit!',
                                 'success'
-                            ).then(() => window.location.replace('/admin/request-permits'))
+                            ).then(() => window.location.replace('/admin/work-permits'))
                         } else {
                             Swal.fire(
-                                'Gagal!',
-                                'Gagal membuat Request Permit!',
+                                'Failed!',
+                                'Fail approve Request Permit!',
                                 'failed'
                             )
                         }
@@ -315,7 +363,7 @@
 
             $('#select_ticket').on('change', function() {
                 var id = $(this).val()
-
+                showTicket(id);
             })
 
             function timeDifference(current, previous) {
@@ -345,15 +393,51 @@
 
         function showTicket(id) {
             $.ajax({
-                url: '/admin/open-tickets/' + id,
+                url: '/admin/open-ticket-rp/' + id,
                 data: {
                     'data_type': 'json'
                 },
                 type: 'GET',
                 success: function(data) {
+                    var rp = data.data.request_permit;
+                    var descRp = rp.keterangan_pekerjaan
+                    var rpDetail = rp.r_p_detail.data;
+
+                    var dataDetail = JSON.parse(rpDetail);
+                    personelsData = JSON.parse(dataDetail);
+                    alatsData = JSON.parse(dataDetail);
+                    materialsData = JSON.parse(dataDetail);
+
+                    personels = personelsData.personels;
+                    alats = alatsData.alats;
+                    materials = materialsData.materials;
+
+                    $('#detailPersonels').html("")
+                    $('#detailAlats').html("")
+                    $('#detailMaterials').html("")
+
+                    detailPersonels();
+                    detailAlats();
+                    detailMaterials();
+
+                    $('#nama_kontraktor').val(rp.nama_kontraktor);
+                    $('#pic').val(rp.pic);
+                    $('#alamat').val(rp.alamat);
+                    $('#no_ktp').val(rp.no_ktp);
+                    $('#no_telp').val(rp.no_telp);
+                    $('#keterangan_pekerjaan').val(rp.keterangan_pekerjaan);
+                    $('#id_jenis_pekerjaan').val(rp.id_jenis_pekerjaan);
+                    $('#id_jenis_pekerjaan').attr("disabled", true);
+                    $('#tanggal_mulai').val(rp.tgl_mulai);
+                    $('#tanggal_akhir').val(rp.tgl_akhir);
+
                     $('#ticket_detail').css('display', 'block')
                     $('#permit_detail').css('display', 'block')
-                    $('#ticket_detail_desc').html(data.data.deskripsi_request)
+                    if (descRp) {
+                        $('#ticket_detail_desc').html(descRp);
+                    } else {
+                        $('#ticket_detail_desc').html(data.data.deskripsi_request);
+                    }
                     $('#ticket_detail_heading').html(data.data.judul_request)
                     $('#ticket_head').html(`
                             <div class="d-md-flex d-xl-inline-block d-xxl-flex align-items-center justify-content-between">
@@ -376,75 +460,25 @@
             })
         }
 
-        function onAddPersonel() {
-            var lastID = 0;
-            var namaPersonel = $('#nama_personil').val();
-
-            lastID += 1;
-
-            let personel = {
-                'id': lastID,
-                nama_personil: namaPersonel,
-            }
-
-
-            if (namaPersonel !== '') {
-                personels.push(personel);
-
-                $('#nama_personil').val('');
-                detailPersonels();
-            }
-        }
-
         function detailPersonels() {
             $('#detailPersonels').html('');
             personels.map((item, i) => {
                 $('#detailPersonels').append(
                     `<div class='row gx-card mx-0 align-items-center border-bottom border-200'>
-                        <div class='col-8 py-3'>
-                            <div class='d-flex align-items-center'>
-                                <div class='flex-1'>
-                                    <h5 class='fs-0'>
-                                        <span class='text-900' href=''>
-                                            ${item.nama_personil}
-                                        </span>
-                                    </h5>
-                                    <div class='fs--2 fs-md--1'>
-                                        <a class='text-danger' onclick='onRemovePersonel(${i})'>Remove</a>
-                                    </div>
-                                </div>
+                    <div class='col-8 py-3'>
+                        <div class='d-flex align-items-center'>
+                            <div class='flex-1'>
+                                <h5 class='fs-0'>
+                                    <span class='text-900' href=''>
+                                        ${item.nama_personil}
+                                    </span>
+                                </h5>
                             </div>
                         </div>
-                    </div>`
+                    </div>
+                </div>`
                 )
             })
-        }
-
-        function onRemovePersonel(id) {
-            idPersonel -= 1;
-
-            personels.splice(id, 1)
-            detailPersonels()
-        }
-
-        function onAddAlat() {
-            var lastID = 0;
-            var namaAlat = $('#nama_alat').val();
-
-            lastID += 1;
-
-            let alat = {
-                'id': lastID,
-                nama_alat: namaAlat,
-            }
-
-
-            if (namaAlat !== '') {
-                alats.push(alat);
-
-                $('#nama_alat').val('');
-                detailAlats();
-            }
         }
 
         function detailAlats() {
@@ -452,50 +486,20 @@
             alats.map((item, i) => {
                 $('#detailAlats').append(
                     `<div class='row gx-card mx-0 align-items-center border-bottom border-200'>
-                        <div class='col-8 py-3'>
-                            <div class='d-flex align-items-center'>
-                                <div class='flex-1'><h5 class='fs-0'>
-                                    <h5 class='fs-0'>
-                                        <span class='text-900' href=''>
-                                            ${item.nama_alat}
-                                        </span>
-                                    </h5>
-                                    <div class='fs--2 fs-md--1'>
-                                        <a class='text-danger' onclick='onRemoveAlat(${i})'>Remove</a>
-                                    </div>
-                                </div>
+                    <div class='col-8 py-3'>
+                        <div class='d-flex align-items-center'>
+                            <div class='flex-1'><h5 class='fs-0'>
+                                <h5 class='fs-0'>
+                                    <span class='text-900' href=''>
+                                        ${item.nama_alat}
+                                    </span>
+                                </h5>
                             </div>
                         </div>
-                    </div>`
+                    </div>
+                </div>`
                 )
             })
-        }
-
-        function onRemoveAlat(id) {
-            idAlat -= 1;
-
-            alats.splice(id, 1)
-            detailAlats()
-        }
-
-        function onAddMaterial() {
-            var lastID = 0;
-            var namaMaterial = $('#material').val();
-
-            lastID += 1;
-
-            let material = {
-                'id': lastID,
-                material: namaMaterial,
-            }
-
-
-            if (namaMaterial !== '') {
-                materials.push(material);
-
-                $('#material').val('');
-                detailMaterials();
-            }
         }
 
         function detailMaterials() {
@@ -503,30 +507,20 @@
             materials.map((item, i) => {
                 $('#detailMaterials').append(
                     `<div class='row gx-card mx-0 align-items-center border-bottom border-200'>
-                        <div class='col-8 py-3'>
-                            <div class='d-flex align-items-center'>
-                                <div class='flex-1'><h5 class='fs-0'>
-                                    <h5 class='fs-0'>
-                                        <span class='text-900' href=''>
-                                            ${item.material}
-                                        </span>
-                                    </h5>
-                                    <div class='fs--2 fs-md--1'>
-                                        <a class='text-danger' onclick='onRemoveMaterial(${i})'>Remove</a>
-                                    </div>
-                                </div>
+                    <div class='col-8 py-3'>
+                        <div class='d-flex align-items-center'>
+                            <div class='flex-1'><h5 class='fs-0'>
+                                <h5 class='fs-0'>
+                                    <span class='text-900' href=''>
+                                        ${item.material}
+                                    </span>
+                                </h5>
                             </div>
                         </div>
-                    </div>`
+                    </div>
+                </div>`
                 )
             })
-        }
-
-        function onRemoveMaterial(id) {
-            idMaterial -= 1;
-
-            materials.splice(id, 1)
-            detailMaterials()
         }
     </script>
 @endsection

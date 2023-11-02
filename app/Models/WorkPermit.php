@@ -17,6 +17,7 @@ class WorkPermit extends Model
         'no_work_permit',
         'nama_project',
         'id_bayarnon',
+        'jumlah_supervisi',
         'jumlah_deposit',
         'status_request',
         'id_user_work_permit',

@@ -450,6 +450,7 @@ Route::prefix('admin')->group(function () {
 
         // Request Permit
         Route::resource('/request-permits', RequestPermitController::class);
+        Route::get('/open-ticket-rp/{id}', [RequestPermitController::class, 'showRPTicket']);
         Route::post('/request-permits/approve1/{id}', [RequestPermitController::class, 'approveRP1'])->name('approveRP1');
 
         // BAPP
