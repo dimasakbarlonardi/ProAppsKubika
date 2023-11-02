@@ -2,32 +2,25 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
-use App\Models\ChecklistAhuDetail;
 use App\Helpers\ConnectionDB;
-use App\Models\ChecklistParameterEquiqment;
-use App\Models\EngAhu;
-use App\Models\EquiqmentAhu;
-use App\Models\EquiqmentEngineeringDetail;
-use App\Models\Login;
-use Illuminate\Support\Facades\DB;
-use RealRashid\SweetAlert\Facades\Alert;
+use App\Http\Controllers\Controller;
+use App\Models\TenantOFF;
 use Illuminate\Http\Request;
 
-class ChecklistAhuDetailController extends Controller
+class OffTenantUnitController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        $equiqmentDetail = ConnectionDB::setConnection(new EquiqmentEngineeringDetail());
+        $conn = ConnectionDB::setConnection(new TenantOFF());
 
-        $data['equiqmentdetails'] = $equiqmentDetail->where('status_schedule', '!=', 'Not Done')->get();
-;
-        return view('AdminSite.ChecklistAhuDetail.index', $data);
+        $data['offtenant'] = $conn->get();
+
+        return view('AdminSite.OffTenantUnit.index', $data);
     }
 
     /**
@@ -48,7 +41,7 @@ class ChecklistAhuDetailController extends Controller
      */
     public function store(Request $request)
     {
-     //
+        //
     }
 
     /**
@@ -70,7 +63,7 @@ class ChecklistAhuDetailController extends Controller
      */
     public function edit($id)
     {
-       //
+        //
     }
 
     /**
@@ -82,7 +75,7 @@ class ChecklistAhuDetailController extends Controller
      */
     public function update(Request $request, $id)
     {
-       //
+        //
     }
 
     /**
@@ -93,6 +86,6 @@ class ChecklistAhuDetailController extends Controller
      */
     public function destroy($id)
     {
-      //
+        //
     }
 }

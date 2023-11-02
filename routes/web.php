@@ -109,6 +109,7 @@ use App\Http\Controllers\Admin\InspectionSecurityController;
 use App\Http\Controllers\Admin\LeaveTypeHRController;
 use App\Http\Controllers\Admin\InvoiceController;
 use App\Http\Controllers\Admin\OffBoardingKepemilikanUnitController;
+use App\Http\Controllers\Admin\OffTenantUnitController;
 use App\Http\Controllers\Admin\PackageController;
 use App\Http\Controllers\Admin\PermitHRController;
 use App\Http\Controllers\Admin\PPNController;
@@ -474,12 +475,15 @@ Route::prefix('admin')->group(function () {
         Route::resource('eng-bapp', EngBAPPcontroller::class);
 
 
-        //CRUD OffBoarding Tenant
+        //CRUD OffBoarding Perubahan Unit
         Route::resource('offtenants', OffBoardingTenantController::class);
         Route::get('tenant-unit-by-id/{id}', [OffBoardingTenantController::class, 'tenantByID'])->name('tenant-by-id');
         Route::get('penjamin-by-id/{id}', [OffBoardingTenantController::class, 'penjaminByID'])->name('penjamin-by-id');
         Route::get('tenant-unit-by-tenant/{IDTenant}/{IDUnit}', [OffBoardingTenantController::class, 'TUByTenantID']);
         Route::post('/update/tenantunits-offtenant', [OffBoardingTenantController::class, 'offdeleteTenantUnit'])->name('offdeleteTenantUnit');
+
+        // OffBoarding Tenant Unit
+        Route::resource('off-tenant-unit', OffTenantUnitController::class);
 
         //CRUD OffBoarding Owner
         Route::resource('offowners', OffBoardingOwnerController::class);

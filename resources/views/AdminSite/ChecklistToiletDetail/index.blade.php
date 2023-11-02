@@ -24,8 +24,10 @@
                             <tr>
                                 <th class="align-baseline" data-sort="">No</th>
                                 <th class="align-baseline" data-sort="image">Image</th>
-                                <th class="align-baseline" data-sort="equipment">Equipment</th>
-                                <th class="align-baseline" data-sort="room">Location</th>
+                                <th class="align-baseline" data-sort="no_equipment">No. Area Inspection</th>
+                                <!-- <th class="align-baseline" data-sort="equipment">Equipment</th> -->
+                                <th class="align-baseline" data-sort="room">Area</th>
+                                <th class="align-baseline" data-sort="floor">Floor</th>
                                 <th class="align-baseline" data-sort="inspection">Inspection HouseKeeping</th>
                                 <th class="align-baseline" data-sort="user">CheckBy</th>
                                 <th class="align-baseline" data-sort="tgl_checklist">Check Date</th>
@@ -48,7 +50,8 @@
                                                 style="max-width: 50px; height: 50px">
                                         </a>
                                     </td>
-                                    <td>{{ $detail->equipment->equipment }}</td>
+                                    <td>{{ $detail->Equipment->no_equipment }}</td>
+                                    <!-- <td>{{ $detail->equipment->equipment }}</td> -->
                                     <td>{{ $detail->Room->nama_room }}</td>
                                     <td scope="row">
                                         <button class="btn btn-warning btn-sm" data-bs-toggle="modal"

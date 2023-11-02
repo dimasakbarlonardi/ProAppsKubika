@@ -1,17 +1,13 @@
 <div class="mb-3">
     <div class="text-end my-3">
-        <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#tambah-member">Tambah
-            Member</button>
+        <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#tambah-member">Tambah Member</button>
     </div>
 </div>
 
 <div class="row p-3">
     @foreach ($tenant_units as $unit)
     <div class="col">
-        <button class="btn btn-falcon-primary me-1 mb-1 btn-unit " type="button"
-            onclick="btnUnitClick('{{ $unit->id_unit }}')"
-            id="btn-unit-{{ $unit->id_unit }}" ><span
-            class="fas fa-building me-2"></span>{{ $unit->unit->nama_unit }}</button>
+        <button class="btn btn-falcon-primary me-1 mb-1 btn-unit" type="button" onclick="btnUnitClick('{{ $unit->id_unit }}')" id="btn-unit-{{ $unit->id_unit }}"><span class="fas fa-building me-2"></span>{{ $unit->unit->nama_unit }}</button>
     </div>
     @endforeach
 </div>
@@ -24,16 +20,14 @@
     <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 800px">
         <div class="modal-content position-relative">
             <div class="position-absolute top-0 end-0 mt-2 me-2 z-index-1">
-                <button class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base"
-                    data-bs-dismiss="modal" aria-label="Close">
-                </button>
+                <button class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body p-0">
                 <div class="rounded-top-lg py-3 ps-4 pe-6 bg-light">
                     <h4 class="mb-1" id="modalExampleDemoLabel">Tambah Member</h4>
                 </div>
                 <div class="p-4 pb-0">
-                    <form method="post" action="{{ route('storeTenantMember') }}">
+                    <form method="post" action="{{ route('storeTenantMember') }}" onsubmit="return validateNikLength()">
                         @csrf
                         <div class="mb-3">
                             <div class="row">
@@ -88,14 +82,9 @@
     <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 800px">
         <div class="modal-content position-relative">
             <div class="position-absolute top-0 end-0 mt-2 me-2 z-index-1">
-                <button class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base"
-                    data-bs-dismiss="modal" aria-label="Close">
-                </button>
+                <button class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-
-            <div class="modal-body-member-edit p-0">
-
-            </div>
+            <div class="modal-body-member-edit p-0"></div>
         </div>
     </div>
 </div>
@@ -114,5 +103,14 @@
                 $('#member_tenant').html(data.html)
             }
         })
+    }
+
+    function validateNikLength() {
+        var nikInput = document.querySelector('input[name="nik_tenant_member"]');
+        if (nikInput.value.length > 16) {
+            alert("Nik Tenant Member tidak boleh lebih dari 16 digit.");
+            return false; // Prevent form submission
+        }
+        return true; // Allow form submission
     }
 </script>

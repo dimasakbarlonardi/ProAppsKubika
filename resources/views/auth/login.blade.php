@@ -21,11 +21,15 @@
                 <input class="form-control" id="card-email" type="email" name="email" />
             </div>
             <div class="mb-3">
-                <div class="d-flex justify-content-between">
-                    <label class="form-label" for="card-password">Password</label>
+                <label class="form-label">Password</label>
+                <div class="input-group">
+                    <input class="form-control" id="password-input" type="password" name="password" required>
+                    <button id="toggle-password" type="button" class="btn btn-outline-secondary">
+                        <span id="eye-icon">View</span>
+                    </button>
                 </div>
-                <input class="form-control" id="card-password" type="password" name="password" />
             </div>
+
             <div class="mb-3">
                 <div class="d-flex justify-content-between">
                     <label class="form-label" for="card-password">Select Site</label>
@@ -46,4 +50,33 @@
         </form>
     </div>
 </div>
+@endsection
+
+
+@section('script')
+<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.full.min.js"></script>
+
+<script>
+    $('#email').select2({
+        theme: 'bootstrap-5'
+    });
+</script>
+
+<script>
+    const passwordInput = document.getElementById('password-input');
+    const togglePasswordButton = document.getElementById('toggle-password');
+    const eyeIcon = document.getElementById('eye-icon');
+
+    togglePasswordButton.addEventListener('click', () => {
+        if (passwordInput.type === 'password') {
+            passwordInput.type = 'text';
+            eyeIcon.textContent = 'Hide';
+        } else {
+            passwordInput.type = 'password';
+            eyeIcon.textContent = 'View';
+        }
+    });
+</script>
+
+
 @endsection

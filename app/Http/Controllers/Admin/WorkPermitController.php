@@ -481,4 +481,5 @@ class WorkPermitController extends Controller
 
         return view('AdminSite.WorkPermit.printout', $data);
     }
+    
 }
