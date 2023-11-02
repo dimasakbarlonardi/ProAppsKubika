@@ -36,6 +36,11 @@ class EquiqmentAhu extends Model
         return $this->hasOne(Room::class, 'id_room', 'id_room');
     }
 
+    public function Floor()
+    {
+        return $this->hasOne(Floor::class, 'id_lantai', 'id_room');
+    }
+
     public function Schedule()
     {
         return $this->hasOne(EquiqmentEngineeringDetail::class, 'id_equiqment_engineering', 'id_equiqment_engineering');

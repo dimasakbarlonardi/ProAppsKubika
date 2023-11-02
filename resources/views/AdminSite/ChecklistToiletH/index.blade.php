@@ -24,8 +24,8 @@
             <thead>
                 <tr>
                     <th class="sort" data-sort="">No</th>
-                    <th class="sort" data-sort="equiqment">Equipment</th>
-                    <th class="sort" data-sort="id_room">Lokasi</th>
+                    <th class="sort" data-sort="equiqment">Area Inspection</th>
+                    <th class="sort" data-sort="id_room">Floor</th>
                     <th class="sort" data-sort="action">Action</th>
                 </tr>
             </thead>
@@ -33,8 +33,8 @@
                 @foreach ($checklisttoilets as $key => $checklisttoilet)
                     <tr>
                         <th scope="row">{{ $key + 1 }}</th>
-                        <td>{{ $checklisttoilet->equipment }}</td>
                         <td>{{ $checklisttoilet->room->nama_room }}</td>
+                        <td>{{ $checklisttoilet->floor->nama_lantai }}</td>
                         <td>
                             <div class="dropdown font-sans-serif position-static">
                                 <button class="btn btn-sm btn-warning" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false">

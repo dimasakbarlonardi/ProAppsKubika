@@ -33,10 +33,10 @@
                     <tr>
                         <th class="sort" data-sort="">No</th>
                         <th class="sort" data-sort="image">Image</th>
+                        <th class="sort" data-sort="equipment">No. Equipment</th>
                         <th class="sort" data-sort="equipment">Equipment</th>
                         <th class="sort" data-sort="room">Location</th>
                         <th class="sort" data-sort="inspection">Inspection Engineering</th>
-                        {{-- <th class="sort" data-sort="pic">Status</th> --}}
                         <th class="sort" data-sort="pic">CheckBy</th>
                         <th class="sort" data-sort="tgl_checklist">Check Date</th>
                         <th class="sort" data-sort="tgl_checklist">Status Checklist</th>
@@ -54,6 +54,7 @@
                                 <img src="{{ $detail->image ? asset($detail->image) : asset('/assets/img/team/3-thumb.png') }}" alt="{{ $detail->image }}" class="img-thumbnail rounded-circle" style="max-width: 50px; height: 50px">
                             </a>
                         </td>
+                        <td>{{ $detail->Equipment->no_equiqment }}</td>
                         <td>{{ $detail->Equipment->equiqment }}</td>
                         <td>{{ $detail->Room->nama_room }}</td>
                         <td scope="row">

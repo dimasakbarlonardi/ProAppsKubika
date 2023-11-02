@@ -2,6 +2,7 @@
 <html lang="en-US" dir="ltr">
 
 <head>
+    @yield('css')
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>Falcon | Dashboard &amp; Web App Template</title>
     <link href="{{ asset('assets/css/theme.min.css') }}" rel="stylesheet" id="style-default">
@@ -31,7 +32,7 @@
     </main>
 
     @include('sweetalert::alert')
-
+    @yield('script')
 </body>
 
 </html>

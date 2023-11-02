@@ -41,6 +41,11 @@ class EquiqmentToilet extends Model
         return $this->hasOne(Room::class, 'id_room', 'id_room');
     }
 
+     public function floor()
+    {
+        return $this->hasOne(Floor::class, 'id_lantai', 'id_room');
+    }
+
     public function role()
     {
         return $this->hasOne(Role::class, 'id', 'id_role');

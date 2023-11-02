@@ -10,7 +10,7 @@ use App\Models\DetailBAPP;
 use App\Models\EngBAPP;
 use App\Models\Notifikasi;
 use App\Models\OpenTicket;
-use App\Models\RequestPermit;
+use App\Models\RequestPermit; 
 use App\Models\System;
 use App\Models\WorkPermit;
 use Illuminate\Http\Request;

@@ -7,8 +7,8 @@
                 <div class="col-auto">
                     <nav aria-label="breadcrumb">
                         <ol class="my-3 breadcrumb">
-                            <li class="breadcrumb-item text-white"> <a href="{{ route('toilets.index')}}" class="text-white"> List Toilet </a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Create Toilet</li>
+                            <li class="breadcrumb-item text-white"> <a href="{{ route('toilets.index')}}" class="text-white"> List Inspection House Keeping </a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Create Inspection House Keeping</li>
                         </ol>
                     </nav>
                 </div>
@@ -19,7 +19,7 @@
                 @csrf
               <div class="row">
                 <div class="col-6 mb-3 ">
-                    <label class="form-label">Nama Toilet</label>
+                    <label class="form-label">Inspection House Keeping Name</label>
                     <input type="text" name="nama_hk_toilet" class="form-control" required>
                 </div>
               </div>
