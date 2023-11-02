@@ -9,6 +9,7 @@ use App\Models\Approve;
 use App\Models\BAPP;
 use App\Models\CashReceipt;
 use App\Models\Notifikasi;
+use App\Models\OpenTicket;
 use App\Models\RequestPermit;
 use App\Models\Site;
 use App\Models\System;
@@ -119,12 +120,13 @@ class WorkPermitController extends Controller
 
     public function store(Request $request)
     {
-        $connRP = ConnectionDB::setConnection(new RequestPermit());
+        $connTicket = ConnectionDB::setConnection(new OpenTicket());
         $connWP = ConnectionDB::setConnection(new WorkPermit());
         $connSystem = ConnectionDB::setConnection(new System());
 
         $system = $connSystem->find(1);
-        $rp = $connRP->find($request->id_rp);
+        $ticket = $connTicket->find($request->no_tiket);
+
         $nowDate = Carbon::now();
         $count = $system->sequence_no_po + 1;
         $user = $request->session()->get('user');
@@ -137,11 +139,11 @@ class WorkPermitController extends Controller
                 Carbon::now()->format('m') . $nowDate->year . '/' .
                 sprintf("%06d", $count);
 
-            $connWP->no_tiket = $rp->no_tiket;
-            $connWP->no_request_permit = $rp->no_request_permit;
+            $connWP->no_tiket = $ticket->no_tiket;
+            $connWP->no_request_permit = $ticket->RequestPermit->no_request_permit;
             $connWP->no_work_permit = $no_po;
-            $connWP->nama_project = $request->nama_project;
-            $connWP->id_bayarnon = $request->id_bayarnon;
+            $connWP->id_bayarnon = 1;
+            $connWP->jumlah_supervisi = $request->jumlah_supervisi;
             $connWP->jumlah_deposit = $request->jumlah_deposit;
             $connWP->status_request = 'PENDING';
             $connWP->id_user_work_permit = $user->id_user;
@@ -149,8 +151,12 @@ class WorkPermitController extends Controller
             $connWP->status_bayar = 'PENDING';
             $connWP->save();
 
-            $rp->status_request = 'PROSES';
-            $rp->save();
+            $ticket->RequestPermit->status_request = 'PROSES';
+            $ticket->RequestPermit->sign_approval_1 = $nowDate;
+            $ticket->RequestPermit->save();
+
+            $ticket->status_request = 'PROSES';
+            $ticket->save();
 
             $system->sequence_no_po = $count;
             $system->save();
@@ -164,7 +170,7 @@ class WorkPermitController extends Controller
                 'sender' => $user->id_user,
                 'division_receiver' => null,
                 'notif_message' => 'Work Permit berhasil dibuat, berikut rancangannya',
-                'receiver' => $rp->Ticket->Tenant->User->id_user
+                'receiver' => $ticket->Tenant->User->id_user
             ];
 
             broadcast(new HelloEvent($dataNotif));
@@ -292,7 +298,7 @@ class WorkPermitController extends Controller
         $createTransaction->no_invoice = $no_invoice;
         $createTransaction->no_draft_cr = $no_cr;
         $createTransaction->ket_pembayaran = 'INV/' . $user->id_user . '/' . $wp->Ticket->Unit->nama_unit;
-        $createTransaction->sub_total = $wp->jumlah_deposit;
+        $createTransaction->sub_total = $wp->jumlah_deposit + $wp->jumlah_supervisi;
         $createTransaction->transaction_status = 'PENDING';
         $createTransaction->id_user = $wp->Ticket->Tenant->User->id_user;
         $createTransaction->transaction_type = 'WorkPermit';

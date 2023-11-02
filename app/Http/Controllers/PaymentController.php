@@ -31,7 +31,7 @@ class PaymentController extends Controller
             $approve = new Approve();
             $approve = $approve->setConnection($site->db_name);
             $approve = $approve->find(7);
-            
+
             if ($callback->isSuccess()) {
                 $cr->transaction_status = 'PAID';
 
@@ -89,7 +89,7 @@ class PaymentController extends Controller
                             'notif_title' => $cr->WorkPermit->no_work_permit,
                             'id_data' => $cr->WorkPermit->id,
                             'sender' => $cr->WorkPermit->Ticket->Tenant->User->id_user,
-                            'division_receiver' => null,
+                            'division_receiver' => 6,
                             'notif_message' => 'Pembayaran Work Permit berhasil',
                             'receiver' => $approve->approval_4,
                             'connection' => $site->db_name
