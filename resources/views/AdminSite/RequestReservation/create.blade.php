@@ -257,8 +257,10 @@
                     $('#ruang_reservasi').val(data.data.request_reservation.ruang_reservation
                         .ruang_reservation);
                     $('#jenis_acara').val(data.data.request_reservation.jenis_acara.jenis_acara);
-
-                    $(tinymce.get('keterangan_reservation').getBody()).html(data.data.request_reservation
+                    console.log(data.data.request_reservation
+                        .keterangan);
+                  
+                    tinyMCE.get('keterangan_reservation').setContent(data.data.request_reservation
                         .keterangan);
 
                     $('#ticket_detail').css('display', 'block')

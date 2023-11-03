@@ -37,14 +37,14 @@
                 </div>
 
                 <div id="detail_bapp">
-                    <h5 class="mt-5">Detail BAPP 1</h5>
+                    <h5 class="mt-5">Biaya perbaikan kerusakan</h5>
                     <hr>
                     <div class="mb-3">
                         <div class="card mt-2" id="detail_work_order">
                             <div class="card-body">
                                 <div class="card-body p-0">
                                     <div class="row gx-card mx-0 bg-200 text-900 fs--1 fw-semi-bold">
-                                        <div class="col-9 col-md-8 py-2">Detil BAPP</div>
+                                        <div class="col-9 col-md-8 py-2">Detil perbaikan kerusakan</div>
                                     </div>
                                     <div id="detailBAPP">
 
@@ -52,7 +52,7 @@
                                     <input type="hidden" name="detail_bapp" id="value_detail_bapp">
                                     <div class="row gx-card mx-0 border-bottom border-200 align-middle">
                                         <div class="col-6 py-3">
-                                            <label for="label-form">Detail BAPP</label>
+                                            <label for="label-form">Kerusakan</label>
                                             <input class="form-control" type="text" id="input_detil_bapp">
                                         </div>
                                         <div class="col-4 py-3">

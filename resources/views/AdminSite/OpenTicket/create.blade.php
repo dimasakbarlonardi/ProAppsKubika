@@ -144,7 +144,7 @@
                     'display': 'none'
                 });
             } else if (id_jenis_request == 4) {
-                $('#work-permit-form').css({
+                $('#request-permit-form').css({
                     'display': 'none'
                 });
                 $('#reservation_form').css({
@@ -160,7 +160,7 @@
                     'display': 'none'
                 });
             } else if (id_jenis_request == 5) {
-                $('#work-permit-form').css({
+                $('#request-permit-form').css({
                     'display': 'none'
                 });
                 $('#gigo_form').css({
@@ -176,6 +176,9 @@
                     'display': 'none'
                 });
             } else {
+                $('#request-permit-form').css({
+                    'display': 'none'
+                });
                 $('#div_deskripsi_request').css({
                     'display': 'block'
                 });
