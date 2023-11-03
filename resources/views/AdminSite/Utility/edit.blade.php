@@ -7,7 +7,8 @@
                 <div class="col-auto">
                     <nav aria-label="breadcrumb">
                         <ol class="my-3 breadcrumb">
-                            <li class="breadcrumb-item text-white"> <a href="{{ route('utilitys.index')}}" class="text-white"> List Utility</a></li>
+                            <li class="breadcrumb-item text-white"> <a href="{{ route('utilitys.index') }}" class="text-white">
+                                    List Utility</a></li>
                             <li class="breadcrumb-item active" aria-current="page">Edit Utility</li>
                         </ol>
                     </nav>
