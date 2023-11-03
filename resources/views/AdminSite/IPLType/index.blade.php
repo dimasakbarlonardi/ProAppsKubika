@@ -17,7 +17,7 @@
             <thead>
                 <tr>
                     <th class="sort" data-sort="">No</th>
-                    <th class="sort" data-sort="nama_ipl_type">Nama IPL Type</th>
+                    <th class="sort" data-sort="nama_ipl_type">IPL Type</th>
                     <th class="sort" data-sort="biaya_permeter">Biaya Permeter</th>
                     <th class="sort" data-sort="biaya_procentage">Biaya Procentage</th>
                     <th class="sort">Action</th>

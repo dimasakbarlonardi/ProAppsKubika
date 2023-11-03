@@ -158,6 +158,7 @@
                                 </div>
                             </div>
                         </li>
+
                         <li class="nav-item dropdown">
                             <a class="nav-link pe-0 ps-2" id="navbarDropdownUser" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <div class="avatar avatar-xl">
@@ -173,6 +174,23 @@
                                 </div>
                             </div>
                         </li>
+                        <li class="nav-item dropdown">
+                        <div class="user-info" id="navbarDropdownUser" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            @php
+                            $user = Session::get('user');
+                            @endphp
+                            <h5 class="btn btn-falcon-default rounded-pill me-1 mb-1 ml-3">{{ $user->nama_user }}</h5>
+                        </div>
+                        <div class="dropdown-menu dropdown-menu-end py-0" aria-labelledby="navbarDropdownUser">
+                                <div class="bg-white dark__bg-1000 rounded-2 py-2">
+                                    <form action="{{ route('logout') }}" method="post">
+                                        @csrf
+                                        <button type="submit" class="dropdown-item">Logout</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </li>
+                        
                     </ul>
                 </nav>
                 <script>
@@ -315,7 +333,7 @@
 
     <script>
         document.addEventListener("DOMContentLoaded", function(event) {
-            console.log('wr' ,division_relation);
+            console.log('wr', division_relation);
             Echo.channel("hello-channel")
                 .listen('HelloEvent', (e) => {
                     var receiver = e.dataNotif.receiver
