@@ -8,7 +8,7 @@
                     <nav aria-label="breadcrumb">
                         <ol class="my-3 breadcrumb">
                             <li class="breadcrumb-item text-white"> <a href="{{ route('utilitys.index')}}" class="text-white"> List Utility</a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Edit Utility</li>
+                            <li class="breadcrumb-item active" aria-current="page">Create Utility</li>
                         </ol>
                     </nav>
                 </div>
@@ -52,7 +52,6 @@
                 </div>
             </div>
             <button type="submit" class="btn btn-primary mt-5">Submit</button>
-            <button class="btn btn-danger"><a class="text-white" href="{{ route('utilitys.index')}}">Cancel</a></button>
         </div>
     </div>
             </form>

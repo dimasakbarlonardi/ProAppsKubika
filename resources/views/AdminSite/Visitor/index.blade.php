@@ -20,7 +20,8 @@
                     <tr>
                         <th class="sort" data-sort="">No</th>
                         <th class="sort" data-sort="name_visitor">Name Visitor</th>
-                        <th class="sort" data-sort="arrival_date">Arrival Time</th>
+                        <th class="sort" data-sort="arrival_date">Arrival Date</th>
+                        <th class="sort" data-sort="arrival_time">Arrival Time</th>
                         <th class="sort" data-sort="heading_to">Meet with</th>
                         <th class="sort" data-sort="unit">Unit</th>
                         <th class="sort" data-sort="desc">Purpose</th>
@@ -32,11 +33,12 @@
                         <tr>
                             <th scope="row">{{ $key + 1 }}</th>
                             <td>{{ $visitor->name_visitor}}</td>
-                            <td>{{ $visitor->arrival_time}}</td>
+                            <td>{{ HumanDate($visitor->arrival_date)}}</td>
+                            <td>{{ HumanTime($visitor->arrival_time)}}</td>
                             <td>{{ $visitor->heading_to }}</td>
                             <td>{{ $visitor->Unit->nama_unit }}</td>
                             <td>{{ $visitor->desc }}</td>
-                            <td>{{ $visitor->leave_time}}</td>
+                            <td>{{ HumanTime($visitor->leave_time}}</td>
                         </tr>
                     @endforeach
                 </tbody>

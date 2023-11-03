@@ -13,7 +13,7 @@
             </div>
         </div>
         <div class="p-5">
-            <div id="tableExample3" data-list='{"valueNames":["id_site", "nama_site", "email"],"page":5,"pagination":true}'>
+            <div id="tableExample3" data-list='{"valueNames":["nama_role", "nama_site", "email"],"page":5,"pagination":true}'>
                 <div class="row justify-content-end g-0">
                     <div class="col-auto col-sm-5 mb-3">
                         <form>
@@ -38,7 +38,7 @@
                             @foreach ($roles as $key => $role)
                                 <tr>
                                     <td class="id_site">{{ $key + 1 }}</td>
-                                    <td class="id_site">{{ $role->nama_role }}</td>
+                                    <td class="nama_role">{{ $role->nama_role }}</td>
                                     <td class="text-center">
                                         <a href="{{ route('akses-form', $role->id) }}"
                                             class="btn btn-sm btn-primary">Web Access Role</a>

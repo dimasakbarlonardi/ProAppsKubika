@@ -7,9 +7,9 @@
             <div class="my-3 col-auto">
                 <h6 class="mb-0 text-white">List Utility</h6>
             </div>
-            {{-- <div class="col-auto d-flex ">
-                <a class="btn btn-falcon-default btn-sm dropdown-toggle ms-2 dropdown-caret-none" href="{{ route('utilitys.create') }}"><span class="fas fa-plus fs--2 me-1"></span>Tambah Utility</a>
-            </div> --}}
+            <div class="col-auto d-flex ">
+                <a class="btn btn-falcon-default btn-sm dropdown-toggle ms-2 dropdown-caret-none" href="{{ route('utilitys.create') }}"><span class="fas fa-plus fs--2 me-1"></span>Create Utility</a>
+            </div>
         </div>
     </div>
     <div class="p-5">
@@ -43,8 +43,8 @@
                                 @method('DELETE')
                                 @csrf
                                 <button type="submit" class="btn btn-danger btn-sm"
-                                    onclick="return confirm('are you sure?')"><span class="fas fa-trash-alt fs--2 me-1"></span>Hapus</button>
-                            </form> --}}
+                                    onclick="return confirm('are you sure?')"><span class="fas fa-trash-alt fs--2 me-1"></span>Delete</button>
+                            </form>
                         </td>
                     </tr>
                 @endforeach

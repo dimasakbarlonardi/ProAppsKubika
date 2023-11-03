@@ -102,9 +102,10 @@ class WorkOrderController extends Controller
     public function showBilling($id, Request $request)
     {
         $connCR = ConnectionDB::setConnection(new CashReceipt());
-        $site = Site::find($request->user()->id_site);
 
-        $cr = $connCR->find($id);
+        $cr = $connCR->where('id', $id)
+        ->with(['WorkOrder.WODetail', 'WorkOrder.Ticket.Tenant', 'WorkOrder.Ticket.Unit'])
+        ->first();
 
         $object = new stdClass();
 
@@ -128,7 +129,7 @@ class WorkOrderController extends Controller
             $object->request_details = $request_details;
             $object->total = $cr->sub_total;
         }
-        
+
         if ($cr->Reservation) {
             $object->reservation_id = $cr->Reservation->id;
             $object->tenant_name = $cr->Reservation->Ticket->Tenant->nama_tenant;
