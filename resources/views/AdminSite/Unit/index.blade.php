@@ -20,7 +20,7 @@
                             </div>
                             <div class="border-bottom border-200 my-3"></div>
                             <div class="d-flex align-items-center justify-content-between justify-content-lg-end px-x1">
-                              
+
                                 <div class="d-flex align-items-center" id="table-ticket-replace-element">
                                     <div class="dropdown font-sans-serif ms-2">
                                         <button
@@ -103,6 +103,7 @@
                                 <div class="mb-3 mt-n2">
                                     <label class="mb-1">Tower</label>
                                     <select class="form-select form-select-sm" name="id_tower" required id="id_tower">
+                                        <option selected value="">All</option>
                                         @foreach ($towers as $tower)
                                             <option value="{{ $tower->id_tower }}"> {{ $tower->nama_tower }}</option>
                                         @endforeach
@@ -111,9 +112,9 @@
                                 <div class="mb-3 mt-n2">
                                     <label class="mb-1">Lantai</label>
                                     <select class="form-select form-select-sm" name="id_floor" id="id_floor" required>
+                                        <option selected value="">All</option>
                                         @foreach ($floors as $floor)
-                                            <option {{ $floor->id_lantai == '006' ? 'selected' : '' }}
-                                                value="{{ $floor->id_lantai }}"> {{ $floor->nama_lantai }}</option>
+                                            <option value="{{ $floor->id_lantai }}"> {{ $floor->nama_lantai }}</option>
                                         @endforeach
                                     </select>
                                 </div>
@@ -130,22 +131,19 @@
 @section('script')
     <script>
         $('document').ready(function() {
+            getUnits('', '')
+        })
+
+        $('#id_tower').on('change', function() {
             var id_tower = $('#id_tower').val()
             var id_floor = $('#id_floor').val()
 
-            $('#id_tower').on('change', function() {
-                var id_tower = $('#id_tower').val()
-                var id_floor = $('#id_floor').val()
+            getUnits(id_tower, id_floor)
+        })
 
-                getUnits(id_tower, id_floor)
-            })
-
-            $('#id_floor').on('change', function() {
-                var id_tower = $('#id_tower').val()
-                var id_floor = $('#id_floor').val()
-
-                getUnits(id_tower, id_floor)
-            })
+        $('#id_floor').on('change', function() {
+            var id_tower = $('#id_tower').val()
+            var id_floor = $('#id_floor').val()
 
             getUnits(id_tower, id_floor)
         })
