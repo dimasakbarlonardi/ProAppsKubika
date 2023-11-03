@@ -69,8 +69,8 @@ class BillingController extends Controller
             ->first();
         $previousBills = $ar->first()->PreviousMonthBill();
 
-        $data['price_water'] = $connUtil->find(2)->biaya_tetap;
-        $data['price_electric'] = $connUtil->find(1)->biaya_tetap;
+        $data['price_water'] = $connUtil->find(2)->biaya_m3;
+        $data['price_electric'] = $connUtil->find(1)->biaya_m3;
         $data['service_charge_price'] = $sc->biaya_permeter;
         $data['sinking_fund_price'] = $sf->biaya_permeter;
 
@@ -348,15 +348,20 @@ class BillingController extends Controller
         $listrik = $connUtility->find(1);
         $usage = $request->current - $request->previous;
 
-        $electric_capacity = $unit->electric_capacity;
-        $abodemen = (40 * $electric_capacity) / 1000;
-        if ($usage < $abodemen) {
-            $usage = $abodemen;
+        $get_ppj = $listrik->biaya_ppj / 100;
+        if ($listrik->abodemen != 0) {
+            $electric_capacity = $unit->electric_capacity;
+            $abodemen = (40 * $electric_capacity) / 1000;
+            if ($usage < $abodemen) {
+                $usage = $abodemen;
+            }
+
+            $biaya_usage = $listrik->biaya_m3;
+            $total_usage = $biaya_usage * $usage;
+        } else {
+            $total_usage = $listrik->biaya_tetap;
         }
 
-        $get_ppj = $listrik->biaya_ppj / 100;
-        $biaya_tetap = $listrik->biaya_tetap;
-        $total_usage = $biaya_tetap * $usage;
         $ppj = $get_ppj * $total_usage;
         $total = $total_usage + $ppj;
 
@@ -444,7 +449,7 @@ class BillingController extends Controller
 
         $water = $connUtility->find(2);
 
-        $total_usage = $water->biaya_tetap * $usage;
+        $total_usage = $water->biaya_m3 * $usage;
         $total = $total_usage + $water->biaya_abodemen;
 
         if ($tokenable) {
