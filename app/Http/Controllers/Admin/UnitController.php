@@ -41,10 +41,19 @@ class UnitController extends Controller
     {
         $connUnit = ConnectionDB::setConnection(new Unit());
 
-        $data['units'] = $connUnit
-            ->where('id_lantai', $request->id_floor)
-            ->where('id_tower', $request->id_tower)
-            ->get();
+        $units = $connUnit->where('deleted_at', null);
+
+        if(!$request->id_tower && !$request->id_floor) {
+            $units = $units;
+        }
+        if ($request->id_floor) {
+            $units = $units->where('id_lantai', $request->id_floor);
+        }
+        if ($request->id_tower) {
+            $units = $units->where('id_tower', $request->id_tower);
+        }
+
+        $data['units'] = $units->get();
 
         return response()->json([
             'html' => view('AdminSite.Unit.card', $data)->render(),
