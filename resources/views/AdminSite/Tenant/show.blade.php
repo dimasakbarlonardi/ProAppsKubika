@@ -14,8 +14,6 @@
         </div>
     </div>
 
-    
-    
     <div class="p-5">
         <div class="col-12">
                 <div class="card mb-3 btn-reveal-trigger">

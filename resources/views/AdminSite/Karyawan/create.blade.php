@@ -12,6 +12,7 @@
             </div>
         </div>
     </div>
+
     <div class="p-5">
         <form method="post" action="{{ route('karyawans.store') }}" enctype="multipart/form-data">
             @csrf
@@ -63,6 +64,10 @@
                             <div class="col-6 mb-2">
                                 <label class="form-label">Join Date</label>
                                 <input type="date" value="{{ old('tgl_masuk') }}" name="tgl_masuk" class="form-control" required>
+                            </div>
+                            <div class="col-6 mb-2">
+                                <label class="form-label">Resign Date</label>
+                                <input type="date" value="{{ old('tgl_keluar') }}" name="tgl_keluar" class="form-control" required>
                             </div>
                             <div class="col-6 mb-2">
                                 <label class="form-label">Departement</label>

@@ -29,10 +29,10 @@
                             <div class="d-flex align-items-center" id="table-ticket-replace-element">
                                 <a href="{{ route('open-tickets.create') }}" class="btn btn-falcon-default btn-sm mx-2"
                                     type="button">
-                                    <span class="fas fa-plus" data-fa-transform="shrink-3"></span>
+                                    <span rclass="fas fa-plus" data-fa-transform="shrink-3"></span>
                                     <span class="d-none d-sm-inline-block d-xl-none d-xxl-inline-block ms-1">New</span>
                                     <span>
-                                        Buat Tiket Baru</span>
+                                       + Create Open Request</span>
                                 </a>
                             </div>
                         </div>

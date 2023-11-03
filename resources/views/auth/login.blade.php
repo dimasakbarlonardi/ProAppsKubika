@@ -1,5 +1,5 @@
 @extends('auth.layout')
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 @section('content')
 <div class="col-md-7 d-flex flex-center">
     <div class="p-4 p-md-5 flex-grow-1">
@@ -24,9 +24,10 @@
                 <label class="form-label">Password</label>
                 <div class="input-group">
                     <input class="form-control" id="password-input" type="password" name="password" required>
-                    <button id="toggle-password" type="button" class="btn btn-outline-secondary">
-                        <span id="eye-icon">View</span>
+                    <button id="toggle-password" type="button" class="btn btn-falcon-default">
+                        <span class="far fa-eye" id="eye-icon"></span>
                     </button>
+
                 </div>
             </div>
 
@@ -54,14 +55,6 @@
 
 
 @section('script')
-<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.full.min.js"></script>
-
-<script>
-    $('#email').select2({
-        theme: 'bootstrap-5'
-    });
-</script>
-
 <script>
     const passwordInput = document.getElementById('password-input');
     const togglePasswordButton = document.getElementById('toggle-password');
@@ -70,10 +63,12 @@
     togglePasswordButton.addEventListener('click', () => {
         if (passwordInput.type === 'password') {
             passwordInput.type = 'text';
-            eyeIcon.textContent = 'Hide';
+            eyeIcon.classList.remove('far', 'fa-eye');
+            eyeIcon.classList.add('far', 'fa-eye-slash');
         } else {
             passwordInput.type = 'password';
-            eyeIcon.textContent = 'View';
+            eyeIcon.classList.remove('far', 'fa-eye-slash');
+            eyeIcon.classList.add('far', 'fa-eye');
         }
     });
 </script>
