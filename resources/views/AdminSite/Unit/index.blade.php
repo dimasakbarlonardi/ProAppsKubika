@@ -20,7 +20,26 @@
                             </div>
                             <div class="border-bottom border-200 my-3"></div>
                             <div class="d-flex align-items-center justify-content-between justify-content-lg-end px-x1">
-                              
+                                <button class="btn btn-sm btn-falcon-default d-xl-none" type="button"
+                                    data-bs-toggle="offcanvas" data-bs-target="#ticketOffcanvas"
+                                    aria-controls="ticketOffcanvas">
+                                    <span class="fas fa-filter" data-fa-transform="shrink-4 down-1"></span><span
+                                        class="ms-1 d-none d-sm-inline-block">Filter</span>
+                                </button>
+                                <div class="bg-300 mx-3 d-none d-lg-block d-xl-none" style="width: 1px; height: 29px">
+                                </div>
+                                <div class="d-none" id="table-ticket-actions">
+                                    <div class="d-flex">
+                                        <select class="form-select form-select-sm" aria-label="Bulk actions">
+                                            <option selected="">Bulk actions</option>
+                                            <option value="Refund">Refund</option>
+                                            <option value="Delete">Delete</option>
+                                            <option value="Archive">Archive</option>
+                                        </select><button class="btn btn-falcon-default btn-sm ms-2" type="button">
+                                            Apply
+                                        </button>
+                                    </div>
+                                </div>
                                 <div class="d-flex align-items-center" id="table-ticket-replace-element">
                                     <div class="dropdown font-sans-serif ms-2">
                                         <button
