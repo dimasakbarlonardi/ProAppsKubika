@@ -26,7 +26,7 @@
                 </thead>
                 <tbody>
                     @foreach ($bapps as $key => $bapp)
-                        @if ($user->id_user == $approve->approval_3 && ($bapp->WorkPermit->status_request == 'WORK DONE' || $bapp->WorkPermit->status_request == 'DONE'))
+                       
                             <tr>
                                 <th scope="row">{{ $key + 1 }}</th>
                                 <td>{{ $bapp->no_tiket }}</td>
@@ -35,12 +35,14 @@
                                 <td>{{ $bapp->no_bapp }}</td>
                                 <td>
                                     <a href="{{ route('bapp.edit', $bapp->id) }}" class="btn btn-sm btn-warning">View</a>
-                                    @if (!$bapp->sign_approval_1)
+                                    @if (!$bapp->sign_approval_1 && !$bapp->status_pengembalian)
                                         <form class="d-inline" action="{{ route('doneTF', $bapp->id) }}" method="post">
                                             @csrf
                                             <button type="submit" class="btn btn-info btn-sm"
-                                                onclick="return confirm('are you sure?')">Sudah Transfer</button>
+                                                onclick="return confirm(`are you sure?`)">Transfer to tenant</button>
                                         </form>
+                                    @else
+                                        <button class="btn btn-secondary btn-sm" type="button">Sudah Transfer</button>
                                     @endif
                                     @if ($bapp->sign_approval_2 && !$bapp->sign_approval_3)
                                         <form class="d-inline" action="{{ route('bappApprove3', $bapp->id) }}" method="post">
@@ -51,32 +53,7 @@
                                     @endif
                                 </td>
                             </tr>
-                        @elseif ($user->id_user != $approve->approval_3)
-                            <tr>
-                                <th scope="row">{{ $key + 1 }}</th>
-                                <td>{{ $bapp->no_tiket }}</td>
-                                <td>{{ $bapp->no_request_permit }}</td>
-                                <td>{{ $bapp->no_work_permit }}</td>
-                                <td>{{ $bapp->no_bapp }}</td>
-                                <td>
-                                    <a href="{{ route('bapp.edit', $bapp->id) }}" class="btn btn-sm btn-warning">View</a>
-                                    @if (!$bapp->sign_approval_2 && $bapp->sign_approval_1 && $bapp->WorkPermit->id_work_relation == $user->RoleH->work_relation_id)
-                                        <form class="d-inline" action="{{ route('bappApprove2', $bapp->id) }}" method="post">
-                                            @csrf
-                                            <button type="submit" class="btn btn-success btn-sm"
-                                                onclick="return confirm('are you sure?')">Approve</button>
-                                        </form>
-                                    @endif
-                                    @if ($user->id_user == $approve->approval_4 && $bapp->sign_approval_3 && !$bapp->sign_approval_4)
-                                        <form class="d-inline" action="{{ route('bappApprove4', $bapp->id) }}" method="post">
-                                            @csrf
-                                            <button type="submit" class="btn btn-info btn-sm"
-                                                onclick="return confirm('are you sure?')">Complete</button>
-                                        </form>
-                                    @endif
-                                </td>
-                            </tr>
-                        @endif
+                       
                     @endforeach
                 </tbody>
             </table>
