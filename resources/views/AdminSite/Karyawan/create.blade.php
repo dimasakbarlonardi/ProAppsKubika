@@ -66,6 +66,10 @@
                                 <input type="date" value="{{ old('tgl_masuk') }}" name="tgl_masuk" class="form-control" required>
                             </div>
                             <div class="col-6 mb-2">
+                                <label class="form-label">Resign Date</label>
+                                <input type="date" value="{{ old('tgl_keluar') }}" name="tgl_keluar" class="form-control" required>
+                            </div>
+                            <div class="col-6 mb-2">
                                 <label class="form-label">Departement</label>
                                 <select class="form-control" name="id_departemen" required>
                                     <option selected disabled>-- Pilih Departement --</option>
