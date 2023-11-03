@@ -28,11 +28,12 @@ use App\Models\WorkPermit;
 use App\Models\WorkPriority;
 use App\Models\WorkRequest;
 use Illuminate\Http\Request;
+use App\Models\Login;
 use Illuminate\Support\Facades\App;
 
 class DashboardController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $connTicket = ConnectionDB::setConnection(new OpenTicket());
         $connWR = ConnectionDB::setConnection(new WorkRequest());
@@ -45,6 +46,7 @@ class DashboardController extends Controller
         $connUnit = ConnectionDB::setConnection(new Unit());
         $connOwner = ConnectionDB::setConnection(new OwnerH());
         $connTenant = ConnectionDB::setConnection(new Tenant());
+        $user_id = $request->user()->id;
 
         $data['entry_ticket'] = $connTicket->count();
         $data['wr'] = $connWR->count();
@@ -57,6 +59,7 @@ class DashboardController extends Controller
         $data['unit'] = $connUnit->count();
         $data['owner'] = $connOwner->count();
         $data['tenant'] = $connTenant->count();
+        $data['idusers'] = Login::where('id', $user_id)->get();
 
         $data['complete_ticket'] = $connTicket->where('status_request', 'complete')->count();
         $data['progress_ticket'] = $connTicket->where('status_request', 'proses')

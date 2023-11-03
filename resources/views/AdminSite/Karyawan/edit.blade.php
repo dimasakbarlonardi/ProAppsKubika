@@ -16,20 +16,15 @@
                 <div class="mb-3">
                     <div class="row">
                     <div class="col-6">
-                        <label class="form-label">Nama Site</label>
+                        <label class="form-label">Site Name</label>
                         <input type="text" value="Park Royale" class="form-control" readonly>
                     </div>
                     <div class="col-6">
-                        <label class="form-label">ID User</label>
-                        <select class="form-control" name="id_user" required>
-                            <option selected disabled>-- Pilih ID User --</option>
-                            @foreach ($idusers as $iduser)
-                            <option value="{{ $iduser->id }}" {{ $iduser->id == $karyawan->id_user ? 'selected' : '' }}>{{ $iduser->nama_user }} </option>
-                            @endforeach
-                        </select>
+                        <label class="form-label">Email</label>
+                        <input type="text" name="nik_karyawan" value="{{$karyawan->nik_karyawan}}" class="form-control" required>
                     </div>
                     <div class="col-6">
-                        <label class="form-label">ID Card Karyawan</label>
+                        <label class="form-label">ID Card</label>
                         <select class="form-control" name="id_card_type" required>
                             <option selected disabled>-- Pilih ID Card --</option>
                             @foreach ($idcards as $idcard)
@@ -38,11 +33,11 @@
                         </select>
                     </div>
                     <div class="col-6">
-                        <label class="form-label">Nik Karyawan</label>
+                        <label class="form-label">ID Number</label>
                         <input type="text" name="nik_karyawan" value="{{$karyawan->nik_karyawan}}" class="form-control" required>
                     </div>
                     <div class="col-6">
-                        <label class="form-label">Nama Karyawan</label>
+                        <label class="form-label">Employee Name</label>
                         <input type="text" name="nama_karyawan" value="{{$karyawan->nama_karyawan}}" class="form-control" required>
                     </div>
                     <div class="col-6">
@@ -113,7 +108,7 @@
                         <input type="text" name="no_telp_penjamin" value="{{$karyawan->no_telp_penjamin}}" class="form-control" required>
                     </div>
                     <div class="col-6">
-                        <label class="form-label">Tanggal Masuk</label>
+                        <label class="form-label">Join Date</label>
                         <input type="date" name="tgl_masuk" value="{{$karyawan->tgl_masuk}}" class="form-control" required>
                     </div>
                     <div class="col-6">
