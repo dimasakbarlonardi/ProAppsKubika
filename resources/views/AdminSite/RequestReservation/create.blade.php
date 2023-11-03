@@ -257,9 +257,7 @@
                     $('#ruang_reservasi').val(data.data.request_reservation.ruang_reservation
                         .ruang_reservation);
                     $('#jenis_acara').val(data.data.request_reservation.jenis_acara.jenis_acara);
-                    console.log(data.data.request_reservation
-                        .keterangan);
-                  
+
                     tinyMCE.get('keterangan_reservation').setContent(data.data.request_reservation
                         .keterangan);
 
