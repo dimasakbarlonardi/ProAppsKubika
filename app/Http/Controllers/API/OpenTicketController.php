@@ -159,7 +159,7 @@ class OpenTicketController extends Controller
 
         if ($gigo) {
             $request = $gigo;
-            $request['model'] = 'GIGO';
+            $ticket['model'] = 'GIGO';
             $request['detail'] = $detail_gigo;
         }
 
