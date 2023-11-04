@@ -107,11 +107,13 @@ Route::prefix('v1')->group(function () {
         Route::get('/banners', [InboxController::class, 'banners']);
 
         // GIGO
+        Route::post('/gigo', [GIGOController::class, 'store']);
         Route::get('/gigo/{id}', [GIGOController::class, 'show']);
         Route::post('/gigo/add/{id}', [GIGOController::class, 'addGood']);
         Route::post('/gigo/remove/{id}', [GIGOController::class, 'removeGood']);
         Route::post('/gigo/{id}', [GIGOController::class, 'update']);
         Route::post('/gigo/approve2/{id}', [GIGOController::class, 'approve2']);
+        Route::post('/gigo/done/{id}/{token}', [GIGOController::class, 'done']);
 
         // ================== Attendance ========================
         Route::get('/site-location', [AttendanceController::class, 'siteLocation']);

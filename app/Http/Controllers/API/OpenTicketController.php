@@ -8,8 +8,10 @@ use App\Helpers\ResponseFormatter;
 use App\Helpers\SaveFile;
 use App\Http\Controllers\Controller;
 use App\Models\CashReceipt;
+use App\Models\DetailGIGO;
 use App\Models\JenisRequest;
 use App\Models\OpenTicket;
+use App\Models\RequestGIGO;
 use App\Models\System;
 use App\Models\Unit;
 use App\Models\User;
@@ -19,6 +21,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use stdClass;
 use Validator;
 use Throwable;
 
@@ -147,13 +150,28 @@ class OpenTicketController extends Controller
     public function show($id)
     {
         $connRequest = ConnectionDB::setConnection(new OpenTicket());
+        $connGIGO = ConnectionDB::setConnection(new RequestGIGO());
+        $connDetailGIGO = ConnectionDB::setConnection(new DetailGIGO());
 
-        $ticket = $connRequest->where('id', $id)->with('Tenant')->first();
+        $ticket = $connRequest->find($id);
+        $gigo = $connGIGO->where('no_tiket', $ticket->no_tiket)->first();
+        $detail_gigo = $connDetailGIGO->where('id_request_gigo', $gigo->id)->get();
+
+        if ($gigo) {
+            $request = $gigo;
+            $request['model'] = 'GIGO';
+            $request['detail'] = $detail_gigo;
+        }
+
         $ticket->deskripsi_request = strip_tags($ticket->deskripsi_request);
         $ticket->deskripsi_respon = strip_tags($ticket->deskripsi_respon);
 
+        $item = new stdClass();
+        $item->ticket = $ticket;
+        $item->request = $request;
+
         return ResponseFormatter::success(
-            $ticket,
+            $item,
             'Berhasil mengambil request'
         );
     }

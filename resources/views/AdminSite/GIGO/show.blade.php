@@ -124,13 +124,11 @@
                             </div>
                         </div>
                         <div class="card-footer text-center">
-                            @if (
-                                !$gigo->sign_approval_1 &&
-                                    $approve->approval_1 == $user->RoleH->WorkRelation->id_work_relation
-                                )
+                            @if (!$gigo->sign_approval_1 && $approve->approval_1 == $user->RoleH->WorkRelation->id_work_relation)
                                 <form action="{{ route('gigoApprove1', $gigo->id) }}" class="d-inline" method="post">
                                     @csrf
-                                    <button class="btn btn-lg btn-block btn-success" onclick="approveGigo1({{ $gigo->id }})" type="button">Approve</button>
+                                    <button class="btn btn-lg btn-block btn-success"
+                                        onclick="approveGigo1({{ $gigo->id }})" type="button">Approve</button>
                                 </form>
                             @endif
                             @if (
@@ -148,7 +146,8 @@
                                     $gigo->status_request != 'DONE' &&
                                     $approve->approval_2 == $user->RoleH->WorkRelation->id_work_relation &&
                                     $user->Karyawan->is_can_approve)
-                                <button class="btn btn-success btn-lg btn-block" type="button" onclick="actionGigoDone({{ $gigo->id }})">Done</button>
+                                <button class="btn btn-success btn-lg btn-block" type="button"
+                                    onclick="actionGigoDone({{ $gigo->id }})">Done</button>
                             @endif
                             @if ($gigo->status_request == 'DONE' && $approve->approval_3 == $user->id_user)
                                 <form action="{{ route('gigoComplete', $gigo->id) }}" class="d-inline" method="post">
@@ -158,6 +157,11 @@
                             @endif
                         </div>
                     </div>
+                    @if ($gigo->barcode)
+                        <div class="card mt-3">
+                            <img src="{{ url($gigo->barcode) }}" class="img-fluid img-thumbnail" alt="">
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

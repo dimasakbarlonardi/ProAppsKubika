@@ -214,6 +214,8 @@ class GIGOController extends Controller
             'sign_approval_2' => Carbon::now()
         ]);
 
+        $gigo->GenerateBarcode();
+
         $dataNotif = [
             'models' => 'GIGO',
             'notif_title' => $gigo->no_request_gigo,

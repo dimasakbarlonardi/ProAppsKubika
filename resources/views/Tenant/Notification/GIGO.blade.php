@@ -46,7 +46,7 @@
                                 <div class="row">
                                     <div class="col-6">
                                         <label class="mb-1">Tanggal & Jam bawa barang</label>
-                                        <input {{ $gigo->gigo_type ? 'disabled' : '' }} class="form-control datetimepicker" required value="{{ $gigo->date_request_gigo ? $gigo->date_request_gigo : '' }}" name="date_request_gigo" id="date_request_gigo" type="text" placeholder="d/m/y H:i" data-options='{"enableTime":true,"dateFormat":"Y-m-d H:i","disableMobile":true}' />
+                                        <input {{ $gigo->gigo_type ? 'disabled' : '' }} class="form-control" required value="{{ $gigo->date_request_gigo ? $gigo->date_request_gigo : '' }}" name="date_request_gigo" id="date_request_gigo" type="text" placeholder="d/m/y H:i" data-options='{"enableTime":true,"dateFormat":"Y-m-d H:i","disableMobile":true}' />
                                     </div>
                                     <div class="col-6">
                                         <label class="mb-1">GIGO Type</label>
@@ -179,6 +179,11 @@
                                 </div>
                             @endif
                         </div>
+                        @if ($gigo->barcode)
+                            <div class="card mt-3">
+                                <img src="{{ url($gigo->barcode) }}" class="img-fluid img-thumbnail" alt="">
+                            </div>
+                        @endif
                     </div>
             </form>
         </div>
@@ -189,13 +194,13 @@
     <script src="{{ asset('assets/js/flatpickr.js') }}"></script>
 
     <script>
-        flatpickr("#date_request_gigo", {
-            dateFormat: "Y-m-d H:i",
-            minDate: "today",
-            enableTime: true,
-            altInput: true,
-            altFormat: "F j, Y - H:i"
-        });
+        // flatpickr("#date_request_gigo", {
+        //     dateFormat: "Y-m-d H:i",
+        //     minDate: "today",
+        //     enableTime: true,
+        //     altInput: true,
+        //     altFormat: "F j, Y - H:i"
+        // });
 
         var goods = [];
         var idGood = 0;
