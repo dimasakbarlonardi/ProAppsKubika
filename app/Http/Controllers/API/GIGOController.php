@@ -14,10 +14,12 @@ use App\Models\System;
 use App\Models\Tenant;
 use App\Models\Unit;
 use App\Models\User;
+use App\Models\Login;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Laravel\Sanctum\PersonalAccessToken;
+use App\Helpers\FCM as FcmNotification;
 
 class GIGOController extends Controller
 {
@@ -205,6 +207,8 @@ class GIGOController extends Controller
             'receiver' => $gigo->Ticket->Tenant->User->id_user,
         ];
 
+        $this->FCM($dataNotif, $request);
+
         broadcast(new HelloEvent($dataNotif));
 
         return ResponseFormatter::success([
@@ -244,6 +248,8 @@ class GIGOController extends Controller
                 'receiver' => $approve->approval_3,
             ];
 
+            $this->FCM($dataNotif, $request);
+
             broadcast(new HelloEvent($dataNotif));
 
             return ResponseFormatter::success(
@@ -254,6 +260,63 @@ class GIGOController extends Controller
             return ResponseFormatter::error([
                 'message' => 'Unauthorized'
             ], 'Authentication Failed', 401);
+        }
+    }
+
+    function FCM($dataNotif, $request)
+    {
+        $connUser = ConnectionDB::setConnection(new User());
+
+        $work_relation = $dataNotif['division_receiver'];
+
+        $users = $connUser->where('deleted_at', null)->whereHas('RoleH.WorkRelation', function ($q) use ($work_relation) {
+            $q->where('work_relation_id', $work_relation);
+        })->get('login_user');
+
+        $sender = $connUser->where('login_user', $request->user()->email)->first();
+       
+        $logins = Login::whereIn('email', $users)
+            ->where('fcm_token', '!=', null)
+            ->get(['name', 'fcm_token']);
+
+        if ($dataNotif['division_receiver'] && $dataNotif['receiver']) {
+            foreach ($logins as $login) {
+                $mobile_notif = new FcmNotification();
+                $mobile_notif->setPayload([
+                    'title' => $sender->nama_user,
+                    'body' => $dataNotif['notif_message']. ' '.  $dataNotif['notif_title'],
+                    'token' => $login->fcm_token,
+                    ])->send();
+                }
+                
+            $userReceiver = $connUser->where('id_user', $dataNotif['receiver'])->first();
+            $loginReceiver = Login::where('email', $userReceiver->login_user)->first();
+                
+            $mobile_notif = new FcmNotification();
+            $mobile_notif->setPayload([
+                'title' => $sender->nama_user,
+                'body' => $dataNotif['notif_message']. ' '.  $dataNotif['notif_title'],
+                'token' => $loginReceiver->fcm_token,
+            ])->send();
+        } elseif ($dataNotif['division_receiver'] && !$dataNotif['receiver']) {         
+            foreach ($logins as $login) {
+                $mobile_notif = new FcmNotification();
+                $mobile_notif->setPayload([
+                    'title' => $sender->nama_user,
+                    'body' => $dataNotif['notif_message']. ' '.  $dataNotif['notif_title'],
+                    'token' => $login->fcm_token,
+                ])->send();
+            }
+        } else {
+            $userReceiver = $connUser->where('id_user', $dataNotif['receiver'])->first();
+            $loginReceiver = Login::where('email', $userReceiver->login_user)->first();
+
+            $mobile_notif = new FcmNotification();
+            $mobile_notif->setPayload([
+                'title' => $sender->nama_user,
+                'body' => $dataNotif['notif_message']. ' '.  $dataNotif['notif_title'],
+                'token' => $loginReceiver->fcm_token,
+            ])->send();
         }
     }
 }

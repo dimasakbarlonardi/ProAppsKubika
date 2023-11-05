@@ -46,11 +46,6 @@ class FCM extends FcmNotification {
             throw new Exception("A notification need to have at least one target: token or topic. Please select only one type of target.");
         }
 
-        // Empty token or topic verification
-        if ($this->token == null && $this->topic == null) {
-            throw new Exception("A notification need to have at least one target: token or topic. Please add a target using setToken() or setTopic().");
-        }
-
         if ($this->token != null && !is_string($this->token)) {
             throw new Exception('Token format error. Received: ' . gettype($this->token) . ". Expected type: string");
         }

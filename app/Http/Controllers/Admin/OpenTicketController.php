@@ -255,7 +255,7 @@ class OpenTicketController extends Controller
 
             if ($request->status_request == 'PROSES KE GIGO') {
                 $this->approveGIGO($ticket, $request);
-                return redirect()->route('open-tickets.index', ['id_tiket' => $ticket->id]);
+                return redirect()->route('open-tickets.index');
             }
 
             Alert::success('Success', 'Success update request');
@@ -273,7 +273,6 @@ class OpenTicketController extends Controller
     public function approveGIGO($ticket, $request)
     {
         $connApprove = ConnectionDB::setConnection(new Approve());
-        $connUser = ConnectionDB::setConnection(new User());
 
         $approve = $connApprove->find(8);
 
@@ -291,55 +290,7 @@ class OpenTicketController extends Controller
             'receiver' => null,
         ];
 
-        $work_relation = $dataNotif['division_receiver'];
-
-        $users = $connUser->where('deleted_at', null)->whereHas('RoleH.WorkRelation', function ($q) use ($work_relation) {
-            $q->where('work_relation_id', $work_relation);
-        })->get('login_user');
-
-        $sender = $connUser->find($request->session()->get('user_id'));
-
-        $logins = Login::whereIn('email', $users)->get(['name', 'fcm_token']);
-
-        if ($dataNotif['division_receiver'] && $dataNotif['receiver']) {
-            foreach ($logins as $login) {
-                $mobile_notif = new FcmNotification();
-                $mobile_notif->setPayload([
-                    'title' => $sender->nama_user,
-                    'body' => 'ini test body',
-                    'token' => $login->fcm_token,
-                ])->send();
-            }
-
-            $userReceiver = $connUser->where('id_user', $dataNotif['receiver'])->first();
-            $loginReceiver = Login::where('email', $userReceiver->login_user)->first();
-
-            $mobile_notif = new FcmNotification();
-            $mobile_notif->setPayload([
-                'title' => $sender->nama_user,
-                'body' => 'ini test body',
-                'token' => $loginReceiver->fcm_token,
-            ])->send();
-        } elseif ($dataNotif['division_receiver']) {
-            foreach ($logins as $login) {
-                $mobile_notif = new FcmNotification();
-                $mobile_notif->setPayload([
-                    'title' => $sender->nama_user,
-                    'body' => 'ini test body',
-                    'token' => $login->fcm_token,
-                ])->send();
-            }
-        } else {
-            $userReceiver = $connUser->where('id_user', $dataNotif['receiver'])->first();
-            $loginReceiver = Login::where('email', $userReceiver->login_user)->first();
-
-            $mobile_notif = new FcmNotification();
-            $mobile_notif->setPayload([
-                'title' => $sender->nama_user,
-                'body' => 'ini test body',
-                'token' => $loginReceiver->fcm_token,
-            ])->send();
-        }
+        $this->FCM($dataNotif, $request);      
 
         broadcast(new HelloEvent($dataNotif));
     }
@@ -412,5 +363,62 @@ class OpenTicketController extends Controller
         Alert::success('Berhasil', 'Berhasil approve tiket');
 
         return redirect()->back();
+    }
+
+    function FCM($dataNotif, $request)
+    {
+        $connUser = ConnectionDB::setConnection(new User());
+
+        $work_relation = $dataNotif['division_receiver'];
+
+        $users = $connUser->where('deleted_at', null)->whereHas('RoleH.WorkRelation', function ($q) use ($work_relation) {
+            $q->where('work_relation_id', $work_relation);
+        })->get('login_user');
+
+        $sender = $connUser->find($request->session()->get('user_id'));
+
+        $logins = Login::whereIn('email', $users)
+            ->where('fcm_token', '!=', null)
+            ->get(['name', 'fcm_token']);
+
+        if ($dataNotif['division_receiver'] && $dataNotif['receiver']) {
+            foreach ($logins as $login) {
+                $mobile_notif = new FcmNotification();
+                $mobile_notif->setPayload([
+                    'title' => $sender->nama_user,
+                    'body' => $dataNotif['notif_message']. ' '.  $dataNotif['notif_title'],
+                    'token' => $login->fcm_token,
+                ])->send();
+            }
+
+            $userReceiver = $connUser->where('id_user', $dataNotif['receiver'])->first();
+            $loginReceiver = Login::where('email', $userReceiver->login_user)->first();
+
+            $mobile_notif = new FcmNotification();
+            $mobile_notif->setPayload([
+                'title' => $sender->nama_user,
+                'body' => $dataNotif['notif_message']. ' '.  $dataNotif['notif_title'],
+                'token' => $loginReceiver->fcm_token,
+            ])->send();
+        } elseif ($dataNotif['division_receiver']) {                
+            foreach ($logins as $login) {
+                $mobile_notif = new FcmNotification();
+                $mobile_notif->setPayload([
+                    'title' => $sender->nama_user,
+                    'body' => $dataNotif['notif_message']. ' '.  $dataNotif['notif_title'],
+                    'token' => $login->fcm_token,
+                ])->send();
+            }
+        } else {
+            $userReceiver = $connUser->where('id_user', $dataNotif['receiver'])->first();
+            $loginReceiver = Login::where('email', $userReceiver->login_user)->first();
+
+            $mobile_notif = new FcmNotification();
+            $mobile_notif->setPayload([
+                'title' => $sender->nama_user,
+                'body' => $dataNotif['notif_message']. ' '.  $dataNotif['notif_title'],
+                'token' => $loginReceiver->fcm_token,
+            ])->send();
+        }
     }
 }
