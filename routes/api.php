@@ -49,6 +49,8 @@ Route::prefix('v1')->group(function () {
     Route::get('/store/insert-water/{unitID}/{token}', [BillingController::class, 'storeWaterMeter'])->name('store-usr-water');
 
     Route::middleware('auth:sanctum')->group(function () {
+        Route::post('/logout', [UserController::class, 'logout'])->name('api-logout');
+
         Route::get('get/access-menu/{roleID}', [RoleController::class, 'getAccessAPI']);
 
         Route::post('get/cc-token', [BillingController::class, 'getTokenCC']);

@@ -147,4 +147,16 @@ class UserController extends Controller
         ->first();
         return ResponseFormatter::success($user, 'Data profile user berhasil diambil');
     }
+
+    public function logout(Request $request)
+    {
+        $connUser = ConnectionDB::setConnection(new User);
+
+        $user = $connUser->where('login_user', $request->user()->email)->first();
+        $user->fcm_token = null;
+        $request->user()->tokens()->delete();
+        $user->save();
+
+        return ResponseFormatter::success(null, 'Successfully logout');
+    }
 }
