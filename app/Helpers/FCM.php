@@ -1,16 +1,20 @@
 <?php
 
 namespace App\Helpers;
+
+use App\Models\Login;
+use App\Models\User;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\Log;
 use Appy\FcmHttpV1\FcmGoogleHelper;
 use Appy\FcmHttpV1\FcmNotification;
+use Exception;
 
 class FCM extends FcmNotification {
 
     public function setPayload($payload) {
-        if(!isset($payload['token']) && !isset($payload['title']) && !isset($payload['title'])){
-            throw new Exception("Payload must contain : token, title, and body");
+        if(!isset($payload['title'])){
+            throw new Exception("Payload must contain :title, and body");
         }
 
         $empty = [
@@ -28,7 +32,7 @@ class FCM extends FcmNotification {
         if(!$empty['body']) {
             $this->body = $payload['body'];
         }
-        
+
 
         return $this;
     }
@@ -68,7 +72,7 @@ class FCM extends FcmNotification {
 
         return $this->prepareSend();
     }
-    
+
     private function prepareSend()
     {
         if (isset($this->topic)) {
