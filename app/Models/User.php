@@ -25,7 +25,8 @@ class User extends Model
         'password_user',
         'id_status_user',
         'id_role_hdr',
-        'profile_picture'
+        'profile_picture',
+        'fcm_token'
     ];
 
     public function RoleH()

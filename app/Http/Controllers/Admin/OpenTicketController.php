@@ -7,19 +7,14 @@ use App\Helpers\ConnectionDB;
 use App\Helpers\FCM as FcmNotification;
 use App\Http\Controllers\Controller;
 use App\Models\Approve;
-use App\Models\ApproveRequest;
-use App\Models\Divisi;
 use App\Models\JenisAcara;
 use App\Models\JenisRequest;
 use App\Models\Login;
 use App\Models\Notifikasi;
 use App\Models\OpenTicket;
-use App\Models\RequestGIGO;
-use App\Models\Site;
 use App\Models\System;
 use App\Models\Tenant;
 use App\Models\OwnerH;
-use App\Models\RequestType;
 use App\Models\RuangReservation;
 use App\Models\TenantUnit;
 use App\Models\Unit;
@@ -27,10 +22,7 @@ use App\Models\User;
 use App\Models\WorkPriority;
 use App\Models\WorkRelation;
 use Carbon\Carbon;
-use Error;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 use Throwable;
@@ -290,8 +282,6 @@ class OpenTicketController extends Controller
             'receiver' => null,
         ];
 
-        $this->FCM($dataNotif, $request);      
-
         broadcast(new HelloEvent($dataNotif));
     }
 
@@ -400,7 +390,7 @@ class OpenTicketController extends Controller
                 'body' => $dataNotif['notif_message']. ' '.  $dataNotif['notif_title'],
                 'token' => $loginReceiver->fcm_token,
             ])->send();
-        } elseif ($dataNotif['division_receiver']) {                
+        } elseif ($dataNotif['division_receiver']) {
             foreach ($logins as $login) {
                 $mobile_notif = new FcmNotification();
                 $mobile_notif->setPayload([

@@ -72,7 +72,7 @@ class UserController extends Controller
 
                 $hasFcm = false;
                 if(isset($request->fcm_token)){
-                    $login->update([
+                    $getUser->update([
                         'fcm_token' => $request->fcm_token
                     ]);
                 }

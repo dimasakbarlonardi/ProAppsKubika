@@ -248,7 +248,7 @@ class GIGOController extends Controller
                 'receiver' => $approve->approval_3,
             ];
 
-            $this->FCM($dataNotif, $request);
+            // $this->FCM($dataNotif, $request);
 
             broadcast(new HelloEvent($dataNotif));
 
@@ -274,7 +274,7 @@ class GIGOController extends Controller
         })->get('login_user');
 
         $sender = $connUser->where('login_user', $request->user()->email)->first();
-       
+
         $logins = Login::whereIn('email', $users)
             ->where('fcm_token', '!=', null)
             ->get(['name', 'fcm_token']);
@@ -288,17 +288,17 @@ class GIGOController extends Controller
                     'token' => $login->fcm_token,
                     ])->send();
                 }
-                
+
             $userReceiver = $connUser->where('id_user', $dataNotif['receiver'])->first();
             $loginReceiver = Login::where('email', $userReceiver->login_user)->first();
-                
+
             $mobile_notif = new FcmNotification();
             $mobile_notif->setPayload([
                 'title' => $sender->nama_user,
                 'body' => $dataNotif['notif_message']. ' '.  $dataNotif['notif_title'],
                 'token' => $loginReceiver->fcm_token,
             ])->send();
-        } elseif ($dataNotif['division_receiver'] && !$dataNotif['receiver']) {         
+        } elseif ($dataNotif['division_receiver'] && !$dataNotif['receiver']) {
             foreach ($logins as $login) {
                 $mobile_notif = new FcmNotification();
                 $mobile_notif->setPayload([
