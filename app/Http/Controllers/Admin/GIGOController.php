@@ -301,7 +301,7 @@ class GIGOController extends Controller
             $q->where('work_relation_id', $work_relation);
         })->get('login_user');
 
-        $sender = $connUser->find($request->session()->get('user_id'));
+        $sender = $connUser->where('login_user', $request->user()->email)->first();
 
         $logins = Login::whereIn('email', $users)
             ->where('fcm_token', '!=', null)
@@ -326,7 +326,7 @@ class GIGOController extends Controller
                 'body' => $dataNotif['notif_message']. ' '.  $dataNotif['notif_title'],
                 'token' => $loginReceiver->fcm_token,
             ])->send();
-        } elseif ($dataNotif['division_receiver']) {                
+        } elseif ($dataNotif['division_receiver']) {
             foreach ($logins as $login) {
                 $mobile_notif = new FcmNotification();
                 $mobile_notif->setPayload([
