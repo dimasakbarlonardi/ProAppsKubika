@@ -342,9 +342,9 @@ class OpenTicketController extends Controller
                 $payment = [];
                 $payment['payment_type'] = $type;
                 $payment['transaction_details']['order_id'] = $cr->order_id;
-                $payment['transaction_details']['gross_amount'] = $gross_amount;
+                $payment['transaction_details']['gross_amount'] = round($gross_amount);
                 $payment['bank_transfer']['bank'] = $bank;
-
+               
                 $response = $client->request('POST', 'https://api.sandbox.midtrans.com/v2/charge', [
                     'body' => json_encode($payment),
                     'headers' => [

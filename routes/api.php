@@ -92,6 +92,7 @@ Route::prefix('v1')->group(function () {
         // Billing Monthly
         Route::get('/list-billings/{id}', [BillingController::class, 'listBillings']);
         Route::get('/get-billing/{id}', [BillingController::class, 'showBilling']);
+        Route::post('/get-billing/{id}', [BillingController::class, 'showBilling']);
 
         // Billing Ticket
         Route::get('/payable-tickets/{id}', [OpenTicketController::class, 'payableTickets']);
