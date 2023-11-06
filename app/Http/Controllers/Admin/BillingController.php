@@ -76,28 +76,30 @@ class BillingController extends Controller
                     $createUtilityBill = $this->createUtilityBill($elecUSS, $waterUSS, $createIPLbill);
                     $createMonthlyTenant = $this->createMonthlyTenant($createUtilityBill, $createIPLbill, $elecUSS, $waterUSS);
 
-                    $createIPLbill->save();
-                    $createUtilityBill->save();
+                    if ($createMonthlyTenant->Unit->TenantUnit) {
+                        $createIPLbill->save();
+                        $createUtilityBill->save();
 
-                    $elecUSS->no_refrensi = $createUtilityBill->id;
-                    $elecUSS->save();
-                    $waterUSS->no_refrensi = $createUtilityBill->id;
-                    $waterUSS->save();
+                        $elecUSS->no_refrensi = $createUtilityBill->id;
+                        $elecUSS->save();
+                        $waterUSS->no_refrensi = $createUtilityBill->id;
+                        $waterUSS->save();
 
-                    $createMonthlyTenant->id_monthly_utility = $createUtilityBill->id;
-                    $createMonthlyTenant->no_monthly_invoice = $no_inv;
-                    $createMonthlyTenant->id_monthly_ipl = $createIPLbill->id;
-                    $createMonthlyTenant->save();
+                        $createMonthlyTenant->id_monthly_utility = $createUtilityBill->id;
+                        $createMonthlyTenant->no_monthly_invoice = $no_inv;
+                        $createMonthlyTenant->id_monthly_ipl = $createIPLbill->id;
+                        $createMonthlyTenant->save();
 
-                    $transaction = $this->createTransaction($createMonthlyTenant);
-                    $transaction->no_reff = $no_inv;
-                    $transaction->no_invoice = $no_inv;
-                    $transaction->save();
+                        $transaction = $this->createTransaction($createMonthlyTenant);
+                        $transaction->no_reff = $no_inv;
+                        $transaction->no_invoice = $no_inv;
+                        $transaction->save();
 
-                    $system->sequence_no_invoice = $countINV;
-                    $system->save();
+                        $system->sequence_no_invoice = $countINV;
+                        $system->save();
 
-                    DB::commit();
+                        DB::commit();
+                    }
                 } catch (Throwable $e) {
                     DB::rollBack();
                     dd($e);

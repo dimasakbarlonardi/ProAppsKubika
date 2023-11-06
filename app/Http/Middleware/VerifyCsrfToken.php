@@ -13,6 +13,9 @@ class VerifyCsrfToken extends Middleware
      */
     protected $except = [
         "https://dev.pro-apps.xyz/payments/midtrans-notifications",
-        "/payments/midtrans-notifications"
+        "/payments/midtrans-notifications",
+        "/api/v1/store/insert-electric/*/*",
+        "/api/v1/store/insert-water/*/*",
+
     ];
 }

@@ -39,9 +39,9 @@ class TenantUnit extends Model
         $connTU = ConnectionDB::setConnection(new TenantUnit());
 
         $tu = $connTU->where('id_unit', $unitID)
-        ->where('is_owner', 1)
-        ->with('Tenant')
-        ->first();
+            ->where('is_owner', 1)
+            ->with('Tenant')
+            ->first();
 
         return $tu->Tenant;
     }
@@ -51,9 +51,9 @@ class TenantUnit extends Model
         $connTU = ConnectionDB::setConnection(new TenantUnit());
 
         $tu = $connTU->where('id_unit', $unitID)
-        ->where('is_owner', 0)
-        ->with('Tenant')
-        ->first();
+            ->where('is_owner', 0)
+            ->with('Tenant')
+            ->first();
 
         return $tu;
     }

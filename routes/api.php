@@ -43,11 +43,11 @@ Route::prefix('v1')->group(function () {
 
     // Insert electric meter
     Route::get('/insert-electric/{unitID}/{token}', [BillingController::class, 'insertElectricMeter']);
-    Route::get('store/insert-electric/{unitID}/{token}', [BillingController::class, 'storeElectricMeter'])->name('store-usr-electric');
+    Route::post('/store/insert-electric/{unitID}/{token}', [BillingController::class, 'storeElectricMeter'])->name('store-usr-electric');
 
     // Insert water meter
     Route::get('/insert-water/{unitID}/{token}', [BillingController::class, 'insertWaterMeter']);
-    Route::get('/store/insert-water/{unitID}/{token}', [BillingController::class, 'storeWaterMeter'])->name('store-usr-water');
+    Route::post('/store/insert-water/{unitID}/{token}', [BillingController::class, 'storeWaterMeter'])->name('store-usr-water');
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/logout', [UserController::class, 'logout'])->name('api-logout');
