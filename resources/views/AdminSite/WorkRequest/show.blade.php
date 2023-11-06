@@ -80,7 +80,7 @@
             </div>
 
             @if ($user->id_role_hdr != 8)
-                <div class="col-3">                                            
+                <div class="col-3">
                     <div class="card">
                         <div class="card-header d-flex flex-between-center py-3">
                             <h6 class="mb-0">Contact Information</h6>
@@ -151,8 +151,11 @@
                                     @endforeach
                                 </select>
                             </div>
+                            <div class="mb-2 mt-n2"><label class="mb-1">Schedule</label>
+                               <input type="text" value="{{ HumanDateTime($wr->schedule) }}" class="form-control" disabled>
+                            </div>
                             @if ($wr->status_request != 'PENDING')
-                                <div class="mb-4 mt-n2"><label class="mb-1">Status</label>
+                                <div class="mb-4 mt-3"><label class="mb-1">Status</label>
                                     <select name="status_request" class="form-select form-select-sm"
                                         id="select_status">
                                         <option {{ $wr->status_request == 'ON WORK' ? 'selected' : '' }}
@@ -193,7 +196,7 @@
                             <button type="button" class="btn btn-primary w-100" id="btn_request_wo">Ajukan Work
                                 Order</button>
                         @endif
-                    </div>                                            
+                    </div>
                 </div>
             @endif
         </div>

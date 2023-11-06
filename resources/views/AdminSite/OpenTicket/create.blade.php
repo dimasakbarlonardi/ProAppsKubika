@@ -237,9 +237,7 @@
                         }
                     });
                 }
-            }
-
-            if (id_jenis_request == 4) {
+            } else if (id_jenis_request == 4) {
                 value = reservationValue();
                 if (!value) {
                     Swal.fire(
@@ -270,9 +268,7 @@
                         }
                     });
                 }
-            }
-
-            if (id_jenis_request == 5) {
+            } else if (id_jenis_request == 5) {
                 gigo = gigoValue();
                 if (!gigo || goods.length === 0) {
                     Swal.fire(
@@ -304,6 +300,8 @@
                         }
                     });
                 }
+            } else {
+                $('#create-open-request').submit();
             }
         }
 

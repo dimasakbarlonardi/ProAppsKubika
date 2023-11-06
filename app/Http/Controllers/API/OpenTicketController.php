@@ -12,10 +12,13 @@ use App\Models\DetailGIGO;
 use App\Models\JenisRequest;
 use App\Models\OpenTicket;
 use App\Models\RequestGIGO;
+use App\Models\Reservation;
 use App\Models\Site;
 use App\Models\System;
 use App\Models\Unit;
 use App\Models\User;
+use App\Models\WorkOrder;
+use App\Models\WorkRequest;
 use Carbon\Carbon;
 use File;
 use GuzzleHttp\Client;
@@ -65,7 +68,10 @@ class OpenTicketController extends Controller
 
     public function store(Request $request)
     {
-        $tenant = $this->user()->Tenant->id_tenant;
+        $connUser = ConnectionDB::setConnection(new User());
+
+        $user = $connUser->where('login_user', $request->user()->email)->first();
+        $tenant = $user->Tenant->id_tenant;
 
         $rules = [
             'id_jenis_request' => 'required',
@@ -75,7 +81,6 @@ class OpenTicketController extends Controller
         ];
         $validator = Validator::make($request->all(), $rules, $message);
         if ($validator->fails()) {
-            dd($validator);
             return ResponseFormatter::error(
                 null,
                 'Gagal membuat ticket, harap mengisi semua form'
@@ -155,23 +160,50 @@ class OpenTicketController extends Controller
         $connRequest = ConnectionDB::setConnection(new OpenTicket());
         $connGIGO = ConnectionDB::setConnection(new RequestGIGO());
         $connDetailGIGO = ConnectionDB::setConnection(new DetailGIGO());
+        $connReservation = ConnectionDB::setConnection(new Reservation());
+        $connWO = ConnectionDB::setConnection(new WorkOrder());
+        $connWR = ConnectionDB::setConnection(new WorkRequest());
 
         $ticket = $connRequest->find($id);
-        $gigo = $connGIGO->where('no_tiket', $ticket->no_tiket)->first();
-        $detail_gigo = $connDetailGIGO->where('id_request_gigo', $gigo->id)->get();
 
-        if ($gigo) {
+        $item = new stdClass();
+        $item->ticket = $ticket;
+
+        if ($ticket->id_jenis_request == 1) {
+            $wo = $connWO->where('no_tiket', $ticket->no_tiket)->first();
+
+            if ($wo) {
+                $ticket['model'] = 'WorkOrder';
+                $ticket->request = $wo;
+            } else {
+                $wr = $connWR->where('no_tiket', $ticket->no_tiket)->first();
+                $ticket['model'] = 'WorkRequest';
+                $ticket->request = $wr;
+            }
+        }
+
+        if ($ticket->id_jenis_request == 4) {
+            $rsv = $connReservation->where('no_tiket', $ticket->no_tiket)->first();
+
+            $ticket['model'] = 'Reservation';
+
+            $ticket->request = $rsv;
+        }
+
+        if ($ticket->id_jenis_request == 5) {
+            $gigo = $connGIGO->where('no_tiket', $ticket->no_tiket)->first();
+            $detail_gigo = $connDetailGIGO->where('id_request_gigo', $gigo->id)->get();
+
             $request = $gigo;
             $ticket['model'] = 'GIGO';
             $request['detail'] = $detail_gigo;
+
+            $ticket->request = $request;
         }
 
         $ticket->deskripsi_request = strip_tags($ticket->deskripsi_request);
         $ticket->deskripsi_respon = strip_tags($ticket->deskripsi_respon);
 
-        $item = new stdClass();
-        $item->ticket = $ticket;
-        $item->request = $request;
 
         return ResponseFormatter::success(
             $item,
@@ -207,24 +239,10 @@ class OpenTicketController extends Controller
             case ('Reservation'):
                 $object = $this->ReservationInvoice($cr, $site);
                 break;
+            case ('WorkOrder'):
+                $object = $this->WorkOrderInvoice($cr, $site);
+                break;
         }
-
-        return ResponseFormatter::success(
-            $object,
-            'Success get transaction'
-        );
-    }
-
-    function ReservationInvoice($cr, $site)
-    {
-        $object = new stdClass();
-
-        $object->reservation_id = $cr->Reservation->id;
-        $object->tenant_name = $cr->Reservation->Ticket->Tenant->nama_tenant;
-        $object->tower = $cr->Reservation->Ticket->Unit->Tower->nama_tower;
-        $object->tower = $cr->Reservation->Ticket->Unit->nama_unit;
-        $object->tenant_email = $cr->Reservation->Ticket->Tenant->email_tenant;
-        $object->phone_number_tenant = $cr->Reservation->Ticket->Tenant->no_telp_tenant;
 
         $object->transaction_id = $cr->id;
         $object->no_invoice = $cr->no_invoice;
@@ -240,6 +258,51 @@ class OpenTicketController extends Controller
         $object->gross_amount = $cr->gross_amount;
         $object->tax = $cr->tax;
 
+        return ResponseFormatter::success(
+            $object,
+            'Success get transaction'
+        );
+    }
+
+    function WorkOrderInvoice($cr, $site)
+    {
+        $object = new stdClass();
+
+        $object->id = $cr->id;
+        $object->work_order_id = $cr->WorkOrder->id;
+        $object->tenant_name = $cr->WorkOrder->Ticket->Tenant->nama_tenant;
+        $object->tower = $cr->WorkOrder->Ticket->Unit->Tower->nama_tower;
+        $object->tower = $cr->WorkOrder->Ticket->Unit->nama_unit;
+        $object->tenant_email = $cr->WorkOrder->Ticket->Tenant->email_tenant;
+        $object->phone_number_tenant = $cr->WorkOrder->Ticket->Tenant->no_telp_tenant;
+
+        $request_details = [];
+        foreach ($cr->WorkOrder->WODetail as $itemWO) {
+            $item = new stdClass();
+            $item->billing = $itemWO->detil_pekerjaan;
+            $item->price = $itemWO->detil_biaya_alat;
+
+            $request_details[] = $item;
+        }
+
+        $object->items = $request_details;
+        $object->total = $cr->sub_total;
+
+        return $object;
+    }
+
+    function ReservationInvoice($cr, $site)
+    {
+        $object = new stdClass();
+
+        $object->id = $cr->id;
+        $object->reservation_id = $cr->Reservation->id;
+        $object->tenant_name = $cr->Reservation->Ticket->Tenant->nama_tenant;
+        $object->tower = $cr->Reservation->Ticket->Unit->Tower->nama_tower;
+        $object->tower = $cr->Reservation->Ticket->Unit->nama_unit;
+        $object->tenant_email = $cr->Reservation->Ticket->Tenant->email_tenant;
+        $object->phone_number_tenant = $cr->Reservation->Ticket->Tenant->no_telp_tenant;
+
         $request_details = [];
 
         $item = new stdClass();
@@ -249,7 +312,7 @@ class OpenTicketController extends Controller
         $request_details[] = $item;
 
         $object->items = $request_details;
-        $object->total = $cr->gross_amount;
+        $object->total = $cr->sub_total;
 
         return $object;
     }
@@ -330,6 +393,65 @@ class OpenTicketController extends Controller
             return ResponseFormatter::success(
                 'Transaction has created'
             );
+        }
+    }
+
+    public function TransactionCC($request, $site)
+    {
+        $expDate = explode('/', $request->expDate);
+        $card_exp_month = $expDate[0];
+        $card_exp_year = $expDate[1];
+
+        try {
+            $token = CoreApi::cardToken(
+                $request->card_number,
+                $card_exp_month,
+                $card_exp_year,
+                $request->card_cvv,
+                $site->midtrans_client_key
+            );
+            if ($token->status_code != 200) {
+                return ResponseFormatter::error([
+                    'message' => 'Unauthorized'
+                ], 'Authentication Failed', 401);
+            }
+
+            return $token;
+        } catch (\Throwable $e) {
+            dd($e);
+            return ResponseFormatter::error([
+                'message' => 'Internar Error'
+            ], 'Something went wrong', 500);
+        }
+
+        return response()->json(['token' => $token]);
+    }
+
+    public function ChargeTransactionCC($token, $transaction, $site)
+    {
+        $server_key = $site->midtrans_server_key;
+
+        try {
+            $credit_card = array(
+                'token_id' => $token,
+                'authentication' => true,
+                'bank' => 'bni'
+            );
+
+            $transactionData = array(
+                "payment_type" => "credit_card",
+                "transaction_details" => [
+                    "gross_amount" => $transaction->gross_amount,
+                    "order_id" => $transaction->order_id
+                ],
+            );
+
+            $transactionData["credit_card"] = $credit_card;
+            $result = CoreApi::charge($transactionData, $server_key);
+
+            return $result;
+        } catch (Throwable $e) {
+            dd($e);
         }
     }
 }
