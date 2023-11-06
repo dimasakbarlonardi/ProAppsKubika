@@ -62,38 +62,6 @@ class ElectricUUSController extends Controller
             $records = $records->where('is_approve', $status);
         }
 
-        $records = $records->where('periode_bulan', $request->period);
-        $records = $records->where('periode_tahun', $request->year);
-
-        $data['elecUSS'] = $records->get();
-
-        return response()->json([
-            'html' => view('AdminSite.UtilityUsageRecording.Electric.table-data', $data)->render()
-        ]);
-    }
-
-    public function filteredData(Request $request)
-    {
-        $connElecUUS = ConnectionDB::setConnection(new ElectricUUS());
-        $connApprove = ConnectionDB::setConnection(new Approve());
-
-        $records = $connElecUUS->where('deleted_at', null);
-
-        $data['approve'] = $connApprove->find(9);
-        $data['user'] = $request->session()->get('user');
-
-        if ($request->tower != 'all') {
-            $id_tower = $request->tower;
-            $records = $records->whereHas('Unit.Tower', function($q) use ($id_tower) {
-                $q->where('id_tower', $id_tower);
-            });
-        }
-
-        if ($request->status != 'all') {
-            $status = $request->status == '0' ? null : $request->status;
-            $records = $records->where('is_approve', $status);
-        }
-
         $data['elecUSS'] = $records->get();
 
         return response()->json([
