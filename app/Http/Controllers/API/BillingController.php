@@ -348,20 +348,25 @@ class BillingController extends Controller
         $listrik = $connUtility->find(1);
         $usage = $request->current - $request->previous;
 
+        $isAbodemen = false;
+        $biaya_usage = $listrik->biaya_m3;
         $get_ppj = $listrik->biaya_ppj / 100;
-        if ($listrik->abodemen != 0) {
-            $electric_capacity = $unit->electric_capacity;
-            $abodemen = (40 * $electric_capacity) / 1000;
-            if ($usage < $abodemen) {
-                $usage = $abodemen;
-            }
+        $electric_capacity = $unit->electric_capacity;
+        $abodemen = (40 * $electric_capacity) / 1000;
 
-            $biaya_usage = $listrik->biaya_m3;
-            $total_usage = $biaya_usage * $usage;
-        } else {
-            $total_usage = $listrik->biaya_tetap;
+        if ($usage < $abodemen) {
+            $isAbodemen = true;
+            $usage = $abodemen;
         }
-
+        if ($isAbodemen) {
+            if ($listrik->abodemen != 0) {
+                $total_usage = $biaya_usage * $usage;
+            } else {
+                $total_usage = $listrik->biaya_tetap;
+            }
+        } else {
+            $total_usage = $biaya_usage * $usage;
+        }
         $ppj = $get_ppj * $total_usage;
         $total = $total_usage + $ppj;
 
@@ -450,7 +455,7 @@ class BillingController extends Controller
         $water = $connUtility->find(2);
 
         $total_usage = $water->biaya_m3 * $usage;
-        $total = $total_usage + $water->biaya_abodemen;
+        $total = $total_usage;
 
         if ($tokenable) {
             try {

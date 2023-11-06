@@ -99,6 +99,7 @@ use App\Http\Controllers\Admin\ChecklistTanggaDaruratHController;
 use App\Http\Controllers\Admin\ChecklistOfficeManagementHController;
 use App\Http\Controllers\Admin\ChecklistSecurityController;
 use App\Http\Controllers\Admin\ChecklistToiletDetailController;
+use App\Http\Controllers\Admin\CompanySettingController;
 use App\Http\Controllers\Admin\ElectricUUSController;
 use App\Http\Controllers\Admin\ForgotAttendanceController;
 use App\Http\Controllers\Admin\ImportController;
@@ -173,6 +174,9 @@ Route::get('/view-room/{idSite}/{id}', [RoomController::class, 'viewRoom']);
 
 Route::prefix('admin')->group(function () {
     Route::middleware(['auth'])->group(function () {
+        Route::get('/company-setting', [CompanySettingController::class, 'show'])->name('company-setting');
+        Route::post('/company-setting', [CompanySettingController::class, 'update'])->name('update-company-setting');
+
         Route::post('payment/check-payment-status/{id}', [PaymentController::class, 'checkStatus']);
 
         Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');

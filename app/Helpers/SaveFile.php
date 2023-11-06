@@ -10,6 +10,18 @@ use Image;
 
 class SaveFile
 {
+    public static function saveCompanyLogo($idSite, $type, $file)
+    {
+        $fileName = $type . '-' . Carbon::now()->format('Y-m-d') . '-' .   $file->getClientOriginalName();
+        $path = '/public/' . $idSite . '/img/' . $type . '/' . $fileName;
+        $storagePath = '/storage/' . $idSite . '/img/' . $type .  '/' . $fileName;
+        $img = Image::make($file);
+        $img->encode('jpg', 100);
+
+        Storage::disk('local')->put($path, $img);
+
+        return $storagePath;
+    }
 
     public static function saveToStorage($idSite, $type, $file)
     {
