@@ -41,7 +41,6 @@ class HelloEvent implements ShouldBroadcast
     public function broadcastWith()
     {
         $dataNotif = $this->dataNotif;
-        $request = Request();
 
         if (!isset($dataNotif['connection'])) {
             $connNotif = ConnectionDB::setConnection(new Notifikasi());
@@ -69,12 +68,17 @@ class HelloEvent implements ShouldBroadcast
             $notif->save();
         }
         $this->dataNotif['id'] = $notif->id;
-        $this->FCM($dataNotif, $request);
+        $this->FCM($dataNotif);
     }
 
-    function FCM($dataNotif, $request)
+    function FCM($dataNotif)
     {
-        $connUser = ConnectionDB::setConnection(new User());
+        if (!isset($dataNotif['connection'])) {
+            $connUser = ConnectionDB::setConnection(new User());
+        } else {
+            $connUser = new User();
+            $connUser = $connUser->setConnection($dataNotif['connection']);
+        }
 
         $work_relation = $dataNotif['division_receiver'];
 
@@ -83,7 +87,7 @@ class HelloEvent implements ShouldBroadcast
         })->where('fcm_token', '!=', null)
             ->get(['login_user', 'fcm_token']);
 
-        $sender = $connUser->where('login_user', $request->user()->email)->first();
+        $sender = $connUser->where('id_user', $dataNotif['sender'])->first();
         $userReceiver = $connUser->where('id_user', $dataNotif['receiver'])->first();
 
         if ($dataNotif['division_receiver'] && $dataNotif['receiver']) {

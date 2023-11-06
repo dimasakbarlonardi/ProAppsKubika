@@ -8,7 +8,7 @@
 
 @section('content')
     <div class="card">
-        
+
         <div class="card-body bg-light">
             <div class="row">
                 <div class="col-8">
@@ -69,7 +69,7 @@
                             <div class="mb-3">
                                 <div class="row">
                                     <div class="col-6">
-                                        <label class="mb-1">Jumlah deposit</label>
+                                        <label class="mb-1">Jumlah pembayaran</label>
                                         <div class="input-group flex-nowrap">
                                             <span class="input-group-text" id="addon-wrapping">Rp</span>
                                             <input class="form-control" style="text-align: right" value="{{ number_format($reservation->jumlah_deposit, '0', ',', '.') }}"
@@ -128,7 +128,7 @@
                         </div>
                         @if (
                             $reservation->sign_approval_1 &&
-                            !$reservation->sign_approval_2 &&                                
+                            !$reservation->sign_approval_2 &&
                             $reservation->Ticket->status_request != 'REJECTED'
                             )
                             <div class="card-footer border-top border-200 py-x1">

@@ -12,15 +12,18 @@ use App\Models\DetailGIGO;
 use App\Models\JenisRequest;
 use App\Models\OpenTicket;
 use App\Models\RequestGIGO;
+use App\Models\Site;
 use App\Models\System;
 use App\Models\Unit;
 use App\Models\User;
 use Carbon\Carbon;
 use File;
+use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use stdClass;
 use Validator;
 use Throwable;
@@ -189,5 +192,144 @@ class OpenTicketController extends Controller
             $tickets,
             'Success get transactions'
         );
+    }
+
+    public function payableTicketShow($id)
+    {
+        $connTransaction = ConnectionDB::setConnection(new CashReceipt());
+
+        $cr = $connTransaction->find($id);
+
+        $login = Auth::user();
+        $site = Site::find($login->id_site);
+
+        switch ($cr->transaction_type) {
+            case ('Reservation'):
+                $object = $this->ReservationInvoice($cr, $site);
+                break;
+        }
+
+        return ResponseFormatter::success(
+            $object,
+            'Success get transaction'
+        );
+    }
+
+    function ReservationInvoice($cr, $site)
+    {
+        $object = new stdClass();
+
+        $object->reservation_id = $cr->Reservation->id;
+        $object->tenant_name = $cr->Reservation->Ticket->Tenant->nama_tenant;
+        $object->tower = $cr->Reservation->Ticket->Unit->Tower->nama_tower;
+        $object->tower = $cr->Reservation->Ticket->Unit->nama_unit;
+        $object->tenant_email = $cr->Reservation->Ticket->Tenant->email_tenant;
+        $object->phone_number_tenant = $cr->Reservation->Ticket->Tenant->no_telp_tenant;
+
+        $object->transaction_id = $cr->id;
+        $object->no_invoice = $cr->no_invoice;
+        $object->issued_date = $cr->created_at;
+        $object->site = $site->province;
+        $object->site = $site->kode_pos;
+        $object->bank = $cr->bank;
+        $object->transaction_status = $cr->transaction_status;
+        $object->payment_type = $cr->payment_type;
+        $object->va_number = $cr->va_number;
+        $object->expiry_time = $cr->expiry_time;
+        $object->admin_fee = $cr->admin_fee;
+        $object->gross_amount = $cr->gross_amount;
+        $object->tax = $cr->tax;
+
+        $request_details = [];
+
+        $item = new stdClass();
+        $item->billing = 'Pembayaran reservasi';
+        $item->price = $cr->sub_total;
+
+        $request_details[] = $item;
+
+        $object->items = $request_details;
+        $object->total = $cr->gross_amount;
+
+        return $object;
+    }
+
+    public function GeneratePayment(Request $request, $id)
+    {
+        $connTransaction = ConnectionDB::setConnection(new CashReceipt());
+
+        $client = new Client();
+        $cr = $connTransaction->find($id);
+        $site = Site::find($request->user()->id_site);
+
+        $client = new Client();
+        $admin_fee = (int) $request->admin_fee;
+        $type = $request->type;
+        $bank = $request->bank;
+
+        if ($cr->transaction_status == 'PENDING') {
+            if ($type == 'bank_transfer') {
+                $cr->gross_amount = $cr->sub_total + $admin_fee;
+                $cr->payment_type = 'bank_transfer';
+                $cr->bank = Str::upper($bank);
+
+                $tax = $request->tax;
+                $gross_amount = $cr->sub_total + $tax + $admin_fee;
+
+                $payment = [];
+                $payment['payment_type'] = $type;
+                $payment['transaction_details']['order_id'] = $cr->order_id;
+                $payment['transaction_details']['gross_amount'] = $gross_amount;
+                $payment['bank_transfer']['bank'] = $bank;
+
+                $response = $client->request('POST', 'https://api.sandbox.midtrans.com/v2/charge', [
+                    'body' => json_encode($payment),
+                    'headers' => [
+                        'accept' => 'application/json',
+                        'authorization' => 'Basic ' . base64_encode($site->midtrans_server_key),
+                        'content-type' => 'application/json',
+                    ],
+                    "custom_expiry" => [
+                        "order_time" => Carbon::now(),
+                        "expiry_duration" => 1,
+                        "unit" => "day"
+                    ]
+                ]);
+                $response = json_decode($response->getBody());
+
+                $cr->va_number = $response->va_numbers[0]->va_number;
+                $cr->transaction_id = $response->transaction_id;
+                $cr->expiry_time = $response->expiry_time;
+                $cr->admin_fee = $admin_fee;
+                $cr->transaction_status = 'VERIFYING';
+
+                $cr->tax = $tax;
+                $cr->gross_amount = $gross_amount;
+                $cr->save();
+
+                return ResponseFormatter::success(
+                    $response,
+                    'Authenticated'
+                );
+            } elseif ($type == 'credit_card') {
+                $cr->payment_type = 'credit_card';
+                $cr->admin_fee = $admin_fee;
+                $cr->gross_amount = round($cr->sub_total + $admin_fee);
+                $cr->transaction_status = 'VERIFYING';
+
+                $getTokenCC = $this->TransactionCC($request, $site);
+                $chargeCC = $this->ChargeTransactionCC($getTokenCC->token_id, $cr, $site);
+
+                $cr->save();
+
+                return ResponseFormatter::success(
+                    $chargeCC
+                );
+            }
+        } else {
+            return ResponseFormatter::success(
+                'Transaction has created'
+            );
+        }
     }
 }

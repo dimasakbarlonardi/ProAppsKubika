@@ -7,14 +7,156 @@ use App\Helpers\ConnectionDB;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Models\Approve;
+use App\Models\OpenTicket;
 use App\Models\Reservation;
+use App\Models\RuangReservation;
 use App\Models\Site;
+use App\Models\System;
+use App\Models\Tenant;
+use App\Models\Unit;
+use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use App\Models\JenisAcara;
 use stdClass;
 
 class ReservationController extends Controller
 {
+    public function JenisAcara()
+    {
+        $connJenisAcara = ConnectionDB::setConnection(new JenisAcara());
+
+        $data = $connJenisAcara->get();
+
+        return ResponseFormatter::success(
+            $data,
+            'Success get reservation type'
+        );
+    }
+    public function RoomRSV()
+    {
+        $connRuangRsv = ConnectionDB::setConnection(new RuangReservation());
+
+        $data = $connRuangRsv->get();
+
+        return ResponseFormatter::success(
+            $data,
+            'Success get reservation rooms'
+        );
+    }
+
+    function createTicket($request)
+    {
+        $user = $request->user();
+
+        $connOpenTicket = ConnectionDB::setConnection(new OpenTicket());
+        $connSystem = ConnectionDB::setConnection(new System());
+        $connUnit = ConnectionDB::setConnection(new Unit());
+        $connTenant = ConnectionDB::setConnection(new Tenant());
+
+        $tenant = $connTenant->where('email_tenant', $user->email)->first();
+        $system = $connSystem->find(1);
+        $count = $system->sequence_notiket + 1;
+
+        $nowDate = Carbon::now();
+
+        try {
+            DB::beginTransaction();
+            $unit = $connUnit->find($request->id_unit);
+
+            $no_tiket = $system->kode_unik_perusahaan . '/' .
+                $system->kode_unik_tiket . '/' .
+                Carbon::now()->format('m') . $nowDate->year . '/' .
+                sprintf("%06d", $count);
+
+            $createTicket = $connOpenTicket->create($request->all());
+            $createTicket->id_jenis_request = 4;
+            $createTicket->id_site = $unit->id_site;
+            $createTicket->id_tower = $unit->id_tower;
+            $createTicket->id_unit = $request->id_unit;
+            $createTicket->id_lantai = $unit->id_lantai;
+            $createTicket->id_tenant = $tenant->id_tenant;
+            $createTicket->no_tiket = $no_tiket;
+            $createTicket->status_request = 'PENDING';
+            $system->sequence_notiket = $count;
+
+            $system->save();
+            $createTicket->save();
+
+            DB::commit();
+
+            return $createTicket;
+        } catch (Throwable $e) {
+            DB::rollBack();
+            dd($e);
+        }
+    }
+
+    public function store(Request $request)
+    {
+        $ticket = $this->createTicket($request);
+
+        $connUser = ConnectionDB::setConnection(new User());
+        $connReservation = ConnectionDB::setConnection(new Reservation());
+        $connSystem = ConnectionDB::setConnection(new System());
+        $user = $connUser->where('login_user', $request->user()->email)->first();
+
+        $waktu_mulai = $request->tanggal_request_reservation . ' ' . $request->waktu_mulai;
+        $waktu_akhir = $request->tanggal_request_reservation . ' ' . $request->waktu_akhir;
+
+        try {
+            DB::beginTransaction();
+
+            $system = $connSystem->find(1);
+            $count = $system->sequence_no_reservation + 1;
+
+            $no_reservation = $system->kode_unik_perusahaan . '/' .
+                $system->kode_unik_reservation . '/' .
+                Carbon::now()->format('m') . Carbon::now()->format('Y') . '/' .
+                sprintf("%06d", $count);
+
+            $rsv = $connReservation->create([
+                'no_tiket' => $ticket->no_tiket,
+                'no_request_reservation' => $no_reservation,
+                'tgl_request_reservation' => $request->tanggal_request_reservation,
+                'id_ruang_reservation' => $request->id_ruang_reservation,
+                'id_jenis_acara' => $request->id_jenis_acara,
+                'keterangan' => $request->keterangan,
+                'durasi_acara' => $request->durasi_acara . ' Jam',
+                'waktu_mulai' => $waktu_mulai,
+                'waktu_akhir' => $waktu_akhir,
+                'status_bayar' => 'PENDING',
+            ]);
+
+            $dataNotif = [
+                'models' => 'OpenTicket',
+                'notif_title' => $ticket->no_tiket,
+                'id_data' => $ticket->id,
+                'sender' => $user->id_user,
+                'division_receiver' => 1,
+                'notif_message' => 'Request reservation sudah dibuat, mohon proses request saya',
+                'receiver' => null,
+            ];
+
+            broadcast(new HelloEvent($dataNotif));
+
+            $system->sequence_no_reservation = $count;
+            $system->save();
+
+            DB::commit();
+
+            return ResponseFormatter::success(
+                $rsv,
+                'Success get reservation rooms'
+            );
+        } catch (Throwable $e) {
+            DB::rollBack();
+            dd($e);
+            return redirect()->back();
+        }
+    }
+
     public function index()
     {
         $connReqRev = ConnectionDB::setConnection(new Reservation());
@@ -48,7 +190,7 @@ class ReservationController extends Controller
         $object->reservation_room = $reservation->RuangReservation->ruang_reservation;
         $object->jenis_acara = $reservation->JenisAcara->jenis_acara;
         $object->notes = strip_tags($reservation->keterangan);
-        $object->notes_by = $reservation->Ticket->ResponseBy->nama_user;
+        $object->notes_by = $reservation->Ticket->ResponseBy ? $reservation->Ticket->ResponseBy->nama_user : null;
         $object->status_reservation = $reservation->sign_approval_1 ? 'APPROVED' : 'PENDING';
 
         if ($reservation->is_deposit) {
@@ -61,7 +203,7 @@ class ReservationController extends Controller
         );
     }
 
-    public function approve($id)
+    public function approve2($id)
     {
         $connReservation = ConnectionDB::setConnection(new Reservation());
         $connApprove = ConnectionDB::setConnection(new Approve());
@@ -69,7 +211,7 @@ class ReservationController extends Controller
         $approve = $connApprove->find(7);
         $rsv = $connReservation->find($id);
 
-        $rsv->sign_approval_1 = Carbon::now();
+        $rsv->sign_approval_2 = Carbon::now();
         $rsv->save();
 
         $dataNotif = [
@@ -77,9 +219,9 @@ class ReservationController extends Controller
             'notif_title' => $rsv->no_request_reservation,
             'id_data' => $rsv->id,
             'sender' => $rsv->Ticket->Tenant->User->id_user,
-            'division_receiver' => $approve->approval_2,
+            'division_receiver' => null,
             'notif_message' => 'Request Reservation diterima, mohon approve reservasi',
-            'receiver' => null,
+            'receiver' => $approve->approval_3,
         ];
 
         broadcast(new HelloEvent($dataNotif));
@@ -87,47 +229,6 @@ class ReservationController extends Controller
         return ResponseFormatter::success(
             $rsv,
             'Success approve reservation'
-        );
-    }
-
-    public function reject($id)
-    {
-        $connReservation = ConnectionDB::setConnection(new Reservation());
-
-        $rsv = $connReservation->find($id);
-
-        $rsv->Ticket->status_request = 'REJECTED';
-        $rsv->Ticket->save();
-
-        return ResponseFormatter::success(
-            $rsv,
-            'Success reject reservation'
-        );
-    }
-
-    public function showBilling($id, Request $request)
-    {
-        $connReservation = ConnectionDB::setConnection(new Reservation());
-        $site = Site::find($request->user()->id_site);
-
-        $rsv = $connReservation->find($id);
-
-        $object = new stdClass();
-        $object->reservation_id = $rsv->id;
-        $object->transaction_id = $rsv->CashReceipt->id;
-        $object->no_invoice = $rsv->CashReceipt->no_invoice;
-        $object->issue_date = $rsv->CashReceipt->created_at;
-        $object->due_date = $rsv->CashReceipt->created_at->addDays(1);
-        $object->invoice_to = $rsv->Ticket->Tenant->nama_tenant;
-        $object->site = $site->nama_site;
-        $object->unit = $rsv->Ticket->Unit->nama_unit;
-        $object->province = $site->provinsi;
-        $object->postal_code = $site->kode_pos;
-        $object->deposit = $rsv->jumlah_deposit;
-
-        return ResponseFormatter::success(
-            $object,
-            'Success billing reservation'
         );
     }
 }

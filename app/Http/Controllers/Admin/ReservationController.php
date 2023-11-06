@@ -159,6 +159,7 @@ class ReservationController extends Controller
 
     public function store(Request $request)
     {
+        dd($request);
         $data = $request->value;
         $ticket = $this->createTicket($request);
 

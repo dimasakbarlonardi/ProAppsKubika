@@ -72,7 +72,6 @@ Route::prefix('v1')->group(function () {
         Route::get('/tenant-unit', [UnitController::class, 'tenantUnit']);
         Route::post('/open-ticket', [OpenTicketController::class, 'store']);
         Route::get('/open-ticket/{id}', [OpenTicketController::class, 'show']);
-        Route::get('/payable-tickets/{id}', [OpenTicketController::class, 'payableTickets']);
 
         // Work Order
         Route::get('/work-order/{id}', [WorkOrderController::class, 'show']);
@@ -81,13 +80,20 @@ Route::prefix('v1')->group(function () {
         Route::post('/generate/payment-wo/{id}', [WorkOrderController::class, 'generatePaymentWO']);
         Route::get('/show/billing/{id}', [WorkOrderController::class, 'showBilling']);
 
-        // Billing
+        // =========================== Billing ============================
+        // Billing Monthly
         Route::get('/list-billings/{id}', [BillingController::class, 'listBillings']);
         Route::get('/get-billing/{id}', [BillingController::class, 'showBilling']);
+
+        // Billing Ticket
+        Route::get('/payable-tickets/{id}', [OpenTicketController::class, 'payableTickets']);
+        Route::get('/payable-ticket/billing/{id}', [OpenTicketController::class, 'payableTicketShow']);
+        Route::post('/payable-ticket/generate-payment/{id}', [OpenTicketController::class, 'GeneratePayment']);
+        // ----------------------------------------------------------------
         Route::post('/create-transaction/{id}', [BillingController::class, 'generateTransaction']);
         Route::get('/list-banks', [BillingController::class, 'listBank']); // List all available bank
-
         Route::post('get/admin-fee', [BillingController::class, 'adminFee']);
+        // ========================= End Billing ==========================
 
         // Inspection Eng
         Route::get('/inspectioneng', [InspectionController::class, 'checklistengineering']);
@@ -168,10 +174,11 @@ Route::prefix('v1')->group(function () {
         Route::get('/history-tools/{wrID}/{id}', [ToolsController::class, 'historyTools']);
 
         // Reservation
+        Route::get('/reservation/rooms', [ReservationController::class, 'RoomRSV']);
+        Route::get('/reservation/types', [ReservationController::class, 'JenisAcara']);
+        Route::post('/reservation', [ReservationController::class, 'store']);
         Route::get('/reservations', [ReservationController::class, 'index']);
         Route::get('/reservation/{id}', [ReservationController::class, 'show']);
-        Route::post('/reservation/approve/{id}', [ReservationController::class, 'approve']);
-        Route::post('/reservation/reject/{id}', [ReservationController::class, 'reject']);
-        Route::get('/reservation/show-billing/{id}', [ReservationController::class, 'showBilling']);
+        Route::post('/reservation/approve2/{id}', [ReservationController::class, 'approve2']);
     });
 });

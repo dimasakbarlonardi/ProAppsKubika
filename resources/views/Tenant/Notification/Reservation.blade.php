@@ -8,7 +8,7 @@
 
 @section('content')
     <div class="card">
-       
+
         <div class="card-body bg-light">
             <div class="row">
                 <div class="col-8">
@@ -70,7 +70,7 @@
                                 <div class="mb-3">
                                     <div class="row">
                                         <div class="col-6">
-                                            <label class="mb-1">Jumlah deposit</label>
+                                            <label class="mb-1">Jumlah pembayaran</label>
                                             <div class="input-group flex-nowrap">
                                                 <span class="input-group-text" id="addon-wrapping">Rp</span>
                                                 <input style="text-align: right" class="form-control"
