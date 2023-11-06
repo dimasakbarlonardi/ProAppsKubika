@@ -17,6 +17,8 @@ use App\Helpers\HelpNotifikasi;
 use App\Helpers\ResponseFormatter;
 use Illuminate\Support\Facades\DB;
 use App\Http\Controllers\Controller;
+use App\Models\Approve;
+use App\Models\User;
 use stdClass;
 
 class WorkOrderController extends Controller
@@ -99,62 +101,194 @@ class WorkOrderController extends Controller
         );
     }
 
-    public function createTransaction($wo)
+    public function approve2($id, Request $request)
     {
-        $connSystem = ConnectionDB::setConnection(new System());
-        $connTransaction = ConnectionDB::setConnection(new CashReceipt());
+        $connWO = ConnectionDB::setConnection(new WorkOrder());
+        $connApprove = ConnectionDB::setConnection(new Approve());
+        $connUser = ConnectionDB::setConnection(new User());
 
-        $system = $connSystem->find(1);
-        $request = Request();
-        $user = $request->user();
+        $wo = $connWO->find($id);
+        $user = $connUser->where('login_user', $request->user()->email)->first();
 
-        $count = $system->sequence_no_cash_receiptment + 1;
-        $countINV = $system->sequence_no_invoice + 1;
+        if ($wo->id_bayarnon == 0) {
+            $dataNotif = [
+                'models' => 'WorkOrderM',
+                'notif_title' => $wo->no_work_order,
+                'id_data' => $wo->id,
+                'sender' => $user->id_user,
+                'division_receiver' => 2,
+                'notif_message' => 'Work order telah di terima, terima kasih..',
+                'receiver' => null,
+            ];
+        } else {
+            $dataNotif = [
+                'models' => 'WorkOrderM',
+                'notif_title' => $wo->no_work_order,
+                'id_data' => $wo->id,
+                'sender' => $user->id_user,
+                'division_receiver' => null,
+                'notif_message' => 'Work order telah di terima, terima kasih..',
+                'receiver' => $connApprove->find(3)->approval_4,
+            ];
+        }
 
-        $no_cr = $system->kode_unik_perusahaan . '/' .
-            $system->kode_unik_cash_receipt . '/' .
-            Carbon::now()->format('m') . Carbon::now()->format('Y') . '/' .
-            sprintf("%06d", $count);
+        broadcast(new HelloEvent($dataNotif));
 
-        $no_inv = $system->kode_unik_perusahaan . '/' .
-            $system->kode_unik_invoice . '/' .
-            Carbon::now()->format('m') . Carbon::now()->format('Y') . '/' .
-            sprintf("%06d", $countINV);
+        $wo->status_wo = 'APPROVED';
+        $wo->sign_approve_2 = 1;
+        $wo->date_approve_2 = Carbon::now();
+        $wo->save();
 
-        $order_id = $user->id_site . '-' . $no_cr;
+        return ResponseFormatter::success(
+            $wo,
+            'Success get WO'
+        );
+    }
+
+    public function approveBM($id, Request $request)
+    {
+        $connApprove = ConnectionDB::setConnection(new Approve());
+        $connWO = ConnectionDB::setConnection(new WorkOrder());
+        $connUser = ConnectionDB::setConnection(new User());
+
+        $wo = $connWO->find($id);
+        $user = $connUser->where('login_user', $request->user()->email)->first();
+
+        if ($wo->id_bayarnon == 0) {
+            $dataNotif = [
+                'models' => 'WorkOrderM',
+                'notif_title' => $wo->no_work_order,
+                'id_data' => $wo->id,
+                'sender' => $user->id_user,
+                'division_receiver' => $wo->Ticket->WorkRequest->id_work_relation,
+                'notif_message' => 'Work Order sudah diapprove, selamat bekerja',
+                'receiver' => null,
+            ];
+        } else {
+            $dataNotif = [
+                'models' => 'WorkOrderM',
+                'notif_title' => $wo->no_work_order,
+                'id_data' => $wo->id,
+                'sender' => $user->id_user,
+                'division_receiver' => null,
+                'notif_message' => 'Work order telah di terima, terima kasih..',
+                'receiver' => $connApprove->find(3)->approval_3,
+            ];
+        }
+
+        $wo->status_wo = 'BM APPROVED';
+        $wo->save();
+
+        broadcast(new HelloEvent($dataNotif));
+
+        return ResponseFormatter::success(
+            $wo,
+            'Success get WO'
+        );
+    }
+
+    public function workDone($id, Request $request)
+    {
+        $connWO = ConnectionDB::setConnection(new WorkOrder());
+        $connUser = ConnectionDB::setConnection(new User());
+
+        $user = $connUser->where('login_user', $request->user()->email)->first();
+        $wo = $connWO->find($id);
+
+        $wo->status_wo = 'WORK DONE';
+        $wo->save();
+
+        $dataNotif = [
+            'models' => 'WorkOrder',
+            'notif_title' => $wo->no_work_order,
+            'id_data' => $wo->id,
+            'sender' => $user->id_user,
+            'division_receiver' => null,
+            'notif_message' => 'Work Order sudah dikerjakan, mohon periksa kembali pekerjaan kami',
+            'receiver' => $wo->WorkRequest->Ticket->Tenant->User->id_user,
+        ];
+
+        broadcast(new HelloEvent($dataNotif));
+
+        return ResponseFormatter::success(
+            $wo,
+            'Success update WO'
+        );
+    }
+
+    public function done($id, Request $request)
+    {
+        $connWO = ConnectionDB::setConnection(new WorkOrder());
+
+        $wo = $connWO->find($id);
 
         try {
             DB::beginTransaction();
 
-            $createTransaction = $connTransaction;
-            $createTransaction->order_id = $order_id;
-            $createTransaction->id_site = $user->id_site;
-            $createTransaction->no_reff = $wo->no_work_order;
-            $createTransaction->no_draft_cr = $no_cr;
-            $createTransaction->ket_pembayaran = 'WO/' . $wo->Ticket->Tenant->User->id_user . '/' . $wo->Ticket->Unit->nama_unit;
-            $createTransaction->sub_total = $wo->jumlah_bayar_wo;
-            $createTransaction->no_invoice = $no_inv;
-            $createTransaction->transaction_status = 'PENDING';
-            $createTransaction->id_user = $wo->Ticket->Tenant->User->id_user;
-            $createTransaction->transaction_type = 'WorkOrder';
-            $createTransaction->save();
+            $wo->status_wo = 'DONE';
+            $wo->save();
 
-            $system->sequence_no_cash_receiptment = $count;
-            $system->sequence_no_invoice = $countINV;
+            $wo->Ticket->status_request = 'DONE';
+            $wo->Ticket->save();
 
-            $createTransaction->WorkOrder->Ticket->no_invoice = $no_inv;
-            $createTransaction->WorkOrder->Ticket->save();
-
-            $system->save();
+            $wo->WorkRequest->status_request = 'DONE';
+            $wo->WorkRequest->save();
 
             DB::commit();
-        } catch (Throwable $e) {
-            dd($e);
+        } catch (Exception $e) {
             DB::rollBack();
-
+            dd($e);
             return redirect()->back();
         }
 
-        return $createTransaction;
+        $dataNotif = [
+            'models' => 'WorkOrderM',
+            'notif_title' => $wo->no_work_order,
+            'id_data' => $wo->id,
+            'sender' => $wo->Ticket->Tenant->User->id_user,
+            'division_receiver' => 2,
+            'notif_message' => 'Work order telah selesai, terima kasih..',
+            'receiver' => null,
+        ];
+
+        broadcast(new HelloEvent($dataNotif));
+
+        return ResponseFormatter::success(
+            $wo,
+            'Success update WO'
+        );
+    }
+
+    public function complete($id, Request $request)
+    {
+        $connWO = ConnectionDB::setConnection(new WorkOrder());
+
+        $wo = $connWO->find($id);
+
+        try {
+            DB::beginTransaction();
+
+            $wo->status_wo = 'COMPLETE';
+            $wo->sign_approve_4 = 1;
+            $wo->date_approve_4 = Carbon::now();
+            $wo->save();
+
+            $wo->Ticket->status_request = 'COMPLETE';
+            $wo->Ticket->save();
+
+            $wo->WorkRequest->status_request = 'COMPLETE';
+            $wo->WorkRequest->save();
+
+            DB::commit();
+        } catch (Exception $e) {
+            DB::rollBack();
+            dd($e);
+            return redirect()->back();
+        }
+
+        return ResponseFormatter::success(
+            $wo,
+            'Success complete WO'
+        );
     }
 }

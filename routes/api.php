@@ -18,6 +18,7 @@ use App\Http\Controllers\API\RoomController;
 use App\Http\Controllers\API\ToolsController;
 use App\Http\Controllers\API\VisitorController;
 use App\Http\Controllers\API\WorkOrderController;
+use App\Http\Controllers\API\WorkRequestController;
 use App\Http\Controllers\PaymentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -73,10 +74,19 @@ Route::prefix('v1')->group(function () {
         Route::post('/open-ticket', [OpenTicketController::class, 'store']);
         Route::get('/open-ticket/{id}', [OpenTicketController::class, 'show']);
 
+        // Work Request
+        Route::post('/on-work/work-request/{id}', [WorkRequestController::class, 'OnWork']);
+        Route::post('/work-done/work-request/{id}', [WorkRequestController::class, 'WorkDone']);
+
         // Work Order
         Route::get('/work-order/{id}', [WorkOrderController::class, 'show']);
         Route::post('/accept/work-order/{id}', [WorkOrderController::class, 'acceptWO']);
         Route::post('/reject/work-order/{id}', [WorkOrderController::class, 'rejectWO']);
+        Route::post('/approve2/work-order/{id}', [WorkOrderController::class, 'approve2']);
+        Route::post('/approve-bm/work-order/{id}', [WorkOrderController::class, 'approveBM']);
+        Route::post('/work-done/work-order/{id}', [WorkOrderController::class, 'workDone']);
+        Route::post('/done/work-order/{id}', [WorkOrderController::class, 'done']);
+        Route::post('/complete/work-order/{id}', [WorkOrderController::class, 'complete']);
 
         // =========================== Billing ============================
         // Billing Monthly
