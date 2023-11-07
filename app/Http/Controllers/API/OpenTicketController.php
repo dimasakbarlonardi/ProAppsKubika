@@ -51,6 +51,8 @@ class OpenTicketController extends Controller
             ->get();
 
         foreach ($tickets as $ticket) {
+            $ticket['model'] = 'Complaint';
+
             if (isset($ticket->WorkRequest)) {
                 $ticket['model'] = 'WorkRequest';
             }
