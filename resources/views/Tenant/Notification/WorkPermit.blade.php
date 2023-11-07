@@ -57,10 +57,11 @@
                                         <div class="row gx-card mx-0 bg-200 text-900 fs--1 fw-semi-bold">
                                             <div class="col-9 col-md-8 py-2">Personil</div>
                                         </div>
-                                        @if($personels)
+                                        @if ($personels)
                                             @foreach ($personels as $personel)
                                                 <div class="gx-card mx-0 border-bottom border-200">
-                                                    <div class='row gx-card mx-0 align-items-center border-bottom border-200'>
+                                                    <div
+                                                        class='row gx-card mx-0 align-items-center border-bottom border-200'>
                                                         <div class='py-3'>
                                                             <div class='d-flex align-items-center'>
                                                                 <div class='flex-1'>
@@ -85,10 +86,11 @@
                                         <div class="row gx-card mx-0 bg-200 text-900 fs--1 fw-semi-bold">
                                             <div class="col-9 col-md-8 py-2">Nama Alat</div>
                                         </div>
-                                        @if($alats)
+                                        @if ($alats)
                                             @foreach ($alats as $alat)
                                                 <div class="gx-card mx-0 border-bottom border-200">
-                                                    <div class='row gx-card mx-0 align-items-center border-bottom border-200'>
+                                                    <div
+                                                        class='row gx-card mx-0 align-items-center border-bottom border-200'>
                                                         <div class='py-3'>
                                                             <div class='d-flex align-items-center'>
                                                                 <div class='flex-1'>
@@ -113,10 +115,11 @@
                                         <div class="row gx-card mx-0 bg-200 text-900 fs--1 fw-semi-bold">
                                             <div class="col-9 col-md-8 py-2">Material</div>
                                         </div>
-                                        @if($materials)
+                                        @if ($materials)
                                             @foreach ($materials as $material)
                                                 <div class="gx-card mx-0 border-bottom border-200">
-                                                    <div class='row gx-card mx-0 align-items-center border-bottom border-200'>
+                                                    <div
+                                                        class='row gx-card mx-0 align-items-center border-bottom border-200'>
                                                         <div class='py-3'>
                                                             <div class='d-flex align-items-center'>
                                                                 <div class='flex-1'>
@@ -146,8 +149,7 @@
                         </div>
                         <div class="card-body">
                             <div class="mb-4 mt-n2"><label class="mb-1">Status</label>
-                                <input type="text" class="form-control" disabled
-                                    value="{{ $permit->status_request }}">
+                                <input type="text" class="form-control" disabled value="{{ $permit->status_request }}">
                             </div>
                             <div class="mb-4 mt-n2"><label class="mb-1">Jenis Pekerjaan</label>
                                 <input type="text" class="form-control" disabled
@@ -170,8 +172,8 @@
                                     class="form-control" name="nama_project" required disabled>
                             </div>
                             <div class="mb-4 mt-n2"><label class="mb-1">Jumlah Supervisi</label>
-                                <input type="text" value="{{ Rupiah($permit->jumlah_supervisi) }}" class="form-control"
-                                    name="jumlah_deposit" required disabled>
+                                <input type="text" value="{{ Rupiah($permit->jumlah_supervisi) }}"
+                                    class="form-control" name="jumlah_deposit" required disabled>
                             </div>
                             <div class="mb-4 mt-n2"><label class="mb-1">Jumlah Deposit</label>
                                 <input type="text" value="{{ Rupiah($permit->jumlah_deposit) }}" class="form-control"
@@ -240,10 +242,11 @@
             </div>
 
             @if (
-                $permit->CashReceipt &&
+                !$permit->CashReceipt &&
                     $permit->Ticket->Tenant->User->id_user == Request::session()->get('user_id') &&
-                    $permit->CashReceipt->transaction_status == 'PENDING')
-                <form class="mt-5" action="{{ route('generatePaymentPO', $permit->CashReceipt->id) }}" method="post" id="generatePaymentPO">
+                    $permit->CashReceipt->payment_tupe)
+                <form class="mt-5" action="{{ route('generatePaymentPO', $permit->CashReceipt->id) }}" method="post"
+                    id="generatePaymentPO">
                     @csrf
                     <div class="row g-3 mb-3">
                         <div class="col-lg-8">

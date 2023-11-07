@@ -13,6 +13,7 @@ use App\Http\Controllers\API\UnitController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\InspectionController;
 use App\Http\Controllers\API\PackageController;
+use App\Http\Controllers\API\RequestPermitController;
 use App\Http\Controllers\API\ReservationController;
 use App\Http\Controllers\API\RoomController;
 use App\Http\Controllers\API\ToolsController;
@@ -73,6 +74,11 @@ Route::prefix('v1')->group(function () {
         Route::get('/tenant-unit', [UnitController::class, 'tenantUnit']);
         Route::post('/open-ticket', [OpenTicketController::class, 'store']);
         Route::get('/open-ticket/{id}', [OpenTicketController::class, 'show']);
+
+        Route::get('/permit/jenis-pekerjaan', [RequestPermitController::class, 'jenisPekerjaan']);
+        Route::post('/permit', [RequestPermitController::class, 'store']);
+        Route::post('/permit/accept/{id}', [RequestPermitController::class, 'accept']);
+        Route::post('/permit/approve2/{id}', [RequestPermitController::class, 'approve2']);
 
         // Work Request
         Route::post('/on-work/work-request/{id}', [WorkRequestController::class, 'OnWork']);

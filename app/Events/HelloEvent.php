@@ -108,7 +108,7 @@ class HelloEvent implements ShouldBroadcast
     {
         $mobile_notif = new FcmNotification();
         $mobile_notif->setPayload([
-            'title' => $sender->nama_user,
+            'title' => $sender ? $sender->nama_user : 'Proapps',
             'body' => $dataNotif['notif_message'] . ' ' .  $dataNotif['notif_title'],
             'token' => $userReceiver->fcm_token,
         ])->send();

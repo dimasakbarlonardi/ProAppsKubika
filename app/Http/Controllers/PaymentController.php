@@ -81,6 +81,7 @@ class PaymentController extends Controller
                         $cr->WorkPermit->status_bayar = 'PAID';
                         $cr->WorkPermit->sign_approval_5 = Carbon::now();
                         $cr->WorkPermit->save();
+                        $cr->WorkPermit->generateBarcode();
 
                         $approve = $approve->find(5);
 
@@ -92,6 +93,19 @@ class PaymentController extends Controller
                             'division_receiver' => 6,
                             'notif_message' => 'Pembayaran Work Permit berhasil',
                             'receiver' => $approve->approval_4,
+                            'connection' => $site->db_name
+                        ];
+
+                        broadcast(new HelloEvent($dataNotif));
+
+                        $dataNotif = [
+                            'models' => 'IzinKerja',
+                            'notif_title' => $cr->WorkPermit->no_work_permit,
+                            'id_data' => $cr->WorkPermit->id,
+                            'sender' => null,
+                            'division_receiver' => 1,
+                            'notif_message' => 'Pembayaran diterima, berikut surat izin kerja permit',
+                            'receiver' => $cr->WorkPermit->Ticket->Tenant->User->id_user,
                             'connection' => $site->db_name
                         ];
 

@@ -12,12 +12,14 @@ use App\Models\DetailGIGO;
 use App\Models\JenisRequest;
 use App\Models\OpenTicket;
 use App\Models\RequestGIGO;
+use App\Models\RequestPermit;
 use App\Models\Reservation;
 use App\Models\Site;
 use App\Models\System;
 use App\Models\Unit;
 use App\Models\User;
 use App\Models\WorkOrder;
+use App\Models\WorkPermit;
 use App\Models\WorkRequest;
 use Carbon\Carbon;
 use File;
@@ -186,6 +188,8 @@ class OpenTicketController extends Controller
         $connReservation = ConnectionDB::setConnection(new Reservation());
         $connWO = ConnectionDB::setConnection(new WorkOrder());
         $connWR = ConnectionDB::setConnection(new WorkRequest());
+        $connRP = ConnectionDB::setConnection(new RequestPermit());
+        $connWP = ConnectionDB::setConnection(new WorkPermit());
 
         $ticket = $connRequest->find($id);
 
@@ -197,11 +201,24 @@ class OpenTicketController extends Controller
 
             if ($wo) {
                 $ticket['model'] = 'WorkOrder';
-                $ticket->request = $wo;
+                $item->request = $wo;
             } else {
                 $wr = $connWR->where('no_tiket', $ticket->no_tiket)->first();
                 $ticket['model'] = 'WorkRequest';
-                $ticket->request = $wr;
+                $item->request = $wr;
+            }
+        }
+
+        if ($ticket->id_jenis_request == 2) {
+            $rp = $connRP->where('no_tiket', $ticket->no_tiket)->first();
+            $wp = $connWP->where('no_tiket', $ticket->no_tiket)->first();
+
+            if ($wp) {
+                $ticket['model'] = 'WorkPermit';
+                $item->request = $wp;
+            } else {
+                $ticket['model'] = 'RequestPermit';
+                $item->request = $rp;
             }
         }
 
@@ -210,7 +227,7 @@ class OpenTicketController extends Controller
 
             $ticket['model'] = 'Reservation';
 
-            $ticket->request = $rsv;
+            $item->request = $rsv;
         }
 
         if ($ticket->id_jenis_request == 5) {
@@ -221,12 +238,11 @@ class OpenTicketController extends Controller
             $ticket['model'] = 'GIGO';
             $request['detail'] = $detail_gigo;
 
-            $ticket->request = $request;
+            $item->request = $request;
         }
 
         $ticket->deskripsi_request = strip_tags($ticket->deskripsi_request);
         $ticket->deskripsi_respon = strip_tags($ticket->deskripsi_respon);
-
 
         return ResponseFormatter::success(
             $item,
@@ -260,10 +276,13 @@ class OpenTicketController extends Controller
 
         switch ($cr->transaction_type) {
             case ('Reservation'):
-                $object = $this->ReservationInvoice($cr, $site);
+                $object = $this->ReservationInvoice($cr);
                 break;
             case ('WorkOrder'):
-                $object = $this->WorkOrderInvoice($cr, $site);
+                $object = $this->WorkOrderInvoice($cr);
+                break;
+            case ('WorkPermit'):
+                $object = $this->WorkPermitInvoice($cr);
                 break;
         }
 
@@ -287,7 +306,23 @@ class OpenTicketController extends Controller
         );
     }
 
-    function WorkOrderInvoice($cr, $site)
+    function WorkPermitInvoice($cr)
+    {
+        $object = new stdClass();
+
+        $object->id = $cr->id;
+        $object->work_order_id = $cr->WorkPermit->id;
+        $object->tenant_name = $cr->WorkPermit->Ticket->Tenant->nama_tenant;
+        $object->tower = $cr->WorkPermit->Ticket->Unit->Tower->nama_tower;
+        $object->tower = $cr->WorkPermit->Ticket->Unit->nama_unit;
+        $object->tenant_email = $cr->WorkPermit->Ticket->Tenant->email_tenant;
+        $object->phone_number_tenant = $cr->WorkPermit->Ticket->Tenant->no_telp_tenant;
+        $object->total = $cr->sub_total;
+
+        return $object;
+    }
+
+    function WorkOrderInvoice($cr)
     {
         $object = new stdClass();
 
@@ -314,7 +349,7 @@ class OpenTicketController extends Controller
         return $object;
     }
 
-    function ReservationInvoice($cr, $site)
+    function ReservationInvoice($cr)
     {
         $object = new stdClass();
 

@@ -213,6 +213,7 @@
                         'error'
                     )
                 } else {
+                    console.log(personels, alats, materials);
                     $.ajax({
                         url: '/admin/request-permits',
                         type: 'POST',
@@ -277,7 +278,6 @@
                         'error'
                     )
                 } else {
-                    console.log(gigo, goods.length);
                     $.ajax({
                         url: '/admin/gigo',
                         type: 'POST',

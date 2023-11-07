@@ -161,6 +161,9 @@ Route::post('/payments/midtrans-notifications', [PaymentController::class, 'rece
 Route::get('/delete/midtrans', [PaymentController::class, 'delete']);
 Route::get('/check/midtrans', [PaymentController::class, 'check']);
 
+// Surat izin kerja
+Route::get('/work-permit/latter/{id}', [WorkPermitController::class, 'printWP']);
+
 //dev
 Route::get('/send-event', function () { });
 Route::get('/notification', [AgamaController::class, 'notification']);
