@@ -50,6 +50,27 @@ class OpenTicketController extends Controller
         $tickets = $connOpenTicket->where('id_tenant', $user->Tenant->id_tenant)
             ->get();
 
+        foreach ($tickets as $ticket) {
+            if (isset($ticket->WorkRequest)) {
+                $ticket['model'] = 'WorkRequest';
+            }
+            if ($ticket->RequestReservation) {
+                $ticket['model'] = 'Reservation';
+            }
+            if ($ticket->WorkOrder) {
+                $ticket['model'] = 'WorkOrder';
+            }
+            if ($ticket->RequestPermit) {
+                $ticket['model'] = 'RequestPermit';
+            }
+            if ($ticket->RequestGIGO) {
+                $ticket['model'] = 'GIGO';
+            }
+            if ($ticket->WorkPermit) {
+                $ticket['model'] = 'GIGO';
+            }
+        }
+
         return ResponseFormatter::success(
             $tickets,
             'Berhasil mengambil semua tickets'
@@ -344,7 +365,7 @@ class OpenTicketController extends Controller
                 $payment['transaction_details']['order_id'] = $cr->order_id;
                 $payment['transaction_details']['gross_amount'] = round($gross_amount);
                 $payment['bank_transfer']['bank'] = $bank;
-               
+
                 $response = $client->request('POST', 'https://api.sandbox.midtrans.com/v2/charge', [
                     'body' => json_encode($payment),
                     'headers' => [
