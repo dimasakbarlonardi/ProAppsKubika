@@ -44,7 +44,7 @@ class WorkPermit extends Model
             ->eyeColor(1, 39, 178, 155, 0, 0, 0)
             ->eyeColor(2, 39, 178, 155, 0, 0, 0)
             ->errorCorrection('H')
-            ->generate(url('') . '/work-permit/latter/' . $this->id);
+            ->generate(url('') . '/work-permit/letter/' . $this->id);
 
         $outputWP = '/public/' . $this->id_site . '/img/qr-code/work-permit/' . $this->id . '-barcode_wp.png';
         $barcode = '/storage/' . $this->id_site . '/img/qr-code/work-permit/' . $this->id . '-barcode_wp.png';

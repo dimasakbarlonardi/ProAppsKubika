@@ -221,6 +221,7 @@
                     @endif
                     @if (
                         $permit->sign_approval_4 &&
+                            $permit->status_request != 'DONE' &&
                             $permit->status_request != 'WORK DONE' &&
                             $permit->status_request != 'COMPLETE' &&
                             $permit->id_work_relation == Request::session()->get('work_relation_id'))
@@ -229,6 +230,15 @@
                                 class="btn btn-warning w-100 mb-3">Print</a>
                             <button type="button" class="btn btn-primary w-100"
                                 onclick="workDoneWP({{ $permit->id }})">Pekerjaan Selesai</button>
+                        </div>
+                    @endif
+                    @if (
+                        !$permit->BAPP &&
+                            $permit->id_work_relation == Request::session()->get('work_relation_id') &&
+                            $permit->status_request != 'COMPLETE')
+                        <div class="card-footer border-top border-200 py-x1">
+                            <a href="{{ route('bapp.create', ['id_wp' => $permit->id]) }}" target="_blank"
+                                class="btn btn-info w-100 mb-3">Buat BAPP</a>
                         </div>
                     @endif
                     @if (Request::session()->get('user_id') == $permit->Ticket->Tenant->User->id_user &&
@@ -242,9 +252,9 @@
             </div>
 
             @if (
-                !$permit->CashReceipt &&
+                $permit->CashReceipt &&
                     $permit->Ticket->Tenant->User->id_user == Request::session()->get('user_id') &&
-                    $permit->CashReceipt->payment_tupe)
+                    !$permit->CashReceipt->payment_type)
                 <form class="mt-5" action="{{ route('generatePaymentPO', $permit->CashReceipt->id) }}" method="post"
                     id="generatePaymentPO">
                     @csrf
@@ -340,7 +350,7 @@
                                 <div class="card-body bg-light">
                                     <div class="d-flex justify-content-between fs--1 mb-1">
                                         <p class="mb-0">Subtotal</p>
-                                        <span>{{ rupiah($permit->jumlah_deposit) }}</span>
+                                        <span>{{ rupiah($permit->jumlah_deposit + $permit->jumlah_supervisi) }}</span>
                                     </div>
                                     <div class="d-flex justify-content-between fs--1 mb-1 text-success">
                                         <p class="mb-0">Tax</p><span>Rp 0</span>

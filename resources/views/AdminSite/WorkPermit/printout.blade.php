@@ -63,7 +63,7 @@
                         </div>
                         <div class="col text-center mt-3">
                             <h3 class="mb-3">SURAT IZIN KERJA</h3>
-                            <h4>Park Royale</h4>
+                            <h4>{{ $setting->company_name ? $setting->company_name : 'Proapps' }}</h4>
                             <h6>No. #{{ $wp->no_work_permit }}</h6>
                         </div>
                         <div class="col text-sm-end mt-3 mt-sm-0">

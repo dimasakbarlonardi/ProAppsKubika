@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\HelloEvent;
 use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
 use App\Models\Approve;
@@ -10,7 +11,7 @@ use App\Models\DetailBAPP;
 use App\Models\EngBAPP;
 use App\Models\Notifikasi;
 use App\Models\OpenTicket;
-use App\Models\RequestPermit; 
+use App\Models\RequestPermit;
 use App\Models\System;
 use App\Models\WorkPermit;
 use Illuminate\Http\Request;
@@ -69,15 +70,17 @@ class BAPPController extends Controller
             Carbon::now()->format('m') . Carbon::now()->format('Y') . '/' .
             sprintf("%06d", $count);
 
-        foreach (json_decode($request->detail_bapp) as $detail) {
-            $connDetailBAPP->create([
-                'no_bapp' => $no_bapp,
-                'name' => $detail->name,
-                'catatan' => $detail->catatan
-            ]);
+        if($request->detail_bapp) {
+            foreach (json_decode($request->detail_bapp) as $detail) {
+                $connDetailBAPP->create([
+                    'no_bapp' => $no_bapp,
+                    'name' => $detail->name,
+                    'catatan' => $detail->catatan
+                ]);
+            }
         }
 
-        $connBAPP->create([
+        $bapp = $connBAPP->create([
             'no_tiket' => $wp->no_tiket,
             'no_request_permit' => $wp->no_request_permit,
             'no_work_permit' => $request->no_work_permit,
@@ -92,6 +95,18 @@ class BAPPController extends Controller
             'status_pengembalian' => 0
         ]);
 
+        $dataNotif = [
+            'models' => 'BAPP',
+            'notif_title' => $bapp->no_bapp,
+            'id_data' => $bapp->id,
+            'sender' => $request->session()->get('user_id'),
+            'division_receiver' => $bapp->jumlah_potongan > 0  ? 6 : null,
+            'notif_message' => 'BAPP sudah dibuat, terima kasih..',
+            'receiver' => $bapp->Ticket->Tenant->User->id_user,
+        ];
+
+        broadcast(new HelloEvent($dataNotif));
+
         $system->sequence_no_bapp = $count;
         $system->save();
 
@@ -103,29 +118,22 @@ class BAPPController extends Controller
     public function doneTF(Request $request, $id)
     {
         $connBAPP = ConnectionDB::setConnection(new BAPP());
-        $connNotif = ConnectionDB::setConnection(new Notifikasi());
 
         $bapp = $connBAPP->find($id);
         $bapp->status_pengembalian = 1;
         $bapp->save();
-        $user = $request->session()->get('user');
 
-        $checkNotif = $connNotif->where('models', 'BAPP')
-            ->where('is_read', 0)
-            ->where('id_data', $id)
-            ->first();
+        $dataNotif = [
+            'models' => 'BAPP',
+            'notif_title' => $bapp->no_bapp,
+            'id_data' => $bapp->id,
+            'sender' => $request->session()->get('user_id'),
+            'division_receiver' => null,
+            'notif_message' => 'Deposit sudah dikembalikan, mohon periksa kembali. Terima kasih..',
+            'receiver' => $bapp->Ticket->Tenant->User->id_user,
+        ];
 
-        if (!$checkNotif) {
-            $connNotif->create([
-                'receiver' => $bapp->Ticket->Tenant->User->id_user,
-                'sender' => $user->id_user,
-                'is_read' => 0,
-                'models' => 'BAPP',
-                'id_data' => $id,
-                'notif_title' => $bapp->no_bapp,
-                'notif_message' => 'Deposit sudah dikembalikan, mohon periksa kembali dan approve'
-            ]);
-        }
+        broadcast(new HelloEvent($dataNotif));
 
         Alert::success('Berhasil', 'Berhasil mengupdate BAPP');
 
@@ -192,5 +200,15 @@ class BAPPController extends Controller
         Alert::success('Berhasil', 'Berhasil mengupdate BAPP');
 
         return redirect()->back();
+    }
+
+    public function show($id, Request $request)
+    {
+        $connBAPP = ConnectionDB::setConnection(new BAPP());
+
+        $data['bapp'] = $connBAPP->find($id);
+        $data['user'] = $request->session()->get('user');
+
+        return view('AdminSite.BAPP.show', $data);
     }
 }

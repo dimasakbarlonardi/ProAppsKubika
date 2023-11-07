@@ -79,6 +79,10 @@ Route::prefix('v1')->group(function () {
         Route::post('/permit', [RequestPermitController::class, 'store']);
         Route::post('/permit/accept/{id}', [RequestPermitController::class, 'accept']);
         Route::post('/permit/approve2/{id}', [RequestPermitController::class, 'approve2']);
+        Route::post('/permit/approve4/{id}', [RequestPermitController::class, 'approve4']);
+        Route::post('/permit/done/{id}', [RequestPermitController::class, 'done']);
+        Route::post('/permit/done-deposit/{id}', [RequestPermitController::class, 'doneDeposit']);
+        Route::post('/permit/complete/{id}', [RequestPermitController::class, 'complete']);
 
         // Work Request
         Route::post('/on-work/work-request/{id}', [WorkRequestController::class, 'OnWork']);

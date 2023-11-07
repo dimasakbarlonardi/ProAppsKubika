@@ -14,6 +14,7 @@ use App\Models\RequestPermitDetail;
 use App\Models\System;
 use App\Models\Tenant;
 use App\Models\Unit;
+use App\Models\User;
 use App\Models\WorkPermit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -187,10 +188,13 @@ class RequestPermitController extends Controller
     {
         $connApprove = ConnectionDB::setConnection(new Approve());
         $connWP = ConnectionDB::setConnection(new WorkPermit());
+        $connUser = ConnectionDB::setConnection(new User());
+        $request = Request();
 
         $wp = $connWP->find($id);
         $wp->sign_approval_2 = Carbon::now();
         $approve = $connApprove->find(5);
+        $user = $connUser->where('login_user', $request->user()->email)->first();
 
         $wp->save();
 
@@ -198,7 +202,7 @@ class RequestPermitController extends Controller
             'models' => 'WorkPermit',
             'notif_title' => $wp->no_work_permit,
             'id_data' => $wp->id,
-            'sender' => $wp->Ticket->Tenant->User->id_user,
+            'sender' => $user->id_user,
             'division_receiver' => null,
             'notif_message' => 'Work Permit diterima, mohon diproses lebih lanjut',
             'receiver' => $approve->approval_3,
@@ -210,5 +214,137 @@ class RequestPermitController extends Controller
             $wp,
             'Success approve permit'
         );
+    }
+
+    public function approve4($id)
+    {
+        $connWP = ConnectionDB::setConnection(new WorkPermit());
+        $connUser = ConnectionDB::setConnection(new User());
+
+        $request = Request();
+        $user = $connUser->where('login_user', $request->user()->email)->first();
+
+        $wp = $connWP->find($id);
+
+        $wp->sign_approval_4 = Carbon::now();
+        $wp->generateBarcode();
+        $wp->save();
+
+        $dataNotif = [
+            'models' => 'WorkPermit',
+            'notif_title' => $wp->no_work_permit,
+            'id_data' => $id,
+            'sender' => $user->id_user,
+            'division_receiver' => $wp->id_work_relation,
+            'notif_message' => 'Work Permit diterima, selamat bekerja',
+            'receiver' => null,
+        ];
+
+        broadcast(new HelloEvent($dataNotif));
+
+        $dataNotifIzinKerja = [
+            'models' => 'IzinKerja',
+            'notif_title' => $wp->no_work_permit,
+            'id_data' => $wp->id,
+            'sender' => $user->id_user,
+            'division_receiver' => 1,
+            'notif_message' => 'Work Permit diterima, berikut surat izin kerja permit',
+            'receiver' => $wp->Ticket->Tenant->User->id_user
+        ];
+
+        broadcast(new HelloEvent($dataNotifIzinKerja));
+
+        return ResponseFormatter::success(
+            $wp,
+            'Success approve permit'
+        );
+    }
+
+    public function done($id)
+    {
+        $connWP = ConnectionDB::setConnection(new WorkPermit());
+        $connUser = ConnectionDB::setConnection(new User());
+
+        $request = Request();
+
+        $user = $connUser->where('login_user', $request->user()->email)->first();
+        $wp = $connWP->find($id);
+
+        $wp->status_request = 'DONE';
+        $wp->save();
+        $wp->RequestPermit->status_request = 'DONE';
+        $wp->RequestPermit->save();
+        $wp->Ticket->status_request = 'DONE';
+        $wp->Ticket->save();
+
+        $dataNotif = [
+            'models' => 'WorkPermit',
+            'notif_title' => $wp->no_work_permit,
+            'id_data' => $id,
+            'sender' => $user->id_user,
+            'division_receiver' => 1,
+            'notif_message' => 'Work Permit telah selesai, terima kasih.',
+            'receiver' => null,
+        ];
+
+        broadcast(new HelloEvent($dataNotif));
+
+        return response()->json(['status' => 'ok']);
+    }
+
+    public function doneDeposit($id)
+    {
+        $connWP = ConnectionDB::setConnection(new WorkPermit());
+
+        $wp = $connWP->find($id);
+
+        $bapp = $wp->BAPP;
+        $bapp->sign_approval_1 = Carbon::now();
+        $bapp->save();
+        $bapp->RequestPermit->status_request = 'DONE';
+        $bapp->RequestPermit->save();
+        $bapp->Ticket->status_request = 'DONE';
+        $bapp->Ticket->save();
+
+        $dataNotif = [
+            'models' => 'BAPP',
+            'notif_title' => $bapp->no_bapp,
+            'id_data' => $bapp->id,
+            'sender' => $wp->Ticket->Tenant->User->id_user,
+            'division_receiver' => 6,
+            'notif_message' => 'Deposit sudah kembali, terima kasih.',
+            'receiver' => null,
+        ];
+
+        broadcast(new HelloEvent($dataNotif));
+
+        $dataNotifBM = [
+            'models' => 'BAPP',
+            'notif_title' => $bapp->no_bapp,
+            'id_data' => $bapp->id,
+            'sender' => $wp->Ticket->Tenant->User->id_user,
+            'division_receiver' => 2,
+            'notif_message' => 'Deposit sudah kembali, terima kasih.',
+            'receiver' => null,
+        ];
+
+        broadcast(new HelloEvent($dataNotifBM));
+
+        return response()->json(['status' => 'ok']);
+    }
+
+    public function complete($id)
+    {
+        $connWP = ConnectionDB::setConnection(new WorkPermit());
+
+        $wp = $connWP->find($id);
+        $wp->status_request = 'COMPLETE';
+        $wp->save();
+        $wp->RequestPermit->status_request = 'COMPLETE';
+        $wp->RequestPermit->save();
+        $wp->Ticket->status_request = 'COMPLETE';
+        $wp->Ticket->save();
+
+        return response()->json(['status' => 'ok']);
     }
 }

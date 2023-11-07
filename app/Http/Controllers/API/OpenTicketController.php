@@ -64,13 +64,10 @@ class OpenTicketController extends Controller
             if ($ticket->WorkOrder) {
                 $ticket['model'] = 'WorkOrder';
             }
-            if ($ticket->RequestPermit) {
-                $ticket['model'] = 'RequestPermit';
+            if ($ticket->WorkPermit) {
+                $ticket['model'] = 'WorkPermit';
             }
             if ($ticket->RequestGIGO) {
-                $ticket['model'] = 'GIGO';
-            }
-            if ($ticket->WorkPermit) {
                 $ticket['model'] = 'GIGO';
             }
         }
