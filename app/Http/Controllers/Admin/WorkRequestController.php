@@ -114,6 +114,7 @@ class WorkRequestController extends Controller
                 sprintf("%06d", $count);
 
             $connWorkRequest->no_tiket = $ticket->no_tiket;
+            $connWorkRequest->schedule = $request->schedule;
             $connWorkRequest->deskripsi_wr = $request->deskripsi_wr;
             $connWorkRequest->status_request = 'PENDING';
             $connWorkRequest->no_work_request = $no_work_request;

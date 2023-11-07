@@ -18,6 +18,7 @@ use App\Http\Controllers\API\RoomController;
 use App\Http\Controllers\API\ToolsController;
 use App\Http\Controllers\API\VisitorController;
 use App\Http\Controllers\API\WorkOrderController;
+use App\Http\Controllers\API\WorkRequestController;
 use App\Http\Controllers\PaymentController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -49,6 +50,8 @@ Route::prefix('v1')->group(function () {
     Route::get('/store/insert-water/{unitID}/{token}', [BillingController::class, 'storeWaterMeter'])->name('store-usr-water');
 
     Route::middleware('auth:sanctum')->group(function () {
+        Route::post('/logout', [UserController::class, 'logout'])->name('api-logout');
+
         Route::get('get/access-menu/{roleID}', [RoleController::class, 'getAccessAPI']);
 
         Route::post('get/cc-token', [BillingController::class, 'getTokenCC']);
@@ -70,22 +73,35 @@ Route::prefix('v1')->group(function () {
         Route::get('/tenant-unit', [UnitController::class, 'tenantUnit']);
         Route::post('/open-ticket', [OpenTicketController::class, 'store']);
         Route::get('/open-ticket/{id}', [OpenTicketController::class, 'show']);
-        Route::get('/payable-tickets/{id}', [OpenTicketController::class, 'payableTickets']);
+
+        // Work Request
+        Route::post('/on-work/work-request/{id}', [WorkRequestController::class, 'OnWork']);
+        Route::post('/work-done/work-request/{id}', [WorkRequestController::class, 'WorkDone']);
 
         // Work Order
         Route::get('/work-order/{id}', [WorkOrderController::class, 'show']);
         Route::post('/accept/work-order/{id}', [WorkOrderController::class, 'acceptWO']);
         Route::post('/reject/work-order/{id}', [WorkOrderController::class, 'rejectWO']);
-        Route::post('/generate/payment-wo/{id}', [WorkOrderController::class, 'generatePaymentWO']);
-        Route::get('/show/billing/{id}', [WorkOrderController::class, 'showBilling']);
+        Route::post('/approve2/work-order/{id}', [WorkOrderController::class, 'approve2']);
+        Route::post('/approve-bm/work-order/{id}', [WorkOrderController::class, 'approveBM']);
+        Route::post('/work-done/work-order/{id}', [WorkOrderController::class, 'workDone']);
+        Route::post('/done/work-order/{id}', [WorkOrderController::class, 'done']);
+        Route::post('/complete/work-order/{id}', [WorkOrderController::class, 'complete']);
 
-        // Billing
+        // =========================== Billing ============================
+        // Billing Monthly
         Route::get('/list-billings/{id}', [BillingController::class, 'listBillings']);
         Route::get('/get-billing/{id}', [BillingController::class, 'showBilling']);
+
+        // Billing Ticket
+        Route::get('/payable-tickets/{id}', [OpenTicketController::class, 'payableTickets']);
+        Route::get('/payable-ticket/billing/{id}', [OpenTicketController::class, 'payableTicketShow']);
+        Route::post('/payable-ticket/generate-payment/{id}', [OpenTicketController::class, 'GeneratePayment']);
+        // ----------------------------------------------------------------
         Route::post('/create-transaction/{id}', [BillingController::class, 'generateTransaction']);
         Route::get('/list-banks', [BillingController::class, 'listBank']); // List all available bank
-
         Route::post('get/admin-fee', [BillingController::class, 'adminFee']);
+        // ========================= End Billing ==========================
 
         // Inspection Eng
         Route::get('/inspectioneng', [InspectionController::class, 'checklistengineering']);
@@ -107,11 +123,13 @@ Route::prefix('v1')->group(function () {
         Route::get('/banners', [InboxController::class, 'banners']);
 
         // GIGO
+        Route::post('/gigo', [GIGOController::class, 'store']);
         Route::get('/gigo/{id}', [GIGOController::class, 'show']);
         Route::post('/gigo/add/{id}', [GIGOController::class, 'addGood']);
         Route::post('/gigo/remove/{id}', [GIGOController::class, 'removeGood']);
         Route::post('/gigo/{id}', [GIGOController::class, 'update']);
         Route::post('/gigo/approve2/{id}', [GIGOController::class, 'approve2']);
+        Route::post('/gigo/done/{id}/{token}', [GIGOController::class, 'done']);
 
         // ================== Attendance ========================
         Route::get('/site-location', [AttendanceController::class, 'siteLocation']);
@@ -164,10 +182,11 @@ Route::prefix('v1')->group(function () {
         Route::get('/history-tools/{wrID}/{id}', [ToolsController::class, 'historyTools']);
 
         // Reservation
+        Route::get('/reservation/rooms', [ReservationController::class, 'RoomRSV']);
+        Route::get('/reservation/types', [ReservationController::class, 'JenisAcara']);
+        Route::post('/reservation', [ReservationController::class, 'store']);
         Route::get('/reservations', [ReservationController::class, 'index']);
         Route::get('/reservation/{id}', [ReservationController::class, 'show']);
-        Route::post('/reservation/approve/{id}', [ReservationController::class, 'approve']);
-        Route::post('/reservation/reject/{id}', [ReservationController::class, 'reject']);
-        Route::get('/reservation/show-billing/{id}', [ReservationController::class, 'showBilling']);
+        Route::post('/reservation/approve2/{id}', [ReservationController::class, 'approve2']);
     });
 });

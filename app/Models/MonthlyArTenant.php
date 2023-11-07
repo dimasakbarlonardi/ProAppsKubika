@@ -97,5 +97,10 @@ class MonthlyArTenant extends Model
         return $subtotal;
     }
 
+    public function TenantUnit()
+    {
+        return $this->hasMany(TenantUnit::class, 'id_unit', 'id_unit');
+    }
+
     protected $dates = ['deleted_at'];
 }

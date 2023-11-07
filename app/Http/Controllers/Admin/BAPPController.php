@@ -139,8 +139,6 @@ class BAPPController extends Controller
         $bapp = $connBAPP->find($id);
         $bapp->sign_approval_1 = Carbon::now();
         $bapp->save();
-        $bapp->WorkPermit->status_request = 'DONE';
-        $bapp->WorkPermit->save();
         $bapp->RequestPermit->status_request = 'DONE';
         $bapp->RequestPermit->save();
         $bapp->Ticket->status_request = 'DONE';

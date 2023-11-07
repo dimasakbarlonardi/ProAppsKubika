@@ -1,40 +1,42 @@
 @extends('layouts.master')
 
 @section('css')
-<script src="https://cdn.tiny.cloud/1/zqt3b05uqsuxthyk5xvi13srgf4ru0l5gcvuxltlpgm6rcki/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" />
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
+    <script src="https://cdn.tiny.cloud/1/zqt3b05uqsuxthyk5xvi13srgf4ru0l5gcvuxltlpgm6rcki/tinymce/6/tinymce.min.js"
+        referrerpolicy="origin"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/css/select2.min.css" />
+    <link rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" />
 @endsection
 
 @section('content')
-<form action="{{ route('work-requests.store') }}" method="post" style="display: inline">
-    @csrf
-    <div class="row g-3">
-        <div class="col-9">
-            <div class="card">
-                <div class="card-header d-flex justify-content-between align-items-center">
-                    <div class="d-flex align-items-center">
-                        <a href="{{ route('work-requests.index') }}" class="btn btn-falcon-default btn-sm">
-                            <i class="fas fa-arrow-left"></i> Back
-                        </a>
-                        <div class="ml-3">Create Work Request</div>
+    <form action="{{ route('work-requests.store') }}" method="post" style="display: inline">
+        @csrf
+        <div class="row g-3">
+            <div class="col-9">
+                <div class="card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <div class="d-flex align-items-center">
+                            <a href="{{ route('work-requests.index') }}" class="btn btn-falcon-default btn-sm">
+                                <i class="fas fa-arrow-left"></i> Back
+                            </a>
+                            <div class="ml-3">Create Work Request</div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="card mt-3" style="display: none" id="ticket_detail">
-                <div class="card-body">
-                    <div class="request" id="ticket_head">
+                <div class="card mt-3" style="display: none" id="ticket_detail">
+                    <div class="card-body">
+                        <div class="request" id="ticket_head">
 
-                    </div>
-                    <div class="pt-4">
-                        <h6 class="mb-3 fw-semi-bold text-1000" id="ticket_detail_heading"></h6>
-                        <div id="ticket_detail_desc">
+                        </div>
+                        <div class="pt-4">
+                            <h6 class="mb-3 fw-semi-bold text-1000" id="ticket_detail_heading"></h6>
+                            <div id="ticket_detail_desc">
 
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
 
             <div class="col-3">
                 <div class="card">
@@ -46,7 +48,8 @@
                             <select name="no_tiket" class="form-select form-select-sm" id="select_ticket">
                                 <option disabled selected>-- Select Request ---</option>
                                 @foreach ($tickets as $ticket)
-                                    <option {{ isset($id_tiket) ? ($id_tiket == $ticket->id ? 'selected' : '') : '' }} value="{{ $ticket->id }}">{{ $ticket->no_tiket }}</option>
+                                    <option {{ isset($id_tiket) ? ($id_tiket == $ticket->id ? 'selected' : '') : '' }}
+                                        value="{{ $ticket->id }}">{{ $ticket->no_tiket }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -59,21 +62,23 @@
                                 @endforeach
                             </select>
                         </div>
+                        <div class="mb-4 mt-n2"><label class="mb-1">Schedule</label>
+                            <input type="datetime-local" name="schedule" class="form-control" />
+                        </div>
                     </div>
                 </div>
                 <div class="card-footer border-top border-200 py-x1">
                     <button type="submit" class="btn btn-primary w-100">Submit</button>
                 </div>
-
-
             </div>
         </div>
     </form>
 @endsection
 
 @section('script')
-<script src="https://cdn.tiny.cloud/1/zqt3b05uqsuxthyk5xvi13srgf4ru0l5gcvuxltlpgm6rcki/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
-<script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.full.min.js"></script>
+    <script src="https://cdn.tiny.cloud/1/zqt3b05uqsuxthyk5xvi13srgf4ru0l5gcvuxltlpgm6rcki/tinymce/6/tinymce.min.js"
+        referrerpolicy="origin"></script>
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.0.13/dist/js/select2.full.min.js"></script>
 
     <script>
         tinymce.init({

@@ -4,21 +4,18 @@ namespace App\Http\Controllers\Admin;
 
 use App\Events\HelloEvent;
 use App\Helpers\ConnectionDB;
+use App\Helpers\FCM as FcmNotification;
+use App\Helpers\SaveFile;
 use App\Http\Controllers\Controller;
 use App\Models\Approve;
-use App\Models\ApproveRequest;
-use App\Models\Divisi;
 use App\Models\JenisAcara;
 use App\Models\JenisRequest;
 use App\Models\Login;
 use App\Models\Notifikasi;
 use App\Models\OpenTicket;
-use App\Models\RequestGIGO;
-use App\Models\Site;
 use App\Models\System;
 use App\Models\Tenant;
 use App\Models\OwnerH;
-use App\Models\RequestType;
 use App\Models\RuangReservation;
 use App\Models\TenantUnit;
 use App\Models\Unit;
@@ -26,9 +23,7 @@ use App\Models\User;
 use App\Models\WorkPriority;
 use App\Models\WorkRelation;
 use Carbon\Carbon;
-use Error;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 use Throwable;
@@ -148,9 +143,8 @@ class OpenTicketController extends Controller
             $file = $request->file('upload_image');
 
             if ($file) {
-                $fileName = $createTicket->id . '-' .   $file->getClientOriginalName();
-                $file->move('uploads/image/ticket', $fileName);
-                $createTicket->upload_image = $fileName;
+                $storagePath = SaveFile::saveToStorage($request->user()->id_site, 'request', $file);
+                $createTicket->upload_image = $storagePath;
             }
 
             $system->sequence_notiket = $count;
@@ -253,7 +247,7 @@ class OpenTicketController extends Controller
 
             if ($request->status_request == 'PROSES KE GIGO') {
                 $this->approveGIGO($ticket, $request);
-                return redirect()->route('open-tickets.index', ['id_tiket' => $ticket->id]);
+                return redirect()->route('open-tickets.index');
             }
 
             Alert::success('Success', 'Success update request');

@@ -19,6 +19,8 @@ use Illuminate\Support\Facades\Hash;
 use League\Flysystem\Config;
 use Symfony\Component\HttpFoundation\Session\Session;
 
+use Appy\FcmHttpV1\FcmNotification;
+
 class UserController extends Controller
 {
     public function setConnection($request)
@@ -35,7 +37,7 @@ class UserController extends Controller
         $request->validate([
             'email' => 'email|required',
             'password' => 'required',
-            'id_site' => 'required'
+            'id_site' => 'required',
         ]);
 
         try {
@@ -68,7 +70,15 @@ class UserController extends Controller
 
                 $tokenResult = $login->createToken('authToken')->plainTextToken;
 
+                $hasFcm = false;
+                if(isset($request->fcm_token)){
+                    $getUser->update([
+                        'fcm_token' => $request->fcm_token
+                    ]);
+                }
+
                 return ResponseFormatter::success([
+                    'fcm' => $hasFcm,
                     'access_token' => $tokenResult,
                     'token_type' => 'Bearer',
                     'user' => $getUser
@@ -136,5 +146,17 @@ class UserController extends Controller
         ->with('RoleH')
         ->first();
         return ResponseFormatter::success($user, 'Data profile user berhasil diambil');
+    }
+
+    public function logout(Request $request)
+    {
+        $connUser = ConnectionDB::setConnection(new User);
+
+        $user = $connUser->where('login_user', $request->user()->email)->first();
+        $user->fcm_token = null;
+        $request->user()->tokens()->delete();
+        $user->save();
+
+        return ResponseFormatter::success(null, 'Successfully logout');
     }
 }

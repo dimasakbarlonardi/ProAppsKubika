@@ -38,7 +38,7 @@
                             <td>{{ $visitor->heading_to }}</td>
                             <td>{{ $visitor->Unit->nama_unit }}</td>
                             <td>{{ $visitor->desc }}</td>
-                            <td>{{ HumanTime($visitor->leave_time}}</td>
+                            <td>{{ HumanTime($visitor->leave_time) }}</td>
                         </tr>
                     @endforeach
                 </tbody>

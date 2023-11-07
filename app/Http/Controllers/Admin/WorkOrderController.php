@@ -398,25 +398,6 @@ class WorkOrderController extends Controller
         return response()->json(['status' => 'ok']);
     }
 
-    public function createNotif($connNotif, $id_data, $user, $wo)
-    {
-        $notif = $connNotif->where('models', 'WorkOrder')
-            ->where('is_read', 0)
-            ->where('id_data', $id_data)
-            ->first();
-
-        if (!$notif) {
-            $createNotif = $connNotif;
-            $createNotif->sender = $user->id_user;
-            $createNotif->is_read = 0;
-            $createNotif->models = 'WorkOrder';
-            $createNotif->id_data = $id_data;
-            $createNotif->notif_title = $wo->no_work_order;
-        }
-
-        return $createNotif;
-    }
-
     public function workDone(Request $request, $id)
     {
         $connWO = ConnectionDB::setConnection(new WorkOrder());
@@ -469,6 +450,18 @@ class WorkOrderController extends Controller
             dd($e);
             return redirect()->back();
         }
+
+        $dataNotif = [
+            'models' => 'WorkOrderM',
+            'notif_title' => $wo->no_work_order,
+            'id_data' => $wo->id,
+            'sender' => $ticket->Tenant->User->id_user,
+            'division_receiver' => 2,
+            'notif_message' => 'Work order telah selesai, terima kasih..',
+            'receiver' => null,
+        ];
+
+        broadcast(new HelloEvent($dataNotif));
 
         Alert::success('Berhasil', 'Berhasil menselesaikan WO');
 

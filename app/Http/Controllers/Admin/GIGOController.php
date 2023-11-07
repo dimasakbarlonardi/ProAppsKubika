@@ -6,6 +6,7 @@ use App\Events\HelloEvent;
 use App\Helpers\ConnectionDB;
 use App\Helpers\SaveFile;
 use App\Http\Controllers\Controller;
+use App\Helpers\FCM as FcmNotification;
 use App\Models\Approve;
 use App\Models\DetailGIGO;
 use App\Models\OpenTicket;
@@ -16,6 +17,8 @@ use App\Models\Unit;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use App\Models\User;
+use App\Models\Login;
 use RealRashid\SweetAlert\Facades\Alert;
 
 class GIGOController extends Controller
@@ -213,6 +216,8 @@ class GIGOController extends Controller
         $gigo->update([
             'sign_approval_2' => Carbon::now()
         ]);
+
+        $gigo->GenerateBarcode();
 
         $dataNotif = [
             'models' => 'GIGO',

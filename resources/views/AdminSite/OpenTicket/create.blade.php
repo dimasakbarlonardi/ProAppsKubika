@@ -144,7 +144,7 @@
                     'display': 'none'
                 });
             } else if (id_jenis_request == 4) {
-                $('#work-permit-form').css({
+                $('#request-permit-form').css({
                     'display': 'none'
                 });
                 $('#reservation_form').css({
@@ -160,7 +160,7 @@
                     'display': 'none'
                 });
             } else if (id_jenis_request == 5) {
-                $('#work-permit-form').css({
+                $('#request-permit-form').css({
                     'display': 'none'
                 });
                 $('#gigo_form').css({
@@ -176,6 +176,9 @@
                     'display': 'none'
                 });
             } else {
+                $('#request-permit-form').css({
+                    'display': 'none'
+                });
                 $('#div_deskripsi_request').css({
                     'display': 'block'
                 });
@@ -234,9 +237,7 @@
                         }
                     });
                 }
-            }
-
-            if (id_jenis_request == 4) {
+            } else if (id_jenis_request == 4) {
                 value = reservationValue();
                 if (!value) {
                     Swal.fire(
@@ -267,9 +268,7 @@
                         }
                     });
                 }
-            }
-
-            if (id_jenis_request == 5) {
+            } else if (id_jenis_request == 5) {
                 gigo = gigoValue();
                 if (!gigo || goods.length === 0) {
                     Swal.fire(
@@ -301,6 +300,8 @@
                         }
                     });
                 }
+            } else {
+                $('#create-open-request').submit();
             }
         }
 
