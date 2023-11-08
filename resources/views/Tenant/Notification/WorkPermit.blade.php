@@ -235,7 +235,7 @@
                     @if (
                         !$permit->BAPP &&
                             $permit->id_work_relation == Request::session()->get('work_relation_id') &&
-                            $permit->status_request != 'COMPLETE')
+                            $permit->status_request == 'WORK DONE')
                         <div class="card-footer border-top border-200 py-x1">
                             <a href="{{ route('bapp.create', ['id_wp' => $permit->id]) }}" target="_blank"
                                 class="btn btn-info w-100 mb-3">Buat BAPP</a>
@@ -586,7 +586,7 @@
 
         $('document').ready(function() {
             var admin_tax = 0.11;
-            var subtotal = parseInt('{{ $permit->jumlah_deposit }}')
+            var subtotal = parseInt('{{ $permit->jumlah_deposit + $permit->jumlah_supervisi }}')
 
             $('#cc_form').css('display', 'none')
             $('.form-check-input').on('change', function() {
@@ -599,6 +599,7 @@
                     var admin_fee = 4000 + (4000 * admin_tax);
                     $('#cc_form').css('display', 'none')
                 }
+                console.log(subtotal);
                 var grand_total = subtotal + admin_fee;
                 $('#val_admin_fee').val(admin_fee);
                 $('#admin_fee').html(`Rp ${formatRupiah(admin_fee.toString())}`)

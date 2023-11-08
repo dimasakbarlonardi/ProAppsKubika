@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Approve;
 use App\Models\BAPP;
 use App\Models\CashReceipt;
+use App\Models\CompanySetting;
 use App\Models\Notifikasi;
 use App\Models\OpenTicket;
 use App\Models\RequestPermit;

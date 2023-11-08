@@ -25,7 +25,7 @@
             </div>
         </div>
         <div class="mb-3 p-3">
-            <label class="form-label">Alamat</label>
+            <label class="form-label">Alamat Kontraktor</label>
             <textarea class="form-control" id="alamat" cols="20" rows="5"></textarea>
         </div>
         <div class="mb-3">

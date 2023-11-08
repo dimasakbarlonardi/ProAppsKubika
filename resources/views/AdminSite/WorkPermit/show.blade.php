@@ -206,7 +206,7 @@
                         onclick="workDoneWP({{ $wp->id }})">Pekerjaan Selesai</button>
                 </div>
             @endif
-            @if (!$wp->BAPP && $wp->id_work_relation == Request::session()->get('work_relation_id') && $wp->status_request != 'COMPLETE')
+            @if (!$wp->BAPP && $wp->id_work_relation == Request::session()->get('work_relation_id') && $wp->status_request == 'WORK DONE')
                 <div class="card-footer border-top border-200 py-x1">
                     <a href="{{ route('bapp.create', ['id_wp' => $wp->id]) }}" target="_blank"
                         class="btn btn-info w-100 mb-3">Buat BAPP</a>
