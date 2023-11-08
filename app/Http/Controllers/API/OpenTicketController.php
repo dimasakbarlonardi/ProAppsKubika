@@ -67,6 +67,9 @@ class OpenTicketController extends Controller
             if ($ticket->WorkPermit) {
                 $ticket['request_type'] = 'WorkPermit';
             }
+            if ($ticket->RequestPermit) {
+                $ticket['request_type'] = 'Permit';
+            }
             if ($ticket->RequestGIGO) {
                 $ticket['request_type'] = 'GIGO';
             }
