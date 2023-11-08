@@ -162,7 +162,7 @@ Route::get('/delete/midtrans', [PaymentController::class, 'delete']);
 Route::get('/check/midtrans', [PaymentController::class, 'check']);
 
 // Surat izin kerja
-Route::get('/work-permit/letter/{id}', [WorkPermitController::class, 'printWP']);
+Route::get('/work-permit/letter/{id}/{idSite}', [WorkPermitController::class, 'printWP']);
 
 //dev
 Route::get('/send-event', function () { });

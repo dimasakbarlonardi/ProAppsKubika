@@ -13,6 +13,7 @@ use App\Models\OpenTicket;
 use App\Models\RequestPermit;
 use App\Models\Site;
 use App\Models\System;
+use App\Models\CompanySetting;
 use App\Models\Transaction;
 use App\Models\TransactionCenter;
 use App\Models\WorkPermit;
@@ -481,11 +482,17 @@ class WorkPermitController extends Controller
         return view('Tenant.Notification.Invoice.payment-monthly', $data);
     }
 
-    public function printWP($id)
+    public function printWP($id, $idSite)
     {
-        $connWP = ConnectionDB::setConnection(new WorkPermit());
+        $site = Site::find($idSite);
+        $model = new WorkPermit();
+        $modelSetting = new CompanySetting();
+
+        $connWP = $model->setConnection($site->db_name);
+        $connSetting = $modelSetting->setConnection($site->db_name);
 
         $data['wp'] = $connWP->find($id);
+        $data['setting'] = $connSetting->find(1);
 
         return view('AdminSite.WorkPermit.printout', $data);
     }
