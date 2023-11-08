@@ -14,7 +14,6 @@ use App\Models\OpenTicket;
 use App\Models\RequestPermit;
 use App\Models\Site;
 use App\Models\System;
-use App\Models\CompanySetting;
 use App\Models\Transaction;
 use App\Models\TransactionCenter;
 use App\Models\WorkPermit;
