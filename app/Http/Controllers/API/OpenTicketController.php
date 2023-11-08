@@ -55,7 +55,7 @@ class OpenTicketController extends Controller
         foreach ($tickets as $ticket) {
             $ticket['request_type'] = 'Complaint';
 
-            if (isset($ticket->WorkRequest)) {
+            if ($ticket->WorkRequest) {
                 $ticket['request_type'] = 'WorkRequest';
             }
             if ($ticket->RequestReservation) {
@@ -196,10 +196,12 @@ class OpenTicketController extends Controller
         $item->ticket['request_date'] = $ticket->created_at;
         $item->ticket['unit'] = $ticket->Unit->nama_unit;
         $item->ticket['tenant'] = $ticket->Tenant->nama_tenant;
+        $item->ticket['upload_image'] = null;
 
         if ($ticket->id_jenis_request == 1) {
             $wo = $connWO->where('no_tiket', $ticket->no_tiket)->first();
-            $item->ticket['description'] = $ticket->deskripsi_request;
+            $item->ticket['deskripsi_request'] = strip_tags($ticket->deskripsi_request);
+            $item->ticket['upload_image'] = $ticket->upload_image;
 
             if ($wo) {
                 $item->ticket['request_type'] = 'WorkOrder';
@@ -222,7 +224,7 @@ class OpenTicketController extends Controller
                 $item->ticket['request_type'] = 'RequestPermit';
                 $item->request = $rp;
             }
-            $item->ticket['description'] = $rp->keterangan_pekerjaan;
+            $item->ticket['deskripsi_request'] = strip_tags($rp->keterangan_pekerjaan);
         }
 
         if ($ticket->id_jenis_request == 4) {
@@ -231,7 +233,7 @@ class OpenTicketController extends Controller
             $item->ticket['request_type'] = 'Reservation';
 
             $item->request = $rsv;
-            $item->ticket['description'] = $rsv->keterangan;
+            $item->ticket['deskripsi_request'] = strip_tags($rsv->keterangan);
         }
 
         if ($ticket->id_jenis_request == 5) {
@@ -243,11 +245,10 @@ class OpenTicketController extends Controller
             $request['detail'] = $detail_gigo;
 
             $item->request = $request;
-            $item->ticket['description'] = null;
+            $item->ticket['deskripsi_request'] = null;
         }
 
-        $ticket->deskripsi_request = strip_tags($ticket->deskripsi_request);
-        $ticket->deskripsi_respon = strip_tags($ticket->deskripsi_respon);
+        $item->ticket['deskripsi_respon'] = strip_tags($ticket->deskripsi_respon);
 
         return ResponseFormatter::success(
             $item,
