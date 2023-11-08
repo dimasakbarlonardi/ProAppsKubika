@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Events\HelloEvent;
 use App\Helpers\ConnectionDB;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
@@ -34,9 +35,12 @@ class PackageController extends Controller
     public function store(Request $request)
     {
         $connPackage = ConnectionDB::setConnection(new Package());
+        $connUser = ConnectionDB::setConnection(new User());
+
         $time = Carbon::now()->format('dmY');
         $package_receipt_number = rand(0, 1000);
         $package_receipt_number = $time . $package_receipt_number;
+        $user = $connUser->where('login_user', $request->user()->email)->first();
 
         $connPackage->package_receipt_number = $package_receipt_number;
         $connPackage->received_location = $request->received_location;
@@ -61,6 +65,18 @@ class PackageController extends Controller
             $connPackage->image = $packageImage;
         }
         $connPackage->save();
+
+        $dataNotif = [
+            'models' => 'Package',
+            'notif_title' => $connPackage->package_receipt_number,
+            'id_data' => $connPackage->id,
+            'sender' => $user->id_user,
+            'division_receiver' => null,
+            'notif_message' => 'Halo, pake mu sudah sampai. Terima kasih..',
+            'receiver' => $connPackage->receiver_id,
+        ];
+
+        broadcast(new HelloEvent($dataNotif));
 
         return ResponseFormatter::success(
             $connPackage,
