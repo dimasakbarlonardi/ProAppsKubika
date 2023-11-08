@@ -83,10 +83,6 @@
                         <div class="mb-4 mt-n2"><label class="mb-1">Status</label>
                             <input type="text" class="form-control" disabled value="{{ $wo->status_wo }}" id="">
                         </div>
-                        <div class="mb-4 mt-n2"><label class="mb-1">Status Berbayar WO</label>
-                            <input type="text" class="form-control" disabled
-                                value="{{ $wo->id_bayarnon == 1 ? 'Berbayar' : 'Non Berbayar' }}" id="">
-                        </div>
                     </div>
                 </div>
                 <div class="card mt-2">

@@ -49,25 +49,26 @@ class HelloEvent implements ShouldBroadcast
             $connNotif = $connNotif->setConnection($dataNotif['connection']);
         }
 
-        // $notif = $connNotif->where('models', $dataNotif['models'])
-        //     ->where('is_read', 0)
-        //     ->where('division_receiver', $dataNotif['division_receiver'])
-        //     ->orWhere('receiver', $dataNotif['receiver'])
-        //     ->where('id_data', $dataNotif['id_data'])
-        //     ->first();
+        $notif = $connNotif->where('models', $dataNotif['models'])
+            ->where('id_data', $dataNotif['id_data']);
 
-        // if (!$notif) {
-        $notif = $connNotif;
-        $notif->sender = $dataNotif['sender'];
-        $notif->division_receiver = $dataNotif['division_receiver'];
-        $notif->receiver = $dataNotif['receiver'];
-        $notif->is_read = 0;
-        $notif->id_data = $dataNotif['id_data'];
-        $notif->notif_title = $dataNotif['notif_title'];
-        $notif->notif_message = $dataNotif['notif_message'];
-        $notif->models = $dataNotif['models'];
-        $notif->save();
-        // }
+        $notif =  $notif->orWhere('division_receiver', $dataNotif['division_receiver'])
+            ->orWhere('receiver', $dataNotif['receiver'])->get(['id', 'id_data', 'is_read']);
+
+        $notif = $notif->where('is_read', 0)->first();
+
+        if (!$notif) {
+            $notif = $connNotif;
+            $notif->sender = $dataNotif['sender'];
+            $notif->division_receiver = $dataNotif['division_receiver'];
+            $notif->receiver = $dataNotif['receiver'];
+            $notif->is_read = 0;
+            $notif->id_data = $dataNotif['id_data'];
+            $notif->notif_title = $dataNotif['notif_title'];
+            $notif->notif_message = $dataNotif['notif_message'];
+            $notif->models = $dataNotif['models'];
+            $notif->save();
+        }
         $this->dataNotif['id'] = $notif->id;
         $this->FCM($dataNotif);
     }
