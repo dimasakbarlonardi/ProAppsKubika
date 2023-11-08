@@ -13,8 +13,8 @@
             <tr>
                 <th scope="row">{{ $key + '1' }}</th>
                 <td>
-                    <img src="{{ asset($tenant->profile_picture) }}"
-                        class="rounded-circle" style="max-width: 50px; height: 50px">
+                    <img src="{{ asset($tenant->profile_picture) }}" class="rounded-circle"
+                        style="max-width: 50px; height: 50px">
                 </td>
                 <td>
                     {{ $tenant->nama_tenant }}
@@ -22,12 +22,35 @@
                 <td>
                     @if (count($tenant->TenantUnit) > 0)
                         @foreach ($tenant->TenantUnit as $tu)
-                            @if ($tu->is_owner)
-                                <span class="badge bg-info mb-2">Pemilik</span>
-                            @else
-                                <span class="badge bg-warning mb-2">Penyewa</span>
+                            @if ($id_tower && $tu->Unit->Tower->id_tower == $id_tower && !$nama_unit)
+                                @if ($tu->is_owner)
+                                    <span class="badge bg-info mb-2">Pemilik</span>
+                                @else
+                                    <span class="badge bg-warning mb-2">Penyewa</span>
+                                @endif
+                                {{ $tu->Unit->nama_unit }} - {{ $tu->Unit->Tower->nama_tower }} <br>
+                            @elseif ($nama_unit && $tu->Unit->nama_unit == $nama_unit && !$id_tower)
+                                @if ($tu->is_owner)
+                                    <span class="badge bg-info mb-2">Pemilik</span>
+                                @else
+                                    <span class="badge bg-warning mb-2">Penyewa</span>
+                                @endif
+                                {{ $tu->Unit->nama_unit }} - {{ $tu->Unit->Tower->nama_tower }} <br>
+                            @elseif (($tu->Unit->nama_unit == $nama_unit) && ($tu->Unit->Tower->id_tower == $id_tower))
+                                @if ($tu->is_owner)
+                                    <span class="badge bg-info mb-2">Pemilik</span>
+                                @else
+                                    <span class="badge bg-warning mb-2">Penyewa</span>
+                                @endif
+                                {{ $tu->Unit->nama_unit }} - {{ $tu->Unit->Tower->nama_tower }} <br>
+                            @elseif (!$id_tower && !$nama_unit)
+                                @if ($tu->is_owner)
+                                    <span class="badge bg-info mb-2">Pemilik</span>
+                                @else
+                                    <span class="badge bg-warning mb-2">Penyewa</span>
+                                @endif
+                                {{ $tu->Unit->nama_unit }} - {{ $tu->Unit->Tower->nama_tower }} <br>
                             @endif
-                            {{ $tu->Unit->nama_unit }} - {{ $tu->Unit->Tower->nama_tower }} <br>
                         @endforeach
                     @endif
                 </td>

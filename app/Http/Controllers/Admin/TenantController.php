@@ -14,6 +14,7 @@ use App\Models\Site;
 use App\Models\StatusHunianTenant;
 use App\Models\StatusKawin;
 use App\Models\Tower;
+use App\Models\Unit;
 use App\Models\User;
 use FTP\Connection;
 use File;
@@ -33,9 +34,11 @@ class TenantController extends Controller
     {
         $conn = ConnectionDB::setConnection(new Tenant());
         $connTower = ConnectionDB::setConnection(new Tower());
+        $connUnit = ConnectionDB::setConnection(new Unit());
 
         $data['tenants'] = $conn->get();
         $data['towers'] = $connTower->get();
+        $data['units'] = $connUnit->get()->groupby('nama_unit');
 
         return view('AdminSite.Tenant.index', $data);
     }
@@ -44,9 +47,9 @@ class TenantController extends Controller
     {
         $connTenant = ConnectionDB::setConnection(new Tenant());
 
-        // $tenants = $connTenant->where('deleted_at', null)->whereHas('TenantUnit', function($q) {
-        //     $q->where('is_owner', true);
-        // });
+        $tenants = $connTenant->where('deleted_at', null);
+        $data['id_tower'] = null;
+        $data['nama_unit'] = null;
         // if ($user->user_category == 3) {
         //     $tenant = $connTenant->where('email_tenant', $user->login_user)->first();
         //     $tickets = $connRequest->where('id_tenant', $tenant->id_tenant)->latest();
@@ -62,20 +65,27 @@ class TenantController extends Controller
         //         })->orWhere('no_tiket', 'like', '%' . $valueString . '%');
         // }
 
-        // if ($request->tower != 'all') {
-        //     $tower_id = $request->tower;
+        if ($request->tower != 'all') {
+            $tower_id = $request->tower;
 
-        //     $tenants = $tenants->whereHas('TenantUnit.Unit.Tower', function ($q) use ($tower_id) {
-        //         $q->where('id_tower', $tower_id);
-        //     });
-        // }
-        // if ($request->priority != 'all') {
-        //     $tickets = $tickets->where('priority', $request->priority);
-        // }
+            $tenants = $tenants->whereHas('TenantUnit.Unit.Tower', function ($q) use ($tower_id) {
+                $q->where('id_tower', $tower_id);
+            });
+            $data['id_tower'] = $tower_id;
+        }
+
+        if ($request->unit != 'all') {
+            $nama_unit = $request->unit;
+
+            $tenants = $tenants->whereHas('TenantUnit.Unit', function ($q) use ($nama_unit) {
+                $q->where('nama_unit', $nama_unit);
+            });
+            $data['nama_unit'] = $nama_unit;
+        }
 
         // $tickets = $tickets->orderBy('id', 'DESC');
         // dd($tenants->get());
-        $data['tenants'] = $connTenant->get();
+        $data['tenants'] = $tenants->get();
 
         return response()->json([
             'html' => view('AdminSite.Tenant.table-data', $data)->render()
