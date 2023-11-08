@@ -50,12 +50,10 @@ class HelloEvent implements ShouldBroadcast
         }
 
         $notif = $connNotif->where('models', $dataNotif['models'])
-            ->where('id_data', $dataNotif['id_data']);
-
-        $notif =  $notif->orWhere('division_receiver', $dataNotif['division_receiver'])
-            ->orWhere('receiver', $dataNotif['receiver'])->get(['id', 'id_data', 'is_read']);
-
-        $notif = $notif->where('is_read', 0)->first();
+            ->where('is_read', 0)
+            ->where('division_receiver', $dataNotif['division_receiver'])
+            ->where('id_data', $dataNotif['id_data'])
+            ->first();
 
         if (!$notif) {
             $notif = $connNotif;
