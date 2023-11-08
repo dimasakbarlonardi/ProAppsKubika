@@ -220,8 +220,6 @@ class OpenTicketController extends Controller
             $rp = $connRP->where('no_tiket', $ticket->no_tiket)->first();
             $wp = $connWP->where('no_tiket', $ticket->no_tiket)->first();
 
-
-            // dd($data);
             if ($wp) {
                 $item->ticket['request_type'] = 'WorkPermit';
                 $item->request = $wp;
@@ -244,7 +242,9 @@ class OpenTicketController extends Controller
         }
 
         if ($ticket->id_jenis_request == 4) {
-            $rsv = $connReservation->where('no_tiket', $ticket->no_tiket)->first();
+            $rsv = $connReservation->where('no_tiket', $ticket->no_tiket)
+                ->with('JenisAcara', 'RuangReservation')
+                ->first();
 
             $item->ticket['request_type'] = 'Reservation';
 
