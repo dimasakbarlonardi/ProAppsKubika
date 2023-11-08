@@ -220,6 +220,8 @@ class OpenTicketController extends Controller
             $rp = $connRP->where('no_tiket', $ticket->no_tiket)->first();
             $wp = $connWP->where('no_tiket', $ticket->no_tiket)->first();
 
+
+            // dd($data);
             if ($wp) {
                 $item->ticket['request_type'] = 'WorkPermit';
                 $item->request = $wp;
@@ -228,6 +230,17 @@ class OpenTicketController extends Controller
                 $item->request = $rp;
             }
             $item->ticket['deskripsi_request'] = strip_tags($rp->keterangan_pekerjaan);
+
+            $dataJSON = json_decode($wp->RequestPermit->RPDetail->data);
+            $dataJSON = json_decode($dataJSON);
+
+            $data['personels'] = $dataJSON->personels;
+            $data['alats'] = $dataJSON->alats;
+            $data['materials'] = $dataJSON->materials;
+
+            $item->request['personels'] =  $data['personels'];
+            $item->request['alats'] =  $data['alats'];
+            $item->request['materials'] =  $data['materials'];
         }
 
         if ($ticket->id_jenis_request == 4) {
