@@ -53,22 +53,22 @@ class OpenTicketController extends Controller
             ->get();
 
         foreach ($tickets as $ticket) {
-            $ticket['model'] = 'Complaint';
+            $ticket['request_type'] = 'Complaint';
 
             if (isset($ticket->WorkRequest)) {
-                $ticket['model'] = 'WorkRequest';
+                $ticket['request_type'] = 'WorkRequest';
             }
             if ($ticket->RequestReservation) {
-                $ticket['model'] = 'Reservation';
+                $ticket['request_type'] = 'Reservation';
             }
             if ($ticket->WorkOrder) {
-                $ticket['model'] = 'WorkOrder';
+                $ticket['request_type'] = 'WorkOrder';
             }
             if ($ticket->WorkPermit) {
-                $ticket['model'] = 'WorkPermit';
+                $ticket['request_type'] = 'WorkPermit';
             }
             if ($ticket->RequestGIGO) {
-                $ticket['model'] = 'GIGO';
+                $ticket['request_type'] = 'GIGO';
             }
         }
 
@@ -191,17 +191,22 @@ class OpenTicketController extends Controller
         $ticket = $connRequest->find($id);
 
         $item = new stdClass();
-        $item->ticket = $ticket;
+        $item->ticket['no_tiket'] = $ticket->no_tiket;
+        $item->ticket['request_title'] = $ticket->judul_request;
+        $item->ticket['request_date'] = $ticket->created_at;
+        $item->ticket['unit'] = $ticket->Unit->nama_unit;
+        $item->ticket['tenant'] = $ticket->Tenant->nama_tenant;
 
         if ($ticket->id_jenis_request == 1) {
             $wo = $connWO->where('no_tiket', $ticket->no_tiket)->first();
+            $item->ticket['description'] = $ticket->deskripsi_request;
 
             if ($wo) {
-                $ticket['model'] = 'WorkOrder';
+                $item->ticket['request_type'] = 'WorkOrder';
                 $item->request = $wo;
             } else {
                 $wr = $connWR->where('no_tiket', $ticket->no_tiket)->first();
-                $ticket['model'] = 'WorkRequest';
+                $item->ticket['request_type'] = 'WorkRequest';
                 $item->request = $wr;
             }
         }
@@ -211,20 +216,22 @@ class OpenTicketController extends Controller
             $wp = $connWP->where('no_tiket', $ticket->no_tiket)->first();
 
             if ($wp) {
-                $ticket['model'] = 'WorkPermit';
+                $item->ticket['request_type'] = 'WorkPermit';
                 $item->request = $wp;
             } else {
-                $ticket['model'] = 'RequestPermit';
+                $item->ticket['request_type'] = 'RequestPermit';
                 $item->request = $rp;
             }
+            $item->ticket['description'] = $rp->keterangan_pekerjaan;
         }
 
         if ($ticket->id_jenis_request == 4) {
             $rsv = $connReservation->where('no_tiket', $ticket->no_tiket)->first();
 
-            $ticket['model'] = 'Reservation';
+            $item->ticket['request_type'] = 'Reservation';
 
             $item->request = $rsv;
+            $item->ticket['description'] = $rsv->keterangan;
         }
 
         if ($ticket->id_jenis_request == 5) {
@@ -232,10 +239,11 @@ class OpenTicketController extends Controller
             $detail_gigo = $connDetailGIGO->where('id_request_gigo', $gigo->id)->get();
 
             $request = $gigo;
-            $ticket['model'] = 'GIGO';
+            $item->ticket['request_type'] = 'GIGO';
             $request['detail'] = $detail_gigo;
 
             $item->request = $request;
+            $item->ticket['description'] = null;
         }
 
         $ticket->deskripsi_request = strip_tags($ticket->deskripsi_request);
