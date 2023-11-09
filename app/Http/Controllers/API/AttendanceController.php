@@ -478,10 +478,12 @@ class AttendanceController extends Controller
 
         foreach ($schedules as $schedule) {
             $object = new stdClass();
+            $object->id = $schedule->id;
             $object->shift_name = $schedule->ShiftType->shift;
             $object->clock_in = $schedule->ShiftType->checkin;
             $object->clock_out = $schedule->ShiftType->checkout;
             $object->karyawan_name = $schedule->Karyawan->nama_karyawan;
+            $object->replacement_karyawan_id = $schedule->Karyawan->id;
             $object->role = $schedule->Karyawan->User->RoleH->nama_role;
 
             $objects[] = $object;
@@ -533,9 +535,9 @@ class AttendanceController extends Controller
         $connPermit->request_time = $request->request_time;
         $connPermit->previous_shift_id = $request->previous_shift_id;
         $connPermit->replace_shift_id = $request->replace_shift_id;
-        $connPermit->replacement_id = $request->replacement_id;
+        $connPermit->replacement_id = $request->replacement_karyawan_id;
         $connPermit->status_permit = 'PENDING';
-        dd($connPermit);
+
         $photo = $request->file('photo');
         if ($photo) {
             $storagePath = SaveFile::saveToStorage($request->user()->id_site, 'permit-attendance', $photo);
