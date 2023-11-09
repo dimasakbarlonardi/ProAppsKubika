@@ -326,16 +326,12 @@ class BillingController extends Controller
             $object = new stdClass();
             $object->unit = $unit->nama_unit;
             $object->period = Carbon::now()->format('m');
-            $object->current = count($unit->electricUUS) > 0 ? $unit->electricUUS[0]->nomor_listrik_awal : 0;
-            $object->previous = count($unit->electricUUS) > 0 ? $unit->electricUUS[0]->nomor_listrik_akhir : 0;
+            $object->current = $unit->electricUUS[0]->nomor_listrik_awal;
+            $object->previous = $unit->electricUUS[0]->nomor_listrik_akhir;
 
-            // return ResponseFormatter::success([
-            //     $object
-            // ], 'Success get data');
-            $data['unit'] = $unit;
-            $data['token'] = $token;
-
-            return view('AdminSite.UtilityUsageRecording.Electric.create', $data);
+            return ResponseFormatter::success([
+                $object
+            ], 'Success get data');
         } else {
             return ResponseFormatter::error([
                 'message' => 'Unauthorized'
