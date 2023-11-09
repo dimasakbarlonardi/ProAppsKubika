@@ -10,6 +10,7 @@ class ConnectionDB {
     {
         $request = Request();
         $user_id = $request->user()->id;
+
         $login = Login::where('id', $user_id)->with('site')->first();
         $db = $login->site->db_name;
 
