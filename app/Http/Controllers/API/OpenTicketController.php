@@ -227,26 +227,18 @@ class OpenTicketController extends Controller
                 $item->ticket['request_type'] = 'RequestPermit';
                 $item->request = $rp;
             }
+
+            if ($rp) {
+                $dataJSON = json_decode($rp->RPDetail->data);
+                $dataJSON = json_decode($dataJSON);
+                $data['personels'] = $dataJSON->personels;
+                $data['alats'] = $dataJSON->alats;
+                $data['materials'] = $dataJSON->materials;
+                $item->request['personels'] =  $data['personels'];
+                $item->request['alats'] =  $data['alats'];
+                $item->request['materials'] =  $data['materials'];
+            }
             $item->ticket['deskripsi_request'] = strip_tags($rp->keterangan_pekerjaan);
-            
-            $item->request['nama_kontraktor'] = strip_tags($rp->nama_kontraktor);
-            $item->request['pic'] = strip_tags($rp->pic);
-            $item->request['alamat'] = strip_tags($rp->alamat);
-            $item->request['no_ktp'] = strip_tags($rp->no_ktp);
-            $item->request['no_telp'] = strip_tags($rp->no_telp);
-            $item->request['tgl_mulai'] = strip_tags($rp->tgl_mulai);
-            $item->request['tgl_akhir'] = strip_tags($rp->tgl_akhir);
-
-            $dataJSON = json_decode($wp->RequestPermit->RPDetail->data);
-            $dataJSON = json_decode($dataJSON);
-
-            $data['personels'] = $dataJSON->personels;
-            $data['alats'] = $dataJSON->alats;
-            $data['materials'] = $dataJSON->materials;
-
-            $item->request['personels'] =  $data['personels'];
-            $item->request['alats'] =  $data['alats'];
-            $item->request['materials'] =  $data['materials'];
         }
 
         if ($ticket->id_jenis_request == 4) {
