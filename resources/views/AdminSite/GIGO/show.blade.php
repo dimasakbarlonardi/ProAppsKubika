@@ -150,10 +150,8 @@
                                     onclick="actionGigoDone({{ $gigo->id }})">Done</button>
                             @endif
                             @if ($gigo->status_request == 'DONE' && $approve->approval_3 == $user->id_user)
-                                <form action="{{ route('gigoComplete', $gigo->id) }}" class="d-inline" method="post">
-                                    @csrf
-                                    <button class="btn btn-lg btn-block btn-success" type="submit">Complete</button>
-                                </form>
+                                <button class="btn btn-lg btn-block btn-success" type="button"
+                                    onclick="actionGigoComplete({{ $gigo->id }})">Complete</button>
                             @endif
                         </div>
                     </div>
@@ -294,6 +292,22 @@
         function actionGigoDone(id) {
             $.ajax({
                 url: `/admin/gigo/done/${id}`,
+                type: 'POST',
+                success: function(data) {
+                    if (data.status === 'ok') {
+                        Swal.fire(
+                            'Success!',
+                            'Success approve GIGO!',
+                            'success'
+                        ).then(() => window.location.reload())
+                    }
+                }
+            })
+        }
+
+        function actionGigoComplete(id) {
+            $.ajax({
+                url: `/admin/gigo/complete/${id}`,
                 type: 'POST',
                 success: function(data) {
                     if (data.status === 'ok') {
