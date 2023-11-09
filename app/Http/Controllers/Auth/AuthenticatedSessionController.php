@@ -58,14 +58,15 @@ class AuthenticatedSessionController extends Controller
         ]);
 
         try {
-            $credentials = request(['email', 'password']);
+            $credentials = request(['email', 'password', 'id_site']);
 
             if (!Auth::attempt($credentials)) {
                 Alert::error('Gagal', 'Mohon periksa kembali email dan password');
 
                 return redirect()->back();
             } else {
-                $user = Login::where('email', $request->email)
+
+                $user = Login::where('email', $request->email)->where('id_site', $request->id_site)
                     ->with('site')
                     ->first();
 
@@ -98,8 +99,9 @@ class AuthenticatedSessionController extends Controller
                         }
 
                         if (isset($getUser)) {
-                            $request->authenticate();
-                            $request->session()->regenerate();
+
+                            // $request->authenticate();
+                            // $request->session()->regenerate();
 
                             return redirect()->route('select-role');
                         } else {
