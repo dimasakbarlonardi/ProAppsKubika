@@ -459,6 +459,40 @@ class AttendanceController extends Controller
         );
     }
 
+    public function getScheduleByDate(Request $request)
+    {
+        $connUser = ConnectionDB::setConnection(new User());
+        $connSchedule = ConnectionDB::setConnection(new WorkTimeline());
+
+        $login = $connUser->where('login_user', $request->user()->email)->first();
+        $getRole = $login->id_role_hdr;
+
+        $schedules = $connSchedule->where('date', $request->request_date)
+            ->whereHas('Karyawan.User', function ($q) use ($getRole) {
+                $q->where('id_role_hdr', $getRole);
+            })
+            ->with(['ShiftType', 'Karyawan.User.RoleH'])
+            ->get();
+
+        $objects = [];
+
+        foreach ($schedules as $schedule) {
+            $object = new stdClass();
+            $object->shift_name = $schedule->ShiftType->shift;
+            $object->clock_in = $schedule->ShiftType->checkin;
+            $object->clock_out = $schedule->ShiftType->checkout;
+            $object->karyawan_name = $schedule->Karyawan->nama_karyawan;
+            $object->role = $schedule->Karyawan->User->RoleH->nama_role;
+
+            $objects[] = $object;
+        }
+
+        return ResponseFormatter::success(
+            $objects,
+            'Success get schedule'
+        );
+    }
+
     public function permitAttendance(Request $request)
     {
         $connPermit = ConnectionDB::setConnection(new PermitAttendance());
@@ -501,7 +535,7 @@ class AttendanceController extends Controller
         $connPermit->replace_shift_id = $request->replace_shift_id;
         $connPermit->replacement_id = $request->replacement_id;
         $connPermit->status_permit = 'PENDING';
-
+        dd($connPermit);
         $photo = $request->file('photo');
         if ($photo) {
             $storagePath = SaveFile::saveToStorage($request->user()->id_site, 'permit-attendance', $photo);
