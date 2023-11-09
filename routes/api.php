@@ -166,6 +166,7 @@ Route::prefix('v1')->group(function () {
 
         // Permit Attendance
         Route::post('/attendance/permit-attendance', [AttendanceController::class, 'permitAttendance']);
+        Route::get('/attendance/schedule', [AttendanceController::class, 'getScheduleByDate']);
 
         // ================= End Attendance =====================
 
