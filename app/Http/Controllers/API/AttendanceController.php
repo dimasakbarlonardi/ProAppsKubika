@@ -538,7 +538,7 @@ class AttendanceController extends Controller
         $connPermit->replace_shift_id = $request->replace_shift_id;
         $connPermit->replacement_id = $request->replacement_karyawan_id;
         $connPermit->status_permit = 'PENDING';
-        dd($connPermit);
+
         $photo = $request->file('photo');
         if ($photo) {
             $storagePath = SaveFile::saveToStorage($request->user()->id_site, 'permit-attendance', $photo);
