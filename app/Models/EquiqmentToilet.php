@@ -20,7 +20,6 @@ class EquiqmentToilet extends Model
         'barcode_room',
         'no_equipment',
         'equipment',
-        'id_role',
         'id_room',
     ];
 
@@ -36,12 +35,12 @@ class EquiqmentToilet extends Model
         return $this->hasOne(EquipmentHousekeepingDetail::class, 'id_equipment_housekeeping', 'id_equipment_housekeeping');
     }
 
-    public function room()
+    public function Room()
     {
         return $this->hasOne(Room::class, 'id_room', 'id_room');
     }
 
-     public function floor()
+     public function Floor()
     {
         return $this->hasOne(Floor::class, 'id_lantai', 'id_room');
     }
