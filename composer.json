@@ -27,6 +27,7 @@
         "pusher/pusher-php-server": "^7.2",
         "realrashid/sweet-alert": "^7.0",
         "simplesoftwareio/simple-qrcode": "^4.2",
+        "tymon/jwt-auth": "dev-develop",
         "zendframework/zend-barcode": "^2.5"
     },
     "require-dev": {
