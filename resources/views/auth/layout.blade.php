@@ -18,8 +18,7 @@
                             <div class="row g-0 h-100 reverse">
                             <div class="col-md-5 text-center">
                                 <div class="image-container">
-                                    <img src="{{ asset('/assets/img/login_image.png') }}" alt="background_image" width="105%" height="100%">
-                                    <img src="{{ asset('/assets/img/logo_white.png') }}" alt="logo_image" class="logo">
+                                    <img src="{{ asset('/assets/img/Login.png') }}" alt="background_image" width="400px" height="500px">
                                 </div>
                             </div>
                                 @yield('content')

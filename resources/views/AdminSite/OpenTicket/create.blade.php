@@ -65,9 +65,9 @@
                         </div>
                     @endif
                 </div>
-                <div class="mb-3">
+                <div class="row">
                     @if ($user->user_category == 2)
-                        <div class="col-6">
+                        <div class="col-6 mb-3 mt-3">
                             <label class="form-label">Unit</label>
                             <select name="id_unit" class="form-control" id="id_unit">
                                 @if ($user->user_category != 2)
