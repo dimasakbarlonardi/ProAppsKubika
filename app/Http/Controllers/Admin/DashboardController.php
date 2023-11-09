@@ -31,11 +31,17 @@ use App\Models\WorkRequest;
 use Illuminate\Http\Request;
 use App\Models\Login;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
     public function index(Request $request)
     {
+        if (!$request->session()->get('user')) {
+            Auth::guard('web')->logout();
+
+            return redirect()->route('login');
+        }
         $connTicket = ConnectionDB::setConnection(new OpenTicket());
         $connWR = ConnectionDB::setConnection(new WorkRequest());
         $connWO = ConnectionDB::setConnection(new WorkOrder());
