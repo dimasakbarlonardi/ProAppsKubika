@@ -8,26 +8,7 @@
 
     <title>Proapps | Utility Usage Recording - Electric</title>
 
-<<<<<<< HEAD
-    <!-- ===============================================-->
-    <!--    Favicons-->
-    <!-- ===============================================-->
-    <link rel="apple-touch-icon" sizes="180x180" href="https://demo.pro-apps.xyz/assets/img/favicons/apple-touch-icon.png">
-    <link rel="manifest" href="https://demo.pro-apps.xyz/assets/img/favicons/manifest.json">
-    <meta name="msapplication-TileImage" content="https://demo.pro-apps.xyz/assets/img/favicons/mstile-150x150.png">
-    <meta name="theme-color" content="#ffffff">
-
-    <!-- ===============================================-->
-    <!--    Stylesheets-->
-    <!-- ===============================================-->
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link
-        href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700%7cPoppins:300,400,500,600,700,800,900&amp;display=swap"
-        rel="stylesheet">
-    <link href="https://demo.pro-apps.xyz/assets/css/theme.min.css" rel="stylesheet" id="style-default">
-=======
     <link href="https://dev.pro-apps.xyz/assets/css/theme.min.css" rel="stylesheet" id="style-default">
->>>>>>> 1bf153fefb7f82492a86d5d5ca0a41c39d251ee9
     <link href="{{ asset('assets/vendors/dropzone/dropzone.min.css') }}" rel="stylesheet" />
 </head>
 
