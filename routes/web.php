@@ -130,6 +130,7 @@ use App\Http\Controllers\API\VisitorController;
 use App\Models\ForgotAttendance;
 use App\Models\IncidentalReportHK;
 use App\Models\PermitHR;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
