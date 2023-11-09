@@ -323,10 +323,15 @@ class BillingController extends Controller
             $connUnit = $connUnit->setConnection($site->db_name);
             $unit = $connUnit->find($unitID);
 
-            $data['unit'] = $unit;
-            $data['token'] = $token;
+            $object = new stdClass();
+            $object->unit = $unit->nama_unit;
+            $object->period = Carbon::now()->format('m');
+            $object->current = $unit->electricUUS[0]->nomor_listrik_awal;
+            $object->previous = $unit->electricUUS[0]->nomor_listrik_akhir;
 
-            return view('AdminSite.UtilityUsageRecording.Electric.create', $data);
+            return ResponseFormatter::success([
+                $object
+            ], 'Success get data');
         } else {
             return ResponseFormatter::error([
                 'message' => 'Unauthorized'
@@ -404,22 +409,10 @@ class BillingController extends Controller
                 'id_user' => $user->id_user
             ]);
 
-            $imageData = $request->input('imageData');
+            $imageData = $request->file('imageData');
 
             if ($imageData) {
-                $image = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $imageData));
-                $filename = 'captured_image_' . time() . '.png';
-
-                $idSite = $tokenable->tokenable->id_site;
-                $path = '/public/' . $idSite . '/img/electric-usage/' . $filename;
-                $storagePath = '/storage/' . $idSite . '/img/electric-usage/' . $filename;
-
-                $img = Image::make($image);
-                $img->resize(200, 200, function ($constraint) {
-                    $constraint->aspectRatio();
-                })->encode('jpg', 80);
-
-                Storage::disk('local')->put($path, $img);
+                $storagePath = SaveFile::saveToStorage($request->user()->id_site, 'electric-usage', $imageData);
 
                 $electricUUS->image = $storagePath;
                 $electricUUS->save();
@@ -445,10 +438,15 @@ class BillingController extends Controller
             $connUnit = $connUnit->setConnection($site->db_name);
             $unit = $connUnit->find($unitID);
 
-            $data['unit'] = $unit;
-            $data['token'] = $token;
+            $object = new stdClass();
+            $object->unit = $unit->nama_unit;
+            $object->period = Carbon::now()->format('m');
+            $object->current = $unit->waterUUS[0]->nomor_air_awal;
+            $object->previous = $unit->waterUUS[0]->nomor_air_akhir;
 
-            return view('AdminSite.UtilityUsageRecording.Water.create', $data);
+            return ResponseFormatter::success([
+                $object
+            ], 'Success get data');
         } else {
             return ResponseFormatter::error([
                 'message' => 'Unauthorized'
@@ -502,22 +500,10 @@ class BillingController extends Controller
                     'usage' => $usage,
                     'id_user' => $user->id_user
                 ]);
-                $imageData = $request->input('imageData');
+                $imageData = $request->file('imageData');
 
                 if ($imageData) {
-                    $image = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $imageData));
-                    $filename = 'captured_image_' . time() . '.png';
-
-                    $idSite = $tokenable->tokenable->id_site;
-                    $path = '/public/' . $idSite . '/img/water-usage/' . $filename;
-                    $storagePath = '/storage/' . $idSite . '/img/water-usage/' . $filename;
-
-                    $img = Image::make($image);
-                    $img->resize(200, 200, function ($constraint) {
-                        $constraint->aspectRatio();
-                    })->encode('jpg', 80);
-
-                    Storage::disk('local')->put($path, $img);
+                    $storagePath = SaveFile::saveToStorage($request->user()->id_site, 'water-usage', $imageData);
 
                     $waterUUS->image = $storagePath;
                     $waterUUS->save();
