@@ -8,6 +8,7 @@ use App\Models\Approve;
 use App\Models\ApproveRequest;
 use App\Models\BAPP;
 use App\Models\CashReceipt;
+use App\Models\CompanySetting;
 use App\Models\JenisRequest;
 use App\Models\Karyawan;
 use App\Models\MonthlyArTenant;
@@ -205,6 +206,11 @@ class DashboardController extends Controller
                 return view('Tenant.Notification.Payment', $data);
                 break;
 
+            case ('IzinKerja'):
+                $data = $this->handleIzinKerja($getNotif);
+                return view('AdminSite.WorkPermit.printout', $data);
+                break;
+
             case ('GIGO'):
                 $data = $this->handleGIGO($connApprove, $getNotif);
                 $data['user'] = $user;
@@ -322,6 +328,23 @@ class DashboardController extends Controller
         $data['personels'] = $dataJSON->personels;
         $data['alats'] = $dataJSON->alats;
         $data['materials'] = $dataJSON->materials;
+
+        return $data;
+    }
+
+    public function handleIzinKerja($getNotif)
+    {
+        $model = new WorkPermit();
+        $modelSetting = new CompanySetting();
+
+        $getData = ConnectionDB::setConnection($model);
+        $connSetting = ConnectionDB::setConnection($modelSetting);
+
+        $permit =  $getData->find($getNotif->id_data);
+        $setting =  $connSetting->find(1);
+
+        $data['wp'] = $permit;
+        $data['setting'] = $setting;
 
         return $data;
     }

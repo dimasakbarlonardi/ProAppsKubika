@@ -76,6 +76,15 @@
                                 @endforeach
                             </select>
                         </div>
+                        <div class="mb-3 mt-n2">
+                            <label class="mb-1">Unit</label>
+                            <select class="form-select form-select-sm" id="select-unit">
+                                <option value="all">All</option>
+                                @foreach ($units as $unit)
+                                    <option value="{{ $unit[0]->nama_unit }}">{{ $unit[0]->nama_unit }}</option>
+                                @endforeach
+                            </select>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -90,30 +99,30 @@
         new DataTable('#table-tenant');
 
         $('document').ready(function() {
-            getData('all', 'all')
+            getData('all', 'all');
         })
 
         $('#select-tower').on('change', function() {
             var tower = $(this).val();
-            var status = $('#select_status').val();
-            console.log(tower, status)
-            getData(tower, status)
+            var unit = $('#select-unit').val();
+
+            getData(tower, unit)
         });
 
-        $('#select-status').on('change', function() {
-            var status = $(this).val();
-            var tower = $('#select_tower').val();
+        $('#select-unit').on('change', function() {
+            var unit = $(this).val();
+            var tower = $('#select-tower').val();
 
-            getData(tower, status)
+            getData(tower, unit)
         });
 
-        function getData(tower, status) {
+        function getData(tower, unit) {
             $.ajax({
                 url: '/admin/filter-tenants/get-filter-data',
                 type: 'GET',
                 data: {
                     tower,
-                    status
+                    unit
                 },
                 success: function(resp) {
                     $('#data-tenants').html(resp.html);

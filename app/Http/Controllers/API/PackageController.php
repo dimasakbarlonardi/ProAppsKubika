@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Events\HelloEvent;
 use App\Helpers\ConnectionDB;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Models\Package;
 use App\Models\Site;
+use App\Models\TenantUnit;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -34,9 +36,14 @@ class PackageController extends Controller
     public function store(Request $request)
     {
         $connPackage = ConnectionDB::setConnection(new Package());
+        $connTU = ConnectionDB::setConnection(new TenantUnit());
+        // $connUser = ConnectionDB::setConnection(new User());
+
         $time = Carbon::now()->format('dmY');
         $package_receipt_number = rand(0, 1000);
         $package_receipt_number = $time . $package_receipt_number;
+        // $user = $connUser->where('login_user', $request->user()->email)->first();
+        $tenants = $connTU->where('id_unit', $request->unit_id)->get();
 
         $connPackage->package_receipt_number = $package_receipt_number;
         $connPackage->received_location = $request->received_location;
@@ -60,7 +67,22 @@ class PackageController extends Controller
 
             $connPackage->image = $packageImage;
         }
+
         $connPackage->save();
+
+        foreach ($tenants as $tenant) {
+            $dataNotif = [
+                'models' => 'Package',
+                'notif_title' => $connPackage->package_receipt_number,
+                'id_data' => $connPackage->id,
+                'sender' => $connPackage->receiver_id,
+                'division_receiver' => null,
+                'notif_message' => 'Halo, paket mu sudah sampai. Terima kasih..',
+                'receiver' => $tenant->Tenant->User->id_user,
+            ];
+
+            broadcast(new HelloEvent($dataNotif));
+        }
 
         return ResponseFormatter::success(
             $connPackage,

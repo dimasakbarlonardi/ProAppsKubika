@@ -57,10 +57,11 @@
                                         <div class="row gx-card mx-0 bg-200 text-900 fs--1 fw-semi-bold">
                                             <div class="col-9 col-md-8 py-2">Personil</div>
                                         </div>
-                                        @if($personels)
+                                        @if ($personels)
                                             @foreach ($personels as $personel)
                                                 <div class="gx-card mx-0 border-bottom border-200">
-                                                    <div class='row gx-card mx-0 align-items-center border-bottom border-200'>
+                                                    <div
+                                                        class='row gx-card mx-0 align-items-center border-bottom border-200'>
                                                         <div class='py-3'>
                                                             <div class='d-flex align-items-center'>
                                                                 <div class='flex-1'>
@@ -85,10 +86,11 @@
                                         <div class="row gx-card mx-0 bg-200 text-900 fs--1 fw-semi-bold">
                                             <div class="col-9 col-md-8 py-2">Nama Alat</div>
                                         </div>
-                                        @if($alats)
+                                        @if ($alats)
                                             @foreach ($alats as $alat)
                                                 <div class="gx-card mx-0 border-bottom border-200">
-                                                    <div class='row gx-card mx-0 align-items-center border-bottom border-200'>
+                                                    <div
+                                                        class='row gx-card mx-0 align-items-center border-bottom border-200'>
                                                         <div class='py-3'>
                                                             <div class='d-flex align-items-center'>
                                                                 <div class='flex-1'>
@@ -113,10 +115,11 @@
                                         <div class="row gx-card mx-0 bg-200 text-900 fs--1 fw-semi-bold">
                                             <div class="col-9 col-md-8 py-2">Material</div>
                                         </div>
-                                        @if($materials)
+                                        @if ($materials)
                                             @foreach ($materials as $material)
                                                 <div class="gx-card mx-0 border-bottom border-200">
-                                                    <div class='row gx-card mx-0 align-items-center border-bottom border-200'>
+                                                    <div
+                                                        class='row gx-card mx-0 align-items-center border-bottom border-200'>
                                                         <div class='py-3'>
                                                             <div class='d-flex align-items-center'>
                                                                 <div class='flex-1'>
@@ -146,8 +149,7 @@
                         </div>
                         <div class="card-body">
                             <div class="mb-4 mt-n2"><label class="mb-1">Status</label>
-                                <input type="text" class="form-control" disabled
-                                    value="{{ $permit->status_request }}">
+                                <input type="text" class="form-control" disabled value="{{ $permit->status_request }}">
                             </div>
                             <div class="mb-4 mt-n2"><label class="mb-1">Jenis Pekerjaan</label>
                                 <input type="text" class="form-control" disabled
@@ -170,8 +172,8 @@
                                     class="form-control" name="nama_project" required disabled>
                             </div>
                             <div class="mb-4 mt-n2"><label class="mb-1">Jumlah Supervisi</label>
-                                <input type="text" value="{{ Rupiah($permit->jumlah_supervisi) }}" class="form-control"
-                                    name="jumlah_deposit" required disabled>
+                                <input type="text" value="{{ Rupiah($permit->jumlah_supervisi) }}"
+                                    class="form-control" name="jumlah_deposit" required disabled>
                             </div>
                             <div class="mb-4 mt-n2"><label class="mb-1">Jumlah Deposit</label>
                                 <input type="text" value="{{ Rupiah($permit->jumlah_deposit) }}" class="form-control"
@@ -219,6 +221,7 @@
                     @endif
                     @if (
                         $permit->sign_approval_4 &&
+                            $permit->status_request != 'DONE' &&
                             $permit->status_request != 'WORK DONE' &&
                             $permit->status_request != 'COMPLETE' &&
                             $permit->id_work_relation == Request::session()->get('work_relation_id'))
@@ -227,6 +230,15 @@
                                 class="btn btn-warning w-100 mb-3">Print</a>
                             <button type="button" class="btn btn-primary w-100"
                                 onclick="workDoneWP({{ $permit->id }})">Pekerjaan Selesai</button>
+                        </div>
+                    @endif
+                    @if (
+                        !$permit->BAPP &&
+                            $permit->id_work_relation == Request::session()->get('work_relation_id') &&
+                            $permit->status_request == 'WORK DONE')
+                        <div class="card-footer border-top border-200 py-x1">
+                            <a href="{{ route('bapp.create', ['id_wp' => $permit->id]) }}" target="_blank"
+                                class="btn btn-info w-100 mb-3">Buat BAPP</a>
                         </div>
                     @endif
                     @if (Request::session()->get('user_id') == $permit->Ticket->Tenant->User->id_user &&
@@ -242,8 +254,9 @@
             @if (
                 $permit->CashReceipt &&
                     $permit->Ticket->Tenant->User->id_user == Request::session()->get('user_id') &&
-                    $permit->CashReceipt->transaction_status == 'PENDING')
-                <form class="mt-5" action="{{ route('generatePaymentPO', $permit->CashReceipt->id) }}" method="post" id="generatePaymentPO">
+                    !$permit->CashReceipt->payment_type)
+                <form class="mt-5" action="{{ route('generatePaymentPO', $permit->CashReceipt->id) }}" method="post"
+                    id="generatePaymentPO">
                     @csrf
                     <div class="row g-3 mb-3">
                         <div class="col-lg-8">
@@ -337,7 +350,7 @@
                                 <div class="card-body bg-light">
                                     <div class="d-flex justify-content-between fs--1 mb-1">
                                         <p class="mb-0">Subtotal</p>
-                                        <span>{{ rupiah($permit->jumlah_deposit) }}</span>
+                                        <span>{{ rupiah($permit->jumlah_deposit + $permit->jumlah_supervisi) }}</span>
                                     </div>
                                     <div class="d-flex justify-content-between fs--1 mb-1 text-success">
                                         <p class="mb-0">Tax</p><span>Rp 0</span>
@@ -573,7 +586,7 @@
 
         $('document').ready(function() {
             var admin_tax = 0.11;
-            var subtotal = parseInt('{{ $permit->jumlah_deposit }}')
+            var subtotal = parseInt('{{ $permit->jumlah_deposit + $permit->jumlah_supervisi }}')
 
             $('#cc_form').css('display', 'none')
             $('.form-check-input').on('change', function() {
@@ -586,6 +599,7 @@
                     var admin_fee = 4000 + (4000 * admin_tax);
                     $('#cc_form').css('display', 'none')
                 }
+                console.log(subtotal);
                 var grand_total = subtotal + admin_fee;
                 $('#val_admin_fee').val(admin_fee);
                 $('#admin_fee').html(`Rp ${formatRupiah(admin_fee.toString())}`)

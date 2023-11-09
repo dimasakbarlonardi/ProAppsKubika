@@ -8,6 +8,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Approve;
 use App\Models\BAPP;
 use App\Models\CashReceipt;
+use App\Models\CompanySetting;
 use App\Models\Notifikasi;
 use App\Models\OpenTicket;
 use App\Models\RequestPermit;
@@ -49,9 +50,9 @@ class WorkPermitController extends Controller
 
         if ($request->valueString) {
             $valueString = $request->valueString;
-            $permits = $permits->whereHas('Ticket.Tenant', function($q) use ($valueString) {
-                    $q->where('nama_tenant', 'like', '%' . $valueString . '%');
-                })->orWhere('no_work_permit', 'like', '%' . $valueString . '%');
+            $permits = $permits->whereHas('Ticket.Tenant', function ($q) use ($valueString) {
+                $q->where('nama_tenant', 'like', '%' . $valueString . '%');
+            })->orWhere('no_work_permit', 'like', '%' . $valueString . '%');
         }
 
         if ($request->status != 'all') {
@@ -59,7 +60,7 @@ class WorkPermitController extends Controller
         }
         if ($request->priority != 'all') {
             $priority = $request->priority;
-            $permits = $permits->whereHas('Ticket', function($q) use ($priority) {
+            $permits = $permits->whereHas('Ticket', function ($q) use ($priority) {
                 $q->where('priority', $priority);
             });
         }
@@ -291,34 +292,29 @@ class WorkPermitController extends Controller
 
         $wp = $connWP->find($id);
 
-        $createTransaction = $connTransaction;
-        $createTransaction->order_id = $order_id;
-        $createTransaction->id_site = $user->id_site;
-        $createTransaction->no_reff = $wp->no_work_permit;
-        $createTransaction->no_invoice = $no_invoice;
-        $createTransaction->no_draft_cr = $no_cr;
-        $createTransaction->ket_pembayaran = 'INV/' . $user->id_user . '/' . $wp->Ticket->Unit->nama_unit;
-        $createTransaction->sub_total = $wp->jumlah_deposit + $wp->jumlah_supervisi;
-        $createTransaction->transaction_status = 'PENDING';
-        $createTransaction->id_user = $wp->Ticket->Tenant->User->id_user;
-        $createTransaction->transaction_type = 'WorkPermit';
+        if (!$wp->CashReceipt) {
+            $createTransaction = $connTransaction;
+            $createTransaction->order_id = $order_id;
+            $createTransaction->id_site = $user->id_site;
+            $createTransaction->no_reff = $wp->no_work_permit;
+            $createTransaction->no_invoice = $no_invoice;
+            $createTransaction->no_draft_cr = $no_cr;
+            $createTransaction->ket_pembayaran = 'INV/' . $user->id_user . '/' . $wp->Ticket->Unit->nama_unit;
+            $createTransaction->sub_total = $wp->jumlah_deposit + $wp->jumlah_supervisi;
+            $createTransaction->transaction_status = 'PENDING';
+            $createTransaction->id_user = $wp->Ticket->Tenant->User->id_user;
+            $createTransaction->transaction_type = 'WorkPermit';
 
-        $wp->Ticket->no_invoice = $no_invoice;
-        $wp->Ticket->save();
+            $wp->Ticket->no_invoice = $no_invoice;
+            $wp->Ticket->save();
 
-        $items = [];
-        $item = new stdClass();
-        $item->id = 1;
-        $item->quantity = 1;
-        $item->detil_pekerjaan = 'Deposit Work Permit';
-        $item->detil_biaya_alat = $wp->jumlah_deposit;
-        array_push($items, $item);
+            $createTransaction->save();
 
-        $createTransaction->save();
+            $system->sequence_no_invoice = $count;
+            $system->sequence_no_cash_receiptment = $countCR;
+            $system->save();
+        }
 
-        $system->sequence_no_invoice = $count;
-        $system->sequence_no_cash_receiptment = $countCR;
-        $system->save();
 
         $wp->sign_approval_3 = Carbon::now();
         $wp->save();
@@ -346,6 +342,7 @@ class WorkPermitController extends Controller
 
         $wp = $connWP->find($id);
         $wp->sign_approval_4 = Carbon::now();
+        $wp->generateBarcode();
         $wp->save();
 
         $dataNotif = [
@@ -359,6 +356,18 @@ class WorkPermitController extends Controller
         ];
 
         broadcast(new HelloEvent($dataNotif));
+
+        $dataNotifIzinKerja = [
+            'models' => 'IzinKerja',
+            'notif_title' => $wp->no_work_permit,
+            'id_data' => $wp->id,
+            'sender' => $request->session()->get('user_id'),
+            'division_receiver' => 1,
+            'notif_message' => 'Work Permit diterima, berikut surat izin kerja permit',
+            'receiver' => $wp->Ticket->Tenant->User->id_user
+        ];
+
+        broadcast(new HelloEvent($dataNotifIzinKerja));
 
         return response()->json(['status' => 'ok']);
     }
@@ -473,13 +482,18 @@ class WorkPermitController extends Controller
         return view('Tenant.Notification.Invoice.payment-monthly', $data);
     }
 
-    public function printWP($id)
+    public function printWP($id, $idSite)
     {
-        $connWP = ConnectionDB::setConnection(new WorkPermit());
+        $site = Site::find($idSite);
+        $model = new WorkPermit();
+        $modelSetting = new CompanySetting();
+
+        $connWP = $model->setConnection($site->db_name);
+        $connSetting = $modelSetting->setConnection($site->db_name);
 
         $data['wp'] = $connWP->find($id);
+        $data['setting'] = $connSetting->find(1);
 
         return view('AdminSite.WorkPermit.printout', $data);
     }
-    
 }

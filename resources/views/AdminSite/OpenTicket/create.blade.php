@@ -199,107 +199,107 @@
         var id_jenis_request = $('#id_jenis_request').val();
         var id_unit = $('#id_unit').val();
 
-        if (id_jenis_request == 2) {
-            requestPermit = valueRequestPermit();
-            console.log(requestPermit, personels, alats, materials);
-            if (!requestPermit || personels.length == 0 || alats.length == 0 || materials.length == 0) {
-                Swal.fire(
-                    'Failed!',
-                    'Please fill all field',
-                    'error'
-                )
-            } else {
-                $.ajax({
-                    url: '/admin/request-permits',
-                    type: 'POST',
-                    data: {
-                        requestPermit,
-                        personels,
-                        alats,
-                        materials,
-                        judul_request: judul_request,
-                        no_hp: no_hp,
-                        id_jenis_request: id_jenis_request,
-                        id_unit: id_unit,
-                    },
-                    success: function(resp) {
-                        if (resp.status === 'ok') {
-                            Swal.fire(
-                                'Success!',
-                                'Success create Request!',
-                                'success'
-                            ).then(() => window.location.replace('/admin/open-tickets'))
+            if (id_jenis_request == 2) {
+                requestPermit = valueRequestPermit();
+                console.log(requestPermit, personels, alats, materials);
+                if (!requestPermit || personels.length == 0 || alats.length == 0  || materials.length == 0) {
+                    Swal.fire(
+                        'Failed!',
+                        'Please fill all field',
+                        'error'
+                    )
+                } else {
+                    console.log(personels, alats, materials);
+                    $.ajax({
+                        url: '/admin/request-permits',
+                        type: 'POST',
+                        data: {
+                            requestPermit,
+                            personels,
+                            alats,
+                            materials,
+                            judul_request: judul_request,
+                            no_hp: no_hp,
+                            id_jenis_request: id_jenis_request,
+                            id_unit: id_unit,
+                        },
+                        success: function(resp) {
+                            if (resp.status === 'ok') {
+                                Swal.fire(
+                                    'Success!',
+                                    'Success create Request!',
+                                    'success'
+                                ).then(() => window.location.replace('/admin/open-tickets'))
+                            }
                         }
-                    }
-                });
-            }
-        } else if (id_jenis_request == 4) {
-            value = reservationValue();
-            if (!value) {
-                Swal.fire(
-                    'Failed!',
-                    'Please fill all field',
-                    'error'
-                )
-            } else {
-                $.ajax({
-                    url: '/admin/request-reservations',
-                    type: 'POST',
-                    data: {
-                        value,
-                        judul_request: judul_request,
-                        no_hp: no_hp,
-                        deskripsi_request: deskripsi_request,
-                        id_jenis_request: id_jenis_request,
-                        id_unit: id_unit,
-                    },
-                    success: function(resp) {
-                        if (resp.status === 'ok') {
-                            Swal.fire(
-                                'Success!',
-                                'Success create Request!',
-                                'success'
-                            ).then(() => window.location.replace('/admin/open-tickets'))
+                    });
+                }
+            } else if (id_jenis_request == 4) {
+                value = reservationValue();
+                if (!value) {
+                    Swal.fire(
+                        'Failed!',
+                        'Please fill all field',
+                        'error'
+                    )
+                } else {
+                    $.ajax({
+                        url: '/admin/request-reservations',
+                        type: 'POST',
+                        data: {
+                            value,
+                            judul_request: judul_request,
+                            no_hp: no_hp,
+                            deskripsi_request: deskripsi_request,
+                            id_jenis_request: id_jenis_request,
+                            id_unit: id_unit,
+                        },
+                        success: function(resp) {
+                            if (resp.status === 'ok') {
+                                Swal.fire(
+                                    'Success!',
+                                    'Success create Request!',
+                                    'success'
+                                ).then(() => window.location.replace('/admin/open-tickets'))
+                            }
                         }
-                    }
-                });
-            }
-        } else if (id_jenis_request == 5) {
-            gigo = gigoValue();
-            if (!gigo || goods.length === 0) {
-                Swal.fire(
-                    'Failed!',
-                    'Please fill all field',
-                    'error'
-                )
-            } else {
-                console.log(gigo, goods.length);
-                $.ajax({
-                    url: '/admin/gigo',
-                    type: 'POST',
-                    data: {
-                        gigo,
-                        goods,
-                        judul_request: judul_request,
-                        no_hp: no_hp,
-                        id_jenis_request: id_jenis_request,
-                        id_unit: id_unit,
-                    },
-                    success: function(resp) {
-                        if (resp.status === 'ok') {
-                            Swal.fire(
-                                'Success!',
-                                'Success create Request!',
-                                'success'
-                            ).then(() => window.location.replace('/admin/open-tickets'))
+                    });
+                }
+            } else if (id_jenis_request == 5) {
+                gigo = gigoValue();
+                if (!gigo || goods.length === 0) {
+                    Swal.fire(
+                        'Failed!',
+                        'Please fill all field',
+                        'error'
+                    )
+                } else {
+                    $.ajax({
+                        url: '/admin/gigo',
+                        type: 'POST',
+                        data: {
+                            gigo,
+                            goods,
+                            judul_request: judul_request,
+                            no_hp: no_hp,
+                            id_jenis_request: id_jenis_request,
+                            id_unit: id_unit,
+                        },
+                        success: function(resp) {
+                            if (resp.status === 'ok') {
+                                Swal.fire(
+                                    'Success!',
+                                    'Success create Request!',
+                                    'success'
+                                ).then(() => window.location.replace('/admin/open-tickets'))
+                            }
                         }
-                    }
-                });
+                    });
+                }
+            } else {
+                $('#create-open-request').submit();
             }
-        } else {
-            $('#create-open-request').submit();
         }
-    }
 
     $('#id_tenant').on('change', function() {
         $('#id_unit').html('');

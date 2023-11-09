@@ -57,6 +57,7 @@
                                             data-bulk-select='{"body":"bulk-select-body","actions":"bulk-select-actions","replacedElement":"bulk-select-replace-element"}' />
                                     </div>
                                 </th>
+                                <th></th>
                                 <th class="align-middle">Unit</th>
                                 <th class="align-middle">Water </th>
                                 <th class="align-middle">Electric</th>
@@ -74,6 +75,9 @@
                                                 data-bulk-select-row="data-bulk-select-row" />
                                         </div>
                                     </th>
+                                    <td class="align-middle">
+                                        <img src="{{ $item->image ? url($item->image) : url('/assets/img/icons/spot-illustrations/proapps.png') }}" width="100">
+                                    </td>
                                     <th class="align-middle">{{ $item->Unit->nama_unit }}</th>
                                     <th class="align-middle">
                                         @if ($item->WaterUUSrelation())

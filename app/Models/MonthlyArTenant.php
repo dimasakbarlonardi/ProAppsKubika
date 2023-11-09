@@ -71,11 +71,12 @@ class MonthlyArTenant extends Model
     public function PreviousMonthBill()
     {
         $prevMonthBill = ConnectionDB::setConnection(new MonthlyArTenant())
-        ->where('periode_bulan', '<', $this->periode_bulan)
-        ->where('periode_tahun', $this->periode_tahun)
-        ->with(['MonthlyUtility.ElectricUUS', 'MonthlyUtility.WaterUUS'])
-        ->where('tgl_bayar_invoice', null)
-        ->get();
+            ->where('periode_bulan', '<', $this->periode_bulan)
+            ->where('periode_tahun', $this->periode_tahun)
+            ->with(['MonthlyUtility.ElectricUUS', 'MonthlyUtility.WaterUUS'])
+            ->where('tgl_bayar_invoice', null)
+            ->where('id_unit', $this->id_unit)
+            ->get();
 
         return $prevMonthBill;
     }
@@ -83,10 +84,10 @@ class MonthlyArTenant extends Model
     public function SubTotal()
     {
         $prevMonthBill = ConnectionDB::setConnection(new MonthlyArTenant())
-        ->where('periode_bulan', '<=', $this->periode_bulan)
-        ->where('periode_tahun', $this->periode_tahun)
-        ->where('tgl_bayar_invoice', null)
-        ->get();
+            ->where('periode_bulan', '<=', $this->periode_bulan)
+            ->where('periode_tahun', $this->periode_tahun)
+            ->where('tgl_bayar_invoice', null)
+            ->get();
 
         $total_denda = $prevMonthBill->sum('total_denda');
         $total_tagihan_ipl = $prevMonthBill->sum('total_tagihan_ipl');

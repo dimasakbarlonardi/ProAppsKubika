@@ -12,12 +12,14 @@ use App\Models\DetailGIGO;
 use App\Models\JenisRequest;
 use App\Models\OpenTicket;
 use App\Models\RequestGIGO;
+use App\Models\RequestPermit;
 use App\Models\Reservation;
 use App\Models\Site;
 use App\Models\System;
 use App\Models\Unit;
 use App\Models\User;
 use App\Models\WorkOrder;
+use App\Models\WorkPermit;
 use App\Models\WorkRequest;
 use Carbon\Carbon;
 use File;
@@ -49,6 +51,29 @@ class OpenTicketController extends Controller
 
         $tickets = $connOpenTicket->where('id_tenant', $user->Tenant->id_tenant)
             ->get();
+
+        foreach ($tickets as $ticket) {
+            $ticket['request_type'] = 'Complaint';
+
+            if ($ticket->WorkRequest) {
+                $ticket['request_type'] = 'WorkRequest';
+            }
+            if ($ticket->RequestReservation) {
+                $ticket['request_type'] = 'Reservation';
+            }
+            if ($ticket->WorkOrder) {
+                $ticket['request_type'] = 'WorkOrder';
+            }
+            if ($ticket->WorkPermit) {
+                $ticket['request_type'] = 'WorkPermit';
+            }
+            if ($ticket->RequestPermit) {
+                $ticket['request_type'] = 'Permit';
+            }
+            if ($ticket->RequestGIGO) {
+                $ticket['request_type'] = 'GIGO';
+            }
+        }
 
         return ResponseFormatter::success(
             $tickets,
@@ -163,31 +188,68 @@ class OpenTicketController extends Controller
         $connReservation = ConnectionDB::setConnection(new Reservation());
         $connWO = ConnectionDB::setConnection(new WorkOrder());
         $connWR = ConnectionDB::setConnection(new WorkRequest());
+        $connRP = ConnectionDB::setConnection(new RequestPermit());
+        $connWP = ConnectionDB::setConnection(new WorkPermit());
 
         $ticket = $connRequest->find($id);
 
         $item = new stdClass();
-        $item->ticket = $ticket;
+        $item->ticket['no_tiket'] = $ticket->no_tiket;
+        $item->ticket['request_title'] = $ticket->judul_request;
+        $item->ticket['request_date'] = $ticket->created_at;
+        $item->ticket['unit'] = $ticket->Unit->nama_unit;
+        $item->ticket['tenant'] = $ticket->Tenant->nama_tenant;
+        $item->ticket['upload_image'] = null;
 
         if ($ticket->id_jenis_request == 1) {
             $wo = $connWO->where('no_tiket', $ticket->no_tiket)->first();
+            $item->ticket['deskripsi_request'] = strip_tags($ticket->deskripsi_request);
+            $item->ticket['upload_image'] = $ticket->upload_image;
 
             if ($wo) {
-                $ticket['model'] = 'WorkOrder';
-                $ticket->request = $wo;
+                $item->ticket['request_type'] = 'WorkOrder';
+                $item->request = $wo;
             } else {
                 $wr = $connWR->where('no_tiket', $ticket->no_tiket)->first();
-                $ticket['model'] = 'WorkRequest';
-                $ticket->request = $wr;
+                $item->ticket['request_type'] = 'WorkRequest';
+                $item->request = $wr;
             }
         }
 
+        if ($ticket->id_jenis_request == 2) {
+            $rp = $connRP->where('no_tiket', $ticket->no_tiket)->first();
+            $wp = $connWP->where('no_tiket', $ticket->no_tiket)->first();
+
+            if ($wp) {
+                $item->ticket['request_type'] = 'WorkPermit';
+                $item->request = $wp;
+            } else {
+                $item->ticket['request_type'] = 'RequestPermit';
+                $item->request = $rp;
+            }
+            $item->ticket['deskripsi_request'] = strip_tags($rp->keterangan_pekerjaan);
+
+            $dataJSON = json_decode($wp->RequestPermit->RPDetail->data);
+            $dataJSON = json_decode($dataJSON);
+
+            $data['personels'] = $dataJSON->personels;
+            $data['alats'] = $dataJSON->alats;
+            $data['materials'] = $dataJSON->materials;
+
+            $item->request['personels'] =  $data['personels'];
+            $item->request['alats'] =  $data['alats'];
+            $item->request['materials'] =  $data['materials'];
+        }
+
         if ($ticket->id_jenis_request == 4) {
-            $rsv = $connReservation->where('no_tiket', $ticket->no_tiket)->first();
+            $rsv = $connReservation->where('no_tiket', $ticket->no_tiket)
+                ->with('JenisAcara', 'RuangReservation')
+                ->first();
 
-            $ticket['model'] = 'Reservation';
+            $item->ticket['request_type'] = 'Reservation';
 
-            $ticket->request = $rsv;
+            $item->request = $rsv;
+            $item->ticket['deskripsi_request'] = strip_tags($rsv->keterangan);
         }
 
         if ($ticket->id_jenis_request == 5) {
@@ -195,15 +257,14 @@ class OpenTicketController extends Controller
             $detail_gigo = $connDetailGIGO->where('id_request_gigo', $gigo->id)->get();
 
             $request = $gigo;
-            $ticket['model'] = 'GIGO';
+            $item->ticket['request_type'] = 'GIGO';
             $request['detail'] = $detail_gigo;
 
-            $ticket->request = $request;
+            $item->request = $request;
+            $item->ticket['deskripsi_request'] = null;
         }
 
-        $ticket->deskripsi_request = strip_tags($ticket->deskripsi_request);
-        $ticket->deskripsi_respon = strip_tags($ticket->deskripsi_respon);
-
+        $item->ticket['deskripsi_respon'] = strip_tags($ticket->deskripsi_respon);
 
         return ResponseFormatter::success(
             $item,
@@ -237,10 +298,13 @@ class OpenTicketController extends Controller
 
         switch ($cr->transaction_type) {
             case ('Reservation'):
-                $object = $this->ReservationInvoice($cr, $site);
+                $object = $this->ReservationInvoice($cr);
                 break;
             case ('WorkOrder'):
-                $object = $this->WorkOrderInvoice($cr, $site);
+                $object = $this->WorkOrderInvoice($cr);
+                break;
+            case ('WorkPermit'):
+                $object = $this->WorkPermitInvoice($cr);
                 break;
         }
 
@@ -264,7 +328,23 @@ class OpenTicketController extends Controller
         );
     }
 
-    function WorkOrderInvoice($cr, $site)
+    function WorkPermitInvoice($cr)
+    {
+        $object = new stdClass();
+
+        $object->id = $cr->id;
+        $object->work_order_id = $cr->WorkPermit->id;
+        $object->tenant_name = $cr->WorkPermit->Ticket->Tenant->nama_tenant;
+        $object->tower = $cr->WorkPermit->Ticket->Unit->Tower->nama_tower;
+        $object->tower = $cr->WorkPermit->Ticket->Unit->nama_unit;
+        $object->tenant_email = $cr->WorkPermit->Ticket->Tenant->email_tenant;
+        $object->phone_number_tenant = $cr->WorkPermit->Ticket->Tenant->no_telp_tenant;
+        $object->total = $cr->sub_total;
+
+        return $object;
+    }
+
+    function WorkOrderInvoice($cr)
     {
         $object = new stdClass();
 
@@ -291,7 +371,7 @@ class OpenTicketController extends Controller
         return $object;
     }
 
-    function ReservationInvoice($cr, $site)
+    function ReservationInvoice($cr)
     {
         $object = new stdClass();
 
@@ -342,7 +422,7 @@ class OpenTicketController extends Controller
                 $payment = [];
                 $payment['payment_type'] = $type;
                 $payment['transaction_details']['order_id'] = $cr->order_id;
-                $payment['transaction_details']['gross_amount'] = $gross_amount;
+                $payment['transaction_details']['gross_amount'] = round($gross_amount);
                 $payment['bank_transfer']['bank'] = $bank;
 
                 $response = $client->request('POST', 'https://api.sandbox.midtrans.com/v2/charge', [

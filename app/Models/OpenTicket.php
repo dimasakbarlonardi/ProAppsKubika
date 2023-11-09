@@ -67,6 +67,11 @@ class OpenTicket extends Model
         return $this->hasOne(RequestPermit::class, 'no_tiket', 'no_tiket');
     }
 
+    public function WorkPermit()
+    {
+        return $this->hasOne(WorkPermit::class, 'no_tiket', 'no_tiket');
+    }
+
     public function WorkRequest()
     {
         return $this->hasOne(WorkRequest::class, 'no_tiket', 'no_tiket');

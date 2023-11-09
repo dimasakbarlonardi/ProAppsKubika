@@ -25,7 +25,8 @@ class ElectricUUS extends Model
         'id_user',
         'no_refrensi',
         'catatan',
-        'is_approve'
+        'is_approve',
+        'image'
     ];
 
     public function Unit()

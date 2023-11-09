@@ -13,6 +13,7 @@ use App\Http\Controllers\API\UnitController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\InspectionController;
 use App\Http\Controllers\API\PackageController;
+use App\Http\Controllers\API\RequestPermitController;
 use App\Http\Controllers\API\ReservationController;
 use App\Http\Controllers\API\RoomController;
 use App\Http\Controllers\API\ToolsController;
@@ -43,11 +44,11 @@ Route::prefix('v1')->group(function () {
 
     // Insert electric meter
     Route::get('/insert-electric/{unitID}/{token}', [BillingController::class, 'insertElectricMeter']);
-    Route::get('store/insert-electric/{unitID}/{token}', [BillingController::class, 'storeElectricMeter'])->name('store-usr-electric');
+    Route::post('/store/insert-electric/{unitID}/{token}', [BillingController::class, 'storeElectricMeter'])->name('store-usr-electric');
 
     // Insert water meter
     Route::get('/insert-water/{unitID}/{token}', [BillingController::class, 'insertWaterMeter']);
-    Route::get('/store/insert-water/{unitID}/{token}', [BillingController::class, 'storeWaterMeter'])->name('store-usr-water');
+    Route::post('/store/insert-water/{unitID}/{token}', [BillingController::class, 'storeWaterMeter'])->name('store-usr-water');
 
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/logout', [UserController::class, 'logout'])->name('api-logout');
@@ -74,6 +75,15 @@ Route::prefix('v1')->group(function () {
         Route::post('/open-ticket', [OpenTicketController::class, 'store']);
         Route::get('/open-ticket/{id}', [OpenTicketController::class, 'show']);
 
+        Route::get('/permit/jenis-pekerjaan', [RequestPermitController::class, 'jenisPekerjaan']);
+        Route::post('/permit', [RequestPermitController::class, 'store']);
+        Route::post('/permit/accept/{id}', [RequestPermitController::class, 'accept']);
+        Route::post('/permit/approve2/{id}', [RequestPermitController::class, 'approve2']);
+        Route::post('/permit/approve4/{id}', [RequestPermitController::class, 'approve4']);
+        Route::post('/permit/done/{id}', [RequestPermitController::class, 'done']);
+        Route::post('/permit/done-deposit/{id}', [RequestPermitController::class, 'doneDeposit']);
+        Route::post('/permit/complete/{id}', [RequestPermitController::class, 'complete']);
+
         // Work Request
         Route::post('/on-work/work-request/{id}', [WorkRequestController::class, 'OnWork']);
         Route::post('/work-done/work-request/{id}', [WorkRequestController::class, 'WorkDone']);
@@ -92,6 +102,7 @@ Route::prefix('v1')->group(function () {
         // Billing Monthly
         Route::get('/list-billings/{id}', [BillingController::class, 'listBillings']);
         Route::get('/get-billing/{id}', [BillingController::class, 'showBilling']);
+        Route::post('/get-billing/{id}', [BillingController::class, 'showBilling']);
 
         // Billing Ticket
         Route::get('/payable-tickets/{id}', [OpenTicketController::class, 'payableTickets']);

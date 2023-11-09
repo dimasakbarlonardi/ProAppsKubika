@@ -84,7 +84,7 @@ class WorkOrderController extends Controller
                     'estimasi_pengerjaan' => $request->estimasi_pengerjaan
                 ]);
 
-                if ($request->id_bayarnon == "1") {
+                if ($request->services) {
                     foreach ($request->services as $service) {
                         $connDetailWO->create([
                             'id' => $service['id'],
@@ -348,10 +348,10 @@ class WorkOrderController extends Controller
             ];
         }
 
+        broadcast(new HelloEvent($dataNotif));
+
         $wo->status_wo = 'BM APPROVED';
         $wo->save();
-
-        broadcast(new HelloEvent($dataNotif));
 
         return response()->json(['status' => 'ok']);
     }
