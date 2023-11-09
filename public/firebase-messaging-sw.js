@@ -2,10 +2,10 @@ importScripts('https://www.gstatic.com/firebasejs/8.3.2/firebase-app.js');
 importScripts('https://www.gstatic.com/firebasejs/8.3.2/firebase-messaging.js');
 
 firebase.initializeApp({
-    apiKey: "AIzaSyCTdiDHuOGNRGU9mCxiOZrmEoFam0_sui4",
-    projectId: "proapps-indoland",
-    messagingSenderId: "1022619881265",
-    appId: "1:1022619881265:web:b501044f89e60694d0ea10"
+    apiKey: "AIzaSyCwvhY2qCtw3Aa0auw9_gygY6fhqswHzFc",
+    projectId: "proapps-d8080",
+    messagingSenderId: "921000558886",
+    appId: "1:921000558886:web:f368ccf9a9924e4fe501e7"
 });
 
 const messaging = firebase.messaging();
