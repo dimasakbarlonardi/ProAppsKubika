@@ -67,49 +67,61 @@ class AuthenticatedSessionController extends Controller
                     ->with('site')
                     ->first();
 
-                $currUser = new User();
-                $currUser = $currUser->setConnection($user->site->db_name);
-                $getUser = $currUser->where('login_user', $user->email)
-                    ->with(['RoleH.AksesForm', 'RoleH.WorkRelation'])
-                    ->first();
+                if ($user->site->id_site == $request->id_site) {
+                    $currUser = new User();
+                    $currUser = $currUser->setConnection($user->site->db_name);
+                    $getUser = $currUser->where('login_user', $user->email)
+                        ->with(['RoleH.AksesForm', 'RoleH.WorkRelation'])
+                        ->first();
 
-                if (Auth::check()) {
-                    if (!Hash::check($request->password, $user->password, [])) {
-                        throw new \Exception('Invalid Credentials');
-                    }
+                    if (Auth::check()) {
+                        if (!Hash::check($request->password, $user->password, [])) {
+                            throw new \Exception('Invalid Credentials');
+                        }
 
-                    if ($getUser->Karyawan) {
-                        $checkIsResign = $getUser->Karyawan->tgl_keluar;
+                        if ($getUser->Karyawan) {
+                            $checkIsResign = $getUser->Karyawan->tgl_keluar;
 
-                        if ($checkIsResign < Carbon::now()->format('Y-m-d')) {
+                            if ($checkIsResign < Carbon::now()->format('Y-m-d')) {
+                                Auth::guard('web')->logout();
+
+                                $request->session()->invalidate();
+
+                                $request->session()->regenerateToken();
+
+                                Alert::error('Sorry', 'You can not access this app anymore');
+
+                                return redirect()->route('login');
+                            }
+                        }
+
+                        if (isset($getUser)) {
+                            $request->authenticate();
+                            $request->session()->regenerate();
+
+                            return redirect()->route('select-role');
+                        } else {
                             Auth::guard('web')->logout();
 
                             $request->session()->invalidate();
 
                             $request->session()->regenerateToken();
 
-                            Alert::error('Sorry', 'You can not access this app anymore');
+                            Alert::error('Gagal', 'Anda tidak terdaftar');
 
                             return redirect()->route('login');
                         }
                     }
+                } else {
+                    Auth::guard('web')->logout();
 
-                    if (isset($getUser)) {
-                        $request->authenticate();
-                        $request->session()->regenerate();
+                    $request->session()->invalidate();
 
-                        return redirect()->route('select-role');
-                    } else {
-                        Auth::guard('web')->logout();
+                    $request->session()->regenerateToken();
 
-                        $request->session()->invalidate();
+                    Alert::error('Gagal', 'Anda tidak terdaftar');
 
-                        $request->session()->regenerateToken();
-
-                        Alert::error('Gagal', 'Anda tidak terdaftar');
-
-                        return redirect()->route('login');
-                    }
+                    return redirect()->route('login');
                 }
             }
         } catch (Exception $error) {
