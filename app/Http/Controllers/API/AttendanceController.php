@@ -465,13 +465,14 @@ class AttendanceController extends Controller
         $connSchedule = ConnectionDB::setConnection(new WorkTimeline());
 
         $login = $connUser->where('login_user', $request->user()->email)->first();
-        $getRole = $login->id_role_hdr;
+        $getRole = $login->RoleH->WorkRelation->id_work_relation;
 
         $schedules = $connSchedule->where('date', $request->request_date)
-            ->whereHas('Karyawan.User', function ($q) use ($getRole) {
-                $q->where('id_role_hdr', $getRole);
+            ->whereHas('Karyawan.User.RoleH.WorkRelation', function ($q) use ($getRole) {
+                $q->where('id_work_relation', $getRole);
             })
             ->with(['ShiftType', 'Karyawan.User.RoleH'])
+            ->where('karyawan_id', '!=', $login->Karyawan->id)
             ->get();
 
         $objects = [];
