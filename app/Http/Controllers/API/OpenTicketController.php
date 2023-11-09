@@ -219,24 +219,13 @@ class OpenTicketController extends Controller
         if ($ticket->id_jenis_request == 2) {
             $rp = $connRP->where('no_tiket', $ticket->no_tiket)->first();
             $wp = $connWP->where('no_tiket', $ticket->no_tiket)->first();
-            
+
             if ($wp) {
                 $item->ticket['request_type'] = 'WorkPermit';
-                $item->request = $wp;                
+                $item->request = $wp;
             } else {
                 $item->ticket['request_type'] = 'RequestPermit';
-                $item->request = $rp;                
-            }
-
-            if ($rp) {
-                $dataJSON = json_decode($rp->RPDetail->data);
-                $dataJSON = json_decode($dataJSON);
-                $data['personels'] = $dataJSON->personels;
-                $data['alats'] = $dataJSON->alats;
-                $data['materials'] = $dataJSON->materials;
-                $item->request['personels'] =  $data['personels'];
-                $item->request['alats'] =  $data['alats'];
-                $item->request['materials'] =  $data['materials'];
+                $item->request = $rp;
             }
 
             if ($rp) {
