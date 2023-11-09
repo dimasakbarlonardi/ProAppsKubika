@@ -108,7 +108,7 @@ class Unit extends Model
 
     public function electricUUS()
     {
-        return $this->hasMany(ElectricUUS::class, 'id_unit', 'id_unit')->latest();
+        return $this->hasMany(ElectricUUS::class, 'id_unit', 'id_unit')->orderBy('id', 'DESC');
     }
 
     public function allElectricUUS()
@@ -123,7 +123,7 @@ class Unit extends Model
 
     public function waterUUS()
     {
-        return $this->hasMany(WaterUUS::class, 'id_unit', 'id_unit')->latest();
+        return $this->hasMany(WaterUUS::class, 'id_unit', 'id_unit')->orderBy('id', 'DESC');
     }
 
     public function allWaterUUS()
