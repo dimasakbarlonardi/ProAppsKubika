@@ -418,7 +418,7 @@ Route::prefix('admin')->group(function () {
         Route::post('/work-permit/doneWP/{id}', [WorkPermitController::class, 'doneWP'])->name('doneWP');
         Route::post('/work-permit/generate/{id}', [WorkPermitController::class, 'generatePaymentPO'])->name('generatePaymentPO');
         Route::get('/work-permit/payment/{id}', [WorkPermitController::class, 'paymentPO'])->name('paymentPO');
-        Route::get('/work-permit/print-paper/{id}', [WorkPermitController::class, 'printWP'])->name('printWP');
+        Route::get('/work-permit/print-paper/{id}/{idSite}', [WorkPermitController::class, 'printWP'])->name('printWP');
 
         // Reservation
         Route::resource('request-reservations', ReservationController::class);
