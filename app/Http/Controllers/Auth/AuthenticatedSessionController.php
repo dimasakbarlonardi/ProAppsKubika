@@ -31,6 +31,8 @@ class AuthenticatedSessionController extends Controller
      */
     public function create()
     {
+        Auth::guard('web')->logout();
+
         return view('auth.login');
     }
 
