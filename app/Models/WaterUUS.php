@@ -24,7 +24,8 @@ class WaterUUS extends Model
         'total',
         'no_refrensi',
         'catatan',
-        'is_approve'
+        'is_approve',
+        'image'
     ];
 
     public function Unit()

@@ -33,7 +33,6 @@ class FCM extends FcmNotification {
             $this->body = $payload['body'];
         }
 
-
         return $this;
     }
     /**
@@ -70,6 +69,8 @@ class FCM extends FcmNotification {
 
     private function prepareSend()
     {
+        $data = [];
+
         if (isset($this->topic)) {
             $data = [
                 "message" => [

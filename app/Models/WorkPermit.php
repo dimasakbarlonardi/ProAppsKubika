@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 
 class WorkPermit extends Model
 {
@@ -29,7 +31,29 @@ class WorkPermit extends Model
         'sign_approval_5',
         'no_cash_receipt',
         'status_bayar',
+        'barcode'
     ];
+
+    public function GenerateBarcode()
+    {
+        $barcodeWP = QrCode::format('png')
+            ->merge(public_path('assets/img/logos/proapps.png'), 0.6, true)
+            ->size(500)
+            ->color(0, 0, 0)
+            ->eyeColor(0, 39, 178, 155, 0, 0, 0)
+            ->eyeColor(1, 39, 178, 155, 0, 0, 0)
+            ->eyeColor(2, 39, 178, 155, 0, 0, 0)
+            ->errorCorrection('H')
+            ->generate(url('') . '/work-permit/letter/' . $this->id . '/' . $this->Ticket->id_site);
+
+        $outputWP = '/public/' . $this->id_site . '/img/qr-code/work-permit/' . $this->id . '-barcode_wp.png';
+        $barcode = '/storage/' . $this->id_site . '/img/qr-code/work-permit/' . $this->id . '-barcode_wp.png';
+
+        Storage::disk('local')->put($outputWP, $barcodeWP);
+
+        $this->barcode = $barcode;
+        $this->save();
+    }
 
     public function Ticket()
     {

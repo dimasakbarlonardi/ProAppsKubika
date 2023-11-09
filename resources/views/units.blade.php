@@ -59,7 +59,7 @@
                                         </button>
                                         <div class="dropdown-menu dropdown-menu-end border py-2"
                                             aria-labelledby="preview-dropdown">
-                                            <a class="dropdown-item" href="#!">Tambah Tower</a>
+                                            <a class="dropdown-item" href="#!">Create Tower</a>
                                             <a class="dropdown-item"
                                                 href="#!">List Tower</a>
                                         </div>

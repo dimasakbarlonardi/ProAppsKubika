@@ -156,12 +156,22 @@
                             <option {{ $wp->id_bayarnon == 0 ? 'selected' : '' }} value="0">No</option>
                         </select>
                     </div>
+                    <div class="mb-4 mt-n2"><label class="mb-1">Jumlah Supervisi</label>
+                        <input type="text" value="{{ Rupiah($wp->jumlah_supervisi) }}" class="form-control"
+                            name="jumlah_deposit" required disabled>
+                    </div>
                     <div class="mb-4 mt-n2"><label class="mb-1">Jumlah Deposit</label>
-                        <input type="text" value="{{ $wp->jumlah_deposit }}" class="form-control"
+                        <input type="text" value="{{ Rupiah($wp->jumlah_deposit) }}" class="form-control"
                             name="jumlah_deposit" required disabled>
                     </div>
                 </div>
             </div>
+            @if ($wp->sign_approval_4 && $wp->status_request != 'COMPLETE' && Request::session()->get('work_relation_id') == 1)
+                <div class="card-footer border-top border-200 py-x1">
+                    <a href="{{ route('printWP', [$wp->id, Request::user()->id_site]) }}" target="_blank"
+                        class="btn btn-warning w-100 mb-3">Print</a>
+                </div>
+            @endif
             @if (
                 $wp->id_work_relation == $user->RoleH->WorkRelation->id_work_relation &&
                     $user->Karyawan->is_can_approve &&
@@ -190,13 +200,13 @@
                     $wp->status_request != 'DONE' &&
                     $wp->id_work_relation == Request::session()->get('work_relation_id'))
                 <div class="card-footer border-top border-200 py-x1">
-                    <a href="{{ route('printWP', $wp->id) }}" target="_blank"
+                    <a href="{{ route('printWP', [$wp->id, Request::user()->id_site]) }}" target="_blank"
                         class="btn btn-warning w-100 mb-3">Print</a>
                     <button type="button" class="btn btn-primary w-100"
                         onclick="workDoneWP({{ $wp->id }})">Pekerjaan Selesai</button>
                 </div>
             @endif
-            @if (!$wp->BAPP)
+            @if (!$wp->BAPP && $wp->id_work_relation == Request::session()->get('work_relation_id') && $wp->status_request == 'WORK DONE')
                 <div class="card-footer border-top border-200 py-x1">
                     <a href="{{ route('bapp.create', ['id_wp' => $wp->id]) }}" target="_blank"
                         class="btn btn-info w-100 mb-3">Buat BAPP</a>
@@ -250,6 +260,22 @@
                         Swal.fire(
                             'Berhasil!',
                             'Berhasil mengupdate Work Order!',
+                            'success'
+                        ).then(() => window.location.reload())
+                    }
+                }
+            })
+        }
+
+        function approve4(id) {
+            $.ajax({
+                url: `/admin/work-permit/approve4/${id}`,
+                type: 'POST',
+                success: function(data) {
+                    if (data.status === 'ok') {
+                        Swal.fire(
+                            'Success!',
+                            'Success approve Work Permit!',
                             'success'
                         ).then(() => window.location.reload())
                     }

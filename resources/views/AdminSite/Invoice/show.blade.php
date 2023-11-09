@@ -59,16 +59,15 @@
     <div class="card mb-3">
         <div class="card-body">
             <div class="row align-items-center text-center mb-3">
-                <div class="col-sm-6 text-sm-start"><img src="/assets/img/icons/spot-illustrations/proapps.png"
-                        alt="invoice" width="150" /></div>
+                <div class="col-sm-6 text-sm-start">
+                    <img src="{{ $setting->company_logo ? url($setting->company_logo) : '/assets/img/icons/spot-illustrations/proapps.png' }}"
+                        alt="invoice" width="150" />
+                </div>
                 <div class="col text-sm-end mt-3 mt-sm-0">
                     <h2 class="mb-3">Invoice</h2>
-                    <h5>Proapps</h5>
-                    <p class="fs--1 mb-0">
-                        Harton Tower Citihub, 6th floor <br>
-                        Jl. Boulevard Artha Gading Blok D No. 3, <br>
-                        Kelapa Gading Barat
-                        Jakarta Utara, 14240
+                    <h5>{{ $setting->company_name ? $setting->company_name : 'Proapps' }}</h5>
+                    <p class="fs--1 mt-2">
+                        {!! $setting->company_address !!}
                     </p>
                 </div>
                 <div class="col-12">
@@ -90,7 +89,8 @@
                             @if ($tu->is_owner == 1)
                                 <h6 class="text-500">Unit Owner</h6>
                                 <p class="fs--1">
-                                    <a href="mailto:{{ $tu->Tenant->email_tenant }}">{{ $tu->Tenant->email_tenant }}</a><br />
+                                    <a
+                                        href="mailto:{{ $tu->Tenant->email_tenant }}">{{ $tu->Tenant->email_tenant }}</a><br />
                                     <a href="tel:{{ $tu->Tenant->no_telp_tenant }}">{{ $tu->Tenant->no_telp_tenant }}</a>
                             @endif
                         @endforeach
@@ -98,16 +98,18 @@
                             @if ($tu->is_owner == 0)
                                 <h6 class="text-500">Tenant</h6>
                                 <p class="fs--1">
-                                    <a href="mailto:{{ $tu->Tenant->email_tenant  }}">{{ $tu->Tenant->email_tenant  }}</a><br />
+                                    <a
+                                        href="mailto:{{ $tu->Tenant->email_tenant }}">{{ $tu->Tenant->email_tenant }}</a><br />
                                     <a href="tel:{{ $tu->Tenant->no_telp_tenant }}">{{ $tu->Tenant->no_telp_tenant }}</a>
                             @endif
                         @endforeach
                     @else
-                    @foreach ($data->TenantUnit as $tu)
+                        @foreach ($data->TenantUnit as $tu)
                             @if ($tu->is_owner == 1)
                                 <h6 class="text-500">Unit Owner</h6>
                                 <p class="fs--1">
-                                    <a href="mailto:{{ $tu->Tenant->email_tenant }}">{{ $tu->Tenant->email_tenant }}</a><br />
+                                    <a
+                                        href="mailto:{{ $tu->Tenant->email_tenant }}">{{ $tu->Tenant->email_tenant }}</a><br />
                                     <a href="tel:{{ $tu->Tenant->no_telp_tenant }}">{{ $tu->Tenant->no_telp_tenant }}</a>
                             @endif
                         @endforeach
@@ -115,7 +117,8 @@
                             @if ($tu->is_owner == 0)
                                 <h6 class="text-500">Tenant</h6>
                                 <p class="fs--1">
-                                    <a href="mailto:{{ $tu->Tenant->email_tenant  }}">{{ $tu->Tenant->email_tenant  }}</a><br />
+                                    <a
+                                        href="mailto:{{ $tu->Tenant->email_tenant }}">{{ $tu->Tenant->email_tenant }}</a><br />
                                     <a href="tel:{{ $tu->Tenant->no_telp_tenant }}">{{ $tu->Tenant->no_telp_tenant }}</a>
                             @endif
                         @endforeach
@@ -214,41 +217,71 @@
                                             </td>
                                             <td class="align-middle text-end"></td>
                                             <td class="align-middle text-end"></td>
+                                            <td class="align-middle text-end"></td>
                                         </tr>
                                         <tr></tr>
                                         <tr>
                                             <td class="align-middle">
-                                                <h6 class="mb-0 text-nowrap">Tagihan Utility</h6>
+                                                <h6 class="mb-3 text-nowrap">Tagihan Utility</h6>
                                                 <p class="mb-0">Listrik</p>
+                                                <hr>
                                                 <p class="mb-0">Air</p>
                                             </td>
                                             <td class="align-middle text-center">
-                                                <br>
-                                                <span>Usage : {{ $prevBill->MonthlyUtility->ElectricUUS->usage }}</span>
-                                                <br>
-                                                <span>Usage : {{ $prevBill->MonthlyUtility->WaterUUS->usage }}</span>
+                                                <h6 class="text-nowrap mb-3">Usage</h6>
+                                                <span>{{ $prevBill->MonthlyUtility->ElectricUUS->usage }} W</span> <br>
+                                                <hr>
+                                                <span>{{ $prevBill->MonthlyUtility->WaterUUS->usage }}</span>
                                             </td>
-                                            <td class="align-middle text-end"></td>
+                                            <td class="align-middle text-center">
+                                                <h6 class="text-nowrap mb-3">Price</h6>
+                                                <span>{{ DecimalRupiahRP($electric->biaya_m3) }} / KWh</span> <br>
+                                                <hr>
+                                                <span>{{ Rupiah($prevBill->biaya_m3) }}</span>
+                                            </td>
+                                            <td class="align-middle text-center">
+                                                <h6 class="text-nowrap mb-3">PPJ
+                                                    <small>({{ $electric->biaya_ppj }}%)</small></h6>
+                                                <span>{{ DecimalRupiahRP($prevBill->MonthlyUtility->ElectricUUS->ppj) }}</span>
+                                                <br>
+                                                <hr>
+                                                <span>-</span>
+                                            </td>
                                             <td class="align-middle text-end">
-                                                {{ Rupiah($prevBill->total_tagihan_utility) }}
+                                                <h6 class="text-nowrap mb-3 text-end">Total</h6>
+                                                <span>{{ DecimalRupiahRP($prevBill->MonthlyUtility->ElectricUUS->total) }}</span>
+                                                <br>
+                                                <hr>
+                                                <span>{{ Rupiah($prevBill->MonthlyUtility->WaterUUS->total) }}</span>
                                             </td>
                                         </tr>
                                         <tr></tr>
                                         <tr>
                                             <td class="align-middle">
-                                                <h6 class="mb-0 text-nowrap">Tagihan IPL</h6>
+                                                <h6 class="mb-3 mt-3 text-nowrap">Tagihan IPL</h6>
                                                 <p class="mb-0">Service Charge</p>
+                                                <hr>
                                                 <p class="mb-0">Sink Fund</p>
                                             </td>
                                             <td class="align-middle text-center">
-                                                <br>
-                                                <span>{{ rupiah($prevBill->MonthlyIPL->ipl_service_charge) }}</span>
-                                                <br>
-                                                <span>{{ rupiah($prevBill->MonthlyIPL->ipl_sink_fund) }}</span>
+                                                <h6 class="mb-3 mt-3 text-nowrap">Luas Unit</h6>
+                                                <span>{{ $prevBill->MonthlyIPL->Unit->luas_unit }} m<sup>2</sup></span> <br>
+                                                <hr>
+                                                <span>{{ $prevBill->MonthlyIPL->Unit->luas_unit }} m<sup>2</sup></span>
                                             </td>
-                                            <td class="align-middle text-end"></td>
-                                            <td class="align-middle text-end">
-                                                {{ rupiah($prevBill->MonthlyIPL->total_tagihan_ipl) }}</td>
+                                            <td class="align-middle text-center" colspan="2">
+                                                <h6 class="mb-3 mt-3">Biaya Permeter / Biaya Procentage</h6>
+                                                <span>{{ $sc->biaya_procentage ? $sc->biaya_procentage . '%' : Rupiah($sc->biaya_permeter) }}</span>
+                                                <br>
+                                                <hr>
+                                                <span>{{ $sf->biaya_procentage ? $sf->biaya_procentage . '%' : Rupiah($sf->biaya_permeter) }}</span>
+                                            </td>
+                                            <td class="align-middle text-end" colspan="2">
+                                                <h6 class="mb-3 mt-3">Total</h6>
+                                                <span>{{ Rupiah($prevBill->MonthlyIPL->ipl_service_charge) }}</span> <br>
+                                                <hr>
+                                                <span>{{ Rupiah($prevBill->MonthlyIPL->ipl_sink_fund) }}</span>
+                                            </td>
                                         </tr>
                                     @endforeach
                                 @endif
@@ -262,38 +295,66 @@
                                     </td>
                                     <td class="align-middle text-end"></td>
                                     <td class="align-middle text-end"></td>
+                                    <td class="align-middle text-end"></td>
                                 </tr>
                                 <tr>
                                     <td class="align-middle">
-                                        <h6 class="mb-0 text-nowrap">Tagihan Utility</h6>
+                                        <h6 class="mb-3 text-nowrap">Tagihan Utility</h6>
                                         <p class="mb-0">Listrik</p>
+                                        <hr>
                                         <p class="mb-0">Air</p>
                                     </td>
                                     <td class="align-middle text-center">
-                                        <br>
-                                        <span>Usage : {{ $data->MonthlyUtility->ElectricUUS->usage }}</span> <br>
-                                        <span>Usage : {{ $data->MonthlyUtility->WaterUUS->usage }}</span>
+                                        <h6 class="text-nowrap mb-3">Usage</h6>
+                                        <span>{{ $data->MonthlyUtility->ElectricUUS->usage }} W</span> <br>
+                                        <hr>
+                                        <span>{{ $data->MonthlyUtility->WaterUUS->usage }}</span>
                                     </td>
-                                    <td class="align-middle text-end"></td>
+                                    <td class="align-middle text-center">
+                                        <h6 class="text-nowrap mb-3">Price</h6>
+                                        <span>{{ DecimalRupiahRP($electric->biaya_m3) }} / KWh</span> <br>
+                                        <hr>
+                                        <span>{{ Rupiah($water->biaya_m3) }}</span>
+                                    </td>
+                                    <td class="align-middle text-center">
+                                        <h6 class="text-nowrap mb-3">PPJ <small>({{ $electric->biaya_ppj }}%)</small></h6>
+                                        <span>{{ DecimalRupiahRP($data->MonthlyUtility->ElectricUUS->ppj) }}</span> <br>
+                                        <hr>
+                                        <span>-</span>
+                                    </td>
                                     <td class="align-middle text-end">
-                                        {{ rupiah($data->total_tagihan_utility) }}
+                                        <h6 class="text-nowrap mb-3 text-end">Total</h6>
+                                        <span>{{ DecimalRupiahRP($data->MonthlyUtility->ElectricUUS->total) }}</span> <br>
+                                        <hr>
+                                        <span>{{ Rupiah($data->MonthlyUtility->WaterUUS->total) }}</span>
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="align-middle">
-                                        <h6 class="mb-0 text-nowrap">Tagihan IPL</h6>
+                                        <h6 class="mb-3 mt-3 text-nowrap">Tagihan IPL</h6>
                                         <p class="mb-0">Service Charge</p>
+                                        <hr>
                                         <p class="mb-0">Sink Fund</p>
                                     </td>
                                     <td class="align-middle text-center">
-                                        <br>
-                                        <span>{{ rupiah($data->MonthlyIPL->ipl_service_charge) }}</span>
-                                        <br>
-                                        <span>{{ rupiah($data->MonthlyIPL->ipl_sink_fund) }}</span>
+                                        <h6 class="mb-3 mt-3 text-nowrap">Luas Unit</h6>
+                                        <span>{{ $data->MonthlyIPL->Unit->luas_unit }} m<sup>2</sup></span> <br>
+                                        <hr>
+                                        <span>{{ $data->MonthlyIPL->Unit->luas_unit }} m<sup>2</sup></span>
                                     </td>
-                                    <td class="align-middle text-end"></td>
-                                    <td class="align-middle text-end">
-                                        {{ rupiah($data->MonthlyIPL->total_tagihan_ipl) }}</td>
+                                    <td class="align-middle text-center" colspan="2">
+                                        <h6 class="mb-3 mt-3">Biaya Permeter / Biaya Procentage</h6>
+                                        <span>{{ $sc->biaya_procentage ? $sc->biaya_procentage . '%' : Rupiah($sc->biaya_permeter) }}</span>
+                                        <br>
+                                        <hr>
+                                        <span>{{ $sf->biaya_procentage ? $sf->biaya_procentage . '%' : Rupiah($sf->biaya_permeter) }}</span>
+                                    </td>
+                                    <td class="align-middle text-end" colspan="2">
+                                        <h6 class="mb-3 mt-3">Total</h6>
+                                        <span>{{ Rupiah($data->MonthlyIPL->ipl_service_charge) }}</span> <br>
+                                        <hr>
+                                        <span>{{ Rupiah($data->MonthlyIPL->ipl_sink_fund) }}</span>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
@@ -362,6 +423,31 @@
                         <tbody>
                             <tr class="alert alert-success my-3">
                                 <td class="align-middle">
+                                    <h6 class="mb-0 text-nowrap">Supervisi Work Permit</h6>
+                                </td>
+                                <td class="align-middle text-center">
+                                </td>
+                                <td class="align-middle text-end"></td>
+                                <td class="align-middle text-end"></td>
+                            </tr>
+
+                            <tr>
+                                <td class="align-middle">
+                                    <p class="mb-0">
+                                        {{ Rupiah($data->jumlah_supervisi) }}
+                                    </p>
+                                </td>
+                                <td class="align-middle text-center">
+                                </td>
+                                <td class="align-middle text-end"></td>
+                                <td class="align-middle text-end"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <table class="table">
+                        <tbody>
+                            <tr class="alert alert-success my-3">
+                                <td class="align-middle">
                                     <h6 class="mb-0 text-nowrap">Deposit Fit Out Permit</h6>
                                 </td>
                                 <td class="align-middle text-center">
@@ -384,11 +470,22 @@
                         </tbody>
                     </table>
                 @endif
-                <form action="{{ route('generatePaymentWO', $transaction->id) }}" method="post">
+                <form action="{{ route('generatePaymentWO', $transaction->id) }}" method="post" class="mt-5">
                     @csrf
                     <div class="row g-3 mb-3">
                         <div class="col-lg-8">
-
+                            @if ($type == 'MonthlyTenant')
+                                <div class="row">
+                                    <div class="col-4">
+                                        <label for="">Electric meter photo : </label>
+                                        <img class="img-fluid img-thumbnail rounded" src="{{ url($data->MonthlyUtility->ElectricUUS->image) }}" width="200">
+                                    </div>
+                                    <div class="col-4">
+                                        <label for="">Water meter photo : </label>
+                                        <img class="img-fluid img-thumbnail rounded" src="{{ url($data->MonthlyUtility->WaterUUS->image) }}" width="200">
+                                    </div>
+                                </div>
+                            @endif
                         </div>
                         <div class="col-lg-4">
                             <div class="card">
@@ -417,6 +514,10 @@
                     <input type="hidden" id="val_admin_fee" name="admin_fee">
                 </form>
             </div>
+        </div>
+        <div class="p-2">
+            <img src="{{ url('/assets/img/icons/spot-illustrations/proapps.png') }}" alt="" width="80">
+            <span class="small text-muted">*Invoice ini diterbitkan secara digital</span>
         </div>
     </div>
 

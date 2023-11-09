@@ -83,10 +83,6 @@
                         <div class="mb-4 mt-n2"><label class="mb-1">Status</label>
                             <input type="text" class="form-control" disabled value="{{ $wo->status_wo }}" id="">
                         </div>
-                        <div class="mb-4 mt-n2"><label class="mb-1">Status Berbayar WO</label>
-                            <input type="text" class="form-control" disabled
-                                value="{{ $wo->id_bayarnon == 1 ? 'Berbayar' : 'Non Berbayar' }}" id="">
-                        </div>
                     </div>
                 </div>
                 <div class="card mt-2">
@@ -147,6 +143,13 @@
                     </div>
                     <div class="card-body">
                         <div class="mb-3">
+                            <label class="mb-1">Work Order Type</label>
+                            <div class="input-group">
+                                <input class="form-control" value="{{ $wo->id_bayarnon == '1' ? 'Berbayar' : 'Tidak Berbayar' }}"
+                                    {{ isset($wo->id_bayarnon) ? 'disabled' : '' }} type="text"/>
+                            </div>
+                        </div>
+                        <div class="mb-3">
                             <label class="mb-1">Estimasi Pengerjaan</label>
                             <div class="input-group">
                                 <input class="form-control" value="{{ $wo->estimasi_pengerjaan }}"
@@ -179,6 +182,8 @@
                             onclick="approve2({{ $wo->id }})">Approve</button>
                     </div>
                 @endif
+
+                {{-- Approve BM berbayar --}}
                 @if (
                     $wo->status_wo == 'APPROVED' &&
                         $user->id_user == $approve->approval_4 &&
@@ -189,6 +194,19 @@
                             onclick="approveBM({{ $wo->id }})">Approve</button>
                     </div>
                 @endif
+
+                {{-- Approve BM tidak berbayar --}}
+                @if (
+                    $wo->status_wo == 'APPROVED' &&
+                        $user->id_user == $approve->approval_4 &&
+                        $wo->sign_approve_2 &&
+                        $wo->sign_approve_3 && $wo->status_wo != 'BM APPROVED')
+                    <div class="card-footer border-top border-200 py-x1">
+                        <button type="button" class="btn btn-primary w-100"
+                            onclick="approveBM({{ $wo->id }})">Approve</button>
+                    </div>
+                @endif
+
                 @if (
                     $wo->status_wo == 'BM APPROVED' &&
                         $user->id_user == $approve->approval_3 &&
@@ -199,15 +217,33 @@
                             onclick="approve3({{ $wo->id }})">Approve</button>
                     </div>
                 @endif
+
+                {{-- Work done berbayar --}}
                 @if (
                     $wo->status_wo == 'APPROVED' &&
                         $wo->sign_approve_3 &&
+                        $wo->sign_approve_2 &&
+                        $wo->id_bayarnon == 1 &&
                         $user->RoleH->work_relation_id == $wo->WorkRequest->id_work_relation)
                     <div class="card-footer border-top border-200 py-x1">
                         <button type="button" class="btn btn-primary w-100"
                             onclick="workDone({{ $wo->id }})">PEKERJAAN SELESAI</button>
                     </div>
                 @endif
+
+                {{-- Work done tidak berbayar --}}
+                @if (
+                    $wo->status_wo == 'BM APPROVED' &&
+                        $wo->sign_approve_3 &&
+                        $wo->sign_approve_2 &&
+                        $wo->id_bayarnon == 0 &&
+                        $user->RoleH->work_relation_id == $wo->WorkRequest->id_work_relation)
+                    <div class="card-footer border-top border-200 py-x1">
+                        <button type="button" class="btn btn-primary w-100"
+                            onclick="workDone({{ $wo->id }})">PEKERJAAN SELESAI</button>
+                    </div>
+                @endif
+
                 @if ($user->id_role_hdr == 8 && $wo->status_wo == 'WAITING APPROVE')
                     <div class="card-footer border-top border-200 py-x1">
                         <button type="button" onclick="onSubmit()" class="btn btn-primary w-100" value="send">Update</button>

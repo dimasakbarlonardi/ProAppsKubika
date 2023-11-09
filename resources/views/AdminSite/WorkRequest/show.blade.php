@@ -80,14 +80,13 @@
             </div>
 
             @if ($user->id_role_hdr != 8)
-                <div class="col-3">                                            
+                <div class="col-3">
                     <div class="card">
                         <div class="card-header d-flex flex-between-center py-3">
                             <h6 class="mb-0">Contact Information</h6>
                         </div>
                         <div class="card-body">
-                            <div
-                                class="row g-0 border-bottom pb-x1 mb-x1 align-items-sm-center align-items-xl-start">
+                            <div class="row g-0 border-bottom pb-x1 mb-x1 align-items-sm-center align-items-xl-start">
                                 <div class="col-3">
                                     <div class="avatar avatar-3xl">
                                         <img class="rounded-circle"
@@ -151,20 +150,22 @@
                                     @endforeach
                                 </select>
                             </div>
+                            <div class="mb-2 mt-n2"><label class="mb-1">Schedule</label>
+                                <input type="text" value="{{ HumanDateTime($wr->schedule) }}" class="form-control"
+                                    disabled>
+                            </div>
                             @if ($wr->status_request != 'PENDING')
-                                <div class="mb-4 mt-n2"><label class="mb-1">Status</label>
-                                    <select name="status_request" class="form-select form-select-sm"
-                                        id="select_status">
-                                        <option {{ $wr->status_request == 'ON WORK' ? 'selected' : '' }}
-                                            value="ON WORK">ON WORK</option>
+                                <div class="mb-4 mt-3"><label class="mb-1">Status</label>
+                                    <select name="status_request" class="form-select form-select-sm" id="select_status">
+                                        <option {{ $wr->status_request == 'ON WORK' ? 'selected' : '' }} value="ON WORK">
+                                            ON WORK</option>
                                         <option {{ $wr->status_request == 'WORK ORDER' ? 'selected' : '' }}
                                             value="WORK ORDER">Ajukan Work Order</option>
                                     </select>
                                 </div>
                                 <div class="mb-4 mt-n2" id="select_id_bayarnon" style="display: none">
                                     <label class="mb-1">Status Berbayar WO</label>
-                                    <select name="id_bayarnon" class="form-select form-select-sm"
-                                        id="id_bayarnon">
+                                    <select name="id_bayarnon" class="form-select form-select-sm" id="id_bayarnon">
                                         <option value="1">Berbayar</option>
                                         <option value="0">Non Berbayar</option>
                                     </select>
@@ -174,8 +175,8 @@
                                     <div class="input-group">
                                         <input class="form-control"
                                             value="{{ $wr->WorkOrder ? $wr->WorkOrder->estimasi_pengerjaan : '' }}"
-                                            type="text" name="estimasi_pengerjaan"
-                                            id="estimasi_pengerjaan" /><span class="input-group-text">Jam</span>
+                                            type="text" name="estimasi_pengerjaan" id="estimasi_pengerjaan" /><span
+                                            class="input-group-text">Jam</span>
                                     </div>
                                 </div>
                             @endif
@@ -193,7 +194,7 @@
                             <button type="button" class="btn btn-primary w-100" id="btn_request_wo">Ajukan Work
                                 Order</button>
                         @endif
-                    </div>                                            
+                    </div>
                 </div>
             @endif
         </div>
@@ -352,6 +353,17 @@
             }
         }
 
+        $('#id_bayarnon').on('change', function() {
+            value = $(this).val();
+
+            if (value == 0) {
+                $('#input_biaya_alat').attr("disabled", true);
+            } else {
+                $('#input_biaya_alat').attr("disabled", false);
+
+            }
+        })
+
 
         function onAddService() {
             var lastID = 0;
@@ -367,10 +379,16 @@
             let service = {
                 'id': lastID,
                 detil_pekerjaan: detilPekerjaan,
-                detil_biaya_alat: detilBiayaAlat,
+                detil_biaya_alat: detilBiayaAlat ? detilBiayaAlat : 0,
             }
+            console.log(id_bayar);
+            if (detilPekerjaan !== '' && detilBiayaAlat !== '' && id_bayar == 1) {
+                services.push(service);
 
-            if (detilPekerjaan !== '' && detilBiayaAlat !== '') {
+                var detilPekerjaan = $('#input_detil_pekerjaan').val('');
+                var detilBiayaAlat = $('#input_biaya_alat').val('');
+                detailServiceWO();
+            } else if (detilPekerjaan !== '' && id_bayar == 0) {
                 services.push(service);
 
                 var detilPekerjaan = $('#input_detil_pekerjaan').val('');

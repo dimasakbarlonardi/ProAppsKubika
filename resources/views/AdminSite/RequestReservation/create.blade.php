@@ -74,7 +74,7 @@
                         </div>
                         <div class="mb-3">
                             <label class="mb-1">Keterangan</label>
-                            <textarea class="form-control" id="keterangan_reservation"></textarea>
+                            <textarea id="keterangan_reservation"></textarea>
                         </div>
                         <div class="mb-3">
                             <div class="row">
@@ -258,7 +258,7 @@
                         .ruang_reservation);
                     $('#jenis_acara').val(data.data.request_reservation.jenis_acara.jenis_acara);
 
-                    tinyMCE.get('keterangan_reservation').setContent(data.data.request_reservation
+                    $('#keterangan_reservation').html(data.data.request_reservation
                         .keterangan);
 
                     $('#ticket_detail').css('display', 'block')

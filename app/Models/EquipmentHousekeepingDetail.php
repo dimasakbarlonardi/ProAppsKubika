@@ -38,6 +38,11 @@ class EquipmentHousekeepingDetail extends Model
         return $this->hasOne(Room::class, 'id_room', 'id_room');
     }
 
+      public function Floor()
+    {
+        return $this->hasOne(Floor::class, 'id_lantai', 'id_room');
+    }
+
     public function Role()
     {
         return $this->hasOne(Role::class, 'id', 'id_role');

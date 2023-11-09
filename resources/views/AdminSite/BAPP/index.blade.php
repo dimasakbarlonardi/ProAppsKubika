@@ -26,7 +26,7 @@
                 </thead>
                 <tbody>
                     @foreach ($bapps as $key => $bapp)
-                       
+
                             <tr>
                                 <th scope="row">{{ $key + 1 }}</th>
                                 <td>{{ $bapp->no_tiket }}</td>
@@ -34,14 +34,14 @@
                                 <td>{{ $bapp->no_work_permit }}</td>
                                 <td>{{ $bapp->no_bapp }}</td>
                                 <td>
-                                    <a href="{{ route('bapp.edit', $bapp->id) }}" class="btn btn-sm btn-warning">View</a>
-                                    @if (!$bapp->sign_approval_1 && !$bapp->status_pengembalian)
+                                    <a href="{{ route('bapp.show', $bapp->id) }}" class="btn btn-sm btn-warning">View</a>
+                                    @if (!$bapp->sign_approval_1 && !$bapp->status_pengembalian && Request::session()->get('work_relation_id') == 6)
                                         <form class="d-inline" action="{{ route('doneTF', $bapp->id) }}" method="post">
                                             @csrf
                                             <button type="submit" class="btn btn-info btn-sm"
                                                 onclick="return confirm(`are you sure?`)">Transfer to tenant</button>
                                         </form>
-                                    @else
+                                    @elseif ($bapp->status_pengembalian)
                                         <button class="btn btn-secondary btn-sm" type="button">Sudah Transfer</button>
                                     @endif
                                     @if ($bapp->sign_approval_2 && !$bapp->sign_approval_3)
@@ -53,7 +53,6 @@
                                     @endif
                                 </td>
                             </tr>
-                       
                     @endforeach
                 </tbody>
             </table>

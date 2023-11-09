@@ -53,6 +53,7 @@
                                     <td>{{ $detail->Equipment->no_equipment }}</td>
                                     <!-- <td>{{ $detail->equipment->equipment }}</td> -->
                                     <td>{{ $detail->Room->nama_room }}</td>
+                                    <td>{{ $detail->Room->Floor->nama_lantai }}</td>
                                     <td scope="row">
                                         <button class="btn btn-warning btn-sm" data-bs-toggle="modal"
                                             data-bs-target="#status-modal{{ $detail->id_equipment_housekeeping_detail }}">See

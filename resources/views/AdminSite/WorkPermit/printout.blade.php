@@ -10,7 +10,7 @@
     <!-- ===============================================-->
     <!--    Document Title-->
     <!-- ===============================================-->
-    <title>Work Permit</title>
+    <title>Surat Izin Kerja</title>
 
     <!-- ===============================================-->
     <!--    Favicons-->
@@ -59,11 +59,11 @@
                 <div class="card-body">
                     <div class="row align-items-center text-center mb-3">
                         <div class="col text-sm-start">
-                            <img src="/assets/img/icons/spot-illustrations/proapps.png" alt="invoice" width="150" />
+                            <img src="{{ $setting->company_logo ? url($setting->company_logo) : url('/assets/img/icons/spot-illustrations/proapps.png') }}" alt="invoice" width="150" />
                         </div>
                         <div class="col text-center mt-3">
                             <h3 class="mb-3">SURAT IZIN KERJA</h3>
-                            <h4>Park Royale</h4>
+                            <h4>{{ $setting->company_name ? $setting->company_name : 'Proapps' }}</h4>
                             <h6>No. #{{ $wp->no_work_permit }}</h6>
                         </div>
                         <div class="col text-sm-end mt-3 mt-sm-0">
@@ -132,49 +132,18 @@
                         <h6>Jakarta, {{ HumanDate($wp->created_at) }}</h6>
                     </div>
                 </div>
-                <div class="p-3">
-                    <table class="table table-bordered">
-                        <thead>
-                            <div class="row">
-                                <div class="col-4" style="width: 10px">
-                                    <th width="25%" class="text-center border">
-                                        <span style="font-size: 12px">
-                                            SECURITY
-                                        </span>
-                                    </th>
-                                </div>
-                                <div class="col-4">
-                                    <th width="25%" class="text-center border">
-                                        <span style="font-size: 12px">
-                                            FIT OUT
-                                        </span>
-                                    </th>
-                                </div>
-                                <div width="25%" class="col-4">
-                                    <th class="text-center border">
-                                        <span style="font-size: 12px">
-                                            ENGINEERING
-                                        </span>
-                                    </th>
-                                </div>
-                                <div width="25%" class="col-4">
-                                    <th class="text-center border">
-                                        <span style="font-size: 12px">
-                                            BUILDING MANAGER
-                                        </span>
-                                    </th>
-                                </div>
-                            </div>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <th style="height: 80px" class="border"></th>
-                                <td style="height: 80px" class="border"></td>
-                                <td style="height: 80px" class="border"></td>
-                                <td style="height: 80px" class="border"></td>
-                            </tr>
-                        </tbody>
-                    </table>
+                <div class="p-2">
+                    <div class="row align-items-center text-center">
+                        <div class="col">
+
+                        </div>
+                        <div class="col">
+
+                        </div>
+                        <div class="col text-center">
+                            <img src="{{ url($wp->barcode) }}" width="160">
+                        </div>
+                    </div>
                     <div style="margin-left: 5%">
                         <span class="mb-2"><u><b>Kententuan : </b></u></span> <br>
                         <div class="ml-3" style="font-size: 12px;">
@@ -211,6 +180,14 @@
                     </div>
                 </div>
                 <hr>
+                <div class="row ml-2 mb-3 flex-between-center">
+                    <div class="col-auto">
+                        <img src="{{ url('/assets/img/icons/spot-illustrations/proapps.png') }}" width="80">
+                    </div>
+                    <div class="col-auto text-right">
+                        <span class="small text-muted">*Surat ini terbuat secara otomatis melalui system Proapps</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

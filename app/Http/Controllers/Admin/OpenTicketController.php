@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Events\HelloEvent;
 use App\Helpers\ConnectionDB;
 use App\Helpers\FCM as FcmNotification;
+use App\Helpers\SaveFile;
 use App\Http\Controllers\Controller;
 use App\Models\Approve;
 use App\Models\JenisAcara;
@@ -142,9 +143,8 @@ class OpenTicketController extends Controller
             $file = $request->file('upload_image');
 
             if ($file) {
-                $fileName = $createTicket->id . '-' .   $file->getClientOriginalName();
-                $file->move('uploads/image/ticket', $fileName);
-                $createTicket->upload_image = $fileName;
+                $storagePath = SaveFile::saveToStorage($request->user()->id_site, 'request', $file);
+                $createTicket->upload_image = $storagePath;
             }
 
             $system->sequence_notiket = $count;
@@ -353,62 +353,5 @@ class OpenTicketController extends Controller
         Alert::success('Berhasil', 'Berhasil approve tiket');
 
         return redirect()->back();
-    }
-
-    function FCM($dataNotif, $request)
-    {
-        $connUser = ConnectionDB::setConnection(new User());
-
-        $work_relation = $dataNotif['division_receiver'];
-
-        $users = $connUser->where('deleted_at', null)->whereHas('RoleH.WorkRelation', function ($q) use ($work_relation) {
-            $q->where('work_relation_id', $work_relation);
-        })->get('login_user');
-
-        $sender = $connUser->find($request->session()->get('user_id'));
-
-        $logins = Login::whereIn('email', $users)
-            ->where('fcm_token', '!=', null)
-            ->get(['name', 'fcm_token']);
-
-        if ($dataNotif['division_receiver'] && $dataNotif['receiver']) {
-            foreach ($logins as $login) {
-                $mobile_notif = new FcmNotification();
-                $mobile_notif->setPayload([
-                    'title' => $sender->nama_user,
-                    'body' => $dataNotif['notif_message']. ' '.  $dataNotif['notif_title'],
-                    'token' => $login->fcm_token,
-                ])->send();
-            }
-
-            $userReceiver = $connUser->where('id_user', $dataNotif['receiver'])->first();
-            $loginReceiver = Login::where('email', $userReceiver->login_user)->first();
-
-            $mobile_notif = new FcmNotification();
-            $mobile_notif->setPayload([
-                'title' => $sender->nama_user,
-                'body' => $dataNotif['notif_message']. ' '.  $dataNotif['notif_title'],
-                'token' => $loginReceiver->fcm_token,
-            ])->send();
-        } elseif ($dataNotif['division_receiver']) {
-            foreach ($logins as $login) {
-                $mobile_notif = new FcmNotification();
-                $mobile_notif->setPayload([
-                    'title' => $sender->nama_user,
-                    'body' => $dataNotif['notif_message']. ' '.  $dataNotif['notif_title'],
-                    'token' => $login->fcm_token,
-                ])->send();
-            }
-        } else {
-            $userReceiver = $connUser->where('id_user', $dataNotif['receiver'])->first();
-            $loginReceiver = Login::where('email', $userReceiver->login_user)->first();
-
-            $mobile_notif = new FcmNotification();
-            $mobile_notif->setPayload([
-                'title' => $sender->nama_user,
-                'body' => $dataNotif['notif_message']. ' '.  $dataNotif['notif_title'],
-                'token' => $loginReceiver->fcm_token,
-            ])->send();
-        }
     }
 }

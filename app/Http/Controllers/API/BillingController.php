@@ -7,6 +7,7 @@ use App\Models\Unit;
 use Illuminate\Http\Request;
 use App\Helpers\ConnectionDB;
 use App\Helpers\ResponseFormatter;
+use App\Helpers\SaveFile;
 use App\Http\Controllers\Controller;
 use App\Models\CashReceipt;
 use App\Models\CashReceiptDetail;
@@ -14,6 +15,7 @@ use App\Models\ElectricUUS;
 use App\Models\IPLType;
 use App\Models\ListBank;
 use App\Models\MonthlyArTenant;
+use Image;
 use App\Models\System;
 use Carbon\Carbon;
 use App\Models\User;
@@ -26,6 +28,7 @@ use RealRashid\SweetAlert\Facades\Alert;
 use Laravel\Sanctum\PersonalAccessToken;
 use Midtrans\CoreApi;
 use App\Models\Utility;
+use Illuminate\Support\Facades\Storage;
 use stdClass;
 use Throwable;
 
@@ -348,20 +351,25 @@ class BillingController extends Controller
         $listrik = $connUtility->find(1);
         $usage = $request->current - $request->previous;
 
+        $isAbodemen = false;
+        $biaya_usage = $listrik->biaya_m3;
         $get_ppj = $listrik->biaya_ppj / 100;
-        if ($listrik->abodemen != 0) {
-            $electric_capacity = $unit->electric_capacity;
-            $abodemen = (40 * $electric_capacity) / 1000;
-            if ($usage < $abodemen) {
-                $usage = $abodemen;
-            }
+        $electric_capacity = $unit->electric_capacity;
+        $abodemen = (40 * $electric_capacity) / 1000;
 
-            $biaya_usage = $listrik->biaya_m3;
-            $total_usage = $biaya_usage * $usage;
-        } else {
-            $total_usage = $listrik->biaya_tetap;
+        if ($usage < $abodemen) {
+            $isAbodemen = true;
+            $usage = $abodemen;
         }
-
+        if ($isAbodemen) {
+            if ($listrik->abodemen != 0) {
+                $total_usage = $biaya_usage * $usage;
+            } else {
+                $total_usage = $listrik->biaya_tetap;
+            }
+        } else {
+            $total_usage = $biaya_usage * $usage;
+        }
         $ppj = $get_ppj * $total_usage;
         $total = $total_usage + $ppj;
 
@@ -376,31 +384,48 @@ class BillingController extends Controller
             $connElecUUS = new ElectricUUS();
             $connElecUUS = $connElecUUS->setConnection($site->db_name);
 
-            // if (Carbon::now()->format('m') == $request->periode_bulan) {
-                $connElecUUS->firstOrCreate(
-                    [
-                        'periode_bulan' => $request->periode_bulan,
-                        'periode_tahun' => Carbon::now()->format('Y'),
-                        'id_unit' =>  $unitID,
+            $isExist = $connElecUUS->where('periode_bulan', $request->periode_bulan)
+                ->where('periode_tahun',  Carbon::now()->format('Y'))
+                ->where('id_unit', $unitID)->first();
 
-                    ],
-                    [
-                        'periode_bulan' => $request->periode_bulan,
-                        'periode_tahun' => Carbon::now()->format('Y'),
-                        'id_unit' => $unitID,
-                        'nomor_listrik_awal' => $request->previous,
-                        'nomor_listrik_akhir' => $request->current,
-                        'usage' => $usage,
-                        'ppj' => $ppj,
-                        'total' => $total,
-                        'id_user' => $user->id_user
-                    ]
-                );
-            // }
+            if ($isExist) {
+                return response()->json(['status' => 'exist']);
+            }
 
-            Alert::success('Berhasil', 'Berhasil menambahkan data');
+            $electricUUS = $connElecUUS->create([
+                'periode_bulan' => $request->periode_bulan,
+                'periode_tahun' => Carbon::now()->format('Y'),
+                'id_unit' => $unitID,
+                'nomor_listrik_awal' => $request->previous,
+                'nomor_listrik_akhir' => $request->current,
+                'usage' => $usage,
+                'ppj' => $ppj,
+                'total' => $total,
+                'id_user' => $user->id_user
+            ]);
 
-            return redirect()->back();
+            $imageData = $request->input('imageData');
+
+            if ($imageData) {
+                $image = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $imageData));
+                $filename = 'captured_image_' . time() . '.png';
+
+                $idSite = $tokenable->tokenable->id_site;
+                $path = '/public/' . $idSite . '/img/electric-usage/' . $filename;
+                $storagePath = '/storage/' . $idSite . '/img/electric-usage/' . $filename;
+
+                $img = Image::make($image);
+                $img->resize(200, 200, function ($constraint) {
+                    $constraint->aspectRatio();
+                })->encode('jpg', 80);
+
+                Storage::disk('local')->put($path, $img);
+
+                $electricUUS->image = $storagePath;
+                $electricUUS->save();
+            }
+
+            return response()->json(['status' => 'ok']);
         } else {
             return ResponseFormatter::error([
                 'message' => 'Unauthorized'
@@ -450,7 +475,7 @@ class BillingController extends Controller
         $water = $connUtility->find(2);
 
         $total_usage = $water->biaya_m3 * $usage;
-        $total = $total_usage + $water->biaya_abodemen;
+        $total = $total_usage;
 
         if ($tokenable) {
             try {
@@ -459,27 +484,46 @@ class BillingController extends Controller
                 $connWaterUUS = new WaterUUS();
                 $connWaterUUS = $connWaterUUS->setConnection($site->db_name);
 
-                // if (Carbon::now()->format('m') == $request->periode_bulan) {
-                    $connWaterUUS->firstOrCreate([
-                        'periode_bulan' => $request->periode_bulan,
-                        'periode_tahun' => Carbon::now()->format('Y'),
-                        'id_unit' =>  $unitID,
-                    ], [
-                        'periode_bulan' => $request->periode_bulan,
-                        'periode_tahun' => Carbon::now()->format('Y'),
-                        'id_unit' => $unitID,
-                        'nomor_air_awal' => $request->previous,
-                        'abodemen' => $water->biaya_abodemen,
-                        'total' => $total,
-                        'nomor_air_akhir' => $request->current,
-                        'usage' => $usage,
-                        'id_user' => $user->id_user
-                    ]);
-                // }
+                $isExist = $connWaterUUS->where('periode_bulan', $request->periode_bulan)
+                    ->where('periode_tahun',  Carbon::now()->format('Y'))
+                    ->where('id_unit', $unitID)->first();
 
-                Alert::success('Berhasil', 'Berhasil menambahkan data');
+                if ($isExist) {
+                    return response()->json(['status' => 'exist']);
+                }
+                $waterUUS = $connWaterUUS->create([
+                    'periode_bulan' => $request->periode_bulan,
+                    'periode_tahun' => Carbon::now()->format('Y'),
+                    'id_unit' => $unitID,
+                    'nomor_air_awal' => $request->previous,
+                    'abodemen' => $water->biaya_abodemen,
+                    'total' => $total,
+                    'nomor_air_akhir' => $request->current,
+                    'usage' => $usage,
+                    'id_user' => $user->id_user
+                ]);
+                $imageData = $request->input('imageData');
 
-                return redirect()->back();
+                if ($imageData) {
+                    $image = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $imageData));
+                    $filename = 'captured_image_' . time() . '.png';
+
+                    $idSite = $tokenable->tokenable->id_site;
+                    $path = '/public/' . $idSite . '/img/water-usage/' . $filename;
+                    $storagePath = '/storage/' . $idSite . '/img/water-usage/' . $filename;
+
+                    $img = Image::make($image);
+                    $img->resize(200, 200, function ($constraint) {
+                        $constraint->aspectRatio();
+                    })->encode('jpg', 80);
+
+                    Storage::disk('local')->put($path, $img);
+
+                    $waterUUS->image = $storagePath;
+                    $waterUUS->save();
+                }
+
+                return response()->json(['status' => 'ok']);
                 DB::commit();
             } catch (Throwable $e) {
                 DB::rollBack();
@@ -539,7 +583,7 @@ class BillingController extends Controller
         if ($request->method == 'credit_card') {
             $admin_fee = 2000 + (0.029 * $subtotal);
             $tax_fee = 0.11 * $admin_fee;
-            $grand_total = $subtotal + $admin_fee_tax;
+            $grand_total = $subtotal + $admin_fee;
         } else {
             $admin_fee = 4000;
             $tax_fee = 0.11 * $admin_fee;

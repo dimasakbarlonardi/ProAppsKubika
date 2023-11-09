@@ -25,7 +25,7 @@
             </div>
         </div>
         <div class="mb-3 p-3">
-            <label class="form-label">Alamat</label>
+            <label class="form-label">Alamat Kontraktor</label>
             <textarea class="form-control" id="alamat" cols="20" rows="5"></textarea>
         </div>
         <div class="mb-3">
@@ -334,7 +334,7 @@
             'tgl_akhir': tgl_akhir,
             'id_jenis_pekerjaan': id_jenis_pekerjaan,
         }
-        console.log(nama_kontraktor, pic, alamat, no_ktp, no_telp, tgl_mulai, tgl_akhir)
+
         if (!nama_kontraktor || !pic ||
             !alamat || !no_ktp ||
             !no_telp || !tgl_mulai || !tgl_akhir) {
