@@ -14,9 +14,9 @@
     <!-- ===============================================-->
     <!--    Favicons-->
     <!-- ===============================================-->
-    <link rel="apple-touch-icon" sizes="180x180" href="https://dev.pro-apps.xyz/assets/img/favicons/apple-touch-icon.png">
-    <link rel="manifest" href="https://dev.pro-apps.xyz/assets/img/favicons/manifest.json">
-    <meta name="msapplication-TileImage" content="https://dev.pro-apps.xyz/assets/img/favicons/mstile-150x150.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="https://demo.pro-apps.xyz/assets/img/favicons/apple-touch-icon.png">
+    <link rel="manifest" href="https://demo.pro-apps.xyz/assets/img/favicons/manifest.json">
+    <meta name="msapplication-TileImage" content="https://demo.pro-apps.xyz/assets/img/favicons/mstile-150x150.png">
     <meta name="theme-color" content="#ffffff">
 
     <!-- ===============================================-->
@@ -26,7 +26,7 @@
     <link
         href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700%7cPoppins:300,400,500,600,700,800,900&amp;display=swap"
         rel="stylesheet">
-    <link href="https://dev.pro-apps.xyz/assets/css/theme.min.css" rel="stylesheet" id="style-default">
+    <link href="https://demo.pro-apps.xyz/assets/css/theme.min.css" rel="stylesheet" id="style-default">
     <link href="{{ asset('assets/vendors/dropzone/dropzone.min.css') }}" rel="stylesheet" />
 </head>
 
