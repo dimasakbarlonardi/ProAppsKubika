@@ -29,6 +29,15 @@ class User extends Model
         'fcm_token'
     ];
 
+    public function getJWTIdentifier()
+    {
+        return $this->getKey();
+    }
+    public function getJWTCustomClaims()
+    {
+        return [];
+    }
+
     public function RoleH()
     {
         return $this->hasOne(Role::class, 'id', 'id_role_hdr');
