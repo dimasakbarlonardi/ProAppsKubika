@@ -386,7 +386,7 @@
                                             <div class="notification-avatar">
                                                 <div class="avatar avatar-2xl me-3">
                                                     <img class="rounded-circle"
-                                                        src="${item.sender ? item.sender.profile_picture : 'https://dev.pro-apps.xyz/assets/img/icons/spot-illustrations/proapps.png'}"
+                                                        src="${item.sender ? item.sender.profile_picture : 'https://demo.pro-apps.xyz/assets/img/icons/spot-illustrations/proapps.png'}"
                                                         alt="" />
                                                 </div>
                                             </div>
@@ -439,7 +439,7 @@
                                     <div class="notification-avatar">
                                         <div class="avatar avatar-2xl me-3">
                                             <img class="rounded-circle"
-                                                src="${resp.sender ? resp.sender.profile_picture : 'https://dev.pro-apps.xyz/assets/img/icons/spot-illustrations/proapps.png'}"
+                                                src="${resp.sender ? resp.sender.profile_picture : 'https://demo.pro-apps.xyz/assets/img/icons/spot-illustrations/proapps.png'}"
                                                 alt="" />
                                         </div>
                                     </div>
