@@ -194,7 +194,7 @@
                     $wp->status_request != 'DONE' &&
                     $wp->id_work_relation == Request::session()->get('work_relation_id'))
                 <div class="card-footer border-top border-200 py-x1">
-                    <a href="{{ route('printWP', $wp->id) }}" target="_blank"
+                    <a href="{{ route('printWP', [$wp->id, Request::user()->id_site]) }}" target="_blank"
                         class="btn btn-warning w-100 mb-3">Print</a>
                     <button type="button" class="btn btn-primary w-100"
                         onclick="workDoneWP({{ $wp->id }})">Pekerjaan Selesai</button>
