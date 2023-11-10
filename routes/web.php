@@ -656,6 +656,7 @@ Route::prefix('admin')->group(function () {
         // Invoice index
         Route::get('invoices', [InvoiceController::class, 'index'])->name('invoices');
         Route::get('invoice/{id}', [InvoiceController::class, 'show'])->name('showInvoices');
+        Route::get('/invoice/get/filter-data', [InvoiceController::class, 'filteredData']);
 
         // Payment monthly tenant
         Route::post('payment-monthly-page/{id}', [BillingController::class, 'generatePaymentMonthly'])->name('generatePaymentMonthly');
