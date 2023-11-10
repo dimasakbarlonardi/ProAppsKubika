@@ -42,6 +42,14 @@ Route::prefix('v1')->group(function () {
     Route::get('sites', [SiteController::class, 'sites']);
     Route::post('/login', [UserController::class, 'login'])->name('api-login');
 
+     // Insert electric meter
+    Route::get('/insert-electric/{unitID}/{token}', [BillingController::class, 'insertElectricMeter']);
+    Route::post('/store/insert-electric/{unitID}/{token}', [BillingController::class, 'storeElectricMeter'])->name('store-usr-electric');
+
+    // Insert water meter
+    Route::get('/insert-water/{unitID}/{token}', [BillingController::class, 'insertWaterMeter']);
+    Route::post('/store/insert-water/{unitID}/{token}', [BillingController::class, 'storeWaterMeter'])->name('store-usr-water');
+
     Route::middleware('auth:sanctum')->group(function () {
         Route::post('/logout', [UserController::class, 'logout'])->name('api-logout');
 
@@ -55,13 +63,13 @@ Route::prefix('v1')->group(function () {
 
         Route::get('/invoice/{id}', [PaymentController::class, 'invoiceAPI']);
 
-        // Insert electric meter
-        Route::get('/insert-electric/{unitID}/{token}', [BillingController::class, 'insertElectricMeter']);
-        Route::post('/store/insert-electric/{unitID}/{token}', [BillingController::class, 'storeElectricMeter'])->name('store-usr-electric');
+        // // Insert electric meter
+        // Route::get('/insert-electric/{unitID}/{token}', [BillingController::class, 'insertElectricMeter']);
+        // Route::post('/store/insert-electric/{unitID}/{token}', [BillingController::class, 'storeElectricMeter'])->name('store-usr-electric');
 
-        // Insert water meter
-        Route::get('/insert-water/{unitID}/{token}', [BillingController::class, 'insertWaterMeter']);
-        Route::post('/store/insert-water/{unitID}/{token}', [BillingController::class, 'storeWaterMeter'])->name('store-usr-water');
+        // // Insert water meter
+        // Route::get('/insert-water/{unitID}/{token}', [BillingController::class, 'insertWaterMeter']);
+        // Route::post('/store/insert-water/{unitID}/{token}', [BillingController::class, 'storeWaterMeter'])->name('store-usr-water');
 
         // Unit
         Route::get('/units', [UnitController::class, 'getAllUnits']);
