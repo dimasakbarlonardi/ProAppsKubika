@@ -296,6 +296,8 @@
                                     <td class="align-middle text-end"></td>
                                     <td class="align-middle text-end"></td>
                                     <td class="align-middle text-end"></td>
+                                    <td class="align-middle text-end"></td>
+                                    <td class="align-middle text-end"></td>
                                 </tr>
                                 <tr>
                                     <td class="align-middle">
@@ -304,11 +306,23 @@
                                         <hr>
                                         <p class="mb-0">Air</p>
                                     </td>
+                                    <td class="align-middle">
+                                        <h6 class="mb-3 text-nowrap">Previous Usage</h6>
+                                        <p class="mb-0">{{$data->MonthlyUtility->ElectricUUS->nomor_listrik_awal}} W</p>
+                                        <hr>
+                                        <p class="mb-0">{{$data->MonthlyUtility->WaterUUS->nomor_air_awal}} m<sup>3</sup></p>
+                                    </td>
+                                    <td class="align-middle">
+                                        <h6 class="mb-3 text-nowrap">Current Usage</h6>
+                                        <p class="mb-0">{{$data->MonthlyUtility->ElectricUUS->nomor_listrik_akhir}} W</p>
+                                        <hr>
+                                        <p class="mb-0">{{$data->MonthlyUtility->WaterUUS->nomor_air_akhir}} m<sup>3</sup></p>
+                                    </td>
                                     <td class="align-middle text-center">
                                         <h6 class="text-nowrap mb-3">Usage</h6>
                                         <span>{{ $data->MonthlyUtility->ElectricUUS->usage }} W</span> <br>
                                         <hr>
-                                        <span>{{ $data->MonthlyUtility->WaterUUS->usage }}</span>
+                                        <span>{{ $data->MonthlyUtility->WaterUUS->usage }} m<sup>3</sup></span>
                                     </td>
                                     <td class="align-middle text-center">
                                         <h6 class="text-nowrap mb-3">Price</h6>
@@ -349,6 +363,9 @@
                                         <hr>
                                         <span>{{ $sf->biaya_procentage ? $sf->biaya_procentage . '%' : Rupiah($sf->biaya_permeter) }}</span>
                                     </td>
+                                    <td>                                        
+                                    </td>
+                                    <td></td>                                    
                                     <td class="align-middle text-end" colspan="2">
                                         <h6 class="mb-3 mt-3">Total</h6>
                                         <span>{{ Rupiah($data->MonthlyIPL->ipl_service_charge) }}</span> <br>
