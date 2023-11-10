@@ -24,7 +24,7 @@
                         <th class="sort" data-sort="courier_type">Courier</th>
                         <th class="sort" data-sort="received_location">Received Location</th>
                         <th class="sort" data-sort="receive_time">Pickup DateTime</th>
-                        <th class="sort" data-sort="status">Description</th>
+                        <!-- <th class="sort" data-sort="status">Description</th> -->
                         <th class="sort" data-sort="status">Status</th>
                     </tr>
                 </thead>
@@ -37,7 +37,7 @@
                                     data-bs-toggle="modal" data-bs-target="#error-modal"
                                     data-image="{{ $item->image ? asset($item->image) : asset('/assets/img/team/3-thumb.png') }}">
                                     <img src="{{ $item->image ? asset($item->image) : asset('/assets/img/team/3-thumb.png') }}"
-                                        alt="{{ $item->image }}" class="img-thumbnail rounded-circle"
+                                        alt="{{ $item->image }}" class="img-thumbnail "
                                         style="max-width: 50px; height: 50px">
                                 </a>
                             </td>
@@ -45,8 +45,8 @@
                             <td>{{ $item->Unit->nama_unit }}</td>
                             <td>{{ $item->courier_type }}</td>
                             <td>{{ $item->received_location}}</td>
-                            <td>{{ $item->receive_time }} - {{ $item->receive_date }}</td>
-                            <td>{{ $item->description}}</td> 
+                            <td>{{ HumanDateTime($item->created_at) }} </td>
+                            <!-- <td>{{ $item->description}}</td>  -->
                             <td>{{ $item->status }}</td>
                         </tr>
                     @endforeach

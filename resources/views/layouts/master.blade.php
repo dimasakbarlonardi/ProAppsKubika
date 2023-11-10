@@ -162,7 +162,10 @@
                         <li class="nav-item dropdown">
                             <a class="nav-link pe-0 ps-2" id="navbarDropdownUser" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <div class="avatar avatar-xl">
-                                    <img class="rounded-circle" src="/assets/img/team/3-thumb.png" alt="" />
+                                    @php
+                                    $user = Session::get('user');
+                                    @endphp
+                                    <img class="rounded-circle" src="{{ $user->profile_picture ? asset($user->profile_picture) : asset('/storage/img/proapps.png') }}">
                                 </div>
                             </a>
                             <div class="dropdown-menu dropdown-caret dropdown-caret dropdown-menu-end py-0" aria-labelledby="navbarDropdownUser">
@@ -175,13 +178,13 @@
                             </div>
                         </li>
                         <li class="nav-item dropdown">
-                        <div class="user-info" id="navbarDropdownUser" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            @php
-                            $user = Session::get('user');
-                            @endphp
-                            <h5 class="btn btn-falcon-default rounded-pill me-1 mb-1 ml-3">{{ $user->nama_user }}</h5>
-                        </div>
-                        <div class="dropdown-menu dropdown-menu-end py-0" aria-labelledby="navbarDropdownUser">
+                            <div class="user-info" id="navbarDropdownUser" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                @php
+                                $user = Session::get('user');
+                                @endphp
+                                <h5 class="btn btn-falcon-default rounded-pill me-1 mb-1 ml-3">{{ $user->nama_user }}</h5>
+                            </div>
+                            <div class="dropdown-menu dropdown-menu-end py-0" aria-labelledby="navbarDropdownUser">
                                 <div class="bg-white dark__bg-1000 rounded-2 py-2">
                                     <form action="{{ route('logout') }}" method="post">
                                         @csrf

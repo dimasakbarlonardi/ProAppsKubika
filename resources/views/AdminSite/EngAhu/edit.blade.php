@@ -7,8 +7,8 @@
                 <div class="col-auto">
                     <nav aria-label="breadcrumb">
                         <ol class="my-3 breadcrumb">
-                            <li class="breadcrumb-item text-white"> <a href="{{ route('engahus.index')}}" class="text-white"> List Engeneering AHU </a></li>
-                            <li class="breadcrumb-item active" aria-current="page">Edit Engeneering AHU</li>
+                            <li class="breadcrumb-item text-white"> <a href="{{ route('engahus.index')}}" class="text-white"> List Engineering Inspection Parameter </a></li>
+                            <li class="breadcrumb-item active" aria-current="page">Edit Engineering Inspection Parameter</li>
                         </ol>
                     </nav>
                 </div>
@@ -20,7 +20,7 @@
                 @csrf
                 <div class="row">
                     <div class="col-6 mt-3">
-                        <label class="form-label">Inspection Engeneering AHU</label>
+                        <label class="form-label">Engineering Inspection Parameter</label>
                         <input type="text" name="nama_eng_ahu" value="{{ $engahu->nama_eng_ahu}}" class="form-control" required>
                     </div>
                 <div class="mt-5">
