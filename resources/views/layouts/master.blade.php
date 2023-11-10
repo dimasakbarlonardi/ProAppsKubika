@@ -185,7 +185,10 @@
                             <a class="nav-link pe-0 ps-2" id="navbarDropdownUser" role="button"
                                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <div class="avatar avatar-xl">
-                                    <img class="rounded-circle" src="/assets/img/team/3-thumb.png" alt="" />
+                                    @php
+                                    $user = Session::get('user');
+                                    @endphp
+                                    <img class="rounded-circle" src="{{ $user->profile_picture ? asset($user->profile_picture) : asset('/storage/img/proapps.png') }}">
                                 </div>
                             </a>
                             <div class="dropdown-menu dropdown-caret dropdown-caret dropdown-menu-end py-0"

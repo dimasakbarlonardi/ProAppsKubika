@@ -41,11 +41,11 @@
                             <td>{{ HumanDate($incident->incident_date) }} - {{ $incident->incident_time }}</td>
                             <td>{{ $incident->desc }}</td>
                             <td>
-                                <a href="{{ $incident->image ? asset($incident->image) : asset('/assets/img/team/3-thumb.png') }}"
+                                <a href="{{ $incident->incident_image ? asset($incident->incident_image) : asset('/assets/img/team/3-thumb.png') }}"
                                     data-bs-toggle="modal" data-bs-target="#error-modal"
-                                    data-image="{{ $incident->image ? asset($incident->image) : asset('/assets/img/team/3-thumb.png') }}">
-                                    <img src="{{ $incident->image ? asset($incident->image) : asset('/assets/img/team/3-thumb.png') }}"
-                                        alt="{{ $incident->image }}" style="max-width: 50px; height: 50px">
+                                    data-image="{{ $incident->incident_image ? asset($incident->incident_image) : asset('/assets/img/team/3-thumb.png') }}">
+                                    <img src="{{ $incident->incident_image ? asset($incident->incident_image) : asset('/assets/img/team/3-thumb.png') }}"
+                                        alt="{{ $incident->incident_image }}" style="max-width: 50px; height: 50px">
                                 </a>
                             </td>
                         </tr>
