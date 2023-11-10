@@ -223,13 +223,10 @@ class ReservationController extends Controller
     public function update(Request $request)
     {
         $connTicket = ConnectionDB::setConnection(new OpenTicket());
-        $connApprove = ConnectionDB::setConnection(new Approve());
 
         $ticket = $connTicket->find($request->no_tiket);
         $rsv = $ticket->RequestReservation;
-        $approve = $connApprove->find(7);
 
-        $rsv->sign_approval_1 = Carbon::now();
         $rsv->is_deposit = $request->is_deposit;
         $rsv->jumlah_deposit = $request->jumlah_deposit;
         $rsv->save();
@@ -242,9 +239,9 @@ class ReservationController extends Controller
             'notif_title' => $rsv->no_request_reservation,
             'id_data' => $rsv->id,
             'sender' => $request->session()->get('user')->id_user,
-            'division_receiver' => $approve->approval_2,
+            'division_receiver' => null,
             'notif_message' => 'Request Reservation diterima, mohon approve reservasi',
-            'receiver' => null,
+            'receiver' => $ticket->Tenant->User->id_user,
         ];
 
         broadcast(new HelloEvent($dataNotif));
