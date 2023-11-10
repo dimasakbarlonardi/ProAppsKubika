@@ -478,11 +478,11 @@
                                 <div class="row">
                                     <div class="col-4">
                                         <label for="">Electric meter photo : </label>
-                                        <img class="img-fluid img-thumbnail rounded" src="{{ url($data->MonthlyUtility->ElectricUUS->image) }}" width="200">
+                                        <img class="img-fluid img-thumbnail rounded" src="{{ $data->MonthlyUtility->ElectricUUS->image ? url($data->MonthlyUtility->ElectricUUS->image) : url('/assets/img/icons/spot-illustrations/proapps.png') }}" width="200">
                                     </div>
                                     <div class="col-4">
                                         <label for="">Water meter photo : </label>
-                                        <img class="img-fluid img-thumbnail rounded" src="{{ url($data->MonthlyUtility->WaterUUS->image) }}" width="200">
+                                        <img class="img-fluid img-thumbnail rounded" src="{{ $data->MonthlyUtility->WaterUUS->image ? url($data->MonthlyUtility->WaterUUS->image) : url('/assets/img/icons/spot-illustrations/proapps.png') }}" width="200">
                                     </div>
                                 </div>
                             @endif
