@@ -150,8 +150,8 @@
                                 <div class="mb-3">
                                     <label class="mb-1 mt-2">Status</label>
                                     <select name="status_request" class="form-select form-select-sm"
-                                        {{ $ticket->status_request != 'RESPONDED' ? 'disabled' : '' }}>
-                                        <option disabled selected>--Pilih Status---</option>
+                                        {{ $ticket->status_request != 'RESPONDED' ? 'disabled' : '' }} required>
+                                        <option disabled selected value="">--Pilih Status---</option>
                                         <option {{ $ticket->status_request == 'PROSES KE WR' ? 'selected' : '' }}
                                             value="PROSES KE WR">Proses ke WR</option>
                                         <option {{ $ticket->status_request == 'PROSES KE PERMIT' ? 'selected' : '' }}
@@ -174,8 +174,8 @@
                             <div class="mb-2 mt-n2">
                                 <label class="mb-1">Priority</label>
                                 <select name="priority" class="form-select form-select-sm"
-                                    {{ $ticket->status_request != 'RESPONDED' ? 'disabled' : '' }}>
-                                    <option disabled selected>-- Priority ---</option>
+                                    {{ $ticket->status_request != 'RESPONDED' ? 'disabled' : '' }} required>
+                                    <option disabled selected value="">-- Priority ---</option>
                                     @foreach ($work_priorities as $priority)
                                         <option {{ $ticket->priority == $priority->work_priority ? 'selected' : '' }}
                                             value="{{ $priority->work_priority }}">{{ $priority->work_priority }}

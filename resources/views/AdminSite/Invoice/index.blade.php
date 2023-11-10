@@ -40,34 +40,9 @@
                                 </div>
                             </div>
                             <div class="table-responsive scrollbar">
-                                <table class="table mb-0" id="tableData">
-                                    <thead class="text-black bg-200">
-                                        <tr>
-                                            <th class="align-middle">No Invoice</th>
-                                            <th class="align-middle">Trasaction Type</th>
-                                            <th class="align-middle">Status</th>
-                                            <th class="align-middle text-center">Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="bulk-select-body">
-                                        @foreach ($transactions as $key => $item)
-                                            <tr>
-                                                <td class="align-middle">
-                                                    {{ $item->no_invoice }}
-                                                </td>
-                                                <td class="align-middle">
-                                                    {{ $item->transaction_type }}
-                                                </td>
-                                                <td class="align-middle">
-                                                    {{ $item->transaction_status }}
-                                                </td>
-                                                <td class="text-center">
-                                                    <a href="{{ route('showInvoices', $item->id) }}" class="btn btn-outline-info btn-sm">View</a>
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    </tbody>
-                                </table>
+                                <div id="data-invoice">
+
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -83,29 +58,22 @@
                     <div class="card-body">
                         <div class="mb-3">
                             <label class="mb-1">Unit</label>
-                            <select name="unit_id" class="form-control" id="id_unit">
-                                {{-- @foreach ($units as $unit)
+                            <select name="unit_id" class="form-control" id="select_unit">
+                                <option value="all">All</option>
+                                @foreach ($units as $unit)
                                     <option {{ request()->get('id_unit') == $unit->id_unit ? 'selected' : '' }}
-                                        value="{{ $unit->id_unit }}">{{ $unit->nama_unit }}</option>
-                                @endforeach --}}
+                                        value="{{ $unit->id_unit }}">{{ $unit->nama_unit }} - {{ $unit->Tower->nama_tower }}
+                                    </option>
+                                @endforeach
                             </select>
                         </div>
                         <div class="mb-3">
                             <label class="mb-1">Status</label>
                             <select name="unit_id" class="form-control" id="select_status">
-                                <option value="">All</option>
-                                <option {{ request()->get('status') == 'PENDING' ? 'selected' : '' }} value="PENDING">
-                                    Pending</option>
-                                <option {{ request()->get('status') == 'APPROVED' ? 'selected' : '' }} value="APPROVED">
-                                    Approved</option>
-                                <option {{ request()->get('status') == 'WAITING' ? 'selected' : '' }} value="WAITING">
-                                    Waiting
-                                    to Send
-                                </option>
-                                <option {{ request()->get('status') == 'PAID' ? 'selected' : '' }} value="PAID">Paid
-                                </option>
-                                <option {{ request()->get('status') == 'UNPAID' ? 'selected' : '' }} value="UNPAID">
-                                    Unpaid</option>
+                                <option value="all">All</option>
+                                <option value="PENDING">Pending</option>
+                                <option value="VERIFYING">Verifying</option>
+                                <option value="PAID">Paid</option>
                             </select>
                         </div>
                     </div>
@@ -119,82 +87,37 @@
 @section('script')
     <script>
         $('document').ready(function() {
-            var optionMenu = $('option').hasClass('can-select');
-            if (optionMenu == false) {
-                $('#bulk-action-menu').css('display', 'none');
-            }
-        })
-        $('#applyBulk').on('click', function() {
-            if (confirm('Are you sure?')) {
-                var url = '';
-
-                $IDs = $("#tableData input:checkbox:checked").map(function() {
-                    return $(this).attr("id");
-                }).get();
-
-                var value = $('#valueAction').val();
-
-                if (value === 'approve') {
-                    url = '/admin/approve/usr-water';
-                } else if (value === 'calculate') {
-                    url = '/admin/generate-invoice';
-                } else if (value === 'send') {
-                    url = '/admin/blast-invoice';
-                }
-
-                actionPost(url);
-            }
+            getData('all', 'all')
         })
 
-        function actionPost(url) {
+        $('#select_unit').on('change', function() {
+            var unit = $(this).val();
+            var status = $('#select_status').val();
+
+            getData(unit, status)
+        });
+
+        $('#select_status').on('change', function() {
+            var unit = $('#select_unit').val();
+            var status = $(this).val();
+
+            getData(unit, status)
+        });
+
+        function getData(unit, status) {
+            console.log(unit, status);
             $.ajax({
-                url: url,
-                type: 'POST',
+                url: '/admin/invoice/get/filter-data',
+                type: 'GET',
                 data: {
-                    'IDs': $IDs,
-                    'type': 'water'
+                    unit,
+                    status
                 },
                 success: function(resp) {
-                    if (resp.status === 'ok') {
-                        Swal.fire(
-                            'Success!',
-                            '',
-                            'success'
-                        ).then(() => {
-                            window.location.reload();
-                        });
-                    } else {
-                        Swal.fire(
-                            'Failed!',
-                            '',
-                            'error'
-                        ).then(() => {
-                            window.location.reload();
-                        });
-                    }
+                    console.log(resp.html);
+                    $('#data-invoice').html(resp.html);
                 }
             })
         }
-
-        $('.form-check-input').on('change', function() {
-            $IDs = $("#tableData input:checkbox:checked").map(function() {
-                return $(this).attr("id");
-            }).get();
-            $('#totalSelected').html($IDs.length)
-        })
-
-        $('#select_status').on('change', function() {
-            var value = $(this).val();
-            var id_unit = $('#id_unit').val();
-
-            window.location.replace(`/admin/uus-water?status=${value}&id_unit=${id_unit}`)
-        })
-
-        $('#id_unit').on('change', function() {
-            var value = $(this).val();
-            var status = $('#select_status').val();
-
-            window.location.replace(`/admin/uus-water?status=${status}&id_unit=${value}`)
-        })
     </script>
 @endsection
