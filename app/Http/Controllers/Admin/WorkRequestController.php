@@ -48,7 +48,7 @@ class WorkRequestController extends Controller
         $conn = ConnectionDB::setConnection(new WorkRequest());
         $user = $request->session()->get('user');
 
-        if ($user->id_role_hdr != 8) {
+        if ($user->RoleH->WorkRelation->id_work_relation != 1) {
             $role = $user->RoleH->WorkRelation->id_work_relation;
             $work_requests = $conn->where('id_work_relation', $role);
         } else {
@@ -68,7 +68,7 @@ class WorkRequestController extends Controller
         }
         if ($request->priority != 'all') {
             $priority = $request->priority;
-            $work_requests = $work_requests->whereHas('Ticket', function($q) use ($priority) {
+            $work_requests = $work_requests->whereHas('Ticket', function ($q) use ($priority) {
                 $q->where('priority', $priority);
             });
         }

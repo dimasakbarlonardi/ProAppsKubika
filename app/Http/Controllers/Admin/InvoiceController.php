@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\CashReceipt;
 use App\Models\CompanySetting;
 use App\Models\IPLType;
+use App\Models\Unit;
 use App\Models\Utility;
 use Illuminate\Http\Request;
 
@@ -15,10 +16,29 @@ class InvoiceController extends Controller
     public function index()
     {
         $connCR = ConnectionDB::setConnection(new CashReceipt());
+        $connUnit = ConnectionDB::setConnection(new Unit());
 
         $data['transactions'] = $connCR->get();
+        $data['units'] = $connUnit->get();
 
         return view('AdminSite.Invoice.index', $data);
+    }
+
+    public function filteredData(Request $request)
+    {
+        $connCR = ConnectionDB::setConnection(new CashReceipt());
+
+        $transactions = $connCR->where('deleted_at', null);
+
+        if ($request->status != 'all') {
+            $transactions = $transactions->where('transaction_status', $request->status);
+        }
+
+        $data['transactions'] = $transactions->get();
+
+        return response()->json([
+            'html' => view('AdminSite.Invoice.table-data', $data)->render()
+        ]);
     }
 
     public function show(Request $request, $id)
