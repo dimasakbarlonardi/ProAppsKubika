@@ -15790,6 +15790,10 @@ html[data-bs-theme="dark"] .tox .tox-dialog__footer .tox-button--secondary,
     ) !important;
 }
 
+.bg-info {
+    background-color: var(--falcon-green) !important;
+}
+
 .bg-warning {
     --falcon-bg-opacity: 1;
     background-color: rgba(
@@ -38890,6 +38894,7 @@ option:disabled {
 
 .unread-message {
     color: var(--falcon-black);
+    background: rgb(223, 246, 241);
 }
 
 .unread-message .chat-contact-title,
@@ -41709,7 +41714,7 @@ td {
 }
 
 .ml-3 {
-    margin-left: 15px; 
+    margin-left: 15px;
 }
 
 
