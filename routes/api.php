@@ -3,6 +3,7 @@
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\API\AttendanceController;
+use App\Http\Controllers\API\BAPPController;
 use App\Http\Controllers\API\BillingController;
 use App\Http\Controllers\API\GIGOController;
 use App\Http\Controllers\API\InboxController;
@@ -92,6 +93,8 @@ Route::prefix('v1')->group(function () {
         Route::post('/permit/done/{id}', [RequestPermitController::class, 'done']);
         Route::post('/permit/done-deposit/{id}', [RequestPermitController::class, 'doneDeposit']);
         Route::post('/permit/complete/{id}', [RequestPermitController::class, 'complete']);
+
+        Route::get('/bapp/{id}', [BAPPController::class, 'show']);
 
         // Work Request
         Route::post('/on-work/work-request/{id}', [WorkRequestController::class, 'OnWork']);
