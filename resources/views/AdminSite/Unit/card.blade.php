@@ -4,7 +4,7 @@
         <div class="card border h-100 border-light">
             <div class="card-body">
                 <p class="fw-semi-bold mb-3 mb-sm-2">
-                    <a class="text-primary" href="{{ route('units.show', $unit->id_unit) }}">{{ $unit->nama_unit }}</a>
+                    <a class="text-primary nama_unit" href="{{ route('units.show', $unit->id_unit) }}">{{ $unit->nama_unit }}</a>
                 </p>
                 <hr>
                 <div class="card-title">

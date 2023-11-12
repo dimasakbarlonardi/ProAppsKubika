@@ -112,6 +112,7 @@ use App\Http\Controllers\Admin\InvoiceController;
 use App\Http\Controllers\Admin\OffBoardingKepemilikanUnitController;
 use App\Http\Controllers\Admin\OffTenantUnitController;
 use App\Http\Controllers\Admin\PackageController;
+use App\Http\Controllers\Admin\ParameterSecurityController;
 use App\Http\Controllers\Admin\PermitHRController;
 use App\Http\Controllers\Admin\PPNController;
 use App\Http\Controllers\Admin\ReminderController;
@@ -746,6 +747,9 @@ Route::prefix('admin')->group(function () {
 
         // ---------------Visitor------------------
         Route::resource('visitor', VisitorsController::class);
+
+        // --------------Parameter Security---------
+        Route::resource('Parameter-Security', ParameterSecurityController::class);
     });
 });
 

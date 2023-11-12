@@ -2,14 +2,15 @@
 
 namespace App\Http\Controllers\Admin;
 
-use App\Http\Controllers\Controller;
 use App\Helpers\ConnectionDB;
+use App\Http\Controllers\Controller;
+use App\Models\ParameterSecurity;
+use Doctrine\DBAL\Connection;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
-use App\Models\EngAhu;
-use Illuminate\Http\Request;
 
-class EngAHUController extends Controller
+class ParameterSecurityController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -18,11 +19,11 @@ class EngAHUController extends Controller
      */
     public function index()
     {
-        $conn = ConnectionDB::setConnection(new EngAhu());
+        $conn = ConnectionDB::setConnection(new ParameterSecurity());
 
-        $data ['engahus'] = $conn->paginate(10);
+        $data['ParameterSecurity'] = $conn->get();
 
-        return view('AdminSite.EngAhu.index', $data);
+        return view('AdminSite.ParameterSecurity.index', $data);
     }
 
     /**
@@ -32,7 +33,7 @@ class EngAHUController extends Controller
      */
     public function create()
     {
-        return view('AdminSite.EngAhu.create');
+        return view('AdminSite.ParameterSecurity.create');
     }
 
     /**
@@ -43,29 +44,26 @@ class EngAHUController extends Controller
      */
     public function store(Request $request)
     {
-        $conn = ConnectionDB::setConnection(new EngAhu());
+        $conn = ConnectionDB::setConnection(new ParameterSecurity());
 
         try {
-
             DB::beginTransaction();
 
             $conn->create([
-                'id_eng_ahu' => $request->id_eng_ahu,
-                'nama_eng_ahu' => $request->nama_eng_ahu,
-                'subject' => $request->subject,
-                'dsg' => $request->dsg,
+            'id' => $request->id,
+            'name_parameter_security' => $request->name_parameter_security
             ]);
 
             DB::commit();
 
-            Alert::success('Success', 'Successfully Added Inspection Engeneering Parameter');
-            return redirect()->route('engahus.index');
+            Alert::success('Success', 'Successfully Added Inspection Security Parameter');
+            return redirect()->route('Parameter-Security.index');
         } catch (\Throwable $e) {
             DB::rollBack();
             dd($e);
-            Alert::error('Gagal', 'Gagal menambahkan Engeneering AHU');
 
-            return redirect()->route('engahus.index');
+            Alert::success('Failed', 'Failed to Add Inspection Security Parameter');
+            return redirect()->route('Parameter-Security.index');
         }
     }
 
@@ -88,11 +86,11 @@ class EngAHUController extends Controller
      */
     public function edit($id)
     {
-        $conn = ConnectionDB::setConnection(new EngAhu());
+        $conn = ConnectionDB::setConnection(new ParameterSecurity());
 
-        $data['engahu'] = $conn->find($id);
+        $data['ParameterSecurity'] = $conn->find($id);
 
-        return view('AdminSite.EngAhu.edit', $data);
+        return view('AdminSite.ParameterSecurity.edit', $data);
     }
 
     /**
@@ -104,14 +102,13 @@ class EngAHUController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $conn = ConnectionDB::setConnection(new EngAhu());
+        $conn = ConnectionDB::setConnection(new ParameterSecurity());
 
-        $checklistahu = $conn->find($id);
-        $checklistahu->update($request->all());
+        $parametersecurity = $conn->find($id);
+        $parametersecurity->update($request->all());
 
-        Alert::success('Berhasil', 'Berhasil mengupdate Engeneering AHU');
-
-        return redirect()->route('engahus.index');
+        Alert::success('Success', 'Successfully Updated Inspection Security Parameter');
+        return redirect()->route('Parameter-Security.index');
     }
 
     /**
@@ -122,11 +119,6 @@ class EngAHUController extends Controller
      */
     public function destroy($id)
     {
-        $conn = ConnectionDB::setConnection(new EngAhu());
-
-        $conn->find($id)->delete();
-        Alert::success('Berhasil','Berhasil Menghapus Engeneering AHU');
-
-        return redirect()->route('engahus.index');
+        //
     }
 }
