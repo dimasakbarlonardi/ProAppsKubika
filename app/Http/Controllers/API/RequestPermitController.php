@@ -49,6 +49,12 @@ class RequestPermitController extends Controller
         $object->kontraktor_id = $wp->RequestPermit->no_ktp;
         $object->kontraktor_phone = $wp->RequestPermit->no_telp;
         $object->kontraktor_address = $wp->RequestPermit->alamat;
+        $object->kontraktor_address = $wp->RequestPermit->alamat;
+        $object->approve_1_tenant = $wp->sign_approval_1;
+        $object->approve_2_work_relation = $wp->sign_approval_2;
+        $object->approve_3_finance = $wp->sign_approval_3;
+        $object->approve_5_midtrans = $wp->sign_approval_5;
+        $object->approve_4_bm = $wp->sign_approval_4;
 
         $dataJSON = json_decode($wp->RequestPermit->RPDetail->data);
         $dataJSON = json_decode($dataJSON);
