@@ -62,7 +62,7 @@
     </script>
 </head>
 
-<body>
+<body id="body">
     <!-- ===============================================-->
     <!--    Main Content-->
     <!-- ===============================================-->
@@ -186,9 +186,10 @@
                                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <div class="avatar avatar-xl">
                                     @php
-                                    $user = Session::get('user');
+                                        $user = Session::get('user');
                                     @endphp
-                                    <img class="rounded-circle" src="{{ $user->profile_picture ? asset($user->profile_picture) : asset('/storage/img/proapps.png') }}">
+                                    <img class="rounded-circle"
+                                        src="{{ $user->profile_picture ? asset($user->profile_picture) : asset('/storage/img/proapps.png') }}">
                                 </div>
                             </a>
                             <div class="dropdown-menu dropdown-caret dropdown-caret dropdown-menu-end py-0"
@@ -228,8 +229,7 @@
 
                     navbarTopVertical.removeAttribute('style');
                 </script>
-
-                <div class="mt-5">
+                <div class="mt-4">
                     @yield('content')
                 </div>
                 <footer class="footer">
@@ -332,33 +332,7 @@
         }
     </script>
     <script src="{{ asset('js/app.js') }}"></script>
-
-    <script src="https://www.gstatic.com/firebasejs/7.23.0/firebase.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyCTdiDHuOGNRGU9mCxiOZrmEoFam0_sui4",
-            authDomain: "proapps-indoland.firebaseapp.com",
-            projectId: "proapps-indoland",
-            storageBucket: "proapps-indoland.appspot.com",
-            messagingSenderId: "1022619881265",
-            appId: "1:1022619881265:web:b501044f89e60694d0ea10"
-        };
-
-        firebase.initializeApp(firebaseConfig);
-        const messaging = firebase.messaging();
-
-        messaging.onMessage(function(payload) {
-
-            const noteTitle = payload.notification.title;
-            const noteOptions = {
-                body: payload.notification.body,
-                icon: payload.notification.icon,
-                sound: "127.0.0.1:8000/assets/audio/notifsound2.mp3"
-            };
-            new Notification(noteTitle, noteOptions);
-        });
-    </script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function(event) {
@@ -367,30 +341,16 @@
                     var receiver = e.dataNotif.receiver
                     var division_receiver = e.dataNotif.division_receiver
                     var notif_id = e.dataNotif.id
-                    console.log(user_id, receiver, division_receiver, notif_id);
                     getNewNotifications(user_id, receiver, division_receiver, notif_id);
-                })
-            messaging
-                .requestPermission()
-                .then(function() {
-                    return messaging.getToken()
-                })
-                .then(function(token) {
-                    $.ajax({
-                        url: "{{ route('save-token') }}",
-                        type: 'POST',
-                        data: {
-                            token: token
-                        },
-                        dataType: 'JSON',
-                        error: function(err) {
-                            console.log('User Chat Token Error' + err);
-                        },
-                    });
-
-                }).catch(function(err) {
-                    console.log('User Chat Token Error' + err);
                 });
+
+            Echo.channel("chat-channel")
+                .listen('ChatEvent', (e) => {
+                    console.log(e.sound);
+                    if (e.sound === true) {
+                        notifSound.play();
+                    }
+                })
         });
 
         function getNotifications(user_id) {
@@ -452,7 +412,6 @@
                 url: `/admin/get-new-notifications/${notif_id}`,
                 type: 'GET',
                 success: function(resp) {
-                    console.log(resp.division_receiver, division_relation, resp.receiver, user_id);
                     if (resp.division_receiver == division_relation || resp.receiver == user_id) {
                         notifSound.play();
                         var current = new Date();
