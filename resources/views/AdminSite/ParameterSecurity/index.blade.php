@@ -2,18 +2,18 @@
 
 @section('content')
 <div class="card">
-    <div class="card-header">
+    <div class="card-header py-2">
         <div class="row flex-between-center">
-            <div class="col-auto">
-                <h6 class="mb-0 text-light">List Floor</h6>
+            <div class="my-3 col-auto">
+                <h6 class="mb-0">List Parameter Security</h6>
             </div>
             <div class="col-auto d-flex">
-                <a class="btn btn-falcon-default btn-sm text-600" href="{{ route('floors.create') }}">Create Floor</a>
+                <a class="btn btn-falcon-default btn-sm text-600" href="{{ route('Parameter-Security.create') }}"><span class="fas fa-plus fs--2 me-1"></span>Create Parameter</a>
             </div>
         </div>
     </div>
     <div class="p-5">
-        <div id="tableExample3" data-list='{"valueNames":["nama_lantai"],"page":10,"pagination":true}'>
+        <div id="tableExample3" data-list='{"valueNames":["name_parameter_security"],"page":10,"pagination":true}'>
             <div class="row justify-content-end g-0">
                 <div class="col-auto col-sm-5 mb-3">
                     <form>
@@ -22,22 +22,24 @@
                         </div>
                     </form>
                 </div>
+                </di>
                 <div class="table-responsive scrollbar">
                     <table class="table table-bordered table-striped fs--1 mb-0">
                         <thead>
                             <tr>
-                                <th>No</th>
-                                <th>Floor Name</th>
-                                <th class="text-center">Action</th>
+                                <th class="sort" data-sort="">No</th>
+                                <th class="sort" data-sort="name_parameter_security">Security Inspection Parameter</th>
+                                <th class="sort">Action</th>
                             </tr>
                         </thead>
                         <tbody class="list">
-                            @foreach ($floors as $key => $floor)
+                            @foreach ($ParameterSecurity as $key => $security)
                             <tr>
                                 <th scope="row">{{ $key + 1 }}</th>
-                                <td class="nama_lantai">{{ $floor->nama_lantai }}</td>
-                                <td class="text-center">
-                                    <a href="{{ route('floors.edit', $floor->id) }}" class="btn btn-sm btn-warning">Edit</a>
+                                <td class="name_parameter_security">{{ $security->name_parameter_security }}</td>
+                                <td>
+                                    <a href="{{ route('Parameter-Security.edit', $security->id) }}" class="btn btn-sm btn-warning"><span class="fas fa-pencil-alt fs--2 me-1"></span>Edit</a>
+                                  
                                 </td>
                             </tr>
                             @endforeach

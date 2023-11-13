@@ -13,7 +13,7 @@
         </div>
     </div>
     <div class="p-5">
-        <div id="tableExample3" data-list='{"valueNames":["nama_role", "jumlah_lantai", "email"],"page":5,"pagination":true}'>
+        <div id="tableExample3" data-list='{"valueNames":["nama_tower", "jumlah_lantai", "jumlah_unit"],"page":10,"pagination":true}'>
             <div class="row justify-content-end g-0">
                 <div class="col-auto col-sm-5 mb-3">
                     <form>
@@ -27,7 +27,7 @@
                 <table class="table table-bordered table-striped fs--1 mb-0">
                     <thead>
                         <tr>
-                            <th >No</th>
+                            <th>No</th>
                             <th>Nama Tower</th>
                             <th>Jumlah lantai</th>
                             <th>Jumlah Unit</th>
@@ -41,15 +41,10 @@
                             <th scope="row">{{ $key + 1 }}</th>
                             <td class="nama_tower">{{ $tower->nama_tower }}</td>
                             <td class="jumlah_lantai">{{ $tower->jumlah_lantai }}</td>
-                            <td>{{ $tower->jumlah_unit }}</td>
+                            <td class="jumlah_unit">{{ $tower->jumlah_unit }}</td>
                             <td>{{ $tower->keterangan }}</td>
                             <td>
                                 <a href="{{ route('towers.edit', $tower->id_tower) }}" class="btn btn-sm btn-warning">Edit</a>
-                                <form class="d-inline" action="{{ route('towers.destroy', $tower->id_tower) }}" method="post">
-                                    @method('DELETE')
-                                    @csrf
-                                    <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('are you sure?')">Hapus</button>
-                                </form>
                             </td>
                         </tr>
                         @endforeach

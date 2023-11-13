@@ -4,12 +4,13 @@
         <div class="card border h-100 border-light">
             <div class="card-body">
                 <p class="fw-semi-bold mb-3 mb-sm-2">
-                    <a class="text-primary" href="{{ route('units.show', $unit->id_unit) }}">{{ $unit->nama_unit }}</a>
+                    <a class="text-primary nama_unit" href="{{ route('units.show', $unit->id_unit) }}">{{ $unit->nama_unit }}</a>
                 </p>
+                <hr>
                 <div class="card-title">
                     <a class="text-800 d-flex align-items-center gap-1" href="../../app/support-desk/contact-details.html">
-                        <span class="fas fa-city" data-fa-transform="shrink-3 up-1"></span>
-                        <span>{{ $unit->tower->nama_tower }}</span>,
+                        <a class="fas fa-city mr-3" data-fa-transform="shrink-3 up-1"></a>
+                        <a>{{ $unit->tower->nama_tower }}</a>,
                         <span>{{ $unit->floor->nama_lantai }}</span>
                     </a>
                 </div>

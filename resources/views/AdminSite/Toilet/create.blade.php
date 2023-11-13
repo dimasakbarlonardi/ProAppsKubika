@@ -19,7 +19,7 @@
                 @csrf
               <div class="row">
                 <div class="col-6 mb-3 ">
-                    <label class="form-label">Inspection House Keeping Name</label>
+                    <label class="form-label">Inspection House Keeping Parameter</label>
                     <input type="text" name="nama_hk_toilet" class="form-control" required>
                 </div>
               </div>
