@@ -6,6 +6,7 @@ use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
 use App\Models\CashReceipt;
 use App\Models\CompanySetting;
+use App\Models\Installment;
 use App\Models\IPLType;
 use App\Models\Unit;
 use App\Models\Utility;
@@ -65,5 +66,38 @@ class InvoiceController extends Controller
         $data['transaction'] = $transaction;
 
         return view('AdminSite.Invoice.show', $data);
+    }
+
+    public function installment($id)
+    {
+        $connCR = ConnectionDB::setConnection(new CashReceipt());
+
+        $data['transaction'] = $connCR->find($id);
+
+        return view('AdminSite.Invoice.installment', $data);
+    }
+
+    public function storeInstallment(Request $request, $id)
+    {
+        $connCR = ConnectionDB::setConnection(new CashReceipt());
+        $connInstallment = ConnectionDB::setConnection(new Installment());
+
+        $cr = $connCR->find($id);
+
+        foreach($request->installments as $i => $item) {
+            $connInstallment->create([
+                'no_invoice' => $cr->no_invoice,
+                'periode' => $item['period'],
+                'tahun' => $item['year'],
+                'rev' => 'Rev ' . $i + 1,
+                'amount' => $item['jumlah_bayar'],
+                'status' => 'PENDING'
+            ]);
+        }
+
+        $cr->transaction_status = 'PAID';
+        $cr->save();
+
+        return response()->json(['status' => 'ok']);
     }
 }

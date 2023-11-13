@@ -71,4 +71,9 @@ class CashReceipt extends Model
     {
         return $this->hasOne(OpenTicket::class, 'no_invoice', 'no_invoice');
     }
+
+    public function Installments()
+    {
+        return $this->hasMany(Installment::class, 'no_invoice', 'no_invoice');
+    }
 }
