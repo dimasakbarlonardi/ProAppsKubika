@@ -19,9 +19,59 @@ use App\Models\WorkPermit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
+use stdClass;
 
 class RequestPermitController extends Controller
 {
+    public function show($id)
+    {
+        $connWP = ConnectionDB::setConnection(new WorkPermit());
+
+        $wp = $connWP->where('id', $id)->with('RequestPermit')->first();
+
+        $object = new stdClass();
+        $object->id = $wp->id;
+        $object->deposit = (int) $wp->jumlah_deposit;
+        $object->supervisi = (int) $wp->jumlah_supervisi;
+        $object->description_permit = $wp->RequestPermit->keterangan_pekerjaan;
+        $object->no_request = $wp->Ticket->no_tiket;
+        $object->no_request = $wp->Ticket->no_tiket;
+        $object->request_title = $wp->Ticket->judul_request;
+        $object->request_type = 'Permit';
+        $object->request_date = $wp->Ticket->created_at;
+        $object->unit = $wp->Ticket->Unit->nama_unit;
+        $object->tenant = $wp->Ticket->Tenant->nama_tenant;
+        $object->permit_number = $wp->no_work_permit;
+        $object->permit_type = $wp->RequestPermit->JenisPekerjaan->jenis_pekerjaan;
+        $object->work_start = $wp->RequestPermit->tgl_mulai;
+        $object->work_end = $wp->RequestPermit->tgl_akhir;
+        $object->kontraktor_name = $wp->RequestPermit->nama_kontraktor;
+        $object->kontraktor_id = $wp->RequestPermit->no_ktp;
+        $object->kontraktor_phone = $wp->RequestPermit->no_telp;
+        $object->kontraktor_address = $wp->RequestPermit->alamat;
+        $object->kontraktor_address = $wp->RequestPermit->alamat;
+        $object->approve_1_tenant = $wp->sign_approval_1;
+        $object->approve_2_work_relation = $wp->sign_approval_2;
+        $object->approve_3_finance = $wp->sign_approval_3;
+        $object->approve_5_midtrans = $wp->sign_approval_5;
+        $object->approve_4_bm = $wp->sign_approval_4;
+
+        $dataJSON = json_decode($wp->RequestPermit->RPDetail->data);
+        $dataJSON = json_decode($dataJSON);
+        $data['personels'] = $dataJSON->personels;
+        $data['alats'] = $dataJSON->alats;
+        $data['materials'] = $dataJSON->materials;
+
+        $object->personels =  $data['personels'];
+        $object->alats =  $data['alats'];
+        $object->materials =  $data['materials'];
+
+        return ResponseFormatter::success(
+            $object,
+            'Success get Work Permit'
+        );
+    }
+
     public function jenisPekerjaan()
     {
         $connJenisPerkejaan = ConnectionDB::setConnection(new JenisPekerjaan());

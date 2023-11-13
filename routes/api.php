@@ -3,6 +3,7 @@
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\API\AttendanceController;
+use App\Http\Controllers\API\BAPPController;
 use App\Http\Controllers\API\BillingController;
 use App\Http\Controllers\API\GIGOController;
 use App\Http\Controllers\API\InboxController;
@@ -85,12 +86,15 @@ Route::prefix('v1')->group(function () {
 
         Route::get('/permit/jenis-pekerjaan', [RequestPermitController::class, 'jenisPekerjaan']);
         Route::post('/permit', [RequestPermitController::class, 'store']);
+        Route::get('/permit/{id}', [RequestPermitController::class, 'show']);
         Route::post('/permit/accept/{id}', [RequestPermitController::class, 'accept']);
         Route::post('/permit/approve2/{id}', [RequestPermitController::class, 'approve2']);
         Route::post('/permit/approve4/{id}', [RequestPermitController::class, 'approve4']);
         Route::post('/permit/done/{id}', [RequestPermitController::class, 'done']);
         Route::post('/permit/done-deposit/{id}', [RequestPermitController::class, 'doneDeposit']);
         Route::post('/permit/complete/{id}', [RequestPermitController::class, 'complete']);
+
+        Route::get('/bapp/{id}', [BAPPController::class, 'show']);
 
         // Work Request
         Route::post('/on-work/work-request/{id}', [WorkRequestController::class, 'OnWork']);
