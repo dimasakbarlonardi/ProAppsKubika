@@ -72,8 +72,3 @@
     </div>
 </div>
 @endsection
-
-@php
-                                    $user = Session::get('user');
-                                    @endphp
-                                    <img class="rounded-circle" src="{{ $user->profile_picture ? asset($user->profile_picture) : asset('/storage/img/proapps.png') }}" alt="" >
