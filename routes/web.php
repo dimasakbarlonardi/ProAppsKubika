@@ -1,18 +1,12 @@
 <?php
 
-use App\Events\HelloEvent;
+
 use App\Events\PaymentEvent;
-use App\Models\ChecklistPutrH;
-use App\Models\MonthlyArTenant;
-use App\Models\ChecklistGensetH;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\OpenTicket;
-use App\Models\ChecklistOfficeManagementH;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\Admin\BAPPController;
 use App\Http\Controllers\Admin\GIGOController;
 use App\Http\Controllers\Admin\InboxCntroller;
-use App\Http\Controllers\Admin\LiftController;
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\RoomController;
@@ -41,6 +35,7 @@ use App\Http\Controllers\Admin\SubMenuController;
 use App\Http\Controllers\Admin\UtilityController;
 use App\Http\Controllers\Admin\BayarnonController;
 use App\Http\Controllers\Admin\BillingController;
+use App\Http\Controllers\Admin\ChatController;
 use App\Http\Controllers\Admin\KaryawanController;
 use App\Http\Controllers\Admin\MainFormController;
 use App\Http\Controllers\Admin\PengurusController;
@@ -126,11 +121,6 @@ use App\Http\Controllers\Admin\ToolsHKController;
 use App\Http\Controllers\Admin\ToolsSecurityController;
 use App\Http\Controllers\Admin\VisitorsController;
 use App\Http\Controllers\Admin\WaterUUSController;
-use App\Http\Controllers\API\VisitorController;
-use App\Models\ForgotAttendance;
-use App\Models\IncidentalReportHK;
-use App\Models\PermitHR;
-use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -181,6 +171,14 @@ Route::prefix('admin')->group(function () {
     Route::middleware(['auth'])->group(function () {
         Route::get('/company-setting', [CompanySettingController::class, 'show'])->name('company-setting');
         Route::post('/company-setting', [CompanySettingController::class, 'update'])->name('update-company-setting');
+
+        Route::get('/chats', [ChatController::class, 'index'])->name('chats');
+        Route::get('/chats/rooms', [ChatController::class, 'rooms']);
+        Route::get('/chats/rooms-slave', [ChatController::class, 'roomSlave']);
+        Route::get('/chats/rooms-master', [ChatController::class, 'roomMaster']);
+        Route::post('/chats', [ChatController::class, 'store']);
+        Route::get('/get-chats', [ChatController::class, 'getChats']);
+        Route::post('/read-chats', [ChatController::class, 'readChats']);
 
         Route::post('payment/check-payment-status/{id}', [PaymentController::class, 'checkStatus']);
 
