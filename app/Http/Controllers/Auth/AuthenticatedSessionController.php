@@ -21,6 +21,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use PhpParser\Node\Stmt\TryCatch;
 use RealRashid\SweetAlert\Facades\Alert;
+use JWTAuth;
 
 class AuthenticatedSessionController extends Controller
 {
@@ -188,6 +189,8 @@ class AuthenticatedSessionController extends Controller
                 if ($request->role_id == 2) {
                     return redirect()->route('dashboard');
                 }
+                $token = JWTAuth::fromUser($getUser);
+                $request->session()->put('token', $token);
 
                 return redirect()->route('open-tickets.index');
             }

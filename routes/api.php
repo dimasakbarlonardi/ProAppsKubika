@@ -43,7 +43,7 @@ Route::prefix('v1')->group(function () {
     Route::get('sites', [SiteController::class, 'sites']);
     Route::post('/login', [UserController::class, 'login'])->name('api-login');
 
-    Route::middleware('auth:sanctum')->group(function () {
+    Route::middleware('jwt.verify')->group(function () {
         Route::post('/logout', [UserController::class, 'logout'])->name('api-logout');
 
         Route::get('get/access-menu/{roleID}', [RoleController::class, 'getAccessAPI']);
@@ -210,5 +210,6 @@ Route::prefix('v1')->group(function () {
         Route::get('/reservations', [ReservationController::class, 'index']);
         Route::get('/reservation/{id}', [ReservationController::class, 'show']);
         Route::post('/reservation/approve2/{id}', [ReservationController::class, 'approve2']);
+        Route::post('/reservation/approve1/{id}', [ReservationController::class, 'approve1']);
     });
 });

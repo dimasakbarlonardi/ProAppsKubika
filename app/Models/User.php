@@ -6,8 +6,9 @@ use App\Helpers\ConnectionDB;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Model
+class User extends Model implements JWTSubject
 {
     use HasFactory, SoftDeletes;
 

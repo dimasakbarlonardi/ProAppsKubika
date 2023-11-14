@@ -331,26 +331,26 @@
             return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
         }
     </script>
-    <script src="{{ asset('js/app.js') }}"></script>
+    {{-- <script src="{{ asset('js/app.js') }}"></script> --}}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function(event) {
-            Echo.channel("hello-channel")
-                .listen('HelloEvent', (e) => {
-                    var receiver = e.dataNotif.receiver
-                    var division_receiver = e.dataNotif.division_receiver
-                    var notif_id = e.dataNotif.id
-                    getNewNotifications(user_id, receiver, division_receiver, notif_id);
-                });
+            // Echo.channel("hello-channel")
+            //     .listen('HelloEvent', (e) => {
+            //         var receiver = e.dataNotif.receiver
+            //         var division_receiver = e.dataNotif.division_receiver
+            //         var notif_id = e.dataNotif.id
+            //         getNewNotifications(user_id, receiver, division_receiver, notif_id);
+            //     });
 
-            Echo.channel("chat-channel")
-                .listen('ChatEvent', (e) => {
-                    console.log(e.sound);
-                    if (e.sound === true) {
-                        notifSound.play();
-                    }
-                })
+            // Echo.channel("chat-channel")
+            //     .listen('ChatEvent', (e) => {
+            //         console.log(e.sound);
+            //         if (e.sound === true) {
+            //             notifSound.play();
+            //         }
+            //     })
         });
 
         function getNotifications(user_id) {

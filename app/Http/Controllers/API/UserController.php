@@ -14,6 +14,7 @@ use App\Models\Unit;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Auth;
+use JWTAuth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use League\Flysystem\Config;
@@ -68,7 +69,8 @@ class UserController extends Controller
                     ], 'Authentication Failed', 500);
                 }
 
-                $tokenResult = $login->createToken('authToken')->plainTextToken;
+                // $tokenResult = $login->createToken('authToken')->plainTextToken;
+                $token = JWTAuth::fromUser($login);
 
                 $hasFcm = false;
                 if(isset($request->fcm_token)){
@@ -79,7 +81,7 @@ class UserController extends Controller
 
                 return ResponseFormatter::success([
                     'fcm' => $hasFcm,
-                    'access_token' => $tokenResult,
+                    'access_token' => $token,
                     'token_type' => 'Bearer',
                     'user' => $getUser
                 ], 'Authenticated');
