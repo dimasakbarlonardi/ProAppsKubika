@@ -189,7 +189,7 @@ class AuthenticatedSessionController extends Controller
                 if ($request->role_id == 2) {
                     return redirect()->route('dashboard');
                 }
-                $token = JWTAuth::fromUser($getUser);
+                $token = JWTAuth::fromUser(Auth::user());
                 $request->session()->put('token', $token);
 
                 return redirect()->route('open-tickets.index');

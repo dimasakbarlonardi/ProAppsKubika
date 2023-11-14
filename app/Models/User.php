@@ -6,9 +6,8 @@ use App\Helpers\ConnectionDB;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
-use Tymon\JWTAuth\Contracts\JWTSubject;
 
-class User extends Model implements JWTSubject
+class User extends Model
 {
     use HasFactory, SoftDeletes;
 
@@ -30,15 +29,6 @@ class User extends Model implements JWTSubject
         'profile_picture',
         'fcm_token'
     ];
-
-    public function getJWTIdentifier()
-    {
-        return $this->getKey();
-    }
-    public function getJWTCustomClaims()
-    {
-        return [];
-    }
 
     public function RoleH()
     {

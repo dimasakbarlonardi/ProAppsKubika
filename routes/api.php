@@ -1,6 +1,7 @@
 <?php
 
 use App\Helpers\ResponseFormatter;
+use App\Http\Controllers\Admin\MainFormController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\API\AttendanceController;
 use App\Http\Controllers\API\BAPPController;
@@ -75,6 +76,8 @@ Route::prefix('v1')->group(function () {
         Route::get('/tenant-unit', [UnitController::class, 'tenantUnit']);
         Route::post('/open-ticket', [OpenTicketController::class, 'store']);
         Route::get('/open-ticket/{id}', [OpenTicketController::class, 'show']);
+
+        Route::get('track-ticket/{id}', [MainFormController::class, 'trackTicket']);
 
         Route::get('/permit/jenis-pekerjaan', [RequestPermitController::class, 'jenisPekerjaan']);
         Route::post('/permit', [RequestPermitController::class, 'store']);
