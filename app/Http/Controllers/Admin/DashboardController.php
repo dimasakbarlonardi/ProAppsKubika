@@ -248,6 +248,10 @@ class DashboardController extends Controller
             case ('Reminder'):
                 return redirect()->route('reminders.show', $getNotif->id_data);
                 break;
+
+            case ('Installment'):
+                return redirect()->route('showInvoices', $getNotif->id_data);
+                break;
         }
     }
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Events\HelloEvent;
 use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
 use App\Models\CashReceipt;
@@ -9,6 +10,7 @@ use App\Models\CompanySetting;
 use App\Models\Installment;
 use App\Models\IPLType;
 use App\Models\Unit;
+use App\Models\User;
 use App\Models\Utility;
 use Illuminate\Http\Request;
 
@@ -52,7 +54,7 @@ class InvoiceController extends Controller
         $user = $request->session()->get('user');
         $transaction = $connCR->find($id);
 
-        if ($request->session()->get('work_relation_id') != 1 && $request->session()->get('work_relation_id') != 6) {
+        if ($request->session()->get('work_relation_id') != 1 && $request->session()->get('work_relation_id') != 6 && $request->session()->get('work_relation_id') != 2) {
             if ($user->id_user != $transaction->id_user) {
                 return redirect()->back();
             }
@@ -81,10 +83,12 @@ class InvoiceController extends Controller
     {
         $connCR = ConnectionDB::setConnection(new CashReceipt());
         $connInstallment = ConnectionDB::setConnection(new Installment());
+        $connUser = ConnectionDB::setConnection(new User());
 
         $cr = $connCR->find($id);
+        $user = $connUser->where('login_user', $request->user()->email)->first();
 
-        foreach($request->installments as $i => $item) {
+        foreach ($request->installments as $i => $item) {
             $connInstallment->create([
                 'no_invoice' => $cr->no_invoice,
                 'periode' => $item['period'],
@@ -97,6 +101,18 @@ class InvoiceController extends Controller
 
         $cr->transaction_status = 'PAID';
         $cr->save();
+
+        $dataNotif = [
+            'models' => 'Installment',
+            'notif_title' => $cr->no_invoice,
+            'id_data' => $cr->id,
+            'sender' => $user->id_user,
+            'division_receiver' => 2,
+            'notif_message' => 'Permintaan Installment invoice',
+            'receiver' => null
+        ];
+
+        broadcast(new HelloEvent($dataNotif));
 
         return response()->json(['status' => 'ok']);
     }
