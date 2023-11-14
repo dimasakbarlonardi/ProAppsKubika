@@ -54,20 +54,22 @@
                         </div>
 
                         <hr>
-                        <div class="row gx-card mx-0">
-                            <div class="col-8 py-3">
-                                <label class="mb-1">Periode</label>
-                                <input class="form-control" type="text" id="input_periode" disabled>
+                        <div id="form-input-item">
+                            <div class="row gx-card mx-0">
+                                <div class="col-8 py-3">
+                                    <label class="mb-1">Periode</label>
+                                    <input class="form-control" type="text" id="input_periode" disabled>
+                                </div>
+                                <div class="col-4 mt-3">
+                                    <label class="mb-1">Jumlah</label>
+                                    <input class="form-control" type="text" id="show_jumlah_bayar">
+                                    <input type="hidden" type="text" id="jumlah_bayar">
+                                </div>
                             </div>
-                            <div class="col-4 mt-3">
-                                <label class="mb-1">Jumlah</label>
-                                <input class="form-control" type="text" id="show_jumlah_bayar">
-                                <input type="hidden" type="text" id="jumlah_bayar">
+                            <div class="text-end mr-5">
+                                <button type="button" class="btn btn-primary mt-3" id="onClickItem"
+                                    onclick="onAddItem()">Tambah</button>
                             </div>
-                        </div>
-                        <div class="text-end mr-5">
-                            <button type="button" class="btn btn-primary mt-3" id="onClickItem"
-                                onclick="onAddItem()">Tambah</button>
                         </div>
                     </div>
                 </div>
@@ -186,14 +188,20 @@
             if (period < 10) {
                 period = '0' + period;
             }
-            console.log('add value period ', valuePeriod)
-            console.log('add period ', period)
+
             $('#input_periode').val(month);
         }
 
         function onAddItem() {
             jumlahBayar = $('#jumlah_bayar').val();
             jumlahBayar = parseInt(jumlahBayar.replace(".", ""));
+
+            console.log(subTotal, jumlahBayar);
+
+            if (jumlahBayar > subTotal) {
+                console.log('cannot');
+                return;
+            }
 
             if (!jumlahBayar) {
                 Swal.fire(
@@ -225,38 +233,39 @@
                 $('#sub_total').html(formatRupiah(subTotal.toString()));
                 $('#show_jumlah_bayar').val('')
             }
+
+            if (subTotal == 0) {
+                $('#form-input-item').css('display', 'none');
+            }
         }
 
         function onRemoveItem(id) {
             idInstall -= 1;
             valuePeriod -= 1;
-            installments.splice(id, 1);
 
             month = months[(d.getMonth() + valuePeriod) % months.length];
             period = months.indexOf(month);
 
-            console.log('remove value period ', valuePeriod)
-            console.log('remove period ', period)
-            console.log('remove month ', month)
-
             if (period == 0) {
-                console.log('year remove');
-                console.log('in 2')
                 addYear -= 1
                 year = d.getFullYear() + addYear;
             }
             $('#input_periode').val(month);
 
-            subTotal += jumlahBayar;
+            subTotal += installments[id].jumlah_bayar;
+            installments.splice(id, 1);
+
             $('#sub_total').html(formatRupiah(subTotal.toString()));
             detailInstallments();
+            if (subTotal > 0) {
+                $('#form-input-item').css('display', 'block');
+            }
         }
 
         function detailInstallments() {
             $('#detailInstallments').html('');
             installments.map((item, i) => {
                 lastElement = installments[installments.length - 1];
-                console.log(lastElement);
 
                 $('#detailInstallments').append(
                     `<div class='row gx-card mx-0 align-items-center border-bottom border-200' id="installment${item.id}">
@@ -299,7 +308,7 @@
 
             var newJumlahBayar = value.replace(".", "")
             $('#jumlah_bayar').val(newJumlahBayar);
-            console.log(newJumlahBayar);
+
             $(this).val(formatRupiah(value.toString()));
         })
     </script>
