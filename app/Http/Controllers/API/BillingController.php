@@ -310,13 +310,10 @@ class BillingController extends Controller
         return $createTransaction;
     }
 
-    public function insertElectricMeter($unitID, $token)
+    public function insertElectricMeter($unitID, Request $request)
     {
-        $getToken = str_replace("RA164-", "|", $token);
-        $tokenable = PersonalAccessToken::findToken($getToken);
-
-        if ($tokenable) {
-            $user = $tokenable->tokenable;
+        if ($request->user()) {
+            $user = $request->user();
             $site = Site::find($user->id_site);
 
             $connUnit = new Unit();
@@ -339,11 +336,9 @@ class BillingController extends Controller
         }
     }
 
-    public function storeElectricMeter(Request $request, $unitID, $token)
+    public function storeElectricMeter(Request $request, $unitID)
     {
-        $getToken = str_replace("RA164-", "|", $token);
-        $tokenable = PersonalAccessToken::findToken($getToken);
-        $user = $tokenable->tokenable;
+        $user = $request->user();
         $site = Site::find($user->id_site);
 
         $connUnit = new Unit();
@@ -378,13 +373,12 @@ class BillingController extends Controller
         $ppj = $get_ppj * $total_usage;
         $total = $total_usage + $ppj;
 
-        if ($tokenable) {
-            $login = $tokenable->tokenable;
-            $site = Site::find($login->id_site);
+        if ($user) {
+            $site = Site::find($user->id_site);
 
             $user = new User();
             $user = $user->setConnection($site->db_name);
-            $user = $user->where('login_user', $login->email)->first();
+            $user = $user->where('login_user', $user->email)->first();
 
             $connElecUUS = new ElectricUUS();
             $connElecUUS = $connElecUUS->setConnection($site->db_name);
@@ -426,13 +420,11 @@ class BillingController extends Controller
         }
     }
 
-    public function insertWaterMeter($unitID, $token)
+    public function insertWaterMeter($unitID, Request $request)
     {
-        $getToken = str_replace("RA164-", "|", $token);
-        $tokenable = PersonalAccessToken::findToken($getToken);
+        if ($request->user()) {
+            $user = $request->user();
 
-        if ($tokenable) {
-            $user = $tokenable->tokenable;
             $site = Site::find($user->id_site);
             $connUnit = new Unit();
             $connUnit = $connUnit->setConnection($site->db_name);
@@ -454,12 +446,10 @@ class BillingController extends Controller
         }
     }
 
-    public function storeWaterMeter(Request $request, $unitID, $token)
+    public function storeWaterMeter(Request $request, $unitID)
     {
-        $getToken = str_replace("RA164-", "|", $token);
-        $tokenable = PersonalAccessToken::findToken($getToken);
         $usage = $request->current - $request->previous;
-        $login = $tokenable->tokenable;
+        $login = $request->user();
         $site = Site::find($login->id_site);
 
         $user = new User();
@@ -475,7 +465,7 @@ class BillingController extends Controller
         $total_usage = $water->biaya_m3 * $usage;
         $total = $total_usage;
 
-        if ($tokenable) {
+        if ($login) {
             try {
                 DB::beginTransaction();
 

@@ -39,14 +39,11 @@ class AttendanceController extends Controller
         );
     }
 
-    public function showLocation($id, $token)
+    public function showLocation($id, Request $request)
     {
         $conCoordinate = ConnectionDB::setConnection(new Coordinate());
 
-        $getToken = str_replace("RA164-", "|", $token);
-        $tokenable = PersonalAccessToken::findToken($getToken);
-
-        if ($tokenable) {
+        if ($request->user()) {
             $coor = $conCoordinate->find($id);
             $data = [
                 'lat' => $coor->latitude,
@@ -89,15 +86,12 @@ class AttendanceController extends Controller
         return $attend;
     }
 
-    public function checkin(Request $request, $token)
+    public function checkin(Request $request)
     {
-        $getToken = str_replace("RA164-", "|", $token);
-        $tokenable = PersonalAccessToken::findToken($getToken);
         $connKaryawan = ConnectionDB::setConnection(new Karyawan());
 
-        if ($tokenable) {
-            $user = $tokenable->tokenable;
-
+        $user = $request->user();
+        if ($user) {
             $karyawan = $connKaryawan->where('email_karyawan', $user->email)->first();
             $attend = $this->attend($karyawan);
 
@@ -182,17 +176,15 @@ class AttendanceController extends Controller
         return response()->json(['status' => $resp]);
     }
 
-    public function checkout(Request $request, $token)
+    public function checkout(Request $request)
     {
-        $getToken = str_replace("RA164-", "|", $token);
-        $tokenable = PersonalAccessToken::findToken($getToken);
         $connKaryawan = ConnectionDB::setConnection(new Karyawan());
 
-        $user = $tokenable->tokenable;
+        $user = $request->user();
         $karyawan = $connKaryawan->where('email_karyawan', $user->email)->first();
         $attend = $this->attendCheckout($karyawan);
 
-        if ($tokenable) {
+        if ($user) {
             if ($attend && !$attend->checkout) {
                 if ($attend) {
 

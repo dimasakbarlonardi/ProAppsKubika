@@ -118,15 +118,14 @@ class PackageController extends Controller
         );
     }
 
-    public function pickupPackage($id, $token, Request $request)
+    public function pickupPackage($id, Request $request)
     {
-        $getToken = str_replace("RA164-", "|", $token);
-        $tokenable = PersonalAccessToken::findToken($getToken);
         $connPackage = ConnectionDB::setConnection(new Package());
         $connUser = ConnectionDB::setConnection(new User());
 
-        if ($tokenable) {
-            $login = $tokenable->tokenable;
+        $login = $request->user();
+
+        if ($login) {
             $user = $connUser->where('login_user', $login->email)->first();
 
             $package = $connPackage->find($id);
