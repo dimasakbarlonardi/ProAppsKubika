@@ -57,12 +57,12 @@ Route::prefix('v1')->group(function () {
         Route::get('/invoice/{id}', [PaymentController::class, 'invoiceAPI']);
 
         // Insert electric meter
-        Route::get('/insert-electric/{unitID}/{token}', [BillingController::class, 'insertElectricMeter']);
-        Route::post('/store/insert-electric/{unitID}/{token}', [BillingController::class, 'storeElectricMeter'])->name('store-usr-electric');
+        Route::get('/insert-electric/{unitID}', [BillingController::class, 'insertElectricMeter']);
+        Route::post('/store/insert-electric/{unitID}', [BillingController::class, 'storeElectricMeter'])->name('store-usr-electric');
 
         // Insert water meter
-        Route::get('/insert-water/{unitID}/{token}', [BillingController::class, 'insertWaterMeter']);
-        Route::post('/store/insert-water/{unitID}/{token}', [BillingController::class, 'storeWaterMeter'])->name('store-usr-water');
+        Route::get('/insert-water/{unitID}', [BillingController::class, 'insertWaterMeter']);
+        Route::post('/store/insert-water/{unitID}', [BillingController::class, 'storeWaterMeter'])->name('store-usr-water');
 
         // Unit
         Route::get('/units', [UnitController::class, 'getAllUnits']);
@@ -151,13 +151,13 @@ Route::prefix('v1')->group(function () {
         Route::post('/gigo/remove/{id}', [GIGOController::class, 'removeGood']);
         Route::post('/gigo/{id}', [GIGOController::class, 'update']);
         Route::post('/gigo/approve2/{id}', [GIGOController::class, 'approve2']);
-        Route::post('/gigo/done/{id}/{token}', [GIGOController::class, 'done']);
+        Route::post('/gigo/done/{id}', [GIGOController::class, 'done']);
 
         // ================== Attendance ========================
         Route::get('/site-location', [AttendanceController::class, 'siteLocation']);
-        Route::get('/site-location/{id}/{token}', [AttendanceController::class, 'showLocation']);
-        Route::post('/attendance/checkin/{token}', [AttendanceController::class, 'checkin']);
-        Route::post('/attendance/checkout/{token}', [AttendanceController::class, 'checkout']);
+        Route::get('/site-location/{id}', [AttendanceController::class, 'showLocation']);
+        Route::post('/attendance/checkin', [AttendanceController::class, 'checkin']);
+        Route::post('/attendance/checkout', [AttendanceController::class, 'checkout']);
         Route::get('/attendance/shift-schedule', [AttendanceController::class, 'shiftSchedule']);
         Route::get('/attendance/today-activity/{userID}', [AttendanceController::class, 'todayData']);
         Route::get('/attendance/recent-activity/{userID}', [AttendanceController::class, 'recentData']);
@@ -180,7 +180,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/packages', [PackageController::class, 'index']);
         Route::get('/package/unit/{id}', [PackageController::class, 'packageByUnit']);
         Route::get('/package/{id}', [PackageController::class, 'showPackage']);
-        Route::post('/pickup/package/{id}/{token}', [PackageController::class, 'pickupPackage']);
+        Route::post('/pickup/package/{id}', [PackageController::class, 'pickupPackage']);
 
         // Visitor
         Route::post('/visitor', [VisitorController::class, 'store']);
