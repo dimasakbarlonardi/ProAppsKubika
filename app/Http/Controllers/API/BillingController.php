@@ -329,13 +329,9 @@ class BillingController extends Controller
             $object->current = count($unit->electricUUS) > 0 ? $unit->electricUUS[0]->nomor_listrik_awal : 0;
             $object->previous = count($unit->electricUUS) > 0 ? $unit->electricUUS[0]->nomor_listrik_akhir : 0;
 
-            // return ResponseFormatter::success([
-            //     $object
-            // ], 'Success get data');
-            $data['unit'] = $unit;
-            $data['token'] = $token;
-
-            return view('AdminSite.UtilityUsageRecording.Electric.create', $data);
+            return ResponseFormatter::success([
+                $object
+            ], 'Success get data');
         } else {
             return ResponseFormatter::error([
                 'message' => 'Unauthorized'
@@ -448,13 +444,9 @@ class BillingController extends Controller
             $object->current = count($unit->waterUUS) > 0 ? $unit->waterUUS[0]->nomor_air_awal : 0;
             $object->previous = count($unit->waterUUS) > 0 ? $unit->waterUUS[0]->nomor_air_akhir : 0;
 
-            $data['unit'] = $unit;
-            $data['token'] = $token;
-          
-            return view('AdminSite.UtilityUsageRecording.Water.create', $data);
-            // return ResponseFormatter::success([
-            //     $object
-            // ], 'Success get data');
+            return ResponseFormatter::success([
+                $object
+            ], 'Success get data');
         } else {
             return ResponseFormatter::error([
                 'message' => 'Unauthorized'
