@@ -47,12 +47,7 @@ class OpenTicketController extends Controller
         $user = $request->session()->get('user');
         $connTenant = ConnectionDB::setConnection(new Tenant());
 
-        if ($user->user_category == 3) {
-            $tenant = $connTenant->where('email_tenant', $user->login_user)->first();
-            $tickets = $connRequest->where('id_tenant', $tenant->id_tenant)->latest();
-        } else {
-            $tickets = $connRequest->where('deleted_at', null);
-        }
+        $tickets = $connRequest->where('deleted_at', null);
 
         if ($request->valueString) {
             $valueString = $request->valueString;
@@ -72,10 +67,15 @@ class OpenTicketController extends Controller
             $tickets = $tickets->where('priority', $request->priority);
         }
 
-        $tickets = $tickets->orderBy('id', 'DESC');
+        if ($user->user_category == 3) {
+            $tenant = $connTenant->where('email_tenant', $user->login_user)->first();
+            $tickets = $connRequest->where('id_tenant', $tenant->id_tenant)->latest();
+        } else {
+            $tickets = $connRequest->where('deleted_at', null);
+        }
 
         $data['tickets'] = $tickets->get();
-
+       
         return response()->json([
             'html' => view('AdminSite.OpenTicket.table-data', $data)->render()
         ]);
