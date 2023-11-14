@@ -192,6 +192,8 @@ class ReservationController extends Controller
         $object->notes = strip_tags($reservation->keterangan);
         $object->notes_by = $reservation->Ticket->ResponseBy ? $reservation->Ticket->ResponseBy->nama_user : null;
         $object->status_reservation = $reservation->sign_approval_1 ? 'APPROVED' : 'PENDING';
+        $object->approve_1_tenant = $reservation->sign_approval_1;
+        $object->approve_2_security = $reservation->sign_approval_2;
 
         if ($reservation->is_deposit) {
             $object->total = $reservation->jumlah_deposit;
@@ -203,13 +205,44 @@ class ReservationController extends Controller
         );
     }
 
-    public function approve2($id)
+    public function approve1($id)
     {
         $connReservation = ConnectionDB::setConnection(new Reservation());
         $connApprove = ConnectionDB::setConnection(new Approve());
 
         $approve = $connApprove->find(7);
         $rsv = $connReservation->find($id);
+
+        $rsv->sign_approval_1 = Carbon::now();
+        $rsv->save();
+
+        $dataNotif = [
+            'models' => 'Reservation',
+            'notif_title' => $rsv->no_request_reservation,
+            'id_data' => $rsv->id,
+            'sender' => $rsv->Ticket->Tenant->User->id_user,
+            'division_receiver' => 10,
+            'notif_message' => 'Request Reservation diterima, mohon approve reservasi',
+            'receiver' => null,
+        ];
+
+        broadcast(new HelloEvent($dataNotif));
+
+        return ResponseFormatter::success(
+            $rsv,
+            'Success approve reservation'
+        );
+    }
+
+    public function approve2($id, Request $request)
+    {
+        $connReservation = ConnectionDB::setConnection(new Reservation());
+        $connApprove = ConnectionDB::setConnection(new Approve());
+        $connUser = ConnectionDB::setConnection(new User());
+
+        $approve = $connApprove->find(7);
+        $rsv = $connReservation->find($id);
+        $user = $connUser->where('login_user', $request->user()->email)->first();
 
         $rsv->sign_approval_2 = Carbon::now();
         $rsv->save();
@@ -218,8 +251,8 @@ class ReservationController extends Controller
             'models' => 'Reservation',
             'notif_title' => $rsv->no_request_reservation,
             'id_data' => $rsv->id,
-            'sender' => $rsv->Ticket->Tenant->User->id_user,
-            'division_receiver' => null,
+            'sender' => $user->id_user,
+            'division_receiver' => 6,
             'notif_message' => 'Request Reservation diterima, mohon approve reservasi',
             'receiver' => $approve->approval_3,
         ];
