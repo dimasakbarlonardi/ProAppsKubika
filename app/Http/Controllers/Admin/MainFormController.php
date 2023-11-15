@@ -71,7 +71,7 @@ class MainFormController extends Controller
 
         $object1 = new stdClass();
         $object1->is_done = $ticket->status_respon ? true : false;
-        $object1->title = 'Request GIGO accepted by TR ';
+        $object1->title = 'Request accepted by TR ';
         $object1->status_time = $ticket->status_respon == 'Responded' ? $ticket->tgl_respon_tiket . ' ' . $ticket->jam_respon : null;
         $object1->icon = null;
         $object1->user = $ticket->status_respon ? $ticket->ResponseBy->nama_user : null;
@@ -80,6 +80,12 @@ class MainFormController extends Controller
         switch ($ticket->id_jenis_request) {
             case 5:
                 $objects = $this->trackGIGO($ticket, $objects);
+                break;
+            case 4:
+                $objects = $this->trackRSV($ticket, $objects);
+                break;
+            case 2:
+                $objects = $this->trackPermit($ticket, $objects);
                 break;
         }
 
@@ -91,31 +97,121 @@ class MainFormController extends Controller
         ]);
     }
 
-    function trackGIGO($ticket, $objects)
+    function createObject($request, $title, $condition, $user, $time)
     {
         $object = new stdClass();
-        $object->is_done = $ticket->RequestGIGO ? ($ticket->requestGIGO->sign_approval_2 ? true : false) : false;
-        $object->title = 'Request GIGO accepted by Security ';
-        $object->status_time = $ticket->RequestGIGO ? ($ticket->requestGIGO->sign_approval_2 ? $ticket->requestGIGO->sign_approval_2 : null) : null;
+        $object->is_done = $request ? ($condition ? true : false) : false;
+        $object->title = $title;
+        $object->status_time = $time;
         $object->icon = null;
-        $object->user = $ticket->RequestGIGO ? ($ticket->requestGIGO->sign_approval_2 ? 'Security' : null) : null;;
-        $objects[] = $object;
+        $object->user = $request ? ($condition ? $user : null) : null;;
 
-        $object2 = new stdClass();
-        $object2->is_done = $ticket->RequestGIGO ? ($ticket->requestGIGO->status_request == 'DONE' || $ticket->requestGIGO->status_request == 'COMPLETE' ? true : false) : false;
-        $object2->title = 'Request GIGO has done';
-        $object2->status_time = $ticket->RequestGIGO ? ($ticket->requestGIGO->status_request ? $ticket->requestGIGO->sign_approval_2 : null) : null;
-        $object2->icon = null;
-        $object2->user = $ticket->RequestGIGO ? ($ticket->requestGIGO->status_request == 'DONE' || $ticket->requestGIGO->status_request == 'COMPLETE' ? $ticket->Tenant->user->nama_user : null) : null;
-        $objects[] = $object2;
+        return $object;
+    }
 
-        $object3 = new stdClass();
-        $object3->is_done = $ticket->RequestGIGO ? ($ticket->requestGIGO->status_request == 'COMPLETE' ? true : false) : false;
-        $object3->title = 'Request GIGO has complete';
-        $object3->status_time = $ticket->RequestGIGO ? ($ticket->requestGIGO->sign_approval_3 ? $ticket->requestGIGO->sign_approval_3 : null) : null;
-        $object3->icon = null;
-        $object3->user = $ticket->RequestGIGO ? ($ticket->requestGIGO->sign_approval_3 ? 'Building Manager' : null) : null;
-        $objects[] = $object3;
+    function trackGIGO($ticket, $objects)
+    {
+        $gigo = $ticket->RequestGIGO;
+        $user = $ticket->Tenant->user->nama_user;
+
+        $condition1 = $gigo->sign_approval_2;
+        $track1 = $this->createObject($gigo, 'Request GIGO accepted by Security', $condition1, 'Security', $gigo->sign_approval_2);
+        $objects[] = $track1;
+
+        $condition2 = $gigo->status_request == 'DONE' || $gigo->status_request == 'COMPLETE';
+        $track2 = $this->createObject($gigo, 'Request GIGO has done', $condition2, $user, $gigo->updated_at);
+        $objects[] = $track2;
+
+        $condition3 = $gigo->status_request == 'COMPLETE';
+        $track3 = $this->createObject($gigo, 'Request GIGO has complete', $condition3, 'Building Manager', $gigo->sign_approval_3);
+        $objects[] = $track3;
+
+        return $objects;
+    }
+
+    function trackRSV($ticket, $objects)
+    {
+        $rsv = $ticket->RequestReservation;
+        $user = $ticket->Tenant->nama_tenant;
+
+        if ($ticket->RequestReservation->is_deposit) {
+            $condition1 = $rsv->sign_approval_1;
+            $track1 = $this->createObject($rsv, 'Tenant accept payment', $condition1, $user, $rsv->sign_approval_1);
+            $objects[] = $track1;
+        }
+
+        $condition2 = $rsv->sign_approval_2;
+        $track2 = $this->createObject($rsv, 'Security accept the request', $condition2, 'Security', $rsv->sign_approval_2);
+        $objects[] = $track2;
+
+        $condition3 = $rsv->sign_approval_3;
+        $track3 = $this->createObject($rsv, 'Wating for payment', $condition3, $user, $rsv->sign_approval_3);
+        $objects[] = $track3;
+
+        if ($ticket->RequestReservation->is_deposit) {
+            $condition4 = $rsv->sign_approval_5;
+            $track4 = $this->createObject($rsv, 'Payment is confirmed and success', $condition4, 'System', $rsv->sign_approval_5);
+            $objects[] = $track4;
+        }
+
+        $condition5 = $rsv->sign_approval_4;
+        $track5 = $this->createObject($rsv, 'Reservation is Done', $condition5, $user, $rsv->updated_at);
+        $objects[] = $track5;
+
+        $condition6 = $rsv->sign_approval_4;
+        $track6 = $this->createObject($rsv, 'Reservation is Completed', $condition6, 'Building Manager', $ticket->updated_at);
+        $objects[] = $track6;
+
+        return $objects;
+    }
+
+    function trackPermit($ticket, $objects)
+    {
+        $wp = $ticket->WorkPermit;
+        $user = $ticket->Tenant->user->nama_user;
+
+        $condition1 = $wp->sign_approval_1;
+        $track1 = $this->createObject($wp, 'Tenant accept payment', $condition1, $user, $wp->sign_approval_1);
+        $objects[] = $track1;
+
+        $condition2 = $wp->sign_approval_2;
+        $track2 = $this->createObject($wp, 'Management accept request', $condition2, $wp->WorkRelation->work_relation, $wp->sign_approval_2);
+        $objects[] = $track2;
+
+        $condition3 = $wp->sign_approval_3;
+        $track3 = $this->createObject($wp, 'Finance accept request', $condition3, 'Finance', $wp->sign_approval_3);
+        $objects[] = $track3;
+
+        $condition4 = $ticket->Cashreceipt;
+        $track4 = $this->createObject($wp, 'Wating for payment', $condition4,  'System', $ticket->CashReceipt->created_at);
+        $objects[] = $track4;
+
+        $condition4 = $wp->status_bayar == 'PAID';
+        $track4 = $this->createObject($wp, 'Payment is confirmed and success', $condition4,  'System', $wp->sign_approval_5);
+        $objects[] = $track4;
+
+        $condition4 = $wp->sign_approval_4;
+        $track4 = $this->createObject($wp, 'Request has been approved', $condition4,  'Building Management', $wp->sign_approval_4);
+        $objects[] = $track4;
+
+        $condition5 = $wp->sign_approval_4 && ($ticket->status_request != 'DONE' || $ticket->status_request != 'COMPLETE');
+        $track5 = $this->createObject($wp, 'Request has been worked', $condition5,  $wp->WorkRelation->work_relation, $wp->sign_approval_4);
+        $objects[] = $track5;
+
+        $condition6 = $wp->BAPP;
+        $track6 = $this->createObject($wp, 'Request has Done', $condition6,  $wp->WorkRelation->work_relation, $wp->BAPP->created_at);
+        $objects[] = $track6;
+
+        $track7 = $this->createObject($wp, 'Waiting for returning Deposit', $condition6,  $user, $wp->BAPP->created_at);
+        $objects[] = $track7;
+
+        $condition7 = $wp->BAPP->status_pengembalian = 1;
+        $track8 = $this->createObject($wp, 'Deposit hasn been returned', $condition7, $user, $wp->BAPP->sign_approval_1);
+        $objects[] = $track8;
+
+        $condition8 = $ticket->status_request = 'COMPLETE';
+        $track9 = $this->createObject($wp, 'Request hasn been Complete', $condition8, 'Building Manager', $ticket->updated_at);
+        $objects[] = $track9;
 
         return $objects;
     }
