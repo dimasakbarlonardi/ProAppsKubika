@@ -539,9 +539,10 @@ class BillingController extends Controller
                         "unit" => "day"
                     ]
                 ]);
+
                 $response = json_decode($response->getBody());
 
-                if ($response->status_code != 406) {
+                if ($response->status_code == 201) {
                     $transaction->va_number = $response->va_numbers[0]->va_number;
                     $transaction->expiry_time = $response->expiry_time;
                     $transaction->transaction_id = $response->transaction_id;
