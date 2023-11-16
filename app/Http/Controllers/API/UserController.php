@@ -70,10 +70,14 @@ class UserController extends Controller
                 }
 
                 // $tokenResult = $login->createToken('authToken')->plainTextToken;
-                $token = JWTAuth::fromUser($login);
+                $customClaims = [
+                    'id_login' => $login->id,
+                    'id_site' => $login->id_site,
+                ];
+                $token = JWTAuth::claims($customClaims)->attempt($credentials);
 
                 $hasFcm = false;
-                if(isset($request->fcm_token)){
+                if (isset($request->fcm_token)) {
                     $getUser->update([
                         'fcm_token' => $request->fcm_token
                     ]);
@@ -132,7 +136,7 @@ class UserController extends Controller
         } else {
             return ResponseFormatter::error([
                 'message' => 'Anda tidak terdaftar'
-            ],'Authentication Failed', 500);
+            ], 'Authentication Failed', 500);
         }
     }
 
@@ -145,8 +149,8 @@ class UserController extends Controller
         $user = new User();
         $user = $user->setConnection($site->db_name);
         $user = $user->where('login_user', $getUser->email)
-        ->with('RoleH')
-        ->first();
+            ->with('RoleH')
+            ->first();
         return ResponseFormatter::success($user, 'Data profile user berhasil diambil');
     }
 

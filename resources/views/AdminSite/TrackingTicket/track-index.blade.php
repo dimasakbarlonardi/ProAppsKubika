@@ -32,15 +32,6 @@
                                     <span class="far fa-clock me-1"></span>
                                     {{ HumanTime($item->status_time) }}
                                 </h6>
-                                <div class="d-flex align-items-center ms-auto me-2 me-sm-x1 me-xl-2 me-xxl-x1">
-                                    <div class="dot me-0 me-sm-2 me-xl-0 me-xxl-2 bg-{{ $item->is_done ? 'success' : 'secondary' }}"
-                                        data-bs-toggle="tooltip" data-bs-placement="top" data-bs-title="Urgent">
-                                    </div>
-                                </div>
-                                <small
-                                    class="badge rounded badge-subtle-{{ $item->is_done ? 'success' : 'secondary' }} false">
-                                    {{ $item->is_done ? 'Done' : 'Pending' }}
-                                </small>
                             </div>
                         </div>
                     </div>
