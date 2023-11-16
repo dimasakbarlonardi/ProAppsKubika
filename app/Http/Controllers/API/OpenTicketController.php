@@ -219,13 +219,13 @@ class OpenTicketController extends Controller
         if ($ticket->id_jenis_request == 2) {
             $rp = $connRP->where('no_tiket', $ticket->no_tiket)->first();
             $wp = $connWP->where('no_tiket', $ticket->no_tiket)->first();
-            
+
             if ($wp) {
                 $item->ticket['request_type'] = 'WorkPermit';
-                $item->request = $wp;                
+                $item->request = $wp;
             } else {
                 $item->ticket['request_type'] = 'RequestPermit';
-                $item->request = $rp;                
+                $item->request = $rp;
             }
 
             if ($rp) {
