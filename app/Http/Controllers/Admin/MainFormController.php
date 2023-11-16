@@ -262,9 +262,33 @@ class MainFormController extends Controller
                 $track8 = $this->createObject($wo, 'Work Request has approved by Managamenet', $condition7, $work_relation, $wo->date_approve_2);
                 $objects[] = $track8;
 
-                $condition7 = $wo->sign_approve_2 && $wo->status_request;
-                $track8 = $this->createObject($wo, 'Work Request has approved by Managamenet', $condition7, $work_relation, $wo->date_approve_2);
-                $objects[] = $track8;
+                $condition8 = $wo->sign_approve_3 || $wo->status_wo == 'BM APPROVED';
+                $track9 = $this->createObject($wo, 'Work Request has approved by Building Manager', $condition8, 'Building Manager', $wo->updated_at);
+                $objects[] = $track9;
+
+                $condition9 = $wo->sign_approve_3;
+                $track10 = $this->createObject($wo, 'Work Request has approved by Finance', $condition9, 'Finance', $wo->updated_at);
+                $objects[] = $track10;
+
+                $condition10 = $ticket->CashReceipt;
+                $track11 = $this->createObject($wo, 'Waiting for payment', $condition10, 'System', $ticket->CashReceipt->created_at);
+                $objects[] = $track11;
+
+                $condition11 = $wo->date_approve_5;
+                $track12 = $this->createObject($wo, 'Payment is confirmed and success', $condition11, 'System', $wo->date_approve_5);
+                $objects[] = $track12;
+
+                $condition12 = $wo->status_wo == 'WORK DONE' || $wo->status_wo == 'DONE' || $wo->status_wo == 'COMPLETE';
+                $track13 = $this->createObject($wo, 'Request has been worked', $condition12, $work_relation, $wo->updated_at);
+                $objects[] = $track13;
+
+                $condition13 = $wo->status_wo == 'DONE' || $wo->status_wo == 'COMPLETE';
+                $track14 = $this->createObject($wo, 'Request has been done by Tenant', $condition13, $user, $wo->updated_at);
+                $objects[] = $track14;
+
+                $condition14 = $wo->status_wo == 'COMPLETE';
+                $track15 = $this->createObject($wo, 'Request has completed', $condition14, 'Building Manager', $wo->updated_at);
+                $objects[] = $track15;
             }
         }
 
