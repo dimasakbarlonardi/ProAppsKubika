@@ -2,10 +2,12 @@
 
 namespace App\Models;
 
+use App\Helpers\ConnectionDB;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Auth;
 
 class CashReceipt extends Model
 {
@@ -75,5 +77,32 @@ class CashReceipt extends Model
     public function Installments()
     {
         return $this->hasMany(Installment::class, 'no_invoice', 'no_invoice');
+    }
+
+    public function Installment($bulan, $tahun)
+    {
+        $connInstallment = ConnectionDB::setConnection(new Installment());
+
+        $installment = $connInstallment->where('periode', $bulan)
+            ->where('tahun', $tahun)
+            ->first();
+
+        return $installment;
+    }
+
+    public function UpdateInstallment($bulan, $tahun, $connection)
+    {
+        if (Auth::user()) {
+            $connInstallment = ConnectionDB::setConnection(new Installment());
+        } else {
+            $connInstallment = new Installment();
+            $connInstallment = $connInstallment->setConnection($connection);
+        }
+
+        $installment = $connInstallment->where('periode', $bulan)
+            ->where('tahun', $tahun)
+            ->first();
+
+        return $installment;
     }
 }

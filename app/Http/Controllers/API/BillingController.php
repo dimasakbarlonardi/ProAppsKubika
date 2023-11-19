@@ -62,20 +62,22 @@ class BillingController extends Controller
         $sc = $connIPLType->find(6);
         $sf = $connIPLType->find(7);
 
-        $data = $ar->with([
+        $ar = $ar->with([
             'Unit.TenantUnit.Tenant',
             'CashReceipt',
             'MonthlyIPL',
             'MonthlyUtility.ElectricUUS',
             'MonthlyUtility.WaterUUS'
-        ])
-            ->first();
+        ]);
+
+        $data = $ar->first();
         $previousBills = $ar->first()->PreviousMonthBill();
 
         $data['price_water'] = $connUtil->find(2)->biaya_m3;
         $data['price_electric'] = $connUtil->find(1)->biaya_m3;
         $data['service_charge_price'] = $sc->biaya_permeter;
         $data['sinking_fund_price'] = $sf->biaya_permeter;
+        $data['installment'] = $data->CashReceipt->Installment($data->periode_bulan, $data->periode_tahun);
 
         return ResponseFormatter::success(
             [
@@ -327,8 +329,9 @@ class BillingController extends Controller
             $object->previous = count($unit->electricUUS) > 0 ? $unit->electricUUS[0]->nomor_listrik_akhir : 0;
 
             return ResponseFormatter::success(
-                $object
-            , 'Success get data');
+                $object,
+                'Success get data'
+            );
         } else {
             return ResponseFormatter::error([
                 'message' => 'Unauthorized'
@@ -437,8 +440,9 @@ class BillingController extends Controller
             $object->previous = count($unit->waterUUS) > 0 ? $unit->waterUUS[0]->nomor_air_akhir : 0;
 
             return ResponseFormatter::success(
-                $object
-            , 'Success get data');
+                $object,
+                'Success get data'
+            );
         } else {
             return ResponseFormatter::error([
                 'message' => 'Unauthorized'
