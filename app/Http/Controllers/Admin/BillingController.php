@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Models\CashReceipt;
 use App\Models\CashReceiptDetail;
 use App\Models\ElectricUUS;
+use App\Models\Installment;
 use App\Models\IPLType;
 use App\Models\MonthlyArTenant;
 use App\Models\MonthlyIPL;
@@ -208,9 +209,11 @@ class BillingController extends Controller
     {
         $connSystem = ConnectionDB::setConnection(new System());
         $connTransaction = ConnectionDB::setConnection(new CashReceipt());
+        $connInstallment = ConnectionDB::setConnection(new Installment());
         $system = $connSystem->find(1);
 
         $user = $mt->Unit->TenantUnit->Tenant->User;
+        // $installment = $
 
         $countCR = $system->sequence_no_cash_receiptment + 1;
         $no_cr = $system->kode_unik_perusahaan . '/' .
@@ -241,7 +244,16 @@ class BillingController extends Controller
                 }
             }
 
-            $subtotal = $subtotal + $prevSubTotal;
+            $amountInstallment = 0;
+            $installment = $connInstallment->where('periode', $mt->periode_bulan)
+                ->where('tahun', $mt->periode_tahun)
+                ->first();
+
+            if ($installment) {
+                $amountInstallment = $installment->amount;
+            }
+
+            $subtotal = $subtotal + $prevSubTotal + $amountInstallment;
 
             $createTransaction = $connTransaction;
             $createTransaction->order_id = $order_id;
@@ -376,7 +388,7 @@ class BillingController extends Controller
 
                 $payment['payment_type'] = $billing[0];
                 $payment['transaction_details']['order_id'] = $transaction->order_id;
-                $payment['transaction_details']['gross_amount'] = $transaction->gross_amount;
+                $payment['transaction_details']['gross_amount'] = (int) $transaction->gross_amount;
                 $payment['bank_transfer']['bank'] = $billing[1];
 
                 $response = $client->request('POST', 'https://api.sandbox.midtrans.com/v2/charge', [

@@ -14,9 +14,15 @@
                 <td class="align-middle">
                     {{ $item->no_invoice }}
                 </td>
+<<<<<<< HEAD
                 <!-- <td class="align-middle">
                     {{ $item->Ticket ? $item->Ticket->Unit : '' }}
                 </td> -->
+=======
+                <td class="align-middle">
+                    {{ $item->Ticket ? $item->Ticket->Unit->nama_unit : '' }}
+                </td>
+>>>>>>> ec8a5b70f6efb323d4af39fc9fe65104cd0a2fdc
                 <td class="align-middle">
                     {{ $item->transaction_type }}
                 </td>

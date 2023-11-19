@@ -144,6 +144,11 @@ class PaymentController extends Controller
                         $bills = $bills->where('id_unit', $cr->MonthlyARTenant->id_unit)->get();
 
                         foreach ($bills as $bill) {
+                            $installment = $cr->UpdateInstallment($bill->periode_bulan, $bill->periode_tahun, $site->db_name);
+                            if ($installment) {
+                                $installment->status = 'PAID';
+                                $installment->save();
+                            }
                             $bill->tgl_bayar_invoice = Carbon::now();
                             $bill->save();
                         }
