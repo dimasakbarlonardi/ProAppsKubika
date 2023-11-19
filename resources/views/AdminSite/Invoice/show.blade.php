@@ -412,7 +412,7 @@
                                         <span>{{ Rupiah($data->MonthlyIPL->ipl_sink_fund) }}</span>
                                     </td>
                                 </tr>
-                                <tr class="alert alert-success mt-3">
+                                <!-- <tr class="alert alert-success mt-3">
                                     <td class="align-middle">
                                         <h6 class="mb-0 text-nowrap">Others
                                         </h6>
@@ -471,7 +471,7 @@
                                         <hr>
                                         <span>{{ Rupiah($data->MonthlyUtility->WaterUUS->total) }}</span>
                                     </td>
-                                </tr>
+                                </tr> -->
                             </tbody>
                         </table>
                     </div>
