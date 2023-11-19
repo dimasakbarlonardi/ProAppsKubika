@@ -446,6 +446,9 @@ Route::prefix('admin')->group(function () {
         Route::get('/get-notifications/{userID}', [DashboardController::class, 'getNotifications'])->name('getNotifications');  // Get all notifications by user_id
         Route::get('/get-new-notifications/{notifID}', [DashboardController::class, 'getNewNotifications'])->name('getNewNotifications');  // Get all notifications by user_id
         Route::get('/notification/{id}', [DashboardController::class, 'showNotification'])->name('showNotification'); // Show all notification by user_id
+        Route::get('/not-done/request', [DashboardController::class, 'notDoneRequest']);
+        Route::get('/not-done/wr', [DashboardController::class, 'notDoneWR']);
+        Route::get('/not-done/wo', [DashboardController::class, 'notDoneWO']);
 
         // CRUD Work Order
         Route::resource('/work-orders', WorkOrderController::class);
