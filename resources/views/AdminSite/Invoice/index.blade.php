@@ -114,7 +114,6 @@
                     status
                 },
                 success: function(resp) {
-                    console.log(resp.html);
                     $('#data-invoice').html(resp.html);
                 }
             })

@@ -68,9 +68,12 @@
                 <!-- parent pages-->
                 <a class="nav-link" href="{{ Route::has($menu->route_name) ? route($menu->route_name) : '' }}"
                     role="button" id="{{ $nav[0] }}">
-                    <div class="d-flex align-items-center"><span class="nav-link-icon"><span
-                                class="{{ $menu->icon }}"></span></span><span
-                            class="nav-link-text ps-1">{{ $menu->caption }}</span>
+                    <div class="d-flex align-items-center">
+                        <span class="nav-link-icon">
+                            <span class="{{ $menu->icon }}"></span>
+                        </span>
+                        <span class="nav-link-text ps-1">{{ $menu->caption }}</span>
+                        <span class="badge rounded-pill ms-2 badge-subtle-success" style="display: none" id="menu{{ $menu->id }}">0</span>
                     </div>
                 </a>
             @else

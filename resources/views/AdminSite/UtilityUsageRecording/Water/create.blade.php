@@ -7,11 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Proapps | Utility Usage Recording - Water</title>
 
-    <link rel="apple-touch-icon" sizes="180x180" href="https://dev.pro-apps.xyz/assets/img/favicons/apple-touch-icon.png">
-    {{-- <link rel="manifest" href="https://dev.pro-apps.xyz/assets/img/favicons/manifest.json"> --}}
-    <meta name="msapplication-TileImage" content="https://dev.pro-apps.xyz/assets/img/favicons/mstile-150x150.png">
     <meta name="theme-color" content="#ffffff">
-
 
     <link href="https://dev.pro-apps.xyz/assets/css/theme.min.css" rel="stylesheet" id="user-style-default">
 </head>

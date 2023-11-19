@@ -66,7 +66,9 @@ class InvoiceController extends Controller
         $data['water'] = $connUtility->find(2);
         $data['setting'] = $connSetting->find(1);
         $data['transaction'] = $transaction;
-        $data['installment'] = $connCR->Installment($transaction->MonthlyARTenant->periode_bulan, $transaction->MonthlyARTenant->periode_tahun);
+        if ($transaction->transaction_type == 'MonthlyTenant') {
+            $data['installment'] = $transaction->Installment($transaction->MonthlyARTenant->periode_bulan, $transaction->MonthlyARTenant->periode_tahun);
+        }
 
         return view('AdminSite.Invoice.show', $data);
     }

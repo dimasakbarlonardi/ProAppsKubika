@@ -19,19 +19,10 @@
     <!-- ===============================================-->
     <title>Pro Apps | Dashboard &amp; Web App Template</title>
 
-    <!-- ===============================================-->
-    <!--    Favicons-->
-    <!-- ===============================================-->
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/img/favicons/apple-touch-icon.png">
-    <meta name="msapplication-TileImage" content="assets/img/favicons/mstile-150x150.png">
     <meta name="theme-color" content="#ffffff">
     <script src="{{ url('assets/js/config.js') }}"></script>
     <script src="{{ url('assets/vendors/simplebar/simplebar.min.js') }}"></script>
-    <!-- ===============================================-->
-    <!--    Favicons-->
-    <!-- ===============================================-->
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/img/favicons/apple-touch-icon.png">
-    <meta name="msapplication-TileImage" content="assets/img/favicons/mstile-150x150.png">
+
     <meta name="theme-color" content="#ffffff">
     <script src="{{ url('assets/js/config.js') }}"></script>
     <script src="{{ url('assets/vendors/simplebar/simplebar.min.js') }}"></script>
@@ -342,6 +333,7 @@
                     var division_receiver = e.dataNotif.division_receiver
                     var notif_id = e.dataNotif.id
                     getNewNotifications(user_id, receiver, division_receiver, notif_id);
+                    sumCounter(e.dataNotif.models);
                 });
 
             Echo.channel("chat-channel")
@@ -361,6 +353,7 @@
                     if (data.length > 0) {
                         var is_notif = 0;
                         data.map((item) => {
+                            sumCounter(item.models);
                             if (item.is_read == 0) {
                                 is_notif += 1;
                             }
@@ -440,6 +433,76 @@
                                 </a>
                             </div>
                         `)
+                    }
+                }
+            })
+        }
+
+        function sumCounter(models) {
+            switch (models) {
+                case 'OpenTicket':
+                    getNotDoneRequest();
+                case 'WorkRequest':
+                    getNotDoneWR();
+                case 'WorkOrderM':
+                    getNotDoneWO();
+                default:
+                    console.log('unknown models');
+            }
+            // getNotDoneRP();
+        }
+
+        function getNotDoneRequest() {
+            $.ajax({
+                url: `/admin/not-done/request`,
+                type: 'GET',
+                success: function(resp) {
+                    console.log(resp)
+                    if (resp > 0) {
+                        $('#menu26').css("display", "block");
+                        $('#menu26').html(resp);
+                    }
+                }
+            })
+        }
+
+        function getNotDoneWR() {
+            $.ajax({
+                url: `/admin/not-done/wr`,
+                type: 'GET',
+                success: function(resp) {
+                    console.log(resp)
+                    if (resp > 0) {
+                        $('#menu27').css("display", "block");
+                        $('#menu27').html(resp);
+                    }
+                }
+            })
+        }
+
+        function getNotDoneWO() {
+            $.ajax({
+                url: `/admin/not-done/wo`,
+                type: 'GET',
+                success: function(resp) {
+                    console.log(resp)
+                    if (resp > 0) {
+                        $('#menu28').css("display", "block");
+                        $('#menu28').html(resp);
+                    }
+                }
+            })
+        }
+
+        function getNotDoneWO() {
+            $.ajax({
+                url: `/admin/not-done/wo`,
+                type: 'GET',
+                success: function(resp) {
+                    console.log(resp)
+                    if (resp > 0) {
+                        $('#menu28').css("display", "block");
+                        $('#menu28').html(resp);
                     }
                 }
             })

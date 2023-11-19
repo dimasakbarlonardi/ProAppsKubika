@@ -2,7 +2,7 @@
     <thead class="text-black bg-200">
         <tr>
             <th class="align-middle">No Invoice</th>
-            <!-- <th class="align-middle">Unit</th> -->
+            <th class="align-middle">Unit</th>
             <th class="align-middle">Trasaction Type</th>
             <th class="align-middle">Status</th>
             <th class="align-middle text-center">Action</th>

@@ -12,11 +12,6 @@
     <!-- ===============================================-->
     <title>Surat Izin Kerja</title>
 
-    <!-- ===============================================-->
-    <!--    Favicons-->
-    <!-- ===============================================-->
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/img/favicons/apple-touch-icon.png">
-    <meta name="msapplication-TileImage" content="assets/img/favicons/mstile-150x150.png">
     <meta name="theme-color" content="#ffffff">
     <script src="{{ url('assets/js/config.js') }}"></script>
     <script src="{{ url('assets/vendors/simplebar/simplebar.min.js') }}"></script>

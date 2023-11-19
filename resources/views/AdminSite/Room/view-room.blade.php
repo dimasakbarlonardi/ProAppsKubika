@@ -11,12 +11,6 @@
     <!-- ===============================================-->
     <title>Proapps | Utility Usage Recording - Water</title>
 
-    <!-- ===============================================-->
-    <!--    Favicons-->
-    <!-- ===============================================-->
-    <link rel="apple-touch-icon" sizes="180x180" href="https://demo.pro-apps.xyz/assets/img/favicons/apple-touch-icon.png">
-    {{-- <link rel="manifest" href="https://demo.pro-apps.xyz/assets/img/favicons/manifest.json"> --}}
-    <meta name="msapplication-TileImage" content="https://demo.pro-apps.xyz/assets/img/favicons/mstile-150x150.png">
     <meta name="theme-color" content="#ffffff">
 
     <!-- ===============================================-->
@@ -34,12 +28,12 @@
     <!--    Main Content-->
     <!-- ===============================================-->
     <main class="main" id="top">
-        <div class="container" data-layout="container">                                              
+        <div class="container" data-layout="container">
             <div class="card mb-3">
                 <div class="mb-5">
                     <span class="font-sans-serif fw-bolder fs-5 d-inline-block text-primary p-2">Room {{ $room->nama_room }}</span>
                 </div>
-                <div class="card-body p-4 p-sm-5">                            
+                <div class="card-body p-4 p-sm-5">
                     <div class="mb-3">
                         <div class="row">
                             <div class="col-6">
@@ -53,15 +47,15 @@
                                     readonly />
                             </div>
                         </div>
-                    </div>                                                          
+                    </div>
                 </div>
-            </div>                
-            
+            </div>
+
             <div class="card">
                 <div class="mb-5">
                     <span class="font-sans-serif fw-bolder fs-2 d-inline-block text-primary p-2">Inspection Engineering</span>
                 </div>
-                <div class="card-body p-sm-5">                            
+                <div class="card-body p-sm-5">
                     <table class="table-striped table-responsive">
                         <thead>
                             <tr>
@@ -80,14 +74,14 @@
                                     <td class="text-center">
                                         <a href="" class="btn btn-sm btn-warning">
                                             <span class="fas fa-pencil-alt fs--2 me-1"></span>
-                                        </a>                                        
+                                        </a>
                                     </td>
                                 </tr>
                             @endforeach
                         </tbody>
-                    </table>                                                       
+                    </table>
                 </div>
-            </div>  
+            </div>
         </div>
     </main><!-- ===============================================-->
     <!--    End of Main Content-->

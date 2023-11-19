@@ -117,6 +117,36 @@ class DashboardController extends Controller
         return response()->json($notifications);
     }
 
+    public function notDoneRequest()
+    {
+        $connTickets = ConnectionDB::setConnection(new OpenTicket());
+
+        $notifications = $connTickets->where('status_request', '!=', 'COMPLETE')
+            ->count();
+
+        return response()->json($notifications);
+    }
+
+    public function notDoneWR()
+    {
+        $connWR = ConnectionDB::setConnection(new WorkRequest());
+
+        $notifications = $connWR->where('status_request', '!=', 'COMPLETE')
+            ->count();
+
+        return response()->json($notifications);
+    }
+
+    public function notDoneWO()
+    {
+        $connWO = ConnectionDB::setConnection(new WorkOrder());
+
+        $notifications = $connWO->where('status_wo', '!=', 'COMPLETE')
+            ->count();
+
+        return response()->json($notifications);
+    }
+
     public function showNotification(Request $request, $id)
     {
         $connNotif = ConnectionDB::setConnection(new Notifikasi());
