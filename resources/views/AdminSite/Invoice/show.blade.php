@@ -433,43 +433,26 @@
                                     <td class="align-middle">
                                         <h6 class="mb-3 text-nowrap">Invoice</h6>
                                         <p class="mb-0">
-                                            {{ $data->CashReceipt->Installment }}
+                                            {{ $installment->no_invoice }} ({{ $installment->rev }})
                                         </p>
                                     </td>
                                     <td class="align-middle">
-                                        <h6 class="mb-3 text-nowrap">Current Usage</h6>
-                                        <p class="mb-0">
-                                            {{ $data->MonthlyUtility->ElectricUUS->nomor_listrik_akhir }} W
-                                        </p>
-                                        <hr>
-                                        <p class="mb-0">
-                                            {{ $data->MonthlyUtility->WaterUUS->nomor_air_akhir }}
-                                            m<sup>3</sup>
-                                        </p>
+
                                     </td>
                                     <td class="align-middle text-center">
-                                        <h6 class="text-nowrap mb-3">Usage</h6>
-                                        <span>{{ $data->MonthlyUtility->ElectricUUS->usage }} W</span> <br>
-                                        <hr>
-                                        <span>{{ $data->MonthlyUtility->WaterUUS->usage }} m<sup>3</sup></span>
+
                                     </td>
                                     <td class="align-middle text-center">
-                                        <h6 class="text-nowrap mb-3">Price</h6>
-                                        <span>{{ DecimalRupiahRP($electric->biaya_m3) }} / KWh</span> <br>
-                                        <hr>
-                                        <span>{{ Rupiah($water->biaya_m3) }}</span>
+
                                     </td>
                                     <td class="align-middle text-center">
-                                        <h6 class="text-nowrap mb-3">PPJ <small>({{ $electric->biaya_ppj }}%)</small></h6>
-                                        <span>{{ DecimalRupiahRP($data->MonthlyUtility->ElectricUUS->ppj) }}</span> <br>
-                                        <hr>
-                                        <span>-</span>
+
                                     </td>
                                     <td class="align-middle text-end">
-                                        <h6 class="text-nowrap mb-3 text-end">Total</h6>
-                                        <span>{{ DecimalRupiahRP($data->MonthlyUtility->ElectricUUS->total) }}</span> <br>
-                                        <hr>
-                                        <span>{{ Rupiah($data->MonthlyUtility->WaterUUS->total) }}</span>
+                                        <h6 class="text-nowrap mb-3 text-end">Amount</h6>
+                                        <p>
+                                            {{ Rupiah($installment->amount) }}
+                                        </p>
                                     </td>
                                 </tr>
                             </tbody>

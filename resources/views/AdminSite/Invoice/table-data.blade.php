@@ -15,7 +15,7 @@
                     {{ $item->no_invoice }}
                 </td>
                 <td class="align-middle">
-                    {{ $item->Ticket ? $item->Ticket->Unit : '' }}
+                    {{ $item->Ticket ? $item->Ticket->Unit->nama_unit : '' }}
                 </td>
                 <td class="align-middle">
                     {{ $item->transaction_type }}
