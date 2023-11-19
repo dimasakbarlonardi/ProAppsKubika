@@ -322,7 +322,9 @@ class BillingController extends Controller
                         ->first();
                 }
 
-                if (!$util->MonthlyUtility->MonthlyTenant->tgl_jt_invoice) {
+                $arTenant = $util->MonthlyUtility->MonthlyTenant;
+
+                if (!$arTenant->tgl_jt_invoice && !$arTenant->tgl_bayar_invoice) {
                     $jatuh_tempo_1 = $connReminder->find(1)->durasi_reminder_letter;
                     $jatuh_tempo_1 = Carbon::now()->addDays($jatuh_tempo_1);
 
@@ -334,19 +336,20 @@ class BillingController extends Controller
 
                     $util->MonthlyUtility->sign_approval_2 = Carbon::now();
                     $util->MonthlyUtility->save();
+
+                    $dataNotif = [
+                        'models' => 'MonthlyTenant',
+                        'notif_title' => 'Monthly Invoice',
+                        'id_data' => $util->MonthlyUtility->MonthlyTenant->id_monthly_ar_tenant,
+                        'sender' => $request->session()->get('user')->id_user,
+                        'division_receiver' => null,
+                        'notif_message' => 'Harap melakukan pembayaran tagihan bulanan anda',
+                        'receiver' => $util->MonthlyUtility->Unit->TenantUnit->Tenant->User->id_user
+                    ];
+
+                    broadcast(new HelloEvent($dataNotif));
                 }
 
-                $dataNotif = [
-                    'models' => 'MonthlyTenant',
-                    'notif_title' => 'Monthly Invoice',
-                    'id_data' => $util->MonthlyUtility->MonthlyTenant->id_monthly_ar_tenant,
-                    'sender' => $request->session()->get('user')->id_user,
-                    'division_receiver' => null,
-                    'notif_message' => 'Harap melakukan pembayaran tagihan bulanan anda',
-                    'receiver' => $util->MonthlyUtility->Unit->TenantUnit->Tenant->User->id_user
-                ];
-
-                broadcast(new HelloEvent($dataNotif));
 
                 DB::commit();
             } catch (Throwable $e) {

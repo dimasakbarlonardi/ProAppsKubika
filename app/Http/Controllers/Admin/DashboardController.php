@@ -295,6 +295,7 @@ class DashboardController extends Controller
         $getData = $getData->find($getNotif->id_data);
         $data['transaction'] = $getData->where('id_monthly_ar_tenant', $getData->id_monthly_ar_tenant)->first();
         $data['type'] = 'MonthlyTenant';
+        $data['installment'] = $getData->CashReceipt->Installment($getData->periode_bulan, $getData->periode_tahun);
 
         return $data;
     }
