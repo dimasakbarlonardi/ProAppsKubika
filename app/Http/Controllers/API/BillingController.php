@@ -341,8 +341,8 @@ class BillingController extends Controller
 
     public function storeElectricMeter(Request $request, $unitID)
     {
-        $user = $request->user();
-        $site = Site::find($user->id_site);
+        $login = $request->user();
+        $site = Site::find($login->id_site);
 
         $connUnit = new Unit();
         $connUtility = new Utility();
@@ -376,12 +376,10 @@ class BillingController extends Controller
         $ppj = $get_ppj * $total_usage;
         $total = $total_usage + $ppj;
 
-        if ($user) {
-            $site = Site::find($user->id_site);
-
+        if ($login) {
             $user = new User();
             $user = $user->setConnection($site->db_name);
-            $user = $user->where('login_user', $user->email)->first();
+            $user = $user->where('login_user', $login->email)->first();
 
             $connElecUUS = new ElectricUUS();
             $connElecUUS = $connElecUUS->setConnection($site->db_name);

@@ -445,7 +445,7 @@
                             </tbody>
                         </table>
                     </div>
-                    @if ($transaction->denda_bulan_sebelumnya != 0)
+                    @if ($data->denda_bulan_sebelumnya)
                         <div class="table-responsive scrollbar mt-4 fs--1">
                             <table class="table border-bottom">
                                 <thead class="alert alert-danger">
@@ -457,7 +457,7 @@
                                     <th></th>
                                 </thead>
                                 <tbody>
-                                    @foreach ($transaction->PreviousMonthBill() as $prevBill)
+                                    @foreach ($data->PreviousMonthBill() as $prevBill)
                                         <tr>
                                             <td>
                                                 Denda tagihan bulan {{ $prevBill->periode_bulan }}
