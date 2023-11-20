@@ -425,36 +425,38 @@
                                     <td class="align-middle text-end"></td>
                                     <td class="align-middle text-end"></td>
                                 </tr>
-                                <tr>
-                                    <td class="align-middle">
-                                        <h6 class="mb-3 text-nowrap">Item</h6>
-                                        <p class="mb-0">Installment</p>
-                                    </td>
-                                    <td class="align-middle">
-                                        <h6 class="mb-3 text-nowrap">Invoice</h6>
-                                        <p class="mb-0">
-                                            {{ $installment->no_invoice }} ({{ $installment->rev }})
-                                        </p>
-                                    </td>
-                                    <td class="align-middle">
+                                @if ($installment)
+                                    <tr>
+                                        <td class="align-middle">
+                                            <h6 class="mb-3 text-nowrap">Item</h6>
+                                            <p class="mb-0">Installment</p>
+                                        </td>
+                                        <td class="align-middle">
+                                            <h6 class="mb-3 text-nowrap">Invoice</h6>
+                                            <p class="mb-0">
+                                                {{ $installment->no_invoice }} ({{ $installment->rev }})
+                                            </p>
+                                        </td>
+                                        <td class="align-middle">
 
-                                    </td>
-                                    <td class="align-middle text-center">
+                                        </td>
+                                        <td class="align-middle text-center">
 
-                                    </td>
-                                    <td class="align-middle text-center">
+                                        </td>
+                                        <td class="align-middle text-center">
 
-                                    </td>
-                                    <td class="align-middle text-center">
+                                        </td>
+                                        <td class="align-middle text-center">
 
-                                    </td>
-                                    <td class="align-middle text-end">
-                                        <h6 class="text-nowrap mb-3 text-end">Amount</h6>
-                                        <p>
-                                            {{ Rupiah($installment->amount) }}
-                                        </p>
-                                    </td>
-                                </tr>
+                                        </td>
+                                        <td class="align-middle text-end">
+                                            <h6 class="text-nowrap mb-3 text-end">Amount</h6>
+                                            <p>
+                                                {{ Rupiah($installment->amount) }}
+                                            </p>
+                                        </td>
+                                    </tr>
+                                @endif
                             </tbody>
                         </table>
                     </div>
