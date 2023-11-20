@@ -197,14 +197,6 @@
                 @if ($type == 'MonthlyTenant')
                     <div class="table-responsive scrollbar mt-4 fs--1">
                         <table class="table">
-                            <thead data-bs-theme="light">
-                                <tr class="bg-primary text-white dark__bg-1000">
-                                    <th class="border-0">Products</th>
-                                    <th class="border-0 text-center">Quantity</th>
-                                    <th class="border-0 text-end">Rate</th>
-                                    <th class="border-0 text-end">Amount</th>
-                                </tr>
-                            </thead>
                             <tbody>
                                 @if ($data->PreviousMonthBill())
                                     @foreach ($data->PreviousMonthBill() as $prevBill)
@@ -412,20 +404,13 @@
                                         <span>{{ Rupiah($data->MonthlyIPL->ipl_sink_fund) }}</span>
                                     </td>
                                 </tr>
-                                <tr class="alert alert-success mt-3">
-                                    <td class="align-middle">
-                                        <h6 class="mb-0 text-nowrap">Others
-                                        </h6>
-                                    </td>
-                                    <td class="align-middle text-center">
-                                    </td>
-                                    <td class="align-middle text-end"></td>
-                                    <td class="align-middle text-end"></td>
-                                    <td class="align-middle text-end"></td>
-                                    <td class="align-middle text-end"></td>
-                                    <td class="align-middle text-end"></td>
-                                </tr>
                                 @if ($installment)
+                                    <tr class="alert alert-success mt-3">
+                                        <td class="align-middle" colspan="6">
+                                            <h6 class="mb-0 text-nowrap">Others
+                                            </h6>
+                                        </td>
+                                    </tr>
                                     <tr>
                                         <td class="align-middle">
                                             <h6 class="mb-3 text-nowrap">Item</h6>
