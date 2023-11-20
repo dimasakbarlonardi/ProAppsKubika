@@ -66,7 +66,7 @@ class InvoiceController extends Controller
         $data['water'] = $connUtility->find(2);
         $data['setting'] = $connSetting->find(1);
         $data['transaction'] = $transaction;
-        if ($transaction->transaction_type == 'MonthlyTenant') {
+        if ($transaction->transaction_type == 'MonthlyTenant' && count($transaction->Installments) > 0) {
             $data['installment'] = $transaction->Installment($transaction->MonthlyARTenant->periode_bulan, $transaction->MonthlyARTenant->periode_tahun);
         }
 
