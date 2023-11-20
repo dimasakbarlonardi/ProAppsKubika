@@ -338,7 +338,6 @@
 
             Echo.channel("chat-channel")
                 .listen('ChatEvent', (e) => {
-                    console.log(e.sound);
                     if (e.sound === true) {
                         notifSound.play();
                     }
@@ -457,7 +456,6 @@
                 url: `/admin/not-done/request`,
                 type: 'GET',
                 success: function(resp) {
-                    console.log(resp)
                     if (resp > 0) {
                         $('#menu26').css("display", "block");
                         $('#menu26').html(resp);
@@ -471,7 +469,6 @@
                 url: `/admin/not-done/wr`,
                 type: 'GET',
                 success: function(resp) {
-                    console.log(resp)
                     if (resp > 0) {
                         $('#menu27').css("display", "block");
                         $('#menu27').html(resp);
@@ -485,7 +482,6 @@
                 url: `/admin/not-done/wo`,
                 type: 'GET',
                 success: function(resp) {
-                    console.log(resp)
                     if (resp > 0) {
                         $('#menu28').css("display", "block");
                         $('#menu28').html(resp);
@@ -499,7 +495,6 @@
                 url: `/admin/not-done/wo`,
                 type: 'GET',
                 success: function(resp) {
-                    console.log(resp)
                     if (resp > 0) {
                         $('#menu28').css("display", "block");
                         $('#menu28').html(resp);

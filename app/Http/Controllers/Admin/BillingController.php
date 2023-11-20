@@ -213,7 +213,6 @@ class BillingController extends Controller
         $system = $connSystem->find(1);
 
         $user = $mt->Unit->TenantUnit->Tenant->User;
-        // $installment = $
 
         $countCR = $system->sequence_no_cash_receiptment + 1;
         $no_cr = $system->kode_unik_perusahaan . '/' .
@@ -226,13 +225,13 @@ class BillingController extends Controller
         try {
             DB::beginTransaction();
 
-            $subtotal = $mt->total_tagihan_utility + $mt->total_tagihan_ipl + $mt->denda_bulan_sebelumnya;
+            $subtotal = $mt->total_tagihan_utility + $mt->total_tagihan_ipl + $mt->total_denda;
             $prevSubTotal = 0;
             $total_denda = 0;
 
             if ($mt->PreviousMonthBill()) {
                 foreach ($mt->PreviousMonthBill() as $key => $prevBill) {
-                    $prevSubTotal += $prevBill->total_tagihan_utility + $prevBill->total_tagihan_ipl + $prevBill->denda_bulan_sebelumnya;
+                    $prevSubTotal += $prevBill->total_tagihan_utility + $prevBill->total_tagihan_ipl + $prevBill->total_denda;
                     $total_denda += $prevBill->total_denda;
 
                     $connCRd = ConnectionDB::setConnection(new CashReceiptDetail());
@@ -268,7 +267,6 @@ class BillingController extends Controller
             $createTransaction->transaction_type = 'MonthlyTenant';
 
             $system->sequence_no_cash_receiptment = $countCR;
-            // $system->sequence_no_invoice = $countINV;
             $system->save();
 
             DB::commit();
@@ -294,6 +292,7 @@ class BillingController extends Controller
 
         $data = $connARTenant->where('periode_tahun', Carbon::now()->format('Y'))
             ->where('tgl_jt_invoice', '<', Carbon::now()->format('Y-m-d'))
+            ->where('tgl_bayar_invoice', null)
             ->orderBy('periode_bulan', 'asc')
             ->get(['periode_bulan', 'periode_tahun', 'jml_hari_jt', 'total_denda']);
 
