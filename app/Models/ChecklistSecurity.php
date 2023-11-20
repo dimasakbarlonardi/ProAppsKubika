@@ -18,23 +18,36 @@ class ChecklistSecurity extends Model
 
     protected $fillable = [
         'id',
-        'guard',
+        'id_parameter_secuirty',
+        'id_shift',
         'id_room',
-        'tgl_checklist',
-        'time_checklist',
-        'keterangan',
-        'image'
+        'user_id',
+        'checklist_datetime',
+        'image',
+        'notes',
+        'status',
+        'status_schedule'
     ];
 
     protected $dates = ['deleted_at'];
-    
-    public function room()
+
+    public function Room()
     {
-        return $this->hasOne(Room::class, 'id_room' , 'id_room');
+        return $this->hasOne(Room::class, 'id_room', 'id_room');
     }
 
-    // public function floor()
-    // {
-    //     return $this->hasOne(Floor::class, 'id_lantai', 'id_lantai');
-    // }
+    public function Parameter()
+    {
+        return $this->hasOne(ParameterSecurity::class, 'id', 'id_parameter_secuirty');
+    }
+
+    public function Shift()
+    {
+        return $this->hasOne(ParameterShiftSecurity::class, 'id', 'id_shift');
+    }
+
+    public function CheckedBy()
+    {
+        return $this->hasOne(User::class, 'id_user', 'user_id');
+    }
 }

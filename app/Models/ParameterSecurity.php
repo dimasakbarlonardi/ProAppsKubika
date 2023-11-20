@@ -20,4 +20,14 @@ class ParameterSecurity extends Model
     ];
     
     protected $dates = ['deleted_at'];
+
+     public function Checklist()
+    {
+        return $this->hasOne(ChecklistParameterEquiqment::class, 'id_checklist', 'id');
+    }
+
+    public function Parameter()
+    {
+        return $this->hasOne(ChecklistSecurity::class, 'id_parameter_secuirty', 'id');
+    }
 }

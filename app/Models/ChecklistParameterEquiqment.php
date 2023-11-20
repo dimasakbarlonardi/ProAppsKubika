@@ -25,6 +25,11 @@ class ChecklistParameterEquiqment extends Model
         return $this->hasOne(EngAhu::class, 'id_eng_ahu', 'id_checklist');
     }
 
+     public function ChecklistSec()
+    {
+        return $this->hasOne(ParameterSecurity::class, 'id', 'id_checklist');
+    }
+
     public function ChecklistHK()
     {
         return $this->hasOne(Toilet::class, 'id_hk_toilet', 'id_checklist');

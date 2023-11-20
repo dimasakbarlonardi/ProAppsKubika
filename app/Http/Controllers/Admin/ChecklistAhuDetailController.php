@@ -26,7 +26,7 @@ class ChecklistAhuDetailController extends Controller
         $equiqmentDetail = ConnectionDB::setConnection(new EquiqmentEngineeringDetail());
 
         $data['equiqmentdetails'] = $equiqmentDetail->where('status_schedule', '!=', 'Not Done')->get();
-;
+
         return view('AdminSite.ChecklistAhuDetail.index', $data);
     }
 

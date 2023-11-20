@@ -175,7 +175,7 @@ class ChecklistAhuHController extends Controller
         } catch (\Throwable $e) {
             DB::rollBack();
             dd($e);
-            Alert::error('Gagal', 'Gagal menambahkan Checklis AHU');
+            Alert::error('Gagal', 'Gagal menambahkan Inspection Engineering');
 
             return redirect()->route('checklistahus.index');
         }

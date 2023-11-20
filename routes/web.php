@@ -113,6 +113,7 @@ use App\Http\Controllers\Admin\OffBoardingKepemilikanUnitController;
 use App\Http\Controllers\Admin\OffTenantUnitController;
 use App\Http\Controllers\Admin\PackageController;
 use App\Http\Controllers\Admin\ParameterSecurityController;
+use App\Http\Controllers\Admin\ParameterShiftSecurityController;
 use App\Http\Controllers\Admin\PermitHRController;
 use App\Http\Controllers\Admin\PPNController;
 use App\Http\Controllers\Admin\ReminderController;
@@ -701,7 +702,7 @@ Route::prefix('admin')->group(function () {
 
         // ---------------Incidental Report Engineering-----------------
         Route::resource('incidentalreporteng', IncidentalEngController::class);
-
+        
         // ---------------Incidental Report HK-----------------
         Route::resource('incidentalreporthk',  IncidentalHKController::class);
 
@@ -750,6 +751,9 @@ Route::prefix('admin')->group(function () {
 
         // --------------Parameter Security---------
         Route::resource('Parameter-Security', ParameterSecurityController::class);
+
+          // --------------Parameter Shift Security---------
+          Route::resource('Parameter-Shift-Security', ParameterShiftSecurityController::class);
     });
 });
 

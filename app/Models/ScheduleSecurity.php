@@ -20,7 +20,7 @@ class ScheduleSecurity extends Model
         'id',
         'id_room',
         'schedule',
-        'status_schedule',
+        'id_shift',
     ];
 
     protected $dates = ['deleted_at'];
@@ -33,6 +33,11 @@ class ScheduleSecurity extends Model
     public function floor()
     {
         return $this->hasOne(Floor::class, 'id_lantai', 'id_lantai');
+    }
+
+    public function Shift()
+    {
+        return $this->hasOne(ParameterShiftSecurity::class, 'id','id_shift');
     }
 
 
