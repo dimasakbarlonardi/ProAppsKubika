@@ -39,8 +39,8 @@ class RoomController extends Controller
         $conntower = ConnectionDB::setConnection(new Tower());
         $connfloor = ConnectionDB::setConnection(new Floor());
 
-        $data['towers'] = $conntower->get();
-        $data['floors'] = $connfloor->get();
+        $data['towers'] = $conntower->orderBy('created_at', 'ASC')->get();
+        $data['floors'] = $connfloor->orderBy('created_at', 'ASC')->get();
 
         return view('AdminSite.Room.create', $data);
     }

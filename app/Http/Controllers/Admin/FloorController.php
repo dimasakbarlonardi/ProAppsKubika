@@ -22,7 +22,7 @@ class FloorController extends Controller
     {
         $conn = ConnectionDB::setConnection(new Floor());
 
-        $data['floors'] = $conn->get();
+        $data['floors'] = $conn->orderBy('created_at', 'ASC')->get();
 
         return view('AdminSite.Floor.index', $data);
     }
