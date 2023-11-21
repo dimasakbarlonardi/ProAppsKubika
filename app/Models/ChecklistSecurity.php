@@ -18,7 +18,7 @@ class ChecklistSecurity extends Model
 
     protected $fillable = [
         'id',
-        'id_parameter_secuirty',
+        'id_parameter_security',
         'id_shift',
         'id_room',
         'user_id',
@@ -26,6 +26,7 @@ class ChecklistSecurity extends Model
         'image',
         'notes',
         'status',
+        'schedule',
         'status_schedule'
     ];
 
@@ -38,7 +39,17 @@ class ChecklistSecurity extends Model
 
     public function Parameter()
     {
-        return $this->hasOne(ParameterSecurity::class, 'id', 'id_parameter_secuirty');
+        return $this->hasOne(ParameterSecurity::class, 'id', 'id_parameter_security');
+    }
+
+    public function Schedule()
+    {
+        return $this->hasOne(ScheduleSecurity::class, 'id', 'id_parameter_security');
+    }
+
+    public function InspectionLocation()
+    {
+        return $this->hasOne(ScheduleSecurity::class, 'id', 'id_parameter_security');
     }
 
     public function Shift()

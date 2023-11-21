@@ -28,6 +28,6 @@ class ParameterSecurity extends Model
 
     public function Parameter()
     {
-        return $this->hasOne(ChecklistSecurity::class, 'id_parameter_secuirty', 'id');
+        return $this->hasOne(ChecklistSecurity::class, 'id_parameter_security', 'id');
     }
 }

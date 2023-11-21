@@ -40,5 +40,16 @@ class ScheduleSecurity extends Model
         return $this->hasOne(ParameterShiftSecurity::class, 'id','id_shift');
     }
 
+    public function Schedule()
+    {
+        return $this->hasOne(ChecklistSecurity::class, 'id_parameter_security', 'id');
+    }
+
+    public function Inspection()
+    {
+        return $this->hasMany(ChecklistParameterEquiqment::class, 'id_item', 'id')
+            ->where('id_equiqment', 3);
+    }
+
 
 }

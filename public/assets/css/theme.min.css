@@ -5972,6 +5972,12 @@ fieldset:disabled .tox .tox-dialog__footer .tox-button--secondary,
     --falcon-btn-disabled-border-color: #00d27a;
 }
 
+.btn-color {
+    --falcon-btn-bg: #1E90FF;
+    --falcon-btn-hover-bg: #00b368;
+    --falcon-btn-disabled-border-color: #000000;
+}
+
 .btn-info {
     --falcon-btn-color: #fff;
     --falcon-btn-bg: #27bcfd;

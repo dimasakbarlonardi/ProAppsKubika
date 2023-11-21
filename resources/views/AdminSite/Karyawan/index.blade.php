@@ -8,7 +8,8 @@
                 <h6 class="mb-0 text-light">All Employee</h6>
             </div>
             <div class="col-auto d-flex">
-                <a class="btn btn-falcon-default text-600 btn-sm" href="{{ route('karyawans.create') }}">Create Employee</a>
+                <a class="btn btn-color text-600 btn-sm mr-3 text-white" href=""><span class="fas fa-plus me-1" data-fa-transform="shrink-3"></span>Import</a>
+                <a class="btn btn-falcon-default text-600 btn-sm ml-3" href="{{ route('karyawans.create') }}">Create Employee</a>
             </div>
         </div>
     </div>
