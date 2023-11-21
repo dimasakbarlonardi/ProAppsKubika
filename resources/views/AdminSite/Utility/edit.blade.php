@@ -41,7 +41,7 @@
                             </div>
                         </div>
                         <div class="col-6 mt-3 ">
-                            <label class="form-label">Biaya / 
+                            <label class="form-label">Biaya /
                                 @if ($utility->id_utility == 1)
                                     Kwh
                                 @else
@@ -50,23 +50,13 @@
                             </label>
                             <div class="input-group mb-3">
                                 <span class="input-group-text text-primary">Rp</span>
-                                <input class="form-control" type="text" id="show_biaya_kwh" value="{{ RupiahNumber($utility->biaya_m3) }}"/>
+                                <input class="form-control" type="text" id="show_biaya_kwh" value="{{ DecimalRupiah($utility->biaya_m3) }}"/>
                                 <input type="hidden" name="biaya_m3" id="biaya_kwh" value="{{ $utility->biaya_m3 }}"/>
                             </div>
                         </div>
                         @if ($utility->id_utility == 1)
                             <div class="col-6 mt-3 ">
-                                <label class="form-label">Biaya Abodemen</label>
-                                <div class="input-group mb-3">
-                                    <span class="input-group-text text-primary">Rp</span>
-                                    <input class="form-control" type="text"
-                                        value="{{ RupiahNumber($utility->biaya_abodemen) }}" id="show_biaya_abodemen" />
-                                    <input name="biaya_abodemen" id="biaya_abodemen" type="hidden"
-                                        value="{{ $utility->biaya_abodemen }}" />
-                                </div>
-                            </div>
-                            <div class="col-6 mt-3 ">
-                                <label class="form-label">Biaya Tetap</label>
+                                <label class="form-label">Biaya Tetap Abodemen</label>
                                 <div class="input-group mb-3">
                                     <span class="input-group-text text-primary" id="basic-addon2">Rp</span>
                                     <input class="form-control" type="text" id="show_biaya_tetap"
