@@ -564,7 +564,7 @@ Route::prefix('admin')->group(function () {
         Route::resource('perhitdendas', PerhitDendaController::class);
 
         //CRUD Reminder Letter
-        Route::resource('reminders-latter', ReminderLetterController::class);
+        Route::resource('reminders-letter', ReminderLetterController::class);
 
         //CRUD PPN
         Route::resource('ppns', PPNController::class);

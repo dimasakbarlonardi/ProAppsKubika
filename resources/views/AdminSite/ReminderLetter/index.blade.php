@@ -30,12 +30,6 @@
                         <td>{{ $reminder->durasi_reminder_letter }} /Hari</td>
                         <td>
                             <a href="{{ route('reminders.edit', $reminder->id_reminder_letter) }}" class="btn btn-sm btn-warning"><span class="fas fa-pencil-alt fs--2 me-1   "></span>Edit</a>
-                            <form class="d-inline" action="{{ route('reminders.destroy', $reminder->id_reminder_letter) }}" method="post">
-                                @method('DELETE')
-                                @csrf
-                                <button type="submit" class="btn btn-danger btn-sm"
-                                    onclick="return confirm('are you sure?')"><span class="fas fa-trash-alt fs--2 me-1"></span>Hapus</button>
-                            </form>
                         </td>
                     </tr>
                 @endforeach
