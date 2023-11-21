@@ -228,6 +228,14 @@ class OpenTicketController extends Controller
                 $item->request = $rp;
             }
             $item->ticket['deskripsi_request'] = strip_tags($rp->keterangan_pekerjaan);
+            
+            $item->request['nama_kontraktor'] = strip_tags($rp->nama_kontraktor);
+            $item->request['pic'] = strip_tags($rp->pic);
+            $item->request['alamat'] = strip_tags($rp->alamat);
+            $item->request['no_ktp'] = strip_tags($rp->no_ktp);
+            $item->request['no_telp'] = strip_tags($rp->no_telp);
+            $item->request['tgl_mulai'] = strip_tags($rp->tgl_mulai);
+            $item->request['tgl_akhir'] = strip_tags($rp->tgl_akhir);
 
             $dataJSON = json_decode($wp->RequestPermit->RPDetail->data);
             $dataJSON = json_decode($dataJSON);
