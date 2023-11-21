@@ -4,7 +4,7 @@
     <div class="">
         <div class="p-4">
             <div class="form-check">
-                <input class="form-check-input" value="1" id="id_jenis_pekerjaan" type="radio" name="id_jenis_pekerjaan" checked/>
+                <input class="form-check-input" value="1" id="id_jenis_pekerjaan" type="radio" name="id_jenis_pekerjaan"/>
                 <label class="form-check-label">Renovasi</label>
             </div>
             <div class="form-check">
@@ -321,7 +321,7 @@
         var no_telp = $('#no_telp').val();
         var tgl_mulai = $('#tanggal_mulai').val();
         var tgl_akhir = $('#tanggal_akhir').val();
-        var id_jenis_pekerjaan = $('#id_jenis_pekerjaan').val();
+        var id_jenis_pekerjaan = $('input[name="id_jenis_pekerjaan"]:checked').val();
 
         var value = {
             'nama_kontraktor': nama_kontraktor,
