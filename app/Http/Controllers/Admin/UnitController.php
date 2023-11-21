@@ -43,7 +43,7 @@ class UnitController extends Controller
 
         $units = $connUnit->where('deleted_at', null);
 
-        if(!$request->id_tower && !$request->id_floor) {
+        if (!$request->id_tower && !$request->id_floor) {
             $units = $units;
         }
         if ($request->id_floor) {
@@ -109,32 +109,24 @@ class UnitController extends Controller
 
             $id_unit = $site . $tower->id_tower . $floor->id_lantai . $count;
 
-            $conn->create([
+            $createUnit = $conn->create([
                 'id_unit' => $id_unit,
                 'id_site' => $site,
                 'id_tower' => $request->id_tower,
                 'id_lantai' => $request->id_lantai,
                 'id_hunian' => $request->id_hunian,
-                'barcode_unit' => $request->barcode_unit,
                 'nama_unit' => $request->nama_unit,
                 'luas_unit' => $request->luas_unit,
-                'barcode_meter_air' => $request->barcode_meter_air,
-                'barcode_meter_gas' => $request->barcode_meter_gas,
-                'barcode_meter_listrik' => $request->barcode_meter_listrik,
+                'electric_capacity' => $request->electric_capacity,
                 'no_meter_air' => $request->no_meter_air,
-                'no_meter_listrik' => $request->no_meter_air,
-                'no_meter_gas' => $request->no_meter_air,
+                'no_meter_listrik' => $request->no_meter_listrik,
                 'meter_air_awal' => $request->meter_air_awal,
-                'meter_air_akhir' => $request->meter_air_akhir,
                 'meter_listrik_awal' => $request->meter_listrik_awal,
-                'meter_listrik_akhir' => $request->meter_listrik_akhir,
-                'meter_gas_awal' => $request->meter_gas_awal,
-                'meter_gas_akhir' => $request->meter_gas_akhir,
                 'keterangan' => $request->keterangan,
             ]);
 
             DB::commit();
-            // $unit->GenerateBarcode();
+            $createUnit->GenerateBarcode();
 
             Alert::success('Berhasil', 'Berhasil menambahkan unit');
 
