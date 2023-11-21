@@ -15,12 +15,16 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
+        // Attendance
         $schedule->command('attendance:cron')->daily();
         // $schedule->command('attendance:cron')->everyMinute(); //dev
 
         // Reminder
-        // $schedule->command('reminder:cron')->everyMinute();
         $schedule->command('reminder:cron')->daily();
+        // $schedule->command('reminder:cron')->everyMinute();
+
+        // SP1
+        $schedule->command('monthly:sp1')->everyMinute();
     }
 
     /**
