@@ -190,7 +190,6 @@
                         $wo->id_bayarnon == 1 &&
                         $user->id_user == $approve->approval_4 &&
                         $wo->sign_approve_2 &&
-                        !$wo->sign_approve_3 &&
                         $wo->status_wo != 'BM APPROVED')
                     <div class="card-footer border-top border-200 py-x1">
                         <button type="button" class="btn btn-primary w-100"
@@ -204,7 +203,6 @@
                         $wo->id_bayarnon == 0 &&
                         $user->id_user == $approve->approval_4 &&
                         $wo->sign_approve_2 &&
-                        $wo->sign_approve_3 &&
                         $wo->status_wo != 'BM APPROVED')
                     <div class="card-footer border-top border-200 py-x1">
                         <button type="button" class="btn btn-primary w-100"
@@ -239,7 +237,6 @@
                 {{-- Work done tidak berbayar --}}
                 @if (
                     $wo->status_wo == 'BM APPROVED' &&
-                        $wo->sign_approve_3 &&
                         $wo->sign_approve_2 &&
                         $wo->id_bayarnon == 0 &&
                         $user->RoleH->work_relation_id == $wo->WorkRequest->id_work_relation)

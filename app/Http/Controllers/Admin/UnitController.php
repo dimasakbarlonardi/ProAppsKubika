@@ -72,8 +72,8 @@ class UnitController extends Controller
         $connFloor = ConnectionDB::setConnection(new Floor());
         $connHunias = ConnectionDB::setConnection(new Hunian());
 
-        $data['towers'] = $connTower->get();
-        $data['floors'] = $connFloor->get();
+        $data['towers'] = $connTower->orderBy('created_at', 'ASC')->get();
+        $data['floors'] = $connFloor->orderBy('created_at', 'ASC')->get();
         $data['units'] = $conn->get();
         $data['hunians'] = $connHunias->get();
 
@@ -134,6 +134,7 @@ class UnitController extends Controller
             ]);
 
             DB::commit();
+            // $unit->GenerateBarcode();
 
             Alert::success('Berhasil', 'Berhasil menambahkan unit');
 
