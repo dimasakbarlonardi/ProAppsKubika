@@ -57,7 +57,7 @@ class EmployeeImport implements ToModel, WithStartRow
 
         $data = $connModel->where('nama_jabatan', 'like', '%' . $query . '%')->first();
 
-        return $data->id_jabatan ? $data->id_jabatan : null;
+        return $data ? $data->id_jabatan : null;
     }
 
     function Divisi($query)
@@ -66,7 +66,7 @@ class EmployeeImport implements ToModel, WithStartRow
 
         $data = $connModel->where('nama_divisi', 'like', '%' . $query . '%')->first();
 
-        return $data->id_divisi ? $data->id_divisi : null;
+        return $data ? $data->id_divisi : null;
     }
 
     function Department($query)
@@ -75,7 +75,7 @@ class EmployeeImport implements ToModel, WithStartRow
 
         $data = $connModel->where('nama_departemen', 'like', '%' . $query . '%')->first();
 
-        return $data->id_departemen ? $data->id_departemen : null;
+        return $data ? $data->id_departemen : null;
     }
 
     function Religion($query)
@@ -84,6 +84,6 @@ class EmployeeImport implements ToModel, WithStartRow
 
         $data = $connModel->where('nama_agama', 'like', '%' . $query . '%')->first();
 
-        return $data->id_agama ? $data->id_agama : null;
+        return $data ? $data->id_agama : null;
     }
 }
