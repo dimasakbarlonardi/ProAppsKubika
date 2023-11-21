@@ -10,9 +10,33 @@ use App\Models\User;
 use App\Models\WorkRequest as AppWorkRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
+use stdClass;
 
 class WorkRequestController extends Controller
 {
+    public function show($id)
+    {
+        $connWR = ConnectionDB::setConnection(new AppWorkRequest);
+
+        $wr = $connWR->find($id);
+
+        $object = new stdClass();
+        $object->request_number = $wr->no_tiket;
+        $object->request_title = $wr->Ticket->judul_request;
+        $object->request_type = 'Complaint';
+        $object->request_date = $wr->Ticket->created_at;
+        $object->unit = $wr->Ticket->Unit->nama_unit;
+        $object->tenant = $wr->Ticket->Tenant->nama_tenant;
+        $object->description = strip_tags($wr->Ticket->deskripsi_request);
+        $object->work_request_number = $wr->no_work_request;
+        $object->work_relation = $wr->WorkRelation->work_relation;
+        $object->schedule = $wr->schedule;
+
+        return ResponseFormatter::success(
+            $object,
+            'Success get WR'
+        );
+    }
     public function OnWork($id)
     {
         $connWR = ConnectionDB::setConnection(new AppWorkRequest);
