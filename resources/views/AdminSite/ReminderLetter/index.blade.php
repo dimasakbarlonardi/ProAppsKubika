@@ -29,7 +29,7 @@
                         <td>{{ $reminder->reminder_letter }}</td>
                         <td>{{ $reminder->durasi_reminder_letter }} /Hari</td>
                         <td>
-                            <a href="{{ route('reminders.edit', $reminder->id_reminder_letter) }}" class="btn btn-sm btn-warning"><span class="fas fa-pencil-alt fs--2 me-1   "></span>Edit</a>
+                            {{-- <a href="{{ route('reminders.edit', $reminder->id_reminder_letter) }}" class="btn btn-sm btn-warning"><span class="fas fa-pencil-alt fs--2 me-1   "></span>Edit</a> --}}
                         </td>
                     </tr>
                 @endforeach
