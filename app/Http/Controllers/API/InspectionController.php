@@ -440,10 +440,10 @@ class InspectionController extends Controller
         $object = new stdClass();
         $object->id_parameter_security = $inspection->id;
         $object->schedule = $inspection->schedule;
-        $object->equipment = $inspection->equipment->equipment;
+        $object->id_shift = $inspection->Shift->shift;
         $object->status_schedule = $inspection->status_schedule;
-        $object->id_room = $inspection->equipment->Room->id_room;
-        $object->room = $inspection->equipment->Room->nama_room;
+        $object->id_room = $inspection->InspectionLocation->Room->id_room;
+        $object->room = $inspection->InspectionLocation->Room->nama_room;
 
         $checklists = [];
         foreach ($inspection->InspectionLocation->Inspection as $data) {
