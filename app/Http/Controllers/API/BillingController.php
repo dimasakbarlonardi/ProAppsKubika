@@ -365,10 +365,10 @@ class BillingController extends Controller
             $usage = $abodemen;
         }
         if ($isAbodemen) {
-            if ($listrik->abodemen != 0) {
-                $total_usage = $biaya_usage * $usage;
-            } else {
+            if ($listrik->biaya_tetap != 0) {
                 $total_usage = $listrik->biaya_tetap;
+            } else {
+                $total_usage = $biaya_usage * $usage;
             }
         } else {
             $total_usage = $biaya_usage * $usage;
