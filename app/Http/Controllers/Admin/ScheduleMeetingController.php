@@ -106,7 +106,6 @@ class ScheduleMeetingController extends Controller
         $data['rooms'] = $room->get();
         $data['parameters'] = $Employee->get();
 
-    
         return view('AdminSite.ScheduleMeeting.create', $data);
     }
     

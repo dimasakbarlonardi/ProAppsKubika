@@ -136,6 +136,13 @@ Route::prefix('v1')->group(function () {
         Route::post('/inspection-housekeeping/{id}', [InspectionController::class, 'storeinspectionHK']);
         Route::get('/equipment-housekeeping/{id}', [InspectionController::class, 'showHousekeeping']);
 
+        // Inspection Security
+        Route::get('/inspection-security', [InspectionController::class, 'checklistsecurity']);
+        Route::get('/inspection-security-history/{id}', [InspectionController::class, 'showHistorySecuirty']);
+        Route::get('/inspection-security-schedule', [InspectionController::class, 'schedueinspectionsecurity']);
+        Route::post('/inspection-security/{id}', [InspectionController::class, 'storeinspectionSecurity']);
+        Route::get('/location-security/{id}', [InspectionController::class, 'showSecurity']);
+
         // Inbox
         Route::get('/inboxes', [InboxController::class, 'index']);
         Route::post('/inbox/{id}', [InboxController::class, 'read']);
@@ -178,7 +185,6 @@ Route::prefix('v1')->group(function () {
         Route::get('/package/unit/{id}', [PackageController::class, 'packageByUnit']);
         Route::get('/package/{id}', [PackageController::class, 'showPackage']);
         Route::post('/pickup/package/{id}', [PackageController::class, 'pickupPackage']);
-
 
         // Visitor
         Route::post('/visitor', [VisitorController::class, 'store']);

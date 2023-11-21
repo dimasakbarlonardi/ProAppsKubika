@@ -120,7 +120,7 @@
     </div>
     @endsection
 
-    @section('script')
+@section('script')
     <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
     <script>
         new DataTable('#table-engineeringhistory', {
@@ -128,4 +128,4 @@
             paging: true
         });
     </script>
-    @endsection
+@endsection

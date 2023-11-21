@@ -6,6 +6,7 @@ use App\Helpers\ConnectionDB;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Models\ChecklistParameterEquiqment;
+use App\Models\ChecklistSecurity;
 use App\Models\EquipmentHousekeepingDetail;
 use App\Models\EquiqmentAhu;
 use App\Models\EngAhu;
@@ -189,7 +190,7 @@ class InspectionController extends Controller
 
         return ResponseFormatter::success(
             $inspection,
-            'Berhasil mengambil Equiqment HouseKeeping'
+            'Berhasil mengambil Equipment HouseKeeping'
         );
     }
 
@@ -324,5 +325,153 @@ class InspectionController extends Controller
     }
 
     // ------------ end inspection -----------------
+
+    // ---------------SECURITY-----------------
+
+    public function checklistsecurity(Request $request)
+    {
+        $connInspectionSecuirty = ConnectionDB::setConnection(new ChecklistSecurity());
+
+        $inspection = $connInspectionSecuirty
+            ->where('status_schedule', '!=', 'Not Done')
+            ->with(['Room.Tower', 'Schedule', 'Shift', 'InspectionLocation'])
+            ->get();
+
+        foreach ($inspection as $key => $data) {
+            $inspection[$key]['status'] = json_decode($data->status);
+        }
+         
+        return ResponseFormatter::success(
+            $inspection,
+            'Berhasil mengambil Parameter Security'
+        );
+    }
+
+    public function schedueinspectionsecurity()
+    {
+        $connInspectionSecurity = ConnectionDB::setConnection(new ChecklistSecurity());
+        $nowMonth = Carbon::now()->format('m');
+        $getSchedules = $connInspectionSecurity->whereMonth('schedule', $nowMonth)
+            ->with('InspectionLocation.Room.Floor')
+            ->get();
+
+        $inspections = [];
+        
+        if ($getSchedules) {
+            foreach ($getSchedules as $schedule) {
+                $eq = $schedule->InspectionLocation;
+                $object = new stdClass();
+                $object->id_parameter_security = $schedule->id;
+                $object->schedule = $schedule->schedule;
+                $object->status_schedule = $schedule->status_schedule;
+                $object->room = $eq->Room;
+                
+                $inspections[] = $object;
+            }
+        }
+        
+        return ResponseFormatter::success(
+            $inspections,
+            'Berhasil mengambil Schedule Security'
+        );
+    }
+
+    public function storeinspectionSecurity(Request $request, $id)
+    {
+        $conn = ConnectionDB::setConnection(new ChecklistSecurity());
+        $schedule = $conn->find($id);
+
+        try {
+            DB::beginTransaction();
+
+            $file = $request->file('image');
+
+            if ($file) {
+                $fileName = $id . '-' .   $file->getClientOriginalName();
+                $outputInspecImage = '/public/' . $request->user()->id_site . '/img/inspection/security/' . $fileName;
+                $inspecImage = '/storage/' . $request->user()->id_site . '/img/inspection/security/' . $fileName;
+
+                Storage::disk('local')->put($outputInspecImage, File::get($file));
+
+                $schedule->image = $inspecImage;
+            }
+            $schedule->id_room = $request->id_room;
+            $schedule->status = $request->status;
+            $schedule->user_id = $request->user_id;
+            $schedule->checklist_datetime = Carbon::now();
+
+            // Periksa dan perbarui status jadwal jika diperlukan
+            if ($schedule->status_schedule == 'Not Done') {
+                // Cek apakah jadwal sudah lewat (late)
+                $currentDate = Carbon::now();
+
+                if ($currentDate > $schedule->schedule) {
+                    $status = 'Late';
+                } elseif ($currentDate <= $schedule->schedule) {
+                    $status = 'On Time';
+                }
+
+                $schedule->status_schedule = $status;
+            }
+
+            $schedule->save();
+            DB::commit();
+
+            return ResponseFormatter::success([
+                $schedule
+            ], 'Berhasil Inspection Security');
+        } catch (\Throwable $e) {
+            DB::rollBack();
+            dd($e);
+            return ResponseFormatter::error([
+                'error' => $e,
+            ], 'Gagal Inspection Security');
+        }
+    }
+
+    public function showSecurity($id)
+    {
+        $connInspectionHK = ConnectionDB::setConnection(new ChecklistSecurity());
+
+        $inspection = $connInspectionHK->where('id', $id)
+            ->with('InspectionLocation.Inspection.ChecklistSec')
+            ->first();
+
+        $object = new stdClass();
+        $object->id_parameter_security = $inspection->id;
+        $object->schedule = $inspection->schedule;
+        $object->id_shift = $inspection->Shift->shift;
+        $object->status_schedule = $inspection->status_schedule;
+        $object->id_room = $inspection->InspectionLocation->Room->id_room;
+        $object->room = $inspection->InspectionLocation->Room->nama_room;
+
+        $checklists = [];
+        foreach ($inspection->InspectionLocation->Inspection as $data) {
+            $checklists[]['question'] = $data->ChecklistSec->name_parameter_security;
+        }
+        $object->checklists = $checklists;
+
+        return ResponseFormatter::success(
+            $object,
+            'Berhasil mengambil Location Security dan Data Checklist Parameter'
+        );
+    }
+
+    public function showHistorySecuirty($id)
+    {
+        $connInspectionDetail = ConnectionDB::setConnection(new ChecklistSecurity());
+
+        $inspection = $connInspectionDetail->where('id', $id)
+            ->with(['Room', 'InspectionLocation', 'Schedule'])
+            ->first();
+            $inspection['status'] = json_decode($inspection->status);
+            
+            return ResponseFormatter::success(
+            $inspection,
+            'Berhasil mengambil history inspection Security'
+        );
+    }
+
+
 
 }

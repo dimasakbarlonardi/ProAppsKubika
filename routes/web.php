@@ -108,6 +108,7 @@ use App\Http\Controllers\Admin\OffBoardingKepemilikanUnitController;
 use App\Http\Controllers\Admin\OffTenantUnitController;
 use App\Http\Controllers\Admin\PackageController;
 use App\Http\Controllers\Admin\ParameterSecurityController;
+use App\Http\Controllers\Admin\ParameterShiftSecurityController;
 use App\Http\Controllers\Admin\PermitHRController;
 use App\Http\Controllers\Admin\PPNController;
 use App\Http\Controllers\Admin\ReminderController;
@@ -121,6 +122,11 @@ use App\Http\Controllers\Admin\ToolsHKController;
 use App\Http\Controllers\Admin\ToolsSecurityController;
 use App\Http\Controllers\Admin\VisitorsController;
 use App\Http\Controllers\Admin\WaterUUSController;
+use App\Http\Controllers\API\VisitorController;
+use App\Models\ForgotAttendance;
+use App\Models\IncidentalReportHK;
+use App\Models\PermitHR;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -755,6 +761,9 @@ Route::prefix('admin')->group(function () {
 
         // --------------Parameter Security---------
         Route::resource('Parameter-Security', ParameterSecurityController::class);
+
+          // --------------Parameter Shift Security---------
+          Route::resource('Parameter-Shift-Security', ParameterShiftSecurityController::class);
     });
 });
 

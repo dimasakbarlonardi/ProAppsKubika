@@ -1,8 +1,8 @@
 @extends('layouts.master')
 
 @section('css')
-    <link rel="stylesheet" href="{{ asset('assets/vendors/flatpickr/flatpickr.min.css') }}">
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="{{ asset('assets/vendors/flatpickr/flatpickr.min.css') }}">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
 @endsection
 
 @section('content')
@@ -42,7 +42,8 @@
                                 </div>
                             </div>
                             <div class="d-flex align-items-center" id="table-ticket-replace-element">
-                                <a class="btn btn-falcon-default text-600 btn-sm" href="{{ route('tenants.create') }}">Create Tenant</a>
+                                <a class="btn btn-color text-600 btn-sm mr-3 text-white" href=""><span class="fas fa-plus me-1" data-fa-transform="shrink-3"></span>Import</a>
+                                <a class="btn btn-falcon-default text-600 btn-sm ml-3" href="{{ route('tenants.create') }}">Create Tenant</a>
                             </div>
                         </div>
                     </div>
@@ -55,12 +56,9 @@
             </div>
         </div>
         <div class="col-3">
-            <div class="offcanvas offcanvas-end offcanvas-filter-sidebar border-0 dark__bg-card-dark h-auto rounded-xl-3"
-                tabindex="-1" id="ticketOffcanvas" aria-labelledby="ticketOffcanvasLabelCard">
+            <div class="offcanvas offcanvas-end offcanvas-filter-sidebar border-0 dark__bg-card-dark h-auto rounded-xl-3" tabindex="-1" id="ticketOffcanvas" aria-labelledby="ticketOffcanvasLabelCard">
                 <div class="offcanvas-header d-flex flex-between-center d-xl-none">
-                    <h6 class="fs-0 mb-0 fw-semi-bold">Filter</h6><button class="btn-close text-reset d-xl-none shadow-none"
-                        id="ticketOffcanvasLabelCard" type="button" data-bs-dismiss="offcanvas"
-                        aria-label="Close"></button>
+                    <h6 class="fs-0 mb-0 fw-semi-bold">Filter</h6><button class="btn-close text-reset d-xl-none shadow-none" id="ticketOffcanvasLabelCard" type="button" data-bs-dismiss="offcanvas" aria-label="Close"></button>
                 </div>
                 <div class="card scrollbar shadow-none shadow-show-xl">
                     <div class="card-header d-none d-xl-block">
@@ -72,7 +70,7 @@
                             <select class="form-select form-select-sm" id="select-tower">
                                 <option value="all">All</option>
                                 @foreach ($towers as $tower)
-                                    <option value="{{ $tower->id_tower }}">{{ $tower->nama_tower }}</option>
+                                <option value="{{ $tower->id_tower }}">{{ $tower->nama_tower }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -81,7 +79,7 @@
                             <select class="form-select form-select-sm" id="select-unit">
                                 <option value="all">All</option>
                                 @foreach ($units as $unit)
-                                    <option value="{{ $unit[0]->nama_unit }}">{{ $unit[0]->nama_unit }}</option>
+                                <option value="{{ $unit[0]->nama_unit }}">{{ $unit[0]->nama_unit }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -94,40 +92,40 @@
 @endsection
 
 @section('script')
-    <script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
-    <script>
-        new DataTable('#table-tenant');
+<script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+<script>
+    new DataTable('#table-tenant');
 
-        $('document').ready(function() {
-            getData('all', 'all');
+    $('document').ready(function() {
+        getData('all', 'all');
+    })
+
+    $('#select-tower').on('change', function() {
+        var tower = $(this).val();
+        var unit = $('#select-unit').val();
+
+        getData(tower, unit)
+    });
+
+    $('#select-unit').on('change', function() {
+        var unit = $(this).val();
+        var tower = $('#select-tower').val();
+
+        getData(tower, unit)
+    });
+
+    function getData(tower, unit) {
+        $.ajax({
+            url: '/admin/filter-tenants/get-filter-data',
+            type: 'GET',
+            data: {
+                tower,
+                unit
+            },
+            success: function(resp) {
+                $('#data-tenants').html(resp.html);
+            }
         })
-
-        $('#select-tower').on('change', function() {
-            var tower = $(this).val();
-            var unit = $('#select-unit').val();
-
-            getData(tower, unit)
-        });
-
-        $('#select-unit').on('change', function() {
-            var unit = $(this).val();
-            var tower = $('#select-tower').val();
-
-            getData(tower, unit)
-        });
-
-        function getData(tower, unit) {
-            $.ajax({
-                url: '/admin/filter-tenants/get-filter-data',
-                type: 'GET',
-                data: {
-                    tower,
-                    unit
-                },
-                success: function(resp) {
-                    $('#data-tenants').html(resp.html);
-                }
-            })
-        }
-    </script>
+    }
+</script>
 @endsection

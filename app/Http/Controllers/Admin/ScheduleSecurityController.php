@@ -4,11 +4,14 @@ namespace App\Http\Controllers\Admin;
 
 use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
+use App\Models\ParameterSecurity;
 use App\Models\Room;
 use App\Models\ScheduleSecurity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
+use App\Models\ChecklistParameterEquiqment;
+use App\Models\ParameterShiftSecurity;
 
 class ScheduleSecurityController extends Controller
 {
@@ -26,16 +29,22 @@ class ScheduleSecurityController extends Controller
         return view('AdminSite.ScheduleSecurity.index', $data);
     }
 
+
     /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
+
     public function create()
     {
         $room = ConnectionDB::setConnection(new Room());
+        $parameter = ConnectionDB::setConnection(new ParameterSecurity());
+        $shift = ConnectionDB::setConnection(new ParameterShiftSecurity());
 
         $data['rooms'] = $room->get();
+        $data['shifts'] = $shift->get();
+        $data['ParameterSecurity'] = $parameter->get();
 
         return view('AdminSite.ScheduleSecurity.create', $data);
     }
@@ -46,24 +55,36 @@ class ScheduleSecurityController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
     public function store(Request $request)
     {
         try {
             DB::beginTransaction();
-            
-            $conn = ConnectionDB::setConnection(new ScheduleSecurity());
 
-            $conn->create([
-                'id_room' => $request->id_room,
-                'schedule' => $request->schedule,
-            ]);
-            
+            // Simpan data ke dalam tabel ScheduleSecurity
+            $schedule = ConnectionDB::setConnection(new ScheduleSecurity());
+            $schedule->schedule = $request->schedule;
+            $schedule->id_shift = $request->id_shift;
+            $schedule->id_room = $request->id_room;
+            $schedule->save();
+
+            $parameter = $request->to;
+            if (!empty($parameter)) {
+                foreach ($parameter as $form) {
+
+                    $Parameter = ConnectionDB::setConnection(new ChecklistParameterEquiqment());
+                    $Parameter->id_equiqment = 3;
+                    $Parameter->id_checklist = $form;
+                    $Parameter->id_item = $schedule->id;
+                    $Parameter->save();
+                }
+            }
+
             DB::commit();
 
             Alert::success('Success', 'Successfully Added Schedule Security');
 
             return redirect()->route('schedulesecurity.index');
-
         } catch (\Throwable $e) {
             DB::rollBack();
             dd($e);
@@ -81,7 +102,31 @@ class ScheduleSecurityController extends Controller
      */
     public function show($id)
     {
-        //
+        $conn = ConnectionDB::setConnection(new ScheduleSecurity());
+        $parameter = ConnectionDB::setConnection(new ParameterSecurity());
+        $connParameter = ConnectionDB::setConnection(new ChecklistParameterEquiqment());
+        $inspectionParameter = ConnectionDB::setConnection(new ParameterSecurity());
+        $room = ConnectionDB::setConnection(new Room());
+        $shift = ConnectionDB::setConnection(new ParameterShiftSecurity());
+
+        $data['checklistparameters'] = $connParameter
+            ->where('id_equiqment', 3)
+            ->where('id_item', $id)
+            ->get();
+
+        $data['parameters'] = $inspectionParameter->where('deleted_at', null)
+            ->with(['Checklist' => function ($q) use ($id) {
+                $q->where('id_item', $id);
+            }])
+            ->get();
+        $data['id'] = $id;
+
+        $data['ParameterSecurity'] = $parameter->where('id', $id)->first();
+        $data['ScheduleSecurity'] = $conn->where('id', $id)->first();
+        $data['rooms'] = $room->get();
+        $data['shift'] = $shift->get();
+
+        return view('AdminSite.ScheduleSecurity.show', $data);
     }
 
     /**
@@ -104,7 +149,17 @@ class ScheduleSecurityController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $conn = ConnectionDB::setConnection(new ScheduleSecurity());
+
+        $checklistahu = $conn->find($id);
+        $checklistahu->no_equiqment = $request->no_equipment;
+        $checklistahu->equiqment = $request->equipment;
+        $checklistahu->id_room = $request->id_room;
+        $checklistahu->save();
+
+        Alert::success('Berhasil', 'Berhasil mengupdate Security');
+
+        return redirect()->route('schedulesecurity.index');
     }
 
     /**

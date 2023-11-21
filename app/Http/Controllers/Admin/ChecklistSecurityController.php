@@ -18,10 +18,9 @@ class ChecklistSecurityController extends Controller
     public function index()
     {
         $conn = ConnectionDB::setConnection(new ChecklistSecurity());
-        $floor = ConnectionDB::setConnection(new Floor());
 
-        $data['checklistsecuriy'] = $conn->get();
-        $data['floors'] = $floor->get();
+        $data['checklistsecuriy'] = $conn->where('status_schedule', '!=', 'Not Done')->get();
+
         return view('AdminSite.ChecklistSecurity.index', $data);
     }
 
