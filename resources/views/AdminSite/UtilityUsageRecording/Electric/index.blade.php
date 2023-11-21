@@ -406,16 +406,24 @@
                 success: function(resp) {
                     if (resp.status === 'ok') {
                         Swal.fire(
-                            'Good job!',
-                            'You clicked the button!',
+                            'Success!',
+                            '',
                             'success'
+                        ).then(() => {
+                            window.location.reload();
+                        });
+                    } else if (resp.status === 401) {
+                        Swal.fire(
+                            'Sorry!',
+                            `Sorry this unit with name ${resp.unit} doesn't have user`,
+                            'info'
                         ).then(() => {
                             window.location.reload();
                         });
                     } else {
                         Swal.fire(
                             'Failed!',
-                            'You clicked the button!',
+                            '',
                             'error'
                         ).then(() => {
                             window.location.reload();

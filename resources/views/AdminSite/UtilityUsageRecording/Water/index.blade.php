@@ -69,13 +69,14 @@
                                                 <tr>
                                                     <th class="align-middle white-space-nowrap">
                                                         <div class="form-check mb-0">
-                                                            <input class="form-check-input" name="bulk-elect" type="checkbox"
-                                                                id="{{ $item->id }}"
+                                                            <input class="form-check-input" name="bulk-elect"
+                                                                type="checkbox" id="{{ $item->id }}"
                                                                 data-bulk-select-row="data-bulk-select-row" />
                                                         </div>
                                                     </th>
                                                     <td class="align-middle">
-                                                        <img src="{{ $item->image ? url($item->image) : url('/assets/img/icons/spot-illustrations/proapps.png') }}" width="100">
+                                                        <img src="{{ $item->image ? url($item->image) : url('/assets/img/icons/spot-illustrations/proapps.png') }}"
+                                                            width="100">
                                                     </td>
                                                     <th class="align-middle">{{ $item->Unit->nama_unit }}</th>
                                                     <th class="align-middle">
@@ -89,9 +90,11 @@
                                                     </th>
                                                     <th class="align-middle">
                                                         @if ($item->ElecUUSrelation())
-                                                            Previous - <b>{{ $item->ElecUUSrelation()->nomor_listrik_awal }}</b>
+                                                            Previous -
+                                                            <b>{{ $item->ElecUUSrelation()->nomor_listrik_awal }}</b>
                                                             <br>
-                                                            Current - <b>{{ $item->ElecUUSrelation()->nomor_listrik_akhir }}</b>
+                                                            Current -
+                                                            <b>{{ $item->ElecUUSrelation()->nomor_listrik_akhir }}</b>
                                                             <br>
                                                             Usage - <b>{{ $item->ElecUUSrelation()->usage }}</b> <br>
                                                         @else
@@ -129,7 +132,9 @@
                                                             </h6>
                                                         @endif
                                                     </th>
-                                                    @if (Request::session()->get('work_relation_id') == $approve->approval_1 && $user->Karyawan->is_can_approve != null && !$item->is_approve)
+                                                    @if (Request::session()->get('work_relation_id') == $approve->approval_1 &&
+                                                            $user->Karyawan->is_can_approve != null &&
+                                                            !$item->is_approve)
                                                         <td class="align-middle text-center">
                                                             <button class="btn btn-warning btn-sm" type="button"
                                                                 data-bs-toggle="modal"
@@ -224,8 +229,8 @@
                                                     </div>
                                                 </div>
 
-                                                <div class="modal fade" id="approve-modal{{ $item->id }}" tabindex="-1"
-                                                    role="dialog" aria-hidden="true">
+                                                <div class="modal fade" id="approve-modal{{ $item->id }}"
+                                                    tabindex="-1" role="dialog" aria-hidden="true">
                                                     <div class="modal-dialog modal-dialog-centered" role="document"
                                                         style="max-width: 500px">
                                                         <div class="modal-content position-relative">
@@ -239,7 +244,8 @@
                                                                 @csrf
                                                                 <div class="modal-body p-0">
                                                                     <div class="rounded-top-3 py-3 ps-4 pe-6 bg-light">
-                                                                        <h4 class="mb-1" id="modalExampleDemoLabel">Approve
+                                                                        <h4 class="mb-1" id="modalExampleDemoLabel">
+                                                                            Approve
                                                                             Record
                                                                         </h4>
                                                                     </div>
@@ -269,14 +275,16 @@
                                                                                 <div class="col-6">
                                                                                     <h4>
                                                                                         <span class="text-success">
-                                                                                            <i class="fas fa-chevron-down"></i>
+                                                                                            <i
+                                                                                                class="fas fa-chevron-down"></i>
                                                                                         </span>
                                                                                     </h4>
                                                                                 </div>
                                                                                 <div class="col-6">
                                                                                     <h4>
                                                                                         <span class="text-success">
-                                                                                            <i class="fas fa-chevron-down"></i>
+                                                                                            <i
+                                                                                                class="fas fa-chevron-down"></i>
                                                                                         </span>
                                                                                     </h4>
                                                                                 </div>
@@ -444,6 +452,14 @@
                             'Success!',
                             '',
                             'success'
+                        ).then(() => {
+                            window.location.reload();
+                        });
+                    } else if (resp.status === 401) {
+                        Swal.fire(
+                            'Sorry!',
+                            `Sorry this unit with name ${resp.unit} doesn't have user`,
+                            'info'
                         ).then(() => {
                             window.location.reload();
                         });

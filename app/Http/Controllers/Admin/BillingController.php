@@ -54,19 +54,33 @@ class BillingController extends Controller
             Carbon::now()->format('m') . Carbon::now()->format('Y') . '/' .
             sprintf("%06d", $countINV);
 
+        $status = false;
         foreach ($request->IDs as $id) {
             if ($request->type == 'electric') {
                 $elecUSS = $connElecUUS->find($id);
                 $waterUSS = $connWaterUUS->where('periode_bulan', $elecUSS->periode_bulan)
                     ->where('is_approve', '1')
                     ->where('periode_tahun', $elecUSS->periode_tahun)
+                    ->where('id_unit', $elecUSS->id_unit)
                     ->first();
+                $status = $elecUSS->Unit->TenantUnit->Tenant->User ? true : false;
+                $nama_unit = $elecUSS->Unit->nama_unit;
             } elseif ($request->type == 'water') {
                 $waterUSS = $connWaterUUS->find($id);
                 $elecUSS = $connElecUUS->where('periode_bulan', $waterUSS->periode_bulan)
                     ->where('is_approve', '1')
                     ->where('periode_tahun', $waterUSS->periode_tahun)
+                    ->where('id_unit', $waterUSS->id_unit)
                     ->first();
+                $status = $waterUSS->Unit->TenantUnit->Tenant->User ? true : false;
+                $nama_unit = $elecUSS->Unit->nama_unit;
+            }
+
+            if (!$status) {
+                return response()->json([
+                    'status' => 401,
+                    'unit' => $nama_unit
+                ]);
             }
 
             if ($waterUSS && $elecUSS && !$waterUSS->MonthlyUtility) {
@@ -121,6 +135,7 @@ class BillingController extends Controller
 
         $previousBills = $connMonthlyTenant->where('tgl_jt_invoice', '<', Carbon::now()->format('Y-m-d'))
             ->where('periode_tahun', Carbon::now()->format('Y'))
+            ->where('id_unit', $createUtilityBill->id_unit)
             ->where('tgl_bayar_invoice', null)
             ->get();
 
@@ -165,13 +180,22 @@ class BillingController extends Controller
         $sf = $connIPLType->find(7);
         $unit = $connUnit->find($elecUSS->id_unit);
 
+        $currMonthDays =  Carbon::now()->daysInMonth;
+        $cutOFFsc = (int) Carbon::now()->diff($unit->Owner()->tgl_masuk)->format("%a");
+
         $ipl_service_charge = (int) $unit->luas_unit * $sc->biaya_permeter;
+        $ipl_price_day = ((int) $unit->luas_unit * $sc->biaya_permeter) / $currMonthDays;
+
+        if ($cutOFFsc < $currMonthDays) {
+            $ipl_service_charge = $cutOFFsc * $ipl_price_day;
+        }
 
         if ($sf->biaya_procentage != null) {
             $ipl_sink_fund = $sf->biaya_procentage / 100 * $ipl_service_charge;
         } else {
             $ipl_sink_fund = $sf->biaya_permeter * (int) $unit->luas_unit;
         }
+
         $total_tagihan_ipl = $ipl_service_charge + $ipl_sink_fund;
 
         $connIPL->id_site = $unit->id_site;
