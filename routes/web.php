@@ -327,6 +327,7 @@ Route::prefix('admin')->group(function () {
 
         // CRUD Karyawan
         Route::resource('karyawans', KaryawanController::class);
+        Route::post('import-employees', [KaryawanController::class, 'import'])->name('import-employees');
 
         // CRUD Jabatan
         Route::resource('jabatans', JabatanController::class);
