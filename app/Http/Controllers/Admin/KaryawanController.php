@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
+use App\Imports\EmployeeImport;
 use App\Models\Karyawan;
 use App\Models\Login;
 use Illuminate\Support\Facades\DB;
@@ -24,6 +25,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Symfony\Component\Console\Input\Input;
 use File;
+use Excel;
 
 class KaryawanController extends Controller
 {
@@ -170,6 +172,17 @@ class KaryawanController extends Controller
 
             return redirect()->route('karyawans.index');
         }
+    }
+
+    public function import(Request $request)
+    {
+        $file = $request->file('file_excel');
+
+        Excel::import(new EmployeeImport(), $file);
+
+        Alert::success('Success', 'Success import data');
+
+        return redirect()->route('karyawans.index');
     }
 
     /**

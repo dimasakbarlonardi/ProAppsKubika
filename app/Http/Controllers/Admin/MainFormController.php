@@ -236,9 +236,8 @@ class MainFormController extends Controller
             $track2 = $this->createObject($wr, 'Work Request has been approved and progress on working', $condition2, $work_relation, $wr->created_at);
             $objects[] = $track2;
 
-            $condition3 = ($wr->status_request == 'WORK DONE' || $wr->status_request == 'DONE' || $wr->status_request == 'COMPLETE') && !$wr->WorkORder;
-            if ($condition3) {
-                $condition3 = $condition3;
+            if (!$wr->WorkOrder) {
+                $condition3 = $wr->status_request == 'WORK DONE' || $wr->status_request == 'DONE' || $wr->status_request == 'COMPLETE';
                 $track3 = $this->createObject($wr, 'Work Request has finished', $condition3, $work_relation, $wr->created_at);
                 $objects[] = $track3;
 
@@ -249,51 +248,50 @@ class MainFormController extends Controller
                 $condition4 = $wr->status_request == 'COMPLETE' && !$wr->WorkORder;
                 $track5 = $this->createObject($wr, 'Work Request has Completed', $condition4, 'Building Manager', $wr->updated_at);
                 $objects[] = $track5;
-            } else {
-                $condition5 = $wo;
-                $track6 = $this->createObject($wo, 'Work Request processed to Work Order', $condition5, $work_relation, $wr->updated_at);
-                $objects[] = $track6;
 
-                $condition6 = $wo->sign_approve_1;
-                $track7 = $this->createObject($wo, 'Work Request has approved by Tenant', $condition6, $user, $wo->date_approve_1);
-                $objects[] = $track7;
-
-                $condition7 = $wo->sign_approve_2;
-                $track8 = $this->createObject($wo, 'Work Request has approved by Managamenet', $condition7, $work_relation, $wo->date_approve_2);
-                $objects[] = $track8;
-
-                $condition8 = $wo->sign_approve_3 || $wo->status_wo == 'BM APPROVED';
-                $track9 = $this->createObject($wo, 'Work Request has approved by Building Manager', $condition8, 'Building Manager', $wo->updated_at);
-                $objects[] = $track9;
-
-                $condition9 = $wo->sign_approve_3;
-                $track10 = $this->createObject($wo, 'Work Request has approved by Finance', $condition9, 'Finance', $wo->updated_at);
-                $objects[] = $track10;
-
-                $condition10 = $ticket->CashReceipt;
-                $track11 = $this->createObject($wo, 'Waiting for payment', $condition10, 'System', $ticket->CashReceipt->created_at);
-                $objects[] = $track11;
-
-                $condition11 = $wo->date_approve_5;
-                $track12 = $this->createObject($wo, 'Payment is confirmed and success', $condition11, 'System', $wo->date_approve_5);
-                $objects[] = $track12;
-
-                $condition12 = $wo->status_wo == 'WORK DONE' || $wo->status_wo == 'DONE' || $wo->status_wo == 'COMPLETE';
-                $track13 = $this->createObject($wo, 'Request has been worked', $condition12, $work_relation, $wo->updated_at);
-                $objects[] = $track13;
-
-                $condition13 = $wo->status_wo == 'DONE' || $wo->status_wo == 'COMPLETE';
-                $track14 = $this->createObject($wo, 'Request has been done by Tenant', $condition13, $user, $wo->updated_at);
-                $objects[] = $track14;
-
-                $condition14 = $wo->status_wo == 'COMPLETE';
-                $track15 = $this->createObject($wo, 'Request has completed', $condition14, 'Building Manager', $wo->updated_at);
-                $objects[] = $track15;
+                return $objects;
             }
+
+            $condition5 = $wo;
+            $track6 = $this->createObject($wo, 'Work Request processed to Work Order', $condition5, $work_relation, $wr->updated_at);
+            $objects[] = $track6;
+
+            $condition6 = $wo->sign_approve_1;
+            $track7 = $this->createObject($wo, 'Work Request has approved by Tenant', $condition6, $user, $wo->date_approve_1);
+            $objects[] = $track7;
+
+            $condition7 = $wo->sign_approve_2;
+            $track8 = $this->createObject($wo, 'Work Request has approved by Managamenet', $condition7, $work_relation, $wo->date_approve_2);
+            $objects[] = $track8;
+
+            $condition8 = $wo->sign_approve_3 || $wo->status_wo == 'BM APPROVED';
+            $track9 = $this->createObject($wo, 'Work Request has approved by Building Manager', $condition8, 'Building Manager', $wo->updated_at);
+            $objects[] = $track9;
+
+            $condition9 = $wo->sign_approve_3;
+            $track10 = $this->createObject($wo, 'Work Request has approved by Finance', $condition9, 'Finance', $wo->updated_at);
+            $objects[] = $track10;
+
+            $condition10 = $ticket->CashReceipt;
+            $track11 = $this->createObject($wo, 'Waiting for payment', $condition10, 'System', $ticket->CashReceipt->created_at);
+            $objects[] = $track11;
+
+            $condition11 = $wo->date_approve_5;
+            $track12 = $this->createObject($wo, 'Payment is confirmed and success', $condition11, 'System', $wo->date_approve_5);
+            $objects[] = $track12;
+
+            $condition12 = $wo->status_wo == 'WORK DONE' || $wo->status_wo == 'DONE' || $wo->status_wo == 'COMPLETE';
+            $track13 = $this->createObject($wo, 'Request has been worked', $condition12, $work_relation, $wo->updated_at);
+            $objects[] = $track13;
+
+            $condition13 = $wo->status_wo == 'DONE' || $wo->status_wo == 'COMPLETE';
+            $track14 = $this->createObject($wo, 'Request has been done by Tenant', $condition13, $user, $wo->updated_at);
+            $objects[] = $track14;
+
+            $condition14 = $wo->status_wo == 'COMPLETE';
+            $track15 = $this->createObject($wo, 'Request has completed', $condition14, 'Building Manager', $wo->updated_at);
+            $objects[] = $track15;
         }
-
-
-
 
         return $objects;
     }

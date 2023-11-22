@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\ConnectionDB;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -41,6 +42,7 @@ class Unit extends Model
         'meter_gas_akhir',
         'keterangan',
         'isempty',
+        'electric_capacity'
     ];
 
     protected $dates = ['deleted_at'];
@@ -79,6 +81,17 @@ class Unit extends Model
         $this->barcode_meter_listrik = $listrik;
         $this->barcode_meter_air = $air;
         $this->save();
+    }
+
+    public function Owner()
+    {
+        $connTU = ConnectionDB::setConnection(new TenantUnit());
+
+        $tu = $connTU->where('id_unit', $this->id_unit)
+            ->where('is_owner', 1)
+            ->first();
+
+        return $tu;
     }
 
     public function site()

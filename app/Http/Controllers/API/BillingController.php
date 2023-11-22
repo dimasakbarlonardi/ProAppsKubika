@@ -326,7 +326,7 @@ class BillingController extends Controller
             $object->unit = $unit->nama_unit;
             $object->period = Carbon::now()->format('m');
             $object->current = count($unit->electricUUS) > 0 ? $unit->electricUUS[0]->nomor_listrik_awal : 0;
-            $object->previous = count($unit->electricUUS) > 0 ? $unit->electricUUS[0]->nomor_listrik_akhir : 0;
+            $object->previous = count($unit->electricUUS) > 0 ? $unit->electricUUS[0]->nomor_listrik_akhir : $unit->meter_listrik_awal;
 
             return ResponseFormatter::success(
                 $object,
@@ -365,10 +365,10 @@ class BillingController extends Controller
             $usage = $abodemen;
         }
         if ($isAbodemen) {
-            if ($listrik->abodemen != 0) {
-                $total_usage = $biaya_usage * $usage;
-            } else {
+            if ($listrik->biaya_tetap != 0) {
                 $total_usage = $listrik->biaya_tetap;
+            } else {
+                $total_usage = $biaya_usage * $usage;
             }
         } else {
             $total_usage = $biaya_usage * $usage;
@@ -435,7 +435,7 @@ class BillingController extends Controller
             $object->unit = $unit->nama_unit;
             $object->period = Carbon::now()->format('m');
             $object->current = count($unit->waterUUS) > 0 ? $unit->waterUUS[0]->nomor_air_awal : 0;
-            $object->previous = count($unit->waterUUS) > 0 ? $unit->waterUUS[0]->nomor_air_akhir : 0;
+            $object->previous = count($unit->waterUUS) > 0 ? $unit->waterUUS[0]->nomor_air_akhir : $unit->meter_air_awal;
 
             return ResponseFormatter::success(
                 $object,

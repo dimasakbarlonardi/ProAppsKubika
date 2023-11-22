@@ -92,6 +92,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/bapp/{id}', [BAPPController::class, 'show']);
 
         // Work Request
+        Route::get('/work-request/{id}', [WorkRequestController::class, 'show']);
         Route::post('/on-work/work-request/{id}', [WorkRequestController::class, 'OnWork']);
         Route::post('/work-done/work-request/{id}', [WorkRequestController::class, 'WorkDone']);
 

@@ -122,6 +122,11 @@ use App\Http\Controllers\Admin\ToolsHKController;
 use App\Http\Controllers\Admin\ToolsSecurityController;
 use App\Http\Controllers\Admin\VisitorsController;
 use App\Http\Controllers\Admin\WaterUUSController;
+use App\Http\Controllers\API\VisitorController;
+use App\Models\ForgotAttendance;
+use App\Models\IncidentalReportHK;
+use App\Models\PermitHR;
+use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -322,6 +327,7 @@ Route::prefix('admin')->group(function () {
 
         // CRUD Karyawan
         Route::resource('karyawans', KaryawanController::class);
+        Route::post('import-employees', [KaryawanController::class, 'import'])->name('import-employees');
 
         // CRUD Jabatan
         Route::resource('jabatans', JabatanController::class);
@@ -707,7 +713,7 @@ Route::prefix('admin')->group(function () {
 
         // ---------------Incidental Report Engineering-----------------
         Route::resource('incidentalreporteng', IncidentalEngController::class);
-        
+
         // ---------------Incidental Report HK-----------------
         Route::resource('incidentalreporthk',  IncidentalHKController::class);
 
