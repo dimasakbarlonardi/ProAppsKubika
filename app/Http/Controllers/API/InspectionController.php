@@ -365,8 +365,8 @@ class InspectionController extends Controller
                 $object->schedule = $schedule->schedule;
                 $object->status_schedule = $schedule->status_schedule;
                 $object->room = $schedule->Room;
-                $object->lantai = $schedule->Room->floor;
-                $object->lantai = $schedule->Room->Tower;
+                $object->floor = $schedule->Room->floor;
+                $object->tower = $schedule->Room->Tower;
                
                 $inspections[] = $object;
             }
@@ -465,7 +465,7 @@ class InspectionController extends Controller
         $connInspectionDetail = ConnectionDB::setConnection(new ChecklistSecurity());
 
         $inspection = $connInspectionDetail->where('id', $id)
-            ->with(['Room', 'InspectionLocation', 'Schedule', 'Shift'])
+            ->with(['Room', 'Schedule', 'Shift'])
             ->first();
             $inspection['status'] = json_decode($inspection->status);
             

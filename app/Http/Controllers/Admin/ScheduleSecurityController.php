@@ -73,7 +73,7 @@ class ScheduleSecurityController extends Controller
             $connEquipmentDetail = ConnectionDB::setConnection(new ChecklistSecurity());
 
             $connEquipmentDetail->create([
-                'id_parameter_security' => $request->id,
+                'id_parameter_security' => $schedule->id,
                 'schedule' => $request->schedule,
                 'id_room' => $request->id_room,
                 'status_schedule' => 'Not Done'
