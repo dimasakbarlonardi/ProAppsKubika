@@ -194,7 +194,8 @@ class ReservationController extends Controller
         $object->status_reservation = $reservation->sign_approval_1 ? 'APPROVED' : 'PENDING';
         $object->approve_1_tenant = $reservation->sign_approval_1;
         $object->approve_2_security = $reservation->sign_approval_2;
-        $object->total = $reservation->is_deposit ? $reservation->is_deposit : 0;
+        $object->is_deposit = $reservation->is_deposit ? $reservation->is_deposit : 0;
+        $object->jumlah_deposit = $reservation->jumlah_deposit;
 
         return ResponseFormatter::success(
             $object,
