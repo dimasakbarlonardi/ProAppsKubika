@@ -66,7 +66,7 @@ class OffBoardingTenantUnitController extends Controller
             dd($e);
             Alert::error('Gagal', 'Gagal menambahkan OffBoarding TenantUnit');
 
-            // return redirect()->route('toilets.index');
+            // return redirect()->route('housekeeping.index');
         }
     }
 

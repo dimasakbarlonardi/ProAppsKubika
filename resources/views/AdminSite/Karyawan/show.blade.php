@@ -69,11 +69,11 @@
                             <input type="text" name="no_telp_karyawan" value="{{ $karyawan->no_telp_karyawan }}" disabled class="form-control editable">
                         </div>
                         <div class="col-6">
-                            <label class="form-label">Join Date</label>
+                            <label class="form-label">Date Of Joining</label>
                             <input type="date" name="tgl_masuk" value="{{ $karyawan->tgl_masuk }}" disabled class="form-control editable">
                         </div>
                         <div class="col-6">
-                            <label class="form-label">Resign Date</label>
+                            <label class="form-label">Contract End Date</label>
                             <input type="date" name="tgl_keluar" value="{{ $karyawan->tgl_keluar }}" disabled class="form-control editable">
                         </div>
                         <div class="col-6">

@@ -350,22 +350,24 @@ class InspectionController extends Controller
     public function schedueinspectionsecurity()
     {
         $connInspectionSecurity = ConnectionDB::setConnection(new ChecklistSecurity());
+        
         $nowMonth = Carbon::now()->format('m');
         $getSchedules = $connInspectionSecurity->whereMonth('schedule', $nowMonth)
-            ->with('InspectionLocation.Room.Floor')
+            ->with('Schedule.Room.Floor')
             ->get();
 
         $inspections = [];
         
         if ($getSchedules) {
             foreach ($getSchedules as $schedule) {
-                $eq = $schedule->InspectionLocation;
                 $object = new stdClass();
                 $object->id_parameter_security = $schedule->id;
                 $object->schedule = $schedule->schedule;
                 $object->status_schedule = $schedule->status_schedule;
-                $object->room = $eq->Room;
-                
+                $object->room = $schedule->Room;
+                $object->lantai = $schedule->Room->floor;
+                $object->lantai = $schedule->Room->Tower;
+               
                 $inspections[] = $object;
             }
         }
@@ -396,6 +398,7 @@ class InspectionController extends Controller
                 $schedule->image = $inspecImage;
             }
             $schedule->id_room = $request->id_room;
+            $schedule->id_shift = $request->id_shift;
             $schedule->status = $request->status;
             $schedule->user_id = $request->user_id;
             $schedule->checklist_datetime = Carbon::now();
@@ -462,7 +465,7 @@ class InspectionController extends Controller
         $connInspectionDetail = ConnectionDB::setConnection(new ChecklistSecurity());
 
         $inspection = $connInspectionDetail->where('id', $id)
-            ->with(['Room', 'InspectionLocation', 'Schedule'])
+            ->with(['Room', 'InspectionLocation', 'Schedule', 'Shift'])
             ->first();
             $inspection['status'] = json_decode($inspection->status);
             

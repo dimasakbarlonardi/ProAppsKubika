@@ -539,7 +539,7 @@ Route::prefix('admin')->group(function () {
         // -------HK Parameter-------
 
         //CRUD HK Toilet
-        Route::resource('toilets', ToiletController::class);
+        Route::resource('housekeeping', ToiletController::class);
 
         //CRUD HK Floor
         Route::resource('hkfloors', HKFloorController::class);

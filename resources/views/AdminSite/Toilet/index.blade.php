@@ -8,7 +8,7 @@
                 <h6 class="mb-0 text-white">List Inspection HouseKeeping</h6>
             </div>
             <div class="col-auto d-flex">
-                <a class="btn btn-falcon-default text-600 btn-sm " href="{{ route('toilets.create') }}"><span class="fas fa-plus fs--2 me-1"></span>Create Parameter</a>
+                <a class="btn btn-falcon-default text-600 btn-sm " href="{{ route('housekeeping.create') }}"><span class="fas fa-plus fs--2 me-1"></span>Create Parameter</a>
             </div>
         </div>
     </div>
@@ -33,13 +33,13 @@
                         </tr>
                     </thead>
                     <tbody class="list">
-                        @foreach ($toilets as $key => $toilet)
+                        @foreach ($housekeeping as $key => $toilet)
                         <tr>
                             <th scope="row">{{ $key + 1 }}</th>
                             <td class="nama_hk_toilet">{{ $toilet->nama_hk_toilet }}</td>
                             <td>
-                                <a href="{{ route('toilets.edit', $toilet->id_hk_toilet) }}" class="btn btn-sm btn-warning"><span class="fas fa-pencil-alt fs--2 me-1"></span>Edit</a>
-                                <!-- <form class="d-inline" action="{{ route('toilets.destroy', $toilet->id_hk_toilet) }}" method="post">
+                                <a href="{{ route('housekeeping.edit', $toilet->id_hk_toilet) }}" class="btn btn-sm btn-warning"><span class="fas fa-pencil-alt fs--2 me-1"></span>Edit</a>
+                                <!-- <form class="d-inline" action="{{ route('housekeeping.destroy', $toilet->id_hk_toilet) }}" method="post">
                                 @method('DELETE')
                                 @csrf
                                 <button type="submit" class="btn btn-danger btn-sm"

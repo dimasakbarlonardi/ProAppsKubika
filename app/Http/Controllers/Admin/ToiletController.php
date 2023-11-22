@@ -47,7 +47,7 @@ class ToiletController extends Controller
     {
         $conn = ConnectionDB::setConnection(new Toilet());
 
-        $data ['toilets'] = $conn->get();
+        $data ['housekeeping'] = $conn->get();
 
         return view('AdminSite.Toilet.index', $data);
     }
@@ -85,13 +85,13 @@ class ToiletController extends Controller
 
             Alert::success('Berhasil', 'Berhasil menambahkan HK Toilet');
 
-            return redirect()->route('toilets.index');
+            return redirect()->route('housekeeping.index');
         } catch (\Throwable $e) {
             DB::rollBack();
             dd($e);
             Alert::error('Gagal', 'Gagal menambahkan HK Toilet');
 
-            return redirect()->route('toilets.index');
+            return redirect()->route('housekeeping.index');
         }
     }
 
@@ -137,7 +137,7 @@ class ToiletController extends Controller
 
         Alert::success('Berhasil', 'Berhasil mengupdate HK Toilet');
 
-        return redirect()->route('toilets.index');
+        return redirect()->route('housekeeping.index');
     }
 
     /**
@@ -153,6 +153,6 @@ class ToiletController extends Controller
         $conn->find($id)->delete();
         Alert::success('Berhasil','Berhasil Menghapus HK Toilet');
 
-        return redirect()->route('toilets.index');
+        return redirect()->route('housekeeping.index');
     }
 }

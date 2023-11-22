@@ -62,7 +62,7 @@ class OffBoardingKepemilikanUnitController extends Controller
             dd($e);
             Alert::error('Gagal', 'Gagal menambahkan OffBoarding KepemilikanUnit');
 
-            // return redirect()->route('toilets.index');
+            // return redirect()->route('housekeeping.index');
         }
     }
 

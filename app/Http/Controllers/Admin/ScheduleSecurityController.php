@@ -11,7 +11,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Models\ChecklistParameterEquiqment;
+use App\Models\ChecklistSecurity;
 use App\Models\ParameterShiftSecurity;
+use App\Models\EquiqmentEngineeringDetail;
 
 class ScheduleSecurityController extends Controller
 {
@@ -67,6 +69,15 @@ class ScheduleSecurityController extends Controller
             $schedule->id_shift = $request->id_shift;
             $schedule->id_room = $request->id_room;
             $schedule->save();
+
+            $connEquipmentDetail = ConnectionDB::setConnection(new ChecklistSecurity());
+
+            $connEquipmentDetail->create([
+                'id_parameter_security' => $request->id,
+                'schedule' => $request->schedule,
+                'id_room' => $request->id_room,
+                'status_schedule' => 'Not Done'
+            ]);
 
             $parameter = $request->to;
             if (!empty($parameter)) {
