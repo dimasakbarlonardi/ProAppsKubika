@@ -56,7 +56,7 @@
                         </td>
                         <td>{{ $detail->Equipment->no_equiqment }}</td>
                         <td>{{ $detail->Equipment->equiqment }}</td>
-                        <td>{{ $detail->Room->nama_room }}</td>
+                        <td>{{$detail->Room->Tower->nama_tower}} - {{$detail->Room->Floor->nama_lantai}} - {{ $detail->Room->nama_room }}</td>
                         <td scope="row">
                             <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#status-modal{{ $detail->id_equiqment_engineering_detail }}">See Result</button>
                         </td>

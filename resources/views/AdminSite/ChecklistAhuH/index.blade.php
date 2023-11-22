@@ -33,7 +33,7 @@
                 <tr>
                     <th scope="row">{{ $key + 1 }}</th>
                     <td>{{ $checklistahu->equiqment }}</td>
-                    <td>{{ $checklistahu->Room->nama_room }} - {{ $checklistahu->Room->Floor->nama_lantai }}</td>
+                    <td>{{ $checklistahu->Room->Tower->nama_tower }} - {{ $checklistahu->Room->Floor->nama_lantai }} - {{ $checklistahu->Room->nama_room }}</td>
                     <td>
                         <div class="dropdown font-sans-serif position-static">
                             <button class="btn btn-sm btn-warning" type="button" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false">

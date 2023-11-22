@@ -23,7 +23,7 @@
                         <option selected disabled>-- Select Room --</option>
                         @foreach ($rooms as $room)
                         <option value="{{ $room->id_room }}" {{ $room->id_room == $ScheduleSecurity->id_room ? 'selected' : '' }}>
-                            {{ $room->nama_room }}
+                           {{$room->tower->nama_tower}} - {{ $room->floor->nama_lantai }} - {{ $room->nama_room }}
                         </option>
                         @endforeach
                     </select>

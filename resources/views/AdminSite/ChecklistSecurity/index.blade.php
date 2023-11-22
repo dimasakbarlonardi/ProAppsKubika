@@ -45,7 +45,7 @@
                             </a>
                         </td>
                         <td>{{ $detail->Shift->shift }} ( {{ $detail->Shift->start_time }}-{{ $detail->Shift->end_time }} )</td>
-                        <td>{{ $detail->Room->nama_room }}</td>
+                        <td>{{ $detail->Room->tower->nama_tower }} - {{ $detail->Room->nama_room }} - {{ $detail->Room->floor->nama_lantai}}</td>
                         <td scope="row">
                             <button class="btn btn-warning btn-sm" data-bs-toggle="modal" data-bs-target="#status-modal{{ $detail->id }}">See Result</button>
                         </td>

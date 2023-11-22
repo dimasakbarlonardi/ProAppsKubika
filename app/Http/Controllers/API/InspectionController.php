@@ -334,7 +334,7 @@ class InspectionController extends Controller
 
         $inspection = $connInspectionSecuirty
             ->where('status_schedule', '!=', 'Not Done')
-            ->with(['Room.Tower', 'Schedule', 'Shift', 'InspectionLocation'])
+            ->with(['Room.Tower', 'Room.Floor', 'Schedule', 'Shift', 'InspectionLocation'])
             ->get();
 
         foreach ($inspection as $key => $data) {

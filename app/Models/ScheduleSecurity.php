@@ -29,7 +29,7 @@ class ScheduleSecurity extends Model
     {
         return $this->hasOne(Room::class, 'id_room','id_room');
     }
-
+    
     public function floor()
     {
         return $this->hasOne(Floor::class, 'id_lantai', 'id_lantai');

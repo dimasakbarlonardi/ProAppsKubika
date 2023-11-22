@@ -33,7 +33,7 @@
                 @foreach ($schedulesec as $key => $security)
                 <tr>
                     <th scope="row">{{ $key + 1 }}</th>
-                    <td class="text-center">{{ $security->room->nama_room}} - {{ $security->room->floor->nama_lantai }}</td>
+                    <td class="text-center">{{ $security->room->tower->nama_tower }} - {{ $security->room->floor->nama_lantai }} - {{ $security->room->nama_room}}</td>
                     <td class="text-center">{{ HumanDate($security->schedule) }}</td>
                     <td class="text-center">{{ $security->Shift->shift }} - ( {{ HumanTime($security->Shift->start_time) }}-{{ HumanTime($security->Shift->end_time) }} ) </td>
                     <td class="text-center">
