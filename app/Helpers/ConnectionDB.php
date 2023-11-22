@@ -9,8 +9,9 @@ class ConnectionDB {
     public static function getDBname()
     {
         $request = Request();
-        $user_id = $request->user()->id;
-        $login = Login::where('id', $user_id)->with('site')->first();
+
+        $login = $request->user();
+
         $db = $login->site->db_name;
 
         return $db;

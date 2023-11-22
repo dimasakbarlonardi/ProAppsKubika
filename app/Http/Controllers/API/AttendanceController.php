@@ -39,14 +39,11 @@ class AttendanceController extends Controller
         );
     }
 
-    public function showLocation($id, $token)
+    public function showLocation($id, Request $request)
     {
         $conCoordinate = ConnectionDB::setConnection(new Coordinate());
 
-        $getToken = str_replace("RA164-", "|", $token);
-        $tokenable = PersonalAccessToken::findToken($getToken);
-
-        if ($tokenable) {
+        if ($request->user()) {
             $coor = $conCoordinate->find($id);
             $data = [
                 'lat' => $coor->latitude,
@@ -89,15 +86,12 @@ class AttendanceController extends Controller
         return $attend;
     }
 
-    public function checkin(Request $request, $token)
+    public function checkin(Request $request)
     {
-        $getToken = str_replace("RA164-", "|", $token);
-        $tokenable = PersonalAccessToken::findToken($getToken);
         $connKaryawan = ConnectionDB::setConnection(new Karyawan());
 
-        if ($tokenable) {
-            $user = $tokenable->tokenable;
-
+        $user = $request->user();
+        if ($user) {
             $karyawan = $connKaryawan->where('email_karyawan', $user->email)->first();
             $attend = $this->attend($karyawan);
 
@@ -182,17 +176,15 @@ class AttendanceController extends Controller
         return response()->json(['status' => $resp]);
     }
 
-    public function checkout(Request $request, $token)
+    public function checkout(Request $request)
     {
-        $getToken = str_replace("RA164-", "|", $token);
-        $tokenable = PersonalAccessToken::findToken($getToken);
         $connKaryawan = ConnectionDB::setConnection(new Karyawan());
 
-        $user = $tokenable->tokenable;
+        $user = $request->user();
         $karyawan = $connKaryawan->where('email_karyawan', $user->email)->first();
         $attend = $this->attendCheckout($karyawan);
 
-        if ($tokenable) {
+        if ($user) {
             if ($attend && !$attend->checkout) {
                 if ($attend) {
 
@@ -459,6 +451,43 @@ class AttendanceController extends Controller
         );
     }
 
+    public function getScheduleByDate(Request $request)
+    {
+        $connUser = ConnectionDB::setConnection(new User());
+        $connSchedule = ConnectionDB::setConnection(new WorkTimeline());
+
+        $login = $connUser->where('login_user', $request->user()->email)->first();
+        $getRole = $login->RoleH->WorkRelation->id_work_relation;
+
+        $schedules = $connSchedule->where('date', $request->request_date)
+            ->whereHas('Karyawan.User.RoleH.WorkRelation', function ($q) use ($getRole) {
+                $q->where('id_work_relation', $getRole);
+            })
+            ->with(['ShiftType', 'Karyawan.User.RoleH'])
+            ->where('karyawan_id', '!=', $login->Karyawan->id)
+            ->get();
+
+        $objects = [];
+
+        foreach ($schedules as $schedule) {
+            $object = new stdClass();
+            $object->id = $schedule->id;
+            $object->shift_name = $schedule->ShiftType->shift;
+            $object->clock_in = $schedule->ShiftType->checkin;
+            $object->clock_out = $schedule->ShiftType->checkout;
+            $object->karyawan_name = $schedule->Karyawan->nama_karyawan;
+            $object->replacement_karyawan_id = $schedule->Karyawan->id;
+            $object->role = $schedule->Karyawan->User->RoleH->nama_role;
+
+            $objects[] = $object;
+        }
+
+        return ResponseFormatter::success(
+            $objects,
+            'Success get schedule'
+        );
+    }
+
     public function permitAttendance(Request $request)
     {
         $connPermit = ConnectionDB::setConnection(new PermitAttendance());
@@ -499,9 +528,9 @@ class AttendanceController extends Controller
         $connPermit->request_time = $request->request_time;
         $connPermit->previous_shift_id = $request->previous_shift_id;
         $connPermit->replace_shift_id = $request->replace_shift_id;
-        $connPermit->replacement_id = $request->replacement_id;
+        $connPermit->replacement_id = $request->replacement_karyawan_id;
         $connPermit->status_permit = 'PENDING';
-
+        dd($connPermit);
         $photo = $request->file('photo');
         if ($photo) {
             $storagePath = SaveFile::saveToStorage($request->user()->id_site, 'permit-attendance', $photo);

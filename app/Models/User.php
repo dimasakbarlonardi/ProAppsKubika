@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\ConnectionDB;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -61,8 +62,24 @@ class User extends Model
 
     public function Attendance($date = "2023-09-01")
     {
-        // dd($date);
         return $this->hasOne(Attendance::class, 'id_user', 'id_user')
             ->where('date_schedule', $date);
+    }
+
+    public function RoomChat($idUser)
+    {
+        $connChat = ConnectionDB::setConnection(new Chat());
+
+        $chats = $connChat->orWhere('sender_id', $idUser)
+            ->orWhere('receiver_id', $idUser)
+            ->orderBy('id', 'DESC')
+            ->first();
+
+        return $chats;
+    }
+
+    public function Chats()
+    {
+        return $this->hasMany(Chat::class, 'sender_id', 'id_user');
     }
 }

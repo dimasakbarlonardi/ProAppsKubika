@@ -40,7 +40,7 @@ class FCM extends Command
      */
     public function handle()
     {
-        $login = Login::where('email', 'engineering@mail.com')->first();
+        $login = Login::where('email', 'sharon@mail.com')->first();
 
 
         $notif = new FcmNotification();

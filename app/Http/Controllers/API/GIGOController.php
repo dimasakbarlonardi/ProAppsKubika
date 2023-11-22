@@ -216,7 +216,7 @@ class GIGOController extends Controller
         ], 'Success approve 2 GIGO');
     }
 
-    public function done($id, $token)
+    public function done($id)
     {
         $request = Request();
         $connDetailGIGO = ConnectionDB::setConnection(new RequestGIGO());
@@ -227,10 +227,7 @@ class GIGOController extends Controller
 
         $approve = $connApprove->find(8);
 
-        $getToken = str_replace("RA164-", "|", $token);
-        $tokenable = PersonalAccessToken::findToken($getToken);
-
-        if ($tokenable) {
+        if ($request->user()) {
             $gigo = $connDetailGIGO->find($id);
 
             $gigo->status_request = 'DONE';
@@ -247,8 +244,6 @@ class GIGOController extends Controller
                 'notif_message' => 'GIGO telah selesai, terima kasih',
                 'receiver' => $approve->approval_3,
             ];
-
-            // $this->FCM($dataNotif, $request);
 
             broadcast(new HelloEvent($dataNotif));
 

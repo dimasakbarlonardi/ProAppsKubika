@@ -31,11 +31,17 @@ use App\Models\WorkRequest;
 use Illuminate\Http\Request;
 use App\Models\Login;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
     public function index(Request $request)
     {
+        if (!$request->session()->get('user')) {
+            Auth::guard('web')->logout();
+
+            return redirect()->route('login');
+        }
         $connTicket = ConnectionDB::setConnection(new OpenTicket());
         $connWR = ConnectionDB::setConnection(new WorkRequest());
         $connWO = ConnectionDB::setConnection(new WorkOrder());
@@ -107,6 +113,36 @@ class DashboardController extends Controller
         $notifications = $connNotif->where('deleted_at', null)
             ->with('Sender')
             ->find($notifID);
+
+        return response()->json($notifications);
+    }
+
+    public function notDoneRequest()
+    {
+        $connTickets = ConnectionDB::setConnection(new OpenTicket());
+
+        $notifications = $connTickets->where('status_request', '!=', 'COMPLETE')
+            ->count();
+
+        return response()->json($notifications);
+    }
+
+    public function notDoneWR()
+    {
+        $connWR = ConnectionDB::setConnection(new WorkRequest());
+
+        $notifications = $connWR->where('status_request', '!=', 'COMPLETE')
+            ->count();
+
+        return response()->json($notifications);
+    }
+
+    public function notDoneWO()
+    {
+        $connWO = ConnectionDB::setConnection(new WorkOrder());
+
+        $notifications = $connWO->where('status_wo', '!=', 'COMPLETE')
+            ->count();
 
         return response()->json($notifications);
     }
@@ -242,6 +278,10 @@ class DashboardController extends Controller
             case ('Reminder'):
                 return redirect()->route('reminders.show', $getNotif->id_data);
                 break;
+
+            case ('Installment'):
+                return redirect()->route('showInvoices', $getNotif->id_data);
+                break;
         }
     }
 
@@ -285,6 +325,7 @@ class DashboardController extends Controller
         $getData = $getData->find($getNotif->id_data);
         $data['transaction'] = $getData->where('id_monthly_ar_tenant', $getData->id_monthly_ar_tenant)->first();
         $data['type'] = 'MonthlyTenant';
+        $data['installment'] = $getData->CashReceipt->Installment($getData->periode_bulan, $getData->periode_tahun);
 
         return $data;
     }

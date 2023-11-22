@@ -69,14 +69,6 @@
         </div>
         <div class="table-responsive scrollbar mt-4 fs--1">
             <table class="table border-bottom">
-                <thead data-bs-theme="light">
-                    <tr class="bg-primary text-white dark__bg-1000">
-                        <th class="border-0">Products</th>
-                        <th class="border-0 text-center">Quantity</th>
-                        <th class="border-0 text-end">Rate</th>
-                        <th class="border-0 text-end">Amount</th>
-                    </tr>
-                </thead>
                 <tbody>
                     @if ($transaction->PreviousMonthBill())
                         @foreach ($transaction->PreviousMonthBill() as $prevBill)
@@ -201,6 +193,27 @@
                 </table>
             </div>
         @endif
+        @if ($installment)
+            <div class="table-responsive scrollbar mb-4 fs--1">
+                <table class="table border-bottom">
+                    <tbody>
+                        <tr class="alert alert-success my-3">
+                            <td class="align-middle" colspan="4">
+                                <h6 class="mb-0 text-nowrap">Installment</h6>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="align-middle" colspan="3">
+                                <h6 class="mb-0 text-nowrap">Invoice</h6>
+                                <p class="mb-0">{{ $installment->no_invoice }} ({{ $installment->rev }}) </p>
+                            </td>
+                            <td class="align-middle text-end">
+                                {{ rupiah($installment->amount) }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        @endif
         @if ($transaction->CashReceipt->transaction_status == 'PENDING' && !$transaction->NextMonthBill())
             <form action="{{ route('generatePaymentMonthly', $transaction->id_monthly_ar_tenant) }}" method="post">
                 @csrf
@@ -296,7 +309,7 @@
                             <div class="card-body bg-light">
                                 <div class="d-flex justify-content-between fs--1 mb-1">
                                     <p class="mb-0">Subtotal</p>
-                                    <span>{{ rupiah($transaction->SubTotal()) }}</span>
+                                    <span>{{ rupiah($transaction->CashReceipt->sub_total) }}</span>
                                 </div>
                                 <div class="d-flex justify-content-between fs--1 mb-1 text-success">
                                     <p class="mb-0">Tax</p><span>Rp 0</span>

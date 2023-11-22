@@ -4,9 +4,9 @@
     <div class="col-md-7 d-flex flex-center">
         <div class="p-4 p-md-5 flex-grow-1">
             <!-- <div class="row flex-between-center"> -->
-                <div class="col-auto mb-5">
-                    <h3 class="text-primary mb-3">Login</h3>
-                </div>
+            <div class="col-auto mb-5">
+                <h3 class="text-primary mb-3">Login</h3>
+            </div>
             <!-- </div> -->
             <form method="POST" action="{{ route('updateRoleID') }}">
                 @csrf
@@ -26,4 +26,18 @@
             </form>
         </div>
     </div>
+@endsection
+
+@section('script')
+    <script>
+        window.addEventListener('beforeunload', () => {
+            $.ajax({
+                url: "/logout",
+                type: "GET",
+                xhrFields: {
+                    withCredentials: true
+                }
+            })
+        });
+    </script>
 @endsection

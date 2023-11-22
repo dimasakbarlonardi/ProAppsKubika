@@ -10,6 +10,7 @@ use App\Http\Controllers\Controller;
 use App\Models\CashReceipt;
 use App\Models\CashReceiptDetail;
 use App\Models\ElectricUUS;
+use App\Models\Installment;
 use App\Models\IPLType;
 use App\Models\MonthlyArTenant;
 use App\Models\MonthlyIPL;
@@ -208,6 +209,7 @@ class BillingController extends Controller
     {
         $connSystem = ConnectionDB::setConnection(new System());
         $connTransaction = ConnectionDB::setConnection(new CashReceipt());
+        $connInstallment = ConnectionDB::setConnection(new Installment());
         $system = $connSystem->find(1);
 
         $user = $mt->Unit->TenantUnit->Tenant->User;
@@ -223,13 +225,13 @@ class BillingController extends Controller
         try {
             DB::beginTransaction();
 
-            $subtotal = $mt->total_tagihan_utility + $mt->total_tagihan_ipl + $mt->denda_bulan_sebelumnya;
+            $subtotal = $mt->total_tagihan_utility + $mt->total_tagihan_ipl + $mt->total_denda;
             $prevSubTotal = 0;
             $total_denda = 0;
 
             if ($mt->PreviousMonthBill()) {
                 foreach ($mt->PreviousMonthBill() as $key => $prevBill) {
-                    $prevSubTotal += $prevBill->total_tagihan_utility + $prevBill->total_tagihan_ipl + $prevBill->denda_bulan_sebelumnya;
+                    $prevSubTotal += $prevBill->total_tagihan_utility + $prevBill->total_tagihan_ipl + $prevBill->total_denda;
                     $total_denda += $prevBill->total_denda;
 
                     $connCRd = ConnectionDB::setConnection(new CashReceiptDetail());
@@ -241,7 +243,16 @@ class BillingController extends Controller
                 }
             }
 
-            $subtotal = $subtotal + $prevSubTotal;
+            $amountInstallment = 0;
+            $installment = $connInstallment->where('periode', $mt->periode_bulan)
+                ->where('tahun', $mt->periode_tahun)
+                ->first();
+
+            if ($installment) {
+                $amountInstallment = $installment->amount;
+            }
+
+            $subtotal = $subtotal + $prevSubTotal + $amountInstallment;
 
             $createTransaction = $connTransaction;
             $createTransaction->order_id = $order_id;
@@ -256,7 +267,6 @@ class BillingController extends Controller
             $createTransaction->transaction_type = 'MonthlyTenant';
 
             $system->sequence_no_cash_receiptment = $countCR;
-            // $system->sequence_no_invoice = $countINV;
             $system->save();
 
             DB::commit();
@@ -282,6 +292,7 @@ class BillingController extends Controller
 
         $data = $connARTenant->where('periode_tahun', Carbon::now()->format('Y'))
             ->where('tgl_jt_invoice', '<', Carbon::now()->format('Y-m-d'))
+            ->where('tgl_bayar_invoice', null)
             ->orderBy('periode_bulan', 'asc')
             ->get(['periode_bulan', 'periode_tahun', 'jml_hari_jt', 'total_denda']);
 
@@ -310,7 +321,9 @@ class BillingController extends Controller
                         ->first();
                 }
 
-                if (!$util->MonthlyUtility->MonthlyTenant->tgl_jt_invoice) {
+                $arTenant = $util->MonthlyUtility->MonthlyTenant;
+
+                if (!$arTenant->tgl_jt_invoice && !$arTenant->tgl_bayar_invoice) {
                     $jatuh_tempo_1 = $connReminder->find(1)->durasi_reminder_letter;
                     $jatuh_tempo_1 = Carbon::now()->addDays($jatuh_tempo_1);
 
@@ -322,19 +335,20 @@ class BillingController extends Controller
 
                     $util->MonthlyUtility->sign_approval_2 = Carbon::now();
                     $util->MonthlyUtility->save();
+
+                    $dataNotif = [
+                        'models' => 'MonthlyTenant',
+                        'notif_title' => 'Monthly Invoice',
+                        'id_data' => $util->MonthlyUtility->MonthlyTenant->id_monthly_ar_tenant,
+                        'sender' => $request->session()->get('user')->id_user,
+                        'division_receiver' => null,
+                        'notif_message' => 'Harap melakukan pembayaran tagihan bulanan anda',
+                        'receiver' => $util->MonthlyUtility->Unit->TenantUnit->Tenant->User->id_user
+                    ];
+
+                    broadcast(new HelloEvent($dataNotif));
                 }
 
-                $dataNotif = [
-                    'models' => 'MonthlyTenant',
-                    'notif_title' => 'Monthly Invoice',
-                    'id_data' => $util->MonthlyUtility->MonthlyTenant->id_monthly_ar_tenant,
-                    'sender' => $request->session()->get('user')->id_user,
-                    'division_receiver' => null,
-                    'notif_message' => 'Harap melakukan pembayaran tagihan bulanan anda',
-                    'receiver' => $util->MonthlyUtility->Unit->TenantUnit->Tenant->User->id_user
-                ];
-
-                broadcast(new HelloEvent($dataNotif));
 
                 DB::commit();
             } catch (Throwable $e) {
@@ -376,7 +390,7 @@ class BillingController extends Controller
 
                 $payment['payment_type'] = $billing[0];
                 $payment['transaction_details']['order_id'] = $transaction->order_id;
-                $payment['transaction_details']['gross_amount'] = $transaction->gross_amount;
+                $payment['transaction_details']['gross_amount'] = (int) $transaction->gross_amount;
                 $payment['bank_transfer']['bank'] = $billing[1];
 
                 $response = $client->request('POST', 'https://api.sandbox.midtrans.com/v2/charge', [
@@ -539,9 +553,10 @@ class BillingController extends Controller
                         "unit" => "day"
                     ]
                 ]);
+
                 $response = json_decode($response->getBody());
 
-                if ($response->status_code != 406) {
+                if ($response->status_code == 201) {
                     $transaction->va_number = $response->va_numbers[0]->va_number;
                     $transaction->expiry_time = $response->expiry_time;
                     $transaction->transaction_id = $response->transaction_id;

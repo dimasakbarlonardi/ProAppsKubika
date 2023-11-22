@@ -19,19 +19,10 @@
     <!-- ===============================================-->
     <title>Pro Apps | Dashboard &amp; Web App Template</title>
 
-    <!-- ===============================================-->
-    <!--    Favicons-->
-    <!-- ===============================================-->
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/img/favicons/apple-touch-icon.png">
-    <meta name="msapplication-TileImage" content="assets/img/favicons/mstile-150x150.png">
     <meta name="theme-color" content="#ffffff">
     <script src="{{ url('assets/js/config.js') }}"></script>
     <script src="{{ url('assets/vendors/simplebar/simplebar.min.js') }}"></script>
-    <!-- ===============================================-->
-    <!--    Favicons-->
-    <!-- ===============================================-->
-    <link rel="apple-touch-icon" sizes="180x180" href="assets/img/favicons/apple-touch-icon.png">
-    <meta name="msapplication-TileImage" content="assets/img/favicons/mstile-150x150.png">
+
     <meta name="theme-color" content="#ffffff">
     <script src="{{ url('assets/js/config.js') }}"></script>
     <script src="{{ url('assets/vendors/simplebar/simplebar.min.js') }}"></script>
@@ -40,7 +31,9 @@
     <!--    Stylesheets-->
     <!-- ===============================================-->
     <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700%7cPoppins:300,400,500,600,700,800,900&amp;display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700%7cPoppins:300,400,500,600,700,800,900&amp;display=swap"
+        rel="stylesheet">
     <link href="{{ url('assets/vendors/simplebar/simplebar.min.css') }}" rel="stylesheet">
 
     <link href="{{ url('assets/css/theme.min.css') }}" rel="stylesheet" id="style-default">
@@ -60,7 +53,7 @@
     </script>
 </head>
 
-<body>
+<body id="body">
     <!-- ===============================================-->
     <!--    Main Content-->
     <!-- ===============================================-->
@@ -71,10 +64,13 @@
             <nav class="navbar navbar-light navbar-vertical navbar-expand-xl navbar-card">
                 <div class="d-flex align-items-center">
                     <div class="toggle-icon-wrapper">
-                        <button class="btn navbar-toggler-humburger-icon navbar-vertical-toggle" data-bs-toggle="tooltip" data-bs-placement="left" title="Toggle Navigation"><span class="navbar-toggle-icon"><span class="toggle-line"></span></span></button>
+                        <button class="btn navbar-toggler-humburger-icon navbar-vertical-toggle"
+                            data-bs-toggle="tooltip" data-bs-placement="left" title="Toggle Navigation"><span
+                                class="navbar-toggle-icon"><span class="toggle-line"></span></span></button>
                     </div>
                     <a class="navbar-brand" href="{{ route('dashboard') }}">
-                        <div class="d-flex align-items-center py-3"><img class="me-2" src="/assets/img/icons/spot-illustrations/proapps.png" alt="proapps" width="150" />
+                        <div class="d-flex align-items-center py-3"><img class="me-2"
+                                src="/assets/img/icons/spot-illustrations/proapps.png" alt="proapps" width="150" />
                         </div>
                     </a>
                 </div>
@@ -89,33 +85,47 @@
 
             <div class="content">
                 <nav class="navbar navbar-light navbar-glass navbar-top navbar-expand" style="display: none;">
-                    <button class="btn navbar-toggler-humburger-icon navbar-toggler me-1 me-sm-3" type="button" data-bs-toggle="collapse" data-bs-target="#navbarVerticalCollapse" aria-controls="navbarVerticalCollapse" aria-expanded="false" aria-label="Toggle   Navigation"><span class="navbar-toggle-icon"><span class="toggle-line"></span></span></button>
+                    <button class="btn navbar-toggler-humburger-icon navbar-toggler me-1 me-sm-3" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#navbarVerticalCollapse"
+                        aria-controls="navbarVerticalCollapse" aria-expanded="false"
+                        aria-label="Toggle   Navigation"><span class="navbar-toggle-icon"><span
+                                class="toggle-line"></span></span></button>
                     <a class="navbar-brand me-1 me-sm-3" href="{{ route('dashboard') }}">
-                        <div class="d-flex align-items-center"><img class="me-2" src="/assets/img/icons/spot-illustrations/proapps.png" alt="" width="150" />
+                        <div class="d-flex align-items-center"><img class="me-2"
+                                src="/assets/img/icons/spot-illustrations/proapps.png" alt="" width="150" />
                         </div>
                     </a>
                     <ul class="navbar-nav align-items-center d-none d-lg-block">
                         <li class="nav-item">
                             <div class="search-box" data-list='{"valueNames":["title"]}'>
                                 <form class="position-relative" data-bs-toggle="search" data-bs-display="static">
-                                    <input class="form-control search-input fuzzy-search" type="search" placeholder="Search..." aria-label="Search" />
+                                    <input class="form-control search-input fuzzy-search" type="search"
+                                        placeholder="Search..." aria-label="Search" />
                                     <span class="fas fa-search search-box-icon"></span>
                                 </form>
-                                <div class="btn-close-falcon-container position-absolute end-0 top-50 translate-middle shadow-none" data-bs-dismiss="search"><button class="btn btn-link btn-close-falcon p-0" aria-label="Close"></button></div>
+                                <div class="btn-close-falcon-container position-absolute end-0 top-50 translate-middle shadow-none"
+                                    data-bs-dismiss="search"><button class="btn btn-link btn-close-falcon p-0"
+                                        aria-label="Close"></button></div>
                                 <div class="dropdown-menu border font-base start-0 mt-2 py-0 overflow-hidden w-100">
                                     <div class="scrollbar list py-3" style="max-height: 24rem;">
                                         <h6 class="dropdown-header fw-medium text-uppercase px-x1 fs--2 pt-0 pb-2">
                                             Recently Browsed</h6>
-                                        <a class="dropdown-item fs--1 px-x1 py-1 hover-primary" href="app/events/event-detail.html">
+                                        <a class="dropdown-item fs--1 px-x1 py-1 hover-primary"
+                                            href="app/events/event-detail.html">
                                             <div class="d-flex align-items-center">
                                                 <span class="fas fa-circle me-2 text-300 fs--2"></span>
-                                                <div class="fw-normal title">Pages <span class="fas fa-chevron-right mx-1 text-500 fs--2" data-fa-transform="shrink-2"></span> Events</div>
+                                                <div class="fw-normal title">Pages <span
+                                                        class="fas fa-chevron-right mx-1 text-500 fs--2"
+                                                        data-fa-transform="shrink-2"></span> Events</div>
                                             </div>
                                         </a>
-                                        <a class="dropdown-item fs--1 px-x1 py-1 hover-primary" href="app/e-commerce/customers.html">
+                                        <a class="dropdown-item fs--1 px-x1 py-1 hover-primary"
+                                            href="app/e-commerce/customers.html">
                                             <div class="d-flex align-items-center">
                                                 <span class="fas fa-circle me-2 text-300 fs--2"></span>
-                                                <div class="fw-normal title">E-commerce <span class="fas fa-chevron-right mx-1 text-500 fs--2" data-fa-transform="shrink-2"></span> Customers</div>
+                                                <div class="fw-normal title">E-commerce <span
+                                                        class="fas fa-chevron-right mx-1 text-500 fs--2"
+                                                        data-fa-transform="shrink-2"></span> Customers</div>
                                             </div>
                                         </a>
                                         <hr class="text-200 dark__text-900" />
@@ -129,10 +139,13 @@
                     </ul>
                     <ul class="navbar-nav navbar-nav-icons ms-auto flex-row align-items-center">
                         <li class="nav-item dropdown">
-                            <a class="nav-link notification-indicator-danger px-0 fa-icon-wait" id="navbarDropdownNotification" role="button" data-bs-toggle="dropdown">
-                                <span class="fas fa-bell" data-fa-transform="shrink-6" style="font-size: 33px"></span>
+                            <a class="nav-link notification-indicator-danger px-0 fa-icon-wait"
+                                id="navbarDropdownNotification" role="button" data-bs-toggle="dropdown">
+                                <span class="fas fa-bell" data-fa-transform="shrink-6"
+                                    style="font-size: 33px"></span>
                             </a>
-                            <div class="dropdown-menu dropdown-caret dropdown-caret dropdown-menu-end dropdown-menu-card dropdown-menu-notification dropdown-caret-bg" aria-labelledby="navbarDropdownNotification">
+                            <div class="dropdown-menu dropdown-caret dropdown-caret dropdown-menu-end dropdown-menu-card dropdown-menu-notification dropdown-caret-bg"
+                                aria-labelledby="navbarDropdownNotification">
                                 <div class="card card-notification shadow-none">
                                     <div class="card-header">
                                         <div class="row justify-content-between align-items-center">
@@ -160,15 +173,18 @@
                         </li>
 
                         <li class="nav-item dropdown">
-                            <a class="nav-link pe-0 ps-2" id="navbarDropdownUser" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <a class="nav-link pe-0 ps-2" id="navbarDropdownUser" role="button"
+                                data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <div class="avatar avatar-xl">
                                     @php
-                                    $user = Session::get('user');
+                                        $user = Session::get('user');
                                     @endphp
-                                    <img class="rounded-circle" src="{{ $user->profile_picture ? asset($user->profile_picture) : asset('/storage/img/proapps.png') }}">
+                                    <img class="rounded-circle"
+                                        src="{{ $user->profile_picture ? asset($user->profile_picture) : asset('/storage/img/proapps.png') }}">
                                 </div>
                             </a>
-                            <div class="dropdown-menu dropdown-caret dropdown-caret dropdown-menu-end py-0" aria-labelledby="navbarDropdownUser">
+                            <div class="dropdown-menu dropdown-caret dropdown-caret dropdown-menu-end py-0"
+                                aria-labelledby="navbarDropdownUser">
                                 <div class="bg-white dark__bg-1000 rounded-2 py-2">
                                     <form action="{{ route('logout') }}" method="post">
                                         @csrf
@@ -178,11 +194,13 @@
                             </div>
                         </li>
                         <li class="nav-item dropdown">
-                            <div class="user-info" id="navbarDropdownUser" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <div class="user-info" id="navbarDropdownUser" role="button" data-bs-toggle="dropdown"
+                                aria-haspopup="true" aria-expanded="false">
                                 @php
-                                $user = Session::get('user');
+                                    $user = Session::get('user');
                                 @endphp
-                                <h5 class="btn btn-falcon-default rounded-pill me-1 mb-1 ml-3">{{ $user->nama_user }}</h5>
+                                <h5 class="btn btn-falcon-default rounded-pill me-1 mb-1 ml-3">{{ $user->nama_user }}
+                                </h5>
                             </div>
                             <div class="dropdown-menu dropdown-menu-end py-0" aria-labelledby="navbarDropdownUser">
                                 <div class="bg-white dark__bg-1000 rounded-2 py-2">
@@ -202,8 +220,7 @@
 
                     navbarTopVertical.removeAttribute('style');
                 </script>
-
-                <div class="mt-5">
+                <div class="mt-4">
                     @yield('content')
                 </div>
                 <footer class="footer">
@@ -306,33 +323,7 @@
         }
     </script>
     <script src="{{ asset('js/app.js') }}"></script>
-
-    <script src="https://www.gstatic.com/firebasejs/7.23.0/firebase.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyCTdiDHuOGNRGU9mCxiOZrmEoFam0_sui4",
-            authDomain: "proapps-indoland.firebaseapp.com",
-            projectId: "proapps-indoland",
-            storageBucket: "proapps-indoland.appspot.com",
-            messagingSenderId: "1022619881265",
-            appId: "1:1022619881265:web:b501044f89e60694d0ea10"
-        };
-
-        firebase.initializeApp(firebaseConfig);
-        const messaging = firebase.messaging();
-
-        messaging.onMessage(function(payload) {
-
-            const noteTitle = payload.notification.title;
-            const noteOptions = {
-                body: payload.notification.body,
-                icon: payload.notification.icon,
-                sound: "127.0.0.1:8000/assets/audio/notifsound2.mp3"
-            };
-            new Notification(noteTitle, noteOptions);
-        });
-    </script>
 
     <script>
         document.addEventListener("DOMContentLoaded", function(event) {
@@ -341,30 +332,16 @@
                     var receiver = e.dataNotif.receiver
                     var division_receiver = e.dataNotif.division_receiver
                     var notif_id = e.dataNotif.id
-                    console.log(user_id, receiver, division_receiver, notif_id);
                     getNewNotifications(user_id, receiver, division_receiver, notif_id);
-                })
-            messaging
-                .requestPermission()
-                .then(function() {
-                    return messaging.getToken()
-                })
-                .then(function(token) {
-                    $.ajax({
-                        url: "{{ route('save-token') }}",
-                        type: 'POST',
-                        data: {
-                            token: token
-                        },
-                        dataType: 'JSON',
-                        error: function(err) {
-                            console.log('User Chat Token Error' + err);
-                        },
-                    });
-
-                }).catch(function(err) {
-                    console.log('User Chat Token Error' + err);
+                    sumCounter(e.dataNotif.models);
                 });
+
+            Echo.channel("chat-channel")
+                .listen('ChatEvent', (e) => {
+                    if (e.sound === true) {
+                        notifSound.play();
+                    }
+                })
         });
 
         function getNotifications(user_id) {
@@ -375,6 +352,7 @@
                     if (data.length > 0) {
                         var is_notif = 0;
                         data.map((item) => {
+                            sumCounter(item.models);
                             if (item.is_read == 0) {
                                 is_notif += 1;
                             }
@@ -386,7 +364,7 @@
                                             <div class="notification-avatar">
                                                 <div class="avatar avatar-2xl me-3">
                                                     <img class="rounded-circle"
-                                                        src="${item.sender ? item.sender.profile_picture : 'https://dev.pro-apps.xyz/assets/img/icons/spot-illustrations/proapps.png'}"
+                                                        src="${item.sender ? item.sender.profile_picture : 'https://demo.pro-apps.xyz/assets/img/icons/spot-illustrations/proapps.png'}"
                                                         alt="" />
                                                 </div>
                                             </div>
@@ -426,7 +404,6 @@
                 url: `/admin/get-new-notifications/${notif_id}`,
                 type: 'GET',
                 success: function(resp) {
-                    console.log(resp.division_receiver, division_relation, resp.receiver, user_id);
                     if (resp.division_receiver == division_relation || resp.receiver == user_id) {
                         notifSound.play();
                         var current = new Date();
@@ -439,7 +416,7 @@
                                     <div class="notification-avatar">
                                         <div class="avatar avatar-2xl me-3">
                                             <img class="rounded-circle"
-                                                src="${resp.sender ? resp.sender.profile_picture : 'https://dev.pro-apps.xyz/assets/img/icons/spot-illustrations/proapps.png'}"
+                                                src="${resp.sender ? resp.sender.profile_picture : 'https://demo.pro-apps.xyz/assets/img/icons/spot-illustrations/proapps.png'}"
                                                 alt="" />
                                         </div>
                                     </div>
@@ -455,6 +432,72 @@
                                 </a>
                             </div>
                         `)
+                    }
+                }
+            })
+        }
+
+        function sumCounter(models) {
+            switch (models) {
+                case 'OpenTicket':
+                    getNotDoneRequest();
+                case 'WorkRequest':
+                    getNotDoneWR();
+                case 'WorkOrderM':
+                    getNotDoneWO();
+                default:
+                    console.log('unknown models');
+            }
+            // getNotDoneRP();
+        }
+
+        function getNotDoneRequest() {
+            $.ajax({
+                url: `/admin/not-done/request`,
+                type: 'GET',
+                success: function(resp) {
+                    if (resp > 0) {
+                        $('#menu26').css("display", "block");
+                        $('#menu26').html(resp);
+                    }
+                }
+            })
+        }
+
+        function getNotDoneWR() {
+            $.ajax({
+                url: `/admin/not-done/wr`,
+                type: 'GET',
+                success: function(resp) {
+                    if (resp > 0) {
+                        $('#menu27').css("display", "block");
+                        $('#menu27').html(resp);
+                    }
+                }
+            })
+        }
+
+        function getNotDoneWO() {
+            $.ajax({
+                url: `/admin/not-done/wo`,
+                type: 'GET',
+                success: function(resp) {
+                    if (resp > 0) {
+                        $('#menu28').css("display", "block");
+                        $('#menu28').html(resp);
+                    }
+                }
+            })
+        }
+
+        function getNotDoneWO() {
+            $.ajax({
+                url: `/admin/not-done/wo`,
+                type: 'GET',
+                success: function(resp) {
+                    if (resp > 0) {
+                        $('#menu28').css("display", "block");
+                        $('#menu28').html(resp);
                     }
                 }
             })

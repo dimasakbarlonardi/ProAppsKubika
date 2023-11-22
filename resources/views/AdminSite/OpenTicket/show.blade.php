@@ -7,7 +7,7 @@
 
 @section('content')
     <div class="row g-3">
-        <div class="col {{ $user->user_category == 2 ? '-xxl-12 col-xl-8' : '' }}">
+        <div class="col-{{ $user->user_category == 2 ? '9' : '8' }}">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center">
                     <div class="d-flex align-items-center">
@@ -150,8 +150,8 @@
                                 <div class="mb-3">
                                     <label class="mb-1 mt-2">Status</label>
                                     <select name="status_request" class="form-select form-select-sm"
-                                        {{ $ticket->status_request != 'RESPONDED' ? 'disabled' : '' }}>
-                                        <option disabled selected>--Pilih Status---</option>
+                                        {{ $ticket->status_request != 'RESPONDED' ? 'disabled' : '' }} required>
+                                        <option disabled selected value="">--Pilih Status---</option>
                                         <option {{ $ticket->status_request == 'PROSES KE WR' ? 'selected' : '' }}
                                             value="PROSES KE WR">Proses ke WR</option>
                                         <option {{ $ticket->status_request == 'PROSES KE PERMIT' ? 'selected' : '' }}
@@ -174,8 +174,8 @@
                             <div class="mb-2 mt-n2">
                                 <label class="mb-1">Priority</label>
                                 <select name="priority" class="form-select form-select-sm"
-                                    {{ $ticket->status_request != 'RESPONDED' ? 'disabled' : '' }}>
-                                    <option disabled selected>-- Priority ---</option>
+                                    {{ $ticket->status_request != 'RESPONDED' ? 'disabled' : '' }} required>
+                                    <option disabled selected value="">-- Priority ---</option>
                                     @foreach ($work_priorities as $priority)
                                         <option {{ $ticket->priority == $priority->work_priority ? 'selected' : '' }}
                                             value="{{ $priority->work_priority }}">{{ $priority->work_priority }}
@@ -191,7 +191,8 @@
                         @endif
                         @if ($ticket->status_request == 'PROSES KE PERMIT')
                             <div class="card-footer border-top border-200 py-x1">
-                                <a href="{{ route('request-permits.create', ['id_tiket' => $ticket->id]) }}" class="btn btn-primary w-100">Approve Permit</a>
+                                <a href="{{ route('request-permits.create', ['id_tiket' => $ticket->id]) }}"
+                                    class="btn btn-primary w-100">Approve Permit</a>
                             </div>
                         @endif
                     </form>
@@ -244,6 +245,49 @@
                     </div>
                 </div>
             </div>
+        @elseif ($user->user_category == 3 && $ticket->status_respon)
+            <div class="col-4">
+                <div class="card card-chat">
+                    <div class="card-body d-flex p-0 h-100">
+                        <div class="tab-content card-chat-content">
+                            <div class="tab-pane card-chat-pane active" id="chat-" role="tabpanel"
+                                aria-labelledby="chat-link-0">
+                                <div class="chat-content-header card-header">
+                                    <div class="row flex-between-center">
+                                        <div class="col-6 col-sm-8 d-flex align-items-center"><a
+                                                class="pe-3 text-700 d-md-none contacts-list-show" href="#!">
+                                                <div class="fas fa-chevron-left"></div>
+                                            </a>
+                                            <div class="min-w-0">
+                                                <h5 class="mb-0 text-truncate fs-0 text-light">
+                                                    Tenant Relation
+                                                </h5>
+                                                <div class="fs--2 text-light">Active On Chat</div>
+                                            </div>
+                                            <hr>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="chat-content-body" id="chat-room-slave">
+                                </div>
+                            </div>
+                            @if ($ticket->status_request != 'DONE' && $ticket->status_request != 'COMPLETE')
+                                <form class="chat-editor-area mt-auto">
+                                    <input type="hidden" id="room_id_value" value="{{ $ticket->id }}">
+                                    <input type="hidden" id="sender_id_value"
+                                        value="{{ $ticket->Tenant->User->id_user }}">
+                                    <input type="hidden" id="receiver_id_value"
+                                        value="{{ $ticket->id_user_resp_request }}">
+                                    <input class="emojiarea-editor outline-none scrollbar form-control"
+                                        contenteditable="true" id="message-content" />
+                                    <button class="btn btn-sm btn-send shadow-none" type="button"
+                                        id="send_message">Send 2</button>
+                                </form>
+                            @endif
+                        </div>
+                    </div>
+                </div>
+            </div>
         @endif
     </div>
 @endsection
@@ -259,6 +303,31 @@
         });
     </script>
     <script>
+        document.addEventListener("DOMContentLoaded", function(event) {
+            var d = $('#content-message-body');
+            d.scrollTop(d.prop("scrollHeight"));
+
+            getChatTenant();
+            Echo.channel("chat-channel")
+                .listen('ChatEvent', (e) => {
+                    getChatTenant();
+                })
+        });
+
+        function getChatTenant() {
+            $.ajax({
+                url: '/admin/chats/rooms-slave',
+                type: 'get',
+                success: function(resp) {
+                    $('#chat-room-slave').html(resp.html)
+                    value = $('#message-content').val('');
+
+                    var d = $('#content-message-body');
+                    d.scrollTop(d.prop("scrollHeight"));
+                }
+            })
+        }
+
         function onReply() {
             $('#response').css('display', 'block')
             $('#btnReply').css('display', 'none')
@@ -277,7 +346,38 @@
             } else {
                 $("#form-response").submit();
             }
-            console.log(deskripsi_response);
         }
+
+        var input = document.getElementById("message-content");
+        // Execute a function when the user presses a key on the keyboard
+        input.addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                document.getElementById("send_message").click();
+            }
+        });
+
+        $('#send_message').on('click', function() {
+            value = $('#message-content').val();
+            room_id = $('#room_id_value').val();
+            receiver_id_value = $('#receiver_id_value').val();
+            sender_id_value = $('#sender_id_value').val();
+
+            $.ajax({
+                url: '/admin/chats',
+                type: 'POST',
+                data: {
+                    value,
+                    room_id,
+                    receiver_id_value,
+                    sender_id_value
+                },
+                success: function(resp) {
+                    value = $('#message-content').val('');
+                    var d = $('#content-message-body');
+                    d.scrollTop(d.prop("scrollHeight"));
+                }
+            })
+        })
     </script>
 @endsection

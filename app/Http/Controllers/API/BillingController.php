@@ -62,20 +62,22 @@ class BillingController extends Controller
         $sc = $connIPLType->find(6);
         $sf = $connIPLType->find(7);
 
-        $data = $ar->with([
+        $ar = $ar->with([
             'Unit.TenantUnit.Tenant',
             'CashReceipt',
             'MonthlyIPL',
             'MonthlyUtility.ElectricUUS',
             'MonthlyUtility.WaterUUS'
-        ])
-            ->first();
+        ]);
+
+        $data = $ar->first();
         $previousBills = $ar->first()->PreviousMonthBill();
 
         $data['price_water'] = $connUtil->find(2)->biaya_m3;
         $data['price_electric'] = $connUtil->find(1)->biaya_m3;
         $data['service_charge_price'] = $sc->biaya_permeter;
         $data['sinking_fund_price'] = $sf->biaya_permeter;
+        $data['installment'] = $data->CashReceipt->Installment($data->periode_bulan, $data->periode_tahun);
 
         return ResponseFormatter::success(
             [
@@ -310,23 +312,26 @@ class BillingController extends Controller
         return $createTransaction;
     }
 
-    public function insertElectricMeter($unitID, $token)
+    public function insertElectricMeter($unitID, Request $request)
     {
-        $getToken = str_replace("RA164-", "|", $token);
-        $tokenable = PersonalAccessToken::findToken($getToken);
-
-        if ($tokenable) {
-            $user = $tokenable->tokenable;
+        if ($request->user()) {
+            $user = $request->user();
             $site = Site::find($user->id_site);
 
             $connUnit = new Unit();
             $connUnit = $connUnit->setConnection($site->db_name);
             $unit = $connUnit->find($unitID);
 
-            $data['unit'] = $unit;
-            $data['token'] = $token;
+            $object = new stdClass();
+            $object->unit = $unit->nama_unit;
+            $object->period = Carbon::now()->format('m');
+            $object->current = count($unit->electricUUS) > 0 ? $unit->electricUUS[0]->nomor_listrik_awal : 0;
+            $object->previous = count($unit->electricUUS) > 0 ? $unit->electricUUS[0]->nomor_listrik_akhir : 0;
 
-            return view('AdminSite.UtilityUsageRecording.Electric.create', $data);
+            return ResponseFormatter::success(
+                $object,
+                'Success get data'
+            );
         } else {
             return ResponseFormatter::error([
                 'message' => 'Unauthorized'
@@ -334,12 +339,10 @@ class BillingController extends Controller
         }
     }
 
-    public function storeElectricMeter(Request $request, $unitID, $token)
+    public function storeElectricMeter(Request $request, $unitID)
     {
-        $getToken = str_replace("RA164-", "|", $token);
-        $tokenable = PersonalAccessToken::findToken($getToken);
-        $user = $tokenable->tokenable;
-        $site = Site::find($user->id_site);
+        $login = $request->user();
+        $site = Site::find($login->id_site);
 
         $connUnit = new Unit();
         $connUtility = new Utility();
@@ -373,10 +376,7 @@ class BillingController extends Controller
         $ppj = $get_ppj * $total_usage;
         $total = $total_usage + $ppj;
 
-        if ($tokenable) {
-            $login = $tokenable->tokenable;
-            $site = Site::find($login->id_site);
-
+        if ($login) {
             $user = new User();
             $user = $user->setConnection($site->db_name);
             $user = $user->where('login_user', $login->email)->first();
@@ -404,22 +404,10 @@ class BillingController extends Controller
                 'id_user' => $user->id_user
             ]);
 
-            $imageData = $request->input('imageData');
+            $imageData = $request->file('imageData');
 
             if ($imageData) {
-                $image = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $imageData));
-                $filename = 'captured_image_' . time() . '.png';
-
-                $idSite = $tokenable->tokenable->id_site;
-                $path = '/public/' . $idSite . '/img/electric-usage/' . $filename;
-                $storagePath = '/storage/' . $idSite . '/img/electric-usage/' . $filename;
-
-                $img = Image::make($image);
-                $img->resize(200, 200, function ($constraint) {
-                    $constraint->aspectRatio();
-                })->encode('jpg', 80);
-
-                Storage::disk('local')->put($path, $img);
+                $storagePath = SaveFile::saveToStorage($request->user()->id_site, 'electric-usage', $imageData);
 
                 $electricUUS->image = $storagePath;
                 $electricUUS->save();
@@ -433,22 +421,26 @@ class BillingController extends Controller
         }
     }
 
-    public function insertWaterMeter($unitID, $token)
+    public function insertWaterMeter($unitID, Request $request)
     {
-        $getToken = str_replace("RA164-", "|", $token);
-        $tokenable = PersonalAccessToken::findToken($getToken);
+        if ($request->user()) {
+            $user = $request->user();
 
-        if ($tokenable) {
-            $user = $tokenable->tokenable;
             $site = Site::find($user->id_site);
             $connUnit = new Unit();
             $connUnit = $connUnit->setConnection($site->db_name);
             $unit = $connUnit->find($unitID);
 
-            $data['unit'] = $unit;
-            $data['token'] = $token;
+            $object = new stdClass();
+            $object->unit = $unit->nama_unit;
+            $object->period = Carbon::now()->format('m');
+            $object->current = count($unit->waterUUS) > 0 ? $unit->waterUUS[0]->nomor_air_awal : 0;
+            $object->previous = count($unit->waterUUS) > 0 ? $unit->waterUUS[0]->nomor_air_akhir : 0;
 
-            return view('AdminSite.UtilityUsageRecording.Water.create', $data);
+            return ResponseFormatter::success(
+                $object,
+                'Success get data'
+            );
         } else {
             return ResponseFormatter::error([
                 'message' => 'Unauthorized'
@@ -456,12 +448,10 @@ class BillingController extends Controller
         }
     }
 
-    public function storeWaterMeter(Request $request, $unitID, $token)
+    public function storeWaterMeter(Request $request, $unitID)
     {
-        $getToken = str_replace("RA164-", "|", $token);
-        $tokenable = PersonalAccessToken::findToken($getToken);
         $usage = $request->current - $request->previous;
-        $login = $tokenable->tokenable;
+        $login = $request->user();
         $site = Site::find($login->id_site);
 
         $user = new User();
@@ -477,7 +467,7 @@ class BillingController extends Controller
         $total_usage = $water->biaya_m3 * $usage;
         $total = $total_usage;
 
-        if ($tokenable) {
+        if ($login) {
             try {
                 DB::beginTransaction();
 
@@ -502,22 +492,10 @@ class BillingController extends Controller
                     'usage' => $usage,
                     'id_user' => $user->id_user
                 ]);
-                $imageData = $request->input('imageData');
+                $imageData = $request->file('imageData');
 
                 if ($imageData) {
-                    $image = base64_decode(preg_replace('#^data:image/\w+;base64,#i', '', $imageData));
-                    $filename = 'captured_image_' . time() . '.png';
-
-                    $idSite = $tokenable->tokenable->id_site;
-                    $path = '/public/' . $idSite . '/img/water-usage/' . $filename;
-                    $storagePath = '/storage/' . $idSite . '/img/water-usage/' . $filename;
-
-                    $img = Image::make($image);
-                    $img->resize(200, 200, function ($constraint) {
-                        $constraint->aspectRatio();
-                    })->encode('jpg', 80);
-
-                    Storage::disk('local')->put($path, $img);
+                    $storagePath = SaveFile::saveToStorage($request->user()->id_site, 'water-usage', $imageData);
 
                     $waterUUS->image = $storagePath;
                     $waterUUS->save();

@@ -1,18 +1,12 @@
 <?php
 
-use App\Events\HelloEvent;
+
 use App\Events\PaymentEvent;
-use App\Models\ChecklistPutrH;
-use App\Models\MonthlyArTenant;
-use App\Models\ChecklistGensetH;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\OpenTicket;
-use App\Models\ChecklistOfficeManagementH;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\Admin\BAPPController;
 use App\Http\Controllers\Admin\GIGOController;
 use App\Http\Controllers\Admin\InboxCntroller;
-use App\Http\Controllers\Admin\LiftController;
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\Admin\RoomController;
@@ -41,6 +35,7 @@ use App\Http\Controllers\Admin\SubMenuController;
 use App\Http\Controllers\Admin\UtilityController;
 use App\Http\Controllers\Admin\BayarnonController;
 use App\Http\Controllers\Admin\BillingController;
+use App\Http\Controllers\Admin\ChatController;
 use App\Http\Controllers\Admin\KaryawanController;
 use App\Http\Controllers\Admin\MainFormController;
 use App\Http\Controllers\Admin\PengurusController;
@@ -127,10 +122,6 @@ use App\Http\Controllers\Admin\ToolsHKController;
 use App\Http\Controllers\Admin\ToolsSecurityController;
 use App\Http\Controllers\Admin\VisitorsController;
 use App\Http\Controllers\Admin\WaterUUSController;
-use App\Http\Controllers\API\VisitorController;
-use App\Models\ForgotAttendance;
-use App\Models\IncidentalReportHK;
-use App\Models\PermitHR;
 
 /*
 |--------------------------------------------------------------------------
@@ -181,6 +172,14 @@ Route::prefix('admin')->group(function () {
     Route::middleware(['auth'])->group(function () {
         Route::get('/company-setting', [CompanySettingController::class, 'show'])->name('company-setting');
         Route::post('/company-setting', [CompanySettingController::class, 'update'])->name('update-company-setting');
+
+        Route::get('/chats', [ChatController::class, 'index'])->name('chats');
+        Route::get('/chats/rooms', [ChatController::class, 'rooms']);
+        Route::get('/chats/rooms-slave', [ChatController::class, 'roomSlave']);
+        Route::get('/chats/rooms-master', [ChatController::class, 'roomMaster']);
+        Route::post('/chats', [ChatController::class, 'store']);
+        Route::get('/get-chats', [ChatController::class, 'getChats']);
+        Route::post('/read-chats', [ChatController::class, 'readChats']);
 
         Route::post('payment/check-payment-status/{id}', [PaymentController::class, 'checkStatus']);
 
@@ -420,7 +419,7 @@ Route::prefix('admin')->group(function () {
         Route::post('/work-permit/doneWP/{id}', [WorkPermitController::class, 'doneWP'])->name('doneWP');
         Route::post('/work-permit/generate/{id}', [WorkPermitController::class, 'generatePaymentPO'])->name('generatePaymentPO');
         Route::get('/work-permit/payment/{id}', [WorkPermitController::class, 'paymentPO'])->name('paymentPO');
-        Route::get('/work-permit/print-paper/{id}', [WorkPermitController::class, 'printWP'])->name('printWP');
+        Route::get('/work-permit/print-paper/{id}/{idSite}', [WorkPermitController::class, 'printWP'])->name('printWP');
 
         // Reservation
         Route::resource('request-reservations', ReservationController::class);
@@ -442,6 +441,9 @@ Route::prefix('admin')->group(function () {
         Route::get('/get-notifications/{userID}', [DashboardController::class, 'getNotifications'])->name('getNotifications');  // Get all notifications by user_id
         Route::get('/get-new-notifications/{notifID}', [DashboardController::class, 'getNewNotifications'])->name('getNewNotifications');  // Get all notifications by user_id
         Route::get('/notification/{id}', [DashboardController::class, 'showNotification'])->name('showNotification'); // Show all notification by user_id
+        Route::get('/not-done/request', [DashboardController::class, 'notDoneRequest']);
+        Route::get('/not-done/wr', [DashboardController::class, 'notDoneWR']);
+        Route::get('/not-done/wo', [DashboardController::class, 'notDoneWO']);
 
         // CRUD Work Order
         Route::resource('/work-orders', WorkOrderController::class);
@@ -563,7 +565,7 @@ Route::prefix('admin')->group(function () {
         Route::resource('perhitdendas', PerhitDendaController::class);
 
         //CRUD Reminder Letter
-        Route::resource('reminders-latter', ReminderLetterController::class);
+        Route::resource('reminders-letter', ReminderLetterController::class);
 
         //CRUD PPN
         Route::resource('ppns', PPNController::class);
@@ -657,6 +659,9 @@ Route::prefix('admin')->group(function () {
         // Invoice index
         Route::get('invoices', [InvoiceController::class, 'index'])->name('invoices');
         Route::get('invoice/{id}', [InvoiceController::class, 'show'])->name('showInvoices');
+        Route::get('invoice/installment/{id}', [InvoiceController::class, 'installment'])->name('installment');
+        Route::post('invoice/installment/{id}', [InvoiceController::class, 'storeInstallment']);
+        Route::get('/invoice/get/filter-data', [InvoiceController::class, 'filteredData']);
 
         // Payment monthly tenant
         Route::post('payment-monthly-page/{id}', [BillingController::class, 'generatePaymentMonthly'])->name('generatePaymentMonthly');
