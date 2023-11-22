@@ -76,6 +76,7 @@ class ScheduleSecurityController extends Controller
                 'id_parameter_security' => $schedule->id,
                 'schedule' => $request->schedule,
                 'id_room' => $request->id_room,
+                'id_shift' => $request->id_shift,
                 'status_schedule' => 'Not Done'
             ]);
 

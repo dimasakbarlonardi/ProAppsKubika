@@ -27,7 +27,7 @@
                 </div>
                 <div class="col-6 mb-3">
                     <label class="form-label">Schedule</label>
-                    <input type="date" name="schedule" class="form-control" required>
+                    <input type="datetime-local" name="schedule" class="form-control" required>
                 </div>
                 <div class="col-6 mb-3">
                     <label class="form-label">Shift</label>

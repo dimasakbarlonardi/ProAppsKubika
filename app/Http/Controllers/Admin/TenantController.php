@@ -43,6 +43,17 @@ class TenantController extends Controller
         return view('AdminSite.Tenant.index', $data);
     }
 
+    public function import(Request $request)
+    {
+        $file = $request->file('file_excel');
+
+        Excel::import(new EmployeeImport(), $file);
+
+        Alert::success('Success', 'Success import data');
+
+        return redirect()->route('tenants.index');
+    }
+
     public function filteredData(Request $request)
     {
         $connTenant = ConnectionDB::setConnection(new Tenant());

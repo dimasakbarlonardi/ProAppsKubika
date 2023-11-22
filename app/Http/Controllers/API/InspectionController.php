@@ -337,9 +337,6 @@ class InspectionController extends Controller
             ->with(['Room.Tower', 'Room.Floor', 'Schedule', 'Shift', 'InspectionLocation'])
             ->get();
 
-        foreach ($inspection as $key => $data) {
-            $inspection[$key]['status'] = json_decode($data->status);
-        }
          
         return ResponseFormatter::success(
             $inspection,
@@ -353,7 +350,7 @@ class InspectionController extends Controller
         
         $nowMonth = Carbon::now()->format('m');
         $getSchedules = $connInspectionSecurity->whereMonth('schedule', $nowMonth)
-            ->with('Schedule.Room.Floor')
+            ->with('Schedule.Room.Floor', 'Shift')
             ->get();
 
         $inspections = [];
@@ -363,8 +360,8 @@ class InspectionController extends Controller
                 $object = new stdClass();
                 $object->id_parameter_security = $schedule->id;
                 $object->schedule = $schedule->schedule;
+                $object->shift = $schedule->Shift;
                 $object->status_schedule = $schedule->status_schedule;
-                $object->room = $schedule->Room;
                 $object->floor = $schedule->Room->floor;
                 $object->tower = $schedule->Room->Tower;
                
