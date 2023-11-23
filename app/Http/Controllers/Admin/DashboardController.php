@@ -282,6 +282,13 @@ class DashboardController extends Controller
             case ('Installment'):
                 return redirect()->route('showInvoices', $getNotif->id_data);
                 break;
+
+            case ('SP1'):
+                $data = $this->handleSP($getNotif->id_data);
+                $data['data'] = $data;
+                $data['notif'] = $getNotif;
+                return view('AdminSite.SP1.SP1', $data);
+                break;
         }
     }
 
@@ -428,6 +435,17 @@ class DashboardController extends Controller
         $data['sysApprove'] = $connApprove->find(8);
         $gigo =  $getData->find($getNotif->id_data);
         $data['gigo'] = $gigo;
+
+        return $data;
+    }
+
+    public function handleSP($id)
+    {
+        $connCompany = ConnectionDB::setConnection(new CompanySetting());
+        $connAR = ConnectionDB::setConnection(new MonthlyArTenant());
+
+        $data['company'] = $connCompany->find(1);
+        $data['ar'] = $connAR->find($id);
 
         return $data;
     }
