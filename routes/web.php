@@ -117,6 +117,7 @@ use App\Http\Controllers\Admin\RequestTypeController;
 use App\Http\Controllers\Admin\ScheduleMeetingController;
 use App\Http\Controllers\Admin\ScheduleSecurityController;
 use App\Http\Controllers\Admin\ShiftTypeController;
+use App\Http\Controllers\Admin\SP1Controller;
 use App\Http\Controllers\Admin\ToolsEngController;
 use App\Http\Controllers\Admin\ToolsHKController;
 use App\Http\Controllers\Admin\ToolsSecurityController;
@@ -677,10 +678,14 @@ Route::prefix('admin')->group(function () {
         Route::post('payment-wo/{id}', [BillingController::class, 'generatePaymentWO'])->name('generatePaymentWO');
         Route::get('payment-wo/{woID}/{id}', [BillingController::class, 'paymentWO'])->name('paymentWO');
 
-
         Route::post('get-montly-ar', [BillingController::class, 'getOverdueARTenant']);
-
         Route::post('get/cc-token', [BillingController::class, 'getTokenCC']);
+
+
+        // ======================= SP ==========================
+        Route::resource('sp1', SP1Controller::class);
+        Route::post('blastSP1', [SP1Controller::class, 'blast']);
+        // ======================= End SP ==========================
 
         // ---------------Inspection Gartur Security-----------------
         Route::resource('inspectionsecurity', InspectionSecurityController::class);
