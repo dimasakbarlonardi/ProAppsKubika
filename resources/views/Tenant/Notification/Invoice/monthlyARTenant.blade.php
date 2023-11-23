@@ -312,7 +312,7 @@
                                     <span>{{ rupiah($transaction->CashReceipt->sub_total) }}</span>
                                 </div>
                                 <div class="d-flex justify-content-between fs--1 mb-1 text-success">
-                                    <p class="mb-0">Tax</p><span>Rp 0</span>
+                                    <p class="mb-0">Tax</p><span>{{ Rupiah($transaction->CashReceipt->tax) }}</span>
                                 </div>
                                 <div class="d-flex justify-content-between fs--1 mb-1 text-success">
                                     <p class="mb-0">Admin Fee</p><span id="admin_fee">Rp 0</span>

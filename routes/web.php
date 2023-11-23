@@ -576,7 +576,7 @@ Route::prefix('admin')->group(function () {
 
         //CRUD PPN
         Route::resource('ppns', PPNController::class);
-
+        Route::post('ppn/isactive/{id}', [PPNController::class, 'isActive']);
         // ----------End Fin Parameter---------
 
         // ----------Checklist AHU-------------
