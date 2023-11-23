@@ -330,14 +330,18 @@ class RoleController extends Controller
 
         $data_nav = MenuHeading::with(['menus' => function ($q) use ($getMenus, $getSubMenus, $getSubMenus2) {
             return $q->whereIn('id', $getMenus)
+                ->orderBy('kode_form', 'ASC')
                 ->with(['subMenus' => function ($q) use ($getSubMenus, $getSubMenus2) {
                     $q->whereIn('id', $getSubMenus)
+                        ->orderBy('kode_form', 'ASC')
                         ->with(['subMenus2' => function ($q) use ($getSubMenus2) {
-                            $q->whereIn('id', $getSubMenus2);
+                            $q->whereIn('id', $getSubMenus2)
+                                ->orderBy('kode_form', 'ASC');
                         }]);
                 }]);
         }])
             ->whereIn('id', $getHeadings)
+
             ->get();
 
         return $data_nav;

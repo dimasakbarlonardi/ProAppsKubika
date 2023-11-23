@@ -31,10 +31,15 @@
                             <th scope="row">{{ $key + 1 }}</th>
                             <td>{{ $notif->notif_title }}</td>
                             <td class="text-center">
-                                <img width="200" src="{{ url($notif->photo) }}" alt="{{$notif->photo}}">
+                                @if ($notif->photo)
+                                    <img width="200" src="{{ url($notif->photo) }}" alt="{{ $notif->photo }}">
+                                @endif
                             </td>
                             <td>
-                                <a href="{{ url($notif->file) }}" class="btn btn-warning btn-sm" target="_blank">File</a>
+                                @if ($notif->file)
+                                    <a href="{{ url($notif->file) }}" class="btn btn-warning btn-sm"
+                                        target="_blank">File</a>
+                                @endif
                             </td>
                         </tr>
                     @endforeach

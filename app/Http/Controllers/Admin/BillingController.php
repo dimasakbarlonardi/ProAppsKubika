@@ -131,7 +131,7 @@ class BillingController extends Controller
         $perhitDenda = ConnectionDB::setConnection(new PerhitDenda());
 
         $perhitDenda = $perhitDenda->find(3);
-        $perhitDenda = $perhitDenda->denda_flat_procetage ? $perhitDenda->denda_flat_procetage : $perhitDenda->denda_flat_amount;
+        // $perhitDenda = $perhitDenda->denda_flat_procetage ? $perhitDenda->denda_flat_procetage : $perhitDenda->denda_flat_amount;
 
         $previousBills = $connMonthlyTenant->where('tgl_jt_invoice', '<', Carbon::now()->format('Y-m-d'))
             ->where('periode_tahun', Carbon::now()->format('Y'))
@@ -146,7 +146,12 @@ class BillingController extends Controller
             $now = Carbon::now();
             $jml_hari_jt = $now->diff($jt)->format("%a");
 
-            $denda_bulan_sebelumnya = $jml_hari_jt * $perhitDenda;
+            if ($perhitDenda->denda_flat_procetage != 0) {
+                $denda_bulan_sebelumnya = ($perhitDenda->denda_flat_procetage / 100) * ($prevBill->total_tagihan_ipl + $prevBill->total_tagihan_utility);
+            } else {
+                $denda_bulan_sebelumnya = $jml_hari_jt * $perhitDenda;
+            }
+
 
             $prevBill->jml_hari_jt = $jml_hari_jt;
             $prevBill->total_denda = $denda_bulan_sebelumnya;
