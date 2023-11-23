@@ -146,11 +146,12 @@ class BillingController extends Controller
             // $now = Carbon::now();
             // $jml_hari_jt = $now->diff($jt)->format("%a");
 
-            // if ($perhitDenda->denda_flat_procetage != 0) {
-            //     $denda_bulan_sebelumnya = (($perhitDenda->denda_flat_procetage / 100) * ($prevBill->total_tagihan_ipl + $prevBill->total_tagihan_utility) * $jml_hari_jt);
-            // } else {
-            //     $denda_bulan_sebelumnya = $jml_hari_jt * $perhitDenda;
-            // }
+            if ($perhitDenda->denda_flat_procetage != 0) {
+                $denda_bulan_sebelumnya = ($perhitDenda->denda_flat_procetage / 100) * ($prevBill->total_tagihan_ipl + $prevBill->total_tagihan_utility);
+            } else {
+                $denda_bulan_sebelumnya = $jml_hari_jt * $perhitDenda;
+            }
+
 
             $connMonthlyTenant = $this->perhitDenda($prevBill, $connMonthlyTenant, $previousBills);
 
