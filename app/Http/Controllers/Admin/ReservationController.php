@@ -520,13 +520,18 @@ class ReservationController extends Controller
                 ]);
                 $response = json_decode($response->getBody());
 
-                $transaction->va_number = $response->va_numbers[0]->va_number;
-                $transaction->expiry_time = $response->expiry_time;
-                $transaction->transaction_status = 'VERIFYING';
-                $transaction->admin_fee = $admin_fee;
-                $transaction->save();
+                if ($response->status_code == 201) {
+                    $transaction->va_number = $response->va_numbers[0]->va_number;
+                    $transaction->expiry_time = $response->expiry_time;
+                    $transaction->transaction_status = 'VERIFYING';
+                    $transaction->admin_fee = $admin_fee;
+                    $transaction->save();
 
-                return redirect()->route('paymentReservation', [$rsv->id, $transaction->id]);
+                    return redirect()->route('paymentReservation', [$rsv->id, $transaction->id]);
+                } else {
+                    Alert::info('Sorry', 'Our server is busy');
+                    return redirect()->back();
+                }
             } elseif ($request->billing == 'credit_card') {
                 $transaction->payment_type = 'credit_card';
                 $transaction->admin_fee = $admin_fee;
