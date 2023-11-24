@@ -463,14 +463,19 @@ class WorkPermitController extends Controller
             ]
         ]);
         $response = json_decode($response->getBody());
-        $transaction->va_number = $response->va_numbers[0]->va_number;
-        $transaction->expiry_time = $response->expiry_time;
-        $transaction->admin_fee = $admin_fee;
-        $transaction->transaction_status = 'VERIFYING';
 
-        $transaction->save();
+        if ($response->status_code == 201) {
+            $transaction->va_number = $response->va_numbers[0]->va_number;
+            $transaction->expiry_time = $response->expiry_time;
+            $transaction->admin_fee = $admin_fee;
+            $transaction->transaction_status = 'VERIFYING';
+            $transaction->save();
 
-        return redirect()->route('paymentMonthly', [$transaction->WorkPermit->id, $transaction->id]);
+            return redirect()->route('paymentMonthly', [$transaction->WorkPermit->id, $transaction->id]);
+        } else {
+            Alert::info('Sorry', 'Our server is busy');
+            return redirect()->back();
+        }
     }
 
     public function paymentPO($id)
