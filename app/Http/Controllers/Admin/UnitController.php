@@ -31,8 +31,8 @@ class UnitController extends Controller
         $connTower = ConnectionDB::setConnection(new Tower());
         $connFloor = ConnectionDB::setConnection(new Floor());
 
-        $data['floors'] = $connFloor->get();
-        $data['towers'] = $connTower->get();
+        $data['floors'] = $connFloor->orderBy('id', 'ASC')->get();
+        $data['towers'] = $connTower->orderBy('id_tower', 'ASC')->get();
 
         return view('AdminSite.Unit.index', $data);
     }
