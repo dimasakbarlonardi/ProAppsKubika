@@ -23,6 +23,8 @@ use App\Models\Tower;
 use App\Models\Transaction;
 use App\Models\TransactionCenter;
 use App\Models\Unit;
+use App\Models\Utility;
+use App\Models\IPLType;
 use App\Models\User;
 use App\Models\WorkOrder;
 use App\Models\WorkPermit;
@@ -328,11 +330,17 @@ class DashboardController extends Controller
     public function handleMonthlyTenant($getNotif)
     {
         $model = new MonthlyArTenant();
+        $connUtility = ConnectionDB::setConnection(new Utility());
+        $connIPLType = ConnectionDB::setConnection(new IPLType());
         $getData = ConnectionDB::setConnection($model);
         $getData = $getData->find($getNotif->id_data);
         $data['transaction'] = $getData->where('id_monthly_ar_tenant', $getData->id_monthly_ar_tenant)->first();
         $data['type'] = 'MonthlyTenant';
         $data['installment'] = $getData->CashReceipt->Installment($getData->periode_bulan, $getData->periode_tahun);
+        $data['electric'] = $connUtility->find(1);
+        $data['water'] = $connUtility->find(2);
+        $data['sc'] = $connIPLType->find(6);
+        $data['sf'] = $connIPLType->find(7);
 
         return $data;
     }

@@ -224,36 +224,34 @@
                                             <td>
                                                 <h6 class="mb-3 text-nowrap">Previous Usage</h6>
                                                 <p class="mb-0">
-                                                    {{ $data->MonthlyUtility->ElectricUUS->nomor_listrik_awal }} W
+                                                    {{ $data->MonthlyUtility->ElectricUUS->nomor_listrik_awal }}
                                                 </p>
                                                 <hr>
                                                 <p class="mb-0">
-                                                    {{ $data->MonthlyUtility->WaterUUS->nomor_air_awal }}
-                                                    m<sup>3</sup>
+                                                    {{ $data->MonthlyUtility->WaterUUS->nomor_air_awal }}                                                    
                                                 </p>
                                             </td>
                                             <td class="align-middle">
                                                 <h6 class="mb-3 text-nowrap">Current Usage</h6>
                                                 <p class="mb-0">
-                                                    {{ $data->MonthlyUtility->ElectricUUS->nomor_listrik_akhir }} W
+                                                    {{ $data->MonthlyUtility->ElectricUUS->nomor_listrik_akhir }}
                                                 </p>
                                                 <hr>
                                                 <p class="mb-0">
                                                     {{ $data->MonthlyUtility->WaterUUS->nomor_air_akhir }}
-                                                    m<sup>3</sup>
                                                 </p>
                                             </td>
                                             <td class="align-middle text-center">
                                                 <h6 class="text-nowrap mb-3">Usage</h6>
-                                                <span>{{ $prevBill->MonthlyUtility->ElectricUUS->usage }} W</span> <br>
+                                                <span>{{ $prevBill->MonthlyUtility->ElectricUUS->usage }} KwH</span> <br>
                                                 <hr>
                                                 <span>{{ $prevBill->MonthlyUtility->WaterUUS->usage }}</span>
                                             </td>
                                             <td class="align-middle text-center">
                                                 <h6 class="text-nowrap mb-3">Price</h6>
-                                                <span>{{ DecimalRupiahRP($electric->biaya_m3) }} / KWh</span> <br>
+                                                <span>{{ DecimalRupiahRP($electric->biaya_m3) }} / KwH</span> <br>
                                                 <hr>
-                                                <span>{{ Rupiah($water->biaya_m3) }}</span>
+                                                <span>{{ Rupiah($water->biaya_m3) }} / m<sup>3</sup></span>
                                             </td>
                                             <td class="align-middle text-center">
                                                 <h6 class="text-nowrap mb-3">PPJ
@@ -330,28 +328,26 @@
                                     <td class="align-middle">
                                         <h6 class="mb-3 text-nowrap">Previous Usage</h6>
                                         <p class="mb-0">
-                                            {{ $data->MonthlyUtility->ElectricUUS->nomor_listrik_awal }} W
+                                            {{ $data->MonthlyUtility->ElectricUUS->nomor_listrik_awal }}
                                         </p>
                                         <hr>
                                         <p class="mb-0">
-                                            {{ $data->MonthlyUtility->WaterUUS->nomor_air_awal }}
-                                            m<sup>3</sup>
+                                            {{ $data->MonthlyUtility->WaterUUS->nomor_air_awal }}                                            
                                         </p>
                                     </td>
                                     <td class="align-middle">
                                         <h6 class="mb-3 text-nowrap">Current Usage</h6>
                                         <p class="mb-0">
-                                            {{ $data->MonthlyUtility->ElectricUUS->nomor_listrik_akhir }} W
+                                            {{ $data->MonthlyUtility->ElectricUUS->nomor_listrik_akhir }}
                                         </p>
                                         <hr>
                                         <p class="mb-0">
                                             {{ $data->MonthlyUtility->WaterUUS->nomor_air_akhir }}
-                                            m<sup>3</sup>
                                         </p>
                                     </td>
                                     <td class="align-middle text-center">
                                         <h6 class="text-nowrap mb-3">Usage</h6>
-                                        <span>{{ $data->MonthlyUtility->ElectricUUS->usage }} W</span> <br>
+                                        <span>{{ $data->MonthlyUtility->ElectricUUS->usage }} KWh</span> <br>
                                         <hr>
                                         <span>{{ $data->MonthlyUtility->WaterUUS->usage }} m<sup>3</sup></span>
                                     </td>
@@ -359,7 +355,7 @@
                                         <h6 class="text-nowrap mb-3">Price</h6>
                                         <span>{{ DecimalRupiahRP($electric->biaya_m3) }} / KWh</span> <br>
                                         <hr>
-                                        <span>{{ Rupiah($water->biaya_m3) }}</span>
+                                        <span>{{ Rupiah($water->biaya_m3) }} / m<sup>3</sup></span>
                                     </td>
                                     <td class="align-middle text-center">
                                         <h6 class="text-nowrap mb-3">PPJ <small>({{ $electric->biaya_ppj }}%)</small></h6>
