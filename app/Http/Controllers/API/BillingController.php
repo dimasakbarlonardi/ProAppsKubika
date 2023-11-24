@@ -110,7 +110,7 @@ class BillingController extends Controller
 
                 $payment['payment_type'] = $type;
                 $payment['transaction_details']['order_id'] = $transaction->order_id;
-                $payment['transaction_details']['gross_amount'] = $transaction->gross_amount;
+                $payment['transaction_details']['gross_amount'] = (int) $transaction->gross_amount;
                 $payment['bank_transfer']['bank'] = $bank;
 
                 $response = $client->request('POST', 'https://api.sandbox.midtrans.com/v2/charge', [
