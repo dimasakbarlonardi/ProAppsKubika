@@ -17,7 +17,7 @@
             </div>
         </div>
         <div class="p-5">
-            <table class="table">
+            <table class="table table-striped">
                 <thead>
                     <tr>
                         <th class="sort" data-sort="">No</th>

@@ -12,6 +12,7 @@ use App\Models\CashReceiptDetail;
 use App\Models\ElectricUUS;
 use App\Models\Installment;
 use App\Models\IPLType;
+use App\Models\JenisDenda;
 use App\Models\MonthlyArTenant;
 use App\Models\MonthlyIPL;
 use App\Models\MonthlyUtility;
@@ -128,7 +129,7 @@ class BillingController extends Controller
     public function createMonthlyTenant($createUtilityBill, $createIPLbill)
     {
         $connMonthlyTenant = ConnectionDB::setConnection(new MonthlyArTenant());
-        $perhitDenda = ConnectionDB::setConnection(new PerhitDenda());
+        // $connDenda = ConnectionDB::setConnection(new JenisDenda());
 
         $perhitDenda = $perhitDenda->find(3);
         // $perhitDenda = $perhitDenda->denda_flat_procetage ? $perhitDenda->denda_flat_procetage : $perhitDenda->denda_flat_amount;
@@ -139,12 +140,12 @@ class BillingController extends Controller
             ->where('tgl_bayar_invoice', null)
             ->get();
 
-        $total_denda = 0;
+        // $total_denda = 0;
 
         foreach ($previousBills as $prevBill) {
-            $jt = new DateTime($prevBill->tgl_jt_invoice);
-            $now = Carbon::now();
-            $jml_hari_jt = $now->diff($jt)->format("%a");
+            // $jt = new DateTime($prevBill->tgl_jt_invoice);
+            // $now = Carbon::now();
+            // $jml_hari_jt = $now->diff($jt)->format("%a");
 
             if ($perhitDenda->denda_flat_procetage != 0) {
                 $denda_bulan_sebelumnya = ($perhitDenda->denda_flat_procetage / 100) * ($prevBill->total_tagihan_ipl + $prevBill->total_tagihan_utility);
@@ -153,13 +154,15 @@ class BillingController extends Controller
             }
 
 
-            $prevBill->jml_hari_jt = $jml_hari_jt;
-            $prevBill->total_denda = $denda_bulan_sebelumnya;
-            $prevBill->save();
+            $connMonthlyTenant = $this->perhitDenda($prevBill, $connMonthlyTenant, $previousBills);
 
-            $total_denda += $prevBill->total_denda;
+            // $prevBill->jml_hari_jt = $jml_hari_jt;
+            // $prevBill->total_denda = $denda_bulan_sebelumnya;
+            // $prevBill->save();
 
-            $connMonthlyTenant->denda_bulan_sebelumnya = $total_denda;
+            // $total_denda += $prevBill->total_denda;
+
+            // $connMonthlyTenant->denda_bulan_sebelumnya = $total_denda;
         }
 
         $connMonthlyTenant->id_site = $createUtilityBill->id_site;
@@ -171,6 +174,123 @@ class BillingController extends Controller
         $connMonthlyTenant->total_tagihan_ipl = $createIPLbill->total_tagihan_ipl;
         $connMonthlyTenant->total_tagihan_utility = $createUtilityBill->total_tagihan_utility;
         $connMonthlyTenant->total = $createIPLbill->total_tagihan_ipl + $createUtilityBill->total_tagihan_utility + $connMonthlyTenant->denda_bulan_sebelumnya;
+
+        return $connMonthlyTenant;
+    }
+
+    function perhitDenda($prevBill, $connMonthlyTenant, $previousBills)
+    {
+        $connDenda = ConnectionDB::setConnection(new JenisDenda());
+
+        $perhitDenda = $connDenda->where('is_active', 1)->first();
+
+        // $jt = new DateTime($prevBill->tgl_jt_invoice);
+        // $now = Carbon::now();
+        // $jml_hari_jt = $now->diff($jt)->format("%a");
+
+        // if ($perhitDenda->denda_flat_procetage != 0) {
+        //     $denda_bulan_sebelumnya = (($perhitDenda->denda_flat_procetage / 100) * ($prevBill->total_tagihan_ipl + $prevBill->total_tagihan_utility) * $jml_hari_jt);
+        // } else {
+        //     $denda_bulan_sebelumnya = $jml_hari_jt * $perhitDenda;
+        // }
+        if ($perhitDenda->id_jenis_denda == 3) {
+            $connMonthlyTenant = $this->dendaRolling($perhitDenda, $prevBill, $connMonthlyTenant);
+        } elseif ($perhitDenda->id_jenis_denda == 2) {
+            $connMonthlyTenant = $this->dendaTetap($perhitDenda, $prevBill, $connMonthlyTenant);
+        } elseif ($perhitDenda->id_jenis_denda == 1) {
+            $connMonthlyTenant = $this->dendaAkumulasi($perhitDenda, $prevBill, $connMonthlyTenant, $previousBills);
+        }
+
+        // $prevBill->total_denda = $denda_bulan_sebelumnya;
+
+        // $total_denda += $prevBill->total_denda;
+
+        // $connMonthlyTenant->denda_bulan_sebelumnya = $total_denda;
+        return $connMonthlyTenant;
+    }
+
+    function dendaRolling($perhitDenda, $prevBill, $connMonthlyTenant)
+    {
+        $jt = new DateTime($prevBill->tgl_jt_invoice);
+        $now = Carbon::now();
+        $jml_hari_jt = $now->diff($jt)->format("%a");
+
+        $total_denda = 0;
+
+        if ($perhitDenda->denda_flat_procetage != 0) {
+            $denda_bulan_sebelumnya = (($perhitDenda->denda_flat_procetage / 100) * ($prevBill->total_tagihan_ipl + $prevBill->total_tagihan_utility) * $jml_hari_jt);
+        } else {
+            $denda_bulan_sebelumnya = $jml_hari_jt * $perhitDenda;
+        }
+
+        $prevBill->total_denda = $denda_bulan_sebelumnya;
+        $prevBill->jml_hari_jt = $jml_hari_jt;
+        $prevBill->save();
+
+        $total_denda += $prevBill->total_denda;
+
+        $connMonthlyTenant->denda_bulan_sebelumnya = $total_denda;
+
+        return $connMonthlyTenant;
+    }
+
+    function dendaTetap($perhitDenda, $prevBill, $connMonthlyTenant)
+    {
+        $prevMonthDays =  Carbon::createFromFormat('Y-m', $prevBill->periode_tahun . '-' . $prevBill->periode_bulan)->format('Y-m');
+        $prevMonthDays = Carbon::parse($prevMonthDays)->daysInMonth;
+
+        if ($perhitDenda->denda_flat_procetage != 0) {
+            $denda_bulan_sebelumnya = (($perhitDenda->denda_flat_procetage / 100) * $prevMonthDays) * ($prevBill->total_tagihan_ipl + $prevBill->total_tagihan_utility);
+        } else {
+            $denda_bulan_sebelumnya = $perhitDenda;
+        }
+
+        $prevBill->total_denda = $denda_bulan_sebelumnya;
+        $prevBill->jml_hari_jt = $prevMonthDays;
+        $prevBill->save();
+
+        $connMonthlyTenant->denda_bulan_sebelumnya = $denda_bulan_sebelumnya;
+
+        return $connMonthlyTenant;
+    }
+
+    function dendaAkumulasi($perhitDenda, $prevBill, $connMonthlyTenant)
+    {
+        $prevMonthDays =  Carbon::createFromFormat('Y-m', $prevBill->periode_tahun . '-' . $prevBill->periode_bulan)->format('Y-m');
+        $prevMonthDays = Carbon::parse($prevMonthDays)->daysInMonth;
+
+        // if ($perhitDenda->denda_flat_procetage != 0) {
+        //     $denda_bulan_sebelumnya = ((($perhitDenda->denda_flat_procetage / 100) * $prevMonthDays) * ($prevBill->total_tagihan_ipl + $prevBill->total_tagihan_utility)) * count($previousBills);
+        // } else {
+        //     $denda_bulan_sebelumnya = $perhitDenda;
+        // }
+
+        // $prevBill->total_denda = $denda_bulan_sebelumnya;
+        // $prevBill->jml_hari_jt = $prevMonthDays;
+        // $prevBill->save();
+
+        // $connMonthlyTenant->denda_bulan_sebelumnya = $denda_bulan_sebelumnya;
+
+        // return $connMonthlyTenant;
+        $jt = new DateTime($prevBill->tgl_jt_invoice);
+        $now = Carbon::now();
+        $jml_hari_jt = $now->diff($jt)->format("%a");
+
+        $total_denda = 0;
+
+        if ($perhitDenda->denda_flat_procetage != 0) {
+            $denda_bulan_sebelumnya = (($perhitDenda->denda_flat_procetage / 100) * ($prevBill->total_tagihan_ipl + $prevBill->total_tagihan_utility) * $prevMonthDays);
+        } else {
+            $denda_bulan_sebelumnya = $jml_hari_jt * $perhitDenda;
+        }
+
+        $prevBill->total_denda = $denda_bulan_sebelumnya +  $prevBill->total_denda;
+        $prevBill->jml_hari_jt = $jml_hari_jt;
+        $prevBill->save();
+
+        $total_denda += $prevBill->total_denda;
+
+        $connMonthlyTenant->denda_bulan_sebelumnya = $total_denda;
 
         return $connMonthlyTenant;
     }

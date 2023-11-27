@@ -24,9 +24,6 @@
                         </div>
                         <div class="border-bottom border-200 my-3"></div>
                         <div class="d-flex align-items-center justify-content-between justify-content-lg-end px-x1">
-                            <button class="btn btn-sm btn-falcon-default d-xl-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#ticketOffcanvas" aria-controls="ticketOffcanvas">
-                                <span class="fas fa-filter" data-fa-transform="shrink-4 down-1"></span><span class="ms-1 d-none d-sm-inline-block">Filter</span>
-                            </button>
                             <div class="bg-300 mx-3 d-none d-lg-block d-xl-none" style="width: 1px; height: 29px">
                             </div>
                             <div class="d-none" id="table-ticket-actions">
@@ -42,7 +39,9 @@
                                 </div>
                             </div>
                             <div class="d-flex align-items-center" id="table-ticket-replace-element">
-                                <a class="btn btn-color text-600 btn-sm mr-3 text-white" href=""><span class="fas fa-plus me-1" data-fa-transform="shrink-3"></span>Import</a>
+                                <button class="btn btn-falcon-default text-600 btn-sm" type="button" class="fas fa-plus" data-bs-toggle="modal" data-bs-target="#modal-import-tenant">
+                                    + Import Excel
+                                </button>
                                 <a class="btn btn-falcon-default text-600 btn-sm ml-3" href="{{ route('tenants.create') }}">Create Tenant</a>
                             </div>
                         </div>
@@ -89,6 +88,32 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="modal-import-tenant" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 500px">
+            <div class="modal-content position-relative">
+                <div class="position-absolute top-0 end-0 mt-2 me-2 z-index-1">
+                    <button class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base"
+                        data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ route('import-tenants') }}" method="post" enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-body p-0">
+                        <div class="rounded-top-lg py-3 ps-4 pe-6 bg-light">
+                            <h4 class="mb-4" id="modalExampleDemoLabel">Upload Excel File </h4>
+                            <div class="mb-3">
+                                <input type="file" name="file_excel" class="form-control" required>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Import</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 @endsection
 
 @section('script')

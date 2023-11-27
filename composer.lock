@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d56a9135857922d760a216ea658a73c8",
+    "content-hash": "2966eb5525226c664138bcde700714a9",
     "packages": [
         {
             "name": "appy/fcmhttpv1",
@@ -370,6 +370,46 @@
                 }
             ],
             "time": "2023-01-15T23:15:59+00:00"
+        },
+        {
+            "name": "calcinai/php-imagick",
+            "version": "v0.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/calcinai/php-imagick.git",
+                "reference": "001530b19560b9862ffe78c3ae29ad5dc2549e6d"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/calcinai/php-imagick/zipball/001530b19560b9862ffe78c3ae29ad5dc2549e6d",
+                "reference": "001530b19560b9862ffe78c3ae29ad5dc2549e6d",
+                "shasum": ""
+            },
+            "suggest": {
+                "ext-imagick": "Native extension"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Imagick": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Michael Calcinai",
+                    "email": "michael@calcin.ai"
+                }
+            ],
+            "description": "PHP wrapper for command line ImageMagick utils compatible with PECL::Imagick",
+            "support": {
+                "issues": "https://github.com/calcinai/php-imagick/issues",
+                "source": "https://github.com/calcinai/php-imagick/tree/master"
+            },
+            "time": "2016-12-22T15:09:47+00:00"
         },
         {
             "name": "cboden/ratchet",
@@ -1956,16 +1996,16 @@
         },
         {
             "name": "google/apiclient-services",
-            "version": "v0.325.0",
+            "version": "v0.326.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/googleapis/google-api-php-client-services.git",
-                "reference": "b2d39ef968f0017d6bff3c1da82501a0c575c9ce"
+                "reference": "033de899257a294ca82f52fe4296dac011d01f74"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/googleapis/google-api-php-client-services/zipball/b2d39ef968f0017d6bff3c1da82501a0c575c9ce",
-                "reference": "b2d39ef968f0017d6bff3c1da82501a0c575c9ce",
+                "url": "https://api.github.com/repos/googleapis/google-api-php-client-services/zipball/033de899257a294ca82f52fe4296dac011d01f74",
+                "reference": "033de899257a294ca82f52fe4296dac011d01f74",
                 "shasum": ""
             },
             "require": {
@@ -1994,9 +2034,9 @@
             ],
             "support": {
                 "issues": "https://github.com/googleapis/google-api-php-client-services/issues",
-                "source": "https://github.com/googleapis/google-api-php-client-services/tree/v0.325.0"
+                "source": "https://github.com/googleapis/google-api-php-client-services/tree/v0.326.0"
             },
-            "time": "2023-11-18T01:04:14+00:00"
+            "time": "2023-11-23T00:56:15+00:00"
         },
         {
             "name": "google/auth",
@@ -5004,6 +5044,68 @@
                 "source": "https://github.com/opis/closure/tree/3.6.3"
             },
             "time": "2022-01-27T09:35:39+00:00"
+        },
+        {
+            "name": "orbitale/imagemagick-php",
+            "version": "v3.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/Orbitale/ImageMagickPHP.git",
+                "reference": "7ef0c651390ac9f38fc4e8ae3e6d73f233d3d1f8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/Orbitale/ImageMagickPHP/zipball/7ef0c651390ac9f38fc4e8ae3e6d73f233d3d1f8",
+                "reference": "7ef0c651390ac9f38fc4e8ae3e6d73f233d3d1f8",
+                "shasum": ""
+            },
+            "require": {
+                "ext-mbstring": "*",
+                "php": "^7.2|^8.0",
+                "symfony/polyfill-php80": "^1.10",
+                "symfony/process": "^5.3|^6.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^8.5|^9.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Orbitale\\Component\\ImageMagick\\": "src/",
+                    "Orbitale\\Component\\ImageMagick\\Tests\\": "Tests/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Alex Rock Ancelet",
+                    "email": "alex@orbitale.io",
+                    "homepage": "http://www.orbitale.io/"
+                }
+            ],
+            "description": "A system that allows creating commands to send to the exec() function to use ImageMagick's powerful features.",
+            "homepage": "https://github.com/Orbitale/ImageMagickPHP",
+            "keywords": [
+                "ImageMagick",
+                "converter",
+                "gd",
+                "image",
+                "imagick"
+            ],
+            "support": {
+                "issues": "https://github.com/Orbitale/ImageMagickPHP/issues",
+                "source": "https://github.com/Orbitale/ImageMagickPHP/tree/v3.3.0"
+            },
+            "funding": [
+                {
+                    "url": "https://github.com/pierstoval",
+                    "type": "github"
+                }
+            ],
+            "time": "2021-12-15T14:22:23+00:00"
         },
         {
             "name": "paragonie/constant_time_encoding",
