@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Helpers\ConnectionDB;
+use App\Imports\TenantImport;
 use App\Http\Controllers\Controller;
 use App\Models\IdCard;
 use App\Models\JenisKelamin;
@@ -21,6 +22,7 @@ use File;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use RealRashid\SweetAlert\Facades\Alert;
+use Excel;
 
 class TenantController extends Controller
 {
@@ -43,11 +45,11 @@ class TenantController extends Controller
         return view('AdminSite.Tenant.index', $data);
     }
 
-    public function import(Request $request)
+    public function importTenant(Request $request)
     {
         $file = $request->file('file_excel');
 
-        Excel::import(new EmployeeImport(), $file);
+        Excel::import(new TenantImport(), $file);
 
         Alert::success('Success', 'Success import data');
 

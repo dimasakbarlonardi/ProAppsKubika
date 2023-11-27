@@ -124,6 +124,7 @@ use App\Http\Controllers\Admin\ToolsSecurityController;
 use App\Http\Controllers\Admin\VisitorsController;
 use App\Http\Controllers\Admin\WaterUUSController;
 use App\Http\Controllers\API\VisitorController;
+use App\Imports\UnitImport;
 use App\Models\ForgotAttendance;
 use App\Models\IncidentalReportHK;
 use App\Models\PermitHR;
@@ -225,10 +226,12 @@ Route::prefix('admin')->group(function () {
         // CRUD UNIT
         Route::resource('units', UnitController::class);
         Route::get('units-by-filter', [UnitController::class, 'unitsByFilter'])->name('unitsByFilter');
+        Route::post('import-units', [UnitController::class, 'importUnit'])->name('import-units');
 
         // CRUD Tenant
         Route::resource('tenants', TenantController::class);
         Route::get('/filter-tenants/get-filter-data', [TenantController::class, 'filteredData']);
+        Route::post('import-tenants', [TenantController::class, 'importTenant'])->name('import-tenants');
 
         // CRUD TenantUnit
         Route::resource('tenantunits', TenantUnitController::class);

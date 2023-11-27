@@ -154,6 +154,8 @@ class BillingController extends Controller
 
             $connMonthlyTenant = $this->perhitDenda($prevBill, $connMonthlyTenant, $previousBills);
 
+            $connMonthlyTenant = $this->perhitDenda($prevBill, $connMonthlyTenant, $previousBills);
+
             // $prevBill->jml_hari_jt = $jml_hari_jt;
             // $prevBill->total_denda = $denda_bulan_sebelumnya;
             // $prevBill->save();
