@@ -116,11 +116,10 @@ class AttendanceController extends Controller
 
                         try {
                             DB::beginTransaction();
-                            $karyawan->NowSchedule->check_in = Carbon::now();
+                            $karyawan->NowSchedule->check_in = !$request->check_in ? Carbon::now() : $request->check_in;
                             $karyawan->NowSchedule->checkin_lat = $request->my_lat;
                             $karyawan->NowSchedule->checkin_long = $request->my_long;
                             $karyawan->NowSchedule->status_absence = $status_absence;
-
                             $file = $request->file('photo');
 
                             if ($file) {
@@ -193,7 +192,7 @@ class AttendanceController extends Controller
 
                     $distance = $this->getDistance($my_lat, $my_long);
                     $checkin = new DateTime($attend->check_in);
-                    $checkout = Carbon::now();
+                    $checkout = $request->check_out ? $request->check_out : Carbon::now();
 
                     $work_hour = $checkin->diff(new DateTime($checkout));
 
