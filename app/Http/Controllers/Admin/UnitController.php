@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
+use App\Imports\UnitImport;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Models\Site;
@@ -18,6 +19,7 @@ use App\Models\TenantUnit;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
+use Excel;
 
 class UnitController extends Controller
 {
@@ -35,6 +37,17 @@ class UnitController extends Controller
         $data['towers'] = $connTower->get();
 
         return view('AdminSite.Unit.index', $data);
+    }
+
+    public function importUnit(Request $request)
+    {
+        $file = $request->file('file_excel');
+
+        Excel::import(new UnitImport(), $file);
+
+        Alert::success('Success', 'Success Import Data');
+
+        return redirect()->route('units.index');
     }
 
     public function unitsByFilter(Request $request)
@@ -116,7 +129,7 @@ class UnitController extends Controller
                 'id_lantai' => $request->id_lantai,
                 'id_hunian' => $request->id_hunian,
                 'nama_unit' => $request->nama_unit,
-                'luas_unit' => $request->luas_unit,
+                'luas_uni4t' => $request->luas_unit,
                 'electric_capacity' => $request->electric_capacity,
                 'no_meter_air' => $request->no_meter_air,
                 'no_meter_listrik' => $request->no_meter_listrik,

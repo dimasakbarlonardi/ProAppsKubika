@@ -337,7 +337,7 @@ class InspectionController extends Controller
             ->with(['Room.Tower', 'Room.Floor', 'Schedule', 'Shift', 'InspectionLocation'])
             ->get();
 
-         
+
         return ResponseFormatter::success(
             $inspection,
             'Berhasil mengambil Parameter Security'
@@ -347,14 +347,14 @@ class InspectionController extends Controller
     public function schedueinspectionsecurity()
     {
         $connInspectionSecurity = ConnectionDB::setConnection(new ChecklistSecurity());
-        
+
         $nowMonth = Carbon::now()->format('m');
         $getSchedules = $connInspectionSecurity->whereMonth('schedule', $nowMonth)
             ->with('Schedule.Room.Floor', 'Shift')
             ->get();
 
         $inspections = [];
-        
+
         if ($getSchedules) {
             foreach ($getSchedules as $schedule) {
                 $object = new stdClass();
@@ -364,11 +364,11 @@ class InspectionController extends Controller
                 $object->status_schedule = $schedule->status_schedule;
                 $object->floor = $schedule->Room->floor;
                 $object->tower = $schedule->Room->Tower;
-               
+
                 $inspections[] = $object;
             }
         }
-        
+
         return ResponseFormatter::success(
             $inspections,
             'Berhasil mengambil Schedule Security'
@@ -464,14 +464,11 @@ class InspectionController extends Controller
         $inspection = $connInspectionDetail->where('id', $id)
             ->with(['Room', 'Schedule', 'Shift'])
             ->first();
-            $inspection['status'] = json_decode($inspection->status);
-            
-            return ResponseFormatter::success(
+        $inspection['status'] = json_decode($inspection->status);
+
+        return ResponseFormatter::success(
             $inspection,
             'Berhasil mengambil history inspection Security'
         );
     }
-
-
-
 }

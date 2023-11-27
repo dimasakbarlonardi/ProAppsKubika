@@ -97,7 +97,7 @@ class ElectricUUSController extends Controller
         $user = $user->where('login_user', $request->user()->email)->first();
 
         $connElecUUS = ConnectionDB::setConnection(new ElectricUUS());
-
+        
         $connElecUUS->create([
             'periode_bulan' => $request->periode_bulan,
             'periode_tahun' => Carbon::now()->format('Y'),

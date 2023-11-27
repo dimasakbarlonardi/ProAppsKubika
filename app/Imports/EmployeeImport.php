@@ -27,12 +27,12 @@ class EmployeeImport implements ToModel, WithStartRow
     {
         $connKaryawan = ConnectionDB::setConnection(new Karyawan());
 
+        $connKaryawan->nama_karyawan = $row[0];
         $connKaryawan->email_karyawan = $row[1];
         $connKaryawan->id_karyawan = sprintf("%04d", $connKaryawan->id);
         $connKaryawan->id_site = Auth::user()->id_site;
         $connKaryawan->id_card_type = $row[2] == 'KTP' ? 1 : 2;
         $connKaryawan->nik_karyawan = $row[3];
-        $connKaryawan->nama_karyawan = $row[0];
         $connKaryawan->kewarganegaraan = $row[4];
         $connKaryawan->alamat_ktp_karyawan = $row[5];
         $connKaryawan->no_telp_karyawan = $row[6];
