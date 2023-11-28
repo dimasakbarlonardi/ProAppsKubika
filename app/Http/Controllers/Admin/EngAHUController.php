@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Helpers\ConnectionDB;
+use App\Imports\EngineeringParameter;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Models\EngAhu;
 use Illuminate\Http\Request;
+use Excel;
 
 class EngAHUController extends Controller
 {
@@ -67,6 +69,17 @@ class EngAHUController extends Controller
 
             return redirect()->route('engahus.index');
         }
+    }
+
+    public function import(Request $request)
+    {
+        $file = $request->file('file_excel');
+
+        Excel::import(new EngineeringParameter(), $file);
+
+        Alert::success('Success', 'Success import data');
+
+        return redirect()->route('engahus.index');
     }
 
     /**

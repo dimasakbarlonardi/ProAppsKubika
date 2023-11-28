@@ -13,7 +13,7 @@
         </div>
     </div>
     <div class="p-5">
-        <div id="tableExample3" data-list='{"valueNames":["nama_user", "nama_site", "login_user"],"page":5,"pagination":true}'>
+        <div id="tableExample3" data-list='{"valueNames":["nama_user", "nama_site", "login_user"]}'>
             <div class="row justify-content-end g-0">
                 <div class="col-auto col-sm-5 mb-3">
                     <form>
@@ -54,8 +54,8 @@
                     </tbody>
                 </table>
             </div>
-            <div class="d-flex justify-content-center mt-3"><button class="btn btn-sm btn-falcon-default me-1" type="button" title="Previous" data-list-pagination="prev"><span class="fas fa-chevron-left"></span></button>
-                <ul class="pagination mb-0"></ul><button class="btn btn-sm btn-falcon-default ms-1" type="button" title="Next" data-list-pagination="next"><span class="fas fa-chevron-right"> </span></button>
+            <div class="d-flex justify-content-center mt-3">
+                {{ $users->links('vendor.pagination.bootstrap-4') }}
             </div>
         </div>
     </div>
