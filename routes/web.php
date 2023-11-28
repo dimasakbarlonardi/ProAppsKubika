@@ -542,7 +542,8 @@ Route::prefix('admin')->group(function () {
         Route::resource('rooms', RoomController::class);
 
         //CRUD Parameter Engineering
-        Route::resource('engineering', EngAHUController::class);
+        Route::resource('engahus', EngAHUController::class);
+        Route::post('import/eng-parameter', [EngAHUController::class, 'import'])->name('importEngParameter');
 
         // --------End Eng Parameter--------
 
@@ -596,6 +597,8 @@ Route::prefix('admin')->group(function () {
         Route::post('/inspections/create-schedules/{id}', [ChecklistAhuHController::class, 'postSchedules'])->name('postSchedules');
         Route::post('/inspections/update-schedules/{id}', [ChecklistAhuHController::class, 'updateSchedules'])->name('updateSchedulesENG');
         Route::post('/inspections/destroy-schedules/{id}', [ChecklistAhuHController::class, 'destroySchedules'])->name('destroySchedules');
+        Route::post('/import/equipment-engineering', [ChecklistAhuHController::class, 'import'])->name('importEquipmentEngineering');
+        Route::post('/import/schedule-engineering', [ChecklistAhuHController::class, 'importSchedules'])->name('importSchedulesEngineering');
 
         //CRUD Checklist AHU Detail
         Route::resource('ahudetails', ChecklistAhuDetailController::class);
@@ -771,8 +774,8 @@ Route::prefix('admin')->group(function () {
         // --------------Parameter Security---------
         Route::resource('Parameter-Security', ParameterSecurityController::class);
 
-          // --------------Parameter Shift Security---------
-          Route::resource('Parameter-Shift-Security', ParameterShiftSecurityController::class);
+        // --------------Parameter Shift Security---------
+        Route::resource('Parameter-Shift-Security', ParameterShiftSecurityController::class);
     });
 });
 
