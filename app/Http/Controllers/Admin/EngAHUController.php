@@ -59,13 +59,13 @@ class EngAHUController extends Controller
             DB::commit();
 
             Alert::success('Success', 'Successfully Added Inspection Engeneering Parameter');
-            return redirect()->route('engahus.index');
+            return redirect()->route('engineering.index');
         } catch (\Throwable $e) {
             DB::rollBack();
             dd($e);
             Alert::error('Gagal', 'Gagal menambahkan Engeneering AHU');
 
-            return redirect()->route('engahus.index');
+            return redirect()->route('engineering.index');
         }
     }
 
@@ -111,7 +111,7 @@ class EngAHUController extends Controller
 
         Alert::success('Berhasil', 'Berhasil mengupdate Engeneering AHU');
 
-        return redirect()->route('engahus.index');
+        return redirect()->route('engineering.index');
     }
 
     /**
@@ -127,6 +127,6 @@ class EngAHUController extends Controller
         $conn->find($id)->delete();
         Alert::success('Berhasil','Berhasil Menghapus Engeneering AHU');
 
-        return redirect()->route('engahus.index');
+        return redirect()->route('engineering.index');
     }
 }

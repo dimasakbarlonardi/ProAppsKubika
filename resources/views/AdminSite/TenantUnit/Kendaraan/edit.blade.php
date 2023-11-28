@@ -11,10 +11,9 @@
                     <select class="form-control" name="id_unit" required>
                         <option selected disabled>-- Pilih Unit --</option>
                         @foreach ($getCreateUnits as $item)
-                            <option value="{{ $item->id_unit }}"
-                                {{ $tenantkendaraan->id_unit == $item->Unit->id_unit ? 'selected' : '' }}>
-                                {{ $item->Unit->nama_unit }}
-                            </option>
+                        <option value="{{ $item->id_unit }}" {{ $tenantkendaraan->id_unit == $item->Unit->id_unit ? 'selected' : '' }}>
+                            {{ $item->Unit->nama_unit }}
+                        </option>
                         @endforeach
                     </select>
                 </div>
@@ -23,9 +22,8 @@
                     <select class="form-control" name="id_jenis_kendaraan" required>
                         <option selected disabled>-- Pilih Jenis Kendaraan --</option>
                         @foreach ($jenis_kendaraan as $jeniskendaraan)
-                            <option value="{{ $jeniskendaraan->id_jenis_kendaraan }}"
-                                {{ $tenantkendaraan->id_jenis_kendaraan == $jeniskendaraan->id_jenis_kendaraan ? 'selected' : '' }}>
-                                {{ $jeniskendaraan->jenis_kendaraan }}</option>
+                        <option value="{{ $jeniskendaraan->id_jenis_kendaraan }}" {{ $tenantkendaraan->id_jenis_kendaraan == $jeniskendaraan->id_jenis_kendaraan ? 'selected' : '' }}>
+                            {{ $jeniskendaraan->jenis_kendaraan }}</option>
                         @endforeach
                     </select>
                 </div>
@@ -33,8 +31,11 @@
             <div class="row">
                 <div class="col-6">
                     <label class="form-label">No Polisi </label>
-                    <input type="text" name="no_polisi" value="{{ $tenantkendaraan->no_polisi }}"
-                        class="form-control" required>
+                    <input type="text" name="no_polisi" value="{{ $tenantkendaraan->no_polisi }}" class="form-control" required>
+                </div>
+                <div class="col-6">
+                    <label class="form-label">Keterangan </label>
+                    <input type="text" name="keterangan" value="{{ $tenantkendaraan->keterangan }}" class="form-control" required>
                 </div>
             </div>
         </div>

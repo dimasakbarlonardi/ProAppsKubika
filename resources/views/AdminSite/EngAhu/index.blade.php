@@ -8,7 +8,7 @@
                 <h6 class="mb-0">List Engeneering Inspection Parameter</h6>
             </div>
             <div class="col-auto d-flex">
-                <a class="btn btn-falcon-default btn-sm text-600" href="{{ route('engahus.create') }}"><span class="fas fa-plus fs--2 me-1"></span>Create Parameter</a>
+                <a class="btn btn-falcon-default btn-sm text-600" href="{{ route('engineering.create') }}"><span class="fas fa-plus fs--2 me-1"></span>Create Parameter</a>
             </div>
         </div>
     </div>
@@ -38,8 +38,8 @@
                                 <th scope="row">{{ $engahus->firstItem() + $key }}</th>
                                 <td class="nama_eng_ahu">{{ $engahu->nama_eng_ahu }}</td>
                                 <td>
-                                    <a href="{{ route('engahus.edit', $engahu->id_eng_ahu) }}" class="btn btn-sm btn-warning"><span class="fas fa-pencil-alt fs--2 me-1"></span>Edit</a>
-                                    <!-- <form class="d-inline" action="{{ route('engahus.destroy', $engahu->id_eng_ahu) }}" method="post">
+                                    <a href="{{ route('engineering.edit', $engahu->id_eng_ahu) }}" class="btn btn-sm btn-warning"><span class="fas fa-pencil-alt fs--2 me-1"></span>Edit</a>
+                                    <!-- <form class="d-inline" action="{{ route('engineering.destroy', $engahu->id_eng_ahu) }}" method="post">
                                     @method('DELETE')
                                     @csrf
                                     <button type="submit" class="btn btn-danger btn-sm"

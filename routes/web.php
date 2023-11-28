@@ -541,7 +541,7 @@ Route::prefix('admin')->group(function () {
         Route::resource('rooms', RoomController::class);
 
         //CRUD Parameter Engineering
-        Route::resource('engahus', EngAHUController::class);
+        Route::resource('engineering', EngAHUController::class);
 
         // --------End Eng Parameter--------
 

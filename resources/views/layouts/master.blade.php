@@ -69,8 +69,8 @@
                                 class="navbar-toggle-icon"><span class="toggle-line"></span></span></button>
                     </div>
                     <a class="navbar-brand" href="{{ route('dashboard') }}">
-                        <div class="d-flex align-items-center py-3"><img class="me-2"
-                                src="/assets/img/icons/spot-illustrations/proapps.png" alt="proapps" width="150" />
+                        <div class="d-flex align-items-center py-4"><img class="me-2"
+                                src="/assets/img/icons/spot-illustrations/proapps.png" alt="proapps" width="130" />
                         </div>
                     </a>
                 </div>

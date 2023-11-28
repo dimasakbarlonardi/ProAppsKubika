@@ -344,12 +344,14 @@ class InspectionController extends Controller
         );
     }
 
+
     public function schedueinspectionsecurity()
     {
         $connInspectionSecurity = ConnectionDB::setConnection(new ChecklistSecurity());
 
         $nowMonth = Carbon::now()->format('m');
         $getSchedules = $connInspectionSecurity->whereMonth('schedule', $nowMonth)
+            ->where('status_schedule', '!=', 'Not Done')
             ->with('Schedule.Room.Floor', 'Shift')
             ->get();
 
