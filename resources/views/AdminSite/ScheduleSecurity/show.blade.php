@@ -30,7 +30,7 @@
                 </div>
                 <div class="col-6">
                     <label class="form-label">Schedule</label>
-                    <input type="datetime-local" name="schedule" value="{{ $ScheduleSecurity->schedule }}" disabled class="form-control editable">
+                    <input type="date" name="schedule" value="{{ $ScheduleSecurity->schedule }}" disabled class="form-control editable">
                 </div>
                 <div class="col-6">
                     <label class="form-label">Shift</label>
