@@ -705,7 +705,7 @@ Route::prefix('admin')->group(function () {
 
         // ---------------Inspection Tools Security-----------------
         Route::resource('tools-security', ToolsSecurityController::class);
-        Route::get('/history-tools-security', [ToolsSecurityController::class, 'History'])->name('history');
+        Route::get('/tools-sec/histories', [ToolsSecurityController::class, 'historyToolSec'])->name('historyToolSec');
         Route::post('tools/borrowSecurity/{id}', [ToolsSecurityController::class, 'borrowToolSecurity'])->name('borrowSecurity.tool');
         Route::post('tools/returnSecurity/{id}', [ToolsSecurityController::class, 'returnToolSecurity'])->name('returnSecurity.tool');
 

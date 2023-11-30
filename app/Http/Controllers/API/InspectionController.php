@@ -397,7 +397,6 @@ class InspectionController extends Controller
                 $schedule->image = $inspecImage;
             }
             $schedule->id_room = $request->id_room;
-            $schedule->id_shift = $request->id_shift;
             $schedule->status = $request->status;
             $schedule->user_id = $request->user_id;
             $schedule->checklist_datetime = Carbon::now();
