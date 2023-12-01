@@ -50,6 +50,7 @@ class InvoiceController extends Controller
         $connSetting = ConnectionDB::setConnection(new CompanySetting());
         $connUtility = ConnectionDB::setConnection(new Utility());
         $connIPLType = ConnectionDB::setConnection(new IPLType());
+        $connSetting = ConnectionDB::setConnection(new CompanySetting());
 
         $user = $request->session()->get('user');
         $transaction = $connCR->find($id);
@@ -66,6 +67,7 @@ class InvoiceController extends Controller
         $data['water'] = $connUtility->find(2);
         $data['setting'] = $connSetting->find(1);
         $data['transaction'] = $transaction;
+        $data['setting'] = $connSetting->find(1);
         $data['installment'] = [];
 
         if ($transaction->transaction_type == 'MonthlyTenant' && count($transaction->Installments) > 0) {

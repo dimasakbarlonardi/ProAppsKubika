@@ -11,6 +11,7 @@ use App\Helpers\SaveFile;
 use App\Http\Controllers\Controller;
 use App\Models\CashReceipt;
 use App\Models\CashReceiptDetail;
+use App\Models\CompanySetting;
 use App\Models\ElectricUUS;
 use App\Models\IPLType;
 use App\Models\ListBank;
@@ -36,15 +37,25 @@ class BillingController extends Controller
 {
     public function listBillings($id)
     {
-        $dbName = ConnectionDB::getDBname();
+        $connSetting = ConnectionDB::setConnection(new CompanySetting());
+        $connAR = ConnectionDB::setConnection(new MonthlyArTenant());
 
-        $connARTenant = DB::connection($dbName)
-            ->table('tb_fin_monthly_ar_tenant as arm')
-            ->join('tb_draft_cash_receipt as cr', 'arm.no_monthly_invoice', 'cr.no_reff')
-            ->where('arm.id_unit', $id)
-            ->where('arm.tgl_jt_invoice', '!=', null)
-            ->orderBy('periode_bulan', 'desc')
-            ->get();
+        $dbName = ConnectionDB::getDBname();
+        $setting = $connSetting->find(1);
+
+        if ($setting->is_split_ar == 0) {
+            $connARTenant = DB::connection($dbName)
+                ->table('tb_fin_monthly_ar_tenant as arm')
+                ->join('tb_draft_cash_receipt as cr', 'arm.no_monthly_invoice', 'cr.no_reff')
+                ->where('arm.id_unit', $id)
+                ->where('arm.tgl_jt_invoice', '!=', null)
+                ->orderBy('periode_bulan', 'desc')
+                ->get();
+        } elseif ($setting->is_split_ar == 1) {
+            $connARTenant = $connAR->where('deleted_at', null)
+                ->with(['UtilityCashReceipt', 'IPLCashReceipt'])
+                ->get();
+        }
 
         return ResponseFormatter::success(
             $connARTenant,
@@ -55,29 +66,40 @@ class BillingController extends Controller
     public function showBilling($id)
     {
         $connARTenant = ConnectionDB::setConnection(new MonthlyArTenant());
-        $ar = $connARTenant->where('id_monthly_ar_tenant', $id);
         $connUtil = ConnectionDB::setConnection(new Utility());
         $connIPLType = ConnectionDB::setConnection(new IPLType());
+        $connSetting = ConnectionDB::setConnection(new CompanySetting());
 
+        $ar = $connARTenant->where('id_monthly_ar_tenant', $id);
+
+        $previousBills = [];
+        $data['installment'] = [];
+
+        $setting = $connSetting->find(1);
         $sc = $connIPLType->find(6);
         $sf = $connIPLType->find(7);
 
         $ar = $ar->with([
             'Unit.TenantUnit.Tenant',
             'CashReceipt',
-            'MonthlyIPL',
+            'MonthlyIPL.CashReceipt',
             'MonthlyUtility.ElectricUUS',
-            'MonthlyUtility.WaterUUS'
+            'MonthlyUtility.WaterUUS',
+            'MonthlyUtility.CashReceipt'
         ]);
 
-        $data = $ar->first();
-        $previousBills = $ar->first()->PreviousMonthBill();
+        if ($setting->is_split_ar == 0) {
+            $previousBills = $ar->first()->PreviousMonthBill();
+            $data['installment'] = $data->CashReceipt->Installment($data->periode_bulan, $data->periode_tahun);
+        } elseif ($setting->is_split_ar == 1) {
 
+        }
+
+        $data = $ar->first();
         $data['price_water'] = $connUtil->find(2)->biaya_m3;
         $data['price_electric'] = $connUtil->find(1)->biaya_m3;
         $data['service_charge_price'] = $sc->biaya_permeter;
         $data['sinking_fund_price'] = $sf->biaya_permeter;
-        $data['installment'] = $data->CashReceipt->Installment($data->periode_bulan, $data->periode_tahun);
 
         return ResponseFormatter::success(
             [
@@ -91,15 +113,14 @@ class BillingController extends Controller
     public function generateTransaction($id)
     {
         $request = Request();
-        $connMonthlyTenant = ConnectionDB::setConnection(new MonthlyArTenant());
-        $mt = $connMonthlyTenant->find($id);
-        $site = Site::find($mt->id_site);
+        $cr = ConnectionDB::setConnection(new CashReceipt());
 
         $client = new Client();
         $admin_fee = (int) $request->admin_fee;
         $type = $request->type;
         $bank = $request->bank;
-        $transaction = $mt->CashReceipt;
+        $transaction = $cr->find($id);
+        $site = Site::find(Auth::user()->id_site);
 
         if ($transaction->transaction_status == 'PENDING') {
             if ($type == 'bank_transfer') {
@@ -131,7 +152,7 @@ class BillingController extends Controller
                 $transaction->va_number = $response->va_numbers[0]->va_number;
                 $transaction->transaction_id = $response->transaction_id;
                 $transaction->expiry_time = $response->expiry_time;
-                $transaction->no_invoice = $mt->no_monthly_invoice;
+                $transaction->no_invoice = $transaction->no_invoice;
                 $transaction->admin_fee = $admin_fee;
                 $transaction->transaction_status = 'VERIFYING';
 
