@@ -71,12 +71,13 @@
                                 <tr>
                                     <th class="align-middle white-space-nowrap">
                                         <div class="form-check mb-0">
-                                            <input class="form-check-input" name="bulk-elect" type="checkbox" id="{{ $item->id }}"
-                                                data-bulk-select-row="data-bulk-select-row" />
+                                            <input class="form-check-input" name="bulk-elect" type="checkbox"
+                                                id="{{ $item->id }}" data-bulk-select-row="data-bulk-select-row" />
                                         </div>
                                     </th>
                                     <td class="align-middle">
-                                        <img src="{{ $item->image ? url($item->image) : url('/assets/img/icons/spot-illustrations/proapps.png') }}" width="100">
+                                        <img src="{{ $item->image ? url($item->image) : url('/assets/img/icons/spot-illustrations/proapps.png') }}"
+                                            width="100">
                                     </td>
                                     <th class="align-middle">{{ $item->Unit->nama_unit }}</th>
                                     <th class="align-middle">
@@ -120,11 +121,28 @@
                                         @endif
                                         @if ($item->MonthlyUtility)
                                             <h6>
-                                                <a class="badge bg-info"
-                                                    href="{{ route('showInvoices', $item->MonthlyUtility->MonthlyTenant->CashReceipt->id) }}">
-                                                    <span class="fas fa-eye fs--2 me-1"></span>
-                                                    Invoice
-                                                </a>
+                                                @if ($setting->is_split_ar == 0)
+                                                    <a class="badge bg-info"
+                                                        href="{{ route('showInvoices', $item->MonthlyUtility->MonthlyTenant->CashReceipt->id) }}">
+                                                        <span class="fas fa-eye fs--2 me-1"></span>
+                                                        Invoice
+                                                    </a>
+                                                @else
+                                                    <div class="mb-2">
+                                                        <a class="badge bg-info"
+                                                            href="{{ route('showInvoices', $item->MonthlyUtility->MonthlyTenant->SplitCashReceipt(null, $item->MonthlyUtility->MonthlyTenant->id_monthly_ipl)->id) }}">
+                                                            <span class="fas fa-eye fs--2 me-1"></span>
+                                                            Invoice IPL
+                                                        </a>
+                                                    </div>
+                                                    <div>
+                                                        <a class="badge bg-info"
+                                                            href="{{ route('showInvoices', $item->MonthlyUtility->MonthlyTenant->SplitCashReceipt($item->MonthlyUtility->id, null)->id) }}">
+                                                            <span class="fas fa-eye fs--2 me-1"></span>
+                                                            Invoice Utility
+                                                        </a>
+                                                    </div>
+                                                @endif
                                             </h6>
                                         @endif
                                     </th>
@@ -167,10 +185,12 @@
 
                                 <div class="modal fade" id="edit-modal{{ $item->id }}" tabindex="-1" role="dialog"
                                     aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 500px">
+                                    <div class="modal-dialog modal-dialog-centered" role="document"
+                                        style="max-width: 500px">
                                         <div class="modal-content position-relative">
                                             <div class="position-absolute top-0 end-0 mt-2 me-2 z-1">
-                                                <button class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base"
+                                                <button
+                                                    class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base"
                                                     data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
                                             <form method="post" action="{{ route('updateElectric', $item->id) }}">
@@ -185,19 +205,24 @@
                                                         <div class="mb-3">
                                                             <div class="row">
                                                                 <div class="col-6">
-                                                                    <label class="col-form-label" for="recipient-name">Previous:</label>
+                                                                    <label class="col-form-label"
+                                                                        for="recipient-name">Previous:</label>
                                                                     <input class="form-control" name="nomor_listrik_awal"
-                                                                        value="{{ $item->nomor_listrik_awal }}" type="integer" />
+                                                                        value="{{ $item->nomor_listrik_awal }}"
+                                                                        type="integer" />
                                                                 </div>
                                                                 <div class="col-6">
-                                                                    <label class="col-form-label" for="recipient-name">Current:</label>
+                                                                    <label class="col-form-label"
+                                                                        for="recipient-name">Current:</label>
                                                                     <input class="form-control" name="nomor_listrik_akhir"
-                                                                        value="{{ $item->nomor_listrik_akhir }}" type="integer" />
+                                                                        value="{{ $item->nomor_listrik_akhir }}"
+                                                                        type="integer" />
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         <div class="mb-3">
-                                                            <label class="col-form-label" for="message-text">Notes:</label>
+                                                            <label class="col-form-label"
+                                                                for="message-text">Notes:</label>
                                                             <textarea class="form-control" name="catatan" rows="8" id="message-text"></textarea>
                                                         </div>
                                                     </div>
@@ -214,15 +239,18 @@
                                     </div>
                                 </div>
 
-                                <div class="modal fade" id="approve-modal{{ $item->id }}" tabindex="-1" role="dialog"
-                                    aria-hidden="true">
-                                    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 500px">
+                                <div class="modal fade" id="approve-modal{{ $item->id }}" tabindex="-1"
+                                    role="dialog" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document"
+                                        style="max-width: 500px">
                                         <div class="modal-content position-relative">
                                             <div class="position-absolute top-0 end-0 mt-2 me-2 z-1">
-                                                <button class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base"
+                                                <button
+                                                    class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base"
                                                     data-bs-dismiss="modal" aria-label="Close"></button>
                                             </div>
-                                            <form method="post" action="{{ route('approveUpdateElectric', $item->id) }}">
+                                            <form method="post"
+                                                action="{{ route('approveUpdateElectric', $item->id) }}">
                                                 @csrf
                                                 <div class="modal-body p-0">
                                                     <div class="rounded-top-3 py-3 ps-4 pe-6 bg-light">
@@ -237,13 +265,15 @@
                                                                     <label class="col-form-label" for="recipient-name">Old
                                                                         previous:</label>
                                                                     <input class="form-control"
-                                                                        value="{{ $item->old_nomor_listrik_awal }}" disabled />
+                                                                        value="{{ $item->old_nomor_listrik_awal }}"
+                                                                        disabled />
                                                                 </div>
                                                                 <div class="col-6">
                                                                     <label class="col-form-label" for="recipient-name">Old
                                                                         current:</label>
                                                                     <input class="form-control"
-                                                                        value="{{ $item->old_nomor_listrik_akhir }}" disabled />
+                                                                        value="{{ $item->old_nomor_listrik_akhir }}"
+                                                                        disabled />
                                                                 </div>
                                                             </div>
                                                         </div>
@@ -268,21 +298,25 @@
                                                         <div class="mb-3">
                                                             <div class="row">
                                                                 <div class="col-6">
-                                                                    <label class="col-form-label" for="recipient-name"> New
+                                                                    <label class="col-form-label" for="recipient-name">
+                                                                        New
                                                                         previous:</label>
                                                                     <input class="form-control"
-                                                                        value="{{ $item->nomor_listrik_awal }}" disabled />
+                                                                        value="{{ $item->nomor_listrik_awal }}"
+                                                                        disabled />
                                                                 </div>
                                                                 <div class="col-6">
                                                                     <label class="col-form-label" for="recipient-name">New
                                                                         current:</label>
                                                                     <input class="form-control"
-                                                                        value="{{ $item->nomor_listrik_akhir }}" disabled />
+                                                                        value="{{ $item->nomor_listrik_akhir }}"
+                                                                        disabled />
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         <div class="mb-3">
-                                                            <label class="col-form-label" for="message-text">Notes:</label>
+                                                            <label class="col-form-label"
+                                                                for="message-text">Notes:</label>
                                                             <textarea class="form-control" name="catatan" rows="8" id="message-text" disabled>{{ $item->catatan }}</textarea>
                                                         </div>
                                                     </div>

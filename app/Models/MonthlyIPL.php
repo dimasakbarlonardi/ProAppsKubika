@@ -15,4 +15,9 @@ class MonthlyIPL extends Model
     {
         return $this->hasOne(Unit::class, 'id_unit', 'id_unit');
     }
+
+    public function CashReceipt()
+    {
+        return $this->hasOne(CashReceipt::class, 'id_monthly_ipl', 'id');
+    }
 }
