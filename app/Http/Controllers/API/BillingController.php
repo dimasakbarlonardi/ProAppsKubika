@@ -178,7 +178,7 @@ class BillingController extends Controller
                 $transaction->payment_type = 'credit_card';
                 $transaction->admin_fee = $admin_fee;
                 $transaction->gross_amount = round($transaction->sub_total + $admin_fee);
-                $transaction->no_invoice = $mt->no_monthly_invoice;
+                $transaction->no_invoice = $transaction->no_invoice;
 
                 $getTokenCC = $this->TransactionCC($request);
                 $chargeCC = $this->ChargeTransactionCC($getTokenCC->token_id, $transaction);
