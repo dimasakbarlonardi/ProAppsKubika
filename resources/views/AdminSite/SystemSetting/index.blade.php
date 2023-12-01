@@ -48,17 +48,17 @@
                         </div>
                     </div>
                 </div> --}}
-                <h4>Kode Unik</h4>
+                {{-- <h4>Kode Unik</h4>
                 <hr>
                 <div class="mb-3">
                     <div class="row">
                         <div class="col-6">
-                            <label class="form-label">Kode Unik Tiket</label>
+                            <label class="form-label">Kode Unik Request</label>
                             <input class="form-control" maxlength="3" disabled type="text" name="kode_unik_tiket"
                                 value="{{ $system->kode_unik_tiket }}">
                         </div>
                         <div class="col-6">
-                            <label class="form-label">Kode Unik WR</label>
+                            <label class="form-label">Kode Unik Work Request</label>
                             <input class="form-control" maxlength="3" disabled type="text" name="kode_unik_wr"
                                 value="{{ $system->kode_unik_wr }}">
                         </div>
@@ -66,37 +66,24 @@
                 </div>
                 <div class="mb-3">
                     <div class="row">
-                        {{-- <div class="col-6">
-                            <label class="form-label">Kode Unik WR</label>
-                            <input class="form-control" maxlength="3" disabled type="text" name="kode_unit_wr" value="{{ $system->kode_unit_wr }}">
-                        </div> --}}
                         <div class="col-6">
-                            <label class="form-label">Kode Unik WO</label>
+                            <label class="form-label">Kode Unik Work Order</label>
                             <input class="form-control" maxlength="3" disabled type="text" name="kode_unik_wo"
                                 value="{{ $system->kode_unik_wo }}">
                         </div>
+                        <div class="col-6">
+                            <label class="form-label">Kode Unik Permit Request</label>
+                            <input class="form-control" maxlength="3" disabled type="text" name="kode_unik_pr"
+                                value="{{ $system->kode_unik_pr }}">
+                        </div>
                     </div>
                 </div>
                 <div class="mb-3">
                     <div class="row">
                         <div class="col-6">
-                            <label class="form-label">Kode Unik PR</label>
-                            <input class="form-control" maxlength="3" disabled type="text" name="kode_unik_pr"
-                                value="{{ $system->kode_unik_pr }}">
-                        </div>
-                        <div class="col-6">
-                            <label class="form-label">Kode Unik PO</label>
+                            <label class="form-label">Kode Unik Permit Order</label>
                             <input class="form-control" maxlength="3" disabled type="text" name="kode_unik_po"
                                 value="{{ $system->kode_unik_po }}">
-                        </div>
-                    </div>
-                </div>
-                <div class="mb-3">
-                    <div class="row">
-                        <div class="col-6">
-                            <label class="form-label">Kode Unik PR</label>
-                            <input class="form-control" maxlength="3" disabled type="text" name="kode_unik_pr"
-                                value="{{ $system->kode_unik_pr }}">
                         </div>
                         <div class="col-6">
                             <label class="form-label">Kode Unik Invoice</label>
@@ -108,29 +95,23 @@
                 <div class="mb-3">
                     <div class="row">
                         <div class="col-6">
-                            <label class="form-label">Kode Unik Cash Payment</label>
-                            <input class="form-control" maxlength="3" disabled type="text" name="kode_unik_cash_payment"
-                                value="{{ $system->kode_unik_cash_payment }}">
-                        </div>
-                        <div class="col-6">
                             <label class="form-label">Kode Unik Cash Receipt</label>
                             <input class="form-control" maxlength="3" disabled type="text" name="kode_unik_cash_receipt"
                                 value="{{ $system->kode_unik_cash_receipt }}">
                         </div>
                     </div>
                 </div>
-
                 <h4 class="mt-5 mb-3">Sequence Number</h4>
                 <hr>
                 <div class="mb-3">
                     <div class="row">
                         <div class="col-6">
-                            <label class="form-label">Sequence No Tiket</label>
+                            <label class="form-label">Sequence No Request</label>
                             <input class="form-control" maxlength="6" disabled type="text" name="sequence_notiket"
                                 value="{{ $system->sequence_notiket }}">
                         </div>
                         <div class="col-6">
-                            <label class="form-label">Sequence No WR</label>
+                            <label class="form-label">Sequence No Work Request</label>
                             <input class="form-control" maxlength="6" disabled type="text" name="sequence_no_wr"
                                 value="{{ $system->sequence_no_wr }}">
                         </div>
@@ -139,12 +120,12 @@
                 <div class="mb-3">
                     <div class="row">
                         <div class="col-6">
-                            <label class="form-label">Sequence No WO</label>
+                            <label class="form-label">Sequence No Work Order</label>
                             <input class="form-control" maxlength="6" disabled type="text" name="sequence_no_wo"
                                 value="{{ $system->sequence_no_wo }}">
                         </div>
                         <div class="col-6">
-                            <label class="form-label">Sequence No PR</label>
+                            <label class="form-label">Sequence No Permit Request</label>
                             <input class="form-control" maxlength="6" disabled type="text" name="sequence_no_pr"
                                 value="{{ $system->sequence_no_pr }}">
                         </div>
@@ -153,7 +134,7 @@
                 <div class="mb-3">
                     <div class="row">
                         <div class="col-6">
-                            <label class="form-label">Sequence No PO</label>
+                            <label class="form-label">Sequence No Permit Order</label>
                             <input class="form-control" maxlength="6" disabled type="text" name="sequence_no_po"
                                 value="{{ $system->sequence_no_po }}">
                         </div>
@@ -167,7 +148,7 @@
                 <div class="mb-3">
                     <div class="row">
                         <div class="col-6">
-                            <label class="form-label">Sequence No Cash Paymeny</label>
+                            <label class="form-label">Sequence No Cash Payment</label>
                             <input class="form-control" maxlength="6" disabled type="text"
                                 name="sequence_no_cash_payment" value="{{ $system->sequence_no_cash_payment }}">
                         </div>
@@ -181,7 +162,7 @@
                     <button type="button" class="btn btn-primary" id="button-edit">Edit</button>
                     <button type="submit" class="btn btn-success" style="display: none"
                         id="button-update">Update</button>
-                </div>
+                </div> --}}
             </form>
         </div>
     </div>

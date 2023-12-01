@@ -285,7 +285,7 @@ Route::prefix('admin')->group(function () {
         Route::resource('tenantunits', TenantUnitController::class);
 
         // System Setting
-        Route::resource('system-settings', SystemSettingController::class);
+        Route::post('/system/split-ar', [CompanySettingController::class, 'splitAR'])->name('splitAR');
         Route::get('/system/approve', [SystemSettingController::class, 'systemApprove'])->name('systemApprove'); // Approve system
         Route::get('/system/approve/{id}', [SystemSettingController::class, 'editSystemApprove'])->name('editSystemApprove'); // edit Approve system
         Route::post('/system/approve/{id}', [SystemSettingController::class, 'updateSystemApprove'])->name('updateSystemApprove'); // update approve system

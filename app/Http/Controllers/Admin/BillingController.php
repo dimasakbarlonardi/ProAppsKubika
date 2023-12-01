@@ -9,6 +9,7 @@ use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Models\CashReceipt;
 use App\Models\CashReceiptDetail;
+use App\Models\CompanySetting;
 use App\Models\ElectricUUS;
 use App\Models\Installment;
 use App\Models\IPLType;
@@ -41,81 +42,54 @@ use Throwable;
 
 class BillingController extends Controller
 {
-    public function generateMonthlyInvoice(Request $request)
+    function validateUtility($request, $id)
     {
         $connElecUUS = ConnectionDB::setConnection(new ElectricUUS());
         $connWaterUUS = ConnectionDB::setConnection(new WaterUUS());
-        $connSystem = ConnectionDB::setConnection(new System());
-        $system = $connSystem->find(1);
-
-        $countINV = $system->sequence_no_invoice + 1;
-
-        $no_inv = $system->kode_unik_perusahaan . '/' .
-            $system->kode_unik_invoice . '/' .
-            Carbon::now()->format('m') . Carbon::now()->format('Y') . '/' .
-            sprintf("%06d", $countINV);
-
         $status = false;
+
+        if ($request->type == 'electric') {
+            $data['elecUSS'] = $connElecUUS->find($id);
+            $data['waterUSS'] = $connWaterUUS->where('periode_bulan', $data['elecUSS']->periode_bulan)
+                ->where('is_approve', '1')
+                ->where('periode_tahun', $data['elecUSS']->periode_tahun)
+                ->where('id_unit', $data['elecUSS']->id_unit)
+                ->first();
+            $status = $data['elecUSS']->Unit->TenantUnit->Tenant->User ? true : false;
+            $nama_unit = $data['elecUSS']->Unit->nama_unit;
+        } elseif ($request->type == 'water') {
+            $data['waterUSS'] = $connWaterUUS->find($id);
+            $data['elecUSS'] = $connElecUUS->where('periode_bulan', $data['waterUSS']->periode_bulan)
+                ->where('is_approve', '1')
+                ->where('periode_tahun', $data['waterUSS']->periode_tahun)
+                ->where('id_unit', $data['waterUSS']->id_unit)
+                ->first();
+            $status = $data['waterUSS']->Unit->TenantUnit->Tenant->User ? true : false;
+            $nama_unit = $data['elecUSS']->Unit->nama_unit;
+        }
+
+        if (!$status) {
+            return response()->json([
+                'status' => 401,
+                'unit' => $nama_unit
+            ]);
+        }
+
+        return $data;
+    }
+
+    public function generateMonthlyInvoice(Request $request)
+    {
         foreach ($request->IDs as $id) {
-            if ($request->type == 'electric') {
-                $elecUSS = $connElecUUS->find($id);
-                $waterUSS = $connWaterUUS->where('periode_bulan', $elecUSS->periode_bulan)
-                    ->where('is_approve', '1')
-                    ->where('periode_tahun', $elecUSS->periode_tahun)
-                    ->where('id_unit', $elecUSS->id_unit)
-                    ->first();
-                $status = $elecUSS->Unit->TenantUnit->Tenant->User ? true : false;
-                $nama_unit = $elecUSS->Unit->nama_unit;
-            } elseif ($request->type == 'water') {
-                $waterUSS = $connWaterUUS->find($id);
-                $elecUSS = $connElecUUS->where('periode_bulan', $waterUSS->periode_bulan)
-                    ->where('is_approve', '1')
-                    ->where('periode_tahun', $waterUSS->periode_tahun)
-                    ->where('id_unit', $waterUSS->id_unit)
-                    ->first();
-                $status = $waterUSS->Unit->TenantUnit->Tenant->User ? true : false;
-                $nama_unit = $elecUSS->Unit->nama_unit;
-            }
+            $validate = $this->validateUtility($request, $id);
 
-            if (!$status) {
-                return response()->json([
-                    'status' => 401,
-                    'unit' => $nama_unit
-                ]);
-            }
-
-            if ($waterUSS && $elecUSS && !$waterUSS->MonthlyUtility) {
+            if ($validate['waterUSS'] && $validate['elecUSS'] && !$validate['waterUSS']->MonthlyUtility) {
                 try {
                     DB::beginTransaction();
 
-                    $createIPLbill = $this->createIPLbill($elecUSS);
-                    $createUtilityBill = $this->createUtilityBill($elecUSS, $waterUSS, $createIPLbill);
-                    $createMonthlyTenant = $this->createMonthlyTenant($createUtilityBill, $createIPLbill, $elecUSS, $waterUSS);
+                    $this->createMonthlyARData($validate);
 
-                    if ($createMonthlyTenant->Unit->TenantUnit) {
-                        $createIPLbill->save();
-                        $createUtilityBill->save();
-
-                        $elecUSS->no_refrensi = $createUtilityBill->id;
-                        $elecUSS->save();
-                        $waterUSS->no_refrensi = $createUtilityBill->id;
-                        $waterUSS->save();
-
-                        $createMonthlyTenant->id_monthly_utility = $createUtilityBill->id;
-                        $createMonthlyTenant->no_monthly_invoice = $no_inv;
-                        $createMonthlyTenant->id_monthly_ipl = $createIPLbill->id;
-                        $createMonthlyTenant->save();
-
-                        $transaction = $this->createTransaction($createMonthlyTenant);
-                        $transaction->no_reff = $no_inv;
-                        $transaction->no_invoice = $no_inv;
-                        $transaction->save();
-
-                        $system->sequence_no_invoice = $countINV;
-                        $system->save();
-
-                        DB::commit();
-                    }
+                    DB::commit();
                 } catch (Throwable $e) {
                     DB::rollBack();
                     dd($e);
@@ -123,15 +97,78 @@ class BillingController extends Controller
                 }
             }
         }
+
         return response()->json(['status' => 'ok']);
+    }
+
+    function createMonthlyARData($validate)
+    {
+        $connCompany = ConnectionDB::setConnection(new CompanySetting());
+
+        $setting = $connCompany->find(1);
+
+        $createIPLbill = $this->createIPLbill($validate['elecUSS']);
+        $createUtilityBill = $this->createUtilityBill($validate['elecUSS'], $validate['waterUSS'], $createIPLbill);
+        $createMonthlyTenant = $this->createMonthlyTenant($createUtilityBill, $createIPLbill, $validate['elecUSS'], $validate['waterUSS']);
+
+        $createIPLbill->save();
+        $createUtilityBill->save();
+
+        $validate['elecUSS']->no_refrensi = $createUtilityBill->id;
+        $validate['elecUSS']->save();
+        $validate['waterUSS']->no_refrensi = $createUtilityBill->id;
+        $validate['waterUSS']->save();
+
+        $createMonthlyTenant->id_monthly_utility = $createUtilityBill->id;
+        $createMonthlyTenant->id_monthly_ipl = $createIPLbill->id;
+        $createMonthlyTenant->save();
+
+        if ($setting->is_split_ar == 0) {
+            $no_inv = $this->generateInvoice($createMonthlyTenant, null, $setting);
+            $createMonthlyTenant->no_monthly_invoice = $no_inv;
+        } else {
+            for ($i = 0; $i < 2; $i++) {
+                $no_inv = $this->generateInvoice($createMonthlyTenant, $i, $setting);
+            }
+        }
+    }
+
+    function generateInvoice($createMonthlyTenant, $i, $setting)
+    {
+        $connSystem = ConnectionDB::setConnection(new System());
+
+        $system = $connSystem->find(1);
+
+        $countINV = $system->sequence_no_invoice + 1;
+        $no_inv = $system->kode_unik_perusahaan . '/' .
+            $system->kode_unik_invoice . '/' .
+            Carbon::now()->format('m') . Carbon::now()->format('Y') . '/' .
+            sprintf("%06d", $countINV);
+
+        if ($i == 0) {
+            $transaction = $this->createTransaction($createMonthlyTenant, $setting, $i);
+            $transaction->id_monthly_utility = $createMonthlyTenant->id_monthly_utility;
+        } elseif ($i == 1) {
+            $transaction = $this->createTransaction($createMonthlyTenant, $setting, $i);
+            $transaction->id_monthly_ipl = $createMonthlyTenant->id_monthly_ipl;
+        } elseif (!$i) {
+            $transaction = $this->createTransaction($createMonthlyTenant, $setting, null);
+        }
+
+        $transaction->no_reff = $no_inv;
+        $transaction->no_invoice = $no_inv;
+        $transaction->save();
+
+        $system->sequence_no_invoice = $countINV;
+        $system->save();
+
+        return $no_inv;
     }
 
     public function createMonthlyTenant($createUtilityBill, $createIPLbill)
     {
         $connMonthlyTenant = ConnectionDB::setConnection(new MonthlyArTenant());
-        // $connDenda = ConnectionDB::setConnection(new JenisDenda());
-
-        // $perhitDenda = $connDenda->find(3);
+        $connCompany = ConnectionDB::setConnection(new CompanySetting());
 
         $previousBills = $connMonthlyTenant->where('tgl_jt_invoice', '<', Carbon::now()->format('Y-m-d'))
             ->where('periode_tahun', Carbon::now()->format('Y'))
@@ -139,29 +176,12 @@ class BillingController extends Controller
             ->where('tgl_bayar_invoice', null)
             ->get();
 
-        // $total_denda = 0;
 
-        // foreach ($previousBills as $prevBill) {
-        // $jt = new DateTime($prevBill->tgl_jt_invoice);
-        // $now = Carbon::now();
-        // $jml_hari_jt = $now->diff($jt)->format("%a");
+        $setting = $connCompany->find(1);
 
-        // if ($perhitDenda->denda_flat_procetage != 0) {
-        //     $denda_bulan_sebelumnya = (($perhitDenda->denda_flat_procetage / 100) * ($prevBill->total_tagihan_ipl + $prevBill->total_tagihan_utility) * $jml_hari_jt);
-        // } else {
-        //     $denda_bulan_sebelumnya = $jml_hari_jt * $perhitDenda;
-        // }
-
-        $connMonthlyTenant = $this->perhitDenda($connMonthlyTenant, $previousBills);
-
-        // $prevBill->jml_hari_jt = $jml_hari_jt;
-        // $prevBill->total_denda = $denda_bulan_sebelumnya;
-        // $prevBill->save();
-
-        // $total_denda += $prevBill->total_denda;
-
-        // $connMonthlyTenant->denda_bulan_sebelumnya = $total_denda;
-        // }
+        if ($setting->is_split_ar == 0) {
+            $connMonthlyTenant = $this->perhitDenda($connMonthlyTenant, $previousBills);
+        }
 
         $connMonthlyTenant->id_site = $createUtilityBill->id_site;
         $connMonthlyTenant->id_tower = $createUtilityBill->id_tower;
@@ -182,15 +202,6 @@ class BillingController extends Controller
 
         $perhitDenda = $connDenda->where('is_active', 1)->first();
 
-        // $jt = new DateTime($prevBill->tgl_jt_invoice);
-        // $now = Carbon::now();
-        // $jml_hari_jt = $now->diff($jt)->format("%a");
-
-        // if ($perhitDenda->denda_flat_procetage != 0) {
-        //     $denda_bulan_sebelumnya = (($perhitDenda->denda_flat_procetage / 100) * ($prevBill->total_tagihan_ipl + $prevBill->total_tagihan_utility) * $jml_hari_jt);
-        // } else {
-        //     $denda_bulan_sebelumnya = $jml_hari_jt * $perhitDenda;
-        // }
         if ($perhitDenda->id_jenis_denda == 3) {
             $connMonthlyTenant = $this->dendaRolling($perhitDenda, $connMonthlyTenant, $previousBills);
         } elseif ($perhitDenda->id_jenis_denda == 2) {
@@ -199,11 +210,6 @@ class BillingController extends Controller
             $connMonthlyTenant = $this->dendaAkumulasi($perhitDenda, $connMonthlyTenant, $previousBills);
         }
 
-        // $prevBill->total_denda = $denda_bulan_sebelumnya;
-
-        // $total_denda += $prevBill->total_denda;
-
-        // $connMonthlyTenant->denda_bulan_sebelumnya = $total_denda;
         return $connMonthlyTenant;
     }
 
@@ -338,7 +344,7 @@ class BillingController extends Controller
         return $connMonthlyUtility;
     }
 
-    public function createTransaction($mt)
+    public function createTransaction($mt, $setting, $i)
     {
         $connSystem = ConnectionDB::setConnection(new System());
         $connTransaction = ConnectionDB::setConnection(new CashReceipt());
@@ -385,7 +391,13 @@ class BillingController extends Controller
                 $amountInstallment = $installment->amount;
             }
 
-            $subtotal = $subtotal + $prevSubTotal + $amountInstallment;
+            if ($setting->is_split_ar == 0 && !$i) {
+                $subtotal = $subtotal + $prevSubTotal + $amountInstallment;
+            } elseif ($setting->is_split_ar == 1 && $i == 0) {
+                $subtotal = $mt->total_tagihan_utility + $amountInstallment;
+            } elseif ($setting->is_split_ar == 1 && $i == 1) {
+                $subtotal = $mt->total_tagihan_ipl + $amountInstallment;
+            }
 
             $createTransaction = $connTransaction;
             $createTransaction->order_id = $order_id;
