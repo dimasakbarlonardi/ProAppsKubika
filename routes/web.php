@@ -540,6 +540,7 @@ Route::prefix('admin')->group(function () {
 
         //CRUD Room
         Route::resource('rooms', RoomController::class);
+        Route::post('/import-rooms', [RoomController::class, 'import'])->name('import-rooms');
 
         //CRUD Parameter Engineering
         Route::resource('engahus', EngAHUController::class);
