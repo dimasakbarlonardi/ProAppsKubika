@@ -242,6 +242,7 @@ class TenantUnitController extends Controller
                 'id_unit' => $request->id_unit,
                 'id_jenis_kendaraan' => $request->id_jenis_kendaraan,
                 'no_polisi' => $request->no_polisi,
+                'keterangan' => $request->keterangan,
             ]);
 
             DB::commit();

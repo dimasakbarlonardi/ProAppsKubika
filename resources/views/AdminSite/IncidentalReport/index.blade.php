@@ -19,7 +19,7 @@
             </div>
         </div>
         <div class="p-5 justify-content-center">
-            <table class="table" id="table-incidental">
+            <table class="table table-striped" id="table-incidental">
                 <thead>
                     <tr>
                         <th class="sort" data-sort="">No</th>

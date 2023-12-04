@@ -48,7 +48,7 @@ class InspectionController extends Controller
         $nowMonth = Carbon::now()->format('m');
         $getSchedules = $connSchedules->whereMonth('schedule', $nowMonth)
             ->where('status_schedule', 'Not Done')
-            ->with('Equipment.Room.Tower')
+            ->with('Equipment.Room.Tower' , 'Equipment.Room.Floor')
             ->get();
 
         $inspections = [];
@@ -143,6 +143,9 @@ class InspectionController extends Controller
         $object->status_schedule = $inspection->status_schedule;
         $object->id_room = $inspection->equipment->Room->id_room;
         $object->room = $inspection->equipment->Room->nama_room;
+        $object->Tower = $inspection->equipment->Room->Tower;
+        $object->Floor = $inspection->equipment->Room->Floor;
+
         $checklists = [];
 
         foreach ($inspection->Equipment->InspectionEng as $data) {
@@ -161,7 +164,7 @@ class InspectionController extends Controller
         $connEquipmentDetail = ConnectionDB::setConnection(new EquiqmentEngineeringDetail());
 
         $equipment = $connEquipmentDetail->where('id_equiqment_engineering_detail', $id)
-            ->with(['Room', 'Equipment'])
+            ->with(['Room', 'Equipment', 'Room.Floor' ,'Room.Tower'])
             ->first();
 
         $equipment['status'] = json_decode($equipment->status);
@@ -201,7 +204,7 @@ class InspectionController extends Controller
         $nowMonth = Carbon::now()->format('m');
         $getSchedules = $connInspectionHK->whereMonth('schedule', $nowMonth)
             ->where('status_schedule', 'Not Done')
-            ->with('Equipment.Room.Floor')
+            ->with('Equipment.Room.Floor', 'Equipment.Room.Tower')
             ->get();
 
         $inspections = [];
@@ -295,6 +298,8 @@ class InspectionController extends Controller
         $object->status_schedule = $inspection->status_schedule;
         $object->id_room = $inspection->equipment->Room->id_room;
         $object->room = $inspection->equipment->Room->nama_room;
+        $object->Tower = $inspection->equipment->Room->Tower;
+        $object->Floor = $inspection->equipment->Room->Floor;
 
         $checklists = [];
         foreach ($inspection->Equipment->Inspection as $data) {
@@ -313,7 +318,7 @@ class InspectionController extends Controller
         $connInspectionDetail = ConnectionDB::setConnection(new EquipmentHousekeepingDetail());
 
         $inspection = $connInspectionDetail->where('id_equipment_housekeeping_detail', $id)
-            ->with(['Room', 'Equipment', 'Schedule'])
+            ->with(['Room', 'Equipment', 'Schedule', 'Room.Floor', 'Room.Tower'])
             ->first();
 
         $inspection['status'] = json_decode($inspection->status);
@@ -344,12 +349,14 @@ class InspectionController extends Controller
         );
     }
 
+
     public function schedueinspectionsecurity()
     {
         $connInspectionSecurity = ConnectionDB::setConnection(new ChecklistSecurity());
 
         $nowMonth = Carbon::now()->format('m');
         $getSchedules = $connInspectionSecurity->whereMonth('schedule', $nowMonth)
+            ->where('status_schedule', 'Not Done')
             ->with('Schedule.Room.Floor', 'Shift')
             ->get();
 
@@ -395,7 +402,6 @@ class InspectionController extends Controller
                 $schedule->image = $inspecImage;
             }
             $schedule->id_room = $request->id_room;
-            $schedule->id_shift = $request->id_shift;
             $schedule->status = $request->status;
             $schedule->user_id = $request->user_id;
             $schedule->checklist_datetime = Carbon::now();
