@@ -448,9 +448,13 @@ class BillingController extends Controller
 
     public function blastMonthlyInvoice(Request $request)
     {
+
         $connReminder = ConnectionDB::setConnection(new ReminderLetter());
         $connElec = ConnectionDB::setConnection(new ElectricUUS());
         $connWater = ConnectionDB::setConnection(new WaterUUS());
+        $connSetting = ConnectionDB::setConnection(new CompanySetting());
+
+        $setting = $connSetting->find(1);
 
         foreach ($request->IDs as $id) {
             try {
@@ -458,12 +462,12 @@ class BillingController extends Controller
 
                 if ($request->type == 'electric') {
                     $util = $connElec->where('id', $id)
-                        ->where('is_approve', '1')
-                        ->first();
+                    ->where('is_approve', '1')
+                    ->first();
                 } elseif ($request->type == 'water') {
                     $util = $connWater->where('id', $id)
-                        ->where('is_approve', '1')
-                        ->first();
+                    ->where('is_approve', '1')
+                    ->first();
                 }
 
                 $arTenant = $util->MonthlyUtility->MonthlyTenant;
@@ -482,7 +486,7 @@ class BillingController extends Controller
                     $util->MonthlyUtility->save();
 
                     $dataNotif = [
-                        'models' => 'MonthlyTenant',
+                        'models' => $setting->is_split_ar == 0 ? 'MonthlyTenant' : 'SplitMonthlyTenant',
                         'notif_title' => 'Monthly Invoice',
                         'id_data' => $util->MonthlyUtility->MonthlyTenant->id_monthly_ar_tenant,
                         'sender' => $request->session()->get('user')->id_user,
