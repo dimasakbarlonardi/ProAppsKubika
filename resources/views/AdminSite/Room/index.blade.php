@@ -8,7 +8,11 @@
                     <h6 class="mb-0">List Room</h6>
                 </div>
                 <div class="col-auto d-flex">
-                    <button class="btn btn-falcon-default text-600 btn-sm" type="button" class="fas fa-plus"
+                    <a class="btn btn-falcon-default btn-sm text-600" href="{{ url('/import_template/template_room.xlsx') }}"
+                        download>
+                        <span class="fas fa-plus fs--2 me-1"></span>Download Template
+                    </a>
+                    <button class="btn btn-falcon-default text-600 btn-sm ml-3" type="button" class="fas fa-plus"
                         data-bs-toggle="modal" data-bs-target="#modal-import">
                         + Import Excel
                     </button>
@@ -18,12 +22,13 @@
             </div>
         </div>
         <div class="p-5">
-            <div id="tableExample3" data-list='{"valueNames":["nama_tower", "nama_lantai"],"page":10,"pagination":true}'>
+            <div id="tableExample3" data-list='{"valueNames":["nama_tower", "nama_lantai", "nama_room"]'>
                 <div class="row justify-content-end g-0">
                     <div class="col-auto col-sm-5 mb-3">
                         <form>
-                            <div class="input-group"><input class="form-control form-control-sm shadow-none search"
-                                    type="search" placeholder="Search..." aria-label="search" />
+                            <div class="input-group">
+                                <input class="form-control form-control-sm shadow-none search" type="search"
+                                    placeholder="Search..." aria-label="search" />
                                 <div class="input-group-text bg-transparent"><span
                                         class="fa fa-search fs--1 text-600"></span></div>
                             </div>
@@ -35,9 +40,9 @@
                         <thead>
                             <tr>
                                 <th class="sort" data-sort="">No</th>
-                                <th class="sort" data-sort="id_tower">Tower</th>
-                                <th class="sort" data-sort="id_lantai">Floor</th>
-                                <th class="sort" data-sort="barcode_room">Barcode Room</th>
+                                <th class="sort" data-sort="nama_tower">Tower</th>
+                                <th class="sort" data-sort="nama_lantai">Floor</th>
+                                <th class="sort">Barcode Room</th>
                                 <th class="sort" data-sort="nama_room">Room Name</th>
                                 <th class="sort">Action</th>
                             </tr>
@@ -49,9 +54,9 @@
                                     <td class="nama_tower">{{ $room->tower->nama_tower }}</td>
                                     <td class="nama_lantai">{{ $room->floor->nama_lantai }}</td>
                                     <td>
-                                        <img src=" {{ url($room->barcode_room) }}" width="80">
+                                        <img src="{{ url($room->barcode_room) }}" width="80">
                                     </td>
-                                    <td>{{ $room->nama_room }}</td>
+                                    <td class="nama_room">{{ $room->nama_room }}</td>
                                     <td>
                                         <a href="{{ route('rooms.edit', $room->id_room) }}"
                                             class="btn btn-sm btn-warning"><span
@@ -62,11 +67,8 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="d-flex justify-content-center mt-3"><button class="btn btn-sm btn-falcon-default me-1"
-                        type="button" title="Previous" data-list-pagination="prev"><span
-                            class="fas fa-chevron-left"></span></button>
-                    <ul class="pagination mb-0"></ul><button class="btn btn-sm btn-falcon-default ms-1" type="button"
-                        title="Next" data-list-pagination="next"><span class="fas fa-chevron-right"> </span></button>
+                <div class="d-flex justify-content-center mt-3">
+                    {{ $rooms->links('vendor.pagination.bootstrap-4') }}
                 </div>
             </div>
         </div>
@@ -79,7 +81,7 @@
                     <button class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base"
                         data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="{{ route('import-employees') }}" method="post" enctype="multipart/form-data">
+                <form action="{{ route('import-rooms') }}" method="post" enctype="multipart/form-data">
                     @csrf
                     <div class="modal-body p-0">
                         <div class="rounded-top-lg py-3 ps-4 pe-6 bg-light">
