@@ -35,7 +35,7 @@ class UserController extends Controller
     {
         $connUser = ConnectionDB::setConnection(new User());
 
-        $data['users'] = $connUser->get();
+        $data['users'] = $connUser->paginate(10);
 
         return view('AdminSite.User.index', $data);
     }
