@@ -189,8 +189,9 @@ class ReservationController extends Controller
         $object->event_duration = $reservation->durasi_acara;
         $object->reservation_room = $reservation->RuangReservation->ruang_reservation;
         $object->jenis_acara = $reservation->JenisAcara->jenis_acara;
-        $object->notes = strip_tags($reservation->keterangan);
-        $object->notes_by = $reservation->Ticket->ResponseBy ? $reservation->Ticket->ResponseBy->nama_user : null;
+        $object->notes_by_tenant = strip_tags($reservation->keterangan);
+        $object->resp_from_tr = strip_tags($reservation->Ticket->deskripsi_respon);
+        $object->tr_name = $reservation->Ticket->ResponseBy ? $reservation->Ticket->ResponseBy->nama_user : null;
         $object->status_reservation = $reservation->sign_approval_1 ? 'APPROVED' : 'PENDING';
         $object->approve_1_tenant = $reservation->sign_approval_1;
         $object->approve_2_security = $reservation->sign_approval_2;
