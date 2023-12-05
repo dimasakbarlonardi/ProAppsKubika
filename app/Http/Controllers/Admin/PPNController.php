@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Helpers\ConnectionDB;
+use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Models\PPN;
 use Illuminate\Http\Request;
@@ -58,7 +59,7 @@ class PPNController extends Controller
             DB::commit();
 
             Alert::success('Berhasil', 'Berhasil Menambahkan PPN');
-            
+
             return redirect()->route('ppns.index');
         } catch (\Throwable $e) {
             DB::rollback();
@@ -108,7 +109,7 @@ class PPNController extends Controller
 
         $PPN = $connPPN->find($id);
         $PPN->update($request->all());
-        
+
         Alert::success('Berhasil', 'Berhasil Mengupdate PPN');
 
         return redirect()->route('ppns.index');
@@ -128,5 +129,21 @@ class PPNController extends Controller
         Alert::success('Berhasil', 'Berhasil Menghapus PPN');
 
         return redirect()->route('ppns.index');
+    }
+
+    public function isActive($id)
+    {
+        $connPPN = ConnectionDB::setConnection(new PPN());
+
+        $ppn = $connPPN->where('id_ppn', $id)->first();
+
+        $status = $ppn->is_active;
+
+        $ppn->is_active = !$status;
+        $ppn->save();
+
+        return ResponseFormatter::success([
+            'status' => 'OK'
+        ], 'Success');
     }
 }

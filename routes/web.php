@@ -117,6 +117,7 @@ use App\Http\Controllers\Admin\RequestTypeController;
 use App\Http\Controllers\Admin\ScheduleMeetingController;
 use App\Http\Controllers\Admin\ScheduleSecurityController;
 use App\Http\Controllers\Admin\ShiftTypeController;
+use App\Http\Controllers\Admin\SP1Controller;
 use App\Http\Controllers\Admin\ToolsEngController;
 use App\Http\Controllers\Admin\ToolsHKController;
 use App\Http\Controllers\Admin\ToolsSecurityController;
@@ -284,7 +285,7 @@ Route::prefix('admin')->group(function () {
         Route::resource('tenantunits', TenantUnitController::class);
 
         // System Setting
-        Route::resource('system-settings', SystemSettingController::class);
+        Route::post('/system/split-ar', [CompanySettingController::class, 'splitAR'])->name('splitAR');
         Route::get('/system/approve', [SystemSettingController::class, 'systemApprove'])->name('systemApprove'); // Approve system
         Route::get('/system/approve/{id}', [SystemSettingController::class, 'editSystemApprove'])->name('editSystemApprove'); // edit Approve system
         Route::post('/system/approve/{id}', [SystemSettingController::class, 'updateSystemApprove'])->name('updateSystemApprove'); // update approve system
@@ -539,9 +540,11 @@ Route::prefix('admin')->group(function () {
 
         //CRUD Room
         Route::resource('rooms', RoomController::class);
+        Route::post('/import-rooms', [RoomController::class, 'import'])->name('import-rooms');
 
         //CRUD Parameter Engineering
         Route::resource('engineering', EngAHUController::class);
+        Route::post('import/eng-parameter', [EngAHUController::class, 'import'])->name('importEngParameter');
 
         // --------End Eng Parameter--------
 
@@ -578,7 +581,7 @@ Route::prefix('admin')->group(function () {
 
         //CRUD PPN
         Route::resource('ppns', PPNController::class);
-
+        Route::post('ppn/isactive/{id}', [PPNController::class, 'isActive']);
         // ----------End Fin Parameter---------
 
         // ----------Checklist AHU-------------
@@ -595,6 +598,8 @@ Route::prefix('admin')->group(function () {
         Route::post('/inspections/create-schedules/{id}', [ChecklistAhuHController::class, 'postSchedules'])->name('postSchedules');
         Route::post('/inspections/update-schedules/{id}', [ChecklistAhuHController::class, 'updateSchedules'])->name('updateSchedulesENG');
         Route::post('/inspections/destroy-schedules/{id}', [ChecklistAhuHController::class, 'destroySchedules'])->name('destroySchedules');
+        Route::post('/import/equipment-engineering', [ChecklistAhuHController::class, 'import'])->name('importEquipmentEngineering');
+        Route::post('/import/schedule-engineering', [ChecklistAhuHController::class, 'importSchedules'])->name('importSchedulesEngineering');
 
         //CRUD Checklist AHU Detail
         Route::resource('ahudetails', ChecklistAhuDetailController::class);
@@ -680,10 +685,14 @@ Route::prefix('admin')->group(function () {
         Route::post('payment-wo/{id}', [BillingController::class, 'generatePaymentWO'])->name('generatePaymentWO');
         Route::get('payment-wo/{woID}/{id}', [BillingController::class, 'paymentWO'])->name('paymentWO');
 
-
         Route::post('get-montly-ar', [BillingController::class, 'getOverdueARTenant']);
-
         Route::post('get/cc-token', [BillingController::class, 'getTokenCC']);
+
+
+        // ======================= SP ==========================
+        Route::resource('sp1', SP1Controller::class);
+        Route::post('blastSP1', [SP1Controller::class, 'blast']);
+        // ======================= End SP ==========================
 
         // ---------------Inspection Gartur Security-----------------
         Route::resource('inspectionsecurity', InspectionSecurityController::class);
@@ -766,8 +775,8 @@ Route::prefix('admin')->group(function () {
         // --------------Parameter Security---------
         Route::resource('Parameter-Security', ParameterSecurityController::class);
 
-          // --------------Parameter Shift Security---------
-          Route::resource('Parameter-Shift-Security', ParameterShiftSecurityController::class);
+        // --------------Parameter Shift Security---------
+        Route::resource('Parameter-Shift-Security', ParameterShiftSecurityController::class);
     });
 });
 

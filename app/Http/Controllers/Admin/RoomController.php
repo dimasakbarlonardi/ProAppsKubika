@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Room;
 use App\Helpers\ConnectionDB;
+use App\Imports\RoomImport;
+use App\Imports\UnitImport;
 use App\Models\Floor;
 use App\Models\Tower;
 use App\Models\Login;
@@ -12,6 +14,7 @@ use App\Models\Site;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Http\Request;
+use Excel;
 
 class RoomController extends Controller
 {
@@ -24,7 +27,7 @@ class RoomController extends Controller
     {
         $conn = ConnectionDB::setConnection(new Room());
 
-        $data['rooms'] = $conn->get();
+        $data['rooms'] = $conn->paginate(10);
 
         return view('AdminSite.Room.index', $data);
     }
@@ -165,5 +168,16 @@ class RoomController extends Controller
         $data['room'] = $room;
 
         return view('AdminSite.Room.view-room', $data);
+    }
+
+    public function import(Request $request)
+    {
+        $file = $request->file('file_excel');
+
+        Excel::import(new RoomImport(), $file);
+
+        Alert::success('Success', 'Success import data');
+
+        return redirect()->route('rooms.index');
     }
 }

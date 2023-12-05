@@ -45,6 +45,29 @@ class MonthlyArTenant extends Model
         return $this->hasOne(CashReceipt::class, 'no_reff', 'no_monthly_invoice');
     }
 
+    public function SplitCashReceipt($utility, $ipl)
+    {
+        $cr = ConnectionDB::setConnection(new CashReceipt());
+
+        if ($ipl) {
+            $cr = $cr->where('id_monthly_ipl', $ipl)->first();
+        } else {
+            $cr = $cr->where('id_monthly_utility', $utility)->first();
+        }
+
+        return $cr;
+    }
+
+    public function UtilityCashReceipt()
+    {
+       return $this->hasOne(CashReceipt::class, 'id_monthly_utility', 'id_monthly_utility');
+    }
+
+    public function IPLCashReceipt()
+    {
+       return $this->hasOne(CashReceipt::class, 'id_monthly_ipl', 'id_monthly_ipl');
+    }
+
     public function MonthlyIPL()
     {
         return $this->hasOne(MonthlyIPL::class, 'id', 'id_monthly_ipl');
@@ -101,6 +124,28 @@ class MonthlyArTenant extends Model
     public function TenantUnit()
     {
         return $this->hasMany(TenantUnit::class, 'id_unit', 'id_unit');
+    }
+
+    public function NotifSP1($title)
+    {
+        $connNotif = ConnectionDB::setConnection(new Notifikasi());
+
+        $notif = $connNotif->where('models', 'SP1')
+            ->where('notif_title', $title)
+            ->first();
+
+        return $notif;
+    }
+
+    public function LastBill()
+    {
+        $lastBill = ConnectionDB::setConnection(new MonthlyArTenant())
+            ->where('tgl_bayar_invoice', null)
+            ->where('id_unit', $this->id_unit)
+            ->orderBy('id_monthly_ar_tenant', 'DESC')
+            ->first();
+
+        return $lastBill;
     }
 
     protected $dates = ['deleted_at'];

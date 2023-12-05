@@ -124,11 +124,28 @@
                                                         @endif
                                                         @if ($item->MonthlyUtility)
                                                             <h6>
-                                                                <a class="badge bg-info"
-                                                                    href="{{ route('showInvoices', $item->MonthlyUtility->MonthlyTenant->CashReceipt->id) }}">
-                                                                    <span class="fas fa-receipt fs--2 me-1"></span>
-                                                                    Invoice
-                                                                </a>
+                                                                @if ($setting->is_split_ar == 0)
+                                                                    <a class="badge bg-info"
+                                                                        href="{{ route('showInvoices', $item->MonthlyUtility->MonthlyTenant->CashReceipt->id) }}">
+                                                                        <span class="fas fa-eye fs--2 me-1"></span>
+                                                                        Invoice
+                                                                    </a>
+                                                                @else
+                                                                    <div class="mb-2">
+                                                                        <a class="badge bg-info"
+                                                                            href="{{ route('showInvoices', $item->MonthlyUtility->MonthlyTenant->SplitCashReceipt(null, $item->MonthlyUtility->MonthlyTenant->id_monthly_ipl)->id) }}">
+                                                                            <span class="fas fa-eye fs--2 me-1"></span>
+                                                                            Invoice IPL
+                                                                        </a>
+                                                                    </div>
+                                                                    <div>
+                                                                        <a class="badge bg-info"
+                                                                            href="{{ route('showInvoices', $item->MonthlyUtility->MonthlyTenant->SplitCashReceipt($item->MonthlyUtility->id, null)->id) }}">
+                                                                            <span class="fas fa-eye fs--2 me-1"></span>
+                                                                            Invoice Utility
+                                                                        </a>
+                                                                    </div>
+                                                                @endif
                                                             </h6>
                                                         @endif
                                                     </th>

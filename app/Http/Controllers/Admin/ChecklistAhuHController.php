@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\ChecklistAhuH;
 use App\Helpers\ConnectionDB;
+use App\Imports\EquipmentEngineering;
+use App\Imports\ScheduleEngineering;
 use App\Models\ChecklistAhuDetail;
 use App\Models\ChecklistParameterEquiqment;
 use App\Models\EngAhu;
@@ -18,6 +20,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Http\Request;
+use Excel;
 
 
 class ChecklistAhuHController extends Controller
@@ -213,6 +216,17 @@ class ChecklistAhuHController extends Controller
         }
     }
 
+    public function import(Request $request)
+    {
+        $file = $request->file('file_excel');
+
+        Excel::import(new EquipmentEngineering(), $file);
+
+        Alert::success('Success', 'Success import data');
+
+        return redirect()->route('checklistahus.index');
+    }
+
     public function updateSchedules(Request $request, $id)
     {
         $equiqmentDetail = ConnectionDB::setConnection(new EquiqmentEngineeringDetail());
@@ -313,7 +327,7 @@ class ChecklistAhuHController extends Controller
         $data['eq'] = $connEquiqment->find($id);
         $data['schedules'] = $connSchedules->where('id_equiqment_engineering', $id)
             ->orderBy('schedule', 'ASC')
-            ->get();
+            ->paginate(10);
 
         return view('AdminSite.ChecklistAhuH.schedules', $data);
     }
@@ -329,6 +343,17 @@ class ChecklistAhuHController extends Controller
         ]);
 
         Alert::success('Success', 'Success add schedule');
+
+        return redirect()->back();
+    }
+
+    public function importSchedules(Request $request)
+    {
+        $file = $request->file('file_excel');
+
+        Excel::import(new ScheduleEngineering($request->id_equipment_engineering), $file);
+
+        Alert::success('Success', 'Success import data');
 
         return redirect()->back();
     }

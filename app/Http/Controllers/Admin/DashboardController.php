@@ -23,6 +23,8 @@ use App\Models\Tower;
 use App\Models\Transaction;
 use App\Models\TransactionCenter;
 use App\Models\Unit;
+use App\Models\Utility;
+use App\Models\IPLType;
 use App\Models\User;
 use App\Models\WorkOrder;
 use App\Models\WorkPermit;
@@ -204,6 +206,12 @@ class DashboardController extends Controller
                 return view('Tenant.Notification.Payment', $data);
                 break;
 
+            case ('SplitMonthlyTenant'):
+                $data = $this->handleSplitMonthlyTenant($getNotif);
+                $data['user'] = $user;
+                return view('Tenant.Notification.SplitPayment', $data);
+                break;
+
             case ('OpenTicket'):
                 $data = $this->handleRequest($connApprove, $getNotif);
                 $connJR = ConnectionDB::setConnection(new JenisRequest());
@@ -282,6 +290,13 @@ class DashboardController extends Controller
             case ('Installment'):
                 return redirect()->route('showInvoices', $getNotif->id_data);
                 break;
+
+            case ('SP1'):
+                $data = $this->handleSP($getNotif->id_data);
+                $data['data'] = $data;
+                $data['notif'] = $getNotif;
+                return view('AdminSite.SP1.SP1', $data);
+                break;
         }
     }
 
@@ -321,11 +336,35 @@ class DashboardController extends Controller
     public function handleMonthlyTenant($getNotif)
     {
         $model = new MonthlyArTenant();
+        $connUtility = ConnectionDB::setConnection(new Utility());
+        $connIPLType = ConnectionDB::setConnection(new IPLType());
         $getData = ConnectionDB::setConnection($model);
         $getData = $getData->find($getNotif->id_data);
         $data['transaction'] = $getData->where('id_monthly_ar_tenant', $getData->id_monthly_ar_tenant)->first();
         $data['type'] = 'MonthlyTenant';
         $data['installment'] = $getData->CashReceipt->Installment($getData->periode_bulan, $getData->periode_tahun);
+        $data['electric'] = $connUtility->find(1);
+        $data['water'] = $connUtility->find(2);
+        $data['sc'] = $connIPLType->find(6);
+        $data['sf'] = $connIPLType->find(7);
+
+        return $data;
+    }
+
+    public function handleSplitMonthlyTenant($getNotif)
+    {
+        $model = new MonthlyArTenant();
+        $connUtility = ConnectionDB::setConnection(new Utility());
+        $connIPLType = ConnectionDB::setConnection(new IPLType());
+        $getData = ConnectionDB::setConnection($model);
+        $getData = $getData->find($getNotif->id_data);
+        $data['transaction'] = $getData->where('id_monthly_ar_tenant', $getData->id_monthly_ar_tenant)->first();
+        $data['type'] = 'MonthlyTenant';
+        // $data['installment'] = $getData->CashReceipt->Installment($getData->periode_bulan, $getData->periode_tahun);
+        $data['electric'] = $connUtility->find(1);
+        $data['water'] = $connUtility->find(2);
+        $data['sc'] = $connIPLType->find(6);
+        $data['sf'] = $connIPLType->find(7);
 
         return $data;
     }
@@ -428,6 +467,17 @@ class DashboardController extends Controller
         $data['sysApprove'] = $connApprove->find(8);
         $gigo =  $getData->find($getNotif->id_data);
         $data['gigo'] = $gigo;
+
+        return $data;
+    }
+
+    public function handleSP($id)
+    {
+        $connCompany = ConnectionDB::setConnection(new CompanySetting());
+        $connAR = ConnectionDB::setConnection(new MonthlyArTenant());
+
+        $data['company'] = $connCompany->find(1);
+        $data['ar'] = $connAR->find($id);
 
         return $data;
     }

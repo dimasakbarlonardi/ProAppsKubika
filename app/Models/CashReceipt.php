@@ -41,7 +41,9 @@ class CashReceipt extends Model
         'expiry_time',
         'currency',
         'id_user',
-        'transaction_type'
+        'transaction_type',
+        'id_monthly_utility',
+        'id_monthly_ipl'
     ];
 
     public function User()
@@ -67,6 +69,19 @@ class CashReceipt extends Model
     public function MonthlyARTenant()
     {
         return $this->hasOne(MonthlyArTenant::class, 'no_monthly_invoice', 'no_reff');
+    }
+
+    public function SplitMonthlyARTenant($utility, $ipl)
+    {
+        $ar = ConnectionDB::setConnection(new MonthlyArTenant());
+
+        if ($ipl) {
+            $ar = $ar->where('id_monthly_ipl', $ipl)->first();
+        } else {
+            $ar = $ar->where('id_monthly_utility', $utility)->first();
+        }
+
+        return $ar;
     }
 
     public function Ticket()

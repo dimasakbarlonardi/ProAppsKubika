@@ -174,7 +174,7 @@ class KaryawanController extends Controller
         }
     }
 
-    public function importTenant(Request $request)
+    public function import(Request $request)
     {
         $file = $request->file('file_excel');
 

@@ -7,10 +7,6 @@
                 <div class="my-3 col-auto">
                     <h6 class="mb-0">List PPN</h6>
                 </div>
-                <div class="col-auto d-flex">
-                    <a class="btn btn-falcon-default btn-sm text-600" href="{{ route('ppns.create') }}"><span
-                            class="fas fa-plus fs--2 me-1"></span>Create PPN</a>
-                </div>
             </div>
         </div>
         <div class="p-5">
@@ -20,6 +16,7 @@
                         <th class="sort" data-sort="">No</th>
                         <th class="sort" data-sort="nama_ipl_type">Nama PPN</th>
                         <th class="sort" data-sort="biaya_procentage">Biaya Procentage</th>
+                        <th>Status</th>
                         <th class="sort">Action</th>
                     </tr>
                 </thead>
@@ -29,6 +26,13 @@
                             <th scope="row">{{ $key + 1 }}</th>
                             <td>{{ $ppn->nama_ppn }}</td>
                             <td>{{ $ppn->biaya_procentage ? persen($ppn->biaya_procentage) : '-' }} </td>
+                            <td>
+                                <div class="form-check form-switch">
+                                    <input class="form-check-input" id="isActivePPN{{ $ppn->id_ppn }}"
+                                        onclick="changeActivePPN({{ $ppn->id_ppn }})" type="checkbox"
+                                        {{ $ppn->is_active ? 'checked' : '' }} />
+                                </div>
+                            </td>
                             <td>
                                 <a href="{{ route('ppns.edit', $ppn->id_ppn) }}" class="btn btn-sm btn-warning"><span
                                         class="fas fa-pencil-alt fs--2 me-1"></span>Edit</a>
@@ -46,4 +50,22 @@
             </table>
         </div>
     </div>
+@endsection
+
+@section('script')
+    <script>
+        function changeActivePPN(id) {
+            $.ajax({
+                url: `/admin/ppn/isactive/${id}`,
+                type: 'POST',
+                success: function(data) {
+                    if (data.data.status === 'OK') {
+
+                        window.location.reload();
+                    }
+                }
+            })
+
+        }
+    </script>
 @endsection

@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Approve;
 use App\Models\CashReceipt;
 use App\Models\CashReceiptDetail;
+use App\Models\CompanySetting;
 use App\Models\ElectricUUS;
 use App\Models\Role;
 use App\Models\Site;
@@ -31,7 +32,9 @@ class ElectricUUSController extends Controller
         $connTower = ConnectionDB::setConnection(new Tower());
         $connApprove = ConnectionDB::setConnection(new Approve());
         $connElecUUS = ConnectionDB::setConnection(new ElectricUUS());
+        $connSetting = ConnectionDB::setConnection(new CompanySetting());
 
+        $data['setting'] = $connSetting->find(1);
         $data['elecUSS'] = $connElecUUS->get();
         $data['approve'] = $connApprove->find(9);
         $data['user'] = $request->session()->get('user');
@@ -97,7 +100,7 @@ class ElectricUUSController extends Controller
         $user = $user->where('login_user', $request->user()->email)->first();
 
         $connElecUUS = ConnectionDB::setConnection(new ElectricUUS());
-        
+
         $connElecUUS->create([
             'periode_bulan' => $request->periode_bulan,
             'periode_tahun' => Carbon::now()->format('Y'),
