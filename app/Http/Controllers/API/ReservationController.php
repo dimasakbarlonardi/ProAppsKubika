@@ -219,7 +219,7 @@ class ReservationController extends Controller
             'notif_title' => $rsv->no_request_reservation,
             'id_data' => $rsv->id,
             'sender' => $rsv->Ticket->Tenant->User->id_user,
-            'division_receiver' => 10,
+            'division_receiver' => $approve->approval_2,
             'notif_message' => 'Request Reservation diterima, mohon approve reservasi',
             'receiver' => null,
         ];
