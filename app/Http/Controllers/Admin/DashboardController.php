@@ -451,10 +451,10 @@ class DashboardController extends Controller
     }
     public function handlePaymentReservation($getNotif)
     {
-        $model = new Reservation();
+        $model = new CashReceipt();
         $getData = ConnectionDB::setConnection($model);
         $rsv =  $getData->find($getNotif->id_data);
-        $data['reservation'] = $rsv;
+        $data['reservation'] = $rsv->Reservation;
         $data['type'] = 'Reservation';
 
         return $data;

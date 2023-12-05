@@ -415,7 +415,7 @@ class ReservationController extends Controller
             $dataNotif = [
                 'models' => 'PaymentReservation',
                 'notif_title' => $createTransaction->no_invoice,
-                'id_data' => $rsv->id,
+                'id_data' => $createTransaction->id,
                 'sender' => $approve->approval_3,
                 'division_receiver' => null,
                 'notif_message' => 'Request Reservation diterima, mohon membayar deposit untuk melanjutkan proses reservasi',
