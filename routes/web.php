@@ -543,7 +543,7 @@ Route::prefix('admin')->group(function () {
         Route::post('/import-rooms', [RoomController::class, 'import'])->name('import-rooms');
 
         //CRUD Parameter Engineering
-        Route::resource('engineering', EngAHUController::class);
+        Route::resource('engahus', EngAHUController::class);
         Route::post('import/eng-parameter', [EngAHUController::class, 'import'])->name('importEngParameter');
 
         // --------End Eng Parameter--------
@@ -552,6 +552,7 @@ Route::prefix('admin')->group(function () {
 
         //CRUD HK Toilet
         Route::resource('housekeeping', ToiletController::class);
+        Route::post('import/hk-parameter', [ToiletController::class, 'import'])->name('importHKParameter');
 
         //CRUD HK Floor
         Route::resource('hkfloors', HKFloorController::class);
@@ -629,6 +630,8 @@ Route::prefix('admin')->group(function () {
         Route::post('/inspections-hk/update-schedules/{id}', [ChecklistToiletHController::class, 'updateSchedulesHK'])->name('updateSchedulesHK');
         Route::post('/inspections-hk/schedules/{id}', [ChecklistToiletHController::class, 'postSchedulesHK'])->name('postSchedulesHK');
         Route::post('/inspections-hk/delete-schedules/{id}', [ChecklistToiletHController::class, 'deleteSchedulesHK'])->name('deleteSchedulesHK');
+        Route::post('/import/equipment-housekeeping', [ChecklistToiletHController::class, 'import'])->name('importEquipmentHousekeeping');
+        Route::post('/import/schedule-housekeeping', [ChecklistToiletHController::class, 'importSchedules'])->name('importSchedulesHousekeeping');
 
         //CRUD Checklist Toilet Detail
         Route::resource('toiletdetails', ChecklistToiletDetailController::class);
@@ -722,6 +725,7 @@ Route::prefix('admin')->group(function () {
         Route::resource('checklistsecurity', ChecklistSecurityController::class);
         // -Schedule Security
         Route::resource('schedulesecurity', ScheduleSecurityController::class);
+        Route::post('import/schedule-security', [ScheduleSecurityController::class, 'import'])->name('importSchedulesSecurity');
 
         // ---------------Incidental Report Engineering-----------------
         Route::resource('incidentalreporteng', IncidentalEngController::class);
@@ -774,6 +778,7 @@ Route::prefix('admin')->group(function () {
 
         // --------------Parameter Security---------
         Route::resource('Parameter-Security', ParameterSecurityController::class);
+        Route::post('import/sec-parameter', [ParameterSecurityController::class, 'import'])->name('importSecParameter');
 
         // --------------Parameter Shift Security---------
         Route::resource('Parameter-Shift-Security', ParameterShiftSecurityController::class);

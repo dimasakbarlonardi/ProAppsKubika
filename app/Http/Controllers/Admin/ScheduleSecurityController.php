@@ -13,7 +13,8 @@ use RealRashid\SweetAlert\Facades\Alert;
 use App\Models\ChecklistParameterEquiqment;
 use App\Models\ChecklistSecurity;
 use App\Models\ParameterShiftSecurity;
-use App\Models\EquiqmentEngineeringDetail;
+use App\Imports\ImportScheduleSecurity;
+use Excel;
 
 class ScheduleSecurityController extends Controller
 {
@@ -27,10 +28,21 @@ class ScheduleSecurityController extends Controller
         $conn = ConnectionDB::setConnection(new ScheduleSecurity());
 
         $data['schedulesec'] = $conn->get();
+        $data['eq'] = $conn->first();
 
         return view('AdminSite.ScheduleSecurity.index', $data);
     }
 
+    public function import(Request $request)
+    {
+        $file = $request->file('file_excel');
+
+        Excel::import(new ImportScheduleSecurity(), $file);
+
+        Alert::success('Success', 'Success import data');
+
+        return redirect()->back();
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -162,17 +174,46 @@ class ScheduleSecurityController extends Controller
     public function update(Request $request, $id)
     {
         $conn = ConnectionDB::setConnection(new ScheduleSecurity());
-
+        
         $checklistahu = $conn->find($id);
-        $checklistahu->no_equiqment = $request->no_equipment;
-        $checklistahu->equiqment = $request->equipment;
+        $checklistahu->id_equiqment = 3;
         $checklistahu->id_room = $request->id_room;
         $checklistahu->save();
-
+        
+        $parameter = $request->to;
+        if (!empty($parameter)) {
+            foreach ($parameter as $form) {
+                $Parameter = ConnectionDB::setConnection(new ChecklistParameterEquiqment());
+        
+                $existingParameter = $Parameter
+                    ->where('id_equiqment', 3)
+                    ->where('id_checklist', $form)
+                    ->where('id_item', $checklistahu->id) // Menggunakan $checklistahu->id di sini
+                    ->first();
+        
+                if ($existingParameter) {
+                    // Memperbarui rekaman yang sudah ada
+                    $existingParameter->update([
+                        'id_equiqment' => 3,
+                        'id_checklist' => $form,
+                        'id_item' => $checklistahu->id, // Menggunakan $checklistahu->id di sini
+                    ]);
+                } else {
+                    $Parameter->id_equiqment = 3;
+                    $Parameter->id_checklist = $form;
+                    $Parameter->id_item = $checklistahu->id; // Menggunakan $checklistahu->id di sini
+                    $Parameter->save();
+                }
+            }
+        }
+        
         Alert::success('Berhasil', 'Berhasil mengupdate Security');
-
+        
         return redirect()->route('schedulesecurity.index');
     }
+    
+    
+    
 
     /**
      * Remove the specified resource from storage.

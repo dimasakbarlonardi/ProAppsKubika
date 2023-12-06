@@ -21,10 +21,10 @@
                     <label class="form-label">No. Equipment</label>
                     <input type="text" name="no_equipment" value="{{ $checklisttoilets->no_equipment}}" class="form-control" required>
                 </div>
-                <div class="col-6 mb-3">
+                <!-- <div class="col-6 mb-3">
                     <label class="form-label">Nama Equipment</label>
                     <input type="text" value="{{ $checklisttoilets->equipment}}" name="equipment" class="form-control" required>
-                </div>
+                </div> -->
                 <div class="col-6 mb-3">
                     <label class="form-label">Lokasi</label>
                     <select class="form-control" name="id_room" required>

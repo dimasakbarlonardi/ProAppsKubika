@@ -5,9 +5,11 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Toilet;
 use App\Helpers\ConnectionDB;
+use App\Imports\HousekeepingParameter;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Http\Request;
+use Excel;
 //  public function deleteTenantUnit(Request $request, $id)
 //     {
 //         $conn = $this->setConnection(new TenantUnit());
@@ -50,6 +52,17 @@ class ToiletController extends Controller
         $data ['housekeeping'] = $conn->get();
 
         return view('AdminSite.Toilet.index', $data);
+    }
+
+    public function import(Request $request)
+    {
+        $file = $request->file('file_excel');
+
+        Excel::import(new HousekeepingParameter(), $file);
+
+        Alert::success('Success', 'Success import data');
+
+        return redirect()->route('housekeeping.index');
     }
 
     /**

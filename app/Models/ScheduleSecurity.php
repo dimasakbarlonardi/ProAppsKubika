@@ -18,6 +18,7 @@ class ScheduleSecurity extends Model
 
     protected $fillable = [
         'id',
+        'id_equiqment',
         'id_room',
         'schedule',
         'id_shift',

@@ -369,6 +369,7 @@ class InspectionController extends Controller
                 $object->schedule = $schedule->schedule;
                 $object->shift = $schedule->Shift;
                 $object->status_schedule = $schedule->status_schedule;
+                $object->nama_room = $schedule->Room->nama_room;
                 $object->floor = $schedule->Room->floor;
                 $object->tower = $schedule->Room->Tower;
 

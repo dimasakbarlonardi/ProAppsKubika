@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Helpers\ConnectionDB;
+use App\Imports\EquipmentHousekeeping;
+use App\Imports\ScheduleHousekeeping;
 use App\Models\ChecklistParameterEquiqment;
 use App\Models\ChecklistToiletDetail;
 use App\Models\ChecklistToiletH;
@@ -17,6 +19,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Http\Request;
+use Excel;
 
 class ChecklistToiletHController extends Controller
 {
@@ -37,6 +40,30 @@ class ChecklistToiletHController extends Controller
         return view('AdminSite.ChecklistToiletH.index', $data);
     }
 
+// --------------Import Housekeeping------------------
+
+    public function import(Request $request)
+    {
+        $file = $request->file('file_excel');
+
+        Excel::import(new EquipmentHousekeeping(), $file);
+
+        Alert::success('Success', 'Success import data');
+
+        return redirect()->route('checklisttoilets.index');
+    }
+
+    public function importSchedules(Request $request)
+    {
+        $file = $request->file('file_excel');
+
+        Excel::import(new ScheduleHousekeeping($request->id_equipment_housekeeping), $file);
+
+        Alert::success('Success', 'Success import data');
+
+        return redirect()->back();
+    }
+ // ------------End Import Housekeeping-------------------
 
     public function checklisttoilet($id)
     {
