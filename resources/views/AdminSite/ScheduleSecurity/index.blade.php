@@ -43,7 +43,7 @@
                     <td class="text-center">{{ $security->Room ? $security->Room->Tower->nama_tower : '' }} - {{ $security->Room ? $security->Room->Floor->nama_lantai : '' }}
                         - {{ $security->Room ? $security->Room->nama_room : '' }}</td>
                     <td class="text-center">{{ HumanDate($security->schedule) }}</td>
-                    <td class="text-center">{{ $security->Shift->shift }} - ( {{ HumanTime($security->Shift->start_time) }}-{{ HumanTime($security->Shift->end_time) }} ) </td>
+                    <td class="text-center">{{ $security->Shift ? $security->Shift->shift : '' }} - ( {{ $security->Shift ? HumanTime($security->Shift->start_time) : '' }}-{{ $security->Shift ? HumanTime($security->Shift->end_time) : '' }} ) </td>
                     <td class="text-center">
                         <a href="{{ route('schedulesecurity.show', $security->id) }}" class="btn btn-sm btn-warning"><span class="fas fa-pencil-alt fs--2 me-1"></span>Detail</a>
                     </td>
