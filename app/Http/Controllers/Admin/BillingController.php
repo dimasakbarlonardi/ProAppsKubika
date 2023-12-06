@@ -126,6 +126,7 @@ class BillingController extends Controller
         if ($setting->is_split_ar == 0) {
             $no_inv = $this->generateInvoice($createMonthlyTenant, null, $setting);
             $createMonthlyTenant->no_monthly_invoice = $no_inv;
+            $createMonthlyTenant->save();
         } else {
             for ($i = 0; $i < 2; $i++) {
                 $no_inv = $this->generateInvoice($createMonthlyTenant, $i, $setting);

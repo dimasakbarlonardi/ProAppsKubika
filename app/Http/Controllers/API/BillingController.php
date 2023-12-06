@@ -86,10 +86,10 @@ class BillingController extends Controller
             'MonthlyUtility.CashReceipt'
         ]);
 
+        $data = $ar->first();
         $previousBills = $ar->first()->PreviousMonthBill();
         $data['installment'] = $data->CashReceipt->Installment($data->periode_bulan, $data->periode_tahun);
 
-        $data = $ar->first();
         $data['price_water'] = $connUtil->find(2)->biaya_m3;
         $data['price_electric'] = $connUtil->find(1)->biaya_m3;
         $data['service_charge_price'] = $sc->biaya_permeter;
