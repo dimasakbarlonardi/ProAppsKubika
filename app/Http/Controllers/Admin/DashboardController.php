@@ -356,10 +356,12 @@ class DashboardController extends Controller
         $model = new MonthlyArTenant();
         $connUtility = ConnectionDB::setConnection(new Utility());
         $connIPLType = ConnectionDB::setConnection(new IPLType());
+        $connSetting = ConnectionDB::setConnection(new CompanySetting());
         $getData = ConnectionDB::setConnection($model);
         $getData = $getData->find($getNotif->id_data);
         $data['transaction'] = $getData->where('id_monthly_ar_tenant', $getData->id_monthly_ar_tenant)->first();
         $data['type'] = 'MonthlyTenant';
+        $data['setting'] = $connSetting->find(1);
         // $data['installment'] = $getData->CashReceipt->Installment($getData->periode_bulan, $getData->periode_tahun);
         $data['electric'] = $connUtility->find(1);
         $data['water'] = $connUtility->find(2);

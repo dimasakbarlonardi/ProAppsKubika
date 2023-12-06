@@ -7,6 +7,7 @@ use App\Events\PaymentEvent;
 use App\Helpers\ConnectionDB;
 use App\Models\Approve;
 use App\Models\CashReceipt;
+use App\Models\CompanySetting;
 use App\Models\MonthlyArTenant;
 use App\Models\Site;
 use App\Models\Transaction;
@@ -34,6 +35,7 @@ class PaymentController extends Controller
 
             if ($callback->isSuccess()) {
                 $cr->transaction_status = 'PAID';
+                $cr->settlement_time = $callback->getNotification()->settlement_time;
 
                 switch ($cr->transaction_type) {
                     case ('WorkOrder'):
@@ -139,18 +141,25 @@ class PaymentController extends Controller
                         break;
 
                     case ('MonthlyTenant'):
+                        $setting = new CompanySetting();
                         $bills = new MonthlyArTenant();
-                        $bills = $bills->setConnection($site->db_name);
-                        $bills = $bills->where('id_unit', $cr->MonthlyARTenant->id_unit)->get();
 
-                        foreach ($bills as $bill) {
-                            $installment = $cr->UpdateInstallment($bill->periode_bulan, $bill->periode_tahun, $site->db_name);
-                            if ($installment) {
-                                $installment->status = 'PAID';
-                                $installment->save();
+                        $bills = $bills->setConnection($site->db_name);
+                        $setting = $setting->setConnection($site->db_name);
+                        $setting = $setting->find(1);
+
+                        if ($setting->is_split_ar == 0) {
+                            $bills = $bills->where('id_unit', $cr->MonthlyARTenant->id_unit)->get();
+
+                            foreach ($bills as $bill) {
+                                $installment = $cr->UpdateInstallment($bill->periode_bulan, $bill->periode_tahun, $site->db_name);
+                                if ($installment) {
+                                    $installment->status = 'PAID';
+                                    $installment->save();
+                                }
+                                $bill->tgl_bayar_invoice = Carbon::now();
+                                $bill->save();
                             }
-                            $bill->tgl_bayar_invoice = Carbon::now();
-                            $bill->save();
                         }
 
                         $dataPayment = [
