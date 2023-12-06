@@ -228,7 +228,7 @@ class OpenTicketController extends Controller
                 $item->request = $rp;
             }
             $item->ticket['deskripsi_request'] = strip_tags($rp->keterangan_pekerjaan);
-            
+
             $item->request['nama_kontraktor'] = strip_tags($rp->nama_kontraktor);
             $item->request['pic'] = strip_tags($rp->pic);
             $item->request['alamat'] = strip_tags($rp->alamat);
@@ -348,6 +348,10 @@ class OpenTicketController extends Controller
         $object->tenant_email = $cr->WorkPermit->Ticket->Tenant->email_tenant;
         $object->phone_number_tenant = $cr->WorkPermit->Ticket->Tenant->no_telp_tenant;
         $object->total = $cr->sub_total;
+        $object->items = [
+            'supervisi' => (int) $cr->WorkPermit->jumlah_supervisi,
+            'deposit' => (int) $cr->WorkPermit->jumlah_deposit
+        ];
 
         return $object;
     }
