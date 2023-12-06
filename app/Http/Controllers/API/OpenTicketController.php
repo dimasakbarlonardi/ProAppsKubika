@@ -349,8 +349,14 @@ class OpenTicketController extends Controller
         $object->phone_number_tenant = $cr->WorkPermit->Ticket->Tenant->no_telp_tenant;
         $object->total = $cr->sub_total;
         $object->items = [
-            'supervisi' => (int) $cr->WorkPermit->jumlah_supervisi,
-            'deposit' => (int) $cr->WorkPermit->jumlah_deposit
+            [
+                'billing' => 'supervisi',
+                'price' => $cr->WorkPermit->jumlah_supervisi,
+            ],
+            [
+                'billing' => 'deposit',
+                'price' => $cr->WorkPermit->jumlah_deposit
+            ]
         ];
 
         return $object;

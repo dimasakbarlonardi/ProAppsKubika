@@ -42,7 +42,7 @@
                         </div>
                         <div class="col-6 mt-3 ">
                             <label class="form-label">Biaya /
-                                @if ($utility->id_utility == 1)
+                                @if ($utility->id_utility == 1 || $utility->id_utility == 5)
                                     Kwh
                                 @else
                                     M<sup>3
@@ -54,7 +54,7 @@
                                 <input type="hidden" name="biaya_m3" id="biaya_kwh" value="{{ $utility->biaya_m3 }}"/>
                             </div>
                         </div>
-                        @if ($utility->id_utility == 1)
+                        @if ($utility->id_utility == 1 || $utility->id_utility == 5)
                             <div class="col-6 mt-3 ">
                                 <label class="form-label">Biaya Tetap Abodemen</label>
                                 <div class="input-group mb-3">
