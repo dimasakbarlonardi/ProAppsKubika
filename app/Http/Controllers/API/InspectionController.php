@@ -164,7 +164,7 @@ class InspectionController extends Controller
         $connEquipmentDetail = ConnectionDB::setConnection(new EquiqmentEngineeringDetail());
 
         $equipment = $connEquipmentDetail->where('id_equiqment_engineering_detail', $id)
-            ->with(['Room', 'Equipment', 'Room.Floor' ,'Room.Tower'])
+            ->with(['Room', 'Equipment', 'CheckedBy' ,'Room.Floor' ,'Room.Tower'])
             ->first();
 
         $equipment['status'] = json_decode($equipment->status);
@@ -318,7 +318,7 @@ class InspectionController extends Controller
         $connInspectionDetail = ConnectionDB::setConnection(new EquipmentHousekeepingDetail());
 
         $inspection = $connInspectionDetail->where('id_equipment_housekeeping_detail', $id)
-            ->with(['Room', 'Equipment', 'Schedule', 'Room.Floor', 'Room.Tower'])
+            ->with(['Room', 'Equipment', 'Schedule', 'Room.Floor', 'Room.Tower', 'CheckedBy'])
             ->first();
 
         $inspection['status'] = json_decode($inspection->status);
@@ -468,7 +468,7 @@ class InspectionController extends Controller
         $connInspectionDetail = ConnectionDB::setConnection(new ChecklistSecurity());
 
         $inspection = $connInspectionDetail->where('id', $id)
-            ->with(['Room', 'Schedule', 'Shift'])
+            ->with(['Room', 'Schedule', 'Shift', 'CheckedBy'])
             ->first();
         $inspection['status'] = json_decode($inspection->status);
 
