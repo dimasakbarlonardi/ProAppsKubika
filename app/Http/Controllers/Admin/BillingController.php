@@ -126,6 +126,7 @@ class BillingController extends Controller
         if ($setting->is_split_ar == 0) {
             $no_inv = $this->generateInvoice($createMonthlyTenant, null, $setting);
             $createMonthlyTenant->no_monthly_invoice = $no_inv;
+            $createMonthlyTenant->save();
         } else {
             for ($i = 0; $i < 2; $i++) {
                 $no_inv = $this->generateInvoice($createMonthlyTenant, $i, $setting);
@@ -291,9 +292,15 @@ class BillingController extends Controller
         $connIPL = ConnectionDB::setConnection(new MonthlyIPL());
         $connIPLType = ConnectionDB::setConnection(new IPLType());
 
-        $sc = $connIPLType->find(6);
-        $sf = $connIPLType->find(7);
         $unit = $connUnit->find($elecUSS->id_unit);
+
+        if ($unit->id_hunian == 1) {
+            $sc = $connIPLType->find(6);
+            $sf = $connIPLType->find(7);
+        } elseif ($unit->id_hunian == 2) {
+            $sc = $connIPLType->find(8);
+            $sf = $connIPLType->find(9);
+        }
 
         $currMonthDays =  Carbon::now()->daysInMonth;
         $cutOFFsc = (int) Carbon::now()->diff($unit->Owner()->tgl_masuk)->format("%a");
@@ -462,12 +469,12 @@ class BillingController extends Controller
 
                 if ($request->type == 'electric') {
                     $util = $connElec->where('id', $id)
-                    ->where('is_approve', '1')
-                    ->first();
+                        ->where('is_approve', '1')
+                        ->first();
                 } elseif ($request->type == 'water') {
                     $util = $connWater->where('id', $id)
-                    ->where('is_approve', '1')
-                    ->first();
+                        ->where('is_approve', '1')
+                        ->first();
                 }
 
                 $arTenant = $util->MonthlyUtility->MonthlyTenant;
@@ -521,14 +528,17 @@ class BillingController extends Controller
 
     public function generatePaymentMonthly(Request $request, $id)
     {
-        $connMonthlyTenant = ConnectionDB::setConnection(new MonthlyArTenant());
-        $mt = $connMonthlyTenant->find($id);
-        $site = Site::find($mt->id_site);
+        // $connMonthlyTenant = ConnectionDB::setConnection(new MonthlyArTenant());
+        $connSetting = ConnectionDB::setConnection(new CompanySetting());
+        $connCR = ConnectionDB::setConnection(new CashReceipt());
 
+        // $mt = $connMonthlyTenant->find($id);
+        $site = Site::find(Auth::user()->id_site);
+        $setting = $connSetting->find(1);
         $client = new Client();
         $billing = explode(',', $request->billing);
         $admin_fee = $request->admin_fee;
-        $transaction = $mt->CashReceipt;
+        $transaction = $connCR->find($id);
 
         if ($transaction->transaction_status == 'PENDING') {
             if ($billing[0] == 'bank_transfer') {
@@ -560,14 +570,20 @@ class BillingController extends Controller
                 if ($response->status_code == 201) {
                     $transaction->va_number = $response->va_numbers[0]->va_number;
                     $transaction->expiry_time = $response->expiry_time;
-                    $transaction->no_invoice = $mt->no_monthly_invoice;
+                    $transaction->no_invoice = $transaction->no_invoice;
                     $transaction->admin_fee = $admin_fee;
                     $transaction->transaction_status = 'VERIFYING';
 
                     $transaction->save();
-                    $mt->save();
 
-                    return redirect()->route('paymentMonthly', [$mt->id_monthly_ar_tenant, $transaction->id]);
+                    if ($setting->is_split_ar == 0) {
+                        return redirect()->route('paymentMonthly', [$transaction->id_monthly_ar_tenant, $transaction->id]);
+                    } else {
+                        return redirect()->route(
+                            'paymentMonthly',
+                            [$transaction->SplitMonthlyARTenant($transaction->id_monthly_utility, $transaction->id_monthly_ipl)->id_monthly_ar_tenant, $transaction->id]
+                        );
+                    }
                 } else {
                     Alert::info('Sorry', 'Our server is busy');
                     return redirect()->back();
@@ -580,8 +596,11 @@ class BillingController extends Controller
                 $getTokenCC = $this->TransactionCC($request);
                 $chargeCC = $this->ChargeTransactionCC($getTokenCC->token_id, $transaction);
 
-                $mt->no_monthly_invoice = $transaction->no_invoice;
-                $mt->save();
+                if ($setting->is_split_ar == 0) {
+                    $mt = $transaction->MonthlyARTenant();
+                    $mt->no_monthly_invoice = $transaction->no_invoice;
+                    $mt->save();
+                }
 
                 $transaction->save();
 

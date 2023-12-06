@@ -68,14 +68,12 @@ class BillingController extends Controller
         $connARTenant = ConnectionDB::setConnection(new MonthlyArTenant());
         $connUtil = ConnectionDB::setConnection(new Utility());
         $connIPLType = ConnectionDB::setConnection(new IPLType());
-        $connSetting = ConnectionDB::setConnection(new CompanySetting());
 
         $ar = $connARTenant->where('id_monthly_ar_tenant', $id);
 
         $previousBills = [];
         $data['installment'] = [];
 
-        $setting = $connSetting->find(1);
         $sc = $connIPLType->find(6);
         $sf = $connIPLType->find(7);
 
@@ -88,14 +86,10 @@ class BillingController extends Controller
             'MonthlyUtility.CashReceipt'
         ]);
 
-        if ($setting->is_split_ar == 0) {
-            $previousBills = $ar->first()->PreviousMonthBill();
-            $data['installment'] = $data->CashReceipt->Installment($data->periode_bulan, $data->periode_tahun);
-        } elseif ($setting->is_split_ar == 1) {
-
-        }
-
         $data = $ar->first();
+        $previousBills = $ar->first()->PreviousMonthBill();
+        $data['installment'] = $data->CashReceipt->Installment($data->periode_bulan, $data->periode_tahun);
+
         $data['price_water'] = $connUtil->find(2)->biaya_m3;
         $data['price_electric'] = $connUtil->find(1)->biaya_m3;
         $data['service_charge_price'] = $sc->biaya_permeter;
@@ -105,6 +99,55 @@ class BillingController extends Controller
             [
                 'current_bill' => $data,
                 'previous_bills' => $previousBills
+            ],
+            'Authenticated'
+        );
+    }
+
+    public function showSplitedBilling($id)
+    {
+        $connCR = ConnectionDB::setConnection(new CashReceipt());
+        $connUtil = ConnectionDB::setConnection(new Utility());
+        $connIPLType = ConnectionDB::setConnection(new IPLType());
+        // $connSetting = ConnectionDB::setConnection(new CompanySetting());
+
+        // $previousBills = [];
+        // $data['installment'] = [];
+
+        $cr = $connCR->find($id);
+        $ar = $cr->SplitMonthlyARTenant($cr->id_monthly_utility, $cr->id_monthly_ipl);
+
+        // $setting = $connSetting->find(1);
+        $sc = $connIPLType->find(6);
+        $sf = $connIPLType->find(7);
+
+        if ($cr->id_monthly_utility) {
+            $data['monthly_utility'] = $ar->where('deleted_at', null)->with([
+                'Unit.TenantUnit.Tenant',
+                'MonthlyUtility.ElectricUUS',
+                'MonthlyUtility.WaterUUS',
+                'MonthlyUtility.CashReceipt'
+            ])->first();
+            $data['monthly_i_p_l'] = null;
+            $data['price_water'] = $connUtil->find(2)->biaya_m3;
+            $data['price_electric'] = $connUtil->find(1)->biaya_m3;
+            $data['service_charge_price'] = null;
+            $data['sinking_fund_price'] = null;
+        } elseif ($cr->id_monthly_ipl) {
+            $data['monthly_i_p_l'] = $ar->where('deleted_at', null)->with([
+                'Unit.TenantUnit.Tenant',
+                'MonthlyIPL.CashReceipt',
+            ])->first();
+            $data['monthly_utility'] = null;
+            $data['price_water'] = null;
+            $data['price_electric'] = null;
+            $data['service_charge_price'] = $sc->biaya_permeter;
+            $data['sinking_fund_price'] = $sf->biaya_permeter;
+        }
+
+        return ResponseFormatter::success(
+            [
+                'current_bill' => $data,
             ],
             'Authenticated'
         );
@@ -372,8 +415,13 @@ class BillingController extends Controller
         $connUtility = $connUtility->setConnection($site->db_name);
 
         $unit = $connUnit->find($unitID);
-        $listrik = $connUtility->find(1);
         $usage = $request->current - $request->previous;
+
+        if ($unit->id_hunian == 1) {
+            $listrik = $connUtility->find(1);
+        } elseif ($unit->id_hunian == 2) {
+            $listrik = $connUtility->find(5);
+        }
 
         $isAbodemen = false;
         $biaya_usage = $listrik->biaya_m3;
@@ -478,12 +526,17 @@ class BillingController extends Controller
         $user = new User();
         $user = $user->setConnection($site->db_name);
         $user = $user->where('login_user', $login->email)->first();
-
+        $connUnit = ConnectionDB::setConnection(new Unit());
         $connUtility = new Utility();
 
         $connUtility = $connUtility->setConnection($site->db_name);
+        $unit = $connUnit->find($unitID);
 
-        $water = $connUtility->find(2);
+        if ($unit->id_hunian == 1) {
+            $water = $connUtility->find(2);
+        } elseif ($unit->id_hunian == 2) {
+            $water = $connUtility->find(6);
+        }
 
         $total_usage = $water->biaya_m3 * $usage;
         $total = $total_usage;

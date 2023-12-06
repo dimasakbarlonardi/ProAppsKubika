@@ -10,7 +10,7 @@
         <div class="card-body">
             <div class="row justify-content-between align-items-center">
                 <div class="col-md">
-                    <h5 class="mb-2 mb-md-0">Invoice #{{ $transaction->no_monthly_invoice }}</h5>
+                    <h5 class="mb-2 mb-md-0">Invoice #<span id="no-invoice"></span></h5>
                 </div>
                 <div class="col-auto"><button class="btn btn-falcon-default btn-sm me-1 mb-2 mb-sm-0" type="button"><span
                             class="fas fa-arrow-down me-1"> </span>Download (.pdf)</button><button
@@ -24,16 +24,14 @@
     <div class="card mb-3">
         <div class="card-body">
             <div class="row align-items-center mb-3">
-                <div class="col-sm-6 text-sm-start"><img src="/assets/img/icons/spot-illustrations/proapps.png"
-                        alt="invoice" width="150" /></div>
+                <div class="col-sm-6 text-sm-start">
+                    <img src="{{ $setting->company_logo ? $setting->company_logo : '/assets/img/icons/spot-illustrations/proapps.png' }}" alt="invoice" width="150" />
+                </div>
                 <div class="col text-sm-end mt-3 mt-sm-0">
                     <h2 class="mb-3">Invoice</h2>
-                    <h5>Proapps</h5>
+                    <h5>{{ $setting->company_name }}</h5>
                     <p class="fs--1 mb-0">
-                        Harton Tower Citihub, 6th floor <br>
-                        Jl. Boulevard Artha Gading Blok D No. 3, <br>
-                        Kelapa Gading Barat
-                        Jakarta Utara, 14240
+                        {!! $setting->company_address !!}
                     </p>
                 </div>
                 <div class="col-12">
@@ -70,6 +68,20 @@
                                         {{ HumanDate($transaction->tgl_jt_invoice) }}
                                     </td>
                                 </tr>
+                                @if ($transaction->SplitCashReceipt($transaction->id_monthly_utility, $transaction->id_monthly_ipl)->settlement_time)
+                                    <tr>
+                                        <th class="text-sm-end">Payment Date :</th>
+                                        <td id="payment-date">
+
+                                        </td>
+                                    </tr>
+                                @endif
+                                <tr>
+                                    <th class="text-sm-end">Payment Status:</th>
+                                    <td id="payment-status">
+
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
                     </div>
@@ -92,7 +104,8 @@
                             <td class="align-middle">
                                 <div class="form-check mb-0">
                                     <input class="form-check-input select-payment" name="select-payment" type="radio"
-                                        value="select-payment-utility" />
+                                        value="select-payment-utility"
+                                        cr-id="{{ $transaction->UtilityCashReceipt->id }}" />
                                 </div>
                             </td>
                             <td class="align-middle">
@@ -152,7 +165,7 @@
                             <td class="align-middle">
                                 <div class="form-check mb-0">
                                     <input class="form-check-input select-payment" name="select-payment" type="radio"
-                                        value="select-payment-ipl" />
+                                        value="select-payment-ipl" cr-id="{{ $transaction->IPLCashReceipt->id }}" />
                                 </div>
                             </td>
                             <td class="align-middle">
@@ -210,7 +223,7 @@
             @endif --}}
             <div id="payment-utility" style="display: none">
                 @if ($transaction->UtilityCashReceipt->transaction_status == 'PENDING')
-                    <form action="{{ route('generatePaymentMonthly', $transaction->id_monthly_ar_tenant) }}"
+                    <form action="{{ route('generatePaymentMonthly', $transaction->UtilityCashReceipt->id) }}"
                         method="post">
                         @csrf
                         <div class="row g-3 mb-3">
@@ -221,24 +234,24 @@
                                     </div>
                                     <div class="card-body bg-light">
                                         <div class="form-check mb-4">
-                                            <input class="form-check-input" type="radio" name="billing"
-                                                value="bank_transfer,bca" />
+                                            <input class="form-check-input select-payment-utility-method" type="radio"
+                                                name="billing" value="bank_transfer,bca" />
                                             <label class="form-check-label mb-0 d-block" for="paypal">
                                                 <img src="{{ asset('assets/img/icons/bca_logo.png') }}" height="20"
                                                     alt="" />
                                             </label>
                                         </div>
                                         <div class="form-check mb-4">
-                                            <input class="form-check-input" type="radio" name="billing"
-                                                value="bank_transfer,mandiri" />
+                                            <input class="form-check-input select-payment-utility-method" type="radio"
+                                                name="billing" value="bank_transfer,mandiri" />
                                             <label class="form-check-label mb-0 d-block" for="paypal">
                                                 <img src="{{ asset('assets/img/icons/mandiri_logo.png') }}"
                                                     height="20" alt="" />
                                             </label>
                                         </div>
                                         <div class="form-check mb-3">
-                                            <input class="form-check-input" type="radio" name="billing"
-                                                value="bank_transfer,bni" />
+                                            <input class="form-check-input select-payment-utility-method" type="radio"
+                                                name="billing" value="bank_transfer,bni" />
                                             <label class="form-check-label mb-0 d-block" for="paypal">
                                                 <img src="{{ asset('assets/img/icons/bni_logo.png') }}" height="20"
                                                     alt="" />
@@ -246,8 +259,8 @@
                                         </div>
                                         <p class="fs--1 mb-4">Pay with PayPal, Apple Pay, PayPal Credit and much more</p>
                                         <div class="form-check mb-0">
-                                            <input class="form-check-input" type="radio" value="credit_card"
-                                                id="credit-card" name="billing" />
+                                            <input class="form-check-input select-payment-utility-method" type="radio"
+                                                value="credit_card" id="credit-card" name="billing" />
                                             <label class="form-check-label d-flex align-items-center mb-0"
                                                 for="credit-card">
                                                 <span class="fs-1 text-nowrap">Credit Card</span>
@@ -256,7 +269,7 @@
                                                     height="20" alt="" />
                                             </label>
                                             <div class="row gx-3 mb-3">
-                                                <div id="cc_form">
+                                                <div id="cc_form_utility">
                                                     <div class="col-6 my-3">
                                                         <label
                                                             class="form-label ls text-uppercase text-600 fw-semi-bold mb-0 fs--1"
@@ -307,18 +320,19 @@
                                     <div class="card-body bg-light">
                                         <div class="d-flex justify-content-between fs--1 mb-1">
                                             <p class="mb-0">Subtotal</p>
-                                            <span>{{ rupiah($transaction->CashReceipt->sub_total) }}</span>
+                                            <span>{{ rupiah($transaction->UtilityCashReceipt->sub_total) }}</span>
                                         </div>
                                         <div class="d-flex justify-content-between fs--1 mb-1 text-success">
                                             <p class="mb-0">Tax</p>
-                                            <span>{{ Rupiah($transaction->CashReceipt->tax) }}</span>
+                                            <span>{{ Rupiah($transaction->UtilityCashReceipt->tax) }}</span>
                                         </div>
                                         <div class="d-flex justify-content-between fs--1 mb-1 text-success">
-                                            <p class="mb-0">Admin Fee</p><span id="admin_fee">Rp 0</span>
+                                            <p class="mb-0">Admin Fee Utility</p><span id="admin_fee_utility">Rp
+                                                0</span>
                                         </div>
                                         <hr />
                                         <h5 class="d-flex justify-content-between"><span>Grand Total</span><span
-                                                id="grand_total">Rp 0</span>
+                                                id="grand_total_utility">Rp 0</span>
                                         </h5>
                                         <p class="fs--1 text-600">Once you start your trial, you will have 30 days to use
                                             Falcon
@@ -340,7 +354,7 @@
                                 </div>
                             </div>
                         </div>
-                        <input type="hidden" id="val_admin_fee" name="admin_fee">
+                        <input type="hidden" id="val_admin_fee_utility" name="admin_fee">
                     </form>
                 @elseif($transaction->UtilityCashReceipt->transaction_status == 'VERIFYING')
                     <div class="text-center">
@@ -351,7 +365,7 @@
             </div>
             <div id="payment-ipl" style="display: none">
                 @if ($transaction->IPLCashReceipt->transaction_status == 'PENDING')
-                    <form action="{{ route('generatePaymentMonthly', $transaction->id_monthly_ar_tenant) }}"
+                    <form action="{{ route('generatePaymentMonthly', $transaction->IPLCashReceipt->id) }}"
                         method="post">
                         @csrf
                         <div class="row g-3 mb-3">
@@ -362,24 +376,24 @@
                                     </div>
                                     <div class="card-body bg-light">
                                         <div class="form-check mb-4">
-                                            <input class="form-check-input" type="radio" name="billing"
-                                                value="bank_transfer,bca" />
+                                            <input class="form-check-input select-payment-ipl-method" type="radio"
+                                                name="billing" value="bank_transfer,bca" />
                                             <label class="form-check-label mb-0 d-block" for="paypal">
                                                 <img src="{{ asset('assets/img/icons/bca_logo.png') }}" height="20"
                                                     alt="" />
                                             </label>
                                         </div>
                                         <div class="form-check mb-4">
-                                            <input class="form-check-input" type="radio" name="billing"
-                                                value="bank_transfer,mandiri" />
+                                            <input class="form-check-input select-payment-ipl-method" type="radio"
+                                                name="billing" value="bank_transfer,mandiri" />
                                             <label class="form-check-label mb-0 d-block" for="paypal">
                                                 <img src="{{ asset('assets/img/icons/mandiri_logo.png') }}"
                                                     height="20" alt="" />
                                             </label>
                                         </div>
                                         <div class="form-check mb-3">
-                                            <input class="form-check-input" type="radio" name="billing"
-                                                value="bank_transfer,bni" />
+                                            <input class="form-check-input select-payment-ipl-method" type="radio"
+                                                name="billing" value="bank_transfer,bni" />
                                             <label class="form-check-label mb-0 d-block" for="paypal">
                                                 <img src="{{ asset('assets/img/icons/bni_logo.png') }}" height="20"
                                                     alt="" />
@@ -387,8 +401,8 @@
                                         </div>
                                         <p class="fs--1 mb-4">Pay with PayPal, Apple Pay, PayPal Credit and much more</p>
                                         <div class="form-check mb-0">
-                                            <input class="form-check-input" type="radio" value="credit_card"
-                                                id="credit-card" name="billing" />
+                                            <input class="form-check-input select-payment-ipl-method" type="radio"
+                                                value="credit_card" id="credit-card" name="billing" />
                                             <label class="form-check-label d-flex align-items-center mb-0"
                                                 for="credit-card">
                                                 <span class="fs-1 text-nowrap">Credit Card</span>
@@ -397,7 +411,7 @@
                                                     height="20" alt="" />
                                             </label>
                                             <div class="row gx-3 mb-3">
-                                                <div id="cc_form">
+                                                <div id="cc_form_ipl">
                                                     <div class="col-6 my-3">
                                                         <label
                                                             class="form-label ls text-uppercase text-600 fw-semi-bold mb-0 fs--1"
@@ -448,18 +462,18 @@
                                     <div class="card-body bg-light">
                                         <div class="d-flex justify-content-between fs--1 mb-1">
                                             <p class="mb-0">Subtotal</p>
-                                            <span>{{ rupiah($transaction->CashReceipt->sub_total) }}</span>
+                                            <span>{{ rupiah($transaction->IPLCashReceipt->sub_total) }}</span>
                                         </div>
                                         <div class="d-flex justify-content-between fs--1 mb-1 text-success">
                                             <p class="mb-0">Tax</p>
-                                            <span>{{ Rupiah($transaction->CashReceipt->tax) }}</span>
+                                            <span>{{ Rupiah($transaction->IPLCashReceipt->tax) }}</span>
                                         </div>
                                         <div class="d-flex justify-content-between fs--1 mb-1 text-success">
-                                            <p class="mb-0">Admin Fee</p><span id="admin_fee">Rp 0</span>
+                                            <p class="mb-0">Admin Fee IPL</p><span id="admin_fee_ipl">Rp 0</span>
                                         </div>
                                         <hr />
                                         <h5 class="d-flex justify-content-between"><span>Grand Total</span><span
-                                                id="grand_total">Rp 0</span>
+                                                id="grand_total_ipl">Rp 0</span>
                                         </h5>
                                         <p class="fs--1 text-600">Once you start your trial, you will have 30 days to use
                                             Falcon
@@ -481,7 +495,7 @@
                                 </div>
                             </div>
                         </div>
-                        <input type="hidden" id="val_admin_fee" name="admin_fee">
+                        <input type="hidden" id="val_admin_fee_ipl" name="admin_fee">
                     </form>
                 @elseif($transaction->IPLCashReceipt->transaction_status == 'VERIFYING')
                     <div class="text-center">
@@ -499,30 +513,48 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
-        // console.log('asd')
-        // $('#select-payment-utility:checked').length('checked', function() {
-        //     alert('payment util')
-        //     console.log('asd');
-        // })
-        console.log($('#select-payment-utility:checked').length == 1)
-        if ($('#select-payment-utility:checked').length == 1) {
-            alert('Radio Button Is checked!');
-        }
+
+        value = '';
 
         $('.select-payment').on('change', function() {
             value = $(this).val();
-            if (value == 'select-payment-ipl') {
-                $('#payment-utility').css("display", "none")
-                $('#payment-ipl').css("display", "block")
-            } else {
-                $('#payment-utility').css("display", "block")
-                $('#payment-ipl').css("display", "none")
-            }
-        })
+            crID = $(this).attr("cr-id")
+            let token = "{{ Request::session()->get('token') }}";
 
-        // $('#payment-ipl').prop('checked', function() {
-        //     alert('payment ipl')
-        // })
+            $.ajax({
+                url: `/api/v1/get-splited-billing/${crID}`,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token
+                },
+                type: 'GET',
+                success: function(resp) {
+                    if (value == 'select-payment-ipl') {
+                        data = resp.data.current_bill.monthly_i_p_l.monthly_i_p_l.cash_receipt;
+                        console.log(data.transaction_status);
+                        $('#payment-utility').css("display", "none")
+                        $('#payment-ipl').css("display", "block")
+                    } else {
+                        data = resp.data.current_bill.monthly_utility.monthly_utility.cash_receipt;
+                        $('#payment-utility').css("display", "block")
+                        $('#payment-ipl').css("display", "none")
+                        console.log(data.transaction_status);
+                    }
+                    $('#no-invoice').html(data.no_invoice)
+                    $('#payment-date').html(data.settlement_time)
+                    if (data.transaction_status == 'PAID') {
+                        $('#payment-status').html(`
+                            <span class="badge bg-success">Payed</span>
+                        `)
+                    } else {
+                        $('#payment-status').html(`
+                            <span class="badge bg-warning">Pending</span>
+                        `)
+                    }
+                }
+            })
+
+        })
 
         var admin_tax = 0.11;
         var subtotal = parseInt('{{ $transaction->SubTotal() }}')
@@ -544,21 +576,39 @@
 
 
         $('document').ready(function() {
-            $('#cc_form').css('display', 'none')
-            $('.form-check-input').on('change', function() {
+            $('#cc_form_utility').css('display', 'none');
+            $('#cc_form_ipl').css('display', 'none');
+
+            $(".select-payment-utility-method").on('change', function() {
                 if ($(this).is(':checked') && $(this).val() == 'credit_card') {
                     var admin_fee = Math.round(2000 + (0.029 * subtotal));
                     var admin_fee = admin_fee + (Math.round(admin_fee * 0.11));
 
-                    $('#cc_form').css('display', 'block')
+                    $('#cc_form_utility').css('display', 'block')
                 } else {
                     var admin_fee = 4000 + (4000 * admin_tax);
-                    $('#cc_form').css('display', 'none')
+                    $('#cc_form_utility').css('display', 'none')
                 }
                 var grand_total = subtotal + admin_fee;
-                $('#val_admin_fee').val(admin_fee);
-                $('#admin_fee').html(`Rp ${formatRupiah(admin_fee.toString())}`)
-                $('#grand_total').html(`Rp ${formatRupiah(grand_total.toString())}`)
+                $('#val_admin_fee_utility').val(admin_fee);
+                $('#admin_fee_utility').html(`Rp ${formatRupiah(admin_fee.toString())}`)
+                $('#grand_total_utility').html(`Rp ${formatRupiah(grand_total.toString())}`)
+            });
+
+            $(".select-payment-ipl-method").on('change', function() {
+                if ($(this).is(':checked') && $(this).val() == 'credit_card') {
+                    var admin_fee = Math.round(2000 + (0.029 * subtotal));
+                    var admin_fee = admin_fee + (Math.round(admin_fee * 0.11));
+
+                    $('#cc_form_ipl').css('display', 'block')
+                } else {
+                    var admin_fee = 4000 + (4000 * admin_tax);
+                    $('#cc_form_ipl').css('display', 'none')
+                }
+                var grand_total = subtotal + admin_fee;
+                $('#val_admin_fee_ipl').val(admin_fee);
+                $('#admin_fee_ipl').html(`Rp ${formatRupiah(admin_fee.toString())}`)
+                $('#grand_total_ipl').html(`Rp ${formatRupiah(grand_total.toString())}`)
             });
         })
 
