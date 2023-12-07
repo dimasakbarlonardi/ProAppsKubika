@@ -27,6 +27,7 @@ class WorkOrder extends Model
         'id_user_wo',
         'id_user_mgr',
         'status_wo',
+        'is_worked',
         'sign_approve_1',
         'sign_approve_2',
         'sign_approve_3',
