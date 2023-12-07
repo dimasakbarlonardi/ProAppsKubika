@@ -68,7 +68,7 @@
         id="message-content" />
     <input type="hidden" id="room_id_value" name="room_id" value="{{ $room->id }}">
     <input type="hidden" id="receiver_id_value" name="receiver_id" value="{{ $room->Sender->id_user }}">
-    <button class="btn btn-sm btn-send shadow-none" type="button" id="send_message2">Send 1</button>
+    <button class="btn btn-sm btn-send shadow-none" type="button" id="send_message2">Send</button>
 </form>
 
 <script>
