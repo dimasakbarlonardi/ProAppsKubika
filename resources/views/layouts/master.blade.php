@@ -443,7 +443,7 @@
                     getNotDoneRequest();
                 case 'WorkRequest':
                     getNotDoneWR();
-                case 'WorkOrderM':
+                case 'MApproveWorkOrder':
                     getNotDoneWO();
                 default:
 

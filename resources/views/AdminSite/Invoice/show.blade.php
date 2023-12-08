@@ -5,8 +5,8 @@
         $type = $transaction->transaction_type;
 
         switch ($type) {
-            case 'WorkOrder':
-                $type = 'WorkOrder';
+            case 'TApproveWorkOrder':
+                $type = 'TApproveWorkOrder';
                 $data = $transaction->WorkOrder;
                 $site = \App\Models\Site::find($data->Ticket->id_site);
                 $tenant = $data->Ticket->Tenant;
@@ -170,8 +170,7 @@
                 </div>
             </div>
             <div class="table-responsive mt-4 fs--1">
-                @if ($type == 'WorkOrder')
-                    <table class="table">
+            TApproveWorkOrder                    <table class="table">
                         <tbody>
                             <tr class="alert alert-success my-3">
                                 <td class="align-middle">

@@ -178,13 +178,13 @@ class DashboardController extends Controller
         $getNotif->save();
 
         switch ($getNotif->models) {
-            case ('WorkOrder'):
+            case ('TApproveWorkOrder'):
                 $data = $this->handleWO($connApprove, $getNotif);
                 $data['user'] = $user;
                 return view('Tenant.Notification.WorkOrder', $data);
                 break;
 
-            case ('WorkOrderM'):
+            case ('MApproveWorkOrder'):
                 return redirect()->route('work-orders.show', $getNotif->id_data);
                 break;
 

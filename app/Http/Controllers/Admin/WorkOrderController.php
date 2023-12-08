@@ -127,7 +127,7 @@ class WorkOrderController extends Controller
             DB::commit();
 
             $dataNotif = [
-                'models' => 'WorkOrderM',
+                'models' => 'MApproveWorkOrder',
                 'notif_title' => $wo->no_work_order,
                 'id_data' => $wo->id,
                 'sender' => $request->session()->get('user')->id_user,
@@ -185,7 +185,7 @@ class WorkOrderController extends Controller
             $wo = $connWO->find($id);
 
             $dataNotif = [
-                'models' => 'WorkOrder',
+                'models' => 'TApproveWorkOrder',
                 'notif_title' => $wo->no_work_order,
                 'id_data' => $wo->id,
                 'sender' => $request->session()->get('user')->id_user,
@@ -225,7 +225,7 @@ class WorkOrderController extends Controller
         }
 
         $dataNotif = [
-            'models' => 'WorkOrderM',
+            'models' => 'MApproveWorkOrder',
             'notif_title' => $wo->no_work_order,
             'id_data' => $wo->id,
             'sender' => $request->session()->get('user')->id_user,
@@ -255,7 +255,7 @@ class WorkOrderController extends Controller
         $wo = $connWO->find($id);
 
         $dataNotif = [
-            'models' => 'WorkOrderM',
+            'models' => 'MApproveWorkOrder',
             'notif_title' => $wo->no_work_order,
             'id_data' => $wo->id,
             'sender' => $request->session()->get('user')->id_user,
@@ -289,7 +289,7 @@ class WorkOrderController extends Controller
 
         if ($wo->id_bayarnon == 0) {
             $dataNotif = [
-                'models' => 'WorkOrderM',
+                'models' => 'MApproveWorkOrder',
                 'notif_title' => $wo->no_work_order,
                 'id_data' => $wo->id,
                 'sender' => $request->session()->get('user')->id_user,
@@ -299,7 +299,7 @@ class WorkOrderController extends Controller
             ];
         } else {
             $dataNotif = [
-                'models' => 'WorkOrderM',
+                'models' => 'MApproveWorkOrder',
                 'notif_title' => $wo->no_work_order,
                 'id_data' => $wo->id,
                 'sender' => $request->session()->get('user')->id_user,
@@ -328,7 +328,7 @@ class WorkOrderController extends Controller
 
         if ($wo->id_bayarnon == 0) {
             $dataNotif = [
-                'models' => 'WorkOrderM',
+                'models' => 'MApproveWorkOrder',
                 'notif_title' => $wo->no_work_order,
                 'id_data' => $wo->id,
                 'sender' => $request->session()->get('user')->id_user,
@@ -338,7 +338,7 @@ class WorkOrderController extends Controller
             ];
         } else {
             $dataNotif = [
-                'models' => 'WorkOrderM',
+                'models' => 'MApproveWorkOrder',
                 'notif_title' => $wo->no_work_order,
                 'id_data' => $wo->id,
                 'sender' => $request->session()->get('user')->id_user,
@@ -365,7 +365,7 @@ class WorkOrderController extends Controller
 
         if ($wo->id_bayarnon == 0) {
             $dataNotif = [
-                'models' => 'WorkOrderM',
+                'models' => 'MApproveWorkOrder',
                 'notif_title' => $wo->no_work_order,
                 'id_data' => $wo->id,
                 'sender' => $request->session()->get('user')->id_user,
@@ -408,7 +408,7 @@ class WorkOrderController extends Controller
         $wo->save();
 
         $dataNotif = [
-            'models' => 'WorkOrder',
+            'models' => 'TApproveWorkOrder',
             'notif_title' => $wo->no_work_order,
             'id_data' => $wo->id,
             'sender' => $request->session()->get('user')->id_user,
@@ -452,7 +452,7 @@ class WorkOrderController extends Controller
         }
 
         $dataNotif = [
-            'models' => 'WorkOrderM',
+            'models' => 'MApproveWorkOrder',
             'notif_title' => $wo->no_work_order,
             'id_data' => $wo->id,
             'sender' => $ticket->Tenant->User->id_user,
@@ -536,7 +536,7 @@ class WorkOrderController extends Controller
             $createTransaction->no_invoice = $no_inv;
             $createTransaction->transaction_status = 'PENDING';
             $createTransaction->id_user = $wo->Ticket->Tenant->User->id_user;
-            $createTransaction->transaction_type = 'WorkOrder';
+            $createTransaction->transaction_type = 'TApproveWorkOrder';
             $createTransaction->save();
 
             $wo->Ticket->no_invoice = $no_inv;
