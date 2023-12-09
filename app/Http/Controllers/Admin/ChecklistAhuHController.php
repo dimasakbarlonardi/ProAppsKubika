@@ -80,6 +80,7 @@ class ChecklistAhuHController extends Controller
     {
         $parameter = $request->to;
 
+        $connEquiqmentAHU = ConnectionDB::setConnection(new EquiqmentAhu());
         $checklistParameter = ConnectionDB::setConnection(new ChecklistParameterEquiqment());
 
         $checklist_id = [];
@@ -102,6 +103,8 @@ class ChecklistAhuHController extends Controller
             }
 
             if (isset($parameter)) {
+                $equiqmentAHU = $connEquiqmentAHU->find($id);
+
                 foreach ($parameter as $param) {
                     $checkParam = $checklistParameter->where('id_item', $id)
                         ->where('id_equiqment', 2)
@@ -116,6 +119,7 @@ class ChecklistAhuHController extends Controller
                         ]);
                     }
                 }
+                $equiqmentAHU->generateBarcode();
             }
         } else {
             $checklistParameter->where('id_equiqment', 2)
@@ -189,18 +193,6 @@ class ChecklistAhuHController extends Controller
     {
         $equiqmentAHU = ConnectionDB::setConnection(new EquiqmentAhu());
 
-        $data = [
-            "id_equipment_engineering" => 45,
-            "schedule"=> "2023-12-23",
-            "equipment"=> "Lampu lantai 2",
-            "status_schedule"=> "Not Done",
-            "id_room"=> 4,
-            "room"=> "Anggrek"
-        ];
-
-        $json = json_encode($data);
-        $enkrip = base64_encode($json);
-
         try {
             DB::beginTransaction();
 
@@ -212,7 +204,7 @@ class ChecklistAhuHController extends Controller
             $equiqmentAHU->id_role = $request->id_role;
             $equiqmentAHU->id_room = $request->id_room;
 
-            $equiqmentAHU->generateBarcode($enkrip);
+            $equiqmentAHU->generateBarcode();
 
             $equiqmentAHU->save();
 

@@ -29,8 +29,28 @@ class EquiqmentAhu extends Model
 
     protected $dates = ['deleted_at'];
 
-    public function GenerateBarcode($data)
+    public function GenerateBarcode()
     {
+        $checklists = [];
+
+        foreach ($this->InspectionEng as $data) {
+            $checklists[]['question'] = $data->ChecklistEng->nama_eng_ahu;
+        }
+
+        $data = [
+            "id_equipment_engineering" => $this->id_equiqment_engineering,
+            "equipment" => $this->equiqment,
+            "status_schedule" => "Not Done",
+            "id_room" => $this->id_room,
+            "room" => $this->Room->nama_room,
+            "Tower" => $this->Room->Tower,
+            "Floor" => $this->Room->Floor,
+            "checklists" => $checklists
+        ];
+
+        $json = json_encode($data);
+        $enkrip = base64_encode($json);
+
         $barcodeRoom = QrCode::format('png')
             ->merge(public_path('assets/img/logos/proapps.png'), 0.6, true)
             ->size(500)
@@ -39,10 +59,10 @@ class EquiqmentAhu extends Model
             ->eyeColor(1, 39, 178, 155, 0, 0, 0)
             ->eyeColor(2, 39, 178, 155, 0, 0, 0)
             ->errorCorrection('H')
-            ->generate($data);
+            ->generate($enkrip);
 
-        $outputBarcode = '/public/' . Auth::user()->id_site . '/img/qr-code/equipment-eng/' . $this->id_equiqment_engineering . '-barcode_equipment_engineering.png';
-        $barcode = '/storage/' . Auth::user()->id_site . '/img/qr-code/equipment-eng/' . $this->id_equiqment_engineering . '-barcode_equipment_engineering.png';
+        $outputBarcode = '/public/' . Auth::user()->id_site . '/img/qr-code/equipment-eng/' . $this->equiqment . '-barcode_equipment_engineering.png';
+        $barcode = '/storage/' . Auth::user()->id_site . '/img/qr-code/equipment-eng/' . $this->equiqment . '-barcode_equipment_engineering.png';
 
         Storage::disk('local')->put($outputBarcode, $barcodeRoom);
 
