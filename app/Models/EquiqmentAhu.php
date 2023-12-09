@@ -43,14 +43,14 @@ class EquiqmentAhu extends Model
             "status_schedule" => "Not Done",
             "id_room" => $this->id_room,
             "room" => $this->Room->nama_room,
-            "Tower" => $this->Room->Tower,
-            "Floor" => $this->Room->Floor,
+            "Tower" => $this->Room->Tower->nama_tower,
+            "Floor" => $this->Room->Floor->nama_lantai,
             "checklists" => $checklists
         ];
-
+        
         $json = json_encode($data);
         $enkrip = base64_encode($json);
-
+        
         $barcodeRoom = QrCode::format('png')
             ->merge(public_path('assets/img/logos/proapps.png'), 0.6, true)
             ->size(500)
@@ -63,7 +63,8 @@ class EquiqmentAhu extends Model
 
         $outputBarcode = '/public/' . Auth::user()->id_site . '/img/qr-code/equipment-eng/' . $this->equiqment . '-barcode_equipment_engineering.png';
         $barcode = '/storage/' . Auth::user()->id_site . '/img/qr-code/equipment-eng/' . $this->equiqment . '-barcode_equipment_engineering.png';
-
+        
+        Storage::delete($outputBarcode);
         Storage::disk('local')->put($outputBarcode, $barcodeRoom);
 
         $this->barcode_room = $barcode;
