@@ -189,18 +189,32 @@ class ChecklistAhuHController extends Controller
     {
         $equiqmentAHU = ConnectionDB::setConnection(new EquiqmentAhu());
 
+        $data = [
+            "id_equipment_engineering" => 45,
+            "schedule"=> "2023-12-23",
+            "equipment"=> "Lampu lantai 2",
+            "status_schedule"=> "Not Done",
+            "id_room"=> 4,
+            "room"=> "Anggrek"
+        ];
+
+        $json = json_encode($data);
+        $enkrip = base64_encode($json);
+
         try {
             DB::beginTransaction();
 
             $id_equiqment = 1;
 
-            $equiqmentAHU->create([
-                'no_equiqment' => $request->no_equiqment,
-                'id_equiqment' => $id_equiqment,
-                'equiqment' => $request->equiqment,
-                'id_role' => $request->id_role,
-                'id_room' => $request->id_room,
-            ]);
+            $equiqmentAHU->no_equiqment = $request->no_equiqment;
+            $equiqmentAHU->id_equiqment = $id_equiqment;
+            $equiqmentAHU->equiqment = $request->equiqment;
+            $equiqmentAHU->id_role = $request->id_role;
+            $equiqmentAHU->id_room = $request->id_room;
+
+            $equiqmentAHU->generateBarcode($enkrip);
+
+            $equiqmentAHU->save();
 
             DB::commit();
 

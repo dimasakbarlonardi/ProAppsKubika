@@ -2,9 +2,12 @@
 
 namespace App\Models;
 
+use Auth;
+use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Storage;
 
 class EquiqmentAhu extends Model
 {
@@ -17,7 +20,7 @@ class EquiqmentAhu extends Model
     protected $fillable = [
         'id_equiqment_engineering',
         'id_equiqment',
-        // 'barcode_room',
+        'barcode_room',
         'no_equiqment',
         'equiqment',
         'id_role',
@@ -25,6 +28,27 @@ class EquiqmentAhu extends Model
     ];
 
     protected $dates = ['deleted_at'];
+
+    public function GenerateBarcode($data)
+    {
+        $barcodeRoom = QrCode::format('png')
+            ->merge(public_path('assets/img/logos/proapps.png'), 0.6, true)
+            ->size(500)
+            ->color(0, 0, 0)
+            ->eyeColor(0, 39, 178, 155, 0, 0, 0)
+            ->eyeColor(1, 39, 178, 155, 0, 0, 0)
+            ->eyeColor(2, 39, 178, 155, 0, 0, 0)
+            ->errorCorrection('H')
+            ->generate($data);
+
+        $outputBarcode = '/public/' . Auth::user()->id_site . '/img/qr-code/equipment-eng/' . $this->id_equiqment_engineering . '-barcode_equipment_engineering.png';
+        $barcode = '/storage/' . Auth::user()->id_site . '/img/qr-code/equipment-eng/' . $this->id_equiqment_engineering . '-barcode_equipment_engineering.png';
+
+        Storage::disk('local')->put($outputBarcode, $barcodeRoom);
+
+        $this->barcode_room = $barcode;
+        $this->save();
+    }
 
     public function equiqment()
     {
