@@ -43,10 +43,15 @@
                         <tr>
                             <th scope="row">{{ $key + 1 }}</th>
                             <td>{{ $checklistahu->equiqment }}</td>
-                            <td>{{ $checklistahu->Room ? $checklistahu->Room->Tower->nama_tower : '' }} - {{ $checklistahu->Room ? $checklistahu->Room->Floor->nama_lantai : '' }}
+                            <td>{{ $checklistahu->Room ? $checklistahu->Room->Tower->nama_tower : '' }} -
+                                {{ $checklistahu->Room ? $checklistahu->Room->Floor->nama_lantai : '' }}
                                 - {{ $checklistahu->Room ? $checklistahu->Room->nama_room : '' }}</td>
                             <td>
-                                <img width="150" src="{{ url($checklistahu->barcode_room ? $checklistahu->barcode_room : '') }}">
+                                @if ($checklistahu->barcode_room)
+                                    <img width="150" src="{{ url($checklistahu->barcode_room) }}">
+                                @else
+                                    <small class="badge bg-info text">Please add parameter to generate barcode</small>
+                                @endif
                             </td>
                             <td>
                                 <div class="dropdown font-sans-serif position-static">

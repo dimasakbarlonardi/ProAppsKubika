@@ -203,9 +203,6 @@ class ChecklistAhuHController extends Controller
             $equiqmentAHU->equiqment = $request->equiqment;
             $equiqmentAHU->id_role = $request->id_role;
             $equiqmentAHU->id_room = $request->id_room;
-
-            $equiqmentAHU->generateBarcode();
-
             $equiqmentAHU->save();
 
             DB::commit();
