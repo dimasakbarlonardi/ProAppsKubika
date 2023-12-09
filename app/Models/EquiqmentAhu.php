@@ -47,10 +47,12 @@ class EquiqmentAhu extends Model
             "Floor" => $this->Room->Floor->nama_lantai,
             "checklists" => $checklists
         ];
-        
+
         $json = json_encode($data);
-        $enkrip = base64_encode($json);
-        
+        $iv = random_bytes(16);
+        $cipherText = openssl_encrypt($json, 'aes-256-cbc', env('JWT_SECRET'), 0, $iv);
+        $enkrip = base64_encode($iv . $cipherText);
+
         $barcodeRoom = QrCode::format('png')
             ->merge(public_path('assets/img/logos/proapps.png'), 0.6, true)
             ->size(500)
@@ -63,7 +65,7 @@ class EquiqmentAhu extends Model
 
         $outputBarcode = '/public/' . Auth::user()->id_site . '/img/qr-code/equipment-eng/' . $this->equiqment . '-barcode_equipment_engineering.png';
         $barcode = '/storage/' . Auth::user()->id_site . '/img/qr-code/equipment-eng/' . $this->equiqment . '-barcode_equipment_engineering.png';
-        
+
         Storage::delete($outputBarcode);
         Storage::disk('local')->put($outputBarcode, $barcodeRoom);
 
