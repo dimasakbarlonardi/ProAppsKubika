@@ -34,6 +34,7 @@
                         <th class="sort" data-sort="">No</th>
                         <th class="sort" data-sort="barcode_room">Equipment</th>
                         <th class="sort" data-sort="id_room">Room</th>
+                        <th class="sort" data-sort="id_room">Barcode</th>
                         <th class="sort" data-sort="action">Action</th>
                     </tr>
                 </thead>
@@ -44,6 +45,9 @@
                             <td>{{ $checklistahu->equiqment }}</td>
                             <td>{{ $checklistahu->Room ? $checklistahu->Room->Tower->nama_tower : '' }} - {{ $checklistahu->Room ? $checklistahu->Room->Floor->nama_lantai : '' }}
                                 - {{ $checklistahu->Room ? $checklistahu->Room->nama_room : '' }}</td>
+                            <td>
+                                <img width="150" src="{{ url($checklistahu->barcode_room ? $checklistahu->barcode_room : '') }}">
+                            </td>
                             <td>
                                 <div class="dropdown font-sans-serif position-static">
                                     <button class="btn btn-sm btn-warning" type="button" data-bs-toggle="dropdown"
