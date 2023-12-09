@@ -66,7 +66,7 @@ class EquiqmentAhu extends Model
 
         Storage::disk('local')->put($outputBarcode, $barcodeRoom);
 
-        $this->barcode_room = $barcode;
+        $this->barcode_room = null;
         $this->save();
     }
 
