@@ -33,6 +33,7 @@ class WorkRequestController extends Controller
         $object->schedule = $wr->schedule;
         $object->is_working = $wr->is_working;
         $object->is_worked = $wr->is_worked;
+        $object->is_done = $wr->is_done;
 
         return ResponseFormatter::success(
             $object,
