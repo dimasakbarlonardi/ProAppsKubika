@@ -21,6 +21,7 @@ class WorkRequest extends Model
         'schedule',
         'is_working',
         'is_worked',
+        'is_done',
         'sign_approve_1',
         'sign_approval_2',
         'sign_approval_3',

@@ -194,6 +194,10 @@
                             <button type="button" class="btn btn-primary w-100" id="btn_request_wo">Ajukan Work
                                 Order</button>
                         @endif
+                        @if ($wr->is_done && Request::session()->get('work_relation_id') == 2 && $wr->status_request == 'DONE')
+                            <button type="button" onclick="completeButton({{ $wr->id }})"
+                                class="btn btn-primary w-100" id="btn_request_wo">Complete</button>
+                        @endif
                     </div>
                 </div>
             @endif
@@ -381,7 +385,7 @@
                 detil_pekerjaan: detilPekerjaan,
                 detil_biaya_alat: detilBiayaAlat ? detilBiayaAlat : 0,
             }
-            console.log(id_bayar);
+
             if (detilPekerjaan !== '' && detilBiayaAlat !== '' && id_bayar == 1) {
                 services.push(service);
 
@@ -436,6 +440,30 @@
 
             $('#totalServiceItems').html(`${services.length} (${services.length > 1 ? 'items' : 'item'})`)
             $('#totalServicePrice').html(`Rp ${formatRupiah(sum.toString())}`)
+        }
+
+        let token = "{{ Request::session()->get('token') }}";
+
+        function completeButton(id) {
+            let token = "{{ Request::session()->get('token') }}";
+
+            $.ajax({
+                url: `/api/v1/complete/work-request/${id}`,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token
+                },
+                type: 'POST',
+                success: function(resp) {
+                    if (resp.meta.code === 200) {
+                        Swal.fire(
+                            'Berhasil!',
+                            'Berhasil mengupdate Work Order!',
+                            'success'
+                        ).then(() => window.location.reload())
+                    }
+                }
+            })
         }
     </script>
 @endsection

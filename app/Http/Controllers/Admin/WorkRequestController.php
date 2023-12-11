@@ -180,6 +180,8 @@ class WorkRequestController extends Controller
             $wr->save();
         } elseif ($request->status_request == 'WORK DONE') {
             $ticket->status_request = 'WORK DONE';
+            $wr->is_worked = true;
+            $wr->save();
 
             $getUser = $ticket->Tenant->User;
             $user = $request->session()->get('user');
