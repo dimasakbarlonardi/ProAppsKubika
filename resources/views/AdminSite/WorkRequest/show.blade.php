@@ -176,7 +176,7 @@
                                         <input class="form-control"
                                             value="{{ $wr->WorkOrder ? $wr->WorkOrder->estimasi_pengerjaan : '' }}"
                                             type="text" name="estimasi_pengerjaan" id="estimasi_pengerjaan" /><span
-                                            class="input-group-text">Jam</span>
+                                            class="input-group-text">Menit</span>
                                     </div>
                                 </div>
                             @endif
