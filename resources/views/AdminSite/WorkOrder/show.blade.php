@@ -156,7 +156,7 @@
                                 <input class="form-control" value="{{ $wo->estimasi_pengerjaan }}"
                                     {{ $wo->estimasi_pengerjaan ? 'disabled' : '' }} type="text"
                                     name="estimasi_pengerjaan" id="estimasi_pengerjaan" />
-                                <span class="input-group-text">Jam</span>
+                                <span class="input-group-text">Menit</span>
                             </div>
                         </div>
                         <div class="mb-4">

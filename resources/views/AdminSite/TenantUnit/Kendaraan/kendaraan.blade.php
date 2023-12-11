@@ -63,6 +63,10 @@
                                     <label class="form-label">No Polisi </label>
                                     <input type="text" name="no_polisi" class="form-control" required>
                                 </div>
+                                <div class="col-6">
+                                    <label class="form-label">Keterangan </label>
+                                    <input type="text" name="keterangan" class="form-control" required>
+                                </div>
                             </div>
                         </div>
                         <div class="modal-footer">

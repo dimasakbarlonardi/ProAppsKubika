@@ -339,7 +339,38 @@ class ToolsEngController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $connToolsENG = ConnectionDB::setConnection(new ToolsEngineering());
+        $connToolHistory = ConnectionDB::setConnection(new ToolHistory());
+
+        $tool = $connToolsENG->find($id);
+
+        try {
+            DB::beginTransaction();
+
+            $editQty = (int) abs($request->total_tools - $tool->total_tools);
+
+            $tool->total_tools = $request->total_tools;
+            $tool->current_totals = $editQty;
+            $tool->save();
+
+            $connToolHistory->create([
+                'type' => 'ENG',
+                'id_data' => $id,
+                'qty' => $editQty,
+                'borrowed_by' => $request->session()->get('user')->id_user,
+                'action' => 'Update',
+                'status' => 'Update Tools'
+            ]);
+
+            DB::commit();
+
+            Alert::success('success', 'Tool Borrowed successfully');
+            return redirect()->back();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            dd($e);
+            return redirect()->back()->with('error', 'An error occurred while borrowing the tool.');
+        }
     }
 
     /**

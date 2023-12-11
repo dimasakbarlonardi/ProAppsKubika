@@ -7,7 +7,7 @@
                 <div class="col-auto">
                     <nav aria-label="breadcrumb">
                         <ol class="my-3 breadcrumb">
-                            <li class="breadcrumb-item text-white"> <a href="{{ route('engahus.index')}}" class="text-white"> List Engineering Inspection Parameter </a></li>
+                            <li class="breadcrumb-item text-white"> <a href="{{ route('engineering.index')}}" class="text-white"> List Engineering Inspection Parameter </a></li>
                             <li class="breadcrumb-item active" aria-current="page">Create Engineering Inspection Parameter</li>
                         </ol>
                     </nav>
@@ -15,7 +15,7 @@
             </div>
         </div>
         <div class="p-5">
-            <form method="post" action="{{ route('engahus.store') }}">
+            <form method="post" action="{{ route('engineering.store') }}">
                 @csrf
                 <div class="row">
                 <div class="col-6 mt-3">
@@ -24,7 +24,7 @@
                 </div>
                 <div class="mt-5">
                     <button type="submit" class="btn btn-primary">Submit</button>
-                    <button type="button" class="btn btn-danger"><a class="text-white" href="{{ route('engahus.index')}}">Cancel</a></button>
+                    <button type="button" class="btn btn-danger"><a class="text-white" href="{{ route('engineering.index')}}">Cancel</a></button>
                 </div>
                 </div>
             </form>

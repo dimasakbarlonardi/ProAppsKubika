@@ -178,13 +178,13 @@ class DashboardController extends Controller
         $getNotif->save();
 
         switch ($getNotif->models) {
-            case ('WorkOrder'):
+            case ('TApproveWorkOrder'):
                 $data = $this->handleWO($connApprove, $getNotif);
                 $data['user'] = $user;
                 return view('Tenant.Notification.WorkOrder', $data);
                 break;
 
-            case ('WorkOrderM'):
+            case ('MApproveWorkOrder'):
                 return redirect()->route('work-orders.show', $getNotif->id_data);
                 break;
 
@@ -204,6 +204,12 @@ class DashboardController extends Controller
                 $data = $this->handleMonthlyTenant($getNotif);
                 $data['user'] = $user;
                 return view('Tenant.Notification.Payment', $data);
+                break;
+
+            case ('SplitMonthlyTenant'):
+                $data = $this->handleSplitMonthlyTenant($getNotif);
+                $data['user'] = $user;
+                return view('Tenant.Notification.SplitPayment', $data);
                 break;
 
             case ('OpenTicket'):
@@ -345,6 +351,26 @@ class DashboardController extends Controller
         return $data;
     }
 
+    public function handleSplitMonthlyTenant($getNotif)
+    {
+        $model = new MonthlyArTenant();
+        $connUtility = ConnectionDB::setConnection(new Utility());
+        $connIPLType = ConnectionDB::setConnection(new IPLType());
+        $connSetting = ConnectionDB::setConnection(new CompanySetting());
+        $getData = ConnectionDB::setConnection($model);
+        $getData = $getData->find($getNotif->id_data);
+        $data['transaction'] = $getData->where('id_monthly_ar_tenant', $getData->id_monthly_ar_tenant)->first();
+        $data['type'] = 'MonthlyTenant';
+        $data['setting'] = $connSetting->find(1);
+        // $data['installment'] = $getData->CashReceipt->Installment($getData->periode_bulan, $getData->periode_tahun);
+        $data['electric'] = $connUtility->find(1);
+        $data['water'] = $connUtility->find(2);
+        $data['sc'] = $connIPLType->find(6);
+        $data['sf'] = $connIPLType->find(7);
+
+        return $data;
+    }
+
     public function handlePaymentWO($getNotif)
     {
         $model = new CashReceipt();
@@ -427,10 +453,10 @@ class DashboardController extends Controller
     }
     public function handlePaymentReservation($getNotif)
     {
-        $model = new Reservation();
+        $model = new CashReceipt();
         $getData = ConnectionDB::setConnection($model);
         $rsv =  $getData->find($getNotif->id_data);
-        $data['reservation'] = $rsv;
+        $data['reservation'] = $rsv->Reservation;
         $data['type'] = 'Reservation';
 
         return $data;

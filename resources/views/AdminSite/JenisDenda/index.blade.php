@@ -26,9 +26,9 @@
                         <tr>
                             <th scope="row">{{ $key + 1 }}</th>
                             <td>{{ $jenisdenda->jenis_denda }}</td>
-                            <td>{{ $jenisdenda->denda_flat_procetage ? persen($jenisdenda->denda_flat_procetage) . ' / Hari' : '-' }}
+                            <td>{{ $jenisdenda->denda_flat_procetage ? persen($jenisdenda->denda_flat_procetage) . ' / ' . $jenisdenda->unity : '-' }}
                             </td>
-                            <td>{{ $jenisdenda->denda_flat_amount ? rupiah($jenisdenda->denda_flat_amount) . ' / Hari' : '-' }}</td>
+                            <td>{{ $jenisdenda->denda_flat_amount ? rupiah($jenisdenda->denda_flat_amount) . ' / ' . $jenisdenda->unity : '-' }}</td>
                             <td>
                                 <div class="form-check form-switch">
                                     <input class="form-check-input" id="isActiveDenda{{ $jenisdenda->id_jenis_denda }}"

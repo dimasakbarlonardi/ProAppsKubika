@@ -174,11 +174,14 @@ class WorkRequestController extends Controller
 
         if ($request->status_request == 'ON WORK') {
             $ticket->status_request = 'ON WORK';
+            $wr->is_working = true;
             $wr->sign_approval_1 = 1;
             $wr->date_approval_1 = Carbon::now();
             $wr->save();
         } elseif ($request->status_request == 'WORK DONE') {
             $ticket->status_request = 'WORK DONE';
+            $wr->is_worked = true;
+            $wr->save();
 
             $getUser = $ticket->Tenant->User;
             $user = $request->session()->get('user');

@@ -16,6 +16,7 @@ use App\Models\OpenTicket;
 use App\Models\System;
 use App\Models\Tenant;
 use App\Models\OwnerH;
+use App\Models\RoomChat;
 use App\Models\RuangReservation;
 use App\Models\TenantUnit;
 use App\Models\Unit;
@@ -75,7 +76,7 @@ class OpenTicketController extends Controller
         }
 
         $data['tickets'] = $tickets->get();
-       
+
         return response()->json([
             'html' => view('AdminSite.OpenTicket.table-data', $data)->render()
         ]);
@@ -288,6 +289,8 @@ class OpenTicketController extends Controller
     public function updateRequestTicket(Request $request, $id)
     {
         $connRequest = ConnectionDB::setConnection(new OpenTicket());
+        $connRoomChat = ConnectionDB::setConnection(new RoomChat());
+
         $user = $request->session()->get('user');
         $ticket = $connRequest->find($id);
         $ticket->status_respon = 'Responded';
@@ -297,6 +300,15 @@ class OpenTicketController extends Controller
         $ticket->deskripsi_respon = $request->deskripsi_respon;
         $ticket->id_user_resp_request = $user->id_user;
         $ticket->save();
+
+        $isExist = $connRoomChat->find($ticket->id);
+
+        if (!$isExist) {
+            $connRoomChat->id = $ticket->id;
+            $connRoomChat->receiver_id = $ticket->id_user_resp_request;
+            $connRoomChat->sender_id = $ticket->Tenant->User->id_user;
+            $connRoomChat->save();
+        }
 
         Alert::success('Berhasil', 'Berhasil merespon tiket');
 

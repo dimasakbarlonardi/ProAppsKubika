@@ -1,7 +1,8 @@
 @extends('layouts.master')
 
 @section('css')
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="{{ asset('assets/vendors/flatpickr/flatpickr.min.css') }}">
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
 @endsection
 
 @section('content')
@@ -14,7 +15,7 @@
             </div>
         </div>
         <div class="p-5">
-            <table class="table table-striped">
+            <table class="table table-striped" id="table-package">
                 <thead>
                     <tr>
                         <th class="sort" data-sort="">No</th>

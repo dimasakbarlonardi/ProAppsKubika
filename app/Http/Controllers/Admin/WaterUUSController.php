@@ -6,6 +6,7 @@ use App\Events\HelloEvent;
 use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
 use App\Models\Approve;
+use App\Models\CompanySetting;
 use App\Models\Role;
 use App\Models\Site;
 use App\Models\Tower;
@@ -24,10 +25,11 @@ class WaterUUSController extends Controller
         $connWatercUUS = ConnectionDB::setConnection(new WaterUUS());
         $connTower = ConnectionDB::setConnection(new Tower());
         $connApprove = ConnectionDB::setConnection(new Approve());
+        $connSetting = ConnectionDB::setConnection(new CompanySetting());
 
+        $data['setting'] = $connSetting->find(1);
         $data['approve'] = $connApprove->find(9);
         $data['user'] = $request->session()->get('user');
-
         $data['waterUSS'] = $connWatercUUS->get();
         $data['towers'] = $connTower->get();
 

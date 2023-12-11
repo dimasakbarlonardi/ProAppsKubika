@@ -95,6 +95,8 @@ Route::prefix('v1')->group(function () {
         Route::get('/work-request/{id}', [WorkRequestController::class, 'show']);
         Route::post('/on-work/work-request/{id}', [WorkRequestController::class, 'OnWork']);
         Route::post('/work-done/work-request/{id}', [WorkRequestController::class, 'WorkDone']);
+        Route::post('/done/work-request/{id}', [WorkRequestController::class, 'Done']);
+        Route::post('/complete/work-request/{id}', [WorkRequestController::class, 'Complete']);
 
         // Work Order
         Route::get('/work-order/{id}', [WorkOrderController::class, 'show']);
@@ -111,6 +113,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/list-billings/{id}', [BillingController::class, 'listBillings']);
         Route::get('/get-billing/{id}', [BillingController::class, 'showBilling']);
         Route::post('/get-billing/{id}', [BillingController::class, 'showBilling']);
+        Route::get('/get-splited-billing/{id}', [BillingController::class, 'showSplitedBilling']);
 
         // Billing Ticket
         Route::get('/payable-tickets/{id}', [OpenTicketController::class, 'payableTickets']);

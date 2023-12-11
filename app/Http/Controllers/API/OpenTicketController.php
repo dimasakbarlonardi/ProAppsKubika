@@ -62,7 +62,7 @@ class OpenTicketController extends Controller
                 $ticket['request_type'] = 'Reservation';
             }
             if ($ticket->WorkOrder) {
-                $ticket['request_type'] = 'WorkOrder';
+                $ticket['request_type'] = 'TApproveWorkOrder';
             }
             if ($ticket->WorkPermit) {
                 $ticket['request_type'] = 'WorkPermit';
@@ -207,7 +207,7 @@ class OpenTicketController extends Controller
             $item->ticket['upload_image'] = $ticket->upload_image;
 
             if ($wo) {
-                $item->ticket['request_type'] = 'WorkOrder';
+                $item->ticket['request_type'] = 'TApproveWorkOrder';
                 $item->request = $wo;
             } else {
                 $wr = $connWR->where('no_tiket', $ticket->no_tiket)->first();
@@ -228,7 +228,7 @@ class OpenTicketController extends Controller
                 $item->request = $rp;
             }
             $item->ticket['deskripsi_request'] = strip_tags($rp->keterangan_pekerjaan);
-            
+
             $item->request['nama_kontraktor'] = strip_tags($rp->nama_kontraktor);
             $item->request['pic'] = strip_tags($rp->pic);
             $item->request['alamat'] = strip_tags($rp->alamat);
@@ -308,7 +308,7 @@ class OpenTicketController extends Controller
             case ('Reservation'):
                 $object = $this->ReservationInvoice($cr);
                 break;
-            case ('WorkOrder'):
+            case ('TApproveWorkOrder'):
                 $object = $this->WorkOrderInvoice($cr);
                 break;
             case ('WorkPermit'):
@@ -348,6 +348,16 @@ class OpenTicketController extends Controller
         $object->tenant_email = $cr->WorkPermit->Ticket->Tenant->email_tenant;
         $object->phone_number_tenant = $cr->WorkPermit->Ticket->Tenant->no_telp_tenant;
         $object->total = $cr->sub_total;
+        $object->items = [
+            [
+                'billing' => 'supervisi',
+                'price' => $cr->WorkPermit->jumlah_supervisi,
+            ],
+            [
+                'billing' => 'deposit',
+                'price' => $cr->WorkPermit->jumlah_deposit
+            ]
+        ];
 
         return $object;
     }

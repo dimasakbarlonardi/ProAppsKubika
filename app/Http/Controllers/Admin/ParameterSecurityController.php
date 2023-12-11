@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Admin;
 
 use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
+use App\Imports\SecurityParameter;
 use App\Models\ParameterSecurity;
 use Doctrine\DBAL\Connection;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
+use Excel;
 
 class ParameterSecurityController extends Controller
 {
@@ -24,6 +26,17 @@ class ParameterSecurityController extends Controller
         $data['ParameterSecurity'] = $conn->get();
 
         return view('AdminSite.ParameterSecurity.index', $data);
+    }
+
+    public function import(Request $request)
+    {
+        $file = $request->file('file_excel');
+
+        Excel::import(new SecurityParameter(), $file);
+
+        Alert::success('Success', 'Success import data');
+
+        return redirect()->route('Parameter-Security.index');
     }
 
     /**

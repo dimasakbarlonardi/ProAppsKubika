@@ -13,7 +13,14 @@
                 <h6 class="mb-0 text-white">List Schedule Security</h6>
             </div>
             <div class="col-auto d-flex">
-                <a class="btn btn-falcon-default btn-sm text-600" href="{{ route('schedulesecurity.create') }}"><span class="fas fa-plus fs--2 me-1"></span>Create Schedule Security</a>
+                <a class="btn btn-falcon-default btn-sm text-600" href="{{ url('/import_template/template_schedule_inspection_security.xlsx') }}" download>
+                    <span class="fas fa-plus fs--2 me-1"></span>Download Template
+                </a>
+                <button class="btn btn-falcon-default text-600 btn-sm ml-3" type="button" class="fas fa-plus" data-bs-toggle="modal" data-bs-target="#modal-import">
+                    + Import Inspection Security
+                </button>
+                <a class="btn btn-falcon-default btn-sm text-600 ml-3" href="{{ route('schedulesecurity.create') }}"><span class="fas fa-plus fs--2 me-1"></span>Create Schedule
+                </a>
             </div>
         </div>
     </div>
@@ -33,12 +40,13 @@
                 @foreach ($schedulesec as $key => $security)
                 <tr>
                     <th scope="row">{{ $key + 1 }}</th>
-                    <td class="text-center">{{ $security->room->tower->nama_tower }} - {{ $security->room->floor->nama_lantai }} - {{ $security->room->nama_room}}</td>
+                    <td class="text-center">{{ $security->Room ? $security->Room->Tower->nama_tower : '' }} - {{ $security->Room ? $security->Room->Floor->nama_lantai : '' }}
+                        - {{ $security->Room ? $security->Room->nama_room : '' }}</td>
                     <td class="text-center">{{ HumanDate($security->schedule) }}</td>
-                    <td class="text-center">{{ $security->Shift->shift }} - ( {{ HumanTime($security->Shift->start_time) }}-{{ HumanTime($security->Shift->end_time) }} ) </td>
+                    <td class="text-center">{{ $security->Shift ? $security->Shift->shift : '' }} - ( {{ $security->Shift ? HumanTime($security->Shift->start_time) : '' }}-{{ $security->Shift ? HumanTime($security->Shift->end_time) : '' }} ) </td>
                     <td class="text-center">
                         <a href="{{ route('schedulesecurity.show', $security->id) }}" class="btn btn-sm btn-warning"><span class="fas fa-pencil-alt fs--2 me-1"></span>Detail</a>
-                    </td> 
+                    </td>
                 </tr>
                 @endforeach
             </tbody>
@@ -69,6 +77,32 @@
         </div>
     </div>
 </div>
+
+<div class="modal fade" id="modal-import" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 500px">
+        <div class="modal-content position-relative">
+            <div class="position-absolute top-0 end-0 mt-2 me-2 z-index-1">
+                <button class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{{ route('importSchedulesSecurity') }}" method="post" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-body p-0">
+                    <div class="rounded-top-lg py-3 ps-4 pe-6 bg-light">
+                        <h4 class="mb-4" id="modalExampleDemoLabel">Upload Excel File </h4>
+                        <div class="mb-3">
+                            <input type="file" name="file_excel" class="form-control" required>
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="id_parameter_security" value="{{ $eq->id }}">
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Import</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 @endsection
 
 @section('script')

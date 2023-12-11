@@ -38,7 +38,7 @@
                             <option selected disabled>-- Choose Floor --</option>
                             @foreach ($floors as $floor)
                                 <option value="{{ $floor->id_lantai }}"
-                                    {{ $floor->id_floor == $room->id_floor ? 'selected' : '' }}>{{ $floor->nama_lantai }}
+                                    {{ $floor->id_lantai == $room->id_lantai ? 'selected' : '' }}>{{ $floor->nama_lantai }}
                                 </option>
                             @endforeach
                         </select>

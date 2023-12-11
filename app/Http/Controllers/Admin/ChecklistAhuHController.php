@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\ChecklistAhuH;
 use App\Helpers\ConnectionDB;
+use App\Imports\EquipmentEngineering;
+use App\Imports\ScheduleEngineering;
 use App\Models\ChecklistAhuDetail;
 use App\Models\ChecklistParameterEquiqment;
 use App\Models\EngAhu;
@@ -18,6 +20,7 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Http\Request;
+use Excel;
 
 
 class ChecklistAhuHController extends Controller
@@ -77,6 +80,7 @@ class ChecklistAhuHController extends Controller
     {
         $parameter = $request->to;
 
+        $connEquiqmentAHU = ConnectionDB::setConnection(new EquiqmentAhu());
         $checklistParameter = ConnectionDB::setConnection(new ChecklistParameterEquiqment());
 
         $checklist_id = [];
@@ -99,6 +103,8 @@ class ChecklistAhuHController extends Controller
             }
 
             if (isset($parameter)) {
+                $equiqmentAHU = $connEquiqmentAHU->find($id);
+
                 foreach ($parameter as $param) {
                     $checkParam = $checklistParameter->where('id_item', $id)
                         ->where('id_equiqment', 2)
@@ -113,6 +119,7 @@ class ChecklistAhuHController extends Controller
                         ]);
                     }
                 }
+                $equiqmentAHU->generateBarcode();
             }
         } else {
             $checklistParameter->where('id_equiqment', 2)
@@ -191,13 +198,12 @@ class ChecklistAhuHController extends Controller
 
             $id_equiqment = 1;
 
-            $equiqmentAHU->create([
-                'no_equiqment' => $request->no_equiqment,
-                'id_equiqment' => $id_equiqment,
-                'equiqment' => $request->equiqment,
-                'id_role' => $request->id_role,
-                'id_room' => $request->id_room,
-            ]);
+            $equiqmentAHU->no_equiqment = $request->no_equiqment;
+            $equiqmentAHU->id_equiqment = $id_equiqment;
+            $equiqmentAHU->equiqment = $request->equiqment;
+            $equiqmentAHU->id_role = $request->id_role;
+            $equiqmentAHU->id_room = $request->id_room;
+            $equiqmentAHU->save();
 
             DB::commit();
 
@@ -211,6 +217,17 @@ class ChecklistAhuHController extends Controller
 
             return redirect()->route('checklistahus.index');
         }
+    }
+
+    public function import(Request $request)
+    {
+        $file = $request->file('file_excel');
+
+        Excel::import(new EquipmentEngineering(), $file);
+
+        Alert::success('Success', 'Success import data');
+
+        return redirect()->route('checklistahus.index');
     }
 
     public function updateSchedules(Request $request, $id)
@@ -313,7 +330,7 @@ class ChecklistAhuHController extends Controller
         $data['eq'] = $connEquiqment->find($id);
         $data['schedules'] = $connSchedules->where('id_equiqment_engineering', $id)
             ->orderBy('schedule', 'ASC')
-            ->get();
+            ->paginate(10);
 
         return view('AdminSite.ChecklistAhuH.schedules', $data);
     }
@@ -329,6 +346,17 @@ class ChecklistAhuHController extends Controller
         ]);
 
         Alert::success('Success', 'Success add schedule');
+
+        return redirect()->back();
+    }
+
+    public function importSchedules(Request $request)
+    {
+        $file = $request->file('file_excel');
+
+        Excel::import(new ScheduleEngineering($request->id_equipment_engineering), $file);
+
+        Alert::success('Success', 'Success import data');
 
         return redirect()->back();
     }

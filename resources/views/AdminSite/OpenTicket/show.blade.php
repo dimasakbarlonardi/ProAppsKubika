@@ -281,7 +281,7 @@
                                     <input class="emojiarea-editor outline-none scrollbar form-control"
                                         contenteditable="true" id="message-content" />
                                     <button class="btn btn-sm btn-send shadow-none" type="button"
-                                        id="send_message">Send 2</button>
+                                        id="send_message">Send</button>
                                 </form>
                             @endif
                         </div>
@@ -315,8 +315,10 @@
         });
 
         function getChatTenant() {
+            roomID = '{{ $ticket->id }}'
+
             $.ajax({
-                url: '/admin/chats/rooms-slave',
+                url: `/admin/chats/rooms-slave/${roomID}`,
                 type: 'get',
                 success: function(resp) {
                     $('#chat-room-slave').html(resp.html)

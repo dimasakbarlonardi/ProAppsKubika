@@ -7,6 +7,7 @@ use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Models\Visitor;
 use Illuminate\Http\Request;
+use stdClass;
 
 class VisitorController extends Controller
 {
@@ -63,6 +64,10 @@ class VisitorController extends Controller
         $connVisitor = ConnectionDB::setConnection(new Visitor());
 
         $visitor = $connVisitor->find($id);
+
+        $object = new stdClass();
+        $object->unit_id = $visitor->Unit->nama_unit;
+
 
         return ResponseFormatter::success(
             $visitor,

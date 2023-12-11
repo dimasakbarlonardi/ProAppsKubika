@@ -47,12 +47,12 @@
                 </div>
                 @if ($wr->status_request == 'WORK DONE' && $user->id_role_hdr == $approve->approval_1)
                     <div class="text-center">
-                        <form action="{{ route('doneWR', $wr->id) }}" method="post">
-                            @csrf
-                            <button type="submit" class="btn btn-success btn-lg my-4" type="button">
+                        {{-- <form action="{{ route('doneWR', $wr->id) }}" method="post">
+                            @csrf --}}
+                            <button type="button" class="btn btn-success btn-lg my-4" onclick="doneButton({{ $wr->id }})" type="button">
                                 Selesai
                             </button>
-                        </form>
+                        {{-- </form> --}}
                         <small class="d-block">For any technical issues faced, please contact
                             <a href="#!">Customer Support</a>.</small>
                     </div>
@@ -87,5 +87,27 @@
             readonly: true,
             height: "180"
         });
+
+        function doneButton(id) {
+            let token = "{{ Request::session()->get('token') }}";
+
+            $.ajax({
+                url: `/api/v1/done/work-request/${id}`,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token
+                },
+                type: 'POST',
+                success: function(resp) {
+                    if (resp.meta.code === 200) {
+                        Swal.fire(
+                            'Berhasil!',
+                            'Berhasil mengupdate Work Order!',
+                            'success'
+                        ).then(() => window.location.reload())
+                    }
+                }
+            })
+        }
     </script>
 @endsection

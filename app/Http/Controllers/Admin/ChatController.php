@@ -84,14 +84,16 @@ class ChatController extends Controller
         ]);
     }
 
-    public function roomSlave(Request $request)
+    public function roomSlave(Request $request, $id)
     {
         $connRoom = ConnectionDB::setConnection(new RoomChat());
         $connUser = ConnectionDB::setConnection(new User());
 
         $user = $connUser->where('login_user', $request->user()->email)->first();
 
-        $data['room'] = $connRoom->where('sender_id', $user->id_user)->first();
+        $data['room'] = $connRoom->where('sender_id', $user->id_user)
+            ->where('id', $id)
+            ->first();
 
         return response()->json([
             'html' => view('AdminSite.Chat.chat-room-slave', $data)->render()

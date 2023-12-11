@@ -182,7 +182,7 @@ Route::prefix('admin')->group(function () {
 
         Route::get('/chats', [ChatController::class, 'index'])->name('chats');
         Route::get('/chats/rooms', [ChatController::class, 'rooms']);
-        Route::get('/chats/rooms-slave', [ChatController::class, 'roomSlave']);
+        Route::get('/chats/rooms-slave/{id}', [ChatController::class, 'roomSlave']);
         Route::get('/chats/rooms-master', [ChatController::class, 'roomMaster']);
         Route::post('/chats', [ChatController::class, 'store']);
         Route::get('/get-chats', [ChatController::class, 'getChats']);
@@ -285,7 +285,7 @@ Route::prefix('admin')->group(function () {
         Route::resource('tenantunits', TenantUnitController::class);
 
         // System Setting
-        Route::resource('system-settings', SystemSettingController::class);
+        Route::post('/system/split-ar', [CompanySettingController::class, 'splitAR'])->name('splitAR');
         Route::get('/system/approve', [SystemSettingController::class, 'systemApprove'])->name('systemApprove'); // Approve system
         Route::get('/system/approve/{id}', [SystemSettingController::class, 'editSystemApprove'])->name('editSystemApprove'); // edit Approve system
         Route::post('/system/approve/{id}', [SystemSettingController::class, 'updateSystemApprove'])->name('updateSystemApprove'); // update approve system
@@ -540,9 +540,11 @@ Route::prefix('admin')->group(function () {
 
         //CRUD Room
         Route::resource('rooms', RoomController::class);
+        Route::post('/import-rooms', [RoomController::class, 'import'])->name('import-rooms');
 
         //CRUD Parameter Engineering
         Route::resource('engahus', EngAHUController::class);
+        Route::post('import/eng-parameter', [EngAHUController::class, 'import'])->name('importEngParameter');
 
         // --------End Eng Parameter--------
 
@@ -550,6 +552,7 @@ Route::prefix('admin')->group(function () {
 
         //CRUD HK Toilet
         Route::resource('housekeeping', ToiletController::class);
+        Route::post('import/hk-parameter', [ToiletController::class, 'import'])->name('importHKParameter');
 
         //CRUD HK Floor
         Route::resource('hkfloors', HKFloorController::class);
@@ -596,6 +599,8 @@ Route::prefix('admin')->group(function () {
         Route::post('/inspections/create-schedules/{id}', [ChecklistAhuHController::class, 'postSchedules'])->name('postSchedules');
         Route::post('/inspections/update-schedules/{id}', [ChecklistAhuHController::class, 'updateSchedules'])->name('updateSchedulesENG');
         Route::post('/inspections/destroy-schedules/{id}', [ChecklistAhuHController::class, 'destroySchedules'])->name('destroySchedules');
+        Route::post('/import/equipment-engineering', [ChecklistAhuHController::class, 'import'])->name('importEquipmentEngineering');
+        Route::post('/import/schedule-engineering', [ChecklistAhuHController::class, 'importSchedules'])->name('importSchedulesEngineering');
 
         //CRUD Checklist AHU Detail
         Route::resource('ahudetails', ChecklistAhuDetailController::class);
@@ -625,6 +630,8 @@ Route::prefix('admin')->group(function () {
         Route::post('/inspections-hk/update-schedules/{id}', [ChecklistToiletHController::class, 'updateSchedulesHK'])->name('updateSchedulesHK');
         Route::post('/inspections-hk/schedules/{id}', [ChecklistToiletHController::class, 'postSchedulesHK'])->name('postSchedulesHK');
         Route::post('/inspections-hk/delete-schedules/{id}', [ChecklistToiletHController::class, 'deleteSchedulesHK'])->name('deleteSchedulesHK');
+        Route::post('/import/equipment-housekeeping', [ChecklistToiletHController::class, 'import'])->name('importEquipmentHousekeeping');
+        Route::post('/import/schedule-housekeeping', [ChecklistToiletHController::class, 'importSchedules'])->name('importSchedulesHousekeeping');
 
         //CRUD Checklist Toilet Detail
         Route::resource('toiletdetails', ChecklistToiletDetailController::class);
@@ -710,7 +717,7 @@ Route::prefix('admin')->group(function () {
 
         // ---------------Inspection Tools Security-----------------
         Route::resource('tools-security', ToolsSecurityController::class);
-        Route::get('/history-tools-security', [ToolsSecurityController::class, 'History'])->name('history');
+        Route::get('/tools-sec/histories', [ToolsSecurityController::class, 'historyToolSec'])->name('historyToolSec');
         Route::post('tools/borrowSecurity/{id}', [ToolsSecurityController::class, 'borrowToolSecurity'])->name('borrowSecurity.tool');
         Route::post('tools/returnSecurity/{id}', [ToolsSecurityController::class, 'returnToolSecurity'])->name('returnSecurity.tool');
 
@@ -718,6 +725,7 @@ Route::prefix('admin')->group(function () {
         Route::resource('checklistsecurity', ChecklistSecurityController::class);
         // -Schedule Security
         Route::resource('schedulesecurity', ScheduleSecurityController::class);
+        Route::post('import/schedule-security', [ScheduleSecurityController::class, 'import'])->name('importSchedulesSecurity');
 
         // ---------------Incidental Report Engineering-----------------
         Route::resource('incidentalreporteng', IncidentalEngController::class);
@@ -770,9 +778,10 @@ Route::prefix('admin')->group(function () {
 
         // --------------Parameter Security---------
         Route::resource('Parameter-Security', ParameterSecurityController::class);
+        Route::post('import/sec-parameter', [ParameterSecurityController::class, 'import'])->name('importSecParameter');
 
-          // --------------Parameter Shift Security---------
-          Route::resource('Parameter-Shift-Security', ParameterShiftSecurityController::class);
+        // --------------Parameter Shift Security---------
+        Route::resource('Parameter-Shift-Security', ParameterShiftSecurityController::class);
     });
 });
 

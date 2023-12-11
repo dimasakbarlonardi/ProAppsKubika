@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Helpers\ConnectionDB;
+use App\Imports\EngineeringParameter;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Models\EngAhu;
 use Illuminate\Http\Request;
+use Excel;
 
 class EngAHUController extends Controller
 {
@@ -59,14 +61,25 @@ class EngAHUController extends Controller
             DB::commit();
 
             Alert::success('Success', 'Successfully Added Inspection Engeneering Parameter');
-            return redirect()->route('engahus.index');
+            return redirect()->route('engineering.index');
         } catch (\Throwable $e) {
             DB::rollBack();
             dd($e);
             Alert::error('Gagal', 'Gagal menambahkan Engeneering AHU');
 
-            return redirect()->route('engahus.index');
+            return redirect()->route('engineering.index');
         }
+    }
+
+    public function import(Request $request)
+    {
+        $file = $request->file('file_excel');
+
+        Excel::import(new EngineeringParameter(), $file);
+
+        Alert::success('Success', 'Success import data');
+
+        return redirect()->route('engahus.index');
     }
 
     /**
@@ -111,7 +124,7 @@ class EngAHUController extends Controller
 
         Alert::success('Berhasil', 'Berhasil mengupdate Engeneering AHU');
 
-        return redirect()->route('engahus.index');
+        return redirect()->route('engineering.index');
     }
 
     /**
@@ -127,6 +140,6 @@ class EngAHUController extends Controller
         $conn->find($id)->delete();
         Alert::success('Berhasil','Berhasil Menghapus Engeneering AHU');
 
-        return redirect()->route('engahus.index');
+        return redirect()->route('engineering.index');
     }
 }

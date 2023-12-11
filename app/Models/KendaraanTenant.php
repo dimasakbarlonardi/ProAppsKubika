@@ -18,7 +18,8 @@ class KendaraanTenant extends Model
         'id_tenant',
         'id_unit',
         'id_jenis_kendaraan',
-        'no_polisi'
+        'no_polisi',
+        'keterangan'
     ];
 
     protected $dates = ['deleted_at'];

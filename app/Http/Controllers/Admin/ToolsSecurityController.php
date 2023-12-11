@@ -9,7 +9,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Models\Login;
-
+use App\Models\ToolHistory;
 
 class ToolsSecurityController extends Controller
 {
@@ -27,6 +27,15 @@ class ToolsSecurityController extends Controller
         $data['idusers'] = Login::where('id', $user_id)->get();
 
         return view('AdminSite.ToolsSecurity.index', $data);
+    }
+
+    public function historyToolSec()
+    {
+        $connHistories = ConnectionDB::setConnection(new ToolHistory());
+
+        $data['histories'] = $connHistories->where('type', 'SEC')->get();
+
+        return view('AdminSite.ToolsSecurity.history', $data);
     }
 
     public function borrowToolSecurity(Request $request, $id)
