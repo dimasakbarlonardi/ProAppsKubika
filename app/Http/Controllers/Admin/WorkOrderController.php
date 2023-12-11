@@ -437,6 +437,7 @@ class WorkOrderController extends Controller
             DB::beginTransaction();
 
             $wo->status_wo = 'DONE';
+            $wo->is_done = true;
             $wo->save();
 
             $ticket->status_request = 'DONE';
