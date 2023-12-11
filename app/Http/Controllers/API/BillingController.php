@@ -104,8 +104,9 @@ class BillingController extends Controller
         );
     }
 
-    public function showSplitedBilling($id)
+    public function showSplitedBilling(Request $request)
     {
+        dd($request->all());
         $connCR = ConnectionDB::setConnection(new CashReceipt());
         $connUtil = ConnectionDB::setConnection(new Utility());
         $connIPLType = ConnectionDB::setConnection(new IPLType());

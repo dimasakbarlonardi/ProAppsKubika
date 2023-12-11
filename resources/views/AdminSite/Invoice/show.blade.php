@@ -49,18 +49,51 @@
                 break;
         }
     @endphp
+    @if ($type == 'SplitMonthlyTenant')
+        <ul class="nav nav-pills justify-content-around bg-white p-3 rounded mb-3" id="pill-myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button
+                    class="nav-link
+                        {{ Session::get('active') == 'unit' || Session::get('active') == null ? 'active' : '' }}"
+                    data-bs-toggle="pill" data-bs-target="#pill-tab-home" type="button" role="tab">
+                    <span class="fas fa-hand-holding-water me-2"></span>
+                    <span class="fs--1">Utility</span>
+                </button>
+            </li>
+
+
+            <li class="nav-item" role="presentation">
+                <button class="nav-link btn-primary {{ Session::get('active') == 'member' ? 'active' : '' }}"
+                    data-bs-toggle="pill" data-bs-target="#pill-tab-profile" type="button" role="tab">
+                    <span class="fas fa-home me-2"></span>
+                    <span class="d-none d-md-inline-block fs--1">IPL</span>
+                </button>
+            </li>
+
+
+            <li class="nav-item" role="presentation">
+                <button class="nav-link {{ Session::get('active') == 'vehicle' ? 'active' : '' }}" data-bs-toggle="pill"
+                    data-bs-target="#pill-tab-kendaraan" type="button" role="tab">
+                    <span class="fas fa-grip-horizontal me-2"></span>
+                    <span class="d-none d-md-inline-block fs--1">Other</span>
+                </button>
+            </li>
+        </ul>
+    @endif
     <div class="card mb-3">
         <div class="card-body">
             <div class="row justify-content-between align-items-center">
                 <div class="col-md">
                     <h5 class="mb-2 mb-md-0">Invoice #{{ $transaction->no_invoice }}</h5>
                 </div>
-                <div class="col-auto"><button class="btn btn-falcon-default btn-sm me-1 mb-2 mb-sm-0" type="button"><span
-                            class="fas fa-arrow-down me-1"> </span>Download (.pdf)</button><button
-                        class="btn btn-falcon-default btn-sm me-1 mb-2 mb-sm-0" type="button"><span
-                            class="fas fa-print me-1"> </span>Print</button><button
-                        class="btn btn-falcon-success btn-sm mb-2 mb-sm-0" type="button"><span
-                            class="fas fa-dollar-sign me-1"></span>Receive Payment</button></div>
+                <div class="col-auto">
+                    <button class="btn btn-falcon-default btn-sm me-1 mb-2 mb-sm-0" type="button">
+                        <span class="fas fa-arrow-down me-1"> </span>Download (.pdf)
+                    </button>
+                    <button class="btn btn-falcon-default btn-sm me-1 mb-2 mb-sm-0" type="button">
+                        <span class="fas fa-print me-1"> </span>Print
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -170,7 +203,8 @@
                 </div>
             </div>
             <div class="table-responsive mt-4 fs--1">
-            TApproveWorkOrder                    <table class="table">
+                @if ($type == 'TApproveWorkOrder')
+                    <table class="table">
                         <tbody>
                             <tr class="alert alert-success my-3">
                                 <td class="align-middle">

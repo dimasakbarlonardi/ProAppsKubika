@@ -113,7 +113,7 @@ Route::prefix('v1')->group(function () {
         Route::get('/list-billings/{id}', [BillingController::class, 'listBillings']);
         Route::get('/get-billing/{id}', [BillingController::class, 'showBilling']);
         Route::post('/get-billing/{id}', [BillingController::class, 'showBilling']);
-        Route::get('/get-splited-billing/{id}', [BillingController::class, 'showSplitedBilling']);
+        Route::get('/get-splited-billing', [BillingController::class, 'showSplitedBilling']);
 
         // Billing Ticket
         Route::get('/payable-tickets/{id}', [OpenTicketController::class, 'payableTickets']);
