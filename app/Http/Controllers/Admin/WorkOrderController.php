@@ -538,7 +538,7 @@ class WorkOrderController extends Controller
             $createTransaction->no_invoice = $no_inv;
             $createTransaction->transaction_status = 'PENDING';
             $createTransaction->id_user = $wo->Ticket->Tenant->User->id_user;
-            $createTransaction->transaction_type = 'TApproveWorkOrder';
+            $createTransaction->transaction_type = 'WorkOrder';
             $createTransaction->save();
 
             $wo->Ticket->no_invoice = $no_inv;
