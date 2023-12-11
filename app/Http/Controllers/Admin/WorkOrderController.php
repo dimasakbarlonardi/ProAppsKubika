@@ -405,6 +405,7 @@ class WorkOrderController extends Controller
         $wo = $connWO->find($id);
 
         $wo->status_wo = 'WORK DONE';
+        $wo->is_worked = true;
         $wo->save();
 
         $dataNotif = [

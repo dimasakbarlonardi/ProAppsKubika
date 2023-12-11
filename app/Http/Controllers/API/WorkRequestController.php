@@ -31,6 +31,8 @@ class WorkRequestController extends Controller
         $object->work_request_number = $wr->no_work_request;
         $object->work_relation = $wr->WorkRelation->work_relation;
         $object->schedule = $wr->schedule;
+        $object->is_working = $wr->is_working;
+        $object->is_worked = $wr->is_worked;
 
         return ResponseFormatter::success(
             $object,
@@ -47,6 +49,7 @@ class WorkRequestController extends Controller
         $wr->Ticket->save();
 
         $wr->status_request = 'ON WORK';
+        $wr->is_working = true;
         $wr->sign_approval_1 = 1;
         $wr->date_approval_1 = Carbon::now();
         $wr->save();
@@ -69,6 +72,8 @@ class WorkRequestController extends Controller
         $wr->Ticket->save();
 
         $wr->status_request = 'WORK DONE';
+        $wr->is_worked = true;
+        $wr->deskripsi_wr = $request->work_description;
         $wr->save();
 
         $dataNotif = [

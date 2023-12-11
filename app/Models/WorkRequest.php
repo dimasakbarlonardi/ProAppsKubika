@@ -19,6 +19,8 @@ class WorkRequest extends Model
         'no_work_request',
         'id_work_relation',
         'schedule',
+        'is_working',
+        'is_worked',
         'sign_approve_1',
         'sign_approval_2',
         'sign_approval_3',

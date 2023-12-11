@@ -114,11 +114,12 @@ class JenisDendaController extends Controller
         if ($request->pilihipl == 1) {
             $jenisdenda->denda_flat_procetage = $request->denda_flat_procetage;
             $jenisdenda->denda_flat_amount = null;
+            $jenisdenda->unity = $request->unity_procentage;
         } else {
             $jenisdenda->denda_flat_procetage = null;
             $jenisdenda->denda_flat_amount = $request->denda_flat_amount;
+            $jenisdenda->unity = $request->unity_flat;
         }
-
         $jenisdenda->save();
 
         Alert::success('Berhasil', 'Berhasil mengupdate Jenis Denda');

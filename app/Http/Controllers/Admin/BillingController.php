@@ -177,7 +177,6 @@ class BillingController extends Controller
             ->where('tgl_bayar_invoice', null)
             ->get();
 
-
         $setting = $connCompany->find(1);
 
         if ($setting->is_split_ar == 0) {
@@ -221,12 +220,17 @@ class BillingController extends Controller
         foreach ($previousBills as $prevBill) {
             $jt = new DateTime($prevBill->tgl_jt_invoice);
             $now = Carbon::now();
-            $jml_hari_jt = $now->diff($jt)->format("%a");
+
+            if ($perhitDenda->unity == 'day') {
+                $jml_hari_jt = $now->diff($jt)->format("%a");
+            } elseif ($perhitDenda->unity == 'month') {
+                $jml_hari_jt = $now->diff($jt)->format("%m");
+            }
 
             if ($perhitDenda->denda_flat_procetage != 0) {
-                $denda_bulan_sebelumnya = (($perhitDenda->denda_flat_procetage / 100) * ($prevBill->total_tagihan_ipl + $prevBill->total_tagihan_utility) * $jml_hari_jt);
+                $denda_bulan_sebelumnya = ((($perhitDenda->denda_flat_procetage / 100) * ($prevBill->total_tagihan_ipl + $prevBill->total_tagihan_utility)) * $jml_hari_jt);
             } else {
-                $denda_bulan_sebelumnya = $jml_hari_jt * $perhitDenda;
+                $denda_bulan_sebelumnya = $jml_hari_jt * $perhitDenda->denda_flat_amount;
             }
 
             $prevBill->jml_hari_jt = $jml_hari_jt;
@@ -250,7 +254,7 @@ class BillingController extends Controller
             if ($perhitDenda->denda_flat_procetage != 0) {
                 $denda_bulan_sebelumnya = (($perhitDenda->denda_flat_procetage / 100) * ($prevBill->total_tagihan_ipl + $prevBill->total_tagihan_utility) * $prevMonthDays);
             } else {
-                $denda_bulan_sebelumnya = $prevMonthDays * $perhitDenda;
+                $denda_bulan_sebelumnya = $prevMonthDays * $perhitDenda->denda_flat_amount;
             }
 
             $prevBill->total_denda = $denda_bulan_sebelumnya;
@@ -270,9 +274,9 @@ class BillingController extends Controller
             $prevMonthDays = Carbon::parse($prevMonthDays)->daysInMonth;
 
             if ($perhitDenda->denda_flat_procetage != 0) {
-                $denda_bulan_sebelumnya = (($perhitDenda->denda_flat_procetage / 100) * ($prevBill->total_tagihan_ipl + $prevBill->total_tagihan_utility) * $prevMonthDays);
+                $denda_bulan_sebelumnya = ((($perhitDenda->denda_flat_procetage / 100) * ($prevBill->total_tagihan_ipl + $prevBill->total_tagihan_utility)) * $prevMonthDays);
             } else {
-                $denda_bulan_sebelumnya = $prevMonthDays * $perhitDenda;
+                $denda_bulan_sebelumnya = $prevMonthDays * $perhitDenda->denda_flat_amount;
             }
 
             $prevBill->total_denda += $denda_bulan_sebelumnya;

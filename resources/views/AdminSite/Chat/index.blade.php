@@ -69,6 +69,7 @@
             d.scrollTop(d.prop("scrollHeight"));
 
             getRooms();
+
             Echo.channel("chat-channel")
                 .listen('ChatEvent', (e) => {
                     getRooms();

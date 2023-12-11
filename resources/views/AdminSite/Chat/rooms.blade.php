@@ -1,9 +1,12 @@
 @foreach ($rooms as $room)
     <div class="hover-actions-trigger chat-contact nav-item
-                                @if (
-                                    $room->LatestChat($room->id)->is_read == 0 &&
-                                        $room->LatestChat($room->id)->sender_id != Request::session()->get('user_id')) unread-message @endif
-                                "
+        @if ($room->LatestChat($room->id))
+            @if (
+                $room->LatestChat($room->id)->is_read == 0 &&
+                    $room->LatestChat($room->id)->sender_id != Request::session()->get('user_id')) unread-message
+            @endif
+        @endif
+        "
         role="tab" room-id="{{ $room->id }}" data-bs-toggle="tab" data-bs-target="#chat-0" aria-controls="chat-0"
         aria-selected="false">
         <div class="d-md-none d-lg-block">
@@ -28,14 +31,19 @@
             <div class="flex-1 chat-contact-body ms-2 d-md-none d-lg-block">
                 <div class="d-flex justify-content-between">
                     <h6 class="mb-0 chat-contact-title">
-                        {{ $room->Sender->nama_user }}
+                        {{ $room->Sender->nama_user }} <br>
+                        <small>{{ $room->Ticket->no_tiket }}</small>
                     </h6>
                     <span class="message-time fs--2">Wed</span>
                 </div>
                 <div class="min-w-0">
                     <div class="chat-contact-content pe-3">
-                        {{ $room->LatestChat($room->id)->sender_id == Request::session()->get('user_id') ? 'You' : $room->Sender->nama_user }}
-                        : {{ $room->LatestChat($room->id)->message }}
+                        @if ($room->LatestChat($room->id))
+                            {{ $room->LatestChat($room->id)->sender_id == Request::session()->get('user_id') ? 'You' : $room->Sender->nama_user }}
+                            : {{ $room->LatestChat($room->id)->message }}
+                        @else
+                            Say Hello to {{ $room->Sender->nama_user }}!
+                        @endif
                     </div>
                     <div class="position-absolute bottom-0 end-0 hover-hide">
                         <span class="fas fa-check text-400" data-fa-transform="shrink-5 down-4">

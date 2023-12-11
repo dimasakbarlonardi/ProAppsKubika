@@ -182,7 +182,7 @@ Route::prefix('admin')->group(function () {
 
         Route::get('/chats', [ChatController::class, 'index'])->name('chats');
         Route::get('/chats/rooms', [ChatController::class, 'rooms']);
-        Route::get('/chats/rooms-slave', [ChatController::class, 'roomSlave']);
+        Route::get('/chats/rooms-slave/{id}', [ChatController::class, 'roomSlave']);
         Route::get('/chats/rooms-master', [ChatController::class, 'roomMaster']);
         Route::post('/chats', [ChatController::class, 'store']);
         Route::get('/get-chats', [ChatController::class, 'getChats']);

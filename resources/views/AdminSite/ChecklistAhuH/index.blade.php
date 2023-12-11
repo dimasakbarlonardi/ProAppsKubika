@@ -34,6 +34,7 @@
                         <th class="sort" data-sort="">No</th>
                         <th class="sort" data-sort="barcode_room">Equipment</th>
                         <th class="sort" data-sort="id_room">Room</th>
+                        <th class="sort" data-sort="id_room">Barcode</th>
                         <th class="sort" data-sort="action">Action</th>
                     </tr>
                 </thead>
@@ -42,8 +43,16 @@
                         <tr>
                             <th scope="row">{{ $key + 1 }}</th>
                             <td>{{ $checklistahu->equiqment }}</td>
-                            <td>{{ $checklistahu->Room ? $checklistahu->Room->Tower->nama_tower : '' }} - {{ $checklistahu->Room ? $checklistahu->Room->Floor->nama_lantai : '' }}
+                            <td>{{ $checklistahu->Room ? $checklistahu->Room->Tower->nama_tower : '' }} -
+                                {{ $checklistahu->Room ? $checklistahu->Room->Floor->nama_lantai : '' }}
                                 - {{ $checklistahu->Room ? $checklistahu->Room->nama_room : '' }}</td>
+                            <td>
+                                @if ($checklistahu->barcode_room)
+                                    <img width="150" src="{{ url($checklistahu->barcode_room) }}">
+                                @else
+                                    <small class="badge bg-info text">Please add parameter to generate barcode</small>
+                                @endif
+                            </td>
                             <td>
                                 <div class="dropdown font-sans-serif position-static">
                                     <button class="btn btn-sm btn-warning" type="button" data-bs-toggle="dropdown"

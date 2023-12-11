@@ -80,6 +80,7 @@ class ChecklistAhuHController extends Controller
     {
         $parameter = $request->to;
 
+        $connEquiqmentAHU = ConnectionDB::setConnection(new EquiqmentAhu());
         $checklistParameter = ConnectionDB::setConnection(new ChecklistParameterEquiqment());
 
         $checklist_id = [];
@@ -102,6 +103,8 @@ class ChecklistAhuHController extends Controller
             }
 
             if (isset($parameter)) {
+                $equiqmentAHU = $connEquiqmentAHU->find($id);
+
                 foreach ($parameter as $param) {
                     $checkParam = $checklistParameter->where('id_item', $id)
                         ->where('id_equiqment', 2)
@@ -116,6 +119,7 @@ class ChecklistAhuHController extends Controller
                         ]);
                     }
                 }
+                $equiqmentAHU->generateBarcode();
             }
         } else {
             $checklistParameter->where('id_equiqment', 2)
@@ -194,13 +198,12 @@ class ChecklistAhuHController extends Controller
 
             $id_equiqment = 1;
 
-            $equiqmentAHU->create([
-                'no_equiqment' => $request->no_equiqment,
-                'id_equiqment' => $id_equiqment,
-                'equiqment' => $request->equiqment,
-                'id_role' => $request->id_role,
-                'id_room' => $request->id_room,
-            ]);
+            $equiqmentAHU->no_equiqment = $request->no_equiqment;
+            $equiqmentAHU->id_equiqment = $id_equiqment;
+            $equiqmentAHU->equiqment = $request->equiqment;
+            $equiqmentAHU->id_role = $request->id_role;
+            $equiqmentAHU->id_room = $request->id_room;
+            $equiqmentAHU->save();
 
             DB::commit();
 

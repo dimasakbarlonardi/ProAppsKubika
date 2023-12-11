@@ -40,4 +40,9 @@ class RoomChat extends Model
 
         return $chat;
     }
+
+    public function Ticket()
+    {
+        return $this->hasOne(OpenTicket::class, 'id', 'id');
+    }
 }
