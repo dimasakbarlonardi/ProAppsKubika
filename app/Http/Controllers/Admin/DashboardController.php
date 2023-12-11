@@ -209,7 +209,7 @@ class DashboardController extends Controller
             case ('SplitMonthlyTenant'):
                 $data = $this->handleSplitMonthlyTenant($getNotif);
                 $data['user'] = $user;
-                return view('Tenant.Notification.SplitPayment', $data);
+                return view('Tenant.Notification.Invoice.SplitPaymentMonthly.SplitPayment', $data);
                 break;
 
             case ('OpenTicket'):
