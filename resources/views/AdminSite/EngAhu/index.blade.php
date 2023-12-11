@@ -17,7 +17,7 @@
                         + Import Parameter
                     </button>
                     <a class="btn btn-falcon-default btn-sm text-600 ml-3" href="{{ route('engahus.create') }}"><span
-                            class="fas fa-plus fs--2 me-1"></span>Create Parameter
+                            class="fas fa-plus fs--2 me-1"></span>Create Parameter   
                     </a>
                 </div>
             </div>
@@ -52,15 +52,6 @@
                                             <a href="{{ route('engahus.edit', $engahu->id_eng_ahu) }}"
                                                 class="btn btn-sm btn-warning"><span
                                                     class="fas fa-pencil-alt fs--2 me-1"></span>Edit</a>
-                                            <form class="d-inline"
-                                                action="{{ route('engahus.destroy', $engahu->id_eng_ahu) }}" method="post">
-                                                @method('DELETE')
-                                                @csrf
-                                                <button type="submit" class="btn btn-danger btn-sm"
-                                                    onclick="return confirm('are you sure?')">
-                                                    <span class="fas fa-trash-alt fs--2 me-1"></span>Hapus
-                                                </button>
-                                            </form>
                                         </td>
                                     </tr>
                                 @endforeach

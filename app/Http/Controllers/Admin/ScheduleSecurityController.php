@@ -181,35 +181,52 @@ class ScheduleSecurityController extends Controller
         $checklistahu->save();
         
         $parameter = $request->to;
-        if (!empty($parameter)) {
-            foreach ($parameter as $form) {
-                $Parameter = ConnectionDB::setConnection(new ChecklistParameterEquiqment());
-        
-                $existingParameter = $Parameter
-                    ->where('id_equiqment', 3)
-                    ->where('id_checklist', $form)
-                    ->where('id_item', $checklistahu->id) // Menggunakan $checklistahu->id di sini
-                    ->first();
-        
-                if ($existingParameter) {
-                    // Memperbarui rekaman yang sudah ada
-                    $existingParameter->update([
-                        'id_equiqment' => 3,
-                        'id_checklist' => $form,
-                        'id_item' => $checklistahu->id, // Menggunakan $checklistahu->id di sini
-                    ]);
-                } else {
-                    $Parameter->id_equiqment = 3;
-                    $Parameter->id_checklist = $form;
-                    $Parameter->id_item = $checklistahu->id; // Menggunakan $checklistahu->id di sini
-                    $Parameter->save();
+
+        $checklistParameter = ConnectionDB::setConnection(new ChecklistParameterEquiqment());
+
+        $checklist_id = [];
+
+        if ($parameter) {
+            foreach ($parameter as $param) {
+                $checklist_id[] = $param;
+            }
+
+            $deletes = $checklistParameter->where('id_equiqment', 3)
+                ->where('id_item', $id)
+                ->whereNotIn('id_checklist', $checklist_id)
+                ->get();
+
+            if (count($deletes) > 0) {
+                $checklistParameter->where('id_equiqment', 3)
+                    ->where('id_item', $id)
+                    ->whereNotIn('id_checklist', $checklist_id)
+                    ->delete();
+            }
+
+            if (isset($parameter)) {
+                foreach ($parameter as $param) {
+                    $checkParam = $checklistParameter->where('id_item', $id)
+                        ->where('id_equiqment', 3)
+                        ->where('id_checklist', $param)
+                        ->first();
+
+                    if (!$checkParam) {
+                        $checklistParameter->create([
+                            'id_equiqment' => 3,
+                            'id_checklist' => $param,
+                            'id_item' => $id
+                        ]);
+                    }
                 }
             }
+        } else {
+            $checklistParameter->where('id_equiqment', 3)
+                ->where('id_item', $id)
+                ->delete();
         }
-        
-        Alert::success('Berhasil', 'Berhasil mengupdate Security');
-        
-        return redirect()->route('schedulesecurity.index');
+
+        Alert::success('Success', 'Success update Inspection Security');
+        return redirect()->back();
     }
     
     
