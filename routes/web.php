@@ -682,7 +682,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/invoice/get/filter-data', [InvoiceController::class, 'filteredData']);
 
         // Payment monthly tenant
-        Route::post('payment-monthly-page/{id}', [BillingController::class, 'generatePaymentMonthly'])->name('generatePaymentMonthly');
+        // Route::post('payment-monthly-page/{id}', [BillingController::class, 'generatePaymentMonthly'])->name('generatePaymentMonthly');
         Route::get('payment-monthly-page/{mt}/{id}', [BillingController::class, 'paymentMonthly'])->name('paymentMonthly');
 
         // Payment WO

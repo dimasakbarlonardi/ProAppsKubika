@@ -48,7 +48,7 @@ class BillingController extends Controller
                 ->table('tb_fin_monthly_ar_tenant as arm')
                 ->join('tb_draft_cash_receipt as cr', 'arm.no_monthly_invoice', 'cr.no_reff')
                 ->where('arm.id_unit', $id)
-                ->where('arm.tgl_jt_invoice', '!=', null)
+                ->where('cr.tgl_jt_invoice', '!=', null)
                 ->orderBy('periode_bulan', 'desc')
                 ->get();
         } elseif ($setting->is_split_ar == 1) {
@@ -106,52 +106,68 @@ class BillingController extends Controller
 
     public function showSplitedBilling(Request $request)
     {
-        dd($request->all());
-        $connCR = ConnectionDB::setConnection(new CashReceipt());
-        $connUtil = ConnectionDB::setConnection(new Utility());
+        // $connCR = ConnectionDB::setConnection(new CashReceipt());
+        $connUtility = ConnectionDB::setConnection(new Utility());
         $connIPLType = ConnectionDB::setConnection(new IPLType());
-        // $connSetting = ConnectionDB::setConnection(new CompanySetting());
+        $connSetting = ConnectionDB::setConnection(new CompanySetting());
+        $connAR = ConnectionDB::setConnection(new MonthlyArTenant());
 
-        // $previousBills = [];
-        // $data['installment'] = [];
+        $data['electric'] = $connUtility->find(1);
+        $data['water'] = $connUtility->find(2);
+        $data['sc'] = $connIPLType->find(6);
+        $data['sf'] = $connIPLType->find(7);
+        // // $previousBills = [];
+        // // $data['installment'] = [];
 
-        $cr = $connCR->find($id);
-        $ar = $cr->SplitMonthlyARTenant($cr->id_monthly_utility, $cr->id_monthly_ipl);
+        // $cr = $connCR->find($id);
+        // $ar = $cr->SplitMonthlyARTenant($cr->id_monthly_utility, $cr->id_monthly_ipl);
 
-        // $setting = $connSetting->find(1);
-        $sc = $connIPLType->find(6);
-        $sf = $connIPLType->find(7);
+        $setting = $connSetting->find(1);
 
-        if ($cr->id_monthly_utility) {
-            $data['monthly_utility'] = $ar->where('deleted_at', null)->with([
-                'Unit.TenantUnit.Tenant',
-                'MonthlyUtility.ElectricUUS',
-                'MonthlyUtility.WaterUUS',
-                'MonthlyUtility.CashReceipt'
-            ])->first();
-            $data['monthly_i_p_l'] = null;
-            $data['price_water'] = $connUtil->find(2)->biaya_m3;
-            $data['price_electric'] = $connUtil->find(1)->biaya_m3;
-            $data['service_charge_price'] = null;
-            $data['sinking_fund_price'] = null;
-        } elseif ($cr->id_monthly_ipl) {
-            $data['monthly_i_p_l'] = $ar->where('deleted_at', null)->with([
-                'Unit.TenantUnit.Tenant',
-                'MonthlyIPL.CashReceipt',
-            ])->first();
-            $data['monthly_utility'] = null;
-            $data['price_water'] = null;
-            $data['price_electric'] = null;
-            $data['service_charge_price'] = $sc->biaya_permeter;
-            $data['sinking_fund_price'] = $sf->biaya_permeter;
+        $data['setting'] = $setting;
+        $data['transaction'] = $connAR->find($request->arID);
+        // $sc = $connIPLType->find(6);
+        // $sf = $connIPLType->find(7);
+
+        // if ($cr->id_monthly_utility) {
+        //     $data['monthly_utility'] = $ar->where('deleted_at', null)->with([
+        //         'Unit.TenantUnit.Tenant',
+        //         'MonthlyUtility.ElectricUUS',
+        //         'MonthlyUtility.WaterUUS',
+        //         'MonthlyUtility.CashReceipt'
+        //     ])->first();
+        //     $data['monthly_i_p_l'] = null;
+        //     $data['price_water'] = $connUtil->find(2)->biaya_m3;
+        //     $data['price_electric'] = $connUtil->find(1)->biaya_m3;
+        //     $data['service_charge_price'] = null;
+        //     $data['sinking_fund_price'] = null;
+        // } elseif ($cr->id_monthly_ipl) {
+        //     $data['monthly_i_p_l'] = $ar->where('deleted_at', null)->with([
+        //         'Unit.TenantUnit.Tenant',
+        //         'MonthlyIPL.CashReceipt',
+        //     ])->first();
+        //     $data['monthly_utility'] = null;
+        //     $data['price_water'] = null;
+        //     $data['price_electric'] = null;
+        //     $data['service_charge_price'] = $sc->biaya_permeter;
+        //     $data['sinking_fund_price'] = $sf->biaya_permeter;
+        // }
+
+        // return ResponseFormatter::success(
+        //     [
+        //         'current_bill' => $data,
+        //     ],
+        //     'Authenticated'
+        // );
+        if ($request->type == "utility") {
+            return response()->json([
+                'html' => view('Tenant.Notification.Invoice.SplitPaymentMonthly.Utility_bill', $data)->render()
+            ]);
+        } elseif ($request->type == 'ipl') {
+            return response()->json([
+                'html' => view('Tenant.Notification.Invoice.SplitPaymentMonthly.IPL_bill', $data)->render()
+            ]);
         }
-
-        return ResponseFormatter::success(
-            [
-                'current_bill' => $data,
-            ],
-            'Authenticated'
-        );
     }
 
     public function generateTransaction($id)
@@ -232,6 +248,10 @@ class BillingController extends Controller
                 return ResponseFormatter::success(
                     $chargeCC
                 );
+            } else {
+                return ResponseFormatter::error([
+                    'message' => 'Sorry our server is busy'
+                ], 'Sorry our server is busy', 503);
             }
         } else {
             return ResponseFormatter::success(

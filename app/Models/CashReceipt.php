@@ -23,9 +23,10 @@ class CashReceipt extends Model
         'ket_pembayaran',
         'transaction_status',
         'transaction_id',
-        'status_message',
-        'status_code',
-        'signature_key',
+        'tgl_jt_invoice',
+        'jml_hari_jt',
+        'total_denda',
+        'denda_bulan_sebelumnya',
         'settlement_time',
         'payment_type',
         'bank',
@@ -39,11 +40,12 @@ class CashReceipt extends Model
         'snap_token',
         'va_number',
         'expiry_time',
-        'currency',
         'id_user',
+        'id_unit',
         'transaction_type',
         'id_monthly_utility',
-        'id_monthly_ipl'
+        'id_monthly_ipl',
+        'id_monthly_ar_tenant'
     ];
 
     public function User()
@@ -66,14 +68,33 @@ class CashReceipt extends Model
         return $this->hasOne(Reservation::class, 'no_request_reservation', 'no_reff');
     }
 
+    // public function MonthlyARTenant()
+    // {
+    //     return $this->hasOne(MonthlyArTenant::class, 'no_monthly_invoice', 'no_reff');
+    // }
+
     public function MonthlyARTenant()
     {
-        return $this->hasOne(MonthlyArTenant::class, 'no_monthly_invoice', 'no_reff');
+        return $this->hasOne(MonthlyArTenant::class, 'id_monthly_ar_tenant', 'id_monthly_ar_tenant');
     }
 
     public function SplitMonthlyARTenant($utility, $ipl)
     {
         $ar = ConnectionDB::setConnection(new MonthlyArTenant());
+
+        if ($ipl) {
+            $ar = $ar->where('id_monthly_ipl', $ipl)->first();
+        } else {
+            $ar = $ar->where('id_monthly_utility', $utility)->first();
+        }
+
+        return $ar;
+    }
+
+    public function SplitMonthlyARTenantNotif($utility, $ipl, $db)
+    {
+        $ar = new MonthlyArTenant();
+        $ar = $ar->setConnection($db);
 
         if ($ipl) {
             $ar = $ar->where('id_monthly_ipl', $ipl)->first();
@@ -119,5 +140,48 @@ class CashReceipt extends Model
             ->first();
 
         return $installment;
+    }
+
+    public function PreviousMonthBill($month, $year)
+    {
+        $prevMonthBill = ConnectionDB::setConnection(new CashReceipt())
+            ->whereHas('MonthlyARTenant', function ($q) use ($month, $year) {
+                $q->where('periode_bulan', '<', $month);
+                $q->where('periode_tahun', $year);
+            })
+            ->with(['MonthlyARTenant.MonthlyUtility.ElectricUUS', 'MonthlyARTenant.MonthlyUtility.WaterUUS'])
+            ->where('transaction_status', '!=', 'PAID')
+            ->where('id_unit', $this->id_unit)
+            ->get();
+
+        return $prevMonthBill;
+    }
+
+    public function SubTotal($month, $year)
+    {
+        $prevMonthBill = ConnectionDB::setConnection(new CashReceipt())
+            ->where('transaction_status', '!=', 'PAID')
+            ->where('id_unit', $this->id_unit)
+            ->get();
+
+        $subtotal = $prevMonthBill->sum('sub_total');;
+
+        return $subtotal;
+
+        // return $prevMonthBill;
+
+        // $prevMonthBill = ConnectionDB::setConnection(new MonthlyArTenant())
+        //     ->where('periode_bulan', '<=', $this->periode_bulan)
+        //     ->where('periode_tahun', $this->periode_tahun)
+        //     ->where('tgl_bayar_invoice', null)
+        //     ->get();
+
+        // $total_denda = $prevMonthBill->sum('total_denda');
+        // $total_tagihan_ipl = $prevMonthBill->sum('total_tagihan_ipl');
+        // $total_tagihan_utility = $prevMonthBill->sum('total_tagihan_utility');
+
+        // $subtotal = $total_denda + $total_tagihan_ipl + $total_tagihan_utility;
+
+        // return $subtotal;
     }
 }

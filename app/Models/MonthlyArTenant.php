@@ -33,6 +33,8 @@ class MonthlyArTenant extends Model
         'tgl_bayar_invoice',
         'id_monthly_utility',
         'id_monthly_ipl',
+        'tgl_bayar_utility',
+        'tgl_bayar_ipl',
     ];
 
     public function Unit()
@@ -91,35 +93,35 @@ class MonthlyArTenant extends Model
         return $nextMonthBill;
     }
 
-    public function PreviousMonthBill()
-    {
-        $prevMonthBill = ConnectionDB::setConnection(new MonthlyArTenant())
-            ->where('periode_bulan', '<', $this->periode_bulan)
-            ->where('periode_tahun', $this->periode_tahun)
-            ->with(['MonthlyUtility.ElectricUUS', 'MonthlyUtility.WaterUUS'])
-            ->where('tgl_bayar_invoice', null)
-            ->where('id_unit', $this->id_unit)
-            ->get();
+    // public function PreviousMonthBill()
+    // {
+    //     $prevMonthBill = ConnectionDB::setConnection(new CashReceipt())
+    //         ->where('periode_bulan', '<', $this->periode_bulan)
+    //         ->where('periode_tahun', $this->periode_tahun)
+    //         ->with(['MonthlyUtility.ElectricUUS', 'MonthlyUtility.WaterUUS'])
+    //         ->where('tgl_bayar_invoice', null)
+    //         ->where('id_unit', $this->id_unit)
+    //         ->get();
 
-        return $prevMonthBill;
-    }
+    //     return $prevMonthBill;
+    // }
 
-    public function SubTotal()
-    {
-        $prevMonthBill = ConnectionDB::setConnection(new MonthlyArTenant())
-            ->where('periode_bulan', '<=', $this->periode_bulan)
-            ->where('periode_tahun', $this->periode_tahun)
-            ->where('tgl_bayar_invoice', null)
-            ->get();
+    // public function SubTotal()
+    // {
+    //     $prevMonthBill = ConnectionDB::setConnection(new MonthlyArTenant())
+    //         ->where('periode_bulan', '<=', $this->periode_bulan)
+    //         ->where('periode_tahun', $this->periode_tahun)
+    //         ->where('tgl_bayar_invoice', null)
+    //         ->get();
 
-        $total_denda = $prevMonthBill->sum('total_denda');
-        $total_tagihan_ipl = $prevMonthBill->sum('total_tagihan_ipl');
-        $total_tagihan_utility = $prevMonthBill->sum('total_tagihan_utility');
+    //     $total_denda = $prevMonthBill->sum('total_denda');
+    //     $total_tagihan_ipl = $prevMonthBill->sum('total_tagihan_ipl');
+    //     $total_tagihan_utility = $prevMonthBill->sum('total_tagihan_utility');
 
-        $subtotal = $total_denda + $total_tagihan_ipl + $total_tagihan_utility;
+    //     $subtotal = $total_denda + $total_tagihan_ipl + $total_tagihan_utility;
 
-        return $subtotal;
-    }
+    //     return $subtotal;
+    // }
 
     public function TenantUnit()
     {

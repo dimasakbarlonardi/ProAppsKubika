@@ -1,8 +1,9 @@
-<div class="card mb-3">
+<div class="card mb-3 mt-3">
     <div class="card-body">
         <div class="row justify-content-between align-items-center">
             <div class="col-md">
-                <h5 class="mb-2 mb-md-0">Invoice #<span id="no-invoice"></span></h5>
+                <h5 class="mb-2 mb-md-0">Invoice #<span
+                        id="no-invoice">{{ $transaction->UtilityCashReceipt->no_invoice }}</span></h5>
             </div>
             <div class="col-auto">
                 <button class="btn btn-falcon-default btn-sm me-1 mb-2 mb-sm-0" type="button">
@@ -41,9 +42,10 @@
             {{ $transaction->Unit->nama_unit }}<br />
             {{ Auth::user()->Site->provinsi }}, {{ Auth::user()->Site->kode_pos }}
         </p>
-        <p class="fs--1"><a
-                href="mailto:{{ $transaction->Unit->TenantUnit->Tenant->email_tenant }}">{{ $transaction->Unit->TenantUnit->Tenant->email_tenant }}</a><br /><a
-                href="tel:444466667777">{{ $transaction->Unit->TenantUnit->Tenant->no_telp_tenant }}</a>
+        <p class="fs--1">
+            <a href="mailto:{{ $transaction->Unit->TenantUnit->Tenant->email_tenant }}">
+                {{ $transaction->Unit->TenantUnit->Tenant->email_tenant }}</a><br />
+            <a href="tel:444466667777">{{ $transaction->Unit->TenantUnit->Tenant->no_telp_tenant }}</a>
         </p>
     </div>
     <div class="col-sm-auto ms-auto">
@@ -62,20 +64,25 @@
                             {{ HumanDate($transaction->tgl_jt_invoice) }}
                         </td>
                     </tr>
-                    @if ($transaction->SplitCashReceipt($transaction->id_monthly_utility, $transaction->id_monthly_ipl)->settlement_time)
-                        <tr>
-                            <th class="text-sm-end">Payment Date :</th>
-                            <td id="payment-date">
-
-                            </td>
-                        </tr>
-                    @endif
                     <tr>
                         <th class="text-sm-end">Payment Status:</th>
                         <td id="payment-status">
-
+                            @if ($transaction->UtilityCashReceipt->transaction_status == 'PAID')
+                                <span
+                                    class="badge bg-success">{{ $transaction->UtilityCashReceipt->transaction_status }}</span>
+                            @else
+                                <span class="badge bg-warning">PENDING</span>
+                            @endif
                         </td>
                     </tr>
+                    @if ($transaction->UtilityCashReceipt->settlement_time)
+                        <tr>
+                            <th class="text-sm-end">Payment Date :</th>
+                            <td id="payment-date">
+                                {{ HumanDateTime($transaction->UtilityCashReceipt->settlement_time) }}
+                            </td>
+                        </tr>
+                    @endif
                 </tbody>
             </table>
         </div>
@@ -88,20 +95,14 @@
                 <td class="align-middle">
                     <h6 class="mb-0 text-nowrap">Tagihan bulan
                         {{ $transaction->periode_bulan }},
-                        {{ $transaction->periode_tahun }}</h6>
+                        {{ $transaction->periode_tahun }}
+                    </h6>
                 </td>
                 <td class="align-middle">
                 </td>
                 <td colspan="6"></td>
             </tr>
             <tr>
-                {{-- <td class="align-middle">
-                            <div class="form-check mb-0">
-                                <input class="form-check-input select-payment" name="select-payment"
-                                    type="radio" value="select-payment-utility"
-                                    cr-id="{{ $transaction->UtilityCashReceipt->id }}" />
-                            </div>
-                        </td> --}}
                 <td class="align-middle">
                     <h6 class="mb-3 text-nowrap">Tagihan Utility</h6>
                     <p class="mb-0">Listrik</p>
@@ -157,50 +158,12 @@
                     <span>{{ Rupiah($transaction->MonthlyUtility->WaterUUS->total) }}</span>
                 </td>
             </tr>
-            <tr>
-                {{-- <td class="align-middle">
-                            <div class="form-check mb-0">
-                                <input class="form-check-input select-payment" name="select-payment"
-                                    type="radio" value="select-payment-ipl"
-                                    cr-id="{{ $transaction->IPLCashReceipt->id }}" />
-                            </div>
-                        </td> --}}
-                <td class="align-middle">
-                    <h6 class="mb-3 mt-3">Tagihan IPL</h6>
-                    <p class="mb-0">Service Charge</p>
-                    <hr>
-                    <p class="mb-0">Sink Fund</p>
-                </td>
-                <td class="align-middle">
-                    <h6 class="mb-3 mt-3 text-nowrap">Luas Unit</h6>
-                    <span>{{ $transaction->MonthlyIPL->Unit->luas_unit }} m<sup>2</sup></span> <br>
-                    <hr>
-                    <span>{{ $transaction->MonthlyIPL->Unit->luas_unit }} m<sup>2</sup></span>
-                </td>
-                <td class="align-middle" colspan="2">
-                    <h6 class="mb-3 mt-3">Biaya Permeter / Biaya Procentage</h6>
-                    <span>{{ $sc->biaya_procentage ? $sc->biaya_procentage . '%' : Rupiah($sc->biaya_permeter) }}</span>
-                    <br>
-                    <hr>
-                    <span>{{ $sf->biaya_procentage ? $sf->biaya_procentage . '%' : Rupiah($sf->biaya_permeter) }}</span>
-                </td>
-                <td>
-                </td>
-                <td></td>
-                <td class="align-middle text-end" colspan="2">
-                    <h6 class="mb-3 mt-3">Total</h6>
-                    <span>{{ Rupiah($transaction->MonthlyIPL->ipl_service_charge) }}</span> <br>
-                    <hr>
-                    <span>{{ Rupiah($transaction->MonthlyIPL->ipl_sink_fund) }}</span>
-                </td>
-            </tr>
         </tbody>
     </table>
 </div>
-<div id="payment-utility" class="mt-5">
+<div class="mt-5">
     @if ($transaction->UtilityCashReceipt->transaction_status == 'PENDING')
-        <form action="{{ route('generatePaymentMonthly', $transaction->UtilityCashReceipt->id) }}"
-            method="post">
+        <form action="{{ route('generatePaymentMonthly', $transaction->UtilityCashReceipt->id) }}" method="post">
             @csrf
             <div class="row g-3 mb-3">
                 <div class="col-lg-8">
@@ -210,41 +173,39 @@
                         </div>
                         <div class="card-body bg-light">
                             <div class="form-check mb-4">
-                                <input class="form-check-input select-payment-utility-method"
-                                    type="radio" name="billing" value="bank_transfer,bca" />
+                                <input class="form-check-input select-payment-utility-method" type="radio"
+                                    name="billing" value="bca" />
                                 <label class="form-check-label mb-0 d-block" for="paypal">
-                                    <img src="{{ asset('assets/img/icons/bca_logo.png') }}"
-                                        height="20" alt="" />
+                                    <img src="{{ asset('assets/img/icons/bca_logo.png') }}" height="20"
+                                        alt="" />
                                 </label>
                             </div>
                             <div class="form-check mb-4">
-                                <input class="form-check-input select-payment-utility-method"
-                                    type="radio" name="billing" value="bank_transfer,mandiri" />
+                                <input class="form-check-input select-payment-utility-method" type="radio"
+                                    name="billing" value="mandiri" />
                                 <label class="form-check-label mb-0 d-block" for="paypal">
-                                    <img src="{{ asset('assets/img/icons/mandiri_logo.png') }}"
-                                        height="20" alt="" />
+                                    <img src="{{ asset('assets/img/icons/mandiri_logo.png') }}" height="20"
+                                        alt="" />
                                 </label>
                             </div>
                             <div class="form-check mb-3">
-                                <input class="form-check-input select-payment-utility-method"
-                                    type="radio" name="billing" value="bank_transfer,bni" />
+                                <input class="form-check-input select-payment-utility-method" type="radio"
+                                    name="billing" value="bni" />
                                 <label class="form-check-label mb-0 d-block" for="paypal">
-                                    <img src="{{ asset('assets/img/icons/bni_logo.png') }}"
-                                        height="20" alt="" />
+                                    <img src="{{ asset('assets/img/icons/bni_logo.png') }}" height="20"
+                                        alt="" />
                                 </label>
                             </div>
                             <p class="fs--1 mb-4">Pay with PayPal, Apple Pay, PayPal Credit and
                                 much more</p>
                             <div class="form-check mb-0">
-                                <input class="form-check-input select-payment-utility-method"
-                                    type="radio" value="credit_card" id="credit-card"
-                                    name="billing" />
-                                <label class="form-check-label d-flex align-items-center mb-0"
-                                    for="credit-card">
+                                <input class="form-check-input select-payment-utility-method" type="radio"
+                                    value="credit_card" id="credit-card" name="billing" />
+                                <label class="form-check-label d-flex align-items-center mb-0" for="credit-card">
                                     <span class="fs-1 text-nowrap">Credit Card</span>
                                     <img class="d-none d-sm-inline-block ms-2 mt-lg-0"
-                                        src="{{ asset('assets/img/icons/icon-payment-methods.png') }}"
-                                        height="20" alt="" />
+                                        src="{{ asset('assets/img/icons/icon-payment-methods.png') }}" height="20"
+                                        alt="" />
                                 </label>
                                 <div class="row gx-3 mb-3">
                                     <div id="cc_form_utility">
@@ -254,8 +215,8 @@
                                                 for="cardNumber">Card Number
                                             </label>
                                             <input class="form-control" name="card_number"
-                                                placeholder="XXXX XXXX XXXX XXXX" type="text"
-                                                maxlength="16" pattern="[0-9]{16}" />
+                                                placeholder="XXXX XXXX XXXX XXXX" type="text" maxlength="16"
+                                                pattern="[0-9]{16}" />
                                         </div>
                                         <div class="row gx-3">
                                             <div class="col-6 col-sm-3">
@@ -263,23 +224,21 @@
                                                     class="form-label ls text-uppercase text-600 fw-semi-bold mb-0 fs--1"
                                                     for="expDate">Exp Date
                                                 </label>
-                                                <input class="form-control" id="expDate"
-                                                    placeholder="15/2024" type="text"
-                                                    name="expDate" />
+                                                <input class="form-control" id="expDate" placeholder="15/2024"
+                                                    type="text" name="expDate" />
                                             </div>
                                             <div class="col-6 col-sm-3">
                                                 <label
                                                     class="form-label ls text-uppercase text-600 fw-semi-bold mb-0 fs--1"
                                                     for="cvv">CVV
                                                     <span class="ms-1" data-bs-toggle="tooltip"
-                                                        data-bs-placement="top"
-                                                        title="Card verification value">
+                                                        data-bs-placement="top" title="Card verification value">
                                                         <span class="fa fa-question-circle"></span>
                                                     </span>
                                                 </label>
-                                                <input class="form-control" id="cvv"
-                                                    placeholder="123" maxlength="3" pattern="[0-9]{3}"
-                                                    name="card_cvv" type="text" />
+                                                <input class="form-control" id="cvv" placeholder="123"
+                                                    maxlength="3" pattern="[0-9]{3}" name="card_cvv"
+                                                    type="text" />
                                             </div>
                                         </div>
                                     </div>
@@ -320,8 +279,10 @@
                                 Premium for free. After 30 days you’ll be charged based on your
                                 selected plan.
                             </p>
-                            <button class="btn btn-primary d-block w-100" type="submit">
-                                <span class="fa fa-lock me-2"></span>Continue Payment
+                            <button class="btn btn-primary d-block w-100" type="button"
+                                onclick="onCreateTransaction({{ $transaction->UtilityCashReceipt->id }})">
+                                <span class="fa fa-lock me-2"></span>
+                                Continue Payment
                             </button>
                             <div class="text-center mt-2">
                                 <small class="d-inline-block">By continuing, you are
@@ -340,9 +301,34 @@
             <input type="hidden" id="val_admin_fee_utility" name="admin_fee">
         </form>
     @elseif($transaction->UtilityCashReceipt->transaction_status == 'VERIFYING')
-        <div class="text-center">
+        <div class="text-center p-3">
             <a href="{{ route('paymentMonthly', [$transaction->id_monthly_ar_tenant, $transaction->UtilityCashReceipt->id]) }}"
                 class="btn btn-success">Lihat VA Utility</a>
         </div>
     @endif
 </div>
+
+<script>
+    $('#cc_form_utility').css('display', 'none');
+    var subtotal = parseInt('{{ $transaction->total_tagihan_utility }}')
+
+    $(".select-payment-utility-method").on('change', function() {
+
+        if ($(this).is(':checked') && $(this).val() == 'credit_card') {
+            admin_fee = Math.round(2000 + (0.029 * subtotal));
+            admin_fee = admin_fee + (Math.round(admin_fee * 0.11));
+            type = 'credit_card';
+            bank = '';
+            $('#cc_form_utility').css('display', 'block')
+        } else {
+            type = 'bank_transfer';
+            bank = $(this).val();
+            admin_fee = 4000 + (4000 * admin_tax);
+            $('#cc_form_utility').css('display', 'none')
+        }
+        var grand_total = subtotal + admin_fee;
+        $('#val_admin_fee_utility').val(admin_fee);
+        $('#admin_fee_utility').html(`Rp ${formatRupiah(admin_fee.toString())}`)
+        $('#grand_total_utility').html(`Rp ${formatRupiah(grand_total.toString())}`)
+    });
+</script>
