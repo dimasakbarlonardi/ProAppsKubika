@@ -95,6 +95,8 @@ Route::prefix('v1')->group(function () {
         Route::get('/work-request/{id}', [WorkRequestController::class, 'show']);
         Route::post('/on-work/work-request/{id}', [WorkRequestController::class, 'OnWork']);
         Route::post('/work-done/work-request/{id}', [WorkRequestController::class, 'WorkDone']);
+        Route::post('/done/work-request/{id}', [WorkRequestController::class, 'Done']);
+        Route::post('/complete/work-request/{id}', [WorkRequestController::class, 'Complete']);
 
         // Work Order
         Route::get('/work-order/{id}', [WorkOrderController::class, 'show']);

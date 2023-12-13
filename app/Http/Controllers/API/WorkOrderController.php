@@ -196,6 +196,7 @@ class WorkOrderController extends Controller
         $wo = $connWO->find($id);
 
         $wo->status_wo = 'WORK DONE';
+        $wo->is_worked = 1;
         $wo->save();
 
         $dataNotif = [
@@ -226,6 +227,7 @@ class WorkOrderController extends Controller
             DB::beginTransaction();
 
             $wo->status_wo = 'DONE';
+            $wo->is_done = true;
             $wo->save();
 
             $wo->Ticket->status_request = 'DONE';

@@ -4,7 +4,7 @@
 <head>
     @yield('css')
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>Falcon | Dashboard &amp; Web App Template</title>
+    <title>Proapps | Property Management System</title>
     <link href="{{ asset('assets/css/theme.min.css') }}" rel="stylesheet" id="style-default">
 </head>
 

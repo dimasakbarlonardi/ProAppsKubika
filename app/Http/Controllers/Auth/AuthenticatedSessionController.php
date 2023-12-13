@@ -186,11 +186,12 @@ class AuthenticatedSessionController extends Controller
             if ($verified) {
                 $request->session()->put('has_role', 'yes');
 
+                $token = JWTAuth::fromUser(Auth::user());
+                $request->session()->put('token', $token);
+
                 if ($request->role_id == 2) {
                     return redirect()->route('dashboard');
                 }
-                $token = JWTAuth::fromUser(Auth::user());
-                $request->session()->put('token', $token);
 
                 return redirect()->route('open-tickets.index');
             }
