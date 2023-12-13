@@ -88,17 +88,29 @@
                                             <a class="dropdown-item" href="#">
                                                 <form action="{{ route('returnSecurity.tool', ['id' => $tools->id]) }}" method="POST">
                                                     @csrf
+                                                    <div class="row">
+                                                        <div class="col-8">
+                                                            <input class="form-control" type="number" name="return_qty" required>
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <button class="btn btn-warning btn-sm" type="submit" id="return_qty">Return</button>
+                                                        </div>
+                                                    </div>
                                                     <input type="hidden" name="date_out" value="{{ $tools->date_out }}">
-                                                    <input type="number" name="return_qty" required>
-                                                    <button type="submit">Return</button>
                                                 </form>
                                             </a>
                                             @endif
                                             <a class="dropdown-item text-danger" href="#">
                                                 <form action="{{ route('borrowSecurity.tool', ['id' => $tools->id]) }}" method="POST">
                                                     @csrf
-                                                    <input type="number" name="borrow_qty" required>
-                                                    <button type="submit">Borrow</button>
+                                                    <div class="row">
+                                                        <div class="col-8">
+                                                            <input class="form-control" type="number" name="borrow_qty" required id="borrow_qty">
+                                                        </div>
+                                                        <div class="col-4">
+                                                            <button class="btn btn-success btn-sm" type="submit">Borrow</button>
+                                                        </div>
+                                                    </div>
                                                 </form>
                                             </a>
                                         </div>

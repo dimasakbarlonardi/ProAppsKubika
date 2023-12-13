@@ -107,6 +107,17 @@ class ShiftTypeController extends Controller
         return redirect()->route('shifttype.index');
     }
 
+    public function updateWT(Request $request, $id)
+    {
+        $connWorkTimeline = ConnectionDB::setConnection(new WorkTimeline());
+
+        $WorkTimeLine = $connWorkTimeline->find($request($id));
+        $WorkTimeLine->update($request->all());
+
+        Alert::success('Success', 'Successfully Updated WorkTimeline');
+        return redirect()->back();
+    }
+
     /**
      * Remove the specified resource from storage.
      *
@@ -121,6 +132,16 @@ class ShiftTypeController extends Controller
         Alert::success('Success', 'Successfully Deleted Shift Type');
 
         return redirect()->route('shifttype.index');
+    }
+
+    public function destroyWT($id)
+    {
+        $connWorkTimeline = ConnectionDB::setConnection(new WorkTimeline());
+
+        $connWorkTimeline->find($id)->delete();
+        Alert::success('Success', 'Successfully Deleted WorkTimeLine');
+
+        return redirect()->back();
     }
 
     public function listWorkSchedules()
