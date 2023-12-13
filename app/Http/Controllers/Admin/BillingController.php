@@ -107,36 +107,48 @@ class BillingController extends Controller
 
         $setting = $connCompany->find(1);
 
-        $createIPLbill = $this->createIPLbill($validate['elecUSS']);
-        $createUtilityBill = $this->createUtilityBill($validate['elecUSS'], $validate['waterUSS'], $createIPLbill);
-        $createMonthlyTenant = $this->createMonthlyTenant($createUtilityBill, $createIPLbill, $validate['elecUSS'], $validate['waterUSS']);
+        try {
+            DB::beginTransaction();
+            $createIPLbill = $this->createIPLbill($validate['elecUSS']);
+            $createUtilityBill = $this->createUtilityBill($validate['elecUSS'], $validate['waterUSS'], $createIPLbill);
+            $createMonthlyTenant = $this->createMonthlyTenant($createUtilityBill, $createIPLbill, $validate['elecUSS'], $validate['waterUSS']);
 
-        $createIPLbill->save();
-        $createUtilityBill->save();
+            $createIPLbill->save();
+            $createUtilityBill->save();
 
-        $validate['elecUSS']->no_refrensi = $createUtilityBill->id;
-        $validate['elecUSS']->save();
-        $validate['waterUSS']->no_refrensi = $createUtilityBill->id;
-        $validate['waterUSS']->save();
+            $validate['elecUSS']->no_refrensi = $createUtilityBill->id;
+            $validate['elecUSS']->save();
+            $validate['waterUSS']->no_refrensi = $createUtilityBill->id;
+            $validate['waterUSS']->save();
 
-        $createMonthlyTenant->id_monthly_utility = $createUtilityBill->id;
-        $createMonthlyTenant->id_monthly_ipl = $createIPLbill->id;
-        $createMonthlyTenant->save();
-
-        if ($setting->is_split_ar == 0) {
-            $no_inv = $this->generateInvoice($createMonthlyTenant, null, $setting);
-            $createMonthlyTenant->no_monthly_invoice = $no_inv;
+            $createMonthlyTenant->id_monthly_utility = $createUtilityBill->id;
+            $createMonthlyTenant->id_monthly_ipl = $createIPLbill->id;
             $createMonthlyTenant->save();
-        } else {
-            for ($i = 0; $i < 2; $i++) {
-                $no_inv = $this->generateInvoice($createMonthlyTenant, $i, $setting);
+
+            if ($setting->is_split_ar == 0) {
+                $no_inv = $this->generateInvoice($createMonthlyTenant, null, $setting);
+                $createMonthlyTenant->no_monthly_invoice = $no_inv;
+                $createMonthlyTenant->save();
+            } else {
+                for ($i = 0; $i < 2; $i++) {
+                    $no_inv = $this->generateInvoice($createMonthlyTenant, $i, $setting);
+                }
             }
+
+            DB::commit();
+        } catch (Throwable $e) {
+            DB::rollBack();
+            dd($e);
+
+            return redirect()->back();
         }
     }
 
     function generateInvoice($createMonthlyTenant, $i, $setting)
     {
         $connSystem = ConnectionDB::setConnection(new System());
+        $connCompany = ConnectionDB::setConnection(new CompanySetting());
+        $connCR = ConnectionDB::setConnection(new CashReceipt());
 
         $system = $connSystem->find(1);
 
@@ -156,6 +168,16 @@ class BillingController extends Controller
             $transaction = $this->createTransaction($createMonthlyTenant, $setting, null);
         }
 
+        $setting = $connCompany->find(1);
+
+        if ($setting->is_split_ar == 0) {
+            $previousBills = $connCR->where('transaction_type', 'MonthlyTenant')
+                ->where('transaction_status', '!=', 'PAID')
+                ->where('id_unit', $transaction->id_unit)
+                ->get();
+            $transaction = $this->perhitDenda($transaction, $previousBills);
+        }
+
         $transaction->no_reff = $no_inv;
         $transaction->no_invoice = $no_inv;
         $transaction->save();
@@ -166,22 +188,24 @@ class BillingController extends Controller
         return $no_inv;
     }
 
+    // save
     public function createMonthlyTenant($createUtilityBill, $createIPLbill)
     {
         $connMonthlyTenant = ConnectionDB::setConnection(new MonthlyArTenant());
-        $connCompany = ConnectionDB::setConnection(new CompanySetting());
+        // $connCR = ConnectionDB::setConnection(new CashReceipt());
+        // $connCompany = ConnectionDB::setConnection(new CompanySetting());
 
-        $previousBills = $connMonthlyTenant->where('tgl_jt_invoice', '<', Carbon::now()->format('Y-m-d'))
-            ->where('periode_tahun', Carbon::now()->format('Y'))
-            ->where('id_unit', $createUtilityBill->id_unit)
-            ->where('tgl_bayar_invoice', null)
-            ->get();
+        // $previousBills = $connCR->where('tgl_jt_invoice', '<', Carbon::now()->format('Y-m-d'))
+        //     ->where('id_unit', $createUtilityBill->id_unit)
+        //     ->where('transaction_type', 'MonthlyTenant')
+        //     ->where('transaction_status', '!=', 'PAID')
+        //     ->get();
 
-        $setting = $connCompany->find(1);
+        // $setting = $connCompany->find(1);
 
-        if ($setting->is_split_ar == 0) {
-            $connMonthlyTenant = $this->perhitDenda($connMonthlyTenant, $previousBills);
-        }
+        // if ($setting->is_split_ar == 0) {
+        //     $connMonthlyTenant = $this->perhitDenda($connMonthlyTenant, $previousBills);
+        // }
 
         $connMonthlyTenant->id_site = $createUtilityBill->id_site;
         $connMonthlyTenant->id_tower = $createUtilityBill->id_tower;
@@ -191,29 +215,31 @@ class BillingController extends Controller
         $connMonthlyTenant->periode_tahun = $createUtilityBill->periode_tahun;
         $connMonthlyTenant->total_tagihan_ipl = $createIPLbill->total_tagihan_ipl;
         $connMonthlyTenant->total_tagihan_utility = $createUtilityBill->total_tagihan_utility;
-        $connMonthlyTenant->total = $createIPLbill->total_tagihan_ipl + $createUtilityBill->total_tagihan_utility + $connMonthlyTenant->denda_bulan_sebelumnya;
+        // $connMonthlyTenant->total = $createIPLbill->total_tagihan_ipl + $createUtilityBill->total_tagihan_utility + $connMonthlyTenant->denda_bulan_sebelumnya;
+        $connMonthlyTenant->total = $createIPLbill->total_tagihan_ipl + $createUtilityBill->total_tagihan_utility;
 
         return $connMonthlyTenant;
     }
 
-    function perhitDenda($connMonthlyTenant, $previousBills)
+    function perhitDenda($transaction, $previousBills)
     {
         $connDenda = ConnectionDB::setConnection(new JenisDenda());
 
         $perhitDenda = $connDenda->where('is_active', 1)->first();
 
         if ($perhitDenda->id_jenis_denda == 3) {
-            $connMonthlyTenant = $this->dendaRolling($perhitDenda, $connMonthlyTenant, $previousBills);
+            $transaction = $this->dendaRolling($perhitDenda, $transaction, $previousBills);
         } elseif ($perhitDenda->id_jenis_denda == 2) {
-            $connMonthlyTenant = $this->dendaTetap($perhitDenda, $connMonthlyTenant, $previousBills);
+            $transaction = $this->dendaTetap($perhitDenda, $transaction, $previousBills);
         } elseif ($perhitDenda->id_jenis_denda == 1) {
-            $connMonthlyTenant = $this->dendaAkumulasi($perhitDenda, $connMonthlyTenant, $previousBills);
+            $transaction = $this->dendaAkumulasi($perhitDenda, $transaction, $previousBills);
         }
 
-        return $connMonthlyTenant;
+        return $transaction;
     }
 
-    function dendaRolling($perhitDenda, $connMonthlyTenant, $previousBills)
+    // save
+    function dendaRolling($perhitDenda, $transaction, $previousBills)
     {
         $total_denda = 0;
 
@@ -239,13 +265,14 @@ class BillingController extends Controller
 
             $total_denda += $prevBill->total_denda;
 
-            $connMonthlyTenant->denda_bulan_sebelumnya = $total_denda;
+            $transaction->denda_bulan_sebelumnya = $total_denda;
         }
 
-        return $connMonthlyTenant;
+        return $transaction;
     }
 
-    function dendaTetap($perhitDenda, $connMonthlyTenant, $previousBills)
+    // save
+    function dendaTetap($perhitDenda, $transaction, $previousBills)
     {
         foreach ($previousBills as $prevBill) {
             $prevMonthDays =  Carbon::createFromFormat('Y-m', $prevBill->periode_tahun . '-' . $prevBill->periode_bulan)->format('Y-m');
@@ -261,20 +288,21 @@ class BillingController extends Controller
             $prevBill->jml_hari_jt = $prevMonthDays;
             $prevBill->save();
 
-            $connMonthlyTenant->denda_bulan_sebelumnya = $denda_bulan_sebelumnya;
+            $transaction->denda_bulan_sebelumnya = $denda_bulan_sebelumnya;
         }
 
-        return $connMonthlyTenant;
+        return $transaction;
     }
 
-    function dendaAkumulasi($perhitDenda, $connMonthlyTenant, $previousBills)
+    // save
+    function dendaAkumulasi($perhitDenda, $transaction, $previousBills)
     {
         foreach ($previousBills as $prevBill) {
-            $prevMonthDays =  Carbon::createFromFormat('Y-m', $prevBill->periode_tahun . '-' . $prevBill->periode_bulan)->format('Y-m');
+            $prevMonthDays =  Carbon::createFromFormat('Y-m', $prevBill->MonthlyARTenant->periode_tahun . '-' . $prevBill->MonthlyARTenant->periode_bulan)->format('Y-m');
             $prevMonthDays = Carbon::parse($prevMonthDays)->daysInMonth;
 
             if ($perhitDenda->denda_flat_procetage != 0) {
-                $denda_bulan_sebelumnya = ((($perhitDenda->denda_flat_procetage / 100) * ($prevBill->total_tagihan_ipl + $prevBill->total_tagihan_utility)) * $prevMonthDays);
+                $denda_bulan_sebelumnya = ((($perhitDenda->denda_flat_procetage / 100) * ($prevBill->MonthlyARTenant->total_tagihan_ipl + $prevBill->MonthlyARTenant->total_tagihan_utility)) * $prevMonthDays);
             } else {
                 $denda_bulan_sebelumnya = $prevMonthDays * $perhitDenda->denda_flat_amount;
             }
@@ -284,12 +312,13 @@ class BillingController extends Controller
             $prevBill->jml_hari_jt += $prevMonthDays;
             $prevBill->save();
 
-            $connMonthlyTenant->denda_bulan_sebelumnya = $denda_bulan_sebelumnya + $prevBill->denda_bulan_sebelumnya;
+            $transaction->denda_bulan_sebelumnya = $denda_bulan_sebelumnya + $prevBill->MonthlyARTenant->denda_bulan_sebelumnya;
         }
 
-        return $connMonthlyTenant;
+        return $transaction;
     }
 
+    // save
     public function createIPLbill($elecUSS)
     {
         $connUnit = ConnectionDB::setConnection(new Unit());
@@ -335,6 +364,7 @@ class BillingController extends Controller
         return $connIPL;
     }
 
+    // save
     public function createUtilityBill($elecUSS, $waterUSS, $createIPLbill)
     {
         $connMonthlyUtility = ConnectionDB::setConnection(new MonthlyUtility());
@@ -355,6 +385,7 @@ class BillingController extends Controller
         return $connMonthlyUtility;
     }
 
+    // save
     public function createTransaction($mt, $setting, $i)
     {
         $connSystem = ConnectionDB::setConnection(new System());
@@ -375,23 +406,24 @@ class BillingController extends Controller
         try {
             DB::beginTransaction();
 
-            $subtotal = $mt->total_tagihan_utility + $mt->total_tagihan_ipl + $mt->total_denda;
-            $prevSubTotal = 0;
-            $total_denda = 0;
+            $subtotal = $mt->total_tagihan_utility + $mt->total_tagihan_ipl;
+            // $subtotal = $mt->total_tagihan_utility + $mt->total_tagihan_ipl + $mt->total_denda;
+            // $prevSubTotal = 0;
+            // $total_denda = 0;
 
-            if ($mt->PreviousMonthBill()) {
-                foreach ($mt->PreviousMonthBill() as $key => $prevBill) {
-                    $prevSubTotal += $prevBill->total_tagihan_utility + $prevBill->total_tagihan_ipl + $prevBill->total_denda;
-                    $total_denda += $prevBill->total_denda;
+            // if ($mt->PreviousMonthBill()) {
+            //     foreach ($mt->PreviousMonthBill() as $key => $prevBill) {
+            //         $prevSubTotal += $prevBill->total_tagihan_utility + $prevBill->total_tagihan_ipl + $prevBill->total_denda;
+            //         $total_denda += $prevBill->total_denda;
 
-                    $connCRd = ConnectionDB::setConnection(new CashReceiptDetail());
-                    $connCRd->create([
-                        'no_draft_cr' => $no_cr,
-                        'ket_transaksi' => 'Pembayaran bulan IPL dan Utility ' . $prevBill->periode_bulan,
-                        'tx_amount' => $prevSubTotal
-                    ]);
-                }
-            }
+            //         $connCRd = ConnectionDB::setConnection(new CashReceiptDetail());
+            //         $connCRd->create([
+            //             'no_draft_cr' => $no_cr,
+            //             'ket_transaksi' => 'Pembayaran bulan IPL dan Utility ' . $prevBill->periode_bulan,
+            //             'tx_amount' => $prevSubTotal
+            //         ]);
+            //     }
+            // }
 
             $amountInstallment = 0;
             $installment = $connInstallment->where('periode', $mt->periode_bulan)
@@ -402,8 +434,15 @@ class BillingController extends Controller
                 $amountInstallment = $installment->amount;
             }
 
+            // if ($setting->is_split_ar == 0 && !$i) {
+            //     $subtotal = $subtotal + $prevSubTotal + $amountInstallment;
+            // } elseif ($setting->is_split_ar == 1 && $i == 0) {
+            //     $subtotal = $mt->total_tagihan_utility + $amountInstallment;
+            // } elseif ($setting->is_split_ar == 1 && $i == 1) {
+            //     $subtotal = $mt->total_tagihan_ipl + $amountInstallment;
+            // }
             if ($setting->is_split_ar == 0 && !$i) {
-                $subtotal = $subtotal + $prevSubTotal + $amountInstallment;
+                $subtotal = $subtotal + $amountInstallment;
             } elseif ($setting->is_split_ar == 1 && $i == 0) {
                 $subtotal = $mt->total_tagihan_utility + $amountInstallment;
             } elseif ($setting->is_split_ar == 1 && $i == 1) {
@@ -420,6 +459,8 @@ class BillingController extends Controller
             $createTransaction->sub_total = $subtotal;
             $createTransaction->transaction_status = 'PENDING';
             $createTransaction->id_user = $user->id_user;
+            $createTransaction->id_unit = $mt->id_unit;
+            $createTransaction->id_monthly_ar_tenant = $mt->id_monthly_ar_tenant;
             $createTransaction->transaction_type = 'MonthlyTenant';
 
             $system->sequence_no_cash_receiptment = $countCR;
@@ -459,7 +500,6 @@ class BillingController extends Controller
 
     public function blastMonthlyInvoice(Request $request)
     {
-
         $connReminder = ConnectionDB::setConnection(new ReminderLetter());
         $connElec = ConnectionDB::setConnection(new ElectricUUS());
         $connWater = ConnectionDB::setConnection(new WaterUUS());
@@ -487,8 +527,8 @@ class BillingController extends Controller
                     $jatuh_tempo_1 = $connReminder->find(1)->durasi_reminder_letter;
                     $jatuh_tempo_1 = Carbon::now()->addDays($jatuh_tempo_1);
 
-                    $util->MonthlyUtility->MonthlyTenant->tgl_jt_invoice = $jatuh_tempo_1;
-                    $util->MonthlyUtility->MonthlyTenant->save();
+                    $util->MonthlyUtility->MonthlyTenant->CashReceipt->tgl_jt_invoice = $jatuh_tempo_1;
+                    $util->MonthlyUtility->MonthlyTenant->CashReceipt->save();
 
                     $util->MonthlyUtility->MonthlyTenant->MonthlyIPL->sign_approval_2 = Carbon::now();
                     $util->MonthlyUtility->MonthlyTenant->MonthlyIPL->save();
@@ -530,155 +570,155 @@ class BillingController extends Controller
         return view('Tenant.Notification.Invoice.index', $data);
     }
 
-    public function generatePaymentMonthly(Request $request, $id)
-    {
-        // $connMonthlyTenant = ConnectionDB::setConnection(new MonthlyArTenant());
-        $connSetting = ConnectionDB::setConnection(new CompanySetting());
-        $connCR = ConnectionDB::setConnection(new CashReceipt());
+    // public function generatePaymentMonthly(Request $request, $id)
+    // {
+    //     // $connMonthlyTenant = ConnectionDB::setConnection(new MonthlyArTenant());
+    //     $connSetting = ConnectionDB::setConnection(new CompanySetting());
+    //     $connCR = ConnectionDB::setConnection(new CashReceipt());
 
-        // $mt = $connMonthlyTenant->find($id);
-        $site = Site::find(Auth::user()->id_site);
-        $setting = $connSetting->find(1);
-        $client = new Client();
-        $billing = explode(',', $request->billing);
-        $admin_fee = $request->admin_fee;
-        $transaction = $connCR->find($id);
+    //     // $mt = $connMonthlyTenant->find($id);
+    //     $site = Site::find(Auth::user()->id_site);
+    //     $setting = $connSetting->find(1);
+    //     $client = new Client();
+    //     $billing = explode(',', $request->billing);
+    //     $admin_fee = $request->admin_fee;
+    //     $transaction = $connCR->find($id);
 
-        if ($transaction->transaction_status == 'PENDING') {
-            if ($billing[0] == 'bank_transfer') {
-                $transaction->gross_amount = $transaction->sub_total + $admin_fee;
-                $transaction->payment_type = 'bank_transfer';
-                $transaction->bank = Str::upper($billing[1]);
-                $payment = [];
+    //     if ($transaction->transaction_status == 'PENDING') {
+    //         if ($billing[0] == 'bank_transfer') {
+    //             $transaction->gross_amount = $transaction->sub_total + $admin_fee;
+    //             $transaction->payment_type = 'bank_transfer';
+    //             $transaction->bank = Str::upper($billing[1]);
+    //             $payment = [];
 
-                $payment['payment_type'] = $billing[0];
-                $payment['transaction_details']['order_id'] = $transaction->order_id;
-                $payment['transaction_details']['gross_amount'] = (int) $transaction->gross_amount;
-                $payment['bank_transfer']['bank'] = $billing[1];
+    //             $payment['payment_type'] = $billing[0];
+    //             $payment['transaction_details']['order_id'] = $transaction->order_id;
+    //             $payment['transaction_details']['gross_amount'] = (int) $transaction->gross_amount;
+    //             $payment['bank_transfer']['bank'] = $billing[1];
 
-                $response = $client->request('POST', 'https://api.sandbox.midtrans.com/v2/charge', [
-                    'body' => json_encode($payment),
-                    'headers' => [
-                        'accept' => 'application/json',
-                        'authorization' => 'Basic ' . base64_encode($site->midtrans_server_key),
-                        'content-type' => 'application/json',
-                    ],
-                    "custom_expiry" => [
-                        "order_time" => Carbon::now(),
-                        "expiry_duration" => 1,
-                        "unit" => "day"
-                    ]
-                ]);
-                $response = json_decode($response->getBody());
+    //             $response = $client->request('POST', 'https://api.sandbox.midtrans.com/v2/charge', [
+    //                 'body' => json_encode($payment),
+    //                 'headers' => [
+    //                     'accept' => 'application/json',
+    //                     'authorization' => 'Basic ' . base64_encode($site->midtrans_server_key),
+    //                     'content-type' => 'application/json',
+    //                 ],
+    //                 "custom_expiry" => [
+    //                     "order_time" => Carbon::now(),
+    //                     "expiry_duration" => 1,
+    //                     "unit" => "day"
+    //                 ]
+    //             ]);
+    //             $response = json_decode($response->getBody());
 
-                if ($response->status_code == 201) {
-                    $transaction->va_number = $response->va_numbers[0]->va_number;
-                    $transaction->expiry_time = $response->expiry_time;
-                    $transaction->no_invoice = $transaction->no_invoice;
-                    $transaction->admin_fee = $admin_fee;
-                    $transaction->transaction_status = 'VERIFYING';
+    //             if ($response->status_code == 201) {
+    //                 $transaction->va_number = $response->va_numbers[0]->va_number;
+    //                 $transaction->expiry_time = $response->expiry_time;
+    //                 $transaction->no_invoice = $transaction->no_invoice;
+    //                 $transaction->admin_fee = $admin_fee;
+    //                 $transaction->transaction_status = 'VERIFYING';
 
-                    $transaction->save();
+    //                 $transaction->save();
 
-                    if ($setting->is_split_ar == 0) {
-                        return redirect()->route('paymentMonthly', [$transaction->id_monthly_ar_tenant, $transaction->id]);
-                    } else {
-                        return redirect()->route(
-                            'paymentMonthly',
-                            [$transaction->SplitMonthlyARTenant($transaction->id_monthly_utility, $transaction->id_monthly_ipl)->id_monthly_ar_tenant, $transaction->id]
-                        );
-                    }
-                } else {
-                    Alert::info('Sorry', 'Our server is busy');
-                    return redirect()->back();
-                }
-            } elseif ($request->billing == 'credit_card') {
-                $transaction->payment_type = 'credit_card';
-                $transaction->admin_fee = $admin_fee;
-                $transaction->gross_amount = round($transaction->sub_total + $admin_fee);
+    //                 if ($setting->is_split_ar == 0) {
+    //                     return redirect()->route('paymentMonthly', [$transaction->id_monthly_ar_tenant, $transaction->id]);
+    //                 } else {
+    //                     return redirect()->route(
+    //                         'paymentMonthly',
+    //                         [$transaction->SplitMonthlyARTenant($transaction->id_monthly_utility, $transaction->id_monthly_ipl)->id_monthly_ar_tenant, $transaction->id]
+    //                     );
+    //                 }
+    //             } else {
+    //                 Alert::info('Sorry', 'Our server is busy');
+    //                 return redirect()->back();
+    //             }
+    //         } elseif ($request->billing == 'credit_card') {
+    //             $transaction->payment_type = 'credit_card';
+    //             $transaction->admin_fee = $admin_fee;
+    //             $transaction->gross_amount = round($transaction->sub_total + $admin_fee);
 
-                $getTokenCC = $this->TransactionCC($request);
-                $chargeCC = $this->ChargeTransactionCC($getTokenCC->token_id, $transaction);
+    //             $getTokenCC = $this->TransactionCC($request);
+    //             $chargeCC = $this->ChargeTransactionCC($getTokenCC->token_id, $transaction);
 
-                if ($setting->is_split_ar == 0) {
-                    $mt = $transaction->MonthlyARTenant();
-                    $mt->no_monthly_invoice = $transaction->no_invoice;
-                    $mt->save();
-                }
+    //             if ($setting->is_split_ar == 0) {
+    //                 $mt = $transaction->MonthlyARTenant();
+    //                 $mt->no_monthly_invoice = $transaction->no_invoice;
+    //                 $mt->save();
+    //             }
 
-                $transaction->save();
+    //             $transaction->save();
 
-                return redirect($chargeCC->redirect_url);
-            }
-        } else {
-            return redirect()->back();
-        }
-    }
+    //             return redirect($chargeCC->redirect_url);
+    //         }
+    //     } else {
+    //         return redirect()->back();
+    //     }
+    // }
 
-    public function ChargeTransactionCC($token, $transaction)
-    {
-        $login = Auth::user();
-        $site = Site::find($login->id_site);
-        $server_key = $site->midtrans_server_key;
+    // public function ChargeTransactionCC($token, $transaction)
+    // {
+    //     $login = Auth::user();
+    //     $site = Site::find($login->id_site);
+    //     $server_key = $site->midtrans_server_key;
 
-        try {
-            $credit_card = array(
-                'token_id' => $token,
-                'authentication' => true,
-                'bank' => 'bni'
-            );
+    //     try {
+    //         $credit_card = array(
+    //             'token_id' => $token,
+    //             'authentication' => true,
+    //             'bank' => 'bni'
+    //         );
 
-            $transactionData = array(
-                "payment_type" => "credit_card",
-                "transaction_details" => [
-                    "gross_amount" => $transaction->gross_amount,
-                    "order_id" => $transaction->order_id
-                ],
-            );
+    //         $transactionData = array(
+    //             "payment_type" => "credit_card",
+    //             "transaction_details" => [
+    //                 "gross_amount" => $transaction->gross_amount,
+    //                 "order_id" => $transaction->order_id
+    //             ],
+    //         );
 
-            $transactionData["credit_card"] = $credit_card;
-            $result = CoreApi::charge($transactionData, $server_key);
+    //         $transactionData["credit_card"] = $credit_card;
+    //         $result = CoreApi::charge($transactionData, $server_key);
 
-            return $result;
-        } catch (Throwable $e) {
-            dd($e);
-        }
-    }
+    //         return $result;
+    //     } catch (Throwable $e) {
+    //         dd($e);
+    //     }
+    // }
 
-    public function TransactionCC($request)
-    {
-        $expDate = explode('/', $request->expDate);
-        $card_exp_month = $expDate[0];
-        $card_exp_year = $expDate[1];
+    // public function TransactionCC($request)
+    // {
+    //     $expDate = explode('/', $request->expDate);
+    //     $card_exp_month = $expDate[0];
+    //     $card_exp_year = $expDate[1];
 
-        $login = Auth::user();
-        $site = Site::find($login->id_site);
+    //     $login = Auth::user();
+    //     $site = Site::find($login->id_site);
 
-        try {
-            $token = CoreApi::cardToken(
-                $request->card_number,
-                $card_exp_month,
-                $card_exp_year,
-                $request->card_cvv,
-                $site->midtrans_client_key
-            );
+    //     try {
+    //         $token = CoreApi::cardToken(
+    //             $request->card_number,
+    //             $card_exp_month,
+    //             $card_exp_year,
+    //             $request->card_cvv,
+    //             $site->midtrans_client_key
+    //         );
 
-            if ($token->status_code != 200) {
-                return ResponseFormatter::error([
-                    'message' => 'Unauthorized'
-                ], 'Authentication Failed', 401);
-            }
+    //         if ($token->status_code != 200) {
+    //             return ResponseFormatter::error([
+    //                 'message' => 'Unauthorized'
+    //             ], 'Authentication Failed', 401);
+    //         }
 
-            return $token;
-        } catch (\Throwable $e) {
-            dd($e);
-            return ResponseFormatter::error([
-                'message' => 'Internar Error'
-            ], 'Something went wrong', 500);
-        }
+    //         return $token;
+    //     } catch (\Throwable $e) {
+    //         dd($e);
+    //         return ResponseFormatter::error([
+    //             'message' => 'Internar Error'
+    //         ], 'Something went wrong', 500);
+    //     }
 
-        return response()->json(['token' => $token]);
-    }
+    //     return response()->json(['token' => $token]);
+    // }
 
     public function paymentMonthly($mt, $id)
     {

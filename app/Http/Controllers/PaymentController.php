@@ -160,6 +160,21 @@ class PaymentController extends Controller
                                 $bill->tgl_bayar_invoice = Carbon::now();
                                 $bill->save();
                             }
+                        } elseif ($setting->is_split_ar == 1) {
+                            $bills = $bills->where('id_unit', $cr->SplitMonthlyARTenantNotif($cr->id_monthly_utility, $cr->id_monthly_ipl, $site->db_name)->id_unit)->get();
+
+                            foreach ($bills as $bill) {
+                                if ($cr->id_monthly_utility) {
+                                    $bill->tgl_bayar_utility = $callback->getNotification()->settlement_time;
+                                }
+                                if ($cr->id_monthly_ipl) {
+                                    $bill->tgl_bayar_ipl = $callback->getNotification()->settlement_time;
+                                }
+                                if ($bill->tgl_bayar_utility && $bill->tgl_bayar_ipl) {
+                                    $bill->tgl_bayar_invoice = Carbon::now();
+                                }
+                                $bill->save();
+                            }
                         }
 
                         $dataPayment = [
