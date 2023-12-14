@@ -48,7 +48,7 @@
                                 - {{ $checklistahu->Room ? $checklistahu->Room->nama_room : '' }}</td>
                             <td>
                                 @if ($checklistahu->barcode_room)
-                                    <img width="150" src="{{ url($checklistahu->barcode_room) }}">
+                                    <img width="150" src="{{ url(decryptURL($checklistahu->barcode_room)) }}">
                                 @else
                                     <small class="badge bg-info text">Please add parameter to generate barcode</small>
                                 @endif
