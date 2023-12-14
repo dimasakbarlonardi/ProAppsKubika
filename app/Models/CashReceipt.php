@@ -68,11 +68,6 @@ class CashReceipt extends Model
         return $this->hasOne(Reservation::class, 'no_request_reservation', 'no_reff');
     }
 
-    // public function MonthlyARTenant()
-    // {
-    //     return $this->hasOne(MonthlyArTenant::class, 'no_monthly_invoice', 'no_reff');
-    // }
-
     public function MonthlyARTenant()
     {
         return $this->hasOne(MonthlyArTenant::class, 'id_monthly_ar_tenant', 'id_monthly_ar_tenant');
@@ -167,21 +162,5 @@ class CashReceipt extends Model
         $subtotal = $prevMonthBill->sum('sub_total');;
 
         return $subtotal;
-
-        // return $prevMonthBill;
-
-        // $prevMonthBill = ConnectionDB::setConnection(new MonthlyArTenant())
-        //     ->where('periode_bulan', '<=', $this->periode_bulan)
-        //     ->where('periode_tahun', $this->periode_tahun)
-        //     ->where('tgl_bayar_invoice', null)
-        //     ->get();
-
-        // $total_denda = $prevMonthBill->sum('total_denda');
-        // $total_tagihan_ipl = $prevMonthBill->sum('total_tagihan_ipl');
-        // $total_tagihan_utility = $prevMonthBill->sum('total_tagihan_utility');
-
-        // $subtotal = $total_denda + $total_tagihan_ipl + $total_tagihan_utility;
-
-        // return $subtotal;
     }
 }

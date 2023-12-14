@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Events\HelloEvent;
 use App\Helpers\ConnectionDB;
 use App\Helpers\HelpNotifikasi;
+use App\Helpers\InvoiceHelper;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
 use App\Models\CashReceipt;
@@ -113,8 +114,8 @@ class BillingController extends Controller
             $createUtilityBill = $this->createUtilityBill($validate['elecUSS'], $validate['waterUSS'], $createIPLbill);
             $createMonthlyTenant = $this->createMonthlyTenant($createUtilityBill, $createIPLbill, $validate['elecUSS'], $validate['waterUSS']);
 
-            $createIPLbill->save();
-            $createUtilityBill->save();
+            // $createIPLbill->save();
+            // $createUtilityBill->save();
 
             $validate['elecUSS']->no_refrensi = $createUtilityBill->id;
             $validate['elecUSS']->save();
@@ -123,13 +124,13 @@ class BillingController extends Controller
 
             $createMonthlyTenant->id_monthly_utility = $createUtilityBill->id;
             $createMonthlyTenant->id_monthly_ipl = $createIPLbill->id;
-            $createMonthlyTenant->save();
+            // $createMonthlyTenant->save();
 
             if ($setting->is_split_ar == 0) {
                 $no_inv = $this->generateInvoice($createMonthlyTenant, null, $setting);
                 $createMonthlyTenant->no_monthly_invoice = $no_inv;
-                $createMonthlyTenant->save();
-            } else {
+                // $createMonthlyTenant->save();
+            } elseif ($setting->is_split_ar == 1) {
                 for ($i = 0; $i < 2; $i++) {
                     $no_inv = $this->generateInvoice($createMonthlyTenant, $i, $setting);
                 }
@@ -146,46 +147,37 @@ class BillingController extends Controller
 
     function generateInvoice($createMonthlyTenant, $i, $setting)
     {
-        $connSystem = ConnectionDB::setConnection(new System());
-        $connCompany = ConnectionDB::setConnection(new CompanySetting());
         $connCR = ConnectionDB::setConnection(new CashReceipt());
 
-        $system = $connSystem->find(1);
-
-        $countINV = $system->sequence_no_invoice + 1;
-        $no_inv = $system->kode_unik_perusahaan . '/' .
-            $system->kode_unik_invoice . '/' .
-            Carbon::now()->format('m') . Carbon::now()->format('Y') . '/' .
-            sprintf("%06d", $countINV);
+        $invoiceData = InvoiceHelper::generateInvoiceNumber();
 
         if ($i == 0) {
             $transaction = $this->createTransaction($createMonthlyTenant, $setting, $i);
             $transaction->id_monthly_utility = $createMonthlyTenant->id_monthly_utility;
+            $transaction->transaction_type = 'MonthlyUtilityTenant';
         } elseif ($i == 1) {
             $transaction = $this->createTransaction($createMonthlyTenant, $setting, $i);
             $transaction->id_monthly_ipl = $createMonthlyTenant->id_monthly_ipl;
+            $transaction->transaction_type = 'MonthlyIPLTenant';
         } elseif (!$i) {
             $transaction = $this->createTransaction($createMonthlyTenant, $setting, null);
+            $transaction->transaction_type = 'MonthlyTenant';
         }
 
-        $setting = $connCompany->find(1);
+        $previousBills = $connCR->where('transaction_type', $transaction->transaction_type)
+            ->where('transaction_status', '!=', 'PAID')
+            ->where('id_unit', $transaction->id_unit)
+            ->get();
 
-        if ($setting->is_split_ar == 0) {
-            $previousBills = $connCR->where('transaction_type', 'MonthlyTenant')
-                ->where('transaction_status', '!=', 'PAID')
-                ->where('id_unit', $transaction->id_unit)
-                ->get();
-            $transaction = $this->perhitDenda($transaction, $previousBills);
-        }
-
-        $transaction->no_reff = $no_inv;
-        $transaction->no_invoice = $no_inv;
+        $transaction = $this->perhitDenda($transaction, $previousBills);
+        $transaction->no_reff = $invoiceData['no_inv'];
+        $transaction->no_invoice = $invoiceData['no_inv'];
         $transaction->save();
 
-        $system->sequence_no_invoice = $countINV;
-        $system->save();
+        $invoiceData['system']->sequence_no_invoice = $invoiceData['countINV'];
+        $invoiceData['system']->save();
 
-        return $no_inv;
+        return $invoiceData['no_inv'];
     }
 
     // save
@@ -461,7 +453,6 @@ class BillingController extends Controller
             $createTransaction->id_user = $user->id_user;
             $createTransaction->id_unit = $mt->id_unit;
             $createTransaction->id_monthly_ar_tenant = $mt->id_monthly_ar_tenant;
-            $createTransaction->transaction_type = 'MonthlyTenant';
 
             $system->sequence_no_cash_receiptment = $countCR;
             $system->save();
@@ -498,6 +489,7 @@ class BillingController extends Controller
         ]);
     }
 
+    //save
     public function blastMonthlyInvoice(Request $request)
     {
         $connReminder = ConnectionDB::setConnection(new ReminderLetter());
@@ -521,14 +513,21 @@ class BillingController extends Controller
                         ->first();
                 }
 
-                $arTenant = $util->MonthlyUtility->MonthlyTenant;
+                $arTenant = $util->MonthlyUtility->MonthlyTenant->CashReceipts[0];
 
                 if (!$arTenant->tgl_jt_invoice && !$arTenant->tgl_bayar_invoice) {
                     $jatuh_tempo_1 = $connReminder->find(1)->durasi_reminder_letter;
                     $jatuh_tempo_1 = Carbon::now()->addDays($jatuh_tempo_1);
 
-                    $util->MonthlyUtility->MonthlyTenant->CashReceipt->tgl_jt_invoice = $jatuh_tempo_1;
-                    $util->MonthlyUtility->MonthlyTenant->CashReceipt->save();
+                    if ($setting->is_split_ar == 0) {
+                        $util->MonthlyUtility->MonthlyTenant->CashReceipt->tgl_jt_invoice = $jatuh_tempo_1;
+                        $util->MonthlyUtility->MonthlyTenant->CashReceipt->save();
+                    } elseif ($setting->is_split_ar == 1) {
+                        foreach ($util->MonthlyUtility->MonthlyTenant->CashReceipts as $bill) {
+                            $bill->tgl_jt_invoice = $jatuh_tempo_1;
+                            $bill->save();
+                        }
+                    }
 
                     $util->MonthlyUtility->MonthlyTenant->MonthlyIPL->sign_approval_2 = Carbon::now();
                     $util->MonthlyUtility->MonthlyTenant->MonthlyIPL->save();

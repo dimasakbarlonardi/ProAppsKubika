@@ -44,6 +44,7 @@
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
             }
         });
+        let token = "{{ Request::session()->get('token') }}";
 
         $('document').ready(function() {
             SelectType('utility');
@@ -79,6 +80,10 @@
                 type: 'GET',
                 success: function(resp) {
                     $('#splitPaymentData').html(resp.html)
+
+                    if (resp.ar_user == resp.email_user) {
+                       $('#selectPaymentForm').css('display', 'block');
+                    }
                 }
             });
         }
@@ -110,11 +115,10 @@
                     bank
                 },
                 success: function(resp) {
-                    console.log(resp);
                     if (resp.meta.code === 200) {
                         Swal.fire(
                             'Berhasil!',
-                            'Berhasil mengupdate Work Order!',
+                            'Berhasil membuat transaksi!',
                             'success'
                         ).then(() =>
                             window.location.replace(`/admin/payment-monthly-page/${ar}/${id}`)

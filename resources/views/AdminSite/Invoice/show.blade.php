@@ -12,8 +12,16 @@
                 $tenant = $data->Ticket->Tenant;
                 $unit = $data->Ticket->Unit;
                 break;
-            case 'MonthlyTenant' && $setting->is_split_ar == 0:
+            case 'MonthlyTenant':
                 $type = 'MonthlyTenant';
+                $data = $transaction->MonthlyARTenant;
+                $site = \App\Models\Site::find($data->id_site);
+                $tenant = $data->Unit->TenantUnit->Tenant;
+                $unit = $data->Unit;
+                break;
+
+            case 'MonthlyUtilityTenant' || 'MonthlyIPLTenant':
+                $type = 'SplitMonthlyTenant';
                 $data = $transaction->MonthlyARTenant;
                 $site = \App\Models\Site::find($data->id_site);
                 $tenant = $data->Unit->TenantUnit->Tenant;
@@ -41,7 +49,7 @@
                 break;
         }
     @endphp
-    {{-- @if ($type == 'SplitMonthlyTenant')
+    @if ($type == 'SplitMonthlyTenant')
         <ul class="nav nav-pills justify-content-around bg-white p-3 rounded mb-3" id="pill-myTab" role="tablist">
             <li class="nav-item" role="presentation">
                 <button
@@ -74,7 +82,7 @@
                 </button>
             </li>
         </ul>
-    @endif --}}
+    @endif
     <div class="container bg-white rounded" id="splitPaymentData">
         <div class="card mb-3">
             <div class="card-body">
@@ -236,7 +244,7 @@
                         </table>
                     @endif
                     @if ($type == 'MonthlyTenant')
-                       @include('AdminSite.Invoice.MonthlyTenant')
+                        @include('AdminSite.Invoice.MonthlyTenant')
                     @endif
                     @if ($type == 'Reservation')
                         <table class="table">
@@ -266,104 +274,51 @@
                         </table>
                     @endif
                     @if ($type == 'WorkPermit')
-                        <table class="table">
-                            <tbody>
-                                <tr class="alert alert-success my-3">
-                                    <td class="align-middle">
-                                        <h6 class="mb-0 text-nowrap">Supervisi Work Permit</h6>
-                                    </td>
-                                    <td class="align-middle text-center">
-                                    </td>
-                                    <td class="align-middle text-end"></td>
-                                    <td class="align-middle text-end"></td>
-                                </tr>
-
-                                <tr>
-                                    <td class="align-middle">
-                                        <p class="mb-0">
-                                            {{ Rupiah($data->jumlah_supervisi) }}
-                                        </p>
-                                    </td>
-                                    <td class="align-middle text-center">
-                                    </td>
-                                    <td class="align-middle text-end"></td>
-                                    <td class="align-middle text-end"></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        <table class="table">
-                            <tbody>
-                                <tr class="alert alert-success my-3">
-                                    <td class="align-middle">
-                                        <h6 class="mb-0 text-nowrap">Deposit Fit Out Permit</h6>
-                                    </td>
-                                    <td class="align-middle text-center">
-                                    </td>
-                                    <td class="align-middle text-end"></td>
-                                    <td class="align-middle text-end"></td>
-                                </tr>
-
-                                <tr>
-                                    <td class="align-middle">
-                                        <p class="mb-0">
-                                            {{ Rupiah($data->jumlah_deposit) }}
-                                        </p>
-                                    </td>
-                                    <td class="align-middle text-center">
-                                    </td>
-                                    <td class="align-middle text-end"></td>
-                                    <td class="align-middle text-end"></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                        @include('AdminSite.Invoice.WorkPermit')
                     @endif
-                    <form action="{{ route('generatePaymentWO', $transaction->id) }}" method="post" class="mt-5">
-                        @csrf
-                        <div class="row g-3 mb-3">
-                            <div class="col-lg-8">
-                                @if ($type == 'MonthlyTenant')
-                                    <div class="row">
-                                        <div class="col-4">
-                                            <label for="">Electric meter photo : </label>
-                                            <img class="img-fluid img-thumbnail rounded"
-                                                src="{{ $data->MonthlyUtility->ElectricUUS->image ? url($data->MonthlyUtility->ElectricUUS->image) : url('/assets/img/icons/spot-illustrations/proapps.png') }}"
-                                                width="200">
-                                        </div>
-                                        <div class="col-4">
-                                            <label for="">Water meter photo : </label>
-                                            <img class="img-fluid img-thumbnail rounded"
-                                                src="{{ $data->MonthlyUtility->WaterUUS->image ? url($data->MonthlyUtility->WaterUUS->image) : url('/assets/img/icons/spot-illustrations/proapps.png') }}"
-                                                width="200">
-                                        </div>
+                    <div class="row g-3 mb-3">
+                        <div class="col-lg-8">
+                            @if ($type == 'MonthlyTenant')
+                                <div class="row">
+                                    <div class="col-4">
+                                        <label for="">Electric meter photo : </label>
+                                        <img class="img-fluid img-thumbnail rounded"
+                                            src="{{ $data->MonthlyUtility->ElectricUUS->image ? url($data->MonthlyUtility->ElectricUUS->image) : url('/assets/img/icons/spot-illustrations/proapps.png') }}"
+                                            width="200">
                                     </div>
-                                @endif
-                            </div>
-                            <div class="col-lg-4">
-                                <div class="card">
-                                    <div class="card-body bg-light">
-                                        <div class="d-flex mt-3 justify-content-between fs--1 mb-1">
-                                            <p class="mb-0">Subtotal</p>
-                                            <span>{{ rupiah($data->CashReceipt->SubTotal($transaction->periode_bulan, $transaction->periode_tahun)) }}</span>
-                                        </div>
-                                        @if ($transaction != 'PENDING')
-                                            <div class="d-flex justify-content-between fs--1 mb-1 text-success">
-                                                <p class="mb-0">Tax</p><span>Rp 0</span>
-                                            </div>
-                                            <div class="d-flex justify-content-between fs--1 mb-1 text-success">
-                                                <p class="mb-0">Admin Fee</p><span
-                                                    id="admin_fee">{{ Rupiah($transaction->admin_fee) }}</span>
-                                            </div>
-                                            <hr />
-                                            <h5 class="d-flex justify-content-between"><span>Grand Total</span><span
-                                                    id="grand_total">{{ $transaction->gross_amount ? Rupiah($transaction->gross_amount) : rupiah($transaction->SubTotal($transaction->MonthlyARTenant->periode_bulan, $transaction->MonthlyARTenant->periode_tahun)) }}</span>
-                                            </h5>
-                                        @endif
+                                    <div class="col-4">
+                                        <label for="">Water meter photo : </label>
+                                        <img class="img-fluid img-thumbnail rounded"
+                                            src="{{ $data->MonthlyUtility->WaterUUS->image ? url($data->MonthlyUtility->WaterUUS->image) : url('/assets/img/icons/spot-illustrations/proapps.png') }}"
+                                            width="200">
                                     </div>
+                                </div>
+                            @endif
+                        </div>
+                        <div class="col-lg-4">
+                            <div class="card">
+                                <div class="card-body bg-light">
+                                    <div class="d-flex mt-3 justify-content-between fs--1 mb-1">
+                                        <p class="mb-0">Subtotal</p>
+                                        <span>{{ rupiah($data->CashReceipt->SubTotal($transaction->periode_bulan, $transaction->periode_tahun)) }}</span>
+                                    </div>
+                                    @if ($transaction != 'PENDING')
+                                        <div class="d-flex justify-content-between fs--1 mb-1 text-success">
+                                            <p class="mb-0">Tax</p><span>Rp 0</span>
+                                        </div>
+                                        <div class="d-flex justify-content-between fs--1 mb-1 text-success">
+                                            <p class="mb-0">Admin Fee</p><span
+                                                id="admin_fee">{{ Rupiah($transaction->admin_fee) }}</span>
+                                        </div>
+                                        <hr />
+                                        <h5 class="d-flex justify-content-between"><span>Grand Total</span><span
+                                                id="grand_total">{{ $transaction->gross_amount ? Rupiah($transaction->gross_amount) : rupiah($transaction->SubTotal($transaction->MonthlyARTenant->periode_bulan, $transaction->MonthlyARTenant->periode_tahun)) }}</span>
+                                        </h5>
+                                    @endif
                                 </div>
                             </div>
                         </div>
-                        <input type="hidden" id="val_admin_fee" name="admin_fee">
-                    </form>
+                    </div>
                 </div>
             </div>
             <div class="p-2">
@@ -381,7 +336,9 @@
         });
         var admin_tax = 0.11;
         let token = "{{ Request::session()->get('token') }}";
+        var arID = "{{ $data->id_monthly_ar_tenant }}"
         var isCCForm = false;
+        var id_user = '';
 
         $('#expDate').on('input', function() {
             var inputVal = $(this).val();
@@ -399,7 +356,10 @@
 
 
         $('document').ready(function() {
-            // SelectType('utility');
+            let is_split = '{{ $setting->is_split_ar }}'
+            if (is_split == 1) {
+                SelectType('utility');
+            }
             $('#cc_form').css('display', 'none')
             $('.form-check-input').on('change', function() {
                 if ($(this).is(':checked') && $(this).val() == 'credit_card') {
@@ -450,8 +410,6 @@
         function SelectType(type) {
             $('#splitPaymentData').html("")
 
-            arID = "{{ $data->id_monthly_ar_tenant }}"
-            console.log(arID, type);
             $.ajax({
                 url: `/api/v1/get-splited-billing`,
                 headers: {
@@ -464,8 +422,45 @@
                 },
                 type: 'GET',
                 success: function(resp) {
-                    console.log(resp.html)
                     $('#splitPaymentData').html(resp.html)
+
+                    if (resp.ar_user == resp.email_user) {
+                        $('#selectPaymentForm').css('display', 'block');
+                    }
+                }
+            });
+        }
+
+        function onCreateTransaction(id) {
+            $.ajax({
+                url: `/api/v1/create-transaction/${id}`,
+                headers: {
+                    'Authorization': 'Bearer ' + token
+                },
+                type: 'POST',
+                data: {
+                    admin_fee,
+                    type,
+                    bank
+                },
+                success: function(resp) {
+                    if (resp?.meta.code === 200) {
+                        Swal.fire(
+                            'Berhasil!',
+                            'Berhasil membuat transaksi!',
+                            'success'
+                        ).then(() =>
+                            window.location.replace(`/admin/payment-monthly-page/${ar}/${id}`)
+                        )
+                    } else {
+                        Swal.fire(
+                            'Sorry!',
+                            'Our server is busy',
+                            'info'
+                        ).then(() =>
+                            window.location.reload()
+                        )
+                    }
                 }
             });
         }

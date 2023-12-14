@@ -69,14 +69,6 @@ class PaymentController extends Controller
 
                         broadcast(new HelloEvent($dataNotifTR));
 
-                        $dataPayment = [
-                            'id_site' => $site->id_site,
-                            'id' => $cr->id,
-                            'status' => 'settlement',
-                        ];
-
-                        broadcast(new PaymentEvent($dataPayment));
-
                         break;
 
                     case ('WorkPermit'):
@@ -98,14 +90,6 @@ class PaymentController extends Controller
                         ];
 
                         broadcast(new HelloEvent($dataNotif));
-
-                        $dataPayment = [
-                            'id_site' => $site->id_site,
-                            'id' => $cr->id,
-                            'status' => 'settlement',
-                        ];
-
-                        broadcast(new PaymentEvent($dataPayment));
 
                         break;
 
@@ -130,17 +114,9 @@ class PaymentController extends Controller
 
                         broadcast(new HelloEvent($dataNotif));
 
-                        $dataPayment = [
-                            'id_site' => $site->id_site,
-                            'id' => $cr->id,
-                            'status' => 'settlement',
-                        ];
-
-                        broadcast(new PaymentEvent($dataPayment));
-
                         break;
 
-                    case ('MonthlyTenant'):
+                    case 'MonthlyTenant' || 'MonthlyUtilityTenant' || 'MonthlyIPLTenant' :
                         $setting = new CompanySetting();
                         $bills = new MonthlyArTenant();
 
@@ -170,24 +146,21 @@ class PaymentController extends Controller
                                 if ($cr->id_monthly_ipl) {
                                     $bill->tgl_bayar_ipl = $callback->getNotification()->settlement_time;
                                 }
-                                if ($bill->tgl_bayar_utility && $bill->tgl_bayar_ipl) {
-                                    $bill->tgl_bayar_invoice = Carbon::now();
-                                }
+
                                 $bill->save();
                             }
                         }
-
-                        $dataPayment = [
-                            'id_site' => $site->id_site,
-                            'id' => $cr->id,
-                            'status' => 'settlement',
-                        ];
-
-                        broadcast(new PaymentEvent($dataPayment));
-
                         break;
                 }
             }
+
+            $dataPayment = [
+                'id_site' => $site->id_site,
+                'id' => $cr->id,
+                'status' => 'settlement',
+            ];
+
+            broadcast(new PaymentEvent($dataPayment));
 
             if ($callback->isExpire()) {
                 $cr->transaction_status = 'EXPIRED';
