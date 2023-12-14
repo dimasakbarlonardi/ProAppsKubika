@@ -135,9 +135,10 @@
         </tbody>
     </table>
 </div>
-<div id="payment-utility" class="mt-5">
+
+<div class="mt-5" style="display: none" id="selectPaymentForm">
     @if ($transaction->IPLCashReceipt->transaction_status == 'PENDING')
-        <form action="{{ route('generatePaymentMonthly', $transaction->IPLCashReceipt->id) }}" method="post">
+        <form action="" method="post">
             @csrf
             <div class="row g-3 mb-3">
                 <div class="col-lg-8">
@@ -163,8 +164,8 @@
                                 </label>
                             </div>
                             <div class="form-check mb-3">
-                                <input class="form-check-input select-payment-ipl-method" type="radio" name="billing"
-                                    value="bni" />
+                                <input class="form-check-input select-payment-ipl-method" type="radio"
+                                    name="billing" value="bni" />
                                 <label class="form-check-label mb-0 d-block" for="paypal">
                                     <img src="{{ asset('assets/img/icons/bni_logo.png') }}" height="20"
                                         alt="" />
@@ -304,40 +305,4 @@
         $('#admin_fee_ipl').html(`Rp ${formatRupiah(admin_fee.toString())}`)
         $('#grand_total_ipl').html(`Rp ${formatRupiah(grand_total.toString())}`)
     });
-
-    // function onCreateTransaction(id) {
-    //     console.log(admin_fee, type, bank);
-    //     $.ajax({
-    //         url: `/api/v1/create-transaction/${id}`,
-    //         headers: {
-    //             'Authorization': 'Bearer ' + token
-    //         },
-    //         type: 'POST',
-    //         data: {
-    //             admin_fee,
-    //             type,
-    //             bank
-    //         },
-    //         success: function(resp) {
-    //             console.log(resp);
-    //             if (resp.meta.code === 200) {
-    //                 Swal.fire(
-    //                     'Berhasil!',
-    //                     'Berhasil mengupdate Work Order!',
-    //                     'success'
-    //                 ).then(() =>
-    //                     window.location.replace(`/admin/payment-monthly-page/${ar}/${id}`)
-    //                 )
-    //             } else {
-    //                 Swal.fire(
-    //                     'Sorry!',
-    //                     'Our server is busy',
-    //                     'info'
-    //                 ).then(() =>
-    //                     window.location.reload()
-    //                 )
-    //             }
-    //         }
-    //     });
-    // }
 </script>

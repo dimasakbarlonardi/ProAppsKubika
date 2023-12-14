@@ -44,7 +44,12 @@ class MonthlyArTenant extends Model
 
     public function CashReceipt()
     {
-        return $this->hasOne(CashReceipt::class, 'no_reff', 'no_monthly_invoice');
+        return $this->hasOne(CashReceipt::class, 'id_monthly_ar_tenant', 'id_monthly_ar_tenant');
+    }
+
+    public function CashReceipts()
+    {
+        return $this->hasMany(CashReceipt::class, 'id_monthly_ar_tenant', 'id_monthly_ar_tenant');
     }
 
     public function SplitCashReceipt($utility, $ipl)

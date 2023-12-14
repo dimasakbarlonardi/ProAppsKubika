@@ -161,9 +161,25 @@
         </tbody>
     </table>
 </div>
-<div class="mt-5">
+<div class="container p-4">
+    <div class="row">
+        <div class="col-4">
+            <label for="">Electric meter photo : </label>
+            <img class="img-fluid img-thumbnail rounded"
+                src="{{ $transaction->MonthlyUtility->ElectricUUS->image ? url($transaction->MonthlyUtility->ElectricUUS->image) : url('/assets/img/icons/spot-illustrations/proapps.png') }}"
+                width="200">
+        </div>
+        <div class="col-4">
+            <label for="">Water meter photo : </label>
+            <img class="img-fluid img-thumbnail rounded"
+                src="{{ $transaction->MonthlyUtility->WaterUUS->image ? url($transaction->MonthlyUtility->WaterUUS->image) : url('/assets/img/icons/spot-illustrations/proapps.png') }}"
+                width="200">
+        </div>
+    </div>
+</div>
+<div class="mt-5" style="display: none" id="selectPaymentForm">
     @if ($transaction->UtilityCashReceipt->transaction_status == 'PENDING')
-        <form action="{{ route('generatePaymentMonthly', $transaction->UtilityCashReceipt->id) }}" method="post">
+        <form action="" method="post">
             @csrf
             <div class="row g-3 mb-3">
                 <div class="col-lg-8">
