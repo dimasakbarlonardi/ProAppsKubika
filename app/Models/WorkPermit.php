@@ -24,6 +24,8 @@ class WorkPermit extends Model
         'status_request',
         'id_user_work_permit',
         'id_work_relation',
+        'is_worked',
+        'is_done',
         'sign_approval_1',
         'sign_approval_2',
         'sign_approval_3',

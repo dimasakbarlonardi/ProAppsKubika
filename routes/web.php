@@ -274,6 +274,7 @@ Route::prefix('admin')->group(function () {
 
         // CRUD Lantai
         Route::resource('floors', FloorController::class);
+        Route::post('import/floor', [FloorController::class, 'import'])->name('importFloor');
 
         // CRUD Hunian
         Route::resource('hunians', HunianController::class);

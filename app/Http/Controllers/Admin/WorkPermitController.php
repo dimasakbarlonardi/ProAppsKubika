@@ -380,6 +380,7 @@ class WorkPermitController extends Controller
         $wp->RequestPermit->status_request = 'WORK DONE';
         $wp->RequestPermit->save();
         $wp->Ticket->status_request = 'WORK DONE';
+        $wp->is_worked = true;
         $wp->Ticket->save();
 
         $dataNotif = [
@@ -403,6 +404,7 @@ class WorkPermitController extends Controller
 
         $wp = $connWP->find($id);
         $wp->status_request = 'COMPLETE';
+        $wp->is_done = true;
         $wp->save();
         $wp->RequestPermit->status_request = 'COMPLETE';
         $wp->RequestPermit->save();
