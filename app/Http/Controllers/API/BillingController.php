@@ -125,6 +125,8 @@ class BillingController extends Controller
             $html = view('Tenant.Notification.Invoice.SplitPaymentMonthly.Utility_bill', $data)->render();
         } elseif ($request->type == 'ipl') {
             $html = view('Tenant.Notification.Invoice.SplitPaymentMonthly.IPL_bill', $data)->render();
+        } elseif ($request->type == 'other') {
+            $html = view('Tenant.Notification.Invoice.SplitPaymentMonthly.Other_bill', $data)->render();
         }
 
         return response()->json([

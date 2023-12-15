@@ -25,7 +25,11 @@
                 </td>
                 <td class="text-center">
                     <a href="{{ route('showInvoices', $item->id) }}" class="btn btn-outline-info btn-sm">View</a>
-                    @if ($item->transaction_type == 'MonthlyTenant')
+                    @if (
+                        $item->transaction_type == 'MonthlyTenant' ||
+                            $item->transaction_type == 'MonthlyIPLTenant' ||
+                            $item->transaction_type == 'MonthlyUtilityTenant' ||
+                            $item->transaction_type == 'MonthlyOtherBillTenant')
                         <a href="{{ route('installment', $item->id) }}"
                             class="btn btn-outline-success btn-sm">Installment
                         </a>

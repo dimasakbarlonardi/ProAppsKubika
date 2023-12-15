@@ -29,7 +29,7 @@
 
         <li class="nav-item" role="presentation">
             <button class="nav-link {{ Session::get('active') == 'vehicle' ? 'active' : '' }} selectTypePayment"
-                data-bs-toggle="pill" data-bs-target="#pill-tab-kendaraan" type="button" role="tab">
+                data-bs-toggle="pill" data-bs-target="#pill-tab-kendaraan" type="button" role="tab" payment-type="other">
                 <span class="fas fa-grip-horizontal me-2"></span>
                 <span class="d-none d-md-inline-block fs--1">Other</span>
             </button>

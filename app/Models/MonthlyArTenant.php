@@ -67,12 +67,23 @@ class MonthlyArTenant extends Model
 
     public function UtilityCashReceipt()
     {
-       return $this->hasOne(CashReceipt::class, 'id_monthly_utility', 'id_monthly_utility');
+        return $this->hasOne(CashReceipt::class, 'id_monthly_utility', 'id_monthly_utility');
     }
 
     public function IPLCashReceipt()
     {
-       return $this->hasOne(CashReceipt::class, 'id_monthly_ipl', 'id_monthly_ipl');
+        return $this->hasOne(CashReceipt::class, 'id_monthly_ipl', 'id_monthly_ipl');
+    }
+
+    public function OtherCashReceipt()
+    {
+        $connCR = ConnectionDB::setConnection(new CashReceipt());
+
+        $cr = $connCR->where('transaction_type', 'MonthlyOtherBillTenant')
+            ->where('id_monthly_ar_tenant', $this->id_monthly_ar_tenant)
+            ->first();
+
+        return $cr;
     }
 
     public function MonthlyIPL()

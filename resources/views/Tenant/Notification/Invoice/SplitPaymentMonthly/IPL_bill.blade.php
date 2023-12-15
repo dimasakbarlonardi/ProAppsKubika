@@ -132,6 +132,21 @@
                     <span>{{ Rupiah($transaction->MonthlyIPL->ipl_sink_fund) }}</span>
                 </td>
             </tr>
+            @if ($transaction->IPLCashReceipt->Installment())
+                @php
+                    $installment = $transaction->IPLCashReceipt->Installment();
+                @endphp
+                <tr>
+                    <td class="align-middle">
+                        <h6 class="mb-3 text-nowrap">Installment</h6>
+                        <p class="mb-0">{{ $installment->no_invoice }} ({{ $installment->rev }})</p>
+                    </td>
+                    <td class="align-middle text-end" colspan="6">
+                        <h6 class="text-nowrap mb-3 text-end">Total</h6>
+                        <span>{{ DecimalRupiahRP($installment->amount) }}</span>
+                    </td>
+                </tr>
+            @endif
         </tbody>
     </table>
 </div>
