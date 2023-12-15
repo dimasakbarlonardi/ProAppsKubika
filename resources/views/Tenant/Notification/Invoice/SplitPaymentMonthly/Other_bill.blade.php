@@ -60,12 +60,6 @@
                         </td>
                     </tr>
                     <tr>
-                        <th class="text-sm-end">Payment Due:</th>
-                        <td>
-                            {{ HumanDate($transaction->tgl_jt_invoice) }}
-                        </td>
-                    </tr>
-                    <tr>
                         <th class="text-sm-end">Payment Status:</th>
                         <td id="payment-status">
                             @if ($transaction->OtherCashReceipt()->transaction_status == 'PAID')
@@ -92,6 +86,34 @@
 <div class="table-responsive scrollbar mt-4 fs--1">
     <table class="table border-bottom">
         <tbody>
+            @foreach ($transaction->OtherCashReceipt()->PreviousOtherBill($transaction->periode_bulan, $transaction->periode_tahun) as $bill)
+                <tr class="alert alert-success my-3">
+                    <td class="align-middle">
+                        <h6 class="mb-0 text-nowrap">Tagihan bulan
+                            {{ $bill->MonthlyARTenant->periode_bulan }},
+                            {{ $bill->MonthlyARTenant->periode_tahun }}
+                        </h6>
+                    </td>
+                    <td class="align-middle">
+                    </td>
+                    <td colspan="6"></td>
+                </tr>
+                @php
+                    $otherBills = json_decode($bill->MonthlyARTenant->biaya_lain);
+                @endphp
+                @foreach ($otherBills as $otherBill)
+                    <tr>
+                        <td class="align-middle">
+                            <p class="mb-0">{{ $otherBill->bill_name }}</p>
+                        </td>
+
+                        <td class="align-middle text-end" colspan="4">
+                            <h6 class="mb-3 mt-3">Total</h6>
+                            <span>{{ Rupiah($otherBill->bill_price) }}</span>
+                        </td>
+                    </tr>
+                @endforeach
+            @endforeach
             <tr class="alert alert-success my-3">
                 <td class="align-middle">
                     <h6 class="mb-0 text-nowrap">Tagihan bulan
@@ -107,7 +129,6 @@
                 $otherBills = json_decode($transaction->biaya_lain);
             @endphp
             @foreach ($otherBills as $otherBill)
-
                 <tr>
                     <td class="align-middle">
                         <p class="mb-0">{{ $otherBill->bill_name }}</p>
@@ -119,6 +140,30 @@
                     </td>
                 </tr>
             @endforeach
+            @if ($transaction->UtilityCashReceipt->denda_bulan_sebelumnya)
+                <tr class="alert alert-danger my-3">
+                    <td class="align-middle">
+                        <h6 class="mb-0 text-nowrap">Denda Bulan Sebelumnya
+                        </h6>
+                    </td>
+                    <td class="align-middle">
+                    </td>
+                    <td colspan="6"></td>
+                </tr>
+                @foreach ($transaction->OtherCashReceipt()->PreviousOtherBill($transaction->periode_bulan, $transaction->periode_tahun) as $bill)
+                    <tr>
+                        <td class="align-middle">
+                            <h6 class="mb-3 text-nowrap">Periode</h6>
+                            <span>Bulan {{ $bill->MonthlyARTenant->periode_bulan }} /
+                                {{ $bill->MonthlyARTenant->periode_tahun }}</span>
+                        </td>
+                        <td class="align-middle text-end" colspan="6">
+                            <h6 class="text-nowrap mb-3 text-end">Total</h6>
+                            <span>{{ DecimalRupiahRP($bill->total_denda) }}</span>
+                        </td>
+                    </tr>
+                @endforeach
+            @endif
         </tbody>
     </table>
 </div>
@@ -271,7 +316,7 @@
 
 <script>
     $('#cc_form_ipl').css('display', 'none');
-    var subtotal = parseInt('{{ $transaction->total_tagihan_ipl }}')
+    var subtotal = parseInt('{{ $transaction->OtherCashReceipt()->sub_total }}')
     var ar = parseInt('{{ $transaction->id_monthly_ar_tenant }}')
 
     $(".select-payment-ipl-method").on('change', function() {

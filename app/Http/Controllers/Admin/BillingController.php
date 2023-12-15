@@ -207,12 +207,17 @@ class BillingController extends Controller
         $bills = [];
         $otherBillsAmount = 0;
         foreach ($otherBills as $bill) {
-            $otherBillsAmount += (int) $bill->bill_price;
-            $bill = [
+            if ($bill->is_require_unit_volume) {
+                $otherBillsAmount = (int) $bill->bill_price * $createUtilityBill->Unit->luas_unit;
+            } else {
+                $otherBillsAmount = (int) $bill->bill_price;
+            }
+            $addBill = [
                 'bill_name' => $bill->bill_name,
-                'bill_price' => $bill->bill_price
+                'bill_price' => $otherBillsAmount,
+                'is_require_unit_volume' => $bill->is_require_unit_volume
             ];
-            $bills[] = $bill;
+            $bills[] = $addBill;
         }
 
         $connMonthlyTenant->biaya_lain = json_encode($bills);
@@ -273,6 +278,7 @@ class BillingController extends Controller
             $total_denda += $prevBill->total_denda;
 
             $transaction->denda_bulan_sebelumnya = $total_denda;
+            $transaction->sub_total += $transaction->denda_bulan_sebelumnya + $prevBill->sub_total;
         }
 
         return $transaction;
@@ -295,6 +301,7 @@ class BillingController extends Controller
             $prevBill->save();
 
             $transaction->denda_bulan_sebelumnya = $denda_bulan_sebelumnya;
+            $transaction->sub_total += $transaction->denda_bulan_sebelumnya + $prevBill->sub_total;
         }
 
         return $transaction;
@@ -318,6 +325,7 @@ class BillingController extends Controller
             $prevBill->save();
 
             $transaction->denda_bulan_sebelumnya = $denda_bulan_sebelumnya + $prevBill->MonthlyARTenant->denda_bulan_sebelumnya;
+            $transaction->sub_total += $transaction->denda_bulan_sebelumnya + $prevBill->sub_total;
         }
 
         return $transaction;
@@ -595,7 +603,7 @@ class BillingController extends Controller
                 ]);
 
                 $response = json_decode($response->getBody());
-               
+
                 if ($response->status_code == 201) {
                     $transaction->va_number = $response->va_numbers[0]->va_number;
                     $transaction->expiry_time = $response->expiry_time;

@@ -59,12 +59,6 @@
                         </td>
                     </tr>
                     <tr>
-                        <th class="text-sm-end">Payment Due:</th>
-                        <td>
-                            {{ HumanDate($transaction->tgl_jt_invoice) }}
-                        </td>
-                    </tr>
-                    <tr>
                         <th class="text-sm-end">Payment Status:</th>
                         <td id="payment-status">
                             @if ($transaction->IPLCashReceipt->transaction_status == 'PAID')
@@ -91,6 +85,49 @@
 <div class="table-responsive scrollbar mt-4 fs--1">
     <table class="table border-bottom">
         <tbody>
+            @foreach ($transaction->IPLCashReceipt->PreviousIPLBill($transaction->periode_bulan, $transaction->periode_tahun) as $bill)
+                <tr class="alert alert-success my-3">
+                    <td class="align-middle">
+                        <h6 class="mb-0 text-nowrap">Tagihan bulan
+                            {{ $bill->MonthlyARTenant->periode_bulan }},
+                            {{ $bill->MonthlyARTenant->periode_tahun }}
+                        </h6>
+                    </td>
+                    <td class="align-middle">
+                    </td>
+                    <td colspan="6"></td>
+                </tr>
+                <tr>
+                    <td class="align-middle">
+                        <h6 class="mb-3 mt-3">Tagihan IPL</h6>
+                        <p class="mb-0">Service Charge</p>
+                        <hr>
+                        <p class="mb-0">Sink Fund</p>
+                    </td>
+                    <td class="align-middle">
+                        <h6 class="mb-3 mt-3 text-nowrap">Luas Unit</h6>
+                        <span>{{ $bill->MonthlyARTenant->MonthlyIPL->Unit->luas_unit }} m<sup>2</sup></span> <br>
+                        <hr>
+                        <span>{{ $bill->MonthlyARTenant->MonthlyIPL->Unit->luas_unit }} m<sup>2</sup></span>
+                    </td>
+                    <td class="align-middle" colspan="2">
+                        <h6 class="mb-3 mt-3">Biaya Permeter / Biaya Procentage</h6>
+                        <span>{{ $sc->biaya_procentage ? $sc->biaya_procentage . '%' : Rupiah($sc->biaya_permeter) }}</span>
+                        <br>
+                        <hr>
+                        <span>{{ $sf->biaya_procentage ? $sf->biaya_procentage . '%' : Rupiah($sf->biaya_permeter) }}</span>
+                    </td>
+                    <td>
+                    </td>
+                    <td></td>
+                    <td class="align-middle text-end" colspan="2">
+                        <h6 class="mb-3 mt-3">Total</h6>
+                        <span>{{ Rupiah($bill->MonthlyARTenant->MonthlyIPL->ipl_service_charge) }}</span> <br>
+                        <hr>
+                        <span>{{ Rupiah($bill->MonthlyARTenant->MonthlyIPL->ipl_sink_fund) }}</span>
+                    </td>
+                </tr>
+            @endforeach
             <tr class="alert alert-success my-3">
                 <td class="align-middle">
                     <h6 class="mb-0 text-nowrap">Tagihan bulan
@@ -132,6 +169,30 @@
                     <span>{{ Rupiah($transaction->MonthlyIPL->ipl_sink_fund) }}</span>
                 </td>
             </tr>
+            @if ($transaction->UtilityCashReceipt->denda_bulan_sebelumnya)
+                <tr class="alert alert-danger my-3">
+                    <td class="align-middle">
+                        <h6 class="mb-0 text-nowrap">Denda Bulan Sebelumnya
+                        </h6>
+                    </td>
+                    <td class="align-middle">
+                    </td>
+                    <td colspan="6"></td>
+                </tr>
+                @foreach ($transaction->IPLCashReceipt->PreviousIPLBill($transaction->periode_bulan, $transaction->periode_tahun) as $bill)
+                    <tr>
+                        <td class="align-middle">
+                            <h6 class="mb-3 text-nowrap">Periode</h6>
+                            <span>Bulan {{ $bill->MonthlyARTenant->periode_bulan }} /
+                                {{ $bill->MonthlyARTenant->periode_tahun }}</span>
+                        </td>
+                        <td class="align-middle text-end" colspan="6">
+                            <h6 class="text-nowrap mb-3 text-end">Total</h6>
+                            <span>{{ DecimalRupiahRP($bill->total_denda) }}</span>
+                        </td>
+                    </tr>
+                @endforeach
+            @endif
             @if ($transaction->IPLCashReceipt->Installment())
                 @php
                     $installment = $transaction->IPLCashReceipt->Installment();
@@ -163,16 +224,16 @@
                         </div>
                         <div class="card-body bg-light">
                             <div class="form-check mb-4">
-                                <input class="form-check-input select-payment-ipl-method" type="radio" name="billing"
-                                    value="bca" />
+                                <input class="form-check-input select-payment-ipl-method" type="radio"
+                                    name="billing" value="bca" />
                                 <label class="form-check-label mb-0 d-block" for="paypal">
                                     <img src="{{ asset('assets/img/icons/bca_logo.png') }}" height="20"
                                         alt="" />
                                 </label>
                             </div>
                             <div class="form-check mb-4">
-                                <input class="form-check-input select-payment-ipl-method" type="radio" name="billing"
-                                    value="mandiri" />
+                                <input class="form-check-input select-payment-ipl-method" type="radio"
+                                    name="billing" value="mandiri" />
                                 <label class="form-check-label mb-0 d-block" for="paypal">
                                     <img src="{{ asset('assets/img/icons/mandiri_logo.png') }}" height="20"
                                         alt="" />
@@ -299,8 +360,10 @@
 
 <script>
     $('#cc_form_ipl').css('display', 'none');
-    var subtotal = parseInt('{{ $transaction->total_tagihan_ipl }}')
+    var subtotal = parseInt('{{ $transaction->IPLCashReceipt->sub_total }}')
     var ar = parseInt('{{ $transaction->id_monthly_ar_tenant }}')
+
+    console.log('{{ $transaction->IPLCashReceipt->id }}')
 
     $(".select-payment-ipl-method").on('change', function() {
         if ($(this).is(':checked') && $(this).val() == 'credit_card') {
