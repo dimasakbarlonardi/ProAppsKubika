@@ -6,6 +6,7 @@ use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
 use App\Models\Login;
 use App\Models\ToolHistory;
+use App\Models\ToolsEngineering;
 use App\Models\ToolsHousekeeping;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -80,7 +81,7 @@ class ToolsHKController extends Controller
         } elseif ($wrID == 8) {
             try {
                 // Menghubungkan ke database dan mencari alat berdasarkan ID
-                $conn = ConnectionDB::setConnection(new ToolsHousekeeping());
+                $conn = ConnectionDB::setConnection(new ToolsEngineering());
                 $tool = $conn->find($id);
                 $borrowQty = (int) $request->borrow_qty;
 

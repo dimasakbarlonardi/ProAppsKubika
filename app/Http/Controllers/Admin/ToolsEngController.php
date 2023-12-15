@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Login;
 use App\Models\ToolHistory;
 use App\Models\ToolsEngineering;
+use App\Models\ToolsHousekeeping;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -39,9 +40,9 @@ class ToolsEngController extends Controller
         $wrID = $user->RoleH->work_relation_id;
 
         if ($wrID == 8) {
-            $connToolsHK = ConnectionDB::setConnection(new ToolsEngineering());
+            $connToolsENG = ConnectionDB::setConnection(new ToolsEngineering());
 
-            $tool = $connToolsHK->find($id);
+            $tool = $connToolsENG->find($id);
 
             try {
                 DB::beginTransaction();
@@ -61,7 +62,7 @@ class ToolsEngController extends Controller
                 $tool->save();
 
                 $connToolHistory->create([
-                    'type' => 'HK',
+                    'type' => 'ENG',
                     'id_data' => $id,
                     'qty' => $borrowQty,
                     'borrowed_by' => $user->id_user,
@@ -78,15 +79,16 @@ class ToolsEngController extends Controller
                 dd($e);
                 return redirect()->back()->with('error', 'An error occurred while borrowing the tool.');
             }
-        } elseif ($wrID == 8) {
+        } elseif ($wrID == 9) {
             try {
                 // Menghubungkan ke database dan mencari alat berdasarkan ID
-                $conn = ConnectionDB::setConnection(new ToolsEngineering());
+                $conn = ConnectionDB::setConnection(new ToolsHousekeeping());
                 $tool = $conn->find($id);
                 $borrowQty = (int) $request->borrow_qty;
 
                 // Validasi jumlah peminjaman
                 if ($borrowQty <= 0 || $borrowQty > ($tool->total_tools - $tool->borrow)) {
+                    dd($borrowQty <= 0, $borrowQty, ($tool->total_tools - $tool->borrow));
                     Alert::error('error', 'Invalid borrow quantity');
                     return redirect()->back();
                 }
@@ -99,7 +101,7 @@ class ToolsEngController extends Controller
                 $tool->save();
 
                 $connToolHistory->create([
-                    'type' => 'ENG',
+                    'type' => 'HK',
                     'id_data' => $id,
                     'qty' => $borrowQty,
                     'borrowed_by' => $user->id_user,
@@ -156,7 +158,7 @@ class ToolsEngController extends Controller
                 $tool->save();
 
                 $createHistory = $connToolHistory->create([
-                    'type' => 'HK',
+                    'type' => 'ENG',
                     'id_data' => $id,
                     'qty' => $returnQty,
                     'action' => 'Returning',
@@ -190,8 +192,8 @@ class ToolsEngController extends Controller
                 Alert::error('error', 'Invalid borrow quantity');
                 return redirect()->back();
             }
-        } elseif ($wrID == 8) {
-            $conn = ConnectionDB::setConnection(new ToolsEngineering());
+        } elseif ($wrID == 9) {
+            $conn = ConnectionDB::setConnection(new ToolsHousekeeping());
             $tool = $conn->find($id);
 
             $returnQty = (int) $request->return_qty;
@@ -216,7 +218,7 @@ class ToolsEngController extends Controller
             $tool->save();
 
             $createToolHistory = $connToolHistory->create([
-                'type' => 'ENG',
+                'type' => 'HK',
                 'id_data' => $id,
                 'qty' => $returnQty,
                 'action' => 'Returning',
