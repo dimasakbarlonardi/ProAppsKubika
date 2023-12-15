@@ -39,7 +39,7 @@ class ToolsEngController extends Controller
         $wrID = $user->RoleH->work_relation_id;
 
         if ($wrID == 8) {
-            $connToolsHK = ConnectionDB::setConnection(new ToolsHousekeeping());
+            $connToolsHK = ConnectionDB::setConnection(new ToolsEngineering());
 
             $tool = $connToolsHK->find($id);
 
@@ -130,7 +130,7 @@ class ToolsEngController extends Controller
             try {
                 DB::beginTransaction();
 
-                $conn = ConnectionDB::setConnection(new ToolsHousekeeping());
+                $conn = ConnectionDB::setConnection(new ToolsEngineering());
                 $tool = $conn->find($id);
 
                 $returnQty = (int) $request->return_qty;
