@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Admin;
 
 use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
+use App\Imports\FloorImport;
 use Illuminate\Http\Request;
 use App\Models\Floor;
 use App\Models\Login;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\DB;
+use Excel;
 
 
 class FloorController extends Controller
@@ -25,6 +27,17 @@ class FloorController extends Controller
         $data['floors'] = $conn->orderBy('created_at', 'ASC')->get();
 
         return view('AdminSite.Floor.index', $data);
+    }
+
+    public function import(Request $request)
+    {
+        $file = $request->file('file_excel');
+
+        Excel::import(new FloorImport(), $file);
+
+        Alert::success('Success', 'Success import data');
+
+        return redirect()->route('floors.index');
     }
 
     /**
@@ -51,7 +64,7 @@ class FloorController extends Controller
             DB::beginTransaction();
 
             $conn->create([
-                'id_lantai' => rand(100, 200),
+                'id_lantai' => rand(200,300 ),
                 'nama_lantai' => $request->nama_lantai,
             ]);
 

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\CryptoHelper;
 use Auth;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -49,27 +50,19 @@ class EquiqmentAhu extends Model
         ];
 
         $json = json_encode($data);
-        $iv = random_bytes(16);
-        $cipherText = openssl_encrypt($json, 'aes-256-cbc', env('JWT_SECRET'), 0, $iv);
-        $enkrip = base64_encode($iv . $cipherText);
 
-        $barcodeRoom = QrCode::format('png')
-            ->merge(public_path('assets/img/logos/proapps.png'), 0.6, true)
-            ->size(500)
-            ->color(0, 0, 0)
-            ->eyeColor(0, 39, 178, 155, 0, 0, 0)
-            ->eyeColor(1, 39, 178, 155, 0, 0, 0)
-            ->eyeColor(2, 39, 178, 155, 0, 0, 0)
-            ->errorCorrection('H')
-            ->generate($enkrip);
+        $mykey = '@Pr04pp5';
+        $myiv = base64_encode($mykey);
 
-        $outputBarcode = '/public/' . Auth::user()->id_site . '/img/qr-code/equipment-eng/' . $this->equiqment . '-barcode_equipment_engineering.png';
-        $barcode = '/storage/' . Auth::user()->id_site . '/img/qr-code/equipment-eng/' . $this->equiqment . '-barcode_equipment_engineering.png';
+        $key = substr(hash('sha256', $mykey), 0, 32);
+        $iv = substr(hash('sha256', $myiv), 0, 16);
 
-        Storage::delete($outputBarcode);
-        Storage::disk('local')->put($outputBarcode, $barcodeRoom);
+        $cipherText = openssl_encrypt($json, 'aes-256-cbc', $key, 0, $iv);
 
-        $this->barcode_room = $barcode;
+        $barcode = 'https://api.qrserver.com/v1/create-qr-code/?size=1000x1000&data=' . $cipherText;
+        $encrypted = encryptURL($barcode);
+
+        $this->barcode_room = $encrypted;
         $this->save();
     }
 

@@ -55,6 +55,8 @@ class RequestPermitController extends Controller
         $object->approve_3_finance = $wp->sign_approval_3;
         $object->approve_5_midtrans = $wp->sign_approval_5;
         $object->approve_4_bm = $wp->sign_approval_4;
+        $object->is_worked = $wp->is_worked;
+        $object->is_done = $wp->is_done;
 
         $dataJSON = json_decode($wp->RequestPermit->RPDetail->data);
         $dataJSON = json_decode($dataJSON);

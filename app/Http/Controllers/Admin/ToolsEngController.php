@@ -38,7 +38,7 @@ class ToolsEngController extends Controller
         $user = $connUser->where('login_user', $request->user()->email)->first();
         $wrID = $user->RoleH->work_relation_id;
 
-        if ($wrID == 9) {
+        if ($wrID == 8) {
             $connToolsHK = ConnectionDB::setConnection(new ToolsHousekeeping());
 
             $tool = $connToolsHK->find($id);
@@ -126,7 +126,7 @@ class ToolsEngController extends Controller
         $user = $connUser->where('login_user', $request->user()->email)->first();
         $wrID = $user->RoleH->work_relation_id;
 
-        if ($wrID == 9) {
+        if ($wrID == 8) {
             try {
                 DB::beginTransaction();
 
@@ -349,6 +349,7 @@ class ToolsEngController extends Controller
 
             $editQty = (int) abs($request->total_tools - $tool->total_tools);
 
+            $tool->name_tools = $request->name_tools;
             $tool->total_tools = $request->total_tools;
             $tool->current_totals = $editQty;
             $tool->save();

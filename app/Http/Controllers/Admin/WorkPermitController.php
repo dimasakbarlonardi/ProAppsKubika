@@ -315,16 +315,14 @@ class WorkPermitController extends Controller
             $system->save();
         }
 
-
         $wp->sign_approval_3 = Carbon::now();
         $wp->save();
 
         $approve = $connApprove->find(5);
-
         $dataNotif = [
-            'models' => 'WorkPermit',
+            'models' => 'paymentPermit',
             'notif_title' => $wp->no_work_permit,
-            'id_data' => $id,
+            'id_data' => $wp->CashReceipt ? $wp->CashReceipt->id : $id,
             'sender' => $approve->approval_3,
             'division_receiver' => null,
             'notif_message' => 'Work Permit diapprove, mohon melakukan pembayaran untuk proses lebih lanjut',
@@ -382,6 +380,7 @@ class WorkPermitController extends Controller
         $wp->RequestPermit->status_request = 'WORK DONE';
         $wp->RequestPermit->save();
         $wp->Ticket->status_request = 'WORK DONE';
+        $wp->is_worked = true;
         $wp->Ticket->save();
 
         $dataNotif = [
@@ -405,6 +404,7 @@ class WorkPermitController extends Controller
 
         $wp = $connWP->find($id);
         $wp->status_request = 'COMPLETE';
+        $wp->is_done = true;
         $wp->save();
         $wp->RequestPermit->status_request = 'COMPLETE';
         $wp->RequestPermit->save();

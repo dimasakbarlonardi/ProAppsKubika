@@ -38,13 +38,13 @@ class PaymentController extends Controller
                 $cr->settlement_time = $callback->getNotification()->settlement_time;
 
                 switch ($cr->transaction_type) {
-                    case ('TApproveWorkOrder'):
+                    case ('WorkOrder'):
                         $cr->WorkOrder->sign_approve_5 = 1;
                         $cr->WorkOrder->date_approve_5 = Carbon::now();
                         $cr->WorkOrder->save();
 
                         $dataNotif = [
-                            'models' => 'TApproveWorkOrder',
+                            'models' => 'MApproveWorkOrder',
                             'notif_title' => $cr->WorkOrder->no_work_order,
                             'id_data' => $cr->WorkOrder->id,
                             'sender' => $cr->WorkOrder->Ticket->Tenant->User->id_user,
@@ -57,7 +57,7 @@ class PaymentController extends Controller
                         broadcast(new HelloEvent($dataNotif));
 
                         $dataNotifTR = [
-                            'models' => 'TApproveWorkOrder',
+                            'models' => 'MApproveWorkOrder',
                             'notif_title' => $cr->WorkOrder->no_work_order,
                             'id_data' => $cr->WorkOrder->id,
                             'sender' => $cr->WorkOrder->Ticket->Tenant->User->id_user,

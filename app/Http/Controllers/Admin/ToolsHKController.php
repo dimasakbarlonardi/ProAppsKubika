@@ -80,7 +80,7 @@ class ToolsHKController extends Controller
         } elseif ($wrID == 8) {
             try {
                 // Menghubungkan ke database dan mencari alat berdasarkan ID
-                $conn = ConnectionDB::setConnection(new ToolsEngineering());
+                $conn = ConnectionDB::setConnection(new ToolsHousekeeping());
                 $tool = $conn->find($id);
                 $borrowQty = (int) $request->borrow_qty;
 
@@ -347,6 +347,7 @@ class ToolsHKController extends Controller
 
             $editQty = (int) abs($request->total_tools - $tool->total_tools);
 
+            $tool->name_tools = $request->name_tools;
             $tool->total_tools = $request->total_tools;
             $tool->current_totals = $editQty;
             $tool->save();

@@ -88,11 +88,11 @@
                 @csrf
                 <div class="modal-body p-0">
                     <div class="rounded-top-lg py-3 ps-4 pe-6 bg-light">
-                        <h4 class="mb-4" id="modalExampleDemoLabel">Upload Excel File </h4>
+                        <h4 class="mb-4" id="modalExampleDemoLabel">Upload Exc File </h4>
                         <div class="mb-3">
                             <input type="file" name="file_excel" class="form-control" required>
                         </div>
-                    </div>
+                    </div>else
                 </div>
                 <input type="hidden" name="id_parameter_security" value="{{ $eq->id }}">
                 <div class="modal-footer">

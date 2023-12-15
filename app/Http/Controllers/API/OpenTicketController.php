@@ -62,7 +62,7 @@ class OpenTicketController extends Controller
                 $ticket['request_type'] = 'Reservation';
             }
             if ($ticket->WorkOrder) {
-                $ticket['request_type'] = 'TApproveWorkOrder';
+                $ticket['request_type'] = 'WorkOrder';
             }
             if ($ticket->WorkPermit) {
                 $ticket['request_type'] = 'WorkPermit';
@@ -207,7 +207,7 @@ class OpenTicketController extends Controller
             $item->ticket['upload_image'] = $ticket->upload_image;
 
             if ($wo) {
-                $item->ticket['request_type'] = 'TApproveWorkOrder';
+                $item->ticket['request_type'] = 'WorkOrder';
                 $item->request = $wo;
             } else {
                 $wr = $connWR->where('no_tiket', $ticket->no_tiket)->first();
@@ -308,7 +308,7 @@ class OpenTicketController extends Controller
             case ('Reservation'):
                 $object = $this->ReservationInvoice($cr);
                 break;
-            case ('TApproveWorkOrder'):
+            case ('WorkOrder'):
                 $object = $this->WorkOrderInvoice($cr);
                 break;
             case ('WorkPermit'):

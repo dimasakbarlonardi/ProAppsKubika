@@ -263,6 +263,7 @@ Route::prefix('admin')->group(function () {
 
         // CRUD Lantai
         Route::resource('floors', FloorController::class);
+        Route::post('import/floor', [FloorController::class, 'import'])->name('importFloor');
 
         // CRUD Hunian
         Route::resource('hunians', HunianController::class);
@@ -758,6 +759,8 @@ Route::prefix('admin')->group(function () {
         Route::get('/work-schedules', [ShiftTypeController::class, 'listWorkSchedules'])->name('listWorkSchedules');
         Route::get('/work-schedules/{id}', [ShiftTypeController::class, 'workSchedules'])->name('workSchedules');
         Route::post('/work-schedules/store/{id}', [ShiftTypeController::class, 'storeWorkSchedules'])->name('storeWorkSchedules');
+        Route::post('/work-schedules/destroy/{id}', [ShiftTypeController::class, 'destroyWT'])->name('destroyWT');
+        Route::post('/work-schedules/{id}', [ShiftTypeController::class, 'updateWT'])->name('updateWT');
 
         // --------------- Attendance ------------------
         Route::resource('requestattendance', RequestAttendanceController::class);

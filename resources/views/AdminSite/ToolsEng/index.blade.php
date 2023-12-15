@@ -157,6 +157,7 @@
                         </div>
                     </div>
                 </div>
+                
                 @endforeach
             </tbody>
         </table>
