@@ -170,7 +170,7 @@ class BillingController extends Controller
                 } else {
                     $expiry = 40;
                 }
-                dd($expiry);
+
                 $response = $client->request('POST', 'https://api.sandbox.midtrans.com/v2/charge', [
                     'body' => json_encode($payment),
                     'headers' => [

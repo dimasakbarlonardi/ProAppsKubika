@@ -59,12 +59,6 @@
                         </td>
                     </tr>
                     <tr>
-                        <th class="text-sm-end">Payment Due:</th>
-                        <td>
-                            {{ HumanDate($transaction->tgl_jt_invoice) }}
-                        </td>
-                    </tr>
-                    <tr>
                         <th class="text-sm-end">Payment Status:</th>
                         <td id="payment-status">
                             @if ($transaction->UtilityCashReceipt->transaction_status == 'PAID')
@@ -91,6 +85,75 @@
 <div class="table-responsive scrollbar mt-4 fs--1">
     <table class="table border-bottom">
         <tbody>
+            @foreach ($transaction->UtilityCashReceipt->PreviousUtilityBill($transaction->periode_bulan, $transaction->periode_tahun) as $bill)
+                <tr class="alert alert-success my-3">
+                    <td class="align-middle">
+                        <h6 class="mb-0 text-nowrap">Tagihan bulan
+                            {{ $bill->MonthlyARTenant->periode_bulan }},
+                            {{ $bill->MonthlyARTenant->periode_tahun }}
+                        </h6>
+                    </td>
+                    <td class="align-middle">
+                    </td>
+                    <td colspan="6"></td>
+                </tr>
+                <tr>
+                    <td class="align-middle">
+                        <h6 class="mb-3 text-nowrap">Tagihan Utility</h6>
+                        <p class="mb-0">Listrik</p>
+                        <hr>
+                        <p class="mb-0">Air</p>
+                    </td>
+                    <td class="align-middle">
+                        <h6 class="mb-3 text-nowrap">Previous Usage</h6>
+                        <p class="mb-0">
+                            {{ $bill->MonthlyARTenant->MonthlyUtility->ElectricUUS->nomor_listrik_awal }} W
+                        </p>
+                        <hr>
+                        <p class="mb-0">
+                            {{ $bill->MonthlyARTenant->MonthlyUtility->WaterUUS->nomor_air_awal }}
+                            m<sup>3</sup>
+                        </p>
+                    </td>
+                    <td class="align-middle">
+                        <h6 class="mb-3 text-nowrap">Current Usage</h6>
+                        <p class="mb-0">
+                            {{ $bill->MonthlyARTenant->MonthlyUtility->ElectricUUS->nomor_listrik_akhir }} W
+                        </p>
+                        <hr>
+                        <p class="mb-0">
+                            {{ $bill->MonthlyARTenant->MonthlyUtility->WaterUUS->nomor_air_akhir }}
+                            m<sup>3</sup>
+                        </p>
+                    </td>
+                    <td class="align-middle">
+                        <h6 class="text-nowrap mb-3">Usage</h6>
+                        <span>{{ $bill->MonthlyARTenant->MonthlyUtility->ElectricUUS->usage }} W</span> <br>
+                        <hr>
+                        <span>{{ $bill->MonthlyARTenant->MonthlyUtility->WaterUUS->usage }} m<sup>3</sup></span>
+                    </td>
+                    <td class="align-middle">
+                        <h6 class="text-nowrap mb-3">Price</h6>
+                        <span>{{ DecimalRupiahRP($electric->biaya_m3) }} / KWh</span> <br>
+                        <hr>
+                        <span>{{ Rupiah($water->biaya_m3) }}</span>
+                    </td>
+                    <td class="align-middle">
+                        <h6 class="text-nowrap mb-3">PPJ <small>(%)</small></h6>
+                        <span>{{ DecimalRupiahRP($bill->MonthlyARTenant->MonthlyUtility->ElectricUUS->ppj) }}</span>
+                        <br>
+                        <hr>
+                        <span>-</span>
+                    </td>
+                    <td class="align-middle text-end">
+                        <h6 class="text-nowrap mb-3 text-end">Total</h6>
+                        <span>{{ DecimalRupiahRP($bill->MonthlyARTenant->MonthlyUtility->ElectricUUS->total) }}</span>
+                        <br>
+                        <hr>
+                        <span>{{ Rupiah($bill->MonthlyARTenant->MonthlyUtility->WaterUUS->total) }}</span>
+                    </td>
+                </tr>
+            @endforeach
             <tr class="alert alert-success my-3">
                 <td class="align-middle">
                     <h6 class="mb-0 text-nowrap">Tagihan bulan
@@ -158,6 +221,29 @@
                     <span>{{ Rupiah($transaction->MonthlyUtility->WaterUUS->total) }}</span>
                 </td>
             </tr>
+            @if ($transaction->UtilityCashReceipt->denda_bulan_sebelumnya)
+                <tr class="alert alert-danger my-3">
+                    <td class="align-middle">
+                        <h6 class="mb-0 text-nowrap">Denda Bulan Sebelumnya
+                        </h6>
+                    </td>
+                    <td class="align-middle">
+                    </td>
+                    <td colspan="6"></td>
+                </tr>
+                @foreach ($transaction->UtilityCashReceipt->PreviousUtilityBill($transaction->periode_bulan, $transaction->periode_tahun) as $bill)
+                    <tr>
+                        <td class="align-middle">
+                            <h6 class="mb-3 text-nowrap">Periode</h6>
+                            <span>Bulan {{ $bill->MonthlyARTenant->periode_bulan }} / {{ $bill->MonthlyARTenant->periode_tahun }}</span>
+                        </td>
+                        <td class="align-middle text-end" colspan="6">
+                            <h6 class="text-nowrap mb-3 text-end">Total</h6>
+                            <span>{{ DecimalRupiahRP($bill->total_denda) }}</span>
+                        </td>
+                    </tr>
+                @endforeach
+            @endif
             @if ($transaction->UtilityCashReceipt->Installment())
                 @php
                     $installment = $transaction->UtilityCashReceipt->Installment();
@@ -290,6 +376,7 @@
                         <div class="card-body bg-light">
                             <div class="d-flex justify-content-between fs--1 mb-1">
                                 <p class="mb-0">Subtotal</p>
+
                                 <span>{{ rupiah($transaction->UtilityCashReceipt->sub_total) }}</span>
                             </div>
                             <div class="d-flex justify-content-between fs--1 mb-1 text-success">
@@ -341,7 +428,7 @@
 
 <script>
     $('#cc_form_utility').css('display', 'none');
-    var subtotal = parseInt('{{ $transaction->total_tagihan_utility }}')
+    var subtotal = parseInt('{{ $transaction->UtilityCashReceipt->sub_total }}')
 
     $(".select-payment-utility-method").on('change', function() {
 

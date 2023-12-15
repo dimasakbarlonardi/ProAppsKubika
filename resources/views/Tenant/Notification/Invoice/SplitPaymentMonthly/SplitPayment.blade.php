@@ -17,7 +17,6 @@
             </button>
         </li>
 
-
         <li class="nav-item" role="presentation">
             <button class="nav-link btn-primary {{ Session::get('active') == 'member' ? 'active' : '' }} selectTypePayment"
                 data-bs-toggle="pill" data-bs-target="#pill-tab-profile" type="button" role="tab" payment-type="ipl">
@@ -25,7 +24,6 @@
                 <span class="d-none d-md-inline-block fs--1">IPL</span>
             </button>
         </li>
-
 
         <li class="nav-item" role="presentation">
             <button class="nav-link {{ Session::get('active') == 'vehicle' ? 'active' : '' }} selectTypePayment"
