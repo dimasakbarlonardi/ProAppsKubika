@@ -13,10 +13,16 @@ class Installment extends Model
 
     protected $fillable = [
         'no_invoice',
+        'installment_type',
         'periode',
         'tahun',
         'rev',
         'status',
         'amount'
     ];
+
+    public function CashReceipt()
+    {
+        return $this->hasOne(CashReceipt::class, 'no_invoice', 'no_invoice');
+    }
 }

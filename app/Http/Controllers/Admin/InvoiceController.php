@@ -112,6 +112,7 @@ class InvoiceController extends Controller
         $dataNotif = [
             'models' => 'Installment',
             'notif_title' => $cr->no_invoice,
+            'installment_type' => $cr->transaction_type,
             'id_data' => $cr->id,
             'sender' => $user->id_user,
             'division_receiver' => 2,

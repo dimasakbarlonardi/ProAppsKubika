@@ -110,12 +110,12 @@ class CashReceipt extends Model
         return $this->hasMany(Installment::class, 'no_invoice', 'no_invoice');
     }
 
-    public function Installment($bulan, $tahun)
+    public function Installment()
     {
         $connInstallment = ConnectionDB::setConnection(new Installment());
 
-        $installment = $connInstallment->where('periode', $bulan)
-            ->where('tahun', $tahun)
+        $installment = $connInstallment->where('periode', $this->MonthlyARTenant->periode_bulan)
+            ->where('tahun', $this->MonthlyARTenant->periode_tahun)
             ->first();
 
         return $installment;

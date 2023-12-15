@@ -56,9 +56,32 @@
                         <hr>
                         <div id="form-input-item">
                             <div class="row gx-card mx-0">
-                                <div class="col-8 py-3">
-                                    <label class="mb-1">Periode</label>
-                                    <input class="form-control" type="text" id="input_periode" disabled>
+                                <div class="col-4 py-3">
+                                    <label class="mb-1">Bulan</label>
+                                    <select class="form-control" name="bulan" id="input_nama_bulan">
+                                        <option value="Januari" period="01">Januari</option>
+                                        <option value="Febuari" period="02">Febuari</option>
+                                        <option value="Maret" period="03">Maret</option>
+                                        <option value="April" period="04">April</option>
+                                        <option value="Mei" period="05">Mei</option>
+                                        <option value="Juni" period="06">Juni</option>
+                                        <option value="July" period="07">July</option>
+                                        <option value="Agustus" period="08">Agustus</option>
+                                        <option value="September" period="09">September</option>
+                                        <option value="Oktober" period="10">Oktober</option>
+                                        <option value="November" period="11">November</option>
+                                        <option value="Desember" period="12">Desember</option>
+                                    </select>
+                                </div>
+                                <div class="col-4 py-3">
+                                    <label class="mb-1">Tahun</label>
+                                    <select class="form-control" tahun="bulan" id="input_periode_tahun">
+                                        <option value="2023" id="">2023</option>
+                                        <option value="2024" id="">2024</option>
+                                        <option value="2025" id="">2025</option>
+                                        <option value="2026" id="">2026</option>
+                                        <option value="2027" id="">2027</option>
+                                    </select>
                                 </div>
                                 <div class="col-4 mt-3">
                                     <label class="mb-1">Jumlah</label>
@@ -177,6 +200,7 @@
         })
 
         function IncPeriod(valuePeriod) {
+            console.log(d.getMonth(), valuePeriod);
             month = months[(d.getMonth() + valuePeriod) % months.length];
             period = months.indexOf(month) + 1;
 
@@ -196,13 +220,17 @@
             jumlahBayar = $('#jumlah_bayar').val();
             jumlahBayar = parseInt(jumlahBayar.replace(".", ""));
 
+            month = $('#input_nama_bulan').val()
+            period = $("#input_nama_bulan option:selected" ).attr('period');
+            year = $('#input_periode_tahun').val();
+
             console.log(subTotal, jumlahBayar);
 
             if (jumlahBayar > subTotal) {
                 console.log('cannot');
                 return;
             }
-
+            console.log(period, month, year);
             if (!jumlahBayar) {
                 Swal.fire(
                     'Failed!',
@@ -223,7 +251,7 @@
                 }
 
                 valuePeriod += 1;
-                IncPeriod(valuePeriod);
+                // IncPeriod(valuePeriod);
 
                 installments.push(installment);
                 detailInstallments();
