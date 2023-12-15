@@ -7,7 +7,6 @@ use App\Http\Controllers\Controller;
 use App\Imports\FloorImport;
 use Illuminate\Http\Request;
 use App\Models\Floor;
-use App\Models\Login;
 use RealRashid\SweetAlert\Facades\Alert;
 use Illuminate\Support\Facades\DB;
 use Excel;
@@ -45,6 +44,7 @@ class FloorController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+
     public function create()
     {
         return view('AdminSite.Floor.create');
@@ -56,6 +56,7 @@ class FloorController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
     public function store(Request $request)
     {
         $conn = ConnectionDB::setConnection(new Floor());
@@ -63,8 +64,10 @@ class FloorController extends Controller
         try {
             DB::beginTransaction();
 
+            $id_lantai = $this->generateUniqueFloorId();
+
             $conn->create([
-                'id_lantai' => rand(200,300 ),
+                'id_lantai' => $id_lantai,
                 'nama_lantai' => $request->nama_lantai,
             ]);
 
@@ -80,6 +83,18 @@ class FloorController extends Controller
 
             return redirect()->route('floors.index');
         }
+    }
+
+    private function generateUniqueFloorId()
+    {
+        $conn = ConnectionDB::setConnection(new Floor());
+        $id_lantai = rand(200, 300);
+
+        while ($conn->where('id_lantai', $id_lantai)->exists()) {
+            $id_lantai = rand(200, 300);
+        }
+
+        return $id_lantai;
     }
 
     /**
