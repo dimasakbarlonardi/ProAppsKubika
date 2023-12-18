@@ -287,7 +287,7 @@ class BillingController extends Controller
     function dendaTetap($perhitDenda, $transaction, $previousBills)
     {
         foreach ($previousBills as $prevBill) {
-            $prevMonthDays =  Carbon::createFromFormat('Y-m', $prevBill->periode_tahun . '-' . $prevBill->periode_bulan)->format('Y-m');
+            $prevMonthDays =  Carbon::createFromFormat('Y-m', $prevBill->MonthlyARTenant->periode_tahun . '-' . $prevBill->MonthlyARTenant->periode_bulan)->format('Y-m');
             $prevMonthDays = Carbon::parse($prevMonthDays)->daysInMonth;
 
             if ($perhitDenda->denda_flat_procetage != 0) {
