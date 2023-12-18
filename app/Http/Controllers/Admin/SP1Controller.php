@@ -14,7 +14,7 @@ class SP1Controller extends Controller
     {
         $ar = ConnectionDB::setConnection(new MonthlyArTenant());
 
-        $data['invoices'] = $ar->where('sp1', true)->where('tgl_bayar_invoice', null)->get();
+        $data['invoices'] = $ar->where('sp1', true)->get();
 
         return view('AdminSite.SP1.index', $data);
     }

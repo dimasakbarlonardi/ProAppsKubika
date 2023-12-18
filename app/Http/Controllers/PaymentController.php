@@ -163,7 +163,7 @@ class PaymentController extends Controller
             broadcast(new PaymentEvent($dataPayment));
 
             if ($callback->isExpire()) {
-                $cr->transaction_status = 'EXPIRED';
+                $cr->transaction_status = 'PENDING';
             }
 
             if ($callback->isCancelled()) {
