@@ -17,10 +17,23 @@ class FloorImport implements ToModel, WithStartRow
     public function model(array $row)
     {
         $connFloor = ConnectionDB::setConnection(new Floor());
-
-        $connFloor->id_lantai = rand(100, 200);
+        
+        $id_lantai = $this->generateUniqueFloorId();
+        $connFloor->id_lantai = $id_lantai;
         $connFloor->nama_lantai = $row[1];
 
         return $connFloor;
+    }
+
+    private function generateUniqueFloorId()
+    {
+        $connFloor = ConnectionDB::setConnection(new Floor());
+        $id_lantai = rand(200, 300);
+
+        while ( $connFloor->where('id_lantai', $id_lantai)->exists()) {
+            $id_lantai = rand(200, 300);
+        }
+
+        return $id_lantai;
     }
 }

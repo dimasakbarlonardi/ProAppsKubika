@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
 use App\Models\Login;
 use App\Models\ToolHistory;
+use App\Models\ToolsEngineering;
 use App\Models\User;
 
 class ToolsSecurityController extends Controller
@@ -86,10 +87,10 @@ class ToolsSecurityController extends Controller
                 dd($e);
                 return redirect()->back()->with('error', 'An error occurred while borrowing the tool.');
             }
-        } elseif ($wrID == 10) {
+        } elseif ($wrID == 8) {
             try {
                 // Menghubungkan ke database dan mencari alat berdasarkan ID
-                $conn = ConnectionDB::setConnection(new ToolsSecurity());
+                $conn = ConnectionDB::setConnection(new ToolsEngineering());
                 $tool = $conn->find($id);
                 $borrowQty = (int) $request->borrow_qty;
 
@@ -166,7 +167,7 @@ class ToolsSecurityController extends Controller
                 $tool->save();
 
                 $createHistory = $connToolHistory->create([
-                    'type' => 'HK',
+                    'type' => 'SEC',
                     'id_data' => $id,
                     'qty' => $returnQty,
                     'action' => 'Returning',
@@ -200,8 +201,8 @@ class ToolsSecurityController extends Controller
                 Alert::error('error', 'Invalid borrow quantity');
                 return redirect()->back();
             }
-        } elseif ($wrID == 10) {
-            $conn = ConnectionDB::setConnection(new ToolsSecurity());
+        } elseif ($wrID == 8) {
+            $conn = ConnectionDB::setConnection(new ToolsEngineering());
             $tool = $conn->find($id);
 
             $returnQty = (int) $request->return_qty;
