@@ -415,8 +415,6 @@ class WorkPermitController extends Controller
         $wp->Ticket->status_request = 'COMPLETE';
         $wp->Ticket->save();
 
-        dd($wp->is_done = true);
-
         $dataNotif = [
             'models' => 'WorkPermit',
             'notif_title' => $wp->no_work_permit,
