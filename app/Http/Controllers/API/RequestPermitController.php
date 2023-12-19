@@ -312,6 +312,42 @@ class RequestPermitController extends Controller
         );
     }
 
+    public function workDoneWP(Request $request, $id)
+    {
+        $connWP = ConnectionDB::setConnection(new WorkPermit());
+        $connUser = ConnectionDB::setConnection(new User());
+
+        $request = Request();
+
+        $user = $connUser->where('login_user', $request->user()->email)->first();
+
+        $wp = $connWP->find($id);
+        $wp->status_request = 'WORK DONE';
+        $wp->is_worked = 1;
+        $wp->save();
+
+        $wp->RequestPermit->status_request = 'WORK DONE';
+        $wp->RequestPermit->save();
+
+        $wp->Ticket->status_request = 'WORK DONE';
+        $wp->Ticket->save();
+
+        $dataNotif = [
+            'models' => 'WorkPermit',
+            'notif_title' => $wp->no_work_permit,
+            'id_data' => $id,
+            'sender' => $user->id_user,
+            'division_receiver' => null,
+            'notif_message' => 'Work Permit selesai dikerjakan, mohon periksa kembali. Terima kasih..',
+            'receiver' => $wp->Ticket->Tenant->User->id_user,
+        ];
+
+        broadcast(new HelloEvent($dataNotif));
+
+        return response()->json(['status' => 'ok']);
+    }
+
+
     public function done($id)
     {
         $connWP = ConnectionDB::setConnection(new WorkPermit());

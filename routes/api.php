@@ -79,6 +79,7 @@ Route::prefix('v1')->group(function () {
 
         Route::get('track-ticket/{id}', [MainFormController::class, 'trackTicket']);
 
+        // Work Permit
         Route::get('/permit/jenis-pekerjaan', [RequestPermitController::class, 'jenisPekerjaan']);
         Route::post('/permit', [RequestPermitController::class, 'store']);
         Route::get('/permit/{id}', [RequestPermitController::class, 'show']);
@@ -86,6 +87,7 @@ Route::prefix('v1')->group(function () {
         Route::post('/permit/approve2/{id}', [RequestPermitController::class, 'approve2']);
         Route::post('/permit/approve4/{id}', [RequestPermitController::class, 'approve4']);
         Route::post('/permit/done/{id}', [RequestPermitController::class, 'done']);
+        Route::post('/work-permit/workDoneWP/{id}', [RequestPermitController::class, 'workDoneWP']);
         Route::post('/permit/done-deposit/{id}', [RequestPermitController::class, 'doneDeposit']);
         Route::post('/permit/complete/{id}', [RequestPermitController::class, 'complete']);
 
