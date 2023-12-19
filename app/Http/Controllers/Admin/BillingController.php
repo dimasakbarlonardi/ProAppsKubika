@@ -119,11 +119,6 @@ class BillingController extends Controller
             $createIPLbill->save();
             $createUtilityBill->save();
 
-            $validate['elecUSS']->no_refrensi = $createUtilityBill->id;
-            $validate['elecUSS']->save();
-            $validate['waterUSS']->no_refrensi = $createUtilityBill->id;
-            $validate['waterUSS']->save();
-
             $createMonthlyTenant->id_monthly_utility = $createUtilityBill->id;
             $createMonthlyTenant->id_monthly_ipl = $createIPLbill->id;
             $createMonthlyTenant->save();
@@ -203,21 +198,23 @@ class BillingController extends Controller
         $connOtherBill = ConnectionDB::setConnection(new OtherBill());
 
         $otherBills = $connOtherBill->where('is_active', 1)->get();
-
         $bills = [];
+
         $otherBillsAmount = 0;
+
         foreach ($otherBills as $bill) {
             if ($bill->is_require_unit_volume) {
-                $otherBillsAmount = (int) $bill->bill_price * $createUtilityBill->Unit->luas_unit;
+                $billAmount = (int) $bill->bill_price * $createUtilityBill->Unit->luas_unit;
             } else {
-                $otherBillsAmount = (int) $bill->bill_price;
+                $billAmount = (int) $bill->bill_price;
             }
             $addBill = [
                 'bill_name' => $bill->bill_name,
-                'bill_price' => $otherBillsAmount,
+                'bill_price' => $billAmount,
                 'is_require_unit_volume' => $bill->is_require_unit_volume
             ];
             $bills[] = $addBill;
+            $otherBillsAmount += $billAmount;
         }
 
         $connMonthlyTenant->biaya_lain = json_encode($bills);
@@ -236,16 +233,20 @@ class BillingController extends Controller
 
     function perhitDenda($transaction, $previousBills)
     {
-        $connDenda = ConnectionDB::setConnection(new JenisDenda());
+        if (count($previousBills) > 0) {
+            $connDenda = ConnectionDB::setConnection(new JenisDenda());
 
-        $perhitDenda = $connDenda->where('is_active', 1)->first();
+            $perhitDenda = $connDenda->where('is_active', 1)->first();
 
-        if ($perhitDenda->id_jenis_denda == 3) {
-            $transaction = $this->dendaRolling($perhitDenda, $transaction, $previousBills);
-        } elseif ($perhitDenda->id_jenis_denda == 2) {
-            $transaction = $this->dendaTetap($perhitDenda, $transaction, $previousBills);
-        } elseif ($perhitDenda->id_jenis_denda == 1) {
-            $transaction = $this->dendaAkumulasi($perhitDenda, $transaction, $previousBills);
+            if ($perhitDenda->id_jenis_denda == 3) {
+                $transaction = $this->dendaRolling($perhitDenda, $transaction, $previousBills);
+            } elseif ($perhitDenda->id_jenis_denda == 2) {
+                $transaction = $this->dendaTetap($perhitDenda, $transaction, $previousBills);
+            } elseif ($perhitDenda->id_jenis_denda == 1) {
+                $transaction = $this->dendaAkumulasi($perhitDenda, $transaction, $previousBills);
+            }
+
+            $transaction->sub_total = $transaction->amount + $previousBills->reverse()->values()->sum('amount') + $transaction->denda_bulan_sebelumnya;
         }
 
         return $transaction;
@@ -253,6 +254,8 @@ class BillingController extends Controller
 
     function dendaRolling($perhitDenda, $transaction, $previousBills)
     {
+        dd('rolling');
+
         $total_denda = 0;
 
         foreach ($previousBills as $prevBill) {
@@ -265,6 +268,7 @@ class BillingController extends Controller
                 $jml_hari_jt = $now->diff($jt)->format("%m");
             }
 
+            if ($transaction->transaction_type = 'MonthlyOtherBillTenant') { } elseif ($transaction->transaction_type = 'MonthlyUtilityTenant') { } elseif ($transaction->transaction_type = 'MonthlyIPLTenant') { }
             if ($perhitDenda->denda_flat_procetage != 0) {
                 $denda_bulan_sebelumnya = ((($perhitDenda->denda_flat_procetage / 100) * ($prevBill->total_tagihan_ipl + $prevBill->total_tagihan_utility)) * $jml_hari_jt);
             } else {
@@ -286,6 +290,8 @@ class BillingController extends Controller
 
     function dendaTetap($perhitDenda, $transaction, $previousBills)
     {
+        dd('tetap');
+
         foreach ($previousBills as $prevBill) {
             $prevMonthDays =  Carbon::createFromFormat('Y-m', $prevBill->MonthlyARTenant->periode_tahun . '-' . $prevBill->MonthlyARTenant->periode_bulan)->format('Y-m');
             $prevMonthDays = Carbon::parse($prevMonthDays)->daysInMonth;
@@ -309,23 +315,38 @@ class BillingController extends Controller
 
     function dendaAkumulasi($perhitDenda, $transaction, $previousBills)
     {
-        foreach ($previousBills as $prevBill) {
+        foreach ($previousBills->reverse()->values() as $key => $prevBill) {
             $prevMonthDays =  Carbon::createFromFormat('Y-m', $prevBill->MonthlyARTenant->periode_tahun . '-' . $prevBill->MonthlyARTenant->periode_bulan)->format('Y-m');
             $prevMonthDays = Carbon::parse($prevMonthDays)->daysInMonth;
 
-            if ($perhitDenda->denda_flat_procetage != 0) {
-                $denda_bulan_sebelumnya = ((($perhitDenda->denda_flat_procetage / 100) * ($prevBill->MonthlyARTenant->total_tagihan_ipl + $prevBill->MonthlyARTenant->total_tagihan_utility)) * $prevMonthDays);
-            } else {
-                $denda_bulan_sebelumnya = $prevMonthDays * $perhitDenda->denda_flat_amount;
+            if ($transaction->transaction_type == 'MonthlyOtherBillTenant') {
+                $otherBills = json_decode($prevBill->MonthlyARTenant->biaya_lain);
+                $amount = 0;
+                foreach ($otherBills as $bill) {
+                    $amount += $bill->bill_price;
+                }
+            } elseif ($transaction->transaction_type == 'MonthlyUtilityTenant') {
+                $amount = $prevBill->MonthlyARTenant->total_tagihan_utility;
+            } elseif ($transaction->transaction_type == 'MonthlyIPLTenant') {
+                $amount = $prevBill->MonthlyARTenant->total_tagihan_ipl;
             }
 
-            $prevBill->total_denda += $denda_bulan_sebelumnya;
-            $prevBill->denda_bulan_sebelumnya += $prevBill->denda_bulan_sebelumnya;
-            $prevBill->jml_hari_jt += $prevMonthDays;
-            $prevBill->save();
+            if ($perhitDenda->denda_flat_procetage != 0) {
+                $denda = ($perhitDenda->denda_flat_procetage / 100) * $amount;
+            } else {
+                $denda = $perhitDenda->denda_flat_amount + $prevBill->total_denda;
+            }
 
-            $transaction->denda_bulan_sebelumnya = $denda_bulan_sebelumnya + $prevBill->MonthlyARTenant->denda_bulan_sebelumnya;
-            $transaction->sub_total += $transaction->denda_bulan_sebelumnya + $prevBill->sub_total;
+            $transaction->interest = $denda;
+            $prevBill->interest = $transaction->interest;
+
+            $prevBill->total_denda = $denda * ($key + 1);
+            $prevBill->denda_bulan_sebelumnya = $prevBill->denda_bulan_sebelumnya > 0 ? $prevBill->denda_bulan_sebelumnya + $prevBill->total_denda : 0;
+            $prevBill->jml_hari_jt += $prevMonthDays;
+
+            $transaction->denda_bulan_sebelumnya += $prevBill->total_denda;
+
+            $prevBill->save();
         }
 
         return $transaction;
@@ -432,6 +453,7 @@ class BillingController extends Controller
             $createTransaction->no_invoice = $mt->no_monthly_invoice;
             $createTransaction->no_draft_cr = $no_cr;
             $createTransaction->ket_pembayaran = 'INV/' . $user->id_user . '/' . $mt->Unit->nama_unit;
+            $createTransaction->amount = $subtotal;
             $createTransaction->sub_total = $subtotal;
             $createTransaction->transaction_status = 'PENDING';
             $createTransaction->id_user = $user->id_user;
