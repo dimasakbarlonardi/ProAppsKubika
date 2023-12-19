@@ -19,6 +19,11 @@ class SP1Controller extends Controller
         return view('AdminSite.SP1.index', $data);
     }
 
+    public function template()
+    {
+        return view('AdminSite.SP.template');
+    }
+
     public function blast(Request $request)
     {
         $connAR = ConnectionDB::setConnection(new MonthlyArTenant());
@@ -26,6 +31,7 @@ class SP1Controller extends Controller
         foreach ($request->IDs as $id) {
             $ar = $connAR->find($id);
             $ar = $ar->LastBill();
+
             if (!$ar->NotifSP1($ar->Unit->nama_unit)) {
                 $dataNotif = [
                     'models' => 'SP1',

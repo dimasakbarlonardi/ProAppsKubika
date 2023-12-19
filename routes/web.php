@@ -688,6 +688,7 @@ Route::prefix('admin')->group(function () {
 
 
         // ======================= SP ==========================
+        Route::get('/template-sp', [SP1Controller::class, 'template'])->name('templateSP');
         Route::resource('sp1', SP1Controller::class);
         Route::post('blastSP1', [SP1Controller::class, 'blast']);
         // ======================= End SP ==========================
