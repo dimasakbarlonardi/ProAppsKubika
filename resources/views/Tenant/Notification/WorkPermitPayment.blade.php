@@ -25,9 +25,9 @@
                 </div>
                 <div class="col text-sm-end mt-3 mt-sm-0">
                     <h2 class="mb-3">Invoice</h2>
-                    <h5>{{ $setting->company_name ? $setting->company_name : 'Proapps' }}</h5>
+                    <h5>{{ $transaction->company_name ? $setting->company_name : 'Proapps' }}</h5>
                     <p class="fs--1 mt-2">
-                        {!! $setting->company_address !!}
+                        {!! $transaction->company_address !!}
                     </p>
                 </div>
                 <div class="col-12">
