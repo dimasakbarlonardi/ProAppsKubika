@@ -423,10 +423,12 @@ class DashboardController extends Controller
     public function handleWPPayment($connApprove, $getNotif)
     {
         $model = new CashReceipt();
+        $connSetting = ConnectionDB::setConnection(new CompanySetting());
         $getData = ConnectionDB::setConnection($model);
         $getData = $getData->find($getNotif->id_data);
         $data['transaction'] = $getData->where('id', $getData->id)->first();
-        $data['type'] = 'wo';
+        $data['type'] = 'wp';
+        $data['setting'] = $connSetting->find(1);
 
         return $data;
         
