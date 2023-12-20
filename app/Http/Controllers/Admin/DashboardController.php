@@ -234,6 +234,12 @@ class DashboardController extends Controller
                 return view('Tenant.Notification.WorkPermit', $data);
                 break;
 
+            case ('paymentPermit'):
+                $data = $this->handleWPPayment($connApprove, $getNotif);
+                $data['user'] = $user;
+                return view('Tenant.Notification.WorkPermitPayment', $data);
+                break;
+
             case ('BAPP'):
                 $data = $this->handleBAPP($connApprove, $getNotif);
                 $data['user'] = $user;
@@ -407,6 +413,18 @@ class DashboardController extends Controller
         $data['materials'] = $dataJSON->materials;
 
         return $data;
+    }
+
+    public function handleWPPayment($connApprove, $getNotif)
+    {
+        $model = new CashReceipt();
+        $getData = ConnectionDB::setConnection($model);
+        $getData = $getData->find($getNotif->id_data);
+        $data['transaction'] = $getData->where('id', $getData->id)->first();
+        $data['type'] = 'wo';
+
+        return $data;
+        
     }
 
     public function handleIzinKerja($getNotif)

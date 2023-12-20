@@ -303,7 +303,7 @@ class WorkPermitController extends Controller
             $createTransaction->sub_total = $wp->jumlah_deposit + $wp->jumlah_supervisi;
             $createTransaction->transaction_status = 'PENDING';
             $createTransaction->id_user = $wp->Ticket->Tenant->User->id_user;
-            $createTransaction->transaction_type = 'WorkPermit';
+            $createTransaction->transaction_type = 'paymentPermit';
 
             $wp->Ticket->no_invoice = $no_invoice;
             $wp->Ticket->save();
