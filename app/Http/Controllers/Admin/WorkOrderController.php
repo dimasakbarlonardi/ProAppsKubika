@@ -376,7 +376,7 @@ class WorkOrderController extends Controller
             broadcast(new HelloEvent($dataNotif));
         } else {
             $createTransaction = $this->createTransaction($wo);
-            $wo->Ticket->np_invoice = $createTransaction->no_invoice;
+            $wo->Ticket->no_invoice = $createTransaction->no_invoice;
             $dataNotif = [
                 'models' => 'PaymentWO',
                 'notif_title' => $wo->no_work_order,

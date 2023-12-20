@@ -156,7 +156,7 @@
                             <option {{ $wp->id_bayarnon == 0 ? 'selected' : '' }} value="0">No</option>
                         </select>
                     </div>
-                    <div class="mb-4 mt-n2"><label class="mb-1">Jumlah Supervisi</label>
+                    <div class="mb-4 mt-n2"><label class="mb-1">Jumlah Supervisi Work Permit</label>
                         <input type="text" value="{{ Rupiah($wp->jumlah_supervisi) }}" class="form-control"
                             name="jumlah_deposit" required disabled>
                     </div>

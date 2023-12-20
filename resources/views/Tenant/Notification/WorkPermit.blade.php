@@ -254,7 +254,7 @@
             @if (
                 $permit->CashReceipt &&
                     $permit->Ticket->Tenant->User->id_user == Request::session()->get('user_id') &&
-                    !$permit->CashReceipt->payment_type)
+                    !$permit->CashReceipt->payment_type) 
                 <form class="mt-5" action="{{ route('generatePaymentPO', $permit->CashReceipt->id) }}" method="post"
                     id="generatePaymentPO">
                     @csrf
