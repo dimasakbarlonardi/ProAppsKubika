@@ -28,51 +28,43 @@
                     Jatuh Tempo
                 </td>
                 <td class="align-middle text-center">
-                    Jumlah Belum Dibayar
-                </td>
-                <td class="align-middle text-center">
                     Over Due (Hari)
                 </td>
                 <td class="align-middle text-center">
                     Jumlah Penalti
                 </td>
                 <td class="align-middle text-center">
-                    Total
+                    Jumlah Belum Dibayar
                 </td>
             </tr>
-            @foreach ($ar->PreviousMonthBillSP($company->is_aplit_ar) as $key => $prevBill)
-                @if ($prevBill->sp1)
-                    @php
-                        $key += 1;
-                    @endphp
-                    <tr>
-                        <td class="align-middle">
-                            <h6 class="mb-3 text-nowrap">{{ $key }}</h6>
-                        </td>
-                        <td class="align-middle text-center">
-                            Monthly Billing <br> (Utility & Service Charge {{ $company->is_split_ar ? '& Other Bill' : '' }})
-                        </td>
-                        <td class="align-middle text-center">
-                            {{ HumanDate($prevBill->created_at) }}
-                        </td>
-                        <td class="align-middle text-center">
-                            {{ HumanDate($prevBill->CashReceipts[0]->tgl_jt_invoice) }}
-                        </td>
-                        <td class="align-middle text-center">
-                            {{ Rupiah($prevBill->total_tagihan_ipl + $prevBill->total_tagihan_utility) }}
-                        </td>
-                        <td class="align-middle text-center">
-                            {{ $prevBill->jml_hari_jt }}
-                            {{ $prevBill->jml_hari_jt ? 'Hari' : '-' }}
-                        </td>
-                        <td class="align-middle text-center">
-                            {{ $prevBill->total_denda ? Rupiah($prevBill->total_denda) : '-' }}
-                        </td>
-                        <td class="align-middle text-center">
-                            {{ Rupiah($prevBill->CashReceipts->sum('sub_total')) }}
-                        </td>
-                    </tr>
-                @endif
+            @foreach ($ar->PreviousMonthBillSP($ar->biaya_lain) as $key => $prevBill)
+                @php
+                    $key += 1;
+                @endphp
+                <tr>
+                    <td class="align-middle">
+                        <h6 class="mb-3 text-nowrap">{{ $key }}</h6>
+                    </td>
+                    <td class="align-middle text-center">
+                        Monthly Billing <br> (Utility & Service Charge
+                        {{ $ar->biaya_lain ? '& Other Bill' : '' }})
+                    </td>
+                    <td class="align-middle text-center">
+                        {{ HumanDate($prevBill->created_at) }}
+                    </td>
+                    <td class="align-middle text-center">
+                        {{ HumanDate($prevBill->CashReceipts[0]->tgl_jt_invoice) }}
+                    </td>
+                    <td class="align-middle text-center">
+                        {{ $prevBill->CashReceipt->jml_hari_jt ? $prevBill->CashReceipt->jml_hari_jt . ' Hari' : '-' }}
+                    </td>
+                    <td class="align-middle text-center">
+                        {{ $prevBill->CashReceipts->sum('total_denda') ? Rupiah($prevBill->CashReceipts->sum('total_denda')) : '-' }}
+                    </td>
+                    <td class="align-middle text-center">
+                        {{ Rupiah($prevBill->CashReceipts->sum('sub_total')) }}
+                    </td>
+                </tr>
             @endforeach
         </tbody>
     </table>

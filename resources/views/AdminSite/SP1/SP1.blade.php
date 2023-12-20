@@ -11,7 +11,7 @@
                                 <img src="{{ asset($company->company_logo) }}" alt="invoice" width="150" />
                             </div>
                             <div class="col text-sm-end mt-3 mt-sm-0">
-                                <h2 class="mb-3">Surat Peringatan 1</h2>
+                                <h2 class="mb-3">{{ $notif->notif_message }}</h2>
                                 <h5>{{ $company->company_name }}</h5>
                                 <p class="fs--1 mb-0">
                                     {!! $company->company_address !!}
@@ -43,15 +43,36 @@
                             <ol>
                                 <li class="my-2">
                                     Keterlambatan pembayaran dihitung sejak tanggal jatuh tempo pembayaran tagihan dan akan
-                                    dikenakan denda sebesar … (persentase/nilai tetap) dari seluruh tagihan kumulatif per
+                                    dikenakan denda sebesar
+                                    <b>{{ $denda->denda_flat_procetage ? RupiahNumber($denda->denda_flat_procetage) . '%' : Rupiah($denda->denda_flat_amount) }}</b>
+                                    dari seluruh tagihan kumulatif per
                                     bulan.
                                 </li>
                                 <li class="my-2">
                                     Apabila lewat dari tanggal jatuh tempo tagihan belum ada pembayaran maka kami akan
                                     memberikan
-                                    peringatan sebanyak 3 (tiga) kali peringatan, masing-masing peringatan dengan tenggang
-                                    waktu …
-                                    hari kalender.
+                                    peringatan sebanyak 4 (empat) kali peringatan, masing-masing peringatan dengan tenggang
+                                    waktu seperti berikut : <br>
+                                    <table>
+                                        <thead>
+                                            <th>Item</th>
+                                            <th>Tenggat hari kalender</th>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($reminders as $reminder)
+                                                @if ($reminder->id_reminder_letter != 1)
+                                                    <tr>
+                                                        <td>
+                                                            {{ $reminder->reminder_letter }}
+                                                        </td>
+                                                        <td>
+                                                            {{ $reminder->durasi_reminder_letter }} Hari setelah jatuh tempo
+                                                        </td>
+                                                    </tr>
+                                                @endif
+                                            @endforeach
+                                        </tbody>
+                                    </table>
                                 </li>
                                 <li class="my-2">
                                     Bila sampai dengan Surat Peringatan ketiga tagihan belum dibayar maka akan dikeluarkan
@@ -59,7 +80,13 @@
                                     Pemberitahuan terakhir mengenai penghentian sementara supply listrik dan air dan untuk
                                     mengaktifkan kembali supply listrik dan air maka pembayaran total tagihan berjalan,
                                     denda dan
-                                    biaya penyambungan kembali sebesar Rp. … harus sudah dilunasi.
+                                    biaya penyambungan kembali sebesar
+                                    @if (!$company->is_split_ar)
+                                        {{-- @include('AdminSite.SP1.nonsplit') --}}
+                                    @else
+                                        <b>{{ Rupiah($ar->PreviousMonthBillSP($ar->biaya_lain)->reverse()->values()[0]->CashReceipts->sum('sub_total')) }}</b>
+                                    @endif
+                                    harus sudah dilunasi.
                                 </li>
                             </ol>
                             Untuk informasi lebih lanjut mengenai tagihan di atas dapat menghubungi Building Management
@@ -67,7 +94,11 @@
 
                             Demikian kami sampaikan atas perhatian dan kerjasamanya kami ucapkan terima kasih.
                         </div>
-                        <div class="row justify-content-end">
+                        <div class="p-2">
+                            <img src="{{ url('/assets/img/icons/spot-illustrations/proapps.png') }}" alt="" width="80">
+                            <span class="small text-muted">*Surat Pemberitahuan ini diterbitkan secara digital</span>
+                        </div>
+                        {{-- <div class="row justify-content-end">
                             <div class="col-auto">
                                 <table class="table table-sm table-borderless fs--1">
                                     <tr class="">
@@ -86,7 +117,7 @@
                                     </tr>
                                 </table>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
                 <footer class="footer">
