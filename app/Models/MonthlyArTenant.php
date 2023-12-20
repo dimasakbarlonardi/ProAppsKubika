@@ -134,7 +134,7 @@ class MonthlyArTenant extends Model
     //     return $prevMonthBill;
     // }
 
-    public function PreviousMonthBillSP($is_split)
+    public function PreviousMonthBillSP($biaya_lain)
     {
         $prevMonthBill = ConnectionDB::setConnection(new MonthlyArTenant())
             ->where('periode_bulan', '<', $this->periode_bulan)
@@ -144,7 +144,7 @@ class MonthlyArTenant extends Model
             ->orWhere('tgl_bayar_ipl', null)
             ->where('id_unit', $this->id_unit);
 
-        if ($is_split == 1) {
+        if ($biaya_lain == 1) {
             $prevMonthBill = $prevMonthBill->orWhere('tgl_bayar_lainnya', null);
         }
 
@@ -194,7 +194,40 @@ class MonthlyArTenant extends Model
     {
         $connNotif = ConnectionDB::setConnection(new Notifikasi());
 
-        $notif = $connNotif->where('models', 'SP1')
+        $notif = $connNotif->where('notif_message', 'Surat Peringatan 1')
+            ->where('notif_title', $title)
+            ->first();
+
+        return $notif;
+    }
+
+    public function NotifSP2($title)
+    {
+        $connNotif = ConnectionDB::setConnection(new Notifikasi());
+
+        $notif = $connNotif->where('notif_message', 'Surat Peringatan 2')
+            ->where('notif_title', $title)
+            ->first();
+
+        return $notif;
+    }
+
+    public function NotifSP3($title)
+    {
+        $connNotif = ConnectionDB::setConnection(new Notifikasi());
+
+        $notif = $connNotif->where('notif_message', 'Surat Peringatan 3')
+            ->where('notif_title', $title)
+            ->first();
+
+        return $notif;
+    }
+
+    public function NotifSPFinal($title)
+    {
+        $connNotif = ConnectionDB::setConnection(new Notifikasi());
+
+        $notif = $connNotif->where('notif_message', 'Surat Pemberitahuan Terakhir')
             ->where('notif_title', $title)
             ->first();
 
