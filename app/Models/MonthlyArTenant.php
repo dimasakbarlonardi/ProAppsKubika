@@ -52,6 +52,18 @@ class MonthlyArTenant extends Model
         return $this->hasMany(CashReceipt::class, 'id_monthly_ar_tenant', 'id_monthly_ar_tenant');
     }
 
+    public function CashReceiptsSP1()
+    {
+        $cr = ConnectionDB::setConnection(new CashReceipt())
+            ->whereHas('MonthlyARTenant', function ($q) {
+                $q->where('sp1', '!=', null);
+            })
+            ->where('id_unit', $this->id_unit)
+            ->get();
+
+        return $cr;
+    }
+
     public function SplitCashReceipt($utility, $ipl)
     {
         $cr = ConnectionDB::setConnection(new CashReceipt());
@@ -122,6 +134,40 @@ class MonthlyArTenant extends Model
     //     return $prevMonthBill;
     // }
 
+    public function PreviousMonthBillSP($biaya_lain)
+    {
+        $prevMonthBill = ConnectionDB::setConnection(new MonthlyArTenant())
+            ->where('periode_bulan', '<', $this->periode_bulan)
+            ->where('periode_tahun', $this->periode_tahun)
+            ->with(['MonthlyUtility.ElectricUUS', 'MonthlyUtility.WaterUUS'])
+            ->where('tgl_bayar_utility', null)
+            ->orWhere('tgl_bayar_ipl', null)
+            ->where('id_unit', $this->id_unit);
+
+        if ($biaya_lain == 1) {
+            $prevMonthBill = $prevMonthBill->orWhere('tgl_bayar_lainnya', null);
+        }
+
+        $prevMonthBill = $prevMonthBill->get();
+
+        return $prevMonthBill;
+    }
+
+    public function PreviousMonthBillbyMonth($month, $year)
+    {
+        $prevMonthBill = ConnectionDB::setConnection(new CashReceipt())
+            ->whereHas('MonthlyARTenant', function ($q) use ($month, $year) {
+                $q->where('periode_bulan', $month);
+                $q->where('periode_tahun', $year);
+            })
+            ->where('id_unit', $this->id_unit)
+            ->orderBy('id', 'DESC')
+            ->first();
+
+        // dd($prevMonthBill);
+        return $prevMonthBill;
+    }
+
     // public function SubTotal()
     // {
     //     $prevMonthBill = ConnectionDB::setConnection(new MonthlyArTenant())
@@ -148,7 +194,40 @@ class MonthlyArTenant extends Model
     {
         $connNotif = ConnectionDB::setConnection(new Notifikasi());
 
-        $notif = $connNotif->where('models', 'SP1')
+        $notif = $connNotif->where('notif_message', 'Surat Peringatan 1')
+            ->where('notif_title', $title)
+            ->first();
+
+        return $notif;
+    }
+
+    public function NotifSP2($title)
+    {
+        $connNotif = ConnectionDB::setConnection(new Notifikasi());
+
+        $notif = $connNotif->where('notif_message', 'Surat Peringatan 2')
+            ->where('notif_title', $title)
+            ->first();
+
+        return $notif;
+    }
+
+    public function NotifSP3($title)
+    {
+        $connNotif = ConnectionDB::setConnection(new Notifikasi());
+
+        $notif = $connNotif->where('notif_message', 'Surat Peringatan 3')
+            ->where('notif_title', $title)
+            ->first();
+
+        return $notif;
+    }
+
+    public function NotifSPFinal($title)
+    {
+        $connNotif = ConnectionDB::setConnection(new Notifikasi());
+
+        $notif = $connNotif->where('notif_message', 'Surat Pemberitahuan Terakhir')
             ->where('notif_title', $title)
             ->first();
 
@@ -158,7 +237,9 @@ class MonthlyArTenant extends Model
     public function LastBill()
     {
         $lastBill = ConnectionDB::setConnection(new MonthlyArTenant())
-            ->where('tgl_bayar_invoice', null)
+            ->where('tgl_bayar_utility', null)
+            ->orWhere('tgl_bayar_ipl', null)
+            ->orWhere('tgl_bayar_lainnya', null)
             ->where('id_unit', $this->id_unit)
             ->orderBy('id_monthly_ar_tenant', 'DESC')
             ->first();

@@ -112,7 +112,7 @@ use App\Http\Controllers\Admin\RequestTypeController;
 use App\Http\Controllers\Admin\ScheduleMeetingController;
 use App\Http\Controllers\Admin\ScheduleSecurityController;
 use App\Http\Controllers\Admin\ShiftTypeController;
-use App\Http\Controllers\Admin\SP1Controller;
+use App\Http\Controllers\Admin\SPController;
 use App\Http\Controllers\Admin\ToolsEngController;
 use App\Http\Controllers\Admin\ToolsHKController;
 use App\Http\Controllers\Admin\ToolsSecurityController;
@@ -688,8 +688,15 @@ Route::prefix('admin')->group(function () {
 
 
         // ======================= SP ==========================
-        Route::resource('sp1', SP1Controller::class);
-        Route::post('blastSP1', [SP1Controller::class, 'blast']);
+        Route::get('/template-sp', [SPController::class, 'template'])->name('templateSP');
+        Route::resource('sp1', SPController::class);
+        Route::post('blast-sp-1', [SPController::class, 'blast']);
+        Route::get('sp2', [SPController::class, 'sp2'])->name('SP2Index');
+        Route::post('blast-sp-2', [SPController::class, 'blastSP2']);
+        Route::get('sp3', [SPController::class, 'sp3'])->name('SP3Index');
+        Route::post('blast-sp-3', [SPController::class, 'blastSP3']);
+        Route::get('sp-final', [SPController::class, 'spFinal'])->name('SPFinalIndex');
+        Route::post('blast-sp-final', [SPController::class, 'blastSPFinal']);
         // ======================= End SP ==========================
 
         // ---------------Inspection Gartur Security-----------------
