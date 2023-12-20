@@ -58,11 +58,10 @@ class EquiqmentAhu extends Model
         $iv = substr(hash('sha256', $myiv), 0, 16);
 
         $cipherText = openssl_encrypt($json, 'aes-256-cbc', $key, 0, $iv);
+        $encrypted = encryptURL($cipherText);
+        $barcode = 'https://api.qrserver.com/v1/create-qr-code/?size=1000x1000&data=' . $encrypted;
 
-        $barcode = 'https://api.qrserver.com/v1/create-qr-code/?size=1000x1000&data=' . $cipherText;
-        $encrypted = encryptURL($barcode);
-
-        $this->barcode_room = $encrypted;
+        $this->barcode_room = $barcode;
         $this->save();
     }
 
