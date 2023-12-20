@@ -437,50 +437,67 @@ class WorkPermitController extends Controller
         $site = Site::find($user->id_site);
 
         $transaction = $connTransaction->find($cr);
+        if (!$transaction) {
+            return redirect()->back()->with('error', 'Transaction not found');
+        }
 
         $client = new Client();
         $billing = explode(',', $request->billing);
         $admin_fee = $request->admin_fee;
 
+        if (!isset($transaction->sub_total)) {
+            return redirect()->back()->with('error', 'Sub total not set in the transaction');
+        }
+
         $transaction->gross_amount = $transaction->sub_total + $admin_fee;
         $transaction->payment_type = 'bank_transfer';
         $transaction->bank = Str::upper($billing[1]);
 
-        $payment = [];
-
-        $payment['payment_type'] = $billing[0];
-        $payment['transaction_details']['order_id'] = $transaction->order_id;
-        $payment['transaction_details']['gross_amount'] = $transaction->gross_amount;
-        $payment['bank_transfer']['bank'] = $billing[1];
-
-        $response = $client->request('POST', 'https://api.sandbox.midtrans.com/v2/charge', [
-            'body' => json_encode($payment),
-            'headers' => [
-                'accept' => 'application/json',
-                'authorization' => 'Basic ' . base64_encode($site->midtrans_server_key),
-                'content-type' => 'application/json',
+        $payment = [
+            'payment_type' => $billing[0],
+            'transaction_details' => [
+            'order_id' => $transaction->order_id,
+            'gross_amount' => $transaction->gross_amount,
             ],
-            "custom_expiry" => [
-                "order_time" => Carbon::now(),
-                "expiry_duration" => 1,
-                "unit" => "day"
-            ]
-        ]);
-        $response = json_decode($response->getBody());
+            'bank_transfer' => [
+            'bank' => $billing[1],
+            ],
+        ];
 
-        if ($response->status_code == 201) {
-            $transaction->va_number = $response->va_numbers[0]->va_number;
-            $transaction->expiry_time = $response->expiry_time;
-            $transaction->admin_fee = $admin_fee;
-            $transaction->transaction_status = 'VERIFYING';
-            $transaction->save();
+        try {
+            $response = $client->request('POST', 'https://api.sandbox.midtrans.com/v2/charge', [
+                'body' => json_encode($payment),
+                'headers' => [
+                    'accept' => 'application/json',
+                    'authorization' => 'Basic ' . base64_encode($site->midtrans_server_key),
+                    'content-type' => 'application/json',
+                ],
+                'custom_expiry' => [
+                    'order_time' => Carbon::now(),
+                    'expiry_duration' => 1,
+                    'unit' => 'day',
+                ],
+            ]);
 
-            return redirect()->route('paymentMonthly', [$transaction->WorkPermit->id, $transaction->id]);
-        } else {
-            Alert::info('Sorry', 'Our server is busy');
-            return redirect()->back();
+            $response = json_decode($response->getBody());
+
+            if ($response->status_code == 201) {
+                $transaction->va_number = $response->va_numbers[0]->va_number;
+                $transaction->expiry_time = $response->expiry_time;
+                $transaction->admin_fee = $admin_fee;
+                $transaction->transaction_status = 'VERIFYING';
+                $transaction->save();
+
+                return redirect()->route('paymentMonthly', [$transaction->WorkPermit->id, $transaction->id]);
+            } else {
+                Alert::info('Sorry', 'Our server is busy');
+                return redirect()->back();
+            }
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Error processing payment: ' . $e->getMessage());
         }
     }
+
 
     public function paymentPO($id)
     {

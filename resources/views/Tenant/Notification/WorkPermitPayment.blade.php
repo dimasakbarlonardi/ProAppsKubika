@@ -18,22 +18,22 @@
 </div>
 <div class="card mb-3">
     <div class="card-body">
-        <div class="row align-items-center text-center mb-3">
-            <div class="col-sm-6 text-sm-start"><img src="/assets/img/icons/spot-illustrations/proapps.png" alt="invoice" width="150" /></div>
-            <div class="col text-sm-end mt-3 mt-sm-0">
-                <h2 class="mb-3">Invoice</h2>
-                <h5>Proapps</h5>
-                <p class="fs--1 mb-0"> 
-                    Harton Tower Citihub, 6th floor <br>
-                    Jl. Boulevard Artha Gading Blok D No. 3, <br>
-                    Kelapa Gading Barat
-                    Jakarta Utara, 14240
-                </p>
+    <div class="row align-items-center text-center mb-3">
+                <div class="col-sm-6 text-sm-start">
+                    <img src="{{ $transaction->company_logo ? url($transaction->company_logo) : '/assets/img/icons/spot-illustrations/proapps.png' }}"
+                        alt="invoice" width="150" />
+                </div>
+                <div class="col text-sm-end mt-3 mt-sm-0">
+                    <h2 class="mb-3">Invoice</h2>
+                    <h5>{{ $transaction->company_name ? $setting->company_name : 'Proapps' }}</h5>
+                    <p class="fs--1 mt-2">
+                        {!! $transaction->company_address !!}
+                    </p>
+                </div>
+                <div class="col-12">
+                    <hr />
+                </div>
             </div>
-            <div class="col-12">
-                <hr/>
-            </div>
-        </div>
         <div class="row align-items-center">
             <div class="col">
                 <h6 class="text-500">Invoice to</h6>
@@ -147,7 +147,7 @@
             </table>
         </div>
         @if ($transaction->transaction_status == 'PENDING')
-        <form action="{{ route('generatePaymentPO', $transaction->WorkPermit->id) }}" method="post">
+        <form action="{{ route('generatePaymentPO', $transaction->WorkPermit->CashReceipt->id) }}" method="post" id="generatePaymentPO">
             @csrf
             <div class="row g-3 mt-3 mb-3">
                 <div class="col-lg-8">
@@ -254,7 +254,7 @@
         @elseif ($transaction->transaction_status == 'VERIFYING')
         <div class="text-center">
             {{-- {{ dd($transaction->WorkPermit->id, $transaction->id) }} --}}
-            <a href="{{ route('paymentPO', [$transaction->CashReceipt->id, $transaction->id]) }}" class="btn btn-success">Lihat VA</a>
+            <a href="{{ route('paymentPO', [$transaction->CashReceipt->id]) }}" class="btn btn-success">Lihat VA</a>
         </div>
         @endif
     </div>
