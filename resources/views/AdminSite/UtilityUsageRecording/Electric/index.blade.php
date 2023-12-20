@@ -163,22 +163,42 @@
                                         </td>
                                     @endif
                                     @if ($item->MonthlyUtility)
-                                        @if (!$item->MonthlyUtility->MonthlyTenant->tgl_jt_invoice && !$item->MonthlyUtility->MonthlyTenant->tgl_bayar_invoice)
-                                            <td class="align-middle text-center">
-                                                <span class="badge bg-info">
-                                                    <span class="fas fa-check fs--2 me-1"></span>
-                                                    Waiting to send
-                                                </span>
-                                            </td>
-                                        @else
-                                            <td class="align-middle text-center">
-                                                <h6>
-                                                    <span class="badge bg-success">
+                                        @if ($setting->is_split_ar == 0)
+                                            @if (!$item->MonthlyUtility->MonthlyTenant->CashReceipt->tgl_jt_invoice)
+                                                <td class="align-middle text-center">
+                                                    <span class="badge bg-info">
                                                         <span class="fas fa-check fs--2 me-1"></span>
-                                                        Sended
+                                                        Waiting to send
                                                     </span>
-                                                </h6>
-                                            </td>
+                                                </td>
+                                            @else
+                                                <td class="align-middle text-center">
+                                                    <h6>
+                                                        <span class="badge bg-success">
+                                                            <span class="fas fa-check fs--2 me-1"></span>
+                                                            Sended
+                                                        </span>
+                                                    </h6>
+                                                </td>
+                                            @endif
+                                        @elseif ($setting->is_split_ar == 1)
+                                            @if (!$item->MonthlyUtility->MonthlyTenant->CashReceipts[0]->tgl_jt_invoice)
+                                                <td class="align-middle text-center">
+                                                    <span class="badge bg-info">
+                                                        <span class="fas fa-check fs--2 me-1"></span>
+                                                        Waiting to send
+                                                    </span>
+                                                </td>
+                                            @else
+                                                <td class="align-middle text-center">
+                                                    <h6>
+                                                        <span class="badge bg-success">
+                                                            <span class="fas fa-check fs--2 me-1"></span>
+                                                            Sended
+                                                        </span>
+                                                    </h6>
+                                                </td>
+                                            @endif
                                         @endif
                                     @endif
                                 </tr>

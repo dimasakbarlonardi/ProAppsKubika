@@ -48,7 +48,7 @@ class BillingController extends Controller
                 ->table('tb_fin_monthly_ar_tenant as arm')
                 ->join('tb_draft_cash_receipt as cr', 'arm.no_monthly_invoice', 'cr.no_reff')
                 ->where('arm.id_unit', $id)
-                ->where('arm.tgl_jt_invoice', '!=', null)
+                ->where('cr.tgl_jt_invoice', '!=', null)
                 ->orderBy('periode_bulan', 'desc')
                 ->get();
         } elseif ($setting->is_split_ar == 1) {
@@ -104,53 +104,37 @@ class BillingController extends Controller
         );
     }
 
-    public function showSplitedBilling($id)
+    public function showSplitedBilling(Request $request)
     {
-        $connCR = ConnectionDB::setConnection(new CashReceipt());
-        $connUtil = ConnectionDB::setConnection(new Utility());
+        $connUtility = ConnectionDB::setConnection(new Utility());
         $connIPLType = ConnectionDB::setConnection(new IPLType());
-        // $connSetting = ConnectionDB::setConnection(new CompanySetting());
+        $connSetting = ConnectionDB::setConnection(new CompanySetting());
+        $connAR = ConnectionDB::setConnection(new MonthlyArTenant());
 
-        // $previousBills = [];
-        // $data['installment'] = [];
+        $data['electric'] = $connUtility->find(1);
+        $data['water'] = $connUtility->find(2);
+        $data['sc'] = $connIPLType->find(6);
+        $data['sf'] = $connIPLType->find(7);
 
-        $cr = $connCR->find($id);
-        $ar = $cr->SplitMonthlyARTenant($cr->id_monthly_utility, $cr->id_monthly_ipl);
+        $setting = $connSetting->find(1);
 
-        // $setting = $connSetting->find(1);
-        $sc = $connIPLType->find(6);
-        $sf = $connIPLType->find(7);
+        $data['setting'] = $setting;
+        $data['transaction'] = $connAR->find($request->arID);
 
-        if ($cr->id_monthly_utility) {
-            $data['monthly_utility'] = $ar->where('deleted_at', null)->with([
-                'Unit.TenantUnit.Tenant',
-                'MonthlyUtility.ElectricUUS',
-                'MonthlyUtility.WaterUUS',
-                'MonthlyUtility.CashReceipt'
-            ])->first();
-            $data['monthly_i_p_l'] = null;
-            $data['price_water'] = $connUtil->find(2)->biaya_m3;
-            $data['price_electric'] = $connUtil->find(1)->biaya_m3;
-            $data['service_charge_price'] = null;
-            $data['sinking_fund_price'] = null;
-        } elseif ($cr->id_monthly_ipl) {
-            $data['monthly_i_p_l'] = $ar->where('deleted_at', null)->with([
-                'Unit.TenantUnit.Tenant',
-                'MonthlyIPL.CashReceipt',
-            ])->first();
-            $data['monthly_utility'] = null;
-            $data['price_water'] = null;
-            $data['price_electric'] = null;
-            $data['service_charge_price'] = $sc->biaya_permeter;
-            $data['sinking_fund_price'] = $sf->biaya_permeter;
+        if ($request->type == "utility") {
+            $html = view('Tenant.Notification.Invoice.SplitPaymentMonthly.Utility_bill', $data)->render();
+        } elseif ($request->type == 'ipl') {
+            $html = view('Tenant.Notification.Invoice.SplitPaymentMonthly.IPL_bill', $data)->render();
+        } elseif ($request->type == 'other') {
+            $html = view('Tenant.Notification.Invoice.SplitPaymentMonthly.Other_bill', $data)->render();
         }
 
-        return ResponseFormatter::success(
-            [
-                'current_bill' => $data,
-            ],
-            'Authenticated'
-        );
+        return response()->json([
+            'html' => $html,
+            'data' => $data,
+            'ar_user' => $data['transaction']->CashReceipts[0]->User->login_user,
+            'email_user' => Auth::user()->email,
+        ]);
     }
 
     public function generateTransaction($id)
@@ -177,6 +161,16 @@ class BillingController extends Controller
                 $payment['transaction_details']['gross_amount'] = (int) $transaction->gross_amount;
                 $payment['bank_transfer']['bank'] = $bank;
 
+                if (
+                    $transaction->transaction_type != 'MonthlyUtilityTenant' &&
+                    $transaction->transaction_type != 'MonthlyIPLTenant' &&
+                    $transaction->transaction_type != 'MonthlyTenant'
+                ) {
+                    $expiry = 1;
+                } else {
+                    $expiry = 40;
+                }
+
                 $response = $client->request('POST', 'https://api.sandbox.midtrans.com/v2/charge', [
                     'body' => json_encode($payment),
                     'headers' => [
@@ -186,18 +180,25 @@ class BillingController extends Controller
                     ],
                     "custom_expiry" => [
                         "order_time" => Carbon::now(),
-                        "expiry_duration" => 1,
+                        "expiry_duration" => $expiry,
                         "unit" => "day"
                     ]
                 ]);
                 $response = json_decode($response->getBody());
 
-                $transaction->va_number = $response->va_numbers[0]->va_number;
-                $transaction->transaction_id = $response->transaction_id;
-                $transaction->expiry_time = $response->expiry_time;
-                $transaction->no_invoice = $transaction->no_invoice;
-                $transaction->admin_fee = $admin_fee;
-                $transaction->transaction_status = 'VERIFYING';
+                if ($response->status_code == 201) {
+                    $transaction->va_number = $response->va_numbers[0]->va_number;
+                    $transaction->expiry_time = $response->expiry_time;
+                    $transaction->no_invoice = $transaction->no_invoice;
+                    $transaction->admin_fee = $admin_fee;
+                    $transaction->transaction_status = 'VERIFYING';
+
+                    $transaction->save();
+                } else {
+                    return ResponseFormatter::error([
+                        'message' => 'Sorry our server is busy'
+                    ], 'Sorry our server is busy', 205);
+                }
 
                 $object = new stdClass();
                 $object->due_date = $transaction->expiry_time;

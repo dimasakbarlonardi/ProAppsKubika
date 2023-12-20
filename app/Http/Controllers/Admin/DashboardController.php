@@ -158,7 +158,6 @@ class DashboardController extends Controller
         $isDivision = false;
         $isPass = false;
 
-
         $checkDivision = $user->RoleH->WorkRelation->id_work_relation == $getNotif->division_receiver;
         if ($checkDivision) {
             $isDivision = true;
@@ -209,7 +208,7 @@ class DashboardController extends Controller
             case ('SplitMonthlyTenant'):
                 $data = $this->handleSplitMonthlyTenant($getNotif);
                 $data['user'] = $user;
-                return view('Tenant.Notification.SplitPayment', $data);
+                return view('Tenant.Notification.Invoice.SplitPaymentMonthly.SplitPayment', $data);
                 break;
 
             case ('OpenTicket'):
@@ -354,19 +353,13 @@ class DashboardController extends Controller
     public function handleSplitMonthlyTenant($getNotif)
     {
         $model = new MonthlyArTenant();
-        $connUtility = ConnectionDB::setConnection(new Utility());
-        $connIPLType = ConnectionDB::setConnection(new IPLType());
         $connSetting = ConnectionDB::setConnection(new CompanySetting());
         $getData = ConnectionDB::setConnection($model);
         $getData = $getData->find($getNotif->id_data);
+
         $data['transaction'] = $getData->where('id_monthly_ar_tenant', $getData->id_monthly_ar_tenant)->first();
-        $data['type'] = 'MonthlyTenant';
         $data['setting'] = $connSetting->find(1);
-        // $data['installment'] = $getData->CashReceipt->Installment($getData->periode_bulan, $getData->periode_tahun);
-        $data['electric'] = $connUtility->find(1);
-        $data['water'] = $connUtility->find(2);
-        $data['sc'] = $connIPLType->find(6);
-        $data['sf'] = $connIPLType->find(7);
+        // $data['installment'] = $getData->CashReceipt->Installment($getData->periode_bulan, $getData->periode_tahun)
 
         return $data;
     }

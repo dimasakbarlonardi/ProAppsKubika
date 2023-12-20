@@ -167,7 +167,7 @@
                                                         </td>
                                                     @endif
                                                     @if ($item->MonthlyUtility)
-                                                        @if (!$item->MonthlyUtility->MonthlyTenant->tgl_jt_invoice)
+                                                        @if (!$item->MonthlyUtility->MonthlyTenant->CashReceipt->tgl_jt_invoice)
                                                             <td class="align-middle text-center">
                                                                 <span class="badge bg-info">
                                                                     <span class="fas fa-check fs--2 me-1"></span>

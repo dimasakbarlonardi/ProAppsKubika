@@ -41,7 +41,6 @@ use App\Http\Controllers\Admin\MainFormController;
 use App\Http\Controllers\Admin\PengurusController;
 use App\Http\Controllers\Admin\SubMenu2Controller;
 use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\HKKoridorController;
 use App\Http\Controllers\Admin\WorkOrderController;
 use App\Http\Controllers\Admin\DepartemenController;
 use App\Http\Controllers\Admin\JenisAcaraController;
@@ -59,7 +58,6 @@ use App\Http\Controllers\Admin\WorkRequestController;
 use App\Http\Controllers\Admin\JenisKelaminController;
 use App\Http\Controllers\Admin\JenisRequestController;
 use App\Http\Controllers\Admin\MemberTenantController;
-use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\WorkPriorityController;
 use App\Http\Controllers\Admin\WorkRelationController;
 use App\Http\Controllers\Admin\ChecklistAhuHController;
@@ -68,7 +66,6 @@ use App\Http\Controllers\Admin\RequestPermitController;
 use App\Http\Controllers\Admin\StatusRequestController;
 use App\Http\Controllers\Admin\StatusTinggalController;
 use App\Http\Controllers\Admin\SystemSettingController;
-use App\Http\Controllers\Admin\ChecklistLiftHController;
 use App\Http\Controllers\Admin\JenisKendaraanController;
 use App\Http\Controllers\Admin\JenisPekerjaanController;
 use App\Http\Controllers\Admin\ReminderLetterController;
@@ -82,16 +79,13 @@ use App\Http\Controllers\Admin\TypeReservationController;
 use App\Http\Controllers\Admin\ChecklistGensetHController;
 use App\Http\Controllers\Admin\ChecklistToiletHController;
 use App\Http\Controllers\Admin\OffBoardingOwnerController;
-use App\Http\Controllers\Admin\OfficeManagementController;
 use App\Http\Controllers\Admin\RuangReservationController;
-use App\Http\Controllers\Admin\ChecklistKoridorHController;
 use App\Http\Controllers\Admin\OffBoardingTenantController;
 use App\Http\Controllers\Admin\ChecklistAhuDetailController;
 use App\Http\Controllers\Admin\StatusAktifKaryawanController;
 use App\Http\Controllers\Admin\ChecklistTemperaturHController;
 use App\Http\Controllers\Admin\OffBoardingTenantUnitController;
 use App\Http\Controllers\Admin\ChecklistTanggaDaruratHController;
-use App\Http\Controllers\Admin\ChecklistOfficeManagementHController;
 use App\Http\Controllers\Admin\ChecklistSecurityController;
 use App\Http\Controllers\Admin\ChecklistToiletDetailController;
 use App\Http\Controllers\Admin\CompanySettingController;
@@ -106,6 +100,7 @@ use App\Http\Controllers\Admin\LeaveTypeHRController;
 use App\Http\Controllers\Admin\InvoiceController;
 use App\Http\Controllers\Admin\OffBoardingKepemilikanUnitController;
 use App\Http\Controllers\Admin\OffTenantUnitController;
+use App\Http\Controllers\Admin\OtherBillController;
 use App\Http\Controllers\Admin\PackageController;
 use App\Http\Controllers\Admin\ParameterSecurityController;
 use App\Http\Controllers\Admin\ParameterShiftSecurityController;
@@ -123,12 +118,6 @@ use App\Http\Controllers\Admin\ToolsHKController;
 use App\Http\Controllers\Admin\ToolsSecurityController;
 use App\Http\Controllers\Admin\VisitorsController;
 use App\Http\Controllers\Admin\WaterUUSController;
-use App\Http\Controllers\API\VisitorController;
-use App\Imports\UnitImport;
-use App\Models\ForgotAttendance;
-use App\Models\IncidentalReportHK;
-use App\Models\PermitHR;
-use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
@@ -571,6 +560,11 @@ Route::prefix('admin')->group(function () {
         // CRUD Utility
         Route::resource('utilitys', UtilityController::class);
 
+        // CRUD Other Bills
+        Route::resource('other-bills', OtherBillController::class);
+        Route::post('/other-bill/isactive/{id}', [OtherBillController::class, 'changeActiveStatus']);
+        Route::post('/other-bill/is-require-unit-volume/{id}', [OtherBillController::class, 'changeRequireVolume']);
+
         // CRUD JenisDenda
         Route::resource('jenisdendas', JenisDendaController::class);
         Route::post('/jenis-denda/isactive/{id}', [JenisDendaController::class, 'isActive']);
@@ -682,7 +676,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/invoice/get/filter-data', [InvoiceController::class, 'filteredData']);
 
         // Payment monthly tenant
-        Route::post('payment-monthly-page/{id}', [BillingController::class, 'generatePaymentMonthly'])->name('generatePaymentMonthly');
+        // Route::post('payment-monthly-page/{id}', [BillingController::class, 'generatePaymentMonthly'])->name('generatePaymentMonthly');
         Route::get('payment-monthly-page/{mt}/{id}', [BillingController::class, 'paymentMonthly'])->name('paymentMonthly');
 
         // Payment WO
