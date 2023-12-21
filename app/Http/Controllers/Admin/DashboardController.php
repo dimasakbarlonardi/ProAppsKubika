@@ -420,7 +420,7 @@ class DashboardController extends Controller
         return $data;
     }
 
-    public function handleWPPayment($getNotif)
+    public function handleWPPayment($connApprove, $getNotif)
     {
         $model = new CashReceipt();
         $connSetting = ConnectionDB::setConnection(new CompanySetting());
