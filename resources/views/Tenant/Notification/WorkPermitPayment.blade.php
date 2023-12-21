@@ -1,8 +1,9 @@
 @extends('layouts.master')
 
 @section('css')
-<script src="https://cdn.tiny.cloud/1/zqt3b05uqsuxthyk5xvi13srgf4ru0l5gcvuxltlpgm6rcki/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
-<link href="{{ asset('assets/vendors/flatpickr/flatpickr.min.css') }}" rel="stylesheet" />
+    <script src="https://cdn.tiny.cloud/1/zqt3b05uqsuxthyk5xvi13srgf4ru0l5gcvuxltlpgm6rcki/tinymce/6/tinymce.min.js"
+        referrerpolicy="origin"></script>
+    <link href="{{ asset('assets/vendors/flatpickr/flatpickr.min.css') }}" rel="stylesheet" />
 @endsection
 
 @section('content')
@@ -18,6 +19,9 @@
 <div class="card mb-3">
     <div class="card-body">
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 9d595eb475705fe8d682e25859923fa547218090
     <div class="row align-items-center text-center mb-3">
                 <div class="col-sm-6 text-sm-start">
                     <img src="{{ $transaction->company_logo ? url($transaction->company_logo) : '/assets/img/icons/spot-illustrations/proapps.png' }}"
@@ -25,14 +29,21 @@
                 </div>
                 <div class="col text-sm-end mt-3 mt-sm-0">
                     <h2 class="mb-3">Invoice</h2>
+<<<<<<< HEAD
                     <h5>{{ $transaction->company_name ? $setting->company_name : 'Proapps' }}</h5>
                     <p class="fs--1 mt-2">
                         {!! $transaction->company_address !!}
+=======
+                    <h5>{{ $setting->company_name ? $setting->company_name : 'Proapps' }}</h5>
+                    <p class="fs--1 mt-2">
+                        {!! $setting->company_address !!}
+>>>>>>> 9d595eb475705fe8d682e25859923fa547218090
                     </p>
                 </div>
                 <div class="col-12">
                     <hr />
                 </div>
+<<<<<<< HEAD
 =======
         <div class="row align-items-center text-center mb-3">
             <div class="col-sm-6 text-sm-start">
@@ -48,6 +59,8 @@
             <div class="col-12">
                 <hr />
 >>>>>>> 75712f036b9877b546dd0126edadc79faef9a3b1
+=======
+>>>>>>> 9d595eb475705fe8d682e25859923fa547218090
             </div>
         <div class="row align-items-center">
             <div class="col">
@@ -72,26 +85,26 @@
                                 </td>
                             </tr>
                             <tr>
-                                <td>
-                                    @php
-                                    switch ($transaction->transaction_status) {
-                                    case 'PENDING':
-                                    echo '<span class="badge bg-warning">Pending</span>';
-                                    break;
-                                    case 'VERIFYING':
-                                    echo '<span class="badge bg-info">Verifying</span>';
-                                    break;
-                                    case 'PAID':
-                                    echo '<span class="badge bg-success">PAID</span>';
-                                    break;
+                                    <td>
+                                        @php
+                                            switch ($transaction->transaction_status) {
+                                                case 'PENDING':
+                                                    echo '<span class="badge bg-warning">Pending</span>';
+                                                    break;
+                                                case 'VERIFYING':
+                                                    echo '<span class="badge bg-info">Verifying</span>';
+                                                    break;
+                                                case 'PAID':
+                                                    echo '<span class="badge bg-success">PAID</span>';
+                                                    break;
 
-                                    default:
-                                    echo '<span class="badge bg-warning">Pending</span>';
-                                    break;
-                                    }
-                                    @endphp
-                                </td>
-                            </tr>
+                                                default:
+                                                    echo '<span class="badge bg-warning">Pending</span>';
+                                                    break;
+                                            }
+                                        @endphp
+                                    </td>
+                                </tr>
                         </tbody>
                     </table>
                 </div>
@@ -122,7 +135,7 @@
 
                             <tr>
                                 <td class="align-middle">
-                                    <h6 class="mb-2 text-nowrap">Jumlah Supervisi</h6>
+                                     <h6 class="mb-2 text-nowrap">Jumlah Supervisi</h6>
                                     <p class="mb-0">
                                         {{ Rupiah($transaction->WorkPermit->jumlah_supervisi) }}
                                     </p>
@@ -165,10 +178,14 @@
         </div>
         @if ($transaction->transaction_status == 'PENDING')
 <<<<<<< HEAD
+<<<<<<< HEAD
         <form action="{{ route('generatePaymentPO', $transaction->WorkPermit->CashReceipt->id) }}" method="post" id="generatePaymentPO">
 =======
         <form class="mt-5" action="{{ route('generatePaymentPO', $permit->CashReceipt->id) }}" method="post" id="generatePaymentPO">
 >>>>>>> 75712f036b9877b546dd0126edadc79faef9a3b1
+=======
+        <form action="{{ route('generatePaymentPO', $transaction->WorkPermit->CashReceipt->id) }}" method="post" id="generatePaymentPO">
+>>>>>>> 9d595eb475705fe8d682e25859923fa547218090
             @csrf
             <div class="row g-3 mt-3 mb-3">
                 <div class="col-lg-8">
@@ -284,213 +301,215 @@
 
 
 @section('script')
-<script src="https://cdn.tiny.cloud/1/zqt3b05uqsuxthyk5xvi13srgf4ru0l5gcvuxltlpgm6rcki/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
-<script src="{{ asset('assets/js/flatpickr.js') }}"></script>
-<script>
-    tinyMCE.init({
-        selector: 'textarea#deskripsi_wr',
-        menubar: false,
-        toolbar: false,
-        readonly: true,
-        height: "180"
-    });
+    <script src="https://cdn.tiny.cloud/1/zqt3b05uqsuxthyk5xvi13srgf4ru0l5gcvuxltlpgm6rcki/tinymce/6/tinymce.min.js"
+        referrerpolicy="origin"></script>
+    <script src="{{ asset('assets/js/flatpickr.js') }}"></script>
+    <script>
+        tinyMCE.init({
+            selector: 'textarea#deskripsi_wr',
+            menubar: false,
+            toolbar: false,
+            readonly: true,
+            height: "180"
+        });
 
-    function onPayment() {
-        var billing = $('input[name="billing"]:checked').val();
-        var card_number = $('#card_number').val();
-        var expDate = $('#expDate').val();
-        var cvv = $('#cvv').val();
+        function onPayment() {
+            var billing = $('input[name="billing"]:checked').val();
+            var card_number = $('#card_number').val();
+            var expDate = $('#expDate').val();
+            var cvv = $('#cvv').val();
 
-        if (!billing) {
-            if (billing == 'credit_card') {
-                Swal.fire(
-                    'Oppps!',
-                    'Please select payment method',
-                    'info'
-                )
-            }
-        } else {
-            if (billing == 'credit_card') {
-                if (!card_number || !expDate || !cvv) {
+            if (!billing) {
+                if (billing == 'credit_card') {
                     Swal.fire(
                         'Oppps!',
-                        'Please fill all field',
+                        'Please select payment method',
                         'info'
                     )
+                }
+            } else {
+                if (billing == 'credit_card') {
+                    if (!card_number || !expDate || !cvv) {
+                        Swal.fire(
+                            'Oppps!',
+                            'Please fill all field',
+                            'info'
+                        )
+                    } else {
+                        $("#generatePaymentPO").submit();
+                    }
                 } else {
                     $("#generatePaymentPO").submit();
                 }
-            } else {
-                $("#generatePaymentPO").submit();
             }
         }
-    }
 
-    function onApprove(id) {
-        Swal.fire({
-            title: 'Are you sure?',
-            icon: 'info',
-            confirmButtonText: 'Yes!'
-        }).then((result) => {
-            if (result['isConfirmed']) {
-                $.ajax({
-                    url: `/admin/work-permit/approve1/${id}`,
-                    type: 'POST',
-                    success: function(data) {
-                        if (data.status === 'ok') {
-                            Swal.fire(
-                                'Success!',
-                                'Success approve Work Permit!',
-                                'success'
-                            ).then(() => window.location.reload())
+        function onApprove(id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                icon: 'info',
+                confirmButtonText: 'Yes!'
+            }).then((result) => {
+                if (result['isConfirmed']) {
+                    $.ajax({
+                        url: `/admin/work-permit/approve1/${id}`,
+                        type: 'POST',
+                        success: function(data) {
+                            if (data.status === 'ok') {
+                                Swal.fire(
+                                    'Success!',
+                                    'Success approve Work Permit!',
+                                    'success'
+                                ).then(() => window.location.reload())
+                            }
                         }
-                    }
-                })
-            }
-        })
-    }
-
-    function onReject(id) {
-        Swal.fire({
-            title: 'Are you sure?',
-            icon: 'info',
-            confirmButtonText: 'Yes!'
-        }).then((result) => {
-            if (result['isConfirmed']) {
-                $.ajax({
-                    url: `/admin/work-permit/reject/${id}`,
-                    type: 'POST',
-                    success: function(data) {
-                        if (data.status === 'ok') {
-                            Swal.fire(
-                                'Success!',
-                                'Success reject Work Permit!',
-                                'success'
-                            ).then(() => window.location.reload())
-                        }
-                    }
-                })
-            }
-        })
-    }
-
-    function approve2(id) {
-        Swal.fire({
-            title: 'Are you sure?',
-            icon: 'info',
-            confirmButtonText: 'Yes!'
-        }).then((result) => {
-            if (result['isConfirmed']) {
-                $.ajax({
-                    url: `/admin/work-permit/approve2/${id}`,
-                    type: 'POST',
-                    success: function(data) {
-                        if (data.status === 'ok') {
-                            Swal.fire(
-                                'Success!',
-                                'Success approve Work Permit!',
-                                'success'
-                            ).then(() => window.location.reload())
-                        }
-                    }
-                })
-            }
-        })
-    }
-
-    function approve3(id) {
-        $.ajax({
-            url: `/admin/work-permit/approve3/${id}`,
-            type: 'POST',
-            success: function(data) {
-                if (data.status === 'ok') {
-                    Swal.fire(
-                        'Success!',
-                        'Success update Work Permit!',
-                        'success'
-                    ).then(() => window.location.reload())
+                    })
                 }
-            }
-        })
-    }
+            })
+        }
 
-    function approve4(id) {
-        $.ajax({
-            url: `/admin/work-permit/approve4/${id}`,
-            type: 'POST',
-            success: function(data) {
-                if (data.status === 'ok') {
-                    Swal.fire(
-                        'Success!',
-                        'Success approve Work Permit!',
-                        'success'
-                    ).then(() => window.location.reload())
-                }
-            }
-        })
-    }
-
-    function workDoneWP(id) {
-        Swal.fire({
-            title: 'Are you sure?',
-            icon: 'info',
-            confirmButtonText: 'Yes!'
-        }).then((result) => {
-            if (result['isConfirmed']) {
-                $.ajax({
-                    url: `/admin/work-permit/workDoneWP/${id}`,
-                    type: 'POST',
-                    success: function(data) {
-                        if (data.status === 'ok') {
-                            Swal.fire(
-                                'Success!',
-                                'Success update Work Permit!',
-                                'success'
-                            ).then(() => window.location.reload())
+        function onReject(id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                icon: 'info',
+                confirmButtonText: 'Yes!'
+            }).then((result) => {
+                if (result['isConfirmed']) {
+                    $.ajax({
+                        url: `/admin/work-permit/reject/${id}`,
+                        type: 'POST',
+                        success: function(data) {
+                            if (data.status === 'ok') {
+                                Swal.fire(
+                                    'Success!',
+                                    'Success reject Work Permit!',
+                                    'success'
+                                ).then(() => window.location.reload())
+                            }
                         }
-                    }
-                })
-            }
-        })
-    }
-
-    function doneWP(id) {
-        $.ajax({
-            url: `/admin/work-permit/doneWP/${id}`,
-            type: 'POST',
-            success: function(data) {
-                if (data.status === 'ok') {
-                    Swal.fire(
-                        'Success!',
-                        'Success update Work Permit!',
-                        'success'
-                    ).then(() => window.location.reload())
+                    })
                 }
-            }
+            })
+        }
+
+        function approve2(id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                icon: 'info',
+                confirmButtonText: 'Yes!'
+            }).then((result) => {
+                if (result['isConfirmed']) {
+                    $.ajax({
+                        url: `/admin/work-permit/approve2/${id}`,
+                        type: 'POST',
+                        success: function(data) {
+                            if (data.status === 'ok') {
+                                Swal.fire(
+                                    'Success!',
+                                    'Success approve Work Permit!',
+                                    'success'
+                                ).then(() => window.location.reload())
+                            }
+                        }
+                    })
+                }
+            })
+        }
+
+        function approve3(id) {
+            $.ajax({
+                url: `/admin/work-permit/approve3/${id}`,
+                type: 'POST',
+                success: function(data) {
+                    if (data.status === 'ok') {
+                        Swal.fire(
+                            'Success!',
+                            'Success update Work Permit!',
+                            'success'
+                        ).then(() => window.location.reload())
+                    }
+                }
+            })
+        }
+
+        function approve4(id) {
+            $.ajax({
+                url: `/admin/work-permit/approve4/${id}`,
+                type: 'POST',
+                success: function(data) {
+                    if (data.status === 'ok') {
+                        Swal.fire(
+                            'Success!',
+                            'Success approve Work Permit!',
+                            'success'
+                        ).then(() => window.location.reload())
+                    }
+                }
+            })
+        }
+
+        function workDoneWP(id) {
+            Swal.fire({
+                title: 'Are you sure?',
+                icon: 'info',
+                confirmButtonText: 'Yes!'
+            }).then((result) => {
+                if (result['isConfirmed']) {
+                    $.ajax({
+                        url: `/admin/work-permit/workDoneWP/${id}`,
+                        type: 'POST',
+                        success: function(data) {
+                            if (data.status === 'ok') {
+                                Swal.fire(
+                                    'Success!',
+                                    'Success update Work Permit!',
+                                    'success'
+                                ).then(() => window.location.reload())
+                            }
+                        }
+                    })
+                }
+            })
+        }
+
+        function doneWP(id) {
+            $.ajax({
+                url: `/admin/work-permit/doneWP/${id}`,
+                type: 'POST',
+                success: function(data) {
+                    if (data.status === 'ok') {
+                        Swal.fire(
+                            'Success!',
+                            'Success update Work Permit!',
+                            'success'
+                        ).then(() => window.location.reload())
+                    }
+                }
+            })
+        }
+
+        $('document').ready(function() {
+            var admin_tax = 0.11;
+            var subtotal = parseInt('{{ $transaction->WorkPermit->jumlah_deposit + $transaction->WorkPermit->jumlah_supervisi }}')
+
+            $('#cc_form').css('display', 'none')
+            $('.form-check-input').on('change', function() {
+                if ($(this).is(':checked') && $(this).val() == 'credit_card') {
+                    var admin_fee = Math.round(2000 + (0.029 * subtotal));
+                    var admin_fee = admin_fee + (Math.round(admin_fee * 0.11));
+
+                    $('#cc_form').css('display', 'block')
+                } else {
+                    var admin_fee = 4000 + (4000 * admin_tax);
+                    $('#cc_form').css('display', 'none')
+                }
+                console.log(subtotal);
+                var grand_total = subtotal + admin_fee;
+                $('#val_admin_fee').val(admin_fee);
+                $('#admin_fee').html(`Rp ${formatRupiah(admin_fee.toString())}`)
+                $('#grand_total').html(`Rp ${formatRupiah(grand_total.toString())}`)
+            });
         })
-    }
-
-    $('document').ready(function() {
-        var admin_tax = 0.11;
-        var subtotal = parseInt('{{ $transaction->WorkPermit->jumlah_deposit + $transaction->WorkPermit->jumlah_supervisi }}')
-
-        $('#cc_form').css('display', 'none')
-        $('.form-check-input').on('change', function() {
-            if ($(this).is(':checked') && $(this).val() == 'credit_card') {
-                var admin_fee = Math.round(2000 + (0.029 * subtotal));
-                var admin_fee = admin_fee + (Math.round(admin_fee * 0.11));
-
-                $('#cc_form').css('display', 'block')
-            } else {
-                var admin_fee = 4000 + (4000 * admin_tax);
-                $('#cc_form').css('display', 'none')
-            }
-            console.log(subtotal);
-            var grand_total = subtotal + admin_fee;
-            $('#val_admin_fee').val(admin_fee);
-            $('#admin_fee').html(`Rp ${formatRupiah(admin_fee.toString())}`)
-            $('#grand_total').html(`Rp ${formatRupiah(grand_total.toString())}`)
-        });
-    })
-</script>
+    </script>
 @endsection
+
