@@ -31,13 +31,20 @@ class Kernel extends ConsoleKernel
         $schedule->command('monthly:sp2')->daily();
         // $schedule->command('monthly:sp2')->everyMinute();
 
-         // SP3
-         $schedule->command('monthly:sp3')->daily();
-         // $schedule->command('monthly:sp3')->everyMinute();
+        // SP3
+        $schedule->command('monthly:sp3')->daily();
+        // $schedule->command('monthly:sp3')->everyMinute();
+
+        // SP Final
+        $schedule->command('monthly:spfinal')->daily();
+        // $schedule->command('monthly:spfinal')->everyMinute();
+
+        // $schedule->command('inspire')->hourly();
+        $schedule->command('app:send-bulk-emails')->everyMinute();
     }
 
     /**
-     * Register the commands for the application.
+     * Register the commands for the applFication.
      *
      * @return void
      */
