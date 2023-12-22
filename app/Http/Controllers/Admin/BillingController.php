@@ -558,17 +558,10 @@ class BillingController extends Controller
 
                 // broadcast(new HelloEvent($dataNotif));
                 // Mail::to('akmalrifqi2013@gmail.com')->send(new MonthlyUtilityMail($util->MonthlyUtility->MonthlyTenant));
-
-                $dataEmail = [
-                    // 'email' => $arTenant->Unit->TenantUnit->Tenant->email_tenant,
-                    'email' => 'akmalrifqi2013@gmail.com',
-                    'ar' => $util->MonthlyUtility->MonthlyTenant,
-                    'db_name' =>  ConnectionDB::getDBname()
-                ];
-
-                SendBulkUtilityMail::dispatch($dataEmail['email'], $dataEmail['ar'], $dataEmail['db_name']);
-                SendBulkIPLMail::dispatch($dataEmail['email'], $dataEmail['ar'], $dataEmail['db_name']);
-                SendBulkOtherBillMail::dispatch($dataEmail['email'], $dataEmail['ar'], $dataEmail['db_name']);
+                $email = 'akmalrifqi2013@gmail.com';
+                SendBulkUtilityMail::dispatch($email, $util->MonthlyUtility->MonthlyTenant, ConnectionDB::getDBname());
+                SendBulkIPLMail::dispatch($email, $util->MonthlyUtility->MonthlyTenant, ConnectionDB::getDBname());
+                SendBulkOtherBillMail::dispatch($email, $util->MonthlyUtility->MonthlyTenant, ConnectionDB::getDBname());
                 // }
 
 

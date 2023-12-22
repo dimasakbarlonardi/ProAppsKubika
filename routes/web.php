@@ -147,7 +147,7 @@ Route::get('payment-event', function () {
 });
 
 Route::get('send-mail', function () {
-    return view('emails.monthlySplittedBilling');
+    return view('emails.monthlyOtherBilling');
 });
 
 Route::post('/payments/midtrans-notifications', [PaymentController::class, 'receive']);
