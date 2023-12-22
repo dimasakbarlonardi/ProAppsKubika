@@ -97,9 +97,7 @@ class InspectionController extends Controller
             $schedule->id_room = $request->id_room;
             $schedule->checklist_datetime = Carbon::now();
             $schedule->user_id = $request->user_id;
-
             $schedule->save();
-            DB::commit();
 
             // Periksa dan perbarui status jadwal jika diperlukan
             if ($schedule->status_schedule == 'Not Done') {
@@ -116,6 +114,8 @@ class InspectionController extends Controller
 
                 $schedule->save();
             }
+
+            DB::commit();
 
             return ResponseFormatter::success([
                 $schedule
