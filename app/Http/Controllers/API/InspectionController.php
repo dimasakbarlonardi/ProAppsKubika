@@ -48,7 +48,7 @@ class InspectionController extends Controller
         $nowMonth = Carbon::now()->format('m');
         $getSchedules = $connSchedules->whereMonth('schedule', $nowMonth)
             ->where('status_schedule', 'Not Done')
-            ->with('Equipment.Room.Tower' , 'Equipment.Room.Floor')
+            ->with('Equipment.Room.Tower', 'Equipment.Room.Floor')
             ->get();
 
         $inspections = [];
@@ -78,7 +78,9 @@ class InspectionController extends Controller
     public function storeinspectionEng(Request $request, $id)
     {
         $connSchedule = ConnectionDB::setConnection(new EquiqmentEngineeringDetail());
-        $schedule = $connSchedule->find($id);
+        $schedule = $connSchedule->where('id_equiqment_engineering', $id)
+            ->where('schedule', $request->schedule)
+            ->first();
 
         try {
             DB::beginTransaction();
@@ -165,7 +167,7 @@ class InspectionController extends Controller
         $connEquipmentDetail = ConnectionDB::setConnection(new EquiqmentEngineeringDetail());
 
         $equipment = $connEquipmentDetail->where('id_equiqment_engineering_detail', $id)
-            ->with(['Room', 'Equipment', 'CheckedBy' ,'Room.Floor' ,'Room.Tower'])
+            ->with(['Room', 'Equipment', 'CheckedBy', 'Room.Floor', 'Room.Tower'])
             ->first();
 
         $equipment['status'] = json_decode($equipment->status);
