@@ -25,6 +25,7 @@ use App\Models\TransactionCenter;
 use App\Models\Unit;
 use App\Models\Utility;
 use App\Models\IPLType;
+use App\Models\JenisDenda;
 use App\Models\User;
 use App\Models\WorkOrder;
 use App\Models\WorkPermit;
@@ -32,6 +33,7 @@ use App\Models\WorkPriority;
 use App\Models\WorkRequest;
 use Illuminate\Http\Request;
 use App\Models\Login;
+use App\Models\ReminderLetter;
 use Illuminate\Support\Facades\App;
 use Illuminate\Support\Facades\Auth;
 
@@ -158,7 +160,6 @@ class DashboardController extends Controller
         $isDivision = false;
         $isPass = false;
 
-
         $checkDivision = $user->RoleH->WorkRelation->id_work_relation == $getNotif->division_receiver;
         if ($checkDivision) {
             $isDivision = true;
@@ -209,7 +210,7 @@ class DashboardController extends Controller
             case ('SplitMonthlyTenant'):
                 $data = $this->handleSplitMonthlyTenant($getNotif);
                 $data['user'] = $user;
-                return view('Tenant.Notification.SplitPayment', $data);
+                return view('Tenant.Notification.Invoice.SplitPaymentMonthly.SplitPayment', $data);
                 break;
 
             case ('OpenTicket'):
@@ -231,6 +232,12 @@ class DashboardController extends Controller
                 $data = $this->handleWP($connApprove, $getNotif);
                 $data['user'] = $user;
                 return view('Tenant.Notification.WorkPermit', $data);
+                break;
+
+            case ('paymentPermit'):
+                $data = $this->handleWPPayment($connApprove, $getNotif);
+                $data['user'] = $user;
+                return view('Tenant.Notification.WorkPermitPayment', $data);
                 break;
 
             case ('BAPP'):
@@ -291,7 +298,7 @@ class DashboardController extends Controller
                 return redirect()->route('showInvoices', $getNotif->id_data);
                 break;
 
-            case ('SP1'):
+            case ('SP'):
                 $data = $this->handleSP($getNotif->id_data);
                 $data['data'] = $data;
                 $data['notif'] = $getNotif;
@@ -354,19 +361,13 @@ class DashboardController extends Controller
     public function handleSplitMonthlyTenant($getNotif)
     {
         $model = new MonthlyArTenant();
-        $connUtility = ConnectionDB::setConnection(new Utility());
-        $connIPLType = ConnectionDB::setConnection(new IPLType());
         $connSetting = ConnectionDB::setConnection(new CompanySetting());
         $getData = ConnectionDB::setConnection($model);
         $getData = $getData->find($getNotif->id_data);
+
         $data['transaction'] = $getData->where('id_monthly_ar_tenant', $getData->id_monthly_ar_tenant)->first();
-        $data['type'] = 'MonthlyTenant';
         $data['setting'] = $connSetting->find(1);
-        // $data['installment'] = $getData->CashReceipt->Installment($getData->periode_bulan, $getData->periode_tahun);
-        $data['electric'] = $connUtility->find(1);
-        $data['water'] = $connUtility->find(2);
-        $data['sc'] = $connIPLType->find(6);
-        $data['sf'] = $connIPLType->find(7);
+        // $data['installment'] = $getData->CashReceipt->Installment($getData->periode_bulan, $getData->periode_tahun)
 
         return $data;
     }
@@ -412,6 +413,20 @@ class DashboardController extends Controller
         $data['materials'] = $dataJSON->materials;
 
         return $data;
+    }
+
+    public function handleWPPayment($connApprove, $getNotif)
+    {
+        $model = new CashReceipt();
+        $connSetting = ConnectionDB::setConnection(new CompanySetting());
+        $getData = ConnectionDB::setConnection($model);
+        $getData = $getData->find($getNotif->id_data);
+        $data['transaction'] = $getData->where('id', $getData->id)->first();
+        $data['type'] = 'wp';
+        $data['setting'] = $connSetting->find(1);
+
+        return $data;
+        
     }
 
     public function handleIzinKerja($getNotif)
@@ -477,9 +492,13 @@ class DashboardController extends Controller
     {
         $connCompany = ConnectionDB::setConnection(new CompanySetting());
         $connAR = ConnectionDB::setConnection(new MonthlyArTenant());
+        $connDenda = ConnectionDB::setConnection(new JenisDenda());
+        $connReminder = ConnectionDB::setConnection(new ReminderLetter());
 
         $data['company'] = $connCompany->find(1);
         $data['ar'] = $connAR->find($id);
+        $data['denda'] = $connDenda->where('is_active', 1)->first();
+        $data['reminders'] = $connReminder->get();
 
         return $data;
     }

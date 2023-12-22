@@ -17,14 +17,23 @@ class Kernel extends ConsoleKernel
     {
         // Attendance
         $schedule->command('attendance:cron')->daily();
-        // $schedule->command('attendance:cron')->everyMinute(); //dev
+        // $schedule->command('attendance:cron')->everyMinute();
 
         // Reminder
         $schedule->command('reminder:cron')->daily();
         // $schedule->command('reminder:cron')->everyMinute();
 
         // SP1
-        $schedule->command('monthly:sp1')->everyMinute();
+        $schedule->command('monthly:sp1')->daily();
+        // $schedule->command('monthly:sp1')->everyMinute();
+
+        // SP2
+        $schedule->command('monthly:sp2')->daily();
+        // $schedule->command('monthly:sp2')->everyMinute();
+
+         // SP3
+         $schedule->command('monthly:sp3')->daily();
+         // $schedule->command('monthly:sp3')->everyMinute();
     }
 
     /**

@@ -70,8 +70,8 @@
         <div class="table-responsive scrollbar mt-4 fs--1">
             <table class="table border-bottom">
                 <tbody>
-                    @if ($transaction->PreviousMonthBill())
-                        @foreach ($transaction->PreviousMonthBill() as $prevBill)
+                    @if ($transaction->CashReceipt->PreviousMonthBill($transaction->periode_bulan, $transaction->periode_tahun))
+                        @foreach ($transaction->CashReceipt->PreviousMonthBill($transaction->periode_bulan, $transaction->periode_tahun) as $prevBill)
                             <tr class="alert alert-success my-3">
                                 <td class="align-middle">
                                     <h6 class="mb-0 text-nowrap">Tagihan bulan {{ $prevBill->periode_bulan }},
@@ -96,30 +96,30 @@
                                 <td>
                                     <h6 class="mb-3 text-nowrap">Previous Usage</h6>
                                     <p class="mb-0">
-                                        {{ $data->MonthlyUtility->ElectricUUS->nomor_listrik_awal }} W
+                                        {{ $prevBill->MonthlyARTenant->MonthlyUtility->ElectricUUS->nomor_listrik_awal }} W
                                     </p>
                                     <hr>
                                     <p class="mb-0">
-                                        {{ $data->MonthlyUtility->WaterUUS->nomor_air_awal }}
+                                        {{ $prevBill->MonthlyARTenant->MonthlyUtility->WaterUUS->nomor_air_awal }}
                                         m<sup>3</sup>
                                     </p>
                                 </td>
                                 <td class="align-middle">
                                     <h6 class="mb-3 text-nowrap">Current Usage</h6>
                                     <p class="mb-0">
-                                        {{ $data->MonthlyUtility->ElectricUUS->nomor_listrik_akhir }} W
+                                        {{ $prevBill->MonthlyARTenant->MonthlyUtility->ElectricUUS->nomor_listrik_akhir }} W
                                     </p>
                                     <hr>
                                     <p class="mb-0">
-                                        {{ $data->MonthlyUtility->WaterUUS->nomor_air_akhir }}
+                                        {{ $prevBill->MonthlyARTenant->MonthlyUtility->WaterUUS->nomor_air_akhir }}
                                         m<sup>3</sup>
                                     </p>
                                 </td>
                                 <td class="align-middle text-center">
                                     <h6 class="text-nowrap mb-3">Usage</h6>
-                                    <span>{{ $prevBill->MonthlyUtility->ElectricUUS->usage }} W</span> <br>
+                                    <span>{{ $prevBill->MonthlyARTenant->MonthlyUtility->ElectricUUS->usage }} W</span> <br>
                                     <hr>
-                                    <span>{{ $prevBill->MonthlyUtility->WaterUUS->usage }}</span>
+                                    <span>{{ $prevBill->MonthlyARTenant->MonthlyUtility->WaterUUS->usage }}</span>
                                 </td>
                                 <td class="align-middle text-center">
                                     <h6 class="text-nowrap mb-3">Price</h6>
@@ -131,17 +131,17 @@
                                     <h6 class="text-nowrap mb-3">PPJ
                                         <small>({{ $electric->biaya_ppj }}%)</small>
                                     </h6>
-                                    <span>{{ DecimalRupiahRP($prevBill->MonthlyUtility->ElectricUUS->ppj) }}</span>
+                                    <span>{{ DecimalRupiahRP($prevBill->MonthlyARTenant->MonthlyUtility->ElectricUUS->ppj) }}</span>
                                     <br>
                                     <hr>
                                     <span>-</span>
                                 </td>
                                 <td class="align-middle text-end">
                                     <h6 class="text-nowrap mb-3 text-end">Total</h6>
-                                    <span>{{ DecimalRupiahRP($prevBill->MonthlyUtility->ElectricUUS->total) }}</span>
+                                    <span>{{ DecimalRupiahRP($prevBill->MonthlyARTenant->MonthlyUtility->ElectricUUS->total) }}</span>
                                     <br>
                                     <hr>
-                                    <span>{{ Rupiah($prevBill->MonthlyUtility->WaterUUS->total) }}</span>
+                                    <span>{{ Rupiah($prevBill->MonthlyARTenant->MonthlyUtility->WaterUUS->total) }}</span>
                                 </td>
                             </tr>
                             <tr></tr>
@@ -154,10 +154,10 @@
                                 </td>
                                 <td class="align-middle text-center">
                                     <h6 class="mb-3 mt-3 text-nowrap">Luas Unit</h6>
-                                    <span>{{ $prevBill->MonthlyIPL->Unit->luas_unit }} m<sup>2</sup></span>
+                                    <span>{{ $prevBill->MonthlyARTenant->MonthlyIPL->Unit->luas_unit }} m<sup>2</sup></span>
                                     <br>
                                     <hr>
-                                    <span>{{ $prevBill->MonthlyIPL->Unit->luas_unit }} m<sup>2</sup></span>
+                                    <span>{{ $prevBill->MonthlyARTenant->MonthlyIPL->Unit->luas_unit }} m<sup>2</sup></span>
                                 </td>
                                 <td class="align-middle text-center" colspan="2">
                                     <h6 class="mb-3 mt-3">Biaya Permeter / Biaya Procentage</h6>
@@ -171,9 +171,9 @@
                                 <td></td>
                                 <td class="align-middle text-end" colspan="2">
                                     <h6 class="mb-3 mt-3">Total</h6>
-                                    <span>{{ Rupiah($prevBill->MonthlyIPL->ipl_service_charge) }}</span> <br>
+                                    <span>{{ Rupiah($prevBill->MonthlyARTenant->MonthlyIPL->ipl_service_charge) }}</span> <br>
                                     <hr>
-                                    <span>{{ Rupiah($prevBill->MonthlyIPL->ipl_sink_fund) }}</span>
+                                    <span>{{ Rupiah($prevBill->MonthlyARTenant->MonthlyIPL->ipl_sink_fund) }}</span>
                                 </td>
                             </tr>
                         @endforeach
@@ -331,8 +331,8 @@
                 </table>
             </div>
         @endif
-        @if ($transaction->CashReceipt->transaction_status == 'PENDING' && !$transaction->NextMonthBill())
-            <form action="{{ route('generatePaymentMonthly', $transaction->id_monthly_ar_tenant) }}" method="post">
+        @if ($transaction->CashReceipt->transaction_status == 'PENDING')
+            <form action="" method="post" class="mt-5">
                 @csrf
                 <div class="row g-3 mb-3">
                     <div class="col-lg-8">
@@ -426,7 +426,7 @@
                             <div class="card-body bg-light">
                                 <div class="d-flex justify-content-between fs--1 mb-1">
                                     <p class="mb-0">Subtotal</p>
-                                    <span>{{ rupiah($transaction->CashReceipt->sub_total) }}</span>
+                                    <span>{{ rupiah($transaction->CashReceipt->SubTotal($transaction->periode_bulan, $transaction->periode_tahun) ) }}</span>
                                 </div>
                                 <div class="d-flex justify-content-between fs--1 mb-1 text-success">
                                     <p class="mb-0">Tax</p><span>{{ Rupiah($transaction->CashReceipt->tax) }}</span>
@@ -475,7 +475,7 @@
     });
     var admin_tax = 0.11;
 
-    var subtotal = parseInt('{{ $transaction->SubTotal() }}')
+
     var isCCForm = false;
 
     $('#expDate').on('input', function() {
@@ -492,6 +492,7 @@
         $(this).val(cleanedVal);
     })
 
+    var subtotal = parseInt('{{ $transaction->CashReceipt->SubTotal($transaction->periode_bulan, $transaction->periode_tahun) }}')
 
     $('document').ready(function() {
         $('#cc_form').css('display', 'none')
@@ -511,48 +512,4 @@
             $('#grand_total').html(`Rp ${formatRupiah(grand_total.toString())}`)
         });
     })
-
-    var token = '{{ $transaction->snap_token }}'
-    var periode_bulan = "{{ $transaction->periode_bulan }}"
-    var periode_tahun = '{{ $transaction->periode_tahun }}'
-
-    // $.ajax({
-    //     url: '/admin/get-montly-ar',
-    //     type: 'POST',
-    //     data: {
-    //         token
-    //     },
-    //     success: function(resp) {
-    //         resp[0].map((item) => {
-    //             if (periode_bulan != item.periode_bulan) {
-    //                 $('#exampleid').append(`<tr>
-    //                     <td class="align-middle text-nowrap">Periode bulan ${item.periode_bulan}, ${item.periode_tahun}</td>
-    //                     <td class="text-center">${item.jml_hari_jt} Hari</td>
-    //                     <td></td>
-    //                     <td class="text-end">Rp ${formatRupiah(item.total_denda)}</td>
-    //                     </tr>`);
-    //             }
-    //         })
-    //     }
-    // })
-
-    /* Fungsi formatRupiah */
-    function formatRupiah(angka, prefix) {
-        // var angka = angka.substring(0, angka.length - 3);
-
-        var number_string = angka.replace(/[^,\d]/g, '').toString(),
-            split = number_string.split(','),
-            sisa = split[0].length % 3,
-            rupiah = split[0].substr(0, sisa),
-            ribuan = split[0].substr(sisa).match(/\d{3}/gi);
-
-        // tambahkan titik jika yang di input sudah menjadi angka ribuan
-        if (ribuan) {
-            separator = sisa ? '.' : '';
-            rupiah += separator + ribuan.join('.');
-        }
-
-        rupiah = split[1] != undefined ? rupiah + ',' + split[1] : rupiah;
-        return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
-    }
 </script>

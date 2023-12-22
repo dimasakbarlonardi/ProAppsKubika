@@ -98,6 +98,7 @@ class InvoiceController extends Controller
         foreach ($request->installments as $i => $item) {
             $connInstallment->create([
                 'no_invoice' => $cr->no_invoice,
+                'installment_type' => $cr->transaction_type,
                 'periode' => $item['period'],
                 'tahun' => $item['year'],
                 'rev' => 'Rev ' . $i + 1,
@@ -112,6 +113,7 @@ class InvoiceController extends Controller
         $dataNotif = [
             'models' => 'Installment',
             'notif_title' => $cr->no_invoice,
+            'installment_type' => $cr->transaction_type,
             'id_data' => $cr->id,
             'sender' => $user->id_user,
             'division_receiver' => 2,

@@ -251,138 +251,11 @@
                 </div>
             </div>
 
-            @if (
+            <!-- @if (
                 $permit->CashReceipt &&
                     $permit->Ticket->Tenant->User->id_user == Request::session()->get('user_id') &&
-                    !$permit->CashReceipt->payment_type)
-                <form class="mt-5" action="{{ route('generatePaymentPO', $permit->CashReceipt->id) }}" method="post"
-                    id="generatePaymentPO">
-                    @csrf
-                    <div class="row g-3 mb-3">
-                        <div class="col-lg-8">
-                            <div class="card h-100">
-                                <div class="card-header">
-                                    <h6 class="mb-0">Payment Method</h6>
-                                </div>
-                                <div class="card-body bg-light">
-                                    <div class="form-check mb-4">
-                                        <input class="form-check-input" type="radio" name="billing"
-                                            value="bank_transfer,bca" />
-                                        <label class="form-check-label mb-0 d-block" for="paypal">
-                                            <img src="{{ asset('assets/img/icons/bca_logo.png') }}" height="20"
-                                                alt="" />
-                                        </label>
-                                    </div>
-                                    <div class="form-check mb-4">
-                                        <input class="form-check-input" type="radio" name="billing"
-                                            value="bank_transfer,mandiri" />
-                                        <label class="form-check-label mb-0 d-block" for="paypal">
-                                            <img src="{{ asset('assets/img/icons/mandiri_logo.png') }}" height="20"
-                                                alt="" />
-                                        </label>
-                                    </div>
-                                    <div class="form-check mb-3">
-                                        <input class="form-check-input" type="radio" name="billing"
-                                            value="bank_transfer,bni" />
-                                        <label class="form-check-label mb-0 d-block" for="paypal">
-                                            <img src="{{ asset('assets/img/icons/bni_logo.png') }}" height="20"
-                                                alt="" />
-                                        </label>
-                                    </div>
-                                    <p class="fs--1 mb-4">Pay with PayPal, Apple Pay, PayPal Credit and much more</p>
-                                    <div class="form-check mb-0">
-                                        <input class="form-check-input" type="radio" value="credit_card"
-                                            id="credit-card" name="billing" />
-                                        <label class="form-check-label d-flex align-items-center mb-0" for="credit-card">
-                                            <span class="fs-1 text-nowrap">Credit Card</span>
-                                            <img class="d-none d-sm-inline-block ms-2 mt-lg-0"
-                                                src="{{ asset('assets/img/icons/icon-payment-methods.png') }}"
-                                                height="20" alt="" />
-                                        </label>
-                                        <div class="row gx-3 mb-3">
-                                            <div id="cc_form">
-                                                <div class="col-6 my-3">
-                                                    <label
-                                                        class="form-label ls text-uppercase text-600 fw-semi-bold mb-0 fs--1"
-                                                        for="cardNumber">Card Number
-                                                    </label>
-                                                    <input class="form-control" name="card_number" id="card_number"
-                                                        placeholder="XXXX XXXX XXXX XXXX" type="text" maxlength="16"
-                                                        pattern="[0-9]{16}" />
-                                                </div>
-                                                <div class="row gx-3">
-                                                    <div class="col-6 col-sm-3">
-                                                        <label
-                                                            class="form-label ls text-uppercase text-600 fw-semi-bold mb-0 fs--1"
-                                                            for="expDate">Exp Date
-                                                        </label>
-                                                        <input class="form-control" id="expDate" placeholder="15/2024"
-                                                            type="text" name="expDate" />
-                                                    </div>
-                                                    <div class="col-6 col-sm-3">
-                                                        <label
-                                                            class="form-label ls text-uppercase text-600 fw-semi-bold mb-0 fs--1"
-                                                            for="cvv">CVV
-                                                            <span class="ms-1" data-bs-toggle="tooltip"
-                                                                data-bs-placement="top" title="Card verification value">
-                                                                <span class="fa fa-question-circle"></span>
-                                                            </span>
-                                                        </label>
-                                                        <input class="form-control" id="cvv" placeholder="123"
-                                                            maxlength="3" pattern="[0-9]{3}" name="card_cvv"
-                                                            type="text" />
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <p class="fs--1 mb-4">Safe money transfer using your bank accounts. Visa, maestro,
-                                        discover,
-                                        american express.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-lg-4">
-                            <div class="card h-100">
-                                <div class="card-header">
-                                    <h6 class="mb-0">Payment</h6>
-                                </div>
-                                <div class="card-body bg-light">
-                                    <div class="d-flex justify-content-between fs--1 mb-1">
-                                        <p class="mb-0">Subtotal</p>
-                                        <span>{{ rupiah($permit->jumlah_deposit + $permit->jumlah_supervisi) }}</span>
-                                    </div>
-                                    <div class="d-flex justify-content-between fs--1 mb-1 text-success">
-                                        <p class="mb-0">Tax</p><span>Rp 0</span>
-                                    </div>
-                                    <div class="d-flex justify-content-between fs--1 mb-1 text-success">
-                                        <p class="mb-0">Admin Fee</p><span id="admin_fee">Rp 0</span>
-                                    </div>
-                                    <hr />
-                                    <h5 class="d-flex justify-content-between"><span>Grand Total</span><span
-                                            id="grand_total">Rp
-                                            0</span>
-                                    </h5>
-                                    <p class="fs--1 text-600">Once you start your trial, you will have 30 days to use
-                                        Falcon
-                                        Premium for free. After 30 days you’ll be charged based on your selected plan.</p>
-                                    <button class="btn btn-primary d-block w-100" type="button" onclick="onPayment()">
-                                        <span class="fa fa-lock me-2"></span>Continue Payment
-                                    </button>
-                                    <div class="text-center mt-2">
-                                        <small class="d-inline-block">By continuing, you are
-                                            agreeing to
-                                            our subscriber <a href="#!">terms</a> and will be charged at the end of
-                                            the
-                                            trial.
-                                        </small>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <input type="hidden" id="val_admin_fee" name="admin_fee">
-                </form>
+                    !$permit->CashReceipt->payment_type) 
+                
             @elseif (
                 $permit->CashReceipt &&
                     $permit->Ticket->Tenant->User->id_user == Request::session()->get('user_id') &&
@@ -391,7 +264,7 @@
                     <a href="{{ route('paymentPO', $permit->CashReceipt->id) }}" class="btn btn-success">Lihat
                         VA</a>
                 </div>
-            @endif
+            @endif -->
         </div>
     </div>
 @endsection

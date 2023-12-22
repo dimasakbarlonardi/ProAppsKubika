@@ -58,7 +58,8 @@
             "app/Helpers/Notifikasi.php",
             "app/Helpers/ConnectionDB.php",
             "app/Helpers/SaveFile.php",
-            "app/Helpers/CryptoHelper.php"
+            "app/Helpers/CryptoHelper.php",
+            "app/Helpers/InvoiceHelper.php"
         ]
     },
     "autoload-dev": {
