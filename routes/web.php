@@ -146,6 +146,10 @@ Route::get('payment-event', function () {
     broadcast(new PaymentEvent($datanotif));
 });
 
+Route::get('send-mail', function () {
+    return view('emails.monthlySplittedBilling');
+});
+
 Route::post('/payments/midtrans-notifications', [PaymentController::class, 'receive']);
 Route::get('/delete/midtrans', [PaymentController::class, 'delete']);
 Route::get('/check/midtrans', [PaymentController::class, 'check']);

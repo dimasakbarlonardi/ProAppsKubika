@@ -98,6 +98,18 @@ class MonthlyArTenant extends Model
         return $cr;
     }
 
+    public function CronOtherCashReceipt($db_name)
+    {
+        $connCR = new CashReceipt();
+        $connCR = $connCR->setConnection($db_name);
+
+        $cr = $connCR->where('transaction_type', 'MonthlyOtherBillTenant')
+            ->where('id_monthly_ar_tenant', $this->id_monthly_ar_tenant)
+            ->first();
+
+        return $cr;
+    }
+
     public function MonthlyIPL()
     {
         return $this->hasOne(MonthlyIPL::class, 'id', 'id_monthly_ipl');
@@ -246,6 +258,13 @@ class MonthlyArTenant extends Model
 
         return $lastBill;
     }
+
+    // public function getUtilityBilling()
+    // {
+    //     $connCR = ConnectionDB::setConnection(new CashReceipt());
+
+    //     return $this->hasMany(Cas)
+    // }
 
     protected $dates = ['deleted_at'];
 }
