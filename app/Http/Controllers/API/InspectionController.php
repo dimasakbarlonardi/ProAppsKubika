@@ -57,7 +57,8 @@ class InspectionController extends Controller
                 $eq = $schedule->Equipment;
 
                 $object = new stdClass();
-                $object->id_equiqment_engineering = $schedule->id_equiqment_engineering_detail;
+                $object->id_schedule = $schedule->id_equiqment_engineering_detail;
+                $object->id_equiqment_engineering = $eq->id_equiqment_engineering;
                 $object->schedule = $schedule->schedule;
                 $object->equipment = $eq->equiqment;
                 $object->status_schedule = $schedule->status_schedule;
