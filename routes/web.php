@@ -2,6 +2,7 @@
 
 
 use App\Events\PaymentEvent;
+use App\Helpers\ConnectionDB;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\Admin\BAPPController;
@@ -118,6 +119,8 @@ use App\Http\Controllers\Admin\ToolsHKController;
 use App\Http\Controllers\Admin\ToolsSecurityController;
 use App\Http\Controllers\Admin\VisitorsController;
 use App\Http\Controllers\Admin\WaterUUSController;
+use App\Mail\MonthlyOtherBillMail;
+use App\Models\MonthlyArTenant;
 
 /*
 |--------------------------------------------------------------------------
@@ -147,7 +150,11 @@ Route::get('payment-event', function () {
 });
 
 Route::get('send-mail', function () {
-    return view('emails.monthlyOtherBilling');
+    $ar = ConnectionDB::setConnection(new MonthlyArTenant());
+
+    $ar = $ar->find(450);
+
+    return new MonthlyOtherBillMail($ar, 'park-royale');
 });
 
 Route::post('/payments/midtrans-notifications', [PaymentController::class, 'receive']);
