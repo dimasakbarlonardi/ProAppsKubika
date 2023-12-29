@@ -8,6 +8,11 @@ use App\Helpers\HelpNotifikasi;
 use App\Helpers\InvoiceHelper;
 use App\Helpers\ResponseFormatter;
 use App\Http\Controllers\Controller;
+use App\Jobs\SendBulkIPLMail;
+use App\Jobs\SendBulkOtherBillMail;
+use App\Jobs\SendBulkUtilityMail;
+use App\Mail\MonthlySplittedMail;
+use App\Mail\MonthlyUtilityMail;
 use App\Models\CashReceipt;
 use App\Models\CashReceiptDetail;
 use App\Models\CompanySetting;
@@ -36,6 +41,7 @@ use GuzzleHttp\Client;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 use Midtrans\CoreApi;
 use RealRashid\SweetAlert\Facades\Alert;
@@ -551,6 +557,10 @@ class BillingController extends Controller
                     ];
 
                     broadcast(new HelloEvent($dataNotif));
+
+                    SendBulkUtilityMail::dispatch($util->MonthlyUtility->Unit->TenantUnit->Tenant->User->login_user, $util->MonthlyUtility->MonthlyTenant, ConnectionDB::getDBname());
+                    SendBulkIPLMail::dispatch($util->MonthlyUtility->Unit->TenantUnit->Tenant->User->login_user, $util->MonthlyUtility->MonthlyTenant, ConnectionDB::getDBname());
+                    SendBulkOtherBillMail::dispatch($util->MonthlyUtility->Unit->TenantUnit->Tenant->User->login_user, $util->MonthlyUtility->MonthlyTenant, ConnectionDB::getDBname());
                 }
 
 
@@ -629,6 +639,7 @@ class BillingController extends Controller
                 if ($response->status_code == 201) {
                     $transaction->va_number = $response->va_numbers[0]->va_number;
                     $transaction->expiry_time = $response->expiry_time;
+                    $transaction->transaction_id = $response->transaction_id;
                     $transaction->transaction_status = 'VERIFYING';
                     $transaction->save();
 

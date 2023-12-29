@@ -2,6 +2,7 @@
 
 
 use App\Events\PaymentEvent;
+use App\Helpers\ConnectionDB;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\Admin\BAPPController;
@@ -118,6 +119,8 @@ use App\Http\Controllers\Admin\ToolsHKController;
 use App\Http\Controllers\Admin\ToolsSecurityController;
 use App\Http\Controllers\Admin\VisitorsController;
 use App\Http\Controllers\Admin\WaterUUSController;
+use App\Mail\MonthlyOtherBillMail;
+use App\Models\MonthlyArTenant;
 
 /*
 |--------------------------------------------------------------------------
@@ -144,6 +147,14 @@ Route::get('payment-event', function () {
         'status' => 'settlement',
     ];
     broadcast(new PaymentEvent($datanotif));
+});
+
+Route::get('send-mail', function () {
+    $ar = ConnectionDB::setConnection(new MonthlyArTenant());
+
+    $ar = $ar->find(450);
+
+    return new MonthlyOtherBillMail($ar, 'park-royale');
 });
 
 Route::post('/payments/midtrans-notifications', [PaymentController::class, 'receive']);
@@ -768,11 +779,11 @@ Route::prefix('admin')->group(function () {
         Route::post('/work-schedules/store/{id}', [ShiftTypeController::class, 'storeWorkSchedules'])->name('storeWorkSchedules');
         Route::post('/work-schedules/destroy/{id}', [ShiftTypeController::class, 'destroyWT'])->name('destroyWT');
         Route::post('/work-schedules/{id}', [ShiftTypeController::class, 'updateWT'])->name('updateWT');
+        Route::post('import/work-schedule', [ShiftTypeController::class, 'import'])->name('importWorkSchedule');
 
         // --------------- Attendance ------------------
         Route::resource('requestattendance', RequestAttendanceController::class);
         Route::post('/permit-attendance/approve/{id}', [RequestAttendanceController::class, 'approvePermitAttendance'])->name('approvePermitAttendance');
-
 
         // ---------------Package------------------
         Route::resource('packages', PackageController::class);

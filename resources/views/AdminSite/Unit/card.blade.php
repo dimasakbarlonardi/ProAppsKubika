@@ -11,7 +11,7 @@
                     <a class="text-800 d-flex align-items-center gap-1" href="../../app/support-desk/contact-details.html">
                         <a class="fas fa-city mr-3" data-fa-transform="shrink-3 up-1"></a>
                         <a>{{ $unit->tower->nama_tower }}</a>,
-                        <span>{{ $unit->floor->nama_lantai }}</span>
+                        <span>{{ $unit->floor ? $unit->floor->nama_lantai : '-' }}</span>
                     </a>
                 </div>
                 <p class="card-text">

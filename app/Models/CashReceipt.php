@@ -124,6 +124,19 @@ class CashReceipt extends Model
         return $installment;
     }
 
+    public function CronInstallment($db_name)
+    {
+        $connInstallment = new Installment();
+        $connInstallment = $connInstallment->setConnection($db_name);
+
+        $installment = $connInstallment->where('periode', $this->MonthlyARTenant->periode_bulan)
+            ->where('tahun', $this->MonthlyARTenant->periode_tahun)
+            ->where('installment_type', $this->transaction_type)
+            ->first();
+
+        return $installment;
+    }
+
     public function UpdateInstallment($bulan, $tahun, $connection)
     {
         if (Auth::user()) {
@@ -171,6 +184,24 @@ class CashReceipt extends Model
         return $prevMonthBill;
     }
 
+    public function CronPreviousUtilityBill($month, $year, $db_name)
+    {
+        $prevMonthBill = new CashReceipt();
+
+        $prevMonthBill = $prevMonthBill->setConnection($db_name)
+            ->whereHas('MonthlyARTenant', function ($q) use ($month, $year) {
+                $q->where('periode_bulan', '<', $month);
+                $q->where('periode_tahun', $year);
+            })
+            ->where('transaction_type', 'MonthlyUtilityTenant')
+            ->with(['MonthlyARTenant.MonthlyUtility.ElectricUUS', 'MonthlyARTenant.MonthlyUtility.WaterUUS'])
+            ->where('transaction_status', '!=', 'PAID')
+            ->where('id_unit', $this->id_unit)
+            ->get();
+
+        return $prevMonthBill;
+    }
+
     public function PreviousIPLBill($month, $year)
     {
         $prevMonthBill = ConnectionDB::setConnection(new CashReceipt())
@@ -187,9 +218,43 @@ class CashReceipt extends Model
         return $prevMonthBill;
     }
 
+    public function CronPreviousIPLBill($month, $year, $db_name)
+    {
+        $prevMonthBill = new CashReceipt();
+        $prevMonthBill = $prevMonthBill->setConnection($db_name)
+            ->whereHas('MonthlyARTenant', function ($q) use ($month, $year) {
+                $q->where('periode_bulan', '<', $month);
+                $q->where('periode_tahun', $year);
+            })
+            ->where('transaction_type', 'MonthlyIPLTenant')
+            ->with(['MonthlyARTenant.MonthlyUtility.ElectricUUS', 'MonthlyARTenant.MonthlyUtility.WaterUUS'])
+            ->where('transaction_status', '!=', 'PAID')
+            ->where('id_unit', $this->id_unit)
+            ->get();
+
+        return $prevMonthBill;
+    }
+
     public function PreviousOtherBill($month, $year)
     {
         $prevMonthBill = ConnectionDB::setConnection(new CashReceipt())
+            ->whereHas('MonthlyARTenant', function ($q) use ($month, $year) {
+                $q->where('periode_bulan', '<', $month);
+                $q->where('periode_tahun', $year);
+            })
+            ->where('transaction_type', 'MonthlyOtherBillTenant')
+            ->with(['MonthlyARTenant.MonthlyUtility.ElectricUUS', 'MonthlyARTenant.MonthlyUtility.WaterUUS'])
+            ->where('transaction_status', '!=', 'PAID')
+            ->where('id_unit', $this->id_unit)
+            ->get();
+
+        return $prevMonthBill;
+    }
+
+    public function CronPreviousOtherBill($month, $year, $db_name)
+    {
+        $prevMonthBill = new CashReceipt();
+        $prevMonthBill = $prevMonthBill->setConnection($db_name)
             ->whereHas('MonthlyARTenant', function ($q) use ($month, $year) {
                 $q->where('periode_bulan', '<', $month);
                 $q->where('periode_tahun', $year);
@@ -246,5 +311,10 @@ class CashReceipt extends Model
         $subtotal = $prevMonthBill->sum('sub_total');;
 
         return $subtotal;
+    }
+
+    public function Unit()
+    {
+        return $this->hasOne(Unit::class, 'id_unit', 'id_unit');
     }
 }

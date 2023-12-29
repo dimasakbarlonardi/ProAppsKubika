@@ -87,73 +87,98 @@
         <tbody>
             @foreach ($transaction->UtilityCashReceipt->PreviousUtilityBill($transaction->periode_bulan, $transaction->periode_tahun) as $bill)
                 <tr class="alert alert-success my-3">
-                    <td class="align-middle">
+                    <td class="align-middle" colspan="9">
                         <h6 class="mb-0 text-nowrap">Tagihan bulan
                             {{ $bill->MonthlyARTenant->periode_bulan }},
                             {{ $bill->MonthlyARTenant->periode_tahun }}
                         </h6>
                     </td>
-                    <td class="align-middle">
-                    </td>
-                    <td colspan="6"></td>
                 </tr>
                 <tr>
+                    <td>
+                        <h6 class="mb-3 text-nowrap">Item</h6>
+                    </td>
+                    <td>
+                        <h6 class="mb-3 text-nowrap">Previous Usage</h6>
+                    </td>
+                    <td>
+                        <h6 class="mb-3 text-nowrap">Current Usage</h6>
+                    </td>
+                    <td>
+                        <h6 class="text-nowrap mb-3">Usage</h6>
+                    </td>
+                    <td>
+                        <h6 class="text-nowrap mb-3">Price</h6>
+                    </td>
+                    <td>
+                        <h6 class="text-nowrap mb-3">PPJ <small>(%)</small></h6>
+                    </td>
+                    <td>
+                        <h6 class="text-nowrap mb-3 text-end">Total</h6>
+                    </td>
+                </tr>
+                <tr>
+                    <td>Listrik</td>
+                    <td>
+                        {{ $bill->MonthlyARTenant->MonthlyUtility->ElectricUUS->nomor_listrik_awal }} W
+                    </td>
+                    <td>
+                        {{ $bill->MonthlyARTenant->MonthlyUtility->ElectricUUS->nomor_listrik_akhir }} W
+                    </td>
+                    <td>
+                        <span>{{ $bill->MonthlyARTenant->MonthlyUtility->ElectricUUS->usage }} W</span> <br>
+                    </td>
+                    <td>
+                        <span>{{ DecimalRupiahRP($electric->biaya_m3) }} / KWh</span> <br>
+                    </td>
+                    <td>
+                        <span>{{ DecimalRupiahRP($bill->MonthlyARTenant->MonthlyUtility->ElectricUUS->ppj) }}</span>
+                    </td>
+                    <td class="align-middle text-end">
+                        <span>{{ DecimalRupiahRP($bill->MonthlyARTenant->MonthlyUtility->ElectricUUS->total) }}</span>
+                    </td>
+                </tr>
+                @if ($bill->MonthlyARTenant->MonthlyUtility->ElectricUUS->is_abodemen)
+                    <tr>
+                        <td colspan="3">
+                            Abodemen Listrik
+                        </td>
+                        <td>
+                            {{ $bill->MonthlyARTenant->MonthlyUtility->ElectricUUS->abodemen_value }}W
+                        </td>
+                    </tr>
+                @endif
+                <tr>
                     <td class="align-middle">
-                        <h6 class="mb-3 text-nowrap">Tagihan Utility</h6>
-                        <p class="mb-0">Listrik</p>
-                        <hr>
                         <p class="mb-0">Air</p>
                     </td>
                     <td class="align-middle">
-                        <h6 class="mb-3 text-nowrap">Previous Usage</h6>
-                        <p class="mb-0">
-                            {{ $bill->MonthlyARTenant->MonthlyUtility->ElectricUUS->nomor_listrik_awal }} W
-                        </p>
-                        <hr>
                         <p class="mb-0">
                             {{ $bill->MonthlyARTenant->MonthlyUtility->WaterUUS->nomor_air_awal }}
                             m<sup>3</sup>
                         </p>
                     </td>
                     <td class="align-middle">
-                        <h6 class="mb-3 text-nowrap">Current Usage</h6>
-                        <p class="mb-0">
-                            {{ $bill->MonthlyARTenant->MonthlyUtility->ElectricUUS->nomor_listrik_akhir }} W
-                        </p>
-                        <hr>
                         <p class="mb-0">
                             {{ $bill->MonthlyARTenant->MonthlyUtility->WaterUUS->nomor_air_akhir }}
                             m<sup>3</sup>
                         </p>
                     </td>
                     <td class="align-middle">
-                        <h6 class="text-nowrap mb-3">Usage</h6>
-                        <span>{{ $bill->MonthlyARTenant->MonthlyUtility->ElectricUUS->usage }} W</span> <br>
-                        <hr>
                         <span>{{ $bill->MonthlyARTenant->MonthlyUtility->WaterUUS->usage }} m<sup>3</sup></span>
                     </td>
                     <td class="align-middle">
-                        <h6 class="text-nowrap mb-3">Price</h6>
-                        <span>{{ DecimalRupiahRP($electric->biaya_m3) }} / KWh</span> <br>
-                        <hr>
                         <span>{{ Rupiah($water->biaya_m3) }}</span>
                     </td>
                     <td class="align-middle">
-                        <h6 class="text-nowrap mb-3">PPJ <small>(%)</small></h6>
-                        <span>{{ DecimalRupiahRP($bill->MonthlyARTenant->MonthlyUtility->ElectricUUS->ppj) }}</span>
-                        <br>
-                        <hr>
                         <span>-</span>
                     </td>
                     <td class="align-middle text-end">
-                        <h6 class="text-nowrap mb-3 text-end">Total</h6>
-                        <span>{{ DecimalRupiahRP($bill->MonthlyARTenant->MonthlyUtility->ElectricUUS->total) }}</span>
-                        <br>
-                        <hr>
                         <span>{{ Rupiah($bill->MonthlyARTenant->MonthlyUtility->WaterUUS->total) }}</span>
                     </td>
                 </tr>
             @endforeach
+
             <tr class="alert alert-success my-3">
                 <td class="align-middle">
                     <h6 class="mb-0 text-nowrap">Tagihan bulan
@@ -166,61 +191,89 @@
                 <td colspan="6"></td>
             </tr>
             <tr>
+                <td>
+                    <h6 class="mb-3 text-nowrap">Item</h6>
+                </td>
+                <td>
+                    <h6 class="mb-3 text-nowrap">Previous Usage</h6>
+                </td>
+                <td>
+                    <h6 class="mb-3 text-nowrap">Current Usage</h6>
+                </td>
+                <td>
+                    <h6 class="text-nowrap mb-3">Usage</h6>
+                </td>
+                <td>
+                    <h6 class="text-nowrap mb-3">Price</h6>
+                </td>
+                <td>
+                    <h6 class="text-nowrap mb-3">PPJ <small>(%)</small></h6>
+                </td>
+                <td>
+                    <h6 class="text-nowrap mb-3 text-end">Total</h6>
+                </td>
+            </tr>
+            <tr>
+                <td>Listrik</td>
+                <td>
+                    {{ $transaction->MonthlyUtility->ElectricUUS->nomor_listrik_awal }} W
+                </td>
+                <td>
+                    {{ $transaction->MonthlyUtility->ElectricUUS->nomor_listrik_akhir }} W
+                </td>
+                <td>
+                    <span>{{ $transaction->MonthlyUtility->ElectricUUS->usage }} W</span> <br>
+                </td>
+                <td>
+                    <span>{{ DecimalRupiahRP($electric->biaya_m3) }} / KWh</span> <br>
+                </td>
+                <td>
+                    <span>{{ DecimalRupiahRP($transaction->MonthlyUtility->ElectricUUS->ppj) }}</span>
+                </td>
+                <td class="align-middle text-end">
+                    <span>{{ DecimalRupiahRP($transaction->MonthlyUtility->ElectricUUS->total) }}</span>
+                </td>
+            </tr>
+            @if ($transaction->MonthlyUtility->ElectricUUS->is_abodemen)
+                <tr>
+                    <td colspan="3">
+                        Abodemen Listrik
+                    </td>
+                    <td>
+                        {{ $transaction->MonthlyUtility->ElectricUUS->abodemen_value }}W
+                    </td>
+                </tr>
+            @endif
+            <tr>
                 <td class="align-middle">
-                    <h6 class="mb-3 text-nowrap">Tagihan Utility</h6>
-                    <p class="mb-0">Listrik</p>
-                    <hr>
                     <p class="mb-0">Air</p>
                 </td>
                 <td class="align-middle">
-                    <h6 class="mb-3 text-nowrap">Previous Usage</h6>
-                    <p class="mb-0">
-                        {{ $transaction->MonthlyUtility->ElectricUUS->nomor_listrik_awal }} W
-                    </p>
-                    <hr>
                     <p class="mb-0">
                         {{ $transaction->MonthlyUtility->WaterUUS->nomor_air_awal }}
                         m<sup>3</sup>
                     </p>
                 </td>
                 <td class="align-middle">
-                    <h6 class="mb-3 text-nowrap">Current Usage</h6>
-                    <p class="mb-0">
-                        {{ $transaction->MonthlyUtility->ElectricUUS->nomor_listrik_akhir }} W
-                    </p>
-                    <hr>
                     <p class="mb-0">
                         {{ $transaction->MonthlyUtility->WaterUUS->nomor_air_akhir }}
                         m<sup>3</sup>
                     </p>
                 </td>
                 <td class="align-middle">
-                    <h6 class="text-nowrap mb-3">Usage</h6>
-                    <span>{{ $transaction->MonthlyUtility->ElectricUUS->usage }} W</span> <br>
-                    <hr>
                     <span>{{ $transaction->MonthlyUtility->WaterUUS->usage }} m<sup>3</sup></span>
                 </td>
                 <td class="align-middle">
-                    <h6 class="text-nowrap mb-3">Price</h6>
-                    <span>{{ DecimalRupiahRP($electric->biaya_m3) }} / KWh</span> <br>
-                    <hr>
                     <span>{{ Rupiah($water->biaya_m3) }}</span>
                 </td>
                 <td class="align-middle">
-                    <h6 class="text-nowrap mb-3">PPJ <small>(%)</small></h6>
-                    <span>{{ DecimalRupiahRP($transaction->MonthlyUtility->ElectricUUS->ppj) }}</span>
-                    <br>
-                    <hr>
                     <span>-</span>
                 </td>
                 <td class="align-middle text-end">
-                    <h6 class="text-nowrap mb-3 text-end">Total</h6>
-                    <span>{{ DecimalRupiahRP($transaction->MonthlyUtility->ElectricUUS->total) }}</span>
-                    <br>
-                    <hr>
                     <span>{{ Rupiah($transaction->MonthlyUtility->WaterUUS->total) }}</span>
                 </td>
             </tr>
+
             @if ($transaction->UtilityCashReceipt->denda_bulan_sebelumnya)
                 <tr class="alert alert-danger my-3">
                     <td class="align-middle">
@@ -235,7 +288,8 @@
                     <tr>
                         <td class="align-middle">
                             <h6 class="mb-3 text-nowrap">Periode</h6>
-                            <span>Bulan {{ $bill->MonthlyARTenant->periode_bulan }} / {{ $bill->MonthlyARTenant->periode_tahun }}</span>
+                            <span>Bulan {{ $bill->MonthlyARTenant->periode_bulan }} /
+                                {{ $bill->MonthlyARTenant->periode_tahun }}</span>
                         </td>
                         <td class="align-middle text-end" colspan="6">
                             <h6 class="text-nowrap mb-3 text-end">Total</h6>

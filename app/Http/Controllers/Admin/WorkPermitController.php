@@ -437,7 +437,6 @@ class WorkPermitController extends Controller
         $site = Site::find($user->id_site);
 
         $transaction = $connTransaction->find($cr);
-<<<<<<< HEAD
         if (!$transaction) {
             return redirect()->back()->with('error', 'Transaction not found');
         }
@@ -459,29 +458,6 @@ class WorkPermitController extends Controller
             'transaction_details' => [
             'order_id' => $transaction->order_id,
             'gross_amount' => $transaction->gross_amount,
-=======
-        $client = new Client();
-        $billing = explode(',', $request->billing);
-        $admin_fee = $request->admin_fee;
-        
-        $transaction->gross_amount = $transaction->sub_total + $admin_fee;
-        $transaction->payment_type = 'bank_transfer';
-        $transaction->bank = Str::upper($billing[1]);
-        
-        $payment = [];
-
-        $payment['payment_type'] = $billing[0];
-        $payment['transaction_details']['order_id'] = $transaction->order_id;
-        $payment['transaction_details']['gross_amount'] = $transaction->gross_amount;
-        $payment['bank_transfer']['bank'] = $billing[1];
-
-        $response = $client->request('POST', 'https://api.sandbox.midtrans.com/v2/charge', [
-            'body' => json_encode($payment),
-            'headers' => [
-                'accept' => 'application/json',
-                'authorization' => 'Basic ' . base64_encode($site->midtrans_server_key),
-                'content-type' => 'application/json',
->>>>>>> 75712f036b9877b546dd0126edadc79faef9a3b1
             ],
             'bank_transfer' => [
             'bank' => $billing[1],

@@ -424,28 +424,6 @@ class BillingController extends Controller
             $listrik = $connUtility->find(5);
         }
 
-        $isAbodemen = false;
-        $biaya_usage = $listrik->biaya_m3;
-        $get_ppj = $listrik->biaya_ppj / 100;
-        $electric_capacity = $unit->electric_capacity;
-        $abodemen = (40 * $electric_capacity) / 1000;
-
-        if ($usage < $abodemen) {
-            $isAbodemen = true;
-            $usage = $abodemen;
-        }
-        if ($isAbodemen) {
-            if ($listrik->biaya_tetap != 0) {
-                $total_usage = $listrik->biaya_tetap;
-            } else {
-                $total_usage = $biaya_usage * $usage;
-            }
-        } else {
-            $total_usage = $biaya_usage * $usage;
-        }
-        $ppj = $get_ppj * $total_usage;
-        $total = $total_usage + $ppj;
-
         if ($login) {
             $user = new User();
             $user = $user->setConnection($site->db_name);
@@ -462,6 +440,29 @@ class BillingController extends Controller
                 return response()->json(['status' => 'exist']);
             }
 
+            $isAbodemen = false;
+            $biaya_usage = $listrik->biaya_m3;
+            $get_ppj = $listrik->biaya_ppj / 100;
+            $electric_capacity = $unit->electric_capacity;
+            $abodemen = (40 * $electric_capacity) / 1000;
+
+            if ($usage < $abodemen) {
+                $isAbodemen = true;
+            }
+
+            if ($isAbodemen) {
+                if ($listrik->biaya_tetap != 0) {
+                    $total_usage = $listrik->biaya_tetap;
+                } else {
+                    $total_usage = $biaya_usage * $usage;
+                }
+            } else {
+                $total_usage = $biaya_usage * $usage;
+            }
+
+            $ppj = $get_ppj * $total_usage;
+            $total = $total_usage + $ppj;
+
             $electricUUS = $connElecUUS->create([
                 'periode_bulan' => $request->periode_bulan,
                 'periode_tahun' => Carbon::now()->format('Y'),
@@ -469,6 +470,8 @@ class BillingController extends Controller
                 'nomor_listrik_awal' => $request->previous,
                 'nomor_listrik_akhir' => $request->current,
                 'usage' => $usage,
+                'abodemen_value' => $abodemen,
+                'is_abodemen' => $isAbodemen,
                 'ppj' => $ppj,
                 'total' => $total,
                 'id_user' => $user->id_user
