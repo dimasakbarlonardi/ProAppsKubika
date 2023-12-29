@@ -10,6 +10,8 @@ use App\Models\WorkTimeline;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
+use Excel;
+use App\Imports\WorkScheduleImport;
 
 class ShiftTypeController extends Controller
 {
@@ -21,7 +23,7 @@ class ShiftTypeController extends Controller
     public function index()
     {
         $conn = ConnectionDB::setConnection(new ShiftType());
-
+        
         $data['shifttype'] = $conn->get();
         return view('AdminSite.ShiftType.index', $data);
     }
@@ -148,11 +150,22 @@ class ShiftTypeController extends Controller
     {
         $connListSchedule = ConnectionDB::setConnection(new WorkTimeline());
         $connKaryawan = ConnectionDB::setConnection(new Karyawan());
-
+        
         $data['work_schedules'] = $connListSchedule->get();
         $data['karyawans'] = $connKaryawan->get();
 
         return view('AdminSite.WorkSchedule.all_work_schedule', $data);
+    }
+
+    public function import(Request $request)
+    {
+        $file = $request->file('file_excel');
+        
+        Excel::import(new WorkScheduleImport($request->karyawan_id), $file);
+        
+        Alert::success('Success', 'Success import data');
+
+        return redirect()->back();
     }
 
     public function workSchedules($id)
@@ -160,7 +173,7 @@ class ShiftTypeController extends Controller
         $connWorkTimeline = ConnectionDB::setConnection(new WorkTimeline());
         $connShiftType = ConnectionDB::setConnection(new ShiftType());
         $connKaryawan = ConnectionDB::setConnection(new Karyawan());
-
+       
         $data['karyawan'] = $connKaryawan->find($id);
         $data['shift_types'] = $connShiftType->get();
         $data['work_timelines'] = $connWorkTimeline

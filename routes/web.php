@@ -779,11 +779,11 @@ Route::prefix('admin')->group(function () {
         Route::post('/work-schedules/store/{id}', [ShiftTypeController::class, 'storeWorkSchedules'])->name('storeWorkSchedules');
         Route::post('/work-schedules/destroy/{id}', [ShiftTypeController::class, 'destroyWT'])->name('destroyWT');
         Route::post('/work-schedules/{id}', [ShiftTypeController::class, 'updateWT'])->name('updateWT');
+        Route::post('import/work-schedule', [ShiftTypeController::class, 'import'])->name('importWorkSchedule');
 
         // --------------- Attendance ------------------
         Route::resource('requestattendance', RequestAttendanceController::class);
         Route::post('/permit-attendance/approve/{id}', [RequestAttendanceController::class, 'approvePermitAttendance'])->name('approvePermitAttendance');
-
 
         // ---------------Package------------------
         Route::resource('packages', PackageController::class);

@@ -463,17 +463,25 @@ class WorkPermitController extends Controller
         $client = new Client();
         $billing = explode(',', $request->billing);
         $admin_fee = $request->admin_fee;
-        
+
+        if (!isset($transaction->sub_total)) {
+            return redirect()->back()->with('error', 'Sub total not set in the transaction');
+        }
+
         $transaction->gross_amount = $transaction->sub_total + $admin_fee;
         $transaction->payment_type = 'bank_transfer';
         $transaction->bank = Str::upper($billing[1]);
-        
-        $payment = [];
 
-        $payment['payment_type'] = $billing[0];
-        $payment['transaction_details']['order_id'] = $transaction->order_id;
-        $payment['transaction_details']['gross_amount'] = $transaction->gross_amount;
-        $payment['bank_transfer']['bank'] = $billing[1];
+        $payment = [
+            'payment_type' => $billing[0],
+            'transaction_details' => [
+            'order_id' => $transaction->order_id,
+            'gross_amount' => $transaction->gross_amount,
+            ],
+            'bank_transfer' => [
+            'bank' => $billing[1],
+            ],
+        ];
 
         $response = $client->request('POST', 'https://api.sandbox.midtrans.com/v2/charge', [
             'body' => json_encode($payment),
