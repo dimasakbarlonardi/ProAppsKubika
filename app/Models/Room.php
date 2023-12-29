@@ -28,24 +28,26 @@ class Room extends Model
 
     public function GenerateBarcode()
     {
-        $barcodeRoom = QrCode::format('png')
-            ->merge(public_path('assets/img/logos/proapps.png'), 0.6, true)
-            ->size(500)
-            ->color(0, 0, 0)
-            ->eyeColor(0, 39, 178, 155, 0, 0, 0)
-            ->eyeColor(1, 39, 178, 155, 0, 0, 0)
-            ->eyeColor(2, 39, 178, 155, 0, 0, 0)
-            ->errorCorrection('H')
-            ->generate(url('') . '/view-room/' . $this->id_site . '/' .  $this->id_room);
+        $barcode =  'https://api.qrserver.com/v1/create-qr-code/?size=1000x1000&data=' . '/view-room/' . $this->id_site . '/' .  $this->id_room;
 
-        $outputBarcode = '/public/' . $this->id_site . '/img/qr-code/room/' . $this->id_room . '-barcode_room.png';
-        $barcode = '/storage/' . $this->id_site . '/img/qr-code/room/' . $this->id_room . '-barcode_room.png';
+        // $barcodeRoom = QrCode::format('png')
+        //     ->merge(public_path('assets/img/logos/proapps.png'), 0.6, true)
+        //     ->size(500)
+        //     ->color(0, 0, 0)
+        //     ->eyeColor(0, 39, 178, 155, 0, 0, 0)
+        //     ->eyeColor(1, 39, 178, 155, 0, 0, 0)
+        //     ->eyeColor(2, 39, 178, 155, 0, 0, 0)
+        //     ->errorCorrection('H')
+        //     ->generate($urlTerenkripsi);
 
-        Storage::disk('local')->put($outputBarcode, $barcodeRoom);
+        // $outputBarcode = '/public/' . $this->id_site . '/img/qr-code/room/' . $this->id_room . '-barcode_room.png';
+        // $barcode = '/storage/' . $this->id_site . '/img/qr-code/room/' . $this->id_room . '-barcode_room.png';
+        // Storage::disk('local')->put($outputBarcode, $barcodeRoom);
 
         $this->barcode_room = $barcode;
         $this->save();
     }
+
 
     public function tower()
     {
