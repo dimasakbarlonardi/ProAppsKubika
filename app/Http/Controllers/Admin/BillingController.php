@@ -526,43 +526,42 @@ class BillingController extends Controller
 
                 $arTenant = $util->MonthlyUtility->MonthlyTenant->CashReceipts[0];
 
-                // if (!$arTenant->tgl_jt_invoice && !$arTenant->tgl_bayar_invoice) {
-                $jatuh_tempo_1 = $connReminder->find(1)->durasi_reminder_letter;
-                $jatuh_tempo_1 = Carbon::now()->addDays($jatuh_tempo_1);
+                if (!$arTenant->tgl_jt_invoice && !$arTenant->tgl_bayar_invoice) {
+                    $jatuh_tempo_1 = $connReminder->find(1)->durasi_reminder_letter;
+                    $jatuh_tempo_1 = Carbon::now()->addDays($jatuh_tempo_1);
 
-                if ($setting->is_split_ar == 0) {
-                    $util->MonthlyUtility->MonthlyTenant->CashReceipt->tgl_jt_invoice = $jatuh_tempo_1;
-                    $util->MonthlyUtility->MonthlyTenant->CashReceipt->save();
-                } elseif ($setting->is_split_ar == 1) {
-                    foreach ($util->MonthlyUtility->MonthlyTenant->CashReceipts as $bill) {
-                        $bill->tgl_jt_invoice = $jatuh_tempo_1;
-                        $bill->save();
+                    if ($setting->is_split_ar == 0) {
+                        $util->MonthlyUtility->MonthlyTenant->CashReceipt->tgl_jt_invoice = $jatuh_tempo_1;
+                        $util->MonthlyUtility->MonthlyTenant->CashReceipt->save();
+                    } elseif ($setting->is_split_ar == 1) {
+                        foreach ($util->MonthlyUtility->MonthlyTenant->CashReceipts as $bill) {
+                            $bill->tgl_jt_invoice = $jatuh_tempo_1;
+                            $bill->save();
+                        }
                     }
+
+                    $util->MonthlyUtility->MonthlyTenant->MonthlyIPL->sign_approval_2 = Carbon::now();
+                    $util->MonthlyUtility->MonthlyTenant->MonthlyIPL->save();
+
+                    $util->MonthlyUtility->sign_approval_2 = Carbon::now();
+                    $util->MonthlyUtility->save();
+
+                    $dataNotif = [
+                        'models' => $setting->is_split_ar == 0 ? 'MonthlyTenant' : 'SplitMonthlyTenant',
+                        'notif_title' => 'Monthly Invoice',
+                        'id_data' => $util->MonthlyUtility->MonthlyTenant->id_monthly_ar_tenant,
+                        'sender' => $request->session()->get('user')->id_user,
+                        'division_receiver' => null,
+                        'notif_message' => 'Harap melakukan pembayaran tagihan bulanan anda',
+                        'receiver' => $util->MonthlyUtility->Unit->TenantUnit->Tenant->User->id_user
+                    ];
+
+                    broadcast(new HelloEvent($dataNotif));
+
+                    SendBulkUtilityMail::dispatch($util->MonthlyUtility->Unit->TenantUnit->Tenant->User->login_user, $util->MonthlyUtility->MonthlyTenant, ConnectionDB::getDBname());
+                    SendBulkIPLMail::dispatch($util->MonthlyUtility->Unit->TenantUnit->Tenant->User->login_user, $util->MonthlyUtility->MonthlyTenant, ConnectionDB::getDBname());
+                    SendBulkOtherBillMail::dispatch($util->MonthlyUtility->Unit->TenantUnit->Tenant->User->login_user, $util->MonthlyUtility->MonthlyTenant, ConnectionDB::getDBname());
                 }
-
-                $util->MonthlyUtility->MonthlyTenant->MonthlyIPL->sign_approval_2 = Carbon::now();
-                $util->MonthlyUtility->MonthlyTenant->MonthlyIPL->save();
-
-                $util->MonthlyUtility->sign_approval_2 = Carbon::now();
-                $util->MonthlyUtility->save();
-
-                // $dataNotif = [
-                //     'models' => $setting->is_split_ar == 0 ? 'MonthlyTenant' : 'SplitMonthlyTenant',
-                //     'notif_title' => 'Monthly Invoice',
-                //     'id_data' => $util->MonthlyUtility->MonthlyTenant->id_monthly_ar_tenant,
-                //     'sender' => $request->session()->get('user')->id_user,
-                //     'division_receiver' => null,
-                //     'notif_message' => 'Harap melakukan pembayaran tagihan bulanan anda',
-                //     'receiver' => $util->MonthlyUtility->Unit->TenantUnit->Tenant->User->id_user
-                // ];
-
-                // broadcast(new HelloEvent($dataNotif));
-                // Mail::to('akmalrifqi2013@gmail.com')->send(new MonthlyUtilityMail($util->MonthlyUtility->MonthlyTenant));
-                $email = 'akmalrifqi2013@gmail.com';
-                SendBulkUtilityMail::dispatch($email, $util->MonthlyUtility->MonthlyTenant, ConnectionDB::getDBname());
-                SendBulkIPLMail::dispatch($email, $util->MonthlyUtility->MonthlyTenant, ConnectionDB::getDBname());
-                SendBulkOtherBillMail::dispatch($email, $util->MonthlyUtility->MonthlyTenant, ConnectionDB::getDBname());
-                // }
 
 
                 DB::commit();

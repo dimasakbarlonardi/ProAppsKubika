@@ -17,38 +17,7 @@
     <!-- ===============================================-->
     <title>Pro Apps | Dashboard &amp; Web App Template</title>
 
-    <meta name="theme-color" content="#ffffff">
-    <script src="https://dev.pro-apps.xyz/assets/js/config.js"></script>
-    <script src="https://dev.pro-apps.xyz/assets/vendors/simplebar/simplebar.min.js"></script>
-
-    <meta name="theme-color" content="#ffffff">
-    <script src="https://dev.pro-apps.xyz/assets/js/config.js"></script>
-    <script src="https://dev.pro-apps.xyz/assets/vendors/simplebar/simplebar.min.js"></script>
-
-    <!-- ===============================================-->
-    <!--    Stylesheets-->
-    <!-- ===============================================-->
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link
-        href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700%7cPoppins:300,400,500,600,700,800,900&amp;display=swap"
-        rel="stylesheet">
-    <link href="https://dev.pro-apps.xyz/assets/vendors/simplebar/simplebar.min.css" rel="stylesheet">
-
     <link href="https://dev.pro-apps.xyz/assets/css/theme.min.css" rel="stylesheet" id="style-default">
-    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
-    <script>
-        // Enable pusher logging - don't include this in production
-        Pusher.logToConsole = true;
-
-        var pusher = new Pusher('0861d580b79b849c276c', {
-            cluster: 'ap1'
-        });
-
-        var channel = pusher.subscribe('my-channel');
-        channel.bind('my-event', function(data) {
-            alert(JSON.stringify(data));
-        });
-    </script>
 </head>
 
 <body>
@@ -70,7 +39,7 @@
         </div>
         <div class="row align-items-center mb-3">
             <div class="col-sm-6 text-sm-start">
-                <img src="https://dev.pro-apps.xyz{{ $setting->company_logo ? $setting->company_logo : '/assets/img/icons/spot-illustrations/proapps.png' }}"
+                <img src="{{ $message->embed($setting->company_logo ? public_path($setting->company_logo) : '/assets/img/icons/spot-illustrations/proapps.png') }}"
                     alt="invoice" width="150" />
             </div>
             <div class="col text-sm-end mt-3 mt-sm-0">
