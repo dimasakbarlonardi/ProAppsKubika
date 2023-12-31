@@ -6,6 +6,7 @@ use App\Models\Site;
 use App\Models\Unit;
 use Illuminate\Http\Request;
 use App\Helpers\ConnectionDB;
+use App\Helpers\InvoiceHelper;
 use App\Helpers\ResponseFormatter;
 use App\Helpers\SaveFile;
 use App\Http\Controllers\Controller;
@@ -409,20 +410,7 @@ class BillingController extends Controller
         $login = $request->user();
         $site = Site::find($login->id_site);
 
-        $connUnit = new Unit();
-        $connUtility = new Utility();
-
-        $connUnit = $connUnit->setConnection($site->db_name);
-        $connUtility = $connUtility->setConnection($site->db_name);
-
-        $unit = $connUnit->find($unitID);
         $usage = $request->current - $request->previous;
-
-        if ($unit->id_hunian == 1) {
-            $listrik = $connUtility->find(1);
-        } elseif ($unit->id_hunian == 2) {
-            $listrik = $connUtility->find(5);
-        }
 
         if ($login) {
             $user = new User();
@@ -440,28 +428,7 @@ class BillingController extends Controller
                 return response()->json(['status' => 'exist']);
             }
 
-            $isAbodemen = false;
-            $biaya_usage = $listrik->biaya_m3;
-            $get_ppj = $listrik->biaya_ppj / 100;
-            $electric_capacity = $unit->electric_capacity;
-            $abodemen = (40 * $electric_capacity) / 1000;
-
-            if ($usage < $abodemen) {
-                $isAbodemen = true;
-            }
-
-            if ($isAbodemen) {
-                if ($listrik->biaya_tetap != 0) {
-                    $total_usage = $listrik->biaya_tetap;
-                } else {
-                    $total_usage = $biaya_usage * $usage;
-                }
-            } else {
-                $total_usage = $biaya_usage * $usage;
-            }
-
-            $ppj = $get_ppj * $total_usage;
-            $total = $total_usage + $ppj;
+            $get_abodemen = InvoiceHelper::getAbodemen($unitID, $usage);
 
             $electricUUS = $connElecUUS->create([
                 'periode_bulan' => $request->periode_bulan,
@@ -470,10 +437,10 @@ class BillingController extends Controller
                 'nomor_listrik_awal' => $request->previous,
                 'nomor_listrik_akhir' => $request->current,
                 'usage' => $usage,
-                'abodemen_value' => $abodemen,
-                'is_abodemen' => $isAbodemen,
-                'ppj' => $ppj,
-                'total' => $total,
+                'abodemen_value' => $get_abodemen['abodemen'],
+                'is_abodemen' => $get_abodemen['isAbodemen'],
+                'ppj' => $get_abodemen['ppj'],
+                'total' => $get_abodemen['total'],
                 'id_user' => $user->id_user
             ]);
 
@@ -530,20 +497,8 @@ class BillingController extends Controller
         $user = new User();
         $user = $user->setConnection($site->db_name);
         $user = $user->where('login_user', $login->email)->first();
-        $connUnit = ConnectionDB::setConnection(new Unit());
-        $connUtility = new Utility();
 
-        $connUtility = $connUtility->setConnection($site->db_name);
-        $unit = $connUnit->find($unitID);
-
-        if ($unit->id_hunian == 1) {
-            $water = $connUtility->find(2);
-        } elseif ($unit->id_hunian == 2) {
-            $water = $connUtility->find(6);
-        }
-
-        $total_usage = $water->biaya_m3 * $usage;
-        $total = $total_usage;
+        $inputWater = InvoiceHelper::InputWaterUsage($unitID, $usage);
 
         if ($login) {
             try {
@@ -564,10 +519,9 @@ class BillingController extends Controller
                     'periode_tahun' => Carbon::now()->format('Y'),
                     'id_unit' => $unitID,
                     'nomor_air_awal' => $request->previous,
-                    'abodemen' => $water->biaya_abodemen,
-                    'total' => $total,
                     'nomor_air_akhir' => $request->current,
                     'usage' => $usage,
+                    'total' => $inputWater['total'],
                     'id_user' => $user->id_user
                 ]);
                 $imageData = $request->file('imageData');

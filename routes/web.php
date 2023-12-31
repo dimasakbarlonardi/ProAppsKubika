@@ -659,6 +659,8 @@ Route::prefix('admin')->group(function () {
         Route::post('approve/usr-electric', [ElectricUUSController::class, 'approve']);
         Route::post('update/usr-electric/{id}', [ElectricUUSController::class, 'update'])->name('updateElectric');
         Route::post('approve/update/usr-electric/{id}', [ElectricUUSController::class, 'approveUpdate'])->name('approveUpdateElectric');
+        Route::post('import/electric', [ElectricUUSController::class, 'importElectricUsage'])->name('importElectricUsage');
+
         // ---------------End UUS Electric-----------------
 
         // ---------------Start UUS Water -------------------
@@ -668,6 +670,7 @@ Route::prefix('admin')->group(function () {
         Route::post('approve/usr-water', [WaterUUSController::class, 'approve'])->name('approve-usr-water');
         Route::post('update/usr-water/{id}', [WaterUUSController::class, 'update'])->name('updateWater');
         Route::post('approve/update/usr-water/{id}', [WaterUUSController::class, 'approveUpdate'])->name('approveUpdateWater');
+        Route::post('import/water', [WaterUUSController::class, 'importWaterUsage'])->name('importWaterUsage');
         // ---------------End UUS Water -------------------
 
         // Generate monthly invoice IPL & Service charge
