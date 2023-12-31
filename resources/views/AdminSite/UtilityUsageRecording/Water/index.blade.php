@@ -108,7 +108,7 @@
                                                             Current -
                                                             <b>{{ $item->ElecUUSrelation()->nomor_listrik_akhir }}</b>
                                                             <br>
-                                                            Usage - <b>{{ $item->ElecUUSrelation()->usage }}</b> <br>
+                                                            Usageasd - <b>{{ $item->ElecUUSrelation()->usage }}</b> <br>
                                                         @else
                                                             <h6>
                                                                 <span class="badge bg-danger">Not yet inserted</span>

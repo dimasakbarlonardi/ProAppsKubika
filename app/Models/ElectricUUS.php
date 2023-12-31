@@ -39,9 +39,10 @@ class ElectricUUS extends Model
     public function WaterUUSrelation()
     {
         return ConnectionDB::setConnection(new WaterUUS())
-        ->where('periode_bulan', $this->periode_bulan)
-        ->where('periode_tahun', $this->periode_tahun)
-        ->first();
+            ->where('periode_bulan', $this->periode_bulan)
+            ->where('periode_tahun', $this->periode_tahun)
+            ->where('id_unit', $this->id_unit)
+            ->first();
     }
 
     public function MonthlyUtility()
