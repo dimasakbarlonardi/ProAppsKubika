@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Events\HelloEvent;
 use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
+use App\Imports\ImportWater;
 use App\Models\Approve;
 use App\Models\CompanySetting;
 use App\Models\Role;
@@ -17,12 +18,12 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use RealRashid\SweetAlert\Facades\Alert;
+use Excel;
 
 class WaterUUSController extends Controller
 {
     public function index(Request $request)
     {
-        $connWatercUUS = ConnectionDB::setConnection(new WaterUUS());
         $connTower = ConnectionDB::setConnection(new Tower());
         $connApprove = ConnectionDB::setConnection(new Approve());
         $connSetting = ConnectionDB::setConnection(new CompanySetting());
@@ -30,7 +31,7 @@ class WaterUUSController extends Controller
         $data['setting'] = $connSetting->find(1);
         $data['approve'] = $connApprove->find(9);
         $data['user'] = $request->session()->get('user');
-        $data['waterUSS'] = $connWatercUUS->get();
+        $data['waterUSS'] = $this->filteredData($request);
         $data['towers'] = $connTower->get();
 
         return view('AdminSite.UtilityUsageRecording.Water.index', $data);
@@ -39,34 +40,32 @@ class WaterUUSController extends Controller
     public function filteredData(Request $request)
     {
         $connWaterUUS = ConnectionDB::setConnection(new WaterUUS());
-        $connApprove = ConnectionDB::setConnection(new Approve());
 
         $records = $connWaterUUS->where('deleted_at', null);
 
-        $data['approve'] = $connApprove->find(9);
-        $data['user'] = $request->session()->get('user');
-
-        if ($request->tower != 'all') {
-            $id_tower = $request->tower;
+        if ($request->input('id_tower')) {
+            $id_tower = $request->id_tower;
             $records = $records->whereHas('Unit.Tower', function ($q) use ($id_tower) {
                 $q->where('id_tower', $id_tower);
             });
         }
 
-        if ($request->status != 'all') {
-            $status = $request->status == '0' ? null : $request->status;
+        if ($request->input('select_status')) {
+            $status = $request->input('select_status') == '0' ? null : $request->input('select_status');
             $records = $records->where('is_approve', $status);
         }
 
+        if ($request->input('select_period')) {
+            $records = $records->where('periode_bulan', $request->input('select_period'));
+        }
 
-        $records = $records->where('periode_bulan', $request->period);
-        $records = $records->where('periode_tahun', $request->year);
+        if ($request->input('select_year')) {
+            $records = $records->where('periode_tahun', $request->input('select_year'));
+        }
 
-        $data['waterUSS'] = $records->get();
+        $records = $records->paginate(10);
 
-        return response()->json([
-            'html' => view('AdminSite.UtilityUsageRecording.Water.table-data', $data)->render()
-        ]);
+        return $records;
     }
 
     public function create()
@@ -216,6 +215,17 @@ class WaterUUSController extends Controller
         broadcast(new HelloEvent($dataNotif));
 
         Alert::success('Success', 'Success update data');
+
+        return redirect()->back();
+    }
+
+    public function importWaterUsage(Request $request)
+    {
+        $file = $request->file_excel;
+
+        Excel::import(new ImportWater($request), $file);
+
+        Alert::success('Success', 'Success import data');
 
         return redirect()->back();
     }
