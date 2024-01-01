@@ -3,15 +3,18 @@
 namespace App\Imports;
 
 use App\Helpers\ConnectionDB;
+use App\Models\Login;
 use App\Models\Tenant;
+use App\Models\User;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Maatwebsite\Excel\Concerns\ToCollection;
 use Maatwebsite\Excel\Concerns\ToModel;
 use Maatwebsite\Excel\Concerns\WithStartRow;
 
 class TenantImport implements ToModel, WithStartRow
-    
 {
     public function startRow(): int
     {
@@ -21,10 +24,10 @@ class TenantImport implements ToModel, WithStartRow
     public function model(array $row)
     {
         $connTenant =  ConnectionDB::setConnection(new Tenant());
+        $connUser =  ConnectionDB::setConnection(new User());
+
         $count = $connTenant->count();
         $count = $count + 1;
-
-        $connTenant = ConnectionDB::setConnection(new Tenant());
 
         $connTenant->id_site = Auth::user()->id_site;
         $connTenant->id_tenant = sprintf("%03d", $count);
@@ -46,11 +49,30 @@ class TenantImport implements ToModel, WithStartRow
         $connTenant->hubungan_penjamin = $row[15];
         $connTenant->no_telp_penjamin = $row[16];
         $connTenant->profile_picture = '/storage/img/proapps.png';
-        
+
+        $createLogin = Login::create([
+            'name' => $row[0],
+            'email' => $row[1],
+            'password' => Hash::make('password'),
+            'id_site' => Auth::user()->id_site
+        ]);
+
+        $connUser->create([
+            'id_site' => Auth::user()->id_site,
+            'id_user' => strval(Carbon::now()->format('Y') . sprintf("%03d", $count + 1)),
+            'nama_user' => $row[0],
+            'login_user' => $row[1],
+            'password_user' => Hash::make('password'),
+            'id_status_user' => 1,
+            'id_role_hdr' => 3,
+            'user_category' => 3,
+            'profile_picture' => $connTenant->profile_picture,
+        ]);
+
+        $connTenant->update([
+            'id_user' => $createLogin->id
+        ]);
+
         return $connTenant;
     }
-   
-
-
-
 }

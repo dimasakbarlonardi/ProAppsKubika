@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
+use App\Imports\ImportTenantUnit;
 use App\Models\JenisKendaraan;
 use App\Models\KendaraanTenant;
 use App\Models\TenantUnit;
@@ -21,7 +22,7 @@ use RealRashid\SweetAlert\Facades\Alert;
 use App\Models\Unit;
 use App\Models\User;
 use Carbon\Carbon;
-use Symfony\Component\HttpFoundation\Session\Session;
+use Excel;
 
 class TenantUnitController extends Controller
 {
@@ -71,13 +72,13 @@ class TenantUnitController extends Controller
         $units = $this->setConnection(new Unit());
 
         $idUnit = [];
-       
+
         if ($request->is_owner == 1) {
             $tenant_units = $tenant_units->get();
             foreach ($tenant_units as $unit) {
                 $idUnit[] = $unit->id_unit;
             }
-            
+
             $units = $units->whereNotIn('id_unit', $idUnit)->with('Tower')->get();
         } else {
             $tenant_units = $tenant_units->where('id_tenant', '!=', $request->id_tenant)
@@ -349,5 +350,16 @@ class TenantUnitController extends Controller
         return response()->json([
             'html' => view('AdminSite.TenantUnit.Kendaraan.table', $data)->render(),
         ]);
+    }
+
+    public function importTenantUnit(Request $request)
+    {
+        $file = $request->file('file_excel');
+
+        Excel::import(new ImportTenantUnit(), $file);
+
+        Alert::success('Success', 'Success import data');
+
+        return redirect()->route('tenants.index');
     }
 }
