@@ -63,8 +63,9 @@ class BillingController extends Controller
                 ->where('periode_tahun', $data['elecUSS']->periode_tahun)
                 ->where('id_unit', $data['elecUSS']->id_unit)
                 ->first();
-            $status = $data['elecUSS']->Unit->TenantUnit->Tenant->User ? true : false;
-            $nama_unit = $data['elecUSS']->Unit->nama_unit;
+            // $status = $data['elecUSS']->Unit->TenantUnit->Tenant->User ? true : false;
+            $data['status'] = $data['elecUSS']->Unit->TenantUnit ? true : false;
+            $data['nama_unit'] = $data['elecUSS']->Unit->nama_unit;
         } elseif ($request->type == 'water') {
             $data['waterUSS'] = $connWaterUUS->find($id);
             $data['elecUSS'] = $connElecUUS->where('periode_bulan', $data['waterUSS']->periode_bulan)
@@ -72,15 +73,8 @@ class BillingController extends Controller
                 ->where('periode_tahun', $data['waterUSS']->periode_tahun)
                 ->where('id_unit', $data['waterUSS']->id_unit)
                 ->first();
-            $status = $data['waterUSS']->Unit->TenantUnit->Tenant->User ? true : false;
-            $nama_unit = $data['elecUSS']->Unit->nama_unit;
-        }
-
-        if (!$status) {
-            return response()->json([
-                'status' => 401,
-                'unit' => $nama_unit
-            ]);
+            $data['status'] = $data['waterUSS']->Unit->TenantUnit ? true : false;
+            $data['nama_unit'] = $data['elecUSS']->Unit->nama_unit;
         }
 
         return $data;
@@ -91,7 +85,12 @@ class BillingController extends Controller
         foreach ($request->IDs as $id) {
             $validate = $this->validateUtility($request, $id);
 
-            if ($validate['waterUSS'] && $validate['elecUSS'] && !$validate['waterUSS']->MonthlyUtility) {
+            // if (!$validate['status']) {
+            //     $validate['status'] = 401;
+            //     return response()->json($validate);
+            // }
+
+            if ($validate['waterUSS'] && $validate['elecUSS'] && !$validate['waterUSS']->MonthlyUtility && $validate['status']) {
                 try {
                     DB::beginTransaction();
 
@@ -375,6 +374,7 @@ class BillingController extends Controller
         }
 
         $currMonthDays =  Carbon::now()->daysInMonth;
+
         $cutOFFsc = (int) Carbon::now()->diff($unit->Owner()->tgl_masuk)->format("%a");
 
         $ipl_service_charge = (int) $unit->luas_unit * $sc->biaya_permeter;
@@ -454,7 +454,7 @@ class BillingController extends Controller
 
             $createTransaction = $connTransaction;
             $createTransaction->order_id = $order_id;
-            $createTransaction->id_site = $user->id_site;
+            $createTransaction->id_site = Auth::user()->id_site;
             $createTransaction->no_reff = $mt->no_monthly_invoice;
             $createTransaction->no_invoice = $mt->no_monthly_invoice;
             $createTransaction->no_draft_cr = $no_cr;

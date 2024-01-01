@@ -239,6 +239,7 @@ Route::prefix('admin')->group(function () {
         Route::post('tenant-unit/unit', [TenantUnitController::class, 'getUnitIDFromTU'])->name('getUnitIDFromTU');
         Route::get('get-vehicle/by-unit/{id}', [TenantUnitController::class, 'getVehicleUnit']);
         Route::post('/store/tenantunit', [TenantUnitController::class, 'storeTenantUnit'])->name('storeTenantUnit');
+        Route::post('/import/tenant-unit', [TenantUnitController::class, 'importTenantUnit'])->name('importTenantUnit');
 
         Route::get('/tenantunits/{id}', [TenantUnitController::class, 'show'])->name('tenantunitsShow');
 

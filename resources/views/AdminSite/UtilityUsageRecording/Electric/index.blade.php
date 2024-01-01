@@ -495,7 +495,7 @@
                     } else if (resp.status === 401) {
                         Swal.fire(
                             'Sorry!',
-                            `Sorry this unit with name ${resp.unit} doesn't have user`,
+                            `Sorry this unit with name ${resp.nama_unit} doesn't have user`,
                             'info'
                         ).then(() => {
                             window.location.reload();
