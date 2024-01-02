@@ -31,21 +31,29 @@ class ImportElectric implements ToModel, WithStartRow
             $usage = $row[2] - $row[1];
             $get_abodemen = InvoiceHelper::getAbodemen($this->Unit($row[0]), $usage);
 
-            $electricUUS = $connElectric->create([
-                'periode_bulan' => $this->data->periode_bulan,
-                'periode_tahun' => $this->data->periode_tahun,
-                'id_unit' => $this->Unit($row[0]),
-                'nomor_listrik_awal' => $row[1],
-                'nomor_listrik_akhir' => $row[2],
-                'usage' => $usage,
-                'abodemen_value' => $get_abodemen['abodemen'],
-                'is_abodemen' => $get_abodemen['isAbodemen'],
-                'ppj' => $get_abodemen['ppj'],
-                'total' => $get_abodemen['total'],
-                'id_user' => $this->data->session()->get('user_id')
-            ]);
+            $isExist = $connElectric->where('periode_bulan', $this->data->periode_bulan)
+                ->where('periode_tahun', $this->data->periode_tahun)
+                ->where('id_unit', $this->Unit($row[0]))
+                ->first();
 
-            return $electricUUS;
+            if (!$isExist) {
+                $electricUUS = $connElectric->create([
+                    'periode_bulan' => $this->data->periode_bulan,
+                    'periode_tahun' => $this->data->periode_tahun,
+                    'id_unit' => $this->Unit($row[0]),
+                    'nomor_listrik_awal' => $row[1],
+                    'nomor_listrik_akhir' => $row[2],
+                    'usage' => $usage,
+                    'abodemen_value' => $get_abodemen['abodemen'],
+                    'is_abodemen' => $get_abodemen['isAbodemen'],
+                    'ppj' => $get_abodemen['ppj'],
+                    'total' => $get_abodemen['total'],
+                    'id_user' => $this->data->session()->get('user_id')
+                ]);
+
+                return $electricUUS;
+            }
+
         }
     }
 
