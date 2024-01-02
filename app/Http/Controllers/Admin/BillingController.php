@@ -373,16 +373,17 @@ class BillingController extends Controller
             $sf = $connIPLType->find(9);
         }
 
-        $currMonthDays =  Carbon::now()->daysInMonth;
-
-        $cutOFFsc = (int) Carbon::now()->diff($unit->Owner()->tgl_masuk)->format("%a");
+        if ($unit->Owner()->tgl_masuk) {
+            $currMonthDays =  Carbon::now()->daysInMonth;
+            $ipl_price_day = ((int) $unit->luas_unit * $sc->biaya_permeter) / $currMonthDays;
+            $cutOFFsc = (int) Carbon::now()->diff($unit->Owner()->tgl_masuk)->format("%a");
+            if ($cutOFFsc < $currMonthDays) {
+                dd($unit->Owner()->tgl_masuk, $currMonthDays);
+                $ipl_service_charge = $cutOFFsc * $ipl_price_day;
+            }
+        }
 
         $ipl_service_charge = (int) $unit->luas_unit * $sc->biaya_permeter;
-        $ipl_price_day = ((int) $unit->luas_unit * $sc->biaya_permeter) / $currMonthDays;
-
-        if ($cutOFFsc < $currMonthDays) {
-            $ipl_service_charge = $cutOFFsc * $ipl_price_day;
-        }
 
         if ($sf->biaya_procentage != null) {
             $ipl_sink_fund = $sf->biaya_procentage / 100 * $ipl_service_charge;
