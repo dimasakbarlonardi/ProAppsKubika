@@ -59,6 +59,7 @@ class ImportUnit implements ShouldQueue
         $connUnit->meter_air_awal = (int) $this->data[7] ? $this->data[7] : 0;
         $connUnit->meter_listrik_awal = (int) $this->data[8] ? $this->data[8] : 0;
         $connUnit->keterangan = $this->data[9];
+        $connUnit->electric_capacity = $this->data[10];
         $connUnit->GenerateBarcode();
         $connUnit->save();
     }
