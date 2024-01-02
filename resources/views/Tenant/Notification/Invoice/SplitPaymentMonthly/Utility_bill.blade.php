@@ -321,13 +321,13 @@
         <div class="col-4">
             <label for="">Electric meter photo : </label>
             <img class="img-fluid img-thumbnail rounded"
-                src="{{ $transaction->MonthlyUtility->ElectricUUS->image ? url($transaction->MonthlyUtility->ElectricUUS->image) : url('/assets/img/icons/spot-illustrations/proapps.png') }}"
+                src="{{ $transaction->MonthlyUtility->ElectricUUS->image ? url($transaction->MonthlyUtility->ElectricUUS->image) : url('/assets/img/no_image.jpeg') }}"
                 width="200">
         </div>
         <div class="col-4">
             <label for="">Water meter photo : </label>
             <img class="img-fluid img-thumbnail rounded"
-                src="{{ $transaction->MonthlyUtility->WaterUUS->image ? url($transaction->MonthlyUtility->WaterUUS->image) : url('/assets/img/icons/spot-illustrations/proapps.png') }}"
+                src="{{ $transaction->MonthlyUtility->WaterUUS->image ? url($transaction->MonthlyUtility->WaterUUS->image) : url('/assets/img/no_image.jpeg') }}"
                 width="200">
         </div>
     </div>
