@@ -167,8 +167,8 @@ class BillingController extends Controller
         } elseif ($i == 2) {
             $connOtherBill = ConnectionDB::setConnection(new OtherBill());
             $otherBills = $connOtherBill->where('is_active', 1)->get();
+            $transaction = null;
             if (count($otherBills) > 0) {
-                dd($otherBills);
                 $transaction = $this->createTransaction($createMonthlyTenant, $setting, 2);
                 $transaction->transaction_type = 'MonthlyOtherBillTenant';
             }
