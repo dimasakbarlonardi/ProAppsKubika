@@ -31,18 +31,25 @@ class ImportWater implements ToModel, WithStartRow
             $usage = $row[2] - $row[1];
             $inputWater = InvoiceHelper::InputWaterUsage($this->Unit($row[0]), $usage);
 
-            $waterUUS = $connWater->create([
-                'periode_bulan' => $this->data->periode_bulan,
-                'periode_tahun' => $this->data->periode_tahun,
-                'id_unit' => $this->Unit($row[0]),
-                'nomor_air_awal' => $row[1],
-                'nomor_air_akhir' => $row[2],
-                'usage' => $usage,
-                'total' => $inputWater['total'],
-                'id_user' => $this->data->session()->get('user_id')
-            ]);
+            $isExist = $connWater->where('periode_bulan', $this->data->periode_bulan)
+            ->where('periode_tahun', $this->data->periode_tahun)
+            ->where('id_unit', $this->Unit($row[0]))
+            ->first();
 
-            return $waterUUS;
+            if (!$isExist) {
+                $waterUUS = $connWater->create([
+                    'periode_bulan' => $this->data->periode_bulan,
+                    'periode_tahun' => $this->data->periode_tahun,
+                    'id_unit' => $this->Unit($row[0]),
+                    'nomor_air_awal' => $row[1],
+                    'nomor_air_akhir' => $row[2],
+                    'usage' => $usage,
+                    'total' => $inputWater['total'],
+                    'id_user' => $this->data->session()->get('user_id')
+                ]);
+
+                return $waterUUS;
+            }
         }
     }
 
