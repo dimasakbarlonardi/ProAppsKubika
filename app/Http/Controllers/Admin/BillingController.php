@@ -165,13 +165,8 @@ class BillingController extends Controller
             $transaction->id_monthly_ipl = $createMonthlyTenant->id_monthly_ipl;
             $transaction->transaction_type = 'MonthlyIPLTenant';
         } elseif ($i == 2) {
-            $connOtherBill = ConnectionDB::setConnection(new OtherBill());
-            $otherBills = $connOtherBill->where('is_active', 1)->get();
-            $transaction = null;
-            if (count($otherBills) > 0) {
-                $transaction = $this->createTransaction($createMonthlyTenant, $setting, 2);
-                $transaction->transaction_type = 'MonthlyOtherBillTenant';
-            }
+            $transaction = $this->createTransaction($createMonthlyTenant, $setting, 2);
+            $transaction->transaction_type = 'MonthlyOtherBillTenant';
         } elseif (!$i) {
             $transaction = $this->createTransaction($createMonthlyTenant, $setting, null);
             $transaction->transaction_type = 'MonthlyTenant';
@@ -212,33 +207,32 @@ class BillingController extends Controller
 
         $otherBillsAmount = 0;
 
-        if ($otherBills) {
-            foreach ($otherBills as $bill) {
-                if ($bill->is_require_unit_volume) {
-                    $billAmount = (int) $bill->bill_price * $createUtilityBill->Unit->luas_unit;
-                } else {
-                    $billAmount = (int) $bill->bill_price;
-                }
-                $addBill = [
-                    'bill_name' => $bill->bill_name,
-                    'bill_price' => $billAmount,
-                    'is_require_unit_volume' => $bill->is_require_unit_volume
-                ];
-                $bills[] = $addBill;
-                $otherBillsAmount += $billAmount;
+        foreach ($otherBills as $bill) {
+            if ($bill->is_require_unit_volume) {
+                $billAmount = (int) $bill->bill_price * $createUtilityBill->Unit->luas_unit;
+            } else {
+                $billAmount = (int) $bill->bill_price;
             }
-
-            $connMonthlyTenant->biaya_lain = json_encode($bills);
-            $connMonthlyTenant->id_site = $createUtilityBill->id_site;
-            $connMonthlyTenant->id_tower = $createUtilityBill->id_tower;
-            $connMonthlyTenant->id_unit = $createUtilityBill->id_unit;
-            $connMonthlyTenant->id_tenant = $createUtilityBill->id_tenant;
-            $connMonthlyTenant->periode_bulan = $createUtilityBill->periode_bulan;
-            $connMonthlyTenant->periode_tahun = $createUtilityBill->periode_tahun;
-            $connMonthlyTenant->total_tagihan_ipl = $createIPLbill->total_tagihan_ipl;
-            $connMonthlyTenant->total_tagihan_utility = $createUtilityBill->total_tagihan_utility;
-            $connMonthlyTenant->total = $createIPLbill->total_tagihan_ipl + $createUtilityBill->total_tagihan_utility + $otherBillsAmount;
+            $addBill = [
+                'bill_name' => $bill->bill_name,
+                'bill_price' => $billAmount,
+                'is_require_unit_volume' => $bill->is_require_unit_volume
+            ];
+            $bills[] = $addBill;
+            $otherBillsAmount += $billAmount;
         }
+
+        $connMonthlyTenant->biaya_lain = json_encode($bills);
+        $connMonthlyTenant->id_site = $createUtilityBill->id_site;
+        $connMonthlyTenant->id_tower = $createUtilityBill->id_tower;
+        $connMonthlyTenant->id_unit = $createUtilityBill->id_unit;
+        $connMonthlyTenant->id_tenant = $createUtilityBill->id_tenant;
+        $connMonthlyTenant->periode_bulan = $createUtilityBill->periode_bulan;
+        $connMonthlyTenant->periode_tahun = $createUtilityBill->periode_tahun;
+        $connMonthlyTenant->total_tagihan_ipl = $createIPLbill->total_tagihan_ipl;
+        $connMonthlyTenant->total_tagihan_utility = $createUtilityBill->total_tagihan_utility;
+        $connMonthlyTenant->total = $createIPLbill->total_tagihan_ipl + $createUtilityBill->total_tagihan_utility + $otherBillsAmount;
+
         return $connMonthlyTenant;
     }
 
