@@ -110,9 +110,10 @@ class BillingController extends Controller
 
     function createMonthlyARData($validate)
     {
-
         $connCompany = ConnectionDB::setConnection(new CompanySetting());
+        $connOtherBill = ConnectionDB::setConnection(new OtherBill());
 
+        $otherBills = $connOtherBill->where('is_active', 1)->get();
         $setting = $connCompany->find(1);
 
         try {
@@ -135,8 +136,14 @@ class BillingController extends Controller
                 $createMonthlyTenant->no_monthly_invoice = $no_inv;
                 $createMonthlyTenant->save();
             } elseif ($setting->is_split_ar == 1) {
-                for ($i = 0; $i < 2; $i++) {
-                    $no_inv = $this->generateInvoice($createMonthlyTenant, $i, $setting);
+                if (count($otherBills) > 0) {
+                    for ($i = 0; $i < 2; $i++) {
+                        $no_inv = $this->generateInvoice($createMonthlyTenant, $i, $setting);
+                    }
+                } else {
+                    for ($i = 0; $i < 1; $i++) {
+                        $no_inv = $this->generateInvoice($createMonthlyTenant, $i, $setting);
+                    }
                 }
             }
 
