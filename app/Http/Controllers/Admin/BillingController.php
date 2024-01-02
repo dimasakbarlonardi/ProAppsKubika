@@ -165,8 +165,12 @@ class BillingController extends Controller
             $transaction->id_monthly_ipl = $createMonthlyTenant->id_monthly_ipl;
             $transaction->transaction_type = 'MonthlyIPLTenant';
         } elseif ($i == 2) {
-            $transaction = $this->createTransaction($createMonthlyTenant, $setting, 2);
-            $transaction->transaction_type = 'MonthlyOtherBillTenant';
+            $connOtherBill = ConnectionDB::setConnection(new OtherBill());
+            $otherBills = $connOtherBill->where('is_active', 1)->get();
+            if ($otherBills) {
+                $transaction = $this->createTransaction($createMonthlyTenant, $setting, 2);
+                $transaction->transaction_type = 'MonthlyOtherBillTenant';
+            }
         } elseif (!$i) {
             $transaction = $this->createTransaction($createMonthlyTenant, $setting, null);
             $transaction->transaction_type = 'MonthlyTenant';
@@ -233,7 +237,6 @@ class BillingController extends Controller
             $connMonthlyTenant->total_tagihan_ipl = $createIPLbill->total_tagihan_ipl;
             $connMonthlyTenant->total_tagihan_utility = $createUtilityBill->total_tagihan_utility;
             $connMonthlyTenant->total = $createIPLbill->total_tagihan_ipl + $createUtilityBill->total_tagihan_utility + $otherBillsAmount;
-
         }
         return $connMonthlyTenant;
     }
