@@ -15,7 +15,12 @@
                     {{ $item->no_invoice }}
                 </td>
                 <td class="align-middle">
-                    {{ $item->Ticket ? $item->Ticket->Unit->nama_unit : '' }}
+                    @if ($item->Ticket)
+                        {{ $item->Ticket->Unit->nama_unit }}
+                    @endif
+                    @if ($item->MonthlyARTenant)
+                        Unit {{ $item->MonthlyARTenant->Unit->nama_unit }}
+                    @endif
                 </td>
                 <td class="align-middle">
                     {{ $item->transaction_type }}
