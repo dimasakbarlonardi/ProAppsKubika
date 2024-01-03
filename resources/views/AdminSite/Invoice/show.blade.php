@@ -71,8 +71,7 @@
                     <span class="d-none d-md-inline-block fs--1">IPL</span>
                 </button>
             </li>
-
-            @if ($transaction->OtherCashReceipt)
+            @if (json_decode($transaction->MonthlyARTenant->biaya_lain))
                 <li class="nav-item" role="presentation">
                     <button class="nav-link {{ Session::get('active') == 'vehicle' ? 'active' : '' }} selectTypePayment"
                         data-bs-toggle="pill" data-bs-target="#pill-tab-kendaraan" type="button" role="tab"
