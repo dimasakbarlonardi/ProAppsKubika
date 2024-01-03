@@ -129,21 +129,17 @@ class BillingController extends Controller
             $createMonthlyTenant->id_monthly_ipl = $createIPLbill->id;
             $createMonthlyTenant->save();
 
-            $this->generateInvoice($createMonthlyTenant, 2, $setting);
+            if (count($otherBills) > 0) {
+                $this->generateInvoice($createMonthlyTenant, 2, $setting);
+            }
 
             if ($setting->is_split_ar == 0) {
                 $no_inv = $this->generateInvoice($createMonthlyTenant, null, $setting);
                 $createMonthlyTenant->no_monthly_invoice = $no_inv;
                 $createMonthlyTenant->save();
             } elseif ($setting->is_split_ar == 1) {
-                if (count($otherBills) > 0) {
-                    for ($i = 0; $i < 2; $i++) {
-                        $no_inv = $this->generateInvoice($createMonthlyTenant, $i, $setting);
-                    }
-                } else {
-                    for ($i = 0; $i < 1; $i++) {
-                        $no_inv = $this->generateInvoice($createMonthlyTenant, $i, $setting);
-                    }
+                for ($i = 0; $i < 2; $i++) {
+                    $no_inv = $this->generateInvoice($createMonthlyTenant, $i, $setting);
                 }
             }
 
