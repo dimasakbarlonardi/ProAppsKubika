@@ -38,8 +38,8 @@
         <h5>{{ $transaction->Unit->TenantUnit->Tenant->nama_tenant }}</h5>
         <p class="fs--1">
             {{ Auth::user()->Site->nama_site }},
-            {{ $transaction->Unit->Tower->nama_tower }}
-            {{ $transaction->Unit->nama_unit }}<br />
+            {{ $transaction->Unit->Tower->nama_tower }},
+            Unit {{ $transaction->Unit->nama_unit }}<br />
             {{ Auth::user()->Site->provinsi }}, {{ Auth::user()->Site->kode_pos }}
         </p>
         <p class="fs--1">
