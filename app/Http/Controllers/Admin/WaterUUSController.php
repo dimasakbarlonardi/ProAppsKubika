@@ -179,7 +179,8 @@ class WaterUUSController extends Controller
             'sender' => $request->session()->get('user')->id_user,
             'division_receiver' => null,
             'notif_message' => 'Terjadi kesalahan penginputan meter air',
-            'receiver' => $approve->approval_3
+            'receiver' => $approve->approval_3,
+            'connection' => ConnectionDB::getDBname()
         ];
 
         broadcast(new HelloEvent($dataNotif));
@@ -209,7 +210,8 @@ class WaterUUSController extends Controller
             'sender' => $approve->approval_3,
             'division_receiver' => $role->WorkRelation->id_work_relation,
             'notif_message' => 'Perubahan data recording sudah di approve',
-            'receiver' => null
+            'receiver' => null,
+            'connection' => ConnectionDB::getDBname()
         ];
 
         broadcast(new HelloEvent($dataNotif));

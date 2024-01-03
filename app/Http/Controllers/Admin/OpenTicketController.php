@@ -158,6 +158,7 @@ class OpenTicketController extends Controller
                 'division_receiver' => $receiver->id_work_relation,
                 'notif_message' => 'Tiket sudah dibuat, mohon proses request saya',
                 'receiver' => null,
+                'connection' => ConnectionDB::getDBname()
             ];
 
             $system->save();
@@ -224,6 +225,7 @@ class OpenTicketController extends Controller
                     'division_receiver' => null,
                     'notif_message' => 'Keluhan sudah dikerjakan, mohon periksa kembali pekerjaan kami',
                     'receiver' => $ticket->Tenant->User->id_user,
+                    'connection' => ConnectionDB::getDBname()
                 ];
 
                 broadcast(new HelloEvent($dataNotif));
@@ -281,6 +283,7 @@ class OpenTicketController extends Controller
             'division_receiver' => $approve->approval_2,
             'notif_message' => 'Form GIGO sudah diapprove, mohon di tindak lanjuti',
             'receiver' => null,
+            'connection' => ConnectionDB::getDBname()
         ];
 
         broadcast(new HelloEvent($dataNotif));

@@ -113,6 +113,7 @@ class GIGOController extends Controller
             'division_receiver' => 1,
             'notif_message' => 'Request GIGO sudah dibuat, mohon proses request saya',
             'receiver' => null,
+            'connection' => ConnectionDB::getDBname()
         ];
 
         broadcast(new HelloEvent($dataNotif));
@@ -175,6 +176,7 @@ class GIGOController extends Controller
             'division_receiver' => 1,
             'notif_message' => 'Form GIGO sudah dilengkapi, terima kasih',
             'receiver' => null,
+            'connection' => ConnectionDB::getDBname()
         ];
 
         broadcast(new HelloEvent($dataNotif));
@@ -205,6 +207,7 @@ class GIGOController extends Controller
             'division_receiver' => 1,
             'notif_message' => 'GIGO disetujui, mohon melakukan kegiatan sesuai jadwal',
             'receiver' => $gigo->Ticket->Tenant->User->id_user,
+            'connection' => ConnectionDB::getDBname()
         ];
 
         $this->FCM($dataNotif, $request);
@@ -243,6 +246,7 @@ class GIGOController extends Controller
                 'division_receiver' => 1,
                 'notif_message' => 'GIGO telah selesai, terima kasih',
                 'receiver' => $approve->approval_3,
+                'connection' => ConnectionDB::getDBname()
             ];
 
             broadcast(new HelloEvent($dataNotif));

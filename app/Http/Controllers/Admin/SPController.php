@@ -59,6 +59,7 @@ class SPController extends Controller
                     'division_receiver' => null,
                     'notif_message' => 'Surat Peringatan 2',
                     'receiver' => $ar->Unit->Owner()->Tenant->User->id_user,
+                    'connection' => ConnectionDB::getDBname()
                 ];
 
                 broadcast(new HelloEvent($dataNotif));
@@ -120,6 +121,7 @@ class SPController extends Controller
                     'division_receiver' => null,
                     'notif_message' => $notifMessage,
                     'receiver' => $ar->Unit->Owner()->Tenant->User->id_user,
+                    'connection' => ConnectionDB::getDBname()
                 ];
 
                 broadcast(new HelloEvent($dataNotif));

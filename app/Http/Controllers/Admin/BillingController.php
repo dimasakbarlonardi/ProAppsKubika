@@ -560,7 +560,8 @@ class BillingController extends Controller
                         'sender' => $request->session()->get('user')->id_user,
                         'division_receiver' => null,
                         'notif_message' => 'Harap melakukan pembayaran tagihan bulanan anda',
-                        'receiver' => $util->MonthlyUtility->Unit->TenantUnit->Tenant->User->id_user
+                        'receiver' => $util->MonthlyUtility->Unit->TenantUnit->Tenant->User->id_user,
+                        'connection' => ConnectionDB::getDBname()
                     ];
 
                     broadcast(new HelloEvent($dataNotif));

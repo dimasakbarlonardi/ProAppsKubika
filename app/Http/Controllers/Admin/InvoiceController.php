@@ -118,7 +118,8 @@ class InvoiceController extends Controller
             'sender' => $user->id_user,
             'division_receiver' => 2,
             'notif_message' => 'Permintaan Installment invoice',
-            'receiver' => null
+            'receiver' => null,
+            'connection' => ConnectionDB::getDBname()
         ];
 
         broadcast(new HelloEvent($dataNotif));

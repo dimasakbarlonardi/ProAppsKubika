@@ -136,6 +136,7 @@ class WorkRequestController extends Controller
                 'division_receiver' => $request->id_work_relation,
                 'notif_message' => 'Work Request baru, mohon segera dikerjakan',
                 'receiver' => null,
+                'connection' => ConnectionDB::getDBname()
             ];
 
             broadcast(new HelloEvent($dataNotif));
@@ -194,6 +195,7 @@ class WorkRequestController extends Controller
                 'division_receiver' => null,
                 'notif_message' => 'Work Request sudah dikerjakan, mohon periksa kembali pekerjaan kami',
                 'receiver' => $getUser->id_user,
+                'connection' => ConnectionDB::getDBname()
             ];
 
             broadcast(new HelloEvent($dataNotif));
@@ -232,6 +234,7 @@ class WorkRequestController extends Controller
             'division_receiver' => null,
             'notif_message' => 'Work Request sudah saya selesaikan',
             'receiver' => $approve->approval_2,
+            'connection' => ConnectionDB::getDBname()
         ];
 
         broadcast(new HelloEvent($dataNotif));
