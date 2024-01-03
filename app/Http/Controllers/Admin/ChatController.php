@@ -53,14 +53,14 @@ class ChatController extends Controller
 
         if (!$isExist) {
             $connRoomChat->id = $request->room_id;
-            $connRoomChat->receiver_id = $request->receiver_id_value;
+            $connRoomChat->receiver_id = $request->receiver_id;
             $connRoomChat->sender_id = $request->sender_id_value;
             $connRoomChat->save();
         }
 
         $connChat->room_id = $isExist ? $request->room_id : $connRoomChat->id;
         $connChat->message = $request->value;
-        $connChat->receiver_id = $request->receiver_id_value;
+        $connChat->receiver_id = $request->receiver_id;
         $connChat->sender_id = $sender->id_user;
         $connChat->is_read = false;
         $connChat->save();

@@ -362,7 +362,7 @@
         $('#send_message').on('click', function() {
             value = $('#message-content').val();
             room_id = $('#room_id_value').val();
-            receiver_id_value = $('#receiver_id_value').val();
+            receiver_id = $('#receiver_id_value').val();
             sender_id_value = $('#sender_id_value').val();
 
             $.ajax({
@@ -371,7 +371,7 @@
                 data: {
                     value,
                     room_id,
-                    receiver_id_value,
+                    receiver_id,
                     sender_id_value
                 },
                 success: function(resp) {
