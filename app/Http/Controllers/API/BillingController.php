@@ -43,7 +43,7 @@ class BillingController extends Controller
 
         $dbName = ConnectionDB::getDBname();
         $setting = $connSetting->find(1);
-
+        // dd($id);
         if ($setting->is_split_ar == 0) {
             $connARTenant = DB::connection($dbName)
                 ->table('tb_fin_monthly_ar_tenant as arm')
@@ -55,6 +55,8 @@ class BillingController extends Controller
         } elseif ($setting->is_split_ar == 1) {
             $connARTenant = $connAR->where('deleted_at', null)
                 ->with(['UtilityCashReceipt', 'IPLCashReceipt'])
+                ->where('id_unit', $id)
+                ->orderBy('periode_bulan', 'desc')
                 ->get();
         }
 
