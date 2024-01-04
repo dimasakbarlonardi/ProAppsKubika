@@ -1,3 +1,5 @@
+<p>Total Invoice : {{ count($transactions) }}</p>
+<hr>
 <table class="table mb-0" id="tableData">
     <thead class="text-black bg-200">
         <tr>

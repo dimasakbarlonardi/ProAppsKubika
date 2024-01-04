@@ -48,11 +48,30 @@ class InvoiceController extends Controller
             $transactions = $connAR->where('deleted_at', null);
 
             if ($request->status != 'all') {
-                $transactions = $transactions->where('transaction_status', $request->status);
+                $status = $request->status;
+                $transactions = $transactions->whereHas(
+                    'UtilityCashReceipt',
+                    function ($q) use ($status) {
+                        $q->where('transaction_status', $status);
+                    }
+                )->orWhereHas(
+                    'IPLCashReceipt',
+                    function ($q) use ($status) {
+                        $q->where('transaction_status', $status);
+                    }
+                );
             }
 
-            // dd($transactions->get());
-            $data['transactions'] = $transactions->get();
+            if ($request->unit != 'all') {
+                $transactions = $transactions->where('id_unit', $request->unit);
+            }
+
+            // if ($request->status != 'all') {
+            //     $transactions = $transactions->where('transaction_status', $request->status);
+            // }
+
+            $data['transactions'] = $transactions->orderBy('id_unit', 'ASC')->get();
+
             $view = view('AdminSite.Invoice.monthlybill-data', $data)->render();
         }
 

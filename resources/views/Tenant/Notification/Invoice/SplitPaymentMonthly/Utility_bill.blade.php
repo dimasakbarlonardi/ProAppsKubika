@@ -149,7 +149,7 @@
                         <span>{{ DecimalRupiahRP($bill->MonthlyARTenant->MonthlyUtility->ElectricUUS->ppj) }}</span>
                     </td>
                     <td class="align-middle text-end">
-                        <span>{{ DecimalRupiahRP($bill->MonthlyARTenant->MonthlyUtility->ElectricUUS->total) }}</span>
+                        <span>{{ DecimalRupiahRP($bill->MonthlyARTenant->MonthlyUtility->ElectricUUS->total - $bill->MonthlyARTenant->MonthlyUtility->ElectricUUS->ppj) }}</span>
                     </td>
                 </tr>
                 <tr>
@@ -233,7 +233,7 @@
                     <span>{{ DecimalRupiahRP($electric->biaya_m3) }} / KWh</span> <br>
                 </td>
                 <td class="align-middle text-end">
-                    <span>{{ DecimalRupiahRP($transaction->MonthlyUtility->ElectricUUS->total) }}</span>
+                    <span>{{ DecimalRupiahRP($transaction->MonthlyUtility->ElectricUUS->total - $transaction->MonthlyUtility->ElectricUUS->ppj) }}</span>
                 </td>
             </tr>
             <tr>
