@@ -34,7 +34,8 @@ class InvoiceController extends Controller
         $connAR = ConnectionDB::setConnection(new MonthlyArTenant());
 
         if ($request->type == 'RequestBilling') {
-            $transactions = $connCR->where('deleted_at', null);
+            $transactions = $connCR->where('deleted_at', null)
+                ->whereNotIn('transaction_type', ['MonthlyOtherBillTenant', 'MonthlyUtilityTenant', 'MonthlyIPLTenant']);
 
             if ($request->status != 'all') {
                 $transactions = $transactions->where('transaction_status', $request->status);
