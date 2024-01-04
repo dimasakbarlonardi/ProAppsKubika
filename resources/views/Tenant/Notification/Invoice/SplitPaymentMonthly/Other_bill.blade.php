@@ -164,6 +164,14 @@
                     </tr>
                 @endforeach
             @endif
+            <tr class="border-top">
+                <td colspan="3">
+                    <h5>Grand Total</h5>
+                </td>
+                <td class="align-middle text-end">
+                    {{ DecimalRupiahRP($transaction->OtherCashReceipt()->sub_total) }}
+                </td>
+            </tr>
         </tbody>
     </table>
 </div>

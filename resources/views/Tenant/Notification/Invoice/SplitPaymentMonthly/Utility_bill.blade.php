@@ -313,7 +313,7 @@
                     <h5>Grand Total</h5>
                 </td>
                 <td class="align-middle text-end">
-                    {{ DecimalRupiahRP($transaction->total_tagihan_utility) }}
+                    {{ DecimalRupiahRP($transaction->UtilityCashReceipt->sub_total) }}
                 </td>
             </tr>
         </tbody>
