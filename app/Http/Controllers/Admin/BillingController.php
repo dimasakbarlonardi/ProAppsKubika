@@ -84,7 +84,7 @@ class BillingController extends Controller
     {
         foreach ($request->IDs as $id) {
             $validate = $this->validateUtility($request, $id);
-            
+
             if (!$validate['status']) {
                 $validate['status'] = 401;
                 return response()->json($validate);
@@ -220,6 +220,8 @@ class BillingController extends Controller
                 $billAmount = (int) $bill->bill_price;
             }
             $addBill = [
+                'qty' => $createUtilityBill->Unit->luas_unit,
+                'price' => $bill->bill_price,
                 'bill_name' => $bill->bill_name,
                 'bill_price' => $billAmount,
                 'is_require_unit_volume' => $bill->is_require_unit_volume
