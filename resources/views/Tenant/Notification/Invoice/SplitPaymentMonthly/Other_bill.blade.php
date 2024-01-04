@@ -115,7 +115,7 @@
                 @endforeach
             @endforeach
             <tr class="alert alert-success my-3">
-                <td class="align-middle">
+                <td class="align-middle" colspan="4">
                     <h6 class="mb-0 text-nowrap">Tagihan bulan
                         {{ $transaction->periode_bulan }},
                         {{ $transaction->periode_tahun }}
@@ -135,7 +135,7 @@
                 <td>
                     <h6>Price</h6>
                 </td>
-                <td>
+                <td class="align-middle text-end">
                     <h6>Total</h6>
                 </td>
             </tr>
@@ -146,16 +146,15 @@
                     </td>
                     <td>
                         @if ($otherBill->is_require_unit_volume)
-                            {{ $transaction->Unit->luas_unit }}
+                            {{ $transaction->Unit->luas_unit }} m<sup>2</sup>
                         @else
                             -
                         @endif
                     </td>
                     <td>
-                        {{ $otherBill->bill_price }}
+                        {{ Rupiah($otherBill->price) }}
                     </td>
                     <td class="align-middle text-end" colspan="4">
-                        <h6 class="mb-3 mt-3">Total</h6>
                         <span>{{ Rupiah($otherBill->bill_price) }}</span>
                     </td>
                 </tr>
