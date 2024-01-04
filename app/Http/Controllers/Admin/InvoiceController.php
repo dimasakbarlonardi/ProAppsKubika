@@ -9,6 +9,7 @@ use App\Models\CashReceipt;
 use App\Models\CompanySetting;
 use App\Models\Installment;
 use App\Models\IPLType;
+use App\Models\MonthlyArTenant;
 use App\Models\Unit;
 use App\Models\User;
 use App\Models\Utility;
@@ -30,17 +31,33 @@ class InvoiceController extends Controller
     public function filteredData(Request $request)
     {
         $connCR = ConnectionDB::setConnection(new CashReceipt());
+        $connAR = ConnectionDB::setConnection(new MonthlyArTenant());
 
-        $transactions = $connCR->where('deleted_at', null);
+        if ($request->type == 'RequestBilling') {
+            $transactions = $connCR->where('deleted_at', null);
 
-        if ($request->status != 'all') {
-            $transactions = $transactions->where('transaction_status', $request->status);
+            if ($request->status != 'all') {
+                $transactions = $transactions->where('transaction_status', $request->status);
+            }
+
+            $data['transactions'] = $transactions->get();
+            $view = view('AdminSite.Invoice.table-data', $data)->render();
         }
 
-        $data['transactions'] = $transactions->get();
+        if ($request->type == 'MonthlyBilling') {
+            $transactions = $connAR->where('deleted_at', null);
+
+            if ($request->status != 'all') {
+                $transactions = $transactions->where('transaction_status', $request->status);
+            }
+
+            // dd($transactions->get());
+            $data['transactions'] = $transactions->get();
+            $view = view('AdminSite.Invoice.monthlybill-data', $data)->render();
+        }
 
         return response()->json([
-            'html' => view('AdminSite.Invoice.table-data', $data)->render()
+            'html' => $view
         ]);
     }
 

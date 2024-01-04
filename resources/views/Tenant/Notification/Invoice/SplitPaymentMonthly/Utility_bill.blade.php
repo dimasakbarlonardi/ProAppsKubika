@@ -111,22 +111,36 @@
                         <h6 class="text-nowrap mb-3">Price</h6>
                     </td>
                     <td>
-                        <h6 class="text-nowrap mb-3">PPJ <small>(%)</small></h6>
-                    </td>
-                    <td>
                         <h6 class="text-nowrap mb-3 text-end">Total</h6>
                     </td>
                 </tr>
                 <tr>
-                    <td>Listrik</td>
+                    <td>PPJ <small>(%)</small></td>
+                    <td colspan="5">PPJ <small>({{ $electric->biaya_ppj }}%)</small></td>
+                    <td class="align-middle text-end">
+                        {{ DecimalRupiahRP($bill->MonthlyARTenant->MonthlyUtility->ElectricUUS->ppj) }}
+                    </td>
+                </tr>
+                <tr>
                     <td>
-                        {{ $bill->MonthlyARTenant->MonthlyUtility->ElectricUUS->nomor_listrik_awal }} W
+                        Listrik
+                        @if ($transaction->MonthlyUtility->ElectricUUS->is_abodemen)
+                            <br>
+                            (Pemakaian minimum listrik {{ $transaction->MonthlyUtility->ElectricUUS->abodemen_value }} KWh)
+                        @endif
                     </td>
                     <td>
-                        {{ $bill->MonthlyARTenant->MonthlyUtility->ElectricUUS->nomor_listrik_akhir }} W
+                        {{ $bill->MonthlyARTenant->MonthlyUtility->ElectricUUS->nomor_listrik_awal }} KWh
                     </td>
                     <td>
-                        <span>{{ $bill->MonthlyARTenant->MonthlyUtility->ElectricUUS->usage }} W</span> <br>
+                        {{ $bill->MonthlyARTenant->MonthlyUtility->ElectricUUS->nomor_listrik_akhir }} KWh
+                    </td>
+                    <td>
+                        @if (!$transaction->MonthlyUtility->ElectricUUS->is_abodemen)
+                            <span>{{ $bill->MonthlyARTenant->MonthlyUtility->ElectricUUS->usage }} KWh</span>
+                        @else
+                            <s>{{ $bill->MonthlyARTenant->MonthlyUtility->ElectricUUS->usage }} KWh</s>
+                        @endif
                     </td>
                     <td>
                         <span>{{ DecimalRupiahRP($electric->biaya_m3) }} / KWh</span> <br>
@@ -138,16 +152,6 @@
                         <span>{{ DecimalRupiahRP($bill->MonthlyARTenant->MonthlyUtility->ElectricUUS->total) }}</span>
                     </td>
                 </tr>
-                @if ($bill->MonthlyARTenant->MonthlyUtility->ElectricUUS->is_abodemen)
-                    <tr>
-                        <td colspan="3">
-                            Abodemen Listrik
-                        </td>
-                        <td>
-                            {{ $bill->MonthlyARTenant->MonthlyUtility->ElectricUUS->abodemen_value }}W
-                        </td>
-                    </tr>
-                @endif
                 <tr>
                     <td class="align-middle">
                         <p class="mb-0">Air</p>
@@ -170,9 +174,6 @@
                     <td class="align-middle">
                         <span>{{ Rupiah($water->biaya_m3) }}</span>
                     </td>
-                    <td class="align-middle">
-                        <span>-</span>
-                    </td>
                     <td class="align-middle text-end">
                         <span>{{ Rupiah($bill->MonthlyARTenant->MonthlyUtility->WaterUUS->total) }}</span>
                     </td>
@@ -180,15 +181,12 @@
             @endforeach
 
             <tr class="alert alert-success my-3">
-                <td class="align-middle">
+                <td class="align-middle" colspan="6">
                     <h6 class="mb-0 text-nowrap">Tagihan bulan
                         {{ $transaction->periode_bulan }},
                         {{ $transaction->periode_tahun }}
                     </h6>
                 </td>
-                <td class="align-middle">
-                </td>
-                <td colspan="6"></td>
             </tr>
             <tr>
                 <td>
@@ -207,43 +205,43 @@
                     <h6 class="text-nowrap mb-3">Price</h6>
                 </td>
                 <td>
-                    <h6 class="text-nowrap mb-3">PPJ <small>(%)</small></h6>
-                </td>
-                <td>
                     <h6 class="text-nowrap mb-3 text-end">Total</h6>
                 </td>
             </tr>
             <tr>
-                <td>Listrik</td>
                 <td>
-                    {{ $transaction->MonthlyUtility->ElectricUUS->nomor_listrik_awal }} W
+                    Listrik
+                    @if ($transaction->MonthlyUtility->ElectricUUS->is_abodemen)
+                        <br>
+                        (Pemakaian minimum listrik {{ $transaction->MonthlyUtility->ElectricUUS->abodemen_value }} KWh)
+                    @endif
                 </td>
                 <td>
-                    {{ $transaction->MonthlyUtility->ElectricUUS->nomor_listrik_akhir }} W
+                    {{ $transaction->MonthlyUtility->ElectricUUS->nomor_listrik_awal }} KWh
                 </td>
                 <td>
-                    <span>{{ $transaction->MonthlyUtility->ElectricUUS->usage }} W</span> <br>
+                    {{ $transaction->MonthlyUtility->ElectricUUS->nomor_listrik_akhir }} KWh
+                </td>
+                <td>
+                    @if (!$transaction->MonthlyUtility->ElectricUUS->is_abodemen)
+                        <span>{{ $transaction->MonthlyUtility->ElectricUUS->usage }} KWh</span>
+                    @else
+                        <s>{{ $transaction->MonthlyUtility->ElectricUUS->usage }} KWh</s>
+                    @endif
                 </td>
                 <td>
                     <span>{{ DecimalRupiahRP($electric->biaya_m3) }} / KWh</span> <br>
-                </td>
-                <td>
-                    <span>{{ DecimalRupiahRP($transaction->MonthlyUtility->ElectricUUS->ppj) }}</span>
                 </td>
                 <td class="align-middle text-end">
                     <span>{{ DecimalRupiahRP($transaction->MonthlyUtility->ElectricUUS->total) }}</span>
                 </td>
             </tr>
-            @if ($transaction->MonthlyUtility->ElectricUUS->is_abodemen)
-                <tr>
-                    <td colspan="3">
-                        Abodemen Listrik
-                    </td>
-                    <td>
-                        {{ $transaction->MonthlyUtility->ElectricUUS->abodemen_value }}W
-                    </td>
-                </tr>
-            @endif
+            <tr>
+                <td colspan="5">PPJ <small>({{ $electric->biaya_ppj }}%)</small></td>
+                <td class="align-middle text-end">
+                    {{ DecimalRupiahRP($transaction->MonthlyUtility->ElectricUUS->ppj) }}
+                </td>
+            </tr>
             <tr>
                 <td class="align-middle">
                     <p class="mb-0">Air</p>
@@ -265,9 +263,6 @@
                 </td>
                 <td class="align-middle">
                     <span>{{ Rupiah($water->biaya_m3) }}</span>
-                </td>
-                <td class="align-middle">
-                    <span>-</span>
                 </td>
                 <td class="align-middle text-end">
                     <span>{{ Rupiah($transaction->MonthlyUtility->WaterUUS->total) }}</span>
@@ -313,6 +308,14 @@
                     </td>
                 </tr>
             @endif
+            <tr class="border-top">
+                <td colspan="5">
+                    <h5>Grand Total</h5>
+                </td>
+                <td class="align-middle text-end">
+                    {{ DecimalRupiahRP($transaction->total_tagihan_utility) }}
+                </td>
+            </tr>
         </tbody>
     </table>
 </div>
