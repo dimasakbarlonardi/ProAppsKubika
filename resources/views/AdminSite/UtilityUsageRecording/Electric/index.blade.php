@@ -91,7 +91,7 @@
                                         <img src="{{ $item->image ? url($item->image) : url('/assets/img/icons/spot-illustrations/proapps.png') }}"
                                             width="100">
                                     </td>
-                                    <th class="align-middle">{{ $item->Unit->nama_unit }}</th>
+                                    <th class="align-middle">{{ $item->Unit->nama_unit }} - {{ $item->Unit->Tower->nama_tower }}</th>
                                     <th class="align-middle">
                                         @if ($item->WaterUUSrelation())
                                             Previous - <b>{{ $item->WaterUUSrelation()->nomor_air_awal }}</b>
