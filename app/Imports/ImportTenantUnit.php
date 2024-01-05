@@ -68,7 +68,7 @@ class ImportTenantUnit implements ToModel, WithStartRow
     {
         $connModel = ConnectionDB::setConnection(new Tenant());
 
-        $data = $connModel->where('nama_tenant', 'like', '%' . $query . '%')->first();
+        $data = $connModel->where('email_tenant', 'like', '%' . $query . '%')->first();
 
         return $data ? $data->id_tenant : null;
     }
