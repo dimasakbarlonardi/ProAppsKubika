@@ -9,7 +9,9 @@ use App\Models\MonthlyUtility;
 use App\Models\Tenant;
 use App\Models\TenantUnit;
 use App\Models\Unit;
+use App\Models\Utility;
 use Illuminate\Http\Request;
+use stdClass;
 use Throwable;
 
 class UnitController extends Controller
@@ -119,6 +121,37 @@ class UnitController extends Controller
         );
     }
 
+    public function ShowDetailWaterUsage($unitID)
+    {
+        $connMonthlyUtility = ConnectionDB::setConnection(new MonthlyUtility());
+        $connUtility = ConnectionDB::setConnection(new Utility());
+        $unit = $connMonthlyUtility->where('tb_fin_monthly_utility.id_unit', $unitID)->first();
+        
+        $object = new stdClass();
+        $object->unit = $unit->Unit->nama_unit;
+
+        $data['detail'] = $connMonthlyUtility
+            ->select(['nomor_air_awal', 'nomor_air_akhir', 'usage', 'abodemen', 'total', 'image'])
+            ->join('tb_eng_monthly_meter_air as water', 'tb_fin_monthly_utility.id_eng_air', '=', 'water.id')
+            ->where('tb_fin_monthly_utility.id_unit', $unitID)
+            ->first();
+
+            $data['biayaWater'] = $connUtility->find(2)
+            ->select(['biaya_m3'])
+            ->first();
+
+            $data['TotalTagihanUtility'] = $connMonthlyUtility
+            ->select(['total_tagihan_utility'])
+            ->where('tb_fin_monthly_utility.id_unit', $unitID)
+            ->first();
+
+        return ResponseFormatter::success(
+            $data,
+            $object,
+            'Success get water usage units'
+        );
+    }
+
     public function electricUsageRecord($unitID)
     {
         $connUtility = ConnectionDB::setConnection(new MonthlyUtility());
@@ -138,6 +171,37 @@ class UnitController extends Controller
         return ResponseFormatter::success(
             $data,
             'Success get water usage units'
+        );
+    }
+
+    public function ShowDetailElectricUsage($unitID)
+    {
+        $connMonthlyUtility = ConnectionDB::setConnection(new MonthlyUtility());
+        $connUtility = ConnectionDB::setConnection(new Utility());
+        $unit = $connMonthlyUtility->where('tb_fin_monthly_utility.id_unit', $unitID)->first();
+
+        $object = new stdClass();
+        $object->unit = $unit->Unit->nama_unit;
+
+        $data['detail'] = $connMonthlyUtility
+            ->select(['nomor_listrik_awal', 'nomor_listrik_akhir', 'usage', 'ppj', 'total', 'image'])
+            ->join('tb_eng_monthly_meter_listrik as electric', 'tb_fin_monthly_utility.id_eng_listrik', '=', 'electric.id')
+            ->where('tb_fin_monthly_utility.id_unit', $unitID)
+            ->first();
+
+        $data['biayaElectric'] = $connUtility->find(1)
+            ->select(['biaya_m3'])
+            ->first();
+
+        $data['TotalTagihanUtility'] = $connMonthlyUtility
+            ->select(['total_tagihan_utility'])
+            ->where('tb_fin_monthly_utility.id_unit', $unitID)
+            ->first();
+
+        return ResponseFormatter::success(
+            $data,
+            $object,
+            'Success get electric usage units'
         );
     }
 }
