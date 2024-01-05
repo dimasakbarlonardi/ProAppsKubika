@@ -1,8 +1,7 @@
 @extends('layouts.master')
 
 @section('css')
-    <script src="https://cdn.tiny.cloud/1/zqt3b05uqsuxthyk5xvi13srgf4ru0l5gcvuxltlpgm6rcki/tinymce/6/tinymce.min.js"
-        referrerpolicy="origin"></script>
+    <script src="https://cdn.tiny.cloud/1/zfyksst4gxwae7gxmgzef4p86481o6u0hqh00100y0xgkyts/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
 @endsection
 
 @section('content')
@@ -293,8 +292,7 @@
 @endsection
 
 @section('script')
-    <script src="https://cdn.tiny.cloud/1/zqt3b05uqsuxthyk5xvi13srgf4ru0l5gcvuxltlpgm6rcki/tinymce/6/tinymce.min.js"
-        referrerpolicy="origin"></script>
+    <script src="https://cdn.tiny.cloud/1/zfyksst4gxwae7gxmgzef4p86481o6u0hqh00100y0xgkyts/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
     <script>
         tinymce.init({
             selector: 'textarea#deskripsi_response', // Replace this CSS selector to match the placeholder element for TinyMCE
@@ -362,7 +360,7 @@
         $('#send_message').on('click', function() {
             value = $('#message-content').val();
             room_id = $('#room_id_value').val();
-            receiver_id_value = $('#receiver_id_value').val();
+            receiver_id = $('#receiver_id_value').val();
             sender_id_value = $('#sender_id_value').val();
 
             $.ajax({
@@ -371,7 +369,7 @@
                 data: {
                     value,
                     room_id,
-                    receiver_id_value,
+                    receiver_id,
                     sender_id_value
                 },
                 success: function(resp) {

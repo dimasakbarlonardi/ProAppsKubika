@@ -103,6 +103,7 @@ class BAPPController extends Controller
             'division_receiver' => $bapp->jumlah_potongan > 0  ? 6 : null,
             'notif_message' => 'BAPP sudah dibuat, terima kasih..',
             'receiver' => $bapp->Ticket->Tenant->User->id_user,
+            'connection' => ConnectionDB::getDBname()
         ];
 
         broadcast(new HelloEvent($dataNotif));
@@ -131,6 +132,7 @@ class BAPPController extends Controller
             'division_receiver' => null,
             'notif_message' => 'Deposit sudah dikembalikan, mohon periksa kembali. Terima kasih..',
             'receiver' => $bapp->Ticket->Tenant->User->id_user,
+            'connection' => ConnectionDB::getDBname(),
         ];
 
         broadcast(new HelloEvent($dataNotif));

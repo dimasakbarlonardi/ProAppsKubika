@@ -79,6 +79,7 @@ class PackageController extends Controller
                 'division_receiver' => null,
                 'notif_message' => 'Halo, paket mu sudah sampai. Terima kasih..',
                 'receiver' => $tenant->Tenant->User->id_user,
+                'connection' => ConnectionDB::getDBname()
             ];
 
             broadcast(new HelloEvent($dataNotif));

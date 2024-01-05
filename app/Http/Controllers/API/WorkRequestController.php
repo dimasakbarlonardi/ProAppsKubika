@@ -85,6 +85,7 @@ class WorkRequestController extends Controller
             'division_receiver' => null,
             'notif_message' => 'Work Request sudah dikerjakan, mohon periksa kembali pekerjaan kami',
             'receiver' => $wr->Ticket->Tenant->User->id_user,
+            'connection' => ConnectionDB::getDBname()
         ];
 
         broadcast(new HelloEvent($dataNotif));
@@ -118,6 +119,7 @@ class WorkRequestController extends Controller
             'division_receiver' => 2,
             'notif_message' => 'Work Request sudah selesai, terimakasih',
             'receiver' => null,
+            'connection' => ConnectionDB::getDBname()
         ];
 
         broadcast(new HelloEvent($dataNotif));

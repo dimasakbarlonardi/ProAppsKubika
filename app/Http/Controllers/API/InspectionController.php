@@ -48,7 +48,7 @@ class InspectionController extends Controller
         $nowMonth = Carbon::now()->format('m');
         $getSchedules = $connSchedules->whereMonth('schedule', $nowMonth)
             ->where('status_schedule', 'Not Done')
-            ->with('Equipment.Room.Tower' , 'Equipment.Room.Floor')
+            ->with('Equipment.Room.Tower', 'Equipment.Room.Floor')
             ->get();
 
         $inspections = [];
@@ -57,7 +57,8 @@ class InspectionController extends Controller
                 $eq = $schedule->Equipment;
 
                 $object = new stdClass();
-                $object->id_equiqment_engineering = $schedule->id_equiqment_engineering_detail;
+                $object->id_schedule = $schedule->id_equiqment_engineering_detail;
+                $object->id_equiqment_engineering = $eq->id_equiqment_engineering;
                 $object->schedule = $schedule->schedule;
                 $object->equipment = $eq->equiqment;
                 $object->status_schedule = $schedule->status_schedule;
@@ -77,7 +78,9 @@ class InspectionController extends Controller
     public function storeinspectionEng(Request $request, $id)
     {
         $connSchedule = ConnectionDB::setConnection(new EquiqmentEngineeringDetail());
-        $schedule = $connSchedule->find($id);
+        $schedule = $connSchedule->where('id_equiqment_engineering', $id)
+            ->where('schedule', $request->schedule)
+            ->first();
 
         try {
             DB::beginTransaction();
@@ -96,9 +99,7 @@ class InspectionController extends Controller
             $schedule->id_room = $request->id_room;
             $schedule->checklist_datetime = Carbon::now();
             $schedule->user_id = $request->user_id;
-
             $schedule->save();
-            DB::commit();
 
             // Periksa dan perbarui status jadwal jika diperlukan
             if ($schedule->status_schedule == 'Not Done') {
@@ -115,6 +116,8 @@ class InspectionController extends Controller
 
                 $schedule->save();
             }
+
+            DB::commit();
 
             return ResponseFormatter::success([
                 $schedule
@@ -164,7 +167,7 @@ class InspectionController extends Controller
         $connEquipmentDetail = ConnectionDB::setConnection(new EquiqmentEngineeringDetail());
 
         $equipment = $connEquipmentDetail->where('id_equiqment_engineering_detail', $id)
-            ->with(['Room', 'Equipment', 'CheckedBy' ,'Room.Floor' ,'Room.Tower'])
+            ->with(['Room', 'Equipment', 'CheckedBy', 'Room.Floor', 'Room.Tower'])
             ->first();
 
         $equipment['status'] = json_decode($equipment->status);

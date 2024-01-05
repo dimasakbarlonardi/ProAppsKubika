@@ -159,6 +159,7 @@ class OpenTicketController extends Controller
                 'division_receiver' => 1,
                 'notif_message' => 'Tiket sudah dibuat, mohon proses request saya',
                 'receiver' => null,
+                'connection' => ConnectionDB::getDBname()
             ];
 
             $system->save();

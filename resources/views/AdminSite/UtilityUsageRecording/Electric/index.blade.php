@@ -9,6 +9,18 @@
                         <div class="my-3 col-auto">
                             <h6 class="mb-0 text-white">List Utility Usage Recording Electric</h6>
                         </div>
+                        <div class="my-3 col-auto">
+                            <div class="d-flex align-items-center" id="table-ticket-replace-element">
+                                <a class="btn btn-falcon-default btn-sm text-600"
+                                    href="{{ url('/import_template/template_electric_usage.xlsx') }}" download>
+                                    <span class="fas fa-plus fs--2 me-1"></span>Download Template
+                                </a>
+                                <button class="btn btn-falcon-default text-600 btn-sm ml-3" type="button"
+                                    class="fas fa-plus" data-bs-toggle="modal" data-bs-target="#modal-import">
+                                    + Import Excel
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="p-3">
@@ -79,7 +91,7 @@
                                         <img src="{{ $item->image ? url($item->image) : url('/assets/img/icons/spot-illustrations/proapps.png') }}"
                                             width="100">
                                     </td>
-                                    <th class="align-middle">{{ $item->Unit->nama_unit }}</th>
+                                    <th class="align-middle">{{ $item->Unit->nama_unit }} - {{ $item->Unit->Tower->nama_tower }}</th>
                                     <th class="align-middle">
                                         @if ($item->WaterUUSrelation())
                                             Previous - <b>{{ $item->WaterUUSrelation()->nomor_air_awal }}</b>
@@ -108,7 +120,7 @@
                                             </h6>
                                         @endif
 
-                                        @if ($item->is_approve && !$item->no_refrensi)
+                                        @if ($item->is_approve && !$item->no_refrensi && !$item->MonthlyUtility)
                                             <h6>
                                                 <span class="badge bg-success">Approved</span>
                                             </h6>
@@ -163,28 +175,48 @@
                                         </td>
                                     @endif
                                     @if ($item->MonthlyUtility)
-                                        @if (!$item->MonthlyUtility->MonthlyTenant->tgl_jt_invoice && !$item->MonthlyUtility->MonthlyTenant->tgl_bayar_invoice)
-                                            <td class="align-middle text-center">
-                                                <span class="badge bg-info">
-                                                    <span class="fas fa-check fs--2 me-1"></span>
-                                                    Waiting to send
-                                                </span>
-                                            </td>
-                                        @else
-                                            <td class="align-middle text-center">
-                                                <h6>
-                                                    <span class="badge bg-success">
+                                        @if ($setting->is_split_ar == 0)
+                                            @if (!$item->MonthlyUtility->MonthlyTenant->CashReceipt->tgl_jt_invoice)
+                                                <td class="align-middle text-center">
+                                                    <span class="badge bg-info">
                                                         <span class="fas fa-check fs--2 me-1"></span>
-                                                        Sended
+                                                        Waiting to send
                                                     </span>
-                                                </h6>
-                                            </td>
+                                                </td>
+                                            @else
+                                                <td class="align-middle text-center">
+                                                    <h6>
+                                                        <span class="badge bg-success">
+                                                            <span class="fas fa-check fs--2 me-1"></span>
+                                                            Sended
+                                                        </span>
+                                                    </h6>
+                                                </td>
+                                            @endif
+                                        @elseif ($setting->is_split_ar == 1)
+                                            @if (!$item->MonthlyUtility->MonthlyTenant->CashReceipts[0]->tgl_jt_invoice)
+                                                <td class="align-middle text-center">
+                                                    <span class="badge bg-info">
+                                                        <span class="fas fa-check fs--2 me-1"></span>
+                                                        Waiting to send
+                                                    </span>
+                                                </td>
+                                            @else
+                                                <td class="align-middle text-center">
+                                                    <h6>
+                                                        <span class="badge bg-success">
+                                                            <span class="fas fa-check fs--2 me-1"></span>
+                                                            Sended
+                                                        </span>
+                                                    </h6>
+                                                </td>
+                                            @endif
                                         @endif
                                     @endif
                                 </tr>
 
-                                <div class="modal fade" id="edit-modal{{ $item->id }}" tabindex="-1" role="dialog"
-                                    aria-hidden="true">
+                                <div class="modal fade" id="edit-modal{{ $item->id }}" tabindex="-1"
+                                    role="dialog" aria-hidden="true">
                                     <div class="modal-dialog modal-dialog-centered" role="document"
                                         style="max-width: 500px">
                                         <div class="modal-content position-relative">
@@ -335,69 +367,83 @@
                             @endforeach
                         </tbody>
                     </table>
+                    <div class="d-flex justify-content-center my-5">
+                        {{ $elecUSS->appends([
+                                'id_tower' => Request::input('id_tower'),
+                                'select_status' => Request::input('select_status'),
+                                'select_period' => Request::input('select_period'),
+                                'select_year' => Request::input('select_year'),
+                            ])->links('vendor.pagination.bootstrap-4') }}
+                    </div>
                 </div>
-
             </div>
         </div>
         <div class="col-3">
             <div class="card">
-                <form action="" method="post">
-                    <div class="card-header">
-                        <h6 class="mb-0">Properties</h6>
-                    </div>
-                    <div class="card-body">
-                        <div class="mb-3">
-                            <label class="mb-1">Towers</label>
-                            <select class="form-control" id="id_tower">
-                                <option value="all">All</option>
-                                @foreach ($towers as $tower)
-                                    <option value="{{ $tower->id_tower }}">{{ $tower->nama_tower }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="mb-1">Status</label>
-                            <select class="form-control" id="select_status">
-                                <option value="all">All</option>
-                                <option value="0">Pending</option>
-                                <option value="1">Approved</option>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label class="mb-1">Periode</label>
-                            <div class="row">
-                                <div class="col-6">
-                                    <select class="form-control" id="select_period">
-                                        <option value="01">January</option>
-                                        <option value="02">February</option>
-                                        <option value="03">March</option>
-                                        <option value="04">April</option>
-                                        <option value="05">May</option>
-                                        <option value="06">June</option>
-                                        <option value="07">July</option>
-                                        <option value="08">August</option>
-                                        <option value="09">September</option>
-                                        <option value="10">October</option>
-                                        <option value="11">November</option>
-                                        <option value="12">December</option>
-                                    </select>
-                                </div>
-                                <div class="col-6">
-                                    <select class="form-control" id="select_year">
-                                        <option value="2023">2023</option>
-                                        <option value="2022">2022</option>
-                                        <option value="2021">2021</option>
-                                        <option value="2020">2020</option>
-                                        <option value="2019">2019</option>
-                                    </select>
+                <div class="card-header">
+                    <h6 class="mb-0">Properties</h6>
+                </div>
+                <form action="{{ route('usr-electric') }}" class="d-iniline">
+                   @include('AdminSite.UtilityUsageRecording.usage_filter')
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modal-import" tabindex="-1" role="dialog" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 500px">
+            <div class="modal-content position-relative">
+                <div class="position-absolute top-0 end-0 mt-2 me-2 z-index-1">
+                    <button class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base"
+                        data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form action="{{ route('importElectricUsage') }}" method="post" enctype="multipart/form-data">
+                    @csrf
+                    <div class="modal-body p-0">
+                        <div class="rounded-top-lg py-3 ps-4 pe-6 bg-light">
+                            <h4 class="mb-4" id="modalExampleDemoLabel">Upload Excel File </h4>
+                            <div class="mb-4">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <label class="form-label" for="">Periode Bulan</label>
+                                        <select class="form-control" name="periode_bulan">
+                                            <option value="01">January</option>
+                                            <option value="02">February</option>
+                                            <option value="03">March</option>
+                                            <option value="04">April</option>
+                                            <option value="05">May</option>
+                                            <option value="06">June</option>
+                                            <option value="07">July</option>
+                                            <option value="08">August</option>
+                                            <option value="09">September</option>
+                                            <option value="10">October</option>
+                                            <option value="11">November</option>
+                                            <option value="12">December</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-6">
+                                        <label for="">Periode Tahun</label>
+                                        <select class="form-control" name="periode_tahun">
+                                            <option value="2024">2024</option>
+                                            <option value="2023">2023</option>
+                                            <option value="2022">2022</option>
+                                            <option value="2021">2021</option>
+                                            <option value="2020">2020</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
+                            <div class="mb-3">
+                                <input type="file" name="file_excel" class="form-control" required>
+                            </div>
                         </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Import</button>
                     </div>
                 </form>
             </div>
         </div>
-
     </div>
 @endsection
 
@@ -449,7 +495,7 @@
                     } else if (resp.status === 401) {
                         Swal.fire(
                             'Sorry!',
-                            `Sorry this unit with name ${resp.unit} doesn't have user`,
+                            `Sorry this unit with name ${resp.nama_unit} doesn't have user`,
                             'info'
                         ).then(() => {
                             window.location.reload();
@@ -473,57 +519,5 @@
             }).get();
             $('#totalSelected').html($IDs.length)
         })
-
-        $('#select_status').on('change', function() {
-            var status = $(this).val();
-            var tower = $('#id_tower').val();
-            var period = $('#select_period').val();
-            var year = $('#select_year').val();
-
-            getData(tower, status, period, year);
-        })
-
-        $('#id_tower').on('change', function() {
-            var tower = $(this).val();
-            var status = $('#select_status').val();
-            var period = $('#select_period').val();
-            var year = $('#select_year').val();
-
-            getData(tower, status, period, year);
-        })
-
-        $('#select_period').on('change', function() {
-            var tower = $('#id_tower').val();
-            var period = $(this).val();
-            var status = $('#select_status').val();
-            var year = $('#select_year').val();
-
-            getData(tower, status, period, year);
-        })
-
-        $('#select_year').on('change', function() {
-            var tower = $('#id_tower').val();
-            var period = $('#select_period').val();
-            var status = $('#select_status').val();
-            var year = $(this).val();
-
-            getData(tower, status, period, year);
-        })
-
-        function getData(tower, status, period, year) {
-            $.ajax({
-                url: '/admin/uus-electric-filtered',
-                type: 'GET',
-                data: {
-                    tower,
-                    status,
-                    period,
-                    year
-                },
-                success: function(resp) {
-                    $('#uur-data').html(resp.html);
-                }
-            })
-        }
     </script>
 @endsection

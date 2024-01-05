@@ -7,7 +7,7 @@
                 <div class="card-header py-2">
                     <div class="row flex-between-center">
                         <div class="my-3 col-auto">
-                            <h6 class="mb-0 text-white">List Utility Usage Recording Electric</h6>
+                            <h6 class="mb-0 text-white">List Billing SP 1</h6>
                         </div>
                     </div>
                 </div>
@@ -154,7 +154,7 @@
             console.log($IDs);
 
             $.ajax({
-                url: '/admin/blastSP1',
+                url: '/admin/blast-sp-1',
                 type: 'POST',
                 data: {
                     'IDs': $IDs

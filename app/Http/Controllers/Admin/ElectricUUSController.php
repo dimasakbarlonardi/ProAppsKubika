@@ -6,6 +6,7 @@ use App\Events\HelloEvent;
 use App\Helpers\ConnectionDB;
 use App\Helpers\HelpNotifikasi;
 use App\Http\Controllers\Controller;
+use App\Imports\ImportElectric;
 use App\Models\Approve;
 use App\Models\CashReceipt;
 use App\Models\CashReceiptDetail;
@@ -21,6 +22,7 @@ use App\Services\Midtrans\CreateSnapTokenService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Excel;
 use RealRashid\SweetAlert\Facades\Alert;
 use stdClass;
 use Throwable;
@@ -31,11 +33,10 @@ class ElectricUUSController extends Controller
     {
         $connTower = ConnectionDB::setConnection(new Tower());
         $connApprove = ConnectionDB::setConnection(new Approve());
-        $connElecUUS = ConnectionDB::setConnection(new ElectricUUS());
         $connSetting = ConnectionDB::setConnection(new CompanySetting());
 
         $data['setting'] = $connSetting->find(1);
-        $data['elecUSS'] = $connElecUUS->get();
+        $data['elecUSS'] = $this->filteredData($request);
         $data['approve'] = $connApprove->find(9);
         $data['user'] = $request->session()->get('user');
         $data['towers'] = $connTower->get();
@@ -46,30 +47,32 @@ class ElectricUUSController extends Controller
     public function filteredData(Request $request)
     {
         $connElecUUS = ConnectionDB::setConnection(new ElectricUUS());
-        $connApprove = ConnectionDB::setConnection(new Approve());
 
         $records = $connElecUUS->where('deleted_at', null);
 
-        $data['approve'] = $connApprove->find(9);
-        $data['user'] = $request->session()->get('user');
-
-        if ($request->tower != 'all') {
-            $id_tower = $request->tower;
-            $records = $records->whereHas('Unit.Tower', function($q) use ($id_tower) {
+        if ($request->input('id_tower')) {
+            $id_tower = $request->id_tower;
+            $records = $records->whereHas('Unit.Tower', function ($q) use ($id_tower) {
                 $q->where('id_tower', $id_tower);
             });
         }
 
-        if ($request->status != 'all') {
-            $status = $request->status == '0' ? null : $request->status;
+        if ($request->input('select_status')) {
+            $status = $request->input('select_status') == '0' ? null : $request->input('select_status');
             $records = $records->where('is_approve', $status);
         }
 
-        $data['elecUSS'] = $records->get();
+        if ($request->input('select_period')) {
+            $records = $records->where('periode_bulan', $request->input('select_period'));
+        }
 
-        return response()->json([
-            'html' => view('AdminSite.UtilityUsageRecording.Electric.table-data', $data)->render()
-        ]);
+        if ($request->input('select_year')) {
+            $records = $records->where('periode_tahun', $request->input('select_year'));
+        }
+
+        $records = $records->paginate(200);
+
+        return $records;
     }
 
     public function create()
@@ -181,7 +184,8 @@ class ElectricUUSController extends Controller
             'sender' => $request->session()->get('user')->id_user,
             'division_receiver' => null,
             'notif_message' => 'Terjadi kesalahan penginputan meter listrik',
-            'receiver' => $approve->approval_3
+            'receiver' => $approve->approval_3,
+            'connection' => ConnectionDB::getDBname()
         ];
 
         broadcast(new HelloEvent($dataNotif));
@@ -211,12 +215,24 @@ class ElectricUUSController extends Controller
             'sender' => $approve->approval_3,
             'division_receiver' => $role->WorkRelation->id_work_relation,
             'notif_message' => 'Perubahan data recording sudah di approve',
-            'receiver' => null
+            'receiver' => null,
+            'connection' => ConnectionDB::getDBname()
         ];
 
         broadcast(new HelloEvent($dataNotif));
 
         Alert::success('Success', 'Success update data');
+
+        return redirect()->back();
+    }
+
+    public function importElectricUsage(Request $request)
+    {
+        $file = $request->file_excel;
+
+        Excel::import(new ImportElectric($request), $file);
+
+        Alert::success('Success', 'Success import data');
 
         return redirect()->back();
     }

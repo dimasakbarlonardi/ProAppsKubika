@@ -134,6 +134,7 @@ class WorkOrderController extends Controller
                 'division_receiver' => 1,
                 'notif_message' => 'Pekerjaan memerlukan Work Order, mohon segera diperiksa',
                 'receiver' => null,
+                'connection' => ConnectionDB::getDBname()
             ];
 
             broadcast(new HelloEvent($dataNotif));
@@ -192,6 +193,7 @@ class WorkOrderController extends Controller
                 'division_receiver' => null,
                 'notif_message' => 'Persetujuan Work Order',
                 'receiver' => $wo->Ticket->Tenant->User->id_user,
+                'connection' => ConnectionDB::getDBname()
             ];
 
             broadcast(new HelloEvent($dataNotif));
@@ -232,6 +234,7 @@ class WorkOrderController extends Controller
             'division_receiver' => $wo->WorkRequest->id_work_relation,
             'notif_message' => 'Work order telah di terima, terima kasih..',
             'receiver' => null,
+            'connection' => ConnectionDB::getDBname()
         ];
 
         broadcast(new HelloEvent($dataNotif));
@@ -262,6 +265,7 @@ class WorkOrderController extends Controller
             'division_receiver' => 1,
             'notif_message' => 'Maaf work request kali ini saya tolak..',
             'receiver' => null,
+            'connection' => ConnectionDB::getDBname()
         ];
 
         $wo->status_wo = 'REJECTED';
@@ -306,6 +310,7 @@ class WorkOrderController extends Controller
                 'division_receiver' => null,
                 'notif_message' => 'Work order telah di terima, terima kasih..',
                 'receiver' => $connApprove->find(3)->approval_4,
+                'connection' => ConnectionDB::getDBname()
             ];
         }
 
@@ -345,6 +350,7 @@ class WorkOrderController extends Controller
                 'division_receiver' => null,
                 'notif_message' => 'Work order telah di terima, terima kasih..',
                 'receiver' => $connApprove->find(3)->approval_3,
+                'connection' => ConnectionDB::getDBname()
             ];
         }
 
@@ -372,6 +378,7 @@ class WorkOrderController extends Controller
                 'division_receiver' => $wo->Ticket->WorkRequest->id_work_relation,
                 'notif_message' => 'Work Order sudah diapprove, selamat bekerja',
                 'receiver' => null,
+                'connection' => ConnectionDB::getDBname()
             ];
             broadcast(new HelloEvent($dataNotif));
         } else {
@@ -385,6 +392,7 @@ class WorkOrderController extends Controller
                 'division_receiver' => null,
                 'notif_message' => 'Harap melakukan pembayaran untuk menselesaikan transaksi',
                 'receiver' => $wo->WorkRequest->Ticket->Tenant->User->id_user,
+                'connection' => ConnectionDB::getDBname()
             ];
             broadcast(new HelloEvent($dataNotif));
         }
@@ -416,6 +424,7 @@ class WorkOrderController extends Controller
             'division_receiver' => null,
             'notif_message' => 'Work Order sudah dikerjakan, mohon periksa kembali pekerjaan kami',
             'receiver' => $wo->WorkRequest->Ticket->Tenant->User->id_user,
+            'connection' => ConnectionDB::getDBname()
         ];
 
         broadcast(new HelloEvent($dataNotif));
@@ -461,6 +470,7 @@ class WorkOrderController extends Controller
             'division_receiver' => 2,
             'notif_message' => 'Work order telah selesai, terima kasih..',
             'receiver' => null,
+            'connection' => ConnectionDB::getDBname()
         ];
 
         broadcast(new HelloEvent($dataNotif));

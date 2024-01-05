@@ -11,7 +11,7 @@
                                 <img src="{{ asset($company->company_logo) }}" alt="invoice" width="150" />
                             </div>
                             <div class="col text-sm-end mt-3 mt-sm-0">
-                                <h2 class="mb-3">Surat Peringatan 1</h2>
+                                <h2 class="mb-3">{{ $notif->notif_message }}</h2>
                                 <h5>{{ $company->company_name }}</h5>
                                 <p class="fs--1 mb-0">
                                     {!! $company->company_address !!}
@@ -29,112 +29,12 @@
                             </div>
                         </div>
 
-                        <div class="p-4 text-justify">
-                            Dengan Hormat,
+                        @if (!$company->is_split_ar)
+                            @include('AdminSite.SP1.nonsplit')
+                        @else
+                            @include('AdminSite.SP1.splitted')
+                        @endif
 
-                            Bersama ini kami sampaikan, dari data yang kami miliki terhadap kewajiban Invoice bapak/ibu
-                            sebesar
-                            <b>{{ Rupiah($ar->LastBill()->CashReceipt->sub_total) }}</b>
-                            <b>({{ Terbilang($ar->LastBill()->CashReceipt->sub_total) }})</b>, sampai dengan bulan
-                            {{ \Carbon\Carbon::now()->formatLocalized('%B') }}
-
-                            Berikut kami lampirkan rincian penagihan atas unit <b>{{ $ar->Unit->nama_unit }}</b>, sebagai
-                            berikut :
-                        </div>
-
-
-                        <div class="table-responsive scrollbar mt-4 fs--1">
-                            <table class="table table-bordered border-bottom">
-                                <tbody>
-                                    <tr class="alert alert-success my-3">
-                                        <td class="align-middle">
-                                            <h6 class="mb-0 text-nowrap">No</h6>
-                                        </td>
-                                        <td class="align-middle text-center">
-                                            Jenis Tagihan
-                                        </td>
-                                        <td class="align-middle text-center">
-                                            Tanggal Invoice
-                                        </td>
-                                        <td class="align-middle text-center">
-                                            Jatuh Tempo
-                                        </td>
-                                        <td class="align-middle text-center">
-                                            Jumlah Belum Dibayar
-                                        </td>
-                                        <td class="align-middle text-center">
-                                            Over Due (Hari)
-                                        </td>
-                                        <td class="align-middle text-center">
-                                            Jumlah Penalti
-                                        </td>
-                                        <td class="align-middle text-center">
-                                            Total
-                                        </td>
-                                    </tr>
-                                    @if ($ar->PreviousMonthBill())
-                                        @foreach ($ar->PreviousMonthBill() as $key => $prevBill)
-                                            @php
-                                                $key += 1;
-                                            @endphp
-                                            <tr>
-                                                <td class="align-middle">
-                                                    <h6 class="mb-3 text-nowrap">{{ $key }}</h6>
-                                                </td>
-                                                <td class="align-middle text-center">
-                                                    Monthly Billing <br> (Utility & Service Charge)
-                                                </td>
-                                                <td class="align-middle text-center">
-                                                    {{ HumanDate($prevBill->created_at) }}
-                                                </td>
-                                                <td class="align-middle text-center">
-                                                    {{ HumanDate($prevBill->tgl_jt_invoice) }}
-                                                </td>
-                                                <td class="align-middle text-center">
-                                                    {{ Rupiah($prevBill->total_tagihan_ipl + $prevBill->total_tagihan_utility) }}
-                                                </td>
-                                                <td class="align-middle text-center">
-                                                    {{ $prevBill->jml_hari_jt }}
-                                                    {{ $prevBill->jml_hari_jt ? 'Hari' : '-' }}
-                                                </td>
-                                                <td class="align-middle text-center">
-                                                    {{ $prevBill->total_denda ? Rupiah($prevBill->total_denda) : '-' }}
-                                                </td>
-                                                <td class="align-middle text-center">
-                                                    {{ Rupiah($prevBill->total_tagihan_ipl + $prevBill->total_tagihan_utility + $prevBill->denda_bulan_sebelumnya) }}
-                                                </td>
-                                            </tr>
-                                        @endforeach
-                                    @endif
-                                    <tr class="my-3">
-                                        <td class="align-middle">
-                                            <h6 class="mb-0 text-nowrap">{{ $key + 1 }}</h6>
-                                        </td>
-                                        <td class="align-middle text-center">
-                                            Monthly Billing <br> (Utility & Service Charge)
-                                        </td>
-                                        <td class="align-middle text-center">
-                                            {{ HumanDate($ar->created_at) }}
-                                        </td>
-                                        <td class="align-middle text-center">
-                                            {{ HumanDate($ar->tgl_jt_invoice) }}
-                                        </td>
-                                        <td class="align-middle text-center">
-                                            {{ Rupiah($ar->total_tagihan_ipl + $ar->total_tagihan_utility) }}
-                                        </td>
-                                        <td class="align-middle text-center">
-                                            {{ $ar->jml_hari_jt }} {{ $ar->jml_hari_jt ? 'Hari' : '-' }}
-                                        </td>
-                                        <td class="align-middle text-center">
-                                            {{ $ar->total_denda ? Rupiah($ar->total_denda) : '-' }}
-                                        </td>
-                                        <td class="align-middle text-center">
-                                            {{ Rupiah($ar->total_tagihan_ipl + $ar->total_tagihan_utility + $ar->total_denda) }}
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
                         <div class="p-4 text-justify">
                             Untuk itu kami harap bapak/Ibu dapat segera melunasi kewajiban tersebut melalui aplikasi ProApps
                             dengan meng-klik link <b><a href="#">Payment</a></b> .
@@ -143,15 +43,36 @@
                             <ol>
                                 <li class="my-2">
                                     Keterlambatan pembayaran dihitung sejak tanggal jatuh tempo pembayaran tagihan dan akan
-                                    dikenakan denda sebesar … (persentase/nilai tetap) dari seluruh tagihan kumulatif per
+                                    dikenakan denda sebesar
+                                    <b>{{ $denda->denda_flat_procetage ? RupiahNumber($denda->denda_flat_procetage) . '%' : Rupiah($denda->denda_flat_amount) }}</b>
+                                    dari seluruh tagihan kumulatif per
                                     bulan.
                                 </li>
                                 <li class="my-2">
                                     Apabila lewat dari tanggal jatuh tempo tagihan belum ada pembayaran maka kami akan
                                     memberikan
-                                    peringatan sebanyak 3 (tiga) kali peringatan, masing-masing peringatan dengan tenggang
-                                    waktu …
-                                    hari kalender.
+                                    peringatan sebanyak 4 (empat) kali peringatan, masing-masing peringatan dengan tenggang
+                                    waktu seperti berikut : <br>
+                                    <table>
+                                        <thead>
+                                            <th>Item</th>
+                                            <th>Tenggat hari kalender</th>
+                                        </thead>
+                                        <tbody>
+                                            @foreach ($reminders as $reminder)
+                                                @if ($reminder->id_reminder_letter != 1)
+                                                    <tr>
+                                                        <td>
+                                                            {{ $reminder->reminder_letter }}
+                                                        </td>
+                                                        <td>
+                                                            {{ $reminder->durasi_reminder_letter }} Hari setelah jatuh tempo
+                                                        </td>
+                                                    </tr>
+                                                @endif
+                                            @endforeach
+                                        </tbody>
+                                    </table>
                                 </li>
                                 <li class="my-2">
                                     Bila sampai dengan Surat Peringatan ketiga tagihan belum dibayar maka akan dikeluarkan
@@ -159,7 +80,13 @@
                                     Pemberitahuan terakhir mengenai penghentian sementara supply listrik dan air dan untuk
                                     mengaktifkan kembali supply listrik dan air maka pembayaran total tagihan berjalan,
                                     denda dan
-                                    biaya penyambungan kembali sebesar Rp. … harus sudah dilunasi.
+                                    biaya penyambungan kembali sebesar
+                                    @if (!$company->is_split_ar)
+                                        {{-- @include('AdminSite.SP1.nonsplit') --}}
+                                    @else
+                                        <b>{{ Rupiah($ar->PreviousMonthBillSP($ar->biaya_lain)->reverse()->values()[0]->CashReceipts->sum('sub_total')) }}</b>
+                                    @endif
+                                    harus sudah dilunasi.
                                 </li>
                             </ol>
                             Untuk informasi lebih lanjut mengenai tagihan di atas dapat menghubungi Building Management
@@ -167,7 +94,11 @@
 
                             Demikian kami sampaikan atas perhatian dan kerjasamanya kami ucapkan terima kasih.
                         </div>
-                        <div class="row justify-content-end">
+                        <div class="p-2">
+                            <img src="{{ url('/assets/img/icons/spot-illustrations/proapps.png') }}" alt="" width="80">
+                            <span class="small text-muted">*Surat Pemberitahuan ini diterbitkan secara digital</span>
+                        </div>
+                        {{-- <div class="row justify-content-end">
                             <div class="col-auto">
                                 <table class="table table-sm table-borderless fs--1">
                                     <tr class="">
@@ -186,7 +117,7 @@
                                     </tr>
                                 </table>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
                 <footer class="footer">

@@ -1,8 +1,7 @@
 @extends('layouts.master')
 
 @section('css')
-    <script src="https://cdn.tiny.cloud/1/zqt3b05uqsuxthyk5xvi13srgf4ru0l5gcvuxltlpgm6rcki/tinymce/6/tinymce.min.js"
-        referrerpolicy="origin"></script>
+    <script src="https://cdn.tiny.cloud/1/zfyksst4gxwae7gxmgzef4p86481o6u0hqh00100y0xgkyts/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
     <link href="{{ asset('assets/vendors/flatpickr/flatpickr.min.css') }}" rel="stylesheet" />
 @endsection
 
@@ -18,6 +17,10 @@
 </div>
 <div class="card mb-3">
     <div class="card-body">
+<<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 9d595eb475705fe8d682e25859923fa547218090
     <div class="row align-items-center text-center mb-3">
                 <div class="col-sm-6 text-sm-start">
                     <img src="{{ $transaction->company_logo ? url($transaction->company_logo) : '/assets/img/icons/spot-illustrations/proapps.png' }}"
@@ -25,14 +28,38 @@
                 </div>
                 <div class="col text-sm-end mt-3 mt-sm-0">
                     <h2 class="mb-3">Invoice</h2>
+<<<<<<< HEAD
+                    <h5>{{ $transaction->company_name ? $setting->company_name : 'Proapps' }}</h5>
+                    <p class="fs--1 mt-2">
+                        {!! $transaction->company_address !!}
+=======
                     <h5>{{ $setting->company_name ? $setting->company_name : 'Proapps' }}</h5>
                     <p class="fs--1 mt-2">
                         {!! $setting->company_address !!}
+>>>>>>> 9d595eb475705fe8d682e25859923fa547218090
                     </p>
                 </div>
                 <div class="col-12">
                     <hr />
                 </div>
+<<<<<<< HEAD
+=======
+        <div class="row align-items-center text-center mb-3">
+            <div class="col-sm-6 text-sm-start">
+                <img src="{{ $transaction->company_logo ? url($transaction->company_logo) : '/assets/img/icons/spot-illustrations/proapps.png' }}" alt="invoice" width="150" />
+            </div>
+            <div class="col text-sm-end mt-3 mt-sm-0">
+                <h2 class="mb-3">Invoice</h2>
+                <h5>{{ $setting->company_name ? $setting->company_name : 'Proapps' }}</h5>
+                <p class="fs--1 mt-2">
+                    {!! $setting->company_address !!}
+                </p>
+            </div>
+            <div class="col-12">
+                <hr />
+>>>>>>> 75712f036b9877b546dd0126edadc79faef9a3b1
+=======
+>>>>>>> 9d595eb475705fe8d682e25859923fa547218090
             </div>
         <div class="row align-items-center">
             <div class="col">
@@ -149,7 +176,15 @@
             </table>
         </div>
         @if ($transaction->transaction_status == 'PENDING')
+<<<<<<< HEAD
+<<<<<<< HEAD
         <form action="{{ route('generatePaymentPO', $transaction->WorkPermit->CashReceipt->id) }}" method="post" id="generatePaymentPO">
+=======
+        <form class="mt-5" action="{{ route('generatePaymentPO', $permit->CashReceipt->id) }}" method="post" id="generatePaymentPO">
+>>>>>>> 75712f036b9877b546dd0126edadc79faef9a3b1
+=======
+        <form action="{{ route('generatePaymentPO', $transaction->WorkPermit->CashReceipt->id) }}" method="post" id="generatePaymentPO">
+>>>>>>> 9d595eb475705fe8d682e25859923fa547218090
             @csrf
             <div class="row g-3 mt-3 mb-3">
                 <div class="col-lg-8">
@@ -265,8 +300,7 @@
 
 
 @section('script')
-    <script src="https://cdn.tiny.cloud/1/zqt3b05uqsuxthyk5xvi13srgf4ru0l5gcvuxltlpgm6rcki/tinymce/6/tinymce.min.js"
-        referrerpolicy="origin"></script>
+    <script src="https://cdn.tiny.cloud/1/zfyksst4gxwae7gxmgzef4p86481o6u0hqh00100y0xgkyts/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
     <script src="{{ asset('assets/js/flatpickr.js') }}"></script>
     <script>
         tinyMCE.init({

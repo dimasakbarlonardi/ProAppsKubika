@@ -6,6 +6,7 @@ use App\Models\Site;
 use App\Models\Unit;
 use Illuminate\Http\Request;
 use App\Helpers\ConnectionDB;
+use App\Helpers\InvoiceHelper;
 use App\Helpers\ResponseFormatter;
 use App\Helpers\SaveFile;
 use App\Http\Controllers\Controller;
@@ -42,18 +43,20 @@ class BillingController extends Controller
 
         $dbName = ConnectionDB::getDBname();
         $setting = $connSetting->find(1);
-
+        // dd($id);
         if ($setting->is_split_ar == 0) {
             $connARTenant = DB::connection($dbName)
                 ->table('tb_fin_monthly_ar_tenant as arm')
                 ->join('tb_draft_cash_receipt as cr', 'arm.no_monthly_invoice', 'cr.no_reff')
                 ->where('arm.id_unit', $id)
-                ->where('arm.tgl_jt_invoice', '!=', null)
+                ->where('cr.tgl_jt_invoice', '!=', null)
                 ->orderBy('periode_bulan', 'desc')
                 ->get();
         } elseif ($setting->is_split_ar == 1) {
             $connARTenant = $connAR->where('deleted_at', null)
                 ->with(['UtilityCashReceipt', 'IPLCashReceipt'])
+                ->where('id_unit', $id)
+                ->orderBy('periode_bulan', 'desc')
                 ->get();
         }
 
@@ -104,53 +107,37 @@ class BillingController extends Controller
         );
     }
 
-    public function showSplitedBilling($id)
+    public function showSplitedBilling(Request $request)
     {
-        $connCR = ConnectionDB::setConnection(new CashReceipt());
-        $connUtil = ConnectionDB::setConnection(new Utility());
+        $connUtility = ConnectionDB::setConnection(new Utility());
         $connIPLType = ConnectionDB::setConnection(new IPLType());
-        // $connSetting = ConnectionDB::setConnection(new CompanySetting());
+        $connSetting = ConnectionDB::setConnection(new CompanySetting());
+        $connAR = ConnectionDB::setConnection(new MonthlyArTenant());
 
-        // $previousBills = [];
-        // $data['installment'] = [];
+        $data['electric'] = $connUtility->find(1);
+        $data['water'] = $connUtility->find(2);
+        $data['sc'] = $connIPLType->find(6);
+        $data['sf'] = $connIPLType->find(7);
 
-        $cr = $connCR->find($id);
-        $ar = $cr->SplitMonthlyARTenant($cr->id_monthly_utility, $cr->id_monthly_ipl);
+        $setting = $connSetting->find(1);
 
-        // $setting = $connSetting->find(1);
-        $sc = $connIPLType->find(6);
-        $sf = $connIPLType->find(7);
+        $data['setting'] = $setting;
+        $data['transaction'] = $connAR->find($request->arID);
 
-        if ($cr->id_monthly_utility) {
-            $data['monthly_utility'] = $ar->where('deleted_at', null)->with([
-                'Unit.TenantUnit.Tenant',
-                'MonthlyUtility.ElectricUUS',
-                'MonthlyUtility.WaterUUS',
-                'MonthlyUtility.CashReceipt'
-            ])->first();
-            $data['monthly_i_p_l'] = null;
-            $data['price_water'] = $connUtil->find(2)->biaya_m3;
-            $data['price_electric'] = $connUtil->find(1)->biaya_m3;
-            $data['service_charge_price'] = null;
-            $data['sinking_fund_price'] = null;
-        } elseif ($cr->id_monthly_ipl) {
-            $data['monthly_i_p_l'] = $ar->where('deleted_at', null)->with([
-                'Unit.TenantUnit.Tenant',
-                'MonthlyIPL.CashReceipt',
-            ])->first();
-            $data['monthly_utility'] = null;
-            $data['price_water'] = null;
-            $data['price_electric'] = null;
-            $data['service_charge_price'] = $sc->biaya_permeter;
-            $data['sinking_fund_price'] = $sf->biaya_permeter;
+        if ($request->type == "utility") {
+            $html = view('Tenant.Notification.Invoice.SplitPaymentMonthly.Utility_bill', $data)->render();
+        } elseif ($request->type == 'ipl') {
+            $html = view('Tenant.Notification.Invoice.SplitPaymentMonthly.IPL_bill', $data)->render();
+        } elseif ($request->type == 'other') {
+            $html = view('Tenant.Notification.Invoice.SplitPaymentMonthly.Other_bill', $data)->render();
         }
 
-        return ResponseFormatter::success(
-            [
-                'current_bill' => $data,
-            ],
-            'Authenticated'
-        );
+        return response()->json([
+            'html' => $html,
+            'data' => $data,
+            'ar_user' => $data['transaction']->CashReceipts[0]->User->login_user,
+            'email_user' => Auth::user()->email,
+        ]);
     }
 
     public function generateTransaction($id)
@@ -177,6 +164,16 @@ class BillingController extends Controller
                 $payment['transaction_details']['gross_amount'] = (int) $transaction->gross_amount;
                 $payment['bank_transfer']['bank'] = $bank;
 
+                if (
+                    $transaction->transaction_type != 'MonthlyUtilityTenant' &&
+                    $transaction->transaction_type != 'MonthlyIPLTenant' &&
+                    $transaction->transaction_type != 'MonthlyTenant'
+                ) {
+                    $expiry = 1;
+                } else {
+                    $expiry = 40;
+                }
+
                 $response = $client->request('POST', 'https://api.sandbox.midtrans.com/v2/charge', [
                     'body' => json_encode($payment),
                     'headers' => [
@@ -186,18 +183,25 @@ class BillingController extends Controller
                     ],
                     "custom_expiry" => [
                         "order_time" => Carbon::now(),
-                        "expiry_duration" => 1,
+                        "expiry_duration" => $expiry,
                         "unit" => "day"
                     ]
                 ]);
                 $response = json_decode($response->getBody());
 
-                $transaction->va_number = $response->va_numbers[0]->va_number;
-                $transaction->transaction_id = $response->transaction_id;
-                $transaction->expiry_time = $response->expiry_time;
-                $transaction->no_invoice = $transaction->no_invoice;
-                $transaction->admin_fee = $admin_fee;
-                $transaction->transaction_status = 'VERIFYING';
+                if ($response->status_code == 201) {
+                    $transaction->va_number = $response->va_numbers[0]->va_number;
+                    $transaction->expiry_time = $response->expiry_time;
+                    $transaction->no_invoice = $transaction->no_invoice;
+                    $transaction->admin_fee = $admin_fee;
+                    $transaction->transaction_status = 'VERIFYING';
+
+                    $transaction->save();
+                } else {
+                    return ResponseFormatter::error([
+                        'message' => 'Sorry our server is busy'
+                    ], 'Sorry our server is busy', 205);
+                }
 
                 $object = new stdClass();
                 $object->due_date = $transaction->expiry_time;
@@ -408,42 +412,7 @@ class BillingController extends Controller
         $login = $request->user();
         $site = Site::find($login->id_site);
 
-        $connUnit = new Unit();
-        $connUtility = new Utility();
-
-        $connUnit = $connUnit->setConnection($site->db_name);
-        $connUtility = $connUtility->setConnection($site->db_name);
-
-        $unit = $connUnit->find($unitID);
         $usage = $request->current - $request->previous;
-
-        if ($unit->id_hunian == 1) {
-            $listrik = $connUtility->find(1);
-        } elseif ($unit->id_hunian == 2) {
-            $listrik = $connUtility->find(5);
-        }
-
-        $isAbodemen = false;
-        $biaya_usage = $listrik->biaya_m3;
-        $get_ppj = $listrik->biaya_ppj / 100;
-        $electric_capacity = $unit->electric_capacity;
-        $abodemen = (40 * $electric_capacity) / 1000;
-
-        if ($usage < $abodemen) {
-            $isAbodemen = true;
-            $usage = $abodemen;
-        }
-        if ($isAbodemen) {
-            if ($listrik->biaya_tetap != 0) {
-                $total_usage = $listrik->biaya_tetap;
-            } else {
-                $total_usage = $biaya_usage * $usage;
-            }
-        } else {
-            $total_usage = $biaya_usage * $usage;
-        }
-        $ppj = $get_ppj * $total_usage;
-        $total = $total_usage + $ppj;
 
         if ($login) {
             $user = new User();
@@ -461,6 +430,8 @@ class BillingController extends Controller
                 return response()->json(['status' => 'exist']);
             }
 
+            $get_abodemen = InvoiceHelper::getAbodemen($unitID, $usage);
+
             $electricUUS = $connElecUUS->create([
                 'periode_bulan' => $request->periode_bulan,
                 'periode_tahun' => Carbon::now()->format('Y'),
@@ -468,8 +439,10 @@ class BillingController extends Controller
                 'nomor_listrik_awal' => $request->previous,
                 'nomor_listrik_akhir' => $request->current,
                 'usage' => $usage,
-                'ppj' => $ppj,
-                'total' => $total,
+                'abodemen_value' => $get_abodemen['abodemen'],
+                'is_abodemen' => $get_abodemen['isAbodemen'],
+                'ppj' => $get_abodemen['ppj'],
+                'total' => $get_abodemen['total'],
                 'id_user' => $user->id_user
             ]);
 
@@ -526,20 +499,8 @@ class BillingController extends Controller
         $user = new User();
         $user = $user->setConnection($site->db_name);
         $user = $user->where('login_user', $login->email)->first();
-        $connUnit = ConnectionDB::setConnection(new Unit());
-        $connUtility = new Utility();
 
-        $connUtility = $connUtility->setConnection($site->db_name);
-        $unit = $connUnit->find($unitID);
-
-        if ($unit->id_hunian == 1) {
-            $water = $connUtility->find(2);
-        } elseif ($unit->id_hunian == 2) {
-            $water = $connUtility->find(6);
-        }
-
-        $total_usage = $water->biaya_m3 * $usage;
-        $total = $total_usage;
+        $inputWater = InvoiceHelper::InputWaterUsage($unitID, $usage);
 
         if ($login) {
             try {
@@ -560,10 +521,9 @@ class BillingController extends Controller
                     'periode_tahun' => Carbon::now()->format('Y'),
                     'id_unit' => $unitID,
                     'nomor_air_awal' => $request->previous,
-                    'abodemen' => $water->biaya_abodemen,
-                    'total' => $total,
                     'nomor_air_akhir' => $request->current,
                     'usage' => $usage,
+                    'total' => $inputWater['total'],
                     'id_user' => $user->id_user
                 ]);
                 $imageData = $request->file('imageData');

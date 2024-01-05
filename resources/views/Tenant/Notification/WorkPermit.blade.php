@@ -1,8 +1,7 @@
 @extends('layouts.master')
 
 @section('css')
-    <script src="https://cdn.tiny.cloud/1/zqt3b05uqsuxthyk5xvi13srgf4ru0l5gcvuxltlpgm6rcki/tinymce/6/tinymce.min.js"
-        referrerpolicy="origin"></script>
+    <script src="https://cdn.tiny.cloud/1/zfyksst4gxwae7gxmgzef4p86481o6u0hqh00100y0xgkyts/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
     <link href="{{ asset('assets/vendors/flatpickr/flatpickr.min.css') }}" rel="stylesheet" />
 @endsection
 
@@ -254,8 +253,8 @@
             <!-- @if (
                 $permit->CashReceipt &&
                     $permit->Ticket->Tenant->User->id_user == Request::session()->get('user_id') &&
-                    !$permit->CashReceipt->payment_type) 
-                
+                    !$permit->CashReceipt->payment_type)
+
             @elseif (
                 $permit->CashReceipt &&
                     $permit->Ticket->Tenant->User->id_user == Request::session()->get('user_id') &&
@@ -270,8 +269,7 @@
 @endsection
 
 @section('script')
-    <script src="https://cdn.tiny.cloud/1/zqt3b05uqsuxthyk5xvi13srgf4ru0l5gcvuxltlpgm6rcki/tinymce/6/tinymce.min.js"
-        referrerpolicy="origin"></script>
+    <script src="https://cdn.tiny.cloud/1/zfyksst4gxwae7gxmgzef4p86481o6u0hqh00100y0xgkyts/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
     <script src="{{ asset('assets/js/flatpickr.js') }}"></script>
     <script>
         tinyMCE.init({

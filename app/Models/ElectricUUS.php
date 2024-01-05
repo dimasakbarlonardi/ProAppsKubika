@@ -20,6 +20,8 @@ class ElectricUUS extends Model
         'nomor_listrik_awal',
         'nomor_listrik_akhir',
         'usage',
+        'abodemen_value',
+        'is_abodemen',
         'ppj',
         'total',
         'id_user',
@@ -37,9 +39,10 @@ class ElectricUUS extends Model
     public function WaterUUSrelation()
     {
         return ConnectionDB::setConnection(new WaterUUS())
-        ->where('periode_bulan', $this->periode_bulan)
-        ->where('periode_tahun', $this->periode_tahun)
-        ->first();
+            ->where('periode_bulan', $this->periode_bulan)
+            ->where('periode_tahun', $this->periode_tahun)
+            ->where('id_unit', $this->id_unit)
+            ->first();
     }
 
     public function MonthlyUtility()
