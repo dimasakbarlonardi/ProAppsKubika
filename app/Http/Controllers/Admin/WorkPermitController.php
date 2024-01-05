@@ -171,7 +171,8 @@ class WorkPermitController extends Controller
                 'sender' => $user->id_user,
                 'division_receiver' => null,
                 'notif_message' => 'Work Permit berhasil dibuat, berikut rancangannya',
-                'receiver' => $ticket->Tenant->User->id_user
+                'receiver' => $ticket->Tenant->User->id_user,
+                'connection' => ConnectionDB::getDBname()
             ];
 
             broadcast(new HelloEvent($dataNotif));
@@ -208,6 +209,7 @@ class WorkPermitController extends Controller
             'division_receiver' => 1,
             'notif_message' => 'Maaf work permit saya tolak, terima kasih..',
             'receiver' => null,
+            'connection' => ConnectionDB::getDBname()
         ];
 
         broadcast(new HelloEvent($dataNotif));
@@ -233,6 +235,7 @@ class WorkPermitController extends Controller
             'division_receiver' => $wp->id_work_relation,
             'notif_message' => 'Work Permit diterima, mohon diproses lebih lanjut. Terima kasih..',
             'receiver' => null,
+            'connection' => ConnectionDB::getDBname()
         ];
 
         broadcast(new HelloEvent($dataNotif));
@@ -259,6 +262,7 @@ class WorkPermitController extends Controller
             'division_receiver' => null,
             'notif_message' => 'Work Permit diterima, mohon diproses lebih lanjut',
             'receiver' => $approve->approval_3,
+            'connection' => ConnectionDB::getDBname()
         ];
 
         broadcast(new HelloEvent($dataNotif));
@@ -327,6 +331,7 @@ class WorkPermitController extends Controller
             'division_receiver' => null,
             'notif_message' => 'Work Permit diapprove, mohon melakukan pembayaran untuk proses lebih lanjut',
             'receiver' => $wp->Ticket->Tenant->User->id_user,
+            'connection' => ConnectionDB::getDBname()
         ];
 
         broadcast(new HelloEvent($dataNotif));
@@ -351,6 +356,7 @@ class WorkPermitController extends Controller
             'division_receiver' => $wp->id_work_relation,
             'notif_message' => 'Work Permit diterima, selamat bekerja',
             'receiver' => null,
+            'connection' => ConnectionDB::getDBname()
         ];
 
         broadcast(new HelloEvent($dataNotif));
@@ -393,6 +399,7 @@ class WorkPermitController extends Controller
             'division_receiver' => null,
             'notif_message' => 'Work Permit selesai dikerjakan, mohon periksa kembali. Terima kasih..',
             'receiver' => $wp->Ticket->Tenant->User->id_user,
+            'connection' => ConnectionDB::getDBname()
         ];
 
         broadcast(new HelloEvent($dataNotif));
@@ -423,6 +430,7 @@ class WorkPermitController extends Controller
             'division_receiver' => 1,
             'notif_message' => 'Work Permit telah selesai, terima kasih.',
             'receiver' => null,
+            'connection' => ConnectionDB::getDBname()
         ];
 
         broadcast(new HelloEvent($dataNotif));

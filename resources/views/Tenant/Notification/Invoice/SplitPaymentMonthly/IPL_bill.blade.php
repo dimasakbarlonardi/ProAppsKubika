@@ -87,20 +87,20 @@
         <tbody>
             @foreach ($transaction->IPLCashReceipt->PreviousIPLBill($transaction->periode_bulan, $transaction->periode_tahun) as $bill)
                 <tr class="alert alert-success my-3">
-                    <td class="align-middle">
+                    <td class="align-middle" colspan="3">
                         <h6 class="mb-0 text-nowrap">Tagihan bulan
                             {{ $bill->MonthlyARTenant->periode_bulan }},
                             {{ $bill->MonthlyARTenant->periode_tahun }}
                         </h6>
                     </td>
-                    <td class="align-middle">
-                    </td>
-                    <td colspan="6"></td>
                 </tr>
                 <tr>
                     <td class="align-middle">
                         <h6 class="mb-3 mt-3">Tagihan IPL</h6>
-                        <p class="mb-0">Service Charge</p>
+                        <p class="mb-0">
+                            Service Charge
+                            {{ $sc }}
+                        </p>
                         <hr>
                         <p class="mb-0">Sink Fund</p>
                     </td>
@@ -117,9 +117,6 @@
                         <hr>
                         <span>{{ $sf->biaya_procentage ? $sf->biaya_procentage . '%' : Rupiah($sf->biaya_permeter) }}</span>
                     </td>
-                    <td>
-                    </td>
-                    <td></td>
                     <td class="align-middle text-end" colspan="2">
                         <h6 class="mb-3 mt-3">Total</h6>
                         <span>{{ Rupiah($bill->MonthlyARTenant->MonthlyIPL->ipl_service_charge) }}</span> <br>
@@ -129,22 +126,23 @@
                 </tr>
             @endforeach
             <tr class="alert alert-success my-3">
-                <td class="align-middle">
+                <td class="align-middle" colspan="5">
                     <h6 class="mb-0 text-nowrap">Tagihan bulan
                         {{ $transaction->periode_bulan }},
                         {{ $transaction->periode_tahun }}
                     </h6>
                 </td>
-                <td class="align-middle">
-                </td>
-                <td colspan="6"></td>
             </tr>
             <tr>
                 <td class="align-middle">
                     <h6 class="mb-3 mt-3">Tagihan IPL</h6>
-                    <p class="mb-0">Service Charge</p>
+                    <p class="mb-0">
+                        {{ $sc->nama_ipl_type }}
+                    </p>
                     <hr>
-                    <p class="mb-0">Sink Fund</p>
+                    <p class="mb-0">
+                        {{ $sf->nama_ipl_type }}
+                    </p>
                 </td>
                 <td class="align-middle">
                     <h6 class="mb-3 mt-3 text-nowrap">Luas Unit</h6>
@@ -152,17 +150,14 @@
                     <hr>
                     <span>{{ $transaction->MonthlyIPL->Unit->luas_unit }} m<sup>2</sup></span>
                 </td>
-                <td class="align-middle" colspan="2">
+                <td class="align-middle">
                     <h6 class="mb-3 mt-3">Biaya Permeter / Biaya Procentage</h6>
                     <span>{{ $sc->biaya_procentage ? $sc->biaya_procentage . '%' : Rupiah($sc->biaya_permeter) }}</span>
                     <br>
                     <hr>
                     <span>{{ $sf->biaya_procentage ? $sf->biaya_procentage . '%' : Rupiah($sf->biaya_permeter) }}</span>
                 </td>
-                <td>
-                </td>
-                <td></td>
-                <td class="align-middle text-end" colspan="2">
+                <td class="align-middle text-end">
                     <h6 class="mb-3 mt-3">Total</h6>
                     <span>{{ Rupiah($transaction->MonthlyIPL->ipl_service_charge) }}</span> <br>
                     <hr>
@@ -175,9 +170,6 @@
                         <h6 class="mb-0 text-nowrap">Denda Bulan Sebelumnya
                         </h6>
                     </td>
-                    <td class="align-middle">
-                    </td>
-                    <td colspan="6"></td>
                 </tr>
                 @foreach ($transaction->IPLCashReceipt->PreviousIPLBill($transaction->periode_bulan, $transaction->periode_tahun) as $bill)
                     <tr>
@@ -208,6 +200,14 @@
                     </td>
                 </tr>
             @endif
+            <tr class="border-top">
+                <td colspan="3">
+                    <h5>Grand Total</h5>
+                </td>
+                <td class="align-middle text-end">
+                    {{ DecimalRupiahRP($transaction->IPLCashReceipt->sub_total) }}
+                </td>
+            </tr>
         </tbody>
     </table>
 </div>

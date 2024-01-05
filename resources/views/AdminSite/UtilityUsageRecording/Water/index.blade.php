@@ -90,7 +90,7 @@
                                                         <img src="{{ $item->image ? url($item->image) : url('/assets/img/icons/spot-illustrations/proapps.png') }}"
                                                             width="100">
                                                     </td>
-                                                    <th class="align-middle">{{ $item->Unit->nama_unit }}</th>
+                                                    <th class="align-middle">{{ $item->Unit->nama_unit }} - {{ $item->Unit->Tower->nama_tower }}</th>
                                                     <th class="align-middle">
                                                         Previous - <b>{{ $item->nomor_air_awal }}</b> <br>
                                                         Current - <b>{{ $item->nomor_air_akhir }}</b> <br>

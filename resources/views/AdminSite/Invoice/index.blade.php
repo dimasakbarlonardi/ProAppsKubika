@@ -57,6 +57,13 @@
                     </div>
                     <div class="card-body">
                         <div class="mb-3">
+                            <label class="mb-1">Type</label>
+                            <select name="invoice_type" class="form-control" id="invoice_type">
+                                <option value="MonthlyBilling">Monthly Billing</option>
+                                <option value="RequestBilling">Request Billing</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
                             <label class="mb-1">Unit</label>
                             <select name="unit_id" class="form-control" id="select_unit">
                                 <option value="all">All</option>
@@ -87,29 +94,39 @@
 @section('script')
     <script>
         $('document').ready(function() {
-            getData('all', 'all')
+            getData('MonthlyBilling', 'all', 'all')
         })
 
         $('#select_unit').on('change', function() {
             var unit = $(this).val();
             var status = $('#select_status').val();
+            var type = $('#invoice_type').val();
 
-            getData(unit, status)
+            getData(type, unit, status)
         });
 
         $('#select_status').on('change', function() {
             var unit = $('#select_unit').val();
             var status = $(this).val();
+            var type = $('#invoice_type').val();
 
-            getData(unit, status)
+            getData(type, unit, status)
         });
 
-        function getData(unit, status) {
-            console.log(unit, status);
+        $('#invoice_type').on('change', function() {
+            var type = $(this).val();
+            var unit = $('#select_unit').val();
+            var status = $('#select_status').val();
+
+            getData(type, unit, status)
+        });
+
+        function getData(type, unit, status) {
             $.ajax({
                 url: '/admin/invoice/get/filter-data',
                 type: 'GET',
                 data: {
+                    type,
                     unit,
                     status
                 },

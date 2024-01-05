@@ -63,8 +63,9 @@ class BillingController extends Controller
                 ->where('periode_tahun', $data['elecUSS']->periode_tahun)
                 ->where('id_unit', $data['elecUSS']->id_unit)
                 ->first();
-            $status = $data['elecUSS']->Unit->TenantUnit->Tenant->User ? true : false;
-            $nama_unit = $data['elecUSS']->Unit->nama_unit;
+            $data['status'] = $data['elecUSS']->Unit->TenantUnit->Tenant->User ? true : false;
+            // $data['status'] = $data['elecUSS']->Unit->TenantUnit ? true : false;
+            $data['nama_unit'] = $data['elecUSS']->Unit->nama_unit;
         } elseif ($request->type == 'water') {
             $data['waterUSS'] = $connWaterUUS->find($id);
             $data['elecUSS'] = $connElecUUS->where('periode_bulan', $data['waterUSS']->periode_bulan)
@@ -72,15 +73,8 @@ class BillingController extends Controller
                 ->where('periode_tahun', $data['waterUSS']->periode_tahun)
                 ->where('id_unit', $data['waterUSS']->id_unit)
                 ->first();
-            $status = $data['waterUSS']->Unit->TenantUnit->Tenant->User ? true : false;
-            $nama_unit = $data['elecUSS']->Unit->nama_unit;
-        }
-
-        if (!$status) {
-            return response()->json([
-                'status' => 401,
-                'unit' => $nama_unit
-            ]);
+            $data['status'] = $data['waterUSS']->Unit->TenantUnit->Tenant->User ? true : false;
+            $data['nama_unit'] = $data['elecUSS']->Unit->nama_unit;
         }
 
         return $data;
@@ -91,7 +85,12 @@ class BillingController extends Controller
         foreach ($request->IDs as $id) {
             $validate = $this->validateUtility($request, $id);
 
-            if ($validate['waterUSS'] && $validate['elecUSS'] && !$validate['waterUSS']->MonthlyUtility) {
+            if (!$validate['status']) {
+                $validate['status'] = 401;
+                return response()->json($validate);
+            }
+
+            if ($validate['waterUSS'] && $validate['elecUSS'] && !$validate['waterUSS']->MonthlyUtility && $validate['status']) {
                 try {
                     DB::beginTransaction();
 
@@ -111,9 +110,10 @@ class BillingController extends Controller
 
     function createMonthlyARData($validate)
     {
-
         $connCompany = ConnectionDB::setConnection(new CompanySetting());
+        $connOtherBill = ConnectionDB::setConnection(new OtherBill());
 
+        $otherBills = $connOtherBill->where('is_active', 1)->get();
         $setting = $connCompany->find(1);
 
         try {
@@ -129,16 +129,21 @@ class BillingController extends Controller
             $createMonthlyTenant->id_monthly_ipl = $createIPLbill->id;
             $createMonthlyTenant->save();
 
-            $this->generateInvoice($createMonthlyTenant, 2, $setting);
+            if (count($otherBills) > 0) {
+                $this->generateInvoice($createMonthlyTenant, 2, $setting);
+            }
 
             if ($setting->is_split_ar == 0) {
                 $no_inv = $this->generateInvoice($createMonthlyTenant, null, $setting);
                 $createMonthlyTenant->no_monthly_invoice = $no_inv;
+                $createMonthlyTenant->is_splited = false;
                 $createMonthlyTenant->save();
             } elseif ($setting->is_split_ar == 1) {
                 for ($i = 0; $i < 2; $i++) {
                     $no_inv = $this->generateInvoice($createMonthlyTenant, $i, $setting);
                 }
+                $createMonthlyTenant->is_splited = true;
+                $createMonthlyTenant->save();
             }
 
             DB::commit();
@@ -215,6 +220,8 @@ class BillingController extends Controller
                 $billAmount = (int) $bill->bill_price;
             }
             $addBill = [
+                'qty' => $createUtilityBill->Unit->luas_unit,
+                'price' => $bill->bill_price,
                 'bill_name' => $bill->bill_name,
                 'bill_price' => $billAmount,
                 'is_require_unit_volume' => $bill->is_require_unit_volume
@@ -374,15 +381,17 @@ class BillingController extends Controller
             $sf = $connIPLType->find(9);
         }
 
-        $currMonthDays =  Carbon::now()->daysInMonth;
-        $cutOFFsc = (int) Carbon::now()->diff($unit->Owner()->tgl_masuk)->format("%a");
+        if ($unit->Owner()->tgl_masuk) {
+            $currMonthDays =  Carbon::now()->daysInMonth;
+            $ipl_price_day = ((int) $unit->luas_unit * $sc->biaya_permeter) / $currMonthDays;
+            $cutOFFsc = (int) Carbon::now()->diff($unit->Owner()->tgl_masuk)->format("%a");
+            if ($cutOFFsc < $currMonthDays) {
+                dd($unit->Owner()->tgl_masuk, $currMonthDays);
+                $ipl_service_charge = $cutOFFsc * $ipl_price_day;
+            }
+        }
 
         $ipl_service_charge = (int) $unit->luas_unit * $sc->biaya_permeter;
-        $ipl_price_day = ((int) $unit->luas_unit * $sc->biaya_permeter) / $currMonthDays;
-
-        if ($cutOFFsc < $currMonthDays) {
-            $ipl_service_charge = $cutOFFsc * $ipl_price_day;
-        }
 
         if ($sf->biaya_procentage != null) {
             $ipl_sink_fund = $sf->biaya_procentage / 100 * $ipl_service_charge;
@@ -454,7 +463,7 @@ class BillingController extends Controller
 
             $createTransaction = $connTransaction;
             $createTransaction->order_id = $order_id;
-            $createTransaction->id_site = $user->id_site;
+            $createTransaction->id_site = Auth::user()->id_site;
             $createTransaction->no_reff = $mt->no_monthly_invoice;
             $createTransaction->no_invoice = $mt->no_monthly_invoice;
             $createTransaction->no_draft_cr = $no_cr;
@@ -553,7 +562,8 @@ class BillingController extends Controller
                         'sender' => $request->session()->get('user')->id_user,
                         'division_receiver' => null,
                         'notif_message' => 'Harap melakukan pembayaran tagihan bulanan anda',
-                        'receiver' => $util->MonthlyUtility->Unit->TenantUnit->Tenant->User->id_user
+                        'receiver' => $util->MonthlyUtility->Unit->TenantUnit->Tenant->User->id_user,
+                        'connection' => ConnectionDB::getDBname()
                     ];
 
                     broadcast(new HelloEvent($dataNotif));

@@ -18,6 +18,7 @@ class MonthlyArTenant extends Model
     protected $primaryKey = 'id_monthly_ar_tenant';
 
     protected $fillable = [
+        'is_splited',
         'id_site',
         'id_unit',
         'no_monthly_invoice',

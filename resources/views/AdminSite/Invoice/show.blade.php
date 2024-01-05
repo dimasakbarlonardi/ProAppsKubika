@@ -71,16 +71,16 @@
                     <span class="d-none d-md-inline-block fs--1">IPL</span>
                 </button>
             </li>
-
-
-            <li class="nav-item" role="presentation">
-                <button class="nav-link {{ Session::get('active') == 'vehicle' ? 'active' : '' }} selectTypePayment"
-                    data-bs-toggle="pill" data-bs-target="#pill-tab-kendaraan" type="button" role="tab"
-                    payment-type="other">
-                    <span class="fas fa-grip-horizontal me-2"></span>
-                    <span class="d-none d-md-inline-block fs--1">Other</span>
-                </button>
-            </li>
+            @if (json_decode($transaction->MonthlyARTenant->biaya_lain))
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link {{ Session::get('active') == 'vehicle' ? 'active' : '' }} selectTypePayment"
+                        data-bs-toggle="pill" data-bs-target="#pill-tab-kendaraan" type="button" role="tab"
+                        payment-type="other">
+                        <span class="fas fa-grip-horizontal me-2"></span>
+                        <span class="d-none d-md-inline-block fs--1">Other</span>
+                    </button>
+                </li>
+            @endif
         </ul>
     @endif
     <div class="container bg-white rounded" id="splitPaymentData">
@@ -283,13 +283,13 @@
                                     <div class="col-4">
                                         <label for="">Electric meter photo : </label>
                                         <img class="img-fluid img-thumbnail rounded"
-                                            src="{{ $data->MonthlyUtility->ElectricUUS->image ? url($data->MonthlyUtility->ElectricUUS->image) : url('/assets/img/icons/spot-illustrations/proapps.png') }}"
+                                            src="{{ $data->MonthlyUtility->ElectricUUS->image ? url($data->MonthlyUtility->ElectricUUS->image) : url('/assets/img/no_image.jpeg') }}"
                                             width="200">
                                     </div>
                                     <div class="col-4">
                                         <label for="">Water meter photo : </label>
                                         <img class="img-fluid img-thumbnail rounded"
-                                            src="{{ $data->MonthlyUtility->WaterUUS->image ? url($data->MonthlyUtility->WaterUUS->image) : url('/assets/img/icons/spot-illustrations/proapps.png') }}"
+                                            src="{{ $data->MonthlyUtility->WaterUUS->image ? url($data->MonthlyUtility->WaterUUS->image) : url('/assets/img/no_image.jpeg') }}"
                                             width="200">
                                     </div>
                                 </div>

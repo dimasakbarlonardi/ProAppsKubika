@@ -137,6 +137,7 @@ class ReservationController extends Controller
                 'division_receiver' => 1,
                 'notif_message' => 'Request reservation sudah dibuat, mohon proses request saya',
                 'receiver' => null,
+                'connection' => ConnectionDB::getDBname()
             ];
 
             broadcast(new HelloEvent($dataNotif));
@@ -223,6 +224,7 @@ class ReservationController extends Controller
             'division_receiver' => $approve->approval_2,
             'notif_message' => 'Request Reservation diterima, mohon approve reservasi',
             'receiver' => null,
+            'connection' => ConnectionDB::getDBname()
         ];
 
         broadcast(new HelloEvent($dataNotif));
@@ -254,6 +256,7 @@ class ReservationController extends Controller
             'division_receiver' => 6,
             'notif_message' => 'Request Reservation diterima, mohon approve reservasi',
             'receiver' => $approve->approval_3,
+            'connection' => ConnectionDB::getDBname()
         ];
 
         broadcast(new HelloEvent($dataNotif));

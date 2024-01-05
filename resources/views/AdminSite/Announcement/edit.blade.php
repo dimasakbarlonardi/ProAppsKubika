@@ -12,26 +12,30 @@
             </div>
         </div>
         <div class="p-5">
-            <form method="post" action="{{ route('announcements.update', $announcements->id) }}" enctype="multipart/form-data">
-            @method('PUT')
-            @csrf
+            <form method="post" action="{{ route('announcements.update', $announcements->id) }}"
+                enctype="multipart/form-data">
+                @method('PUT')
+                @csrf
                 <div class="mb-3">
                     <div class="row">
                         <div class="col-6">
                             <label class="form-label">Announcement Title</label>
-                            <input type="text" name="notif_title" value="{{ $announcements->notif_title }}" class="form-control" required>
+                            <input type="text" name="notif_title" value="{{ $announcements->notif_title }}"
+                                class="form-control" required>
                         </div>
                     </div>
                 </div>
                 <div class="mb-3 p-3">
                     <label class="form-label">Announcement Content</label>
-                    <textarea class="form-control" name="notif_message" value="{{ $announcements->notif_message }}"  id="notif_message" cols="30" rows="10"></textarea>
+                    <textarea class="form-control" name="notif_message" value="{{ $announcements->notif_message }}" id="notif_message"
+                        cols="30" rows="10"></textarea>
                 </div>
                 <div class="mb-3">
                     <div class="row">
                         <div class="col-6">
                             <label class="form-label">Announcement Banner</label>
-                            <input type="file" name="photo" value="{{ $announcements->photo }}" id="input-photo" class="form-control">
+                            <input type="file" name="photo" value="{{ $announcements->photo }}" id="input-photo"
+                                class="form-control">
                             <img id="new-banner" class="mt-3" />
                         </div>
                         <div class="col-6">
@@ -51,7 +55,8 @@
 @endsection
 
 @section('script')
-<script src="https://cdn.tiny.cloud/1/mugoo4p5wbijt8fzvzj0042pz1zw9brcq34tenfqnw6wsro6/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <script src="https://cdn.tiny.cloud/1/zfyksst4gxwae7gxmgzef4p86481o6u0hqh00100y0xgkyts/tinymce/6/tinymce.min.js"
+        referrerpolicy="origin"></script>
     <script>
         tinymce.init({
             selector: 'textarea#notif_message', // Replace this CSS selector to match the placeholder element for TinyMCE

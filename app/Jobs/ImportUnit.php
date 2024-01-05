@@ -39,13 +39,13 @@ class ImportUnit implements ShouldQueue
         $connUnit = new Unit();
         $connUnit = $connUnit->setConnection($this->site->db_name);
 
-        $count = $connUnit->count();
-        $count += 1;
-        if ($count < 10) {
-            $count = '0' . $count;
-        };
+        // $count = $connUnit->count();
+        // $count += 1;
+        // if ($count < 10) {
+        //     $count = '0' . $count;
+        // };
 
-        $id_unit = $this->site->id_site . $this->Tower($this->data[0]) . $count;
+        $id_unit = $this->site->id_site . $this->Tower($this->data[0]) . $this->data[3];
 
         $connUnit->id_unit = $id_unit;
         $connUnit->id_site = $this->site->id_site;
@@ -59,6 +59,7 @@ class ImportUnit implements ShouldQueue
         $connUnit->meter_air_awal = (int) $this->data[7] ? $this->data[7] : 0;
         $connUnit->meter_listrik_awal = (int) $this->data[8] ? $this->data[8] : 0;
         $connUnit->keterangan = $this->data[9];
+        $connUnit->electric_capacity = $this->data[10];
         $connUnit->GenerateBarcode();
         $connUnit->save();
     }

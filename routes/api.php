@@ -1,11 +1,13 @@
 <?php
 
 use App\Helpers\ResponseFormatter;
+use App\Http\Controllers\Admin\ChatController;
 use App\Http\Controllers\Admin\MainFormController;
 use App\Http\Controllers\Admin\RoleController;
 use App\Http\Controllers\API\AttendanceController;
 use App\Http\Controllers\API\BAPPController;
 use App\Http\Controllers\API\BillingController;
+use App\Http\Controllers\API\ChatController as AppChatController;
 use App\Http\Controllers\API\GIGOController;
 use App\Http\Controllers\API\InboxController;
 use App\Http\Controllers\API\IncidentalController;
@@ -220,5 +222,9 @@ Route::prefix('v1')->group(function () {
         Route::get('/reservation/{id}', [ReservationController::class, 'show']);
         Route::post('/reservation/approve2/{id}', [ReservationController::class, 'approve2']);
         Route::post('/reservation/approve1/{id}', [ReservationController::class, 'approve1']);
+
+        // Chat
+        Route::get('/chats', [AppChatController::class, 'listRoomChat']);
+        Route::get('/chat/{id}', [AppChatController::class, 'showRoomChat']);
     });
 });

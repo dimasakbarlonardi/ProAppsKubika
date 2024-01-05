@@ -192,7 +192,8 @@ class RequestPermitController extends Controller
                 'sender' => $tiket->Tenant->User->id_user,
                 'division_receiver' => 1,
                 'notif_message' => 'Request Permit berhasil dibuat, mohon proses request saya',
-                'receiver' => null
+                'receiver' => null,
+                'connection' => ConnectionDB::getDBname()
             ];
 
             broadcast(new HelloEvent($dataNotif));
@@ -226,6 +227,7 @@ class RequestPermitController extends Controller
             'division_receiver' => $wp->id_work_relation,
             'notif_message' => 'Work Permit diterima, mohon diproses lebih lanjut. Terima kasih..',
             'receiver' => null,
+            'connection' => ConnectionDB::getDBname()
         ];
 
         broadcast(new HelloEvent($dataNotif));
@@ -258,6 +260,7 @@ class RequestPermitController extends Controller
             'division_receiver' => null,
             'notif_message' => 'Work Permit diterima, mohon diproses lebih lanjut',
             'receiver' => $approve->approval_3,
+            'connection' => ConnectionDB::getDBname()
         ];
 
         broadcast(new HelloEvent($dataNotif));
@@ -290,6 +293,7 @@ class RequestPermitController extends Controller
             'division_receiver' => $wp->id_work_relation,
             'notif_message' => 'Work Permit diterima, selamat bekerja',
             'receiver' => null,
+            'connection' => ConnectionDB::getDBname()
         ];
 
         broadcast(new HelloEvent($dataNotif));
@@ -340,6 +344,7 @@ class RequestPermitController extends Controller
             'division_receiver' => null,
             'notif_message' => 'Work Permit selesai dikerjakan, mohon periksa kembali. Terima kasih..',
             'receiver' => $wp->Ticket->Tenant->User->id_user,
+            'connection' => ConnectionDB::getDBname()
         ];
 
         broadcast(new HelloEvent($dataNotif));
@@ -373,6 +378,7 @@ class RequestPermitController extends Controller
             'division_receiver' => 1,
             'notif_message' => 'Work Permit telah selesai, terima kasih.',
             'receiver' => null,
+            'connection' => ConnectionDB::getDBname()
         ];
 
         broadcast(new HelloEvent($dataNotif));
@@ -402,6 +408,7 @@ class RequestPermitController extends Controller
             'division_receiver' => 6,
             'notif_message' => 'Deposit sudah kembali, terima kasih.',
             'receiver' => null,
+            'connection' => ConnectionDB::getDBname()
         ];
 
         broadcast(new HelloEvent($dataNotif));

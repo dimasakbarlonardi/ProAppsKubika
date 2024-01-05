@@ -91,7 +91,7 @@
                                         <img src="{{ $item->image ? url($item->image) : url('/assets/img/icons/spot-illustrations/proapps.png') }}"
                                             width="100">
                                     </td>
-                                    <th class="align-middle">{{ $item->Unit->nama_unit }}</th>
+                                    <th class="align-middle">{{ $item->Unit->nama_unit }} - {{ $item->Unit->Tower->nama_tower }}</th>
                                     <th class="align-middle">
                                         @if ($item->WaterUUSrelation())
                                             Previous - <b>{{ $item->WaterUUSrelation()->nomor_air_awal }}</b>
@@ -495,7 +495,7 @@
                     } else if (resp.status === 401) {
                         Swal.fire(
                             'Sorry!',
-                            `Sorry this unit with name ${resp.unit} doesn't have user`,
+                            `Sorry this unit with name ${resp.nama_unit} doesn't have user`,
                             'info'
                         ).then(() => {
                             window.location.reload();

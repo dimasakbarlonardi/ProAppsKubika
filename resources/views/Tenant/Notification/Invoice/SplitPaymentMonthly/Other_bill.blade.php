@@ -115,27 +115,46 @@
                 @endforeach
             @endforeach
             <tr class="alert alert-success my-3">
-                <td class="align-middle">
+                <td class="align-middle" colspan="4">
                     <h6 class="mb-0 text-nowrap">Tagihan bulan
                         {{ $transaction->periode_bulan }},
                         {{ $transaction->periode_tahun }}
                     </h6>
                 </td>
-                <td class="align-middle">
-                </td>
-                <td colspan="6"></td>
             </tr>
             @php
                 $otherBills = json_decode($transaction->biaya_lain);
             @endphp
+            <tr>
+                <td>
+                    <h6>Item</h6>
+                </td>
+                <td>
+                    <h6>Qty</h6>
+                </td>
+                <td>
+                    <h6>Price</h6>
+                </td>
+                <td class="align-middle text-end">
+                    <h6>Total</h6>
+                </td>
+            </tr>
             @foreach ($otherBills as $otherBill)
                 <tr>
                     <td class="align-middle">
                         <p class="mb-0">{{ $otherBill->bill_name }}</p>
                     </td>
-
+                    <td>
+                        @if ($otherBill->is_require_unit_volume)
+                            {{ $transaction->Unit->luas_unit }} m<sup>2</sup>
+                        @else
+                            -
+                        @endif
+                    </td>
+                    <td>
+                        {{ Rupiah($otherBill->price) }}
+                    </td>
                     <td class="align-middle text-end" colspan="4">
-                        <h6 class="mb-3 mt-3">Total</h6>
                         <span>{{ Rupiah($otherBill->bill_price) }}</span>
                     </td>
                 </tr>
@@ -164,6 +183,14 @@
                     </tr>
                 @endforeach
             @endif
+            <tr class="border-top">
+                <td colspan="3">
+                    <h5>Grand Total</h5>
+                </td>
+                <td class="align-middle text-end">
+                    {{ DecimalRupiahRP($transaction->OtherCashReceipt()->sub_total) }}
+                </td>
+            </tr>
         </tbody>
     </table>
 </div>

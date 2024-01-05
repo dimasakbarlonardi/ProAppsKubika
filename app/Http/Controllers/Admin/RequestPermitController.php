@@ -163,7 +163,8 @@ class RequestPermitController extends Controller
                 'sender' => $user->id_user,
                 'division_receiver' => 1,
                 'notif_message' => 'Request Permit berhasil dibuat, mohon proses request saya',
-                'receiver' => null
+                'receiver' => null,
+                'connection' => ConnectionDB::getDBname()
             ];
 
             broadcast(new HelloEvent($dataNotif));
@@ -208,6 +209,7 @@ class RequestPermitController extends Controller
             'division_receiver' => 1,
             'notif_message' => 'Request Permit disetujui, mohon diproses lebih lanjut..',
             'receiver' => null,
+            'connection' => ConnectionDB::getDBname()
         ];
 
         broadcast(new HelloEvent($dataNotif));
@@ -235,6 +237,7 @@ class RequestPermitController extends Controller
             'division_receiver' => 1,
             'notif_message' => 'Maaf request permit saya tolak, terima kasih..',
             'receiver' => null,
+            'connection' => ConnectionDB::getDBname()
         ];
 
         broadcast(new HelloEvent($dataNotif));
