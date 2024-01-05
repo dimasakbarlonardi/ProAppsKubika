@@ -54,7 +54,7 @@ class InvoiceHelper
             if ($listrik->biaya_tetap != 0) {
                 $total_usage = $listrik->biaya_tetap;
             } else {
-                $total_usage = $biaya_usage * $usage;
+                $total_usage = $biaya_usage * $abodemen;
             }
         } else {
             $total_usage = $biaya_usage * $usage;
