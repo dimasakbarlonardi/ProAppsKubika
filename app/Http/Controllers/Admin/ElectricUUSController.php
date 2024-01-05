@@ -70,7 +70,7 @@ class ElectricUUSController extends Controller
             $records = $records->where('periode_tahun', $request->input('select_year'));
         }
 
-        $records = $records->paginate(10);
+        $records = $records->paginate(200);
 
         return $records;
     }

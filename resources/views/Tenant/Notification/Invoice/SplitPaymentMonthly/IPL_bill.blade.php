@@ -97,7 +97,10 @@
                 <tr>
                     <td class="align-middle">
                         <h6 class="mb-3 mt-3">Tagihan IPL</h6>
-                        <p class="mb-0">Service Charge</p>
+                        <p class="mb-0">
+                            Service Charge
+                            {{ $sc }}
+                        </p>
                         <hr>
                         <p class="mb-0">Sink Fund</p>
                     </td>
@@ -133,9 +136,13 @@
             <tr>
                 <td class="align-middle">
                     <h6 class="mb-3 mt-3">Tagihan IPL</h6>
-                    <p class="mb-0">Service Charge</p>
+                    <p class="mb-0">
+                        {{ $sc->nama_ipl_type }}
+                    </p>
                     <hr>
-                    <p class="mb-0">Sink Fund</p>
+                    <p class="mb-0">
+                        {{ $sf->nama_ipl_type }}
+                    </p>
                 </td>
                 <td class="align-middle">
                     <h6 class="mb-3 mt-3 text-nowrap">Luas Unit</h6>
