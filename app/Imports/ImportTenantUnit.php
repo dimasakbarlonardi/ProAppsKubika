@@ -46,8 +46,8 @@ class ImportTenantUnit implements ToModel, WithStartRow
                 $renter->id_tenant_unit = $id_tenant_unit;
                 $renter->id_unit = $this->Unit($row[0]);
                 $renter->id_tenant = $this->Tenant($row[3]);
-                $renter->tgl_masuk = $row[3];
-                $renter->tgl_keluar = $row[4];
+                $renter->tgl_masuk = $row[4];
+                $renter->tgl_keluar = $row[5];
                 $renter->is_owner = 0;
                 $renter->sewa_ke = 1;
                 $renter->save();
