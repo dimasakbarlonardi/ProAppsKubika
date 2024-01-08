@@ -106,6 +106,7 @@ class UnitController extends Controller
         $data = $connUtility
             ->select(['water.id','nomor_air_awal', 'nomor_air_akhir', 'usage', 'water.periode_bulan', 'water.periode_tahun'])
             ->join('tb_eng_monthly_meter_air as water', 'tb_fin_monthly_utility.id_eng_air', '=', 'water.id')
+            ->where('tb_fin_monthly_utility.id_unit', $unitID)
             ->orderBy('tb_fin_monthly_utility.id', 'DESC')
             ->get();
 
@@ -132,6 +133,7 @@ class UnitController extends Controller
         $data['detail'] = $connMonthlyUtility
             ->select(['water.id', 'nomor_air_awal', 'nomor_air_akhir', 'usage', 'abodemen', 'total', 'image'])
             ->join('tb_eng_monthly_meter_air as water', 'tb_fin_monthly_utility.id_eng_air', '=', 'water.id')
+            ->where('tb_fin_monthly_utility.id', $id)
             ->first();
 
             $data['biayaWater'] = $connUtility->find(2)
@@ -179,6 +181,7 @@ class UnitController extends Controller
         $data['detail'] = $connMonthlyUtility
             ->select(['electric.id', 'nomor_listrik_awal', 'nomor_listrik_akhir', 'usage', 'electric.id_unit', 'ppj', 'total', 'image'])
             ->join('tb_eng_monthly_meter_listrik as electric', 'tb_fin_monthly_utility.id_eng_listrik', '=', 'electric.id')
+            ->where('tb_fin_monthly_utility.id', $id)
             ->first();
 
         $data['biayaElectric'] = $connUtility->find(1)
