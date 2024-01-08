@@ -34,7 +34,7 @@ class ChatController extends Controller
             $data['sender_photo'] =  $rc->Sender->profile_picture;
             $data['no_tiket'] = $rc->Ticket->no_tiket;
             $data['is_done'] = $rc->Ticket->status_request == 'COMPLETED' || $rc->Ticket->status_request == 'DONE' ? true : false;
-            $data['chats'] = count($rc->Chats) > 0 ? $rc->Chats[0]->message : null;
+            $data['chats'] = count($rc->Chats) > 0 ? $rc->Chats[0] : null;
 
             $datas[] = $data;
         }
