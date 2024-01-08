@@ -104,7 +104,7 @@ class UnitController extends Controller
         $connUtility = ConnectionDB::setConnection(new MonthlyUtility());
 
         $data = $connUtility
-            ->select(['nomor_air_awal', 'nomor_air_akhir', 'usage', 'water.periode_bulan', 'water.periode_tahun'])
+            ->select(['water.id','nomor_air_awal', 'nomor_air_akhir', 'usage', 'water.periode_bulan', 'water.periode_tahun'])
             ->join('tb_eng_monthly_meter_air as water', 'tb_fin_monthly_utility.id_eng_air', '=', 'water.id')
             ->where('tb_fin_monthly_utility.id_unit', $unitID)
             ->orderBy('tb_fin_monthly_utility.id', 'DESC')
@@ -121,28 +121,22 @@ class UnitController extends Controller
         );
     }
 
-    public function ShowDetailWaterUsage($unitID)
+    public function ShowDetailWaterUsage($id)
     {
         $connMonthlyUtility = ConnectionDB::setConnection(new MonthlyUtility());
         $connUtility = ConnectionDB::setConnection(new Utility());
-        $unit = $connMonthlyUtility->where('tb_fin_monthly_utility.id_unit', $unitID)->first();
-        
+        $unit = $connMonthlyUtility->where('tb_fin_monthly_utility.id_eng_air', $id)->first();
+
         $object = new stdClass();
         $object->unit = $unit->Unit->nama_unit;
 
         $data['detail'] = $connMonthlyUtility
-            ->select(['nomor_air_awal', 'nomor_air_akhir', 'usage', 'abodemen', 'total', 'image'])
+            ->select(['water.id', 'nomor_air_awal', 'nomor_air_akhir', 'usage', 'abodemen', 'total', 'image'])
             ->join('tb_eng_monthly_meter_air as water', 'tb_fin_monthly_utility.id_eng_air', '=', 'water.id')
-            ->where('tb_fin_monthly_utility.id_unit', $unitID)
             ->first();
 
             $data['biayaWater'] = $connUtility->find(2)
             ->select(['biaya_m3'])
-            ->first();
-
-            $data['TotalTagihanUtility'] = $connMonthlyUtility
-            ->select(['total_tagihan_utility'])
-            ->where('tb_fin_monthly_utility.id_unit', $unitID)
             ->first();
 
         return ResponseFormatter::success(
@@ -157,7 +151,7 @@ class UnitController extends Controller
         $connUtility = ConnectionDB::setConnection(new MonthlyUtility());
 
         $data = $connUtility
-            ->select(['nomor_listrik_awal', 'nomor_listrik_akhir', 'usage', 'electric.periode_bulan', 'electric.periode_tahun'])
+            ->select(['electric.id', 'nomor_listrik_awal', 'nomor_listrik_akhir', 'usage', 'electric.periode_bulan', 'electric.periode_tahun'])
             ->join('tb_eng_monthly_meter_listrik as electric', 'tb_fin_monthly_utility.id_eng_listrik', '=', 'electric.id')
             ->where('tb_fin_monthly_utility.id_unit', $unitID)
             ->orderBy('tb_fin_monthly_utility.id', 'DESC')
@@ -174,28 +168,22 @@ class UnitController extends Controller
         );
     }
 
-    public function ShowDetailElectricUsage($unitID)
+    public function ShowDetailElectricUsage($id)
     {
         $connMonthlyUtility = ConnectionDB::setConnection(new MonthlyUtility());
         $connUtility = ConnectionDB::setConnection(new Utility());
-        $unit = $connMonthlyUtility->where('tb_fin_monthly_utility.id_unit', $unitID)->first();
+        $unit = $connMonthlyUtility->where('tb_fin_monthly_utility.id_eng_listrik', $id)->first();
 
         $object = new stdClass();
         $object->unit = $unit->Unit->nama_unit;
 
         $data['detail'] = $connMonthlyUtility
-            ->select(['nomor_listrik_awal', 'nomor_listrik_akhir', 'usage', 'ppj', 'total', 'image'])
+            ->select(['nomor_listrik_awal', 'nomor_listrik_akhir', 'usage', 'electric.id_unit', 'ppj', 'total', 'image'])
             ->join('tb_eng_monthly_meter_listrik as electric', 'tb_fin_monthly_utility.id_eng_listrik', '=', 'electric.id')
-            ->where('tb_fin_monthly_utility.id_unit', $unitID)
             ->first();
 
         $data['biayaElectric'] = $connUtility->find(1)
             ->select(['biaya_m3'])
-            ->first();
-
-        $data['TotalTagihanUtility'] = $connMonthlyUtility
-            ->select(['total_tagihan_utility'])
-            ->where('tb_fin_monthly_utility.id_unit', $unitID)
             ->first();
 
         return ResponseFormatter::success(

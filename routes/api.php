@@ -70,10 +70,10 @@ Route::prefix('v1')->group(function () {
         // Unit
         Route::get('/units', [UnitController::class, 'getAllUnits']);
         Route::get('/water-usage-record/{unitID}', [UnitController::class, 'waterUsageRecord']);
-        Route::get('/detail-water-usage/{unitID}', [UnitController::class, 'ShowDetailWaterUsage']);
+        Route::get('/detail-water-usage/{id}', [UnitController::class, 'ShowDetailWaterUsage']);
 
         Route::get('/electric-usage-record/{unitID}', [UnitController::class, 'electricUsageRecord']);
-        Route::get('/detail-electric-usage/{unitID}', [UnitController::class, 'ShowDetailElectricUsage']);
+        Route::get('/detail-electric-usage/{id}', [UnitController::class, 'ShowDetailElectricUsage']);
 
         // Open Request
         Route::get('/tickets', [OpenTicketController::class, 'listTickets']);
