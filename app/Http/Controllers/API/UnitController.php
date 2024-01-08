@@ -104,7 +104,7 @@ class UnitController extends Controller
         $connUtility = ConnectionDB::setConnection(new MonthlyUtility());
 
         $data = $connUtility
-            ->select(['id_eng_air','nomor_air_awal', 'nomor_air_akhir', 'usage', 'water.periode_bulan', 'water.periode_tahun'])
+            ->select(['water.id','nomor_air_awal', 'nomor_air_akhir', 'usage', 'water.periode_bulan', 'water.periode_tahun'])
             ->join('tb_eng_monthly_meter_air as water', 'tb_fin_monthly_utility.id_eng_air', '=', 'water.id')
             ->orderBy('tb_fin_monthly_utility.id', 'DESC')
             ->get();
@@ -130,7 +130,7 @@ class UnitController extends Controller
         $object->unit = $unit->Unit->nama_unit;
 
         $data['detail'] = $connMonthlyUtility
-            ->select(['id_eng_air', 'nomor_air_awal', 'nomor_air_akhir', 'usage', 'abodemen', 'total', 'image'])
+            ->select(['water.id', 'nomor_air_awal', 'nomor_air_akhir', 'usage', 'abodemen', 'total', 'image'])
             ->join('tb_eng_monthly_meter_air as water', 'tb_fin_monthly_utility.id_eng_air', '=', 'water.id')
             ->first();
 
@@ -150,7 +150,7 @@ class UnitController extends Controller
         $connUtility = ConnectionDB::setConnection(new MonthlyUtility());
 
         $data = $connUtility
-            ->select(['id_eng_listrik', 'nomor_listrik_awal', 'nomor_listrik_akhir', 'usage', 'electric.periode_bulan', 'electric.periode_tahun'])
+            ->select(['electric.id', 'nomor_listrik_awal', 'nomor_listrik_akhir', 'usage', 'electric.periode_bulan', 'electric.periode_tahun'])
             ->join('tb_eng_monthly_meter_listrik as electric', 'tb_fin_monthly_utility.id_eng_listrik', '=', 'electric.id')
             ->where('tb_fin_monthly_utility.id_unit', $unitID)
             ->orderBy('tb_fin_monthly_utility.id', 'DESC')
@@ -177,7 +177,7 @@ class UnitController extends Controller
         $object->unit = $unit->Unit->nama_unit;
 
         $data['detail'] = $connMonthlyUtility
-            ->select(['id_eng_listrik','nomor_listrik_awal', 'nomor_listrik_akhir', 'usage', 'electric.id_unit', 'ppj', 'total', 'image'])
+            ->select(['electric.id', 'nomor_listrik_awal', 'nomor_listrik_akhir', 'usage', 'electric.id_unit', 'ppj', 'total', 'image'])
             ->join('tb_eng_monthly_meter_listrik as electric', 'tb_fin_monthly_utility.id_eng_listrik', '=', 'electric.id')
             ->first();
 
