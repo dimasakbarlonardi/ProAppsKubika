@@ -34,20 +34,20 @@ class ImportTenantUnit implements ToModel, WithStartRow
             $owner->id_tenant_unit = $id_tenant_unit;
             $owner->id_unit = $this->Unit($row[0]);
             $owner->id_tenant = $this->Tenant($row[1]);
-            $owner->tgl_masuk = $row[3];
-            $owner->tgl_keluar = $row[4];
+            $owner->tgl_masuk = $row[4];
+            $owner->tgl_keluar = $row[5];
             $owner->is_owner = 1;
             $owner->sewa_ke = 1;
             $owner->save();
 
-            if ($this->Tenant($row[2]) && $row[2]) {
+            if ($this->Tenant($row[3]) && $row[3]) {
                 $renter = ConnectionDB::setConnection(new TenantUnit());
                 $id_tenant_unit = $this->generateTenantUnitID($renter);
                 $renter->id_tenant_unit = $id_tenant_unit;
                 $renter->id_unit = $this->Unit($row[0]);
-                $renter->id_tenant = $this->Tenant($row[2]);
-                $renter->tgl_masuk = $row[3];
-                $renter->tgl_keluar = $row[4];
+                $renter->id_tenant = $this->Tenant($row[3]);
+                $renter->tgl_masuk = $row[4];
+                $renter->tgl_keluar = $row[5];
                 $renter->is_owner = 0;
                 $renter->sewa_ke = 1;
                 $renter->save();
@@ -68,7 +68,7 @@ class ImportTenantUnit implements ToModel, WithStartRow
     {
         $connModel = ConnectionDB::setConnection(new Tenant());
 
-        $data = $connModel->where('nama_tenant', 'like', '%' . $query . '%')->first();
+        $data = $connModel->where('email_tenant', 'like', '%' . $query . '%')->first();
 
         return $data ? $data->id_tenant : null;
     }

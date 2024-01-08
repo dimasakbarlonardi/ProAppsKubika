@@ -386,7 +386,6 @@ class BillingController extends Controller
             $ipl_price_day = ((int) $unit->luas_unit * $sc->biaya_permeter) / $currMonthDays;
             $cutOFFsc = (int) Carbon::now()->diff($unit->Owner()->tgl_masuk)->format("%a");
             if ($cutOFFsc < $currMonthDays) {
-                dd($unit->Owner()->tgl_masuk, $currMonthDays);
                 $ipl_service_charge = $cutOFFsc * $ipl_price_day;
             }
         }
