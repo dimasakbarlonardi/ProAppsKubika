@@ -2,6 +2,7 @@
 
 
 use App\Events\PaymentEvent;
+use App\Helpers\ConnectionDB;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\Admin\BAPPController;
@@ -41,7 +42,6 @@ use App\Http\Controllers\Admin\MainFormController;
 use App\Http\Controllers\Admin\PengurusController;
 use App\Http\Controllers\Admin\SubMenu2Controller;
 use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\HKKoridorController;
 use App\Http\Controllers\Admin\WorkOrderController;
 use App\Http\Controllers\Admin\DepartemenController;
 use App\Http\Controllers\Admin\JenisAcaraController;
@@ -59,7 +59,6 @@ use App\Http\Controllers\Admin\WorkRequestController;
 use App\Http\Controllers\Admin\JenisKelaminController;
 use App\Http\Controllers\Admin\JenisRequestController;
 use App\Http\Controllers\Admin\MemberTenantController;
-use App\Http\Controllers\Admin\NotificationController;
 use App\Http\Controllers\Admin\WorkPriorityController;
 use App\Http\Controllers\Admin\WorkRelationController;
 use App\Http\Controllers\Admin\ChecklistAhuHController;
@@ -68,7 +67,6 @@ use App\Http\Controllers\Admin\RequestPermitController;
 use App\Http\Controllers\Admin\StatusRequestController;
 use App\Http\Controllers\Admin\StatusTinggalController;
 use App\Http\Controllers\Admin\SystemSettingController;
-use App\Http\Controllers\Admin\ChecklistLiftHController;
 use App\Http\Controllers\Admin\JenisKendaraanController;
 use App\Http\Controllers\Admin\JenisPekerjaanController;
 use App\Http\Controllers\Admin\ReminderLetterController;
@@ -82,16 +80,13 @@ use App\Http\Controllers\Admin\TypeReservationController;
 use App\Http\Controllers\Admin\ChecklistGensetHController;
 use App\Http\Controllers\Admin\ChecklistToiletHController;
 use App\Http\Controllers\Admin\OffBoardingOwnerController;
-use App\Http\Controllers\Admin\OfficeManagementController;
 use App\Http\Controllers\Admin\RuangReservationController;
-use App\Http\Controllers\Admin\ChecklistKoridorHController;
 use App\Http\Controllers\Admin\OffBoardingTenantController;
 use App\Http\Controllers\Admin\ChecklistAhuDetailController;
 use App\Http\Controllers\Admin\StatusAktifKaryawanController;
 use App\Http\Controllers\Admin\ChecklistTemperaturHController;
 use App\Http\Controllers\Admin\OffBoardingTenantUnitController;
 use App\Http\Controllers\Admin\ChecklistTanggaDaruratHController;
-use App\Http\Controllers\Admin\ChecklistOfficeManagementHController;
 use App\Http\Controllers\Admin\ChecklistSecurityController;
 use App\Http\Controllers\Admin\ChecklistToiletDetailController;
 use App\Http\Controllers\Admin\CompanySettingController;
@@ -106,6 +101,7 @@ use App\Http\Controllers\Admin\LeaveTypeHRController;
 use App\Http\Controllers\Admin\InvoiceController;
 use App\Http\Controllers\Admin\OffBoardingKepemilikanUnitController;
 use App\Http\Controllers\Admin\OffTenantUnitController;
+use App\Http\Controllers\Admin\OtherBillController;
 use App\Http\Controllers\Admin\PackageController;
 use App\Http\Controllers\Admin\ParameterSecurityController;
 use App\Http\Controllers\Admin\ParameterShiftSecurityController;
@@ -117,18 +113,14 @@ use App\Http\Controllers\Admin\RequestTypeController;
 use App\Http\Controllers\Admin\ScheduleMeetingController;
 use App\Http\Controllers\Admin\ScheduleSecurityController;
 use App\Http\Controllers\Admin\ShiftTypeController;
-use App\Http\Controllers\Admin\SP1Controller;
+use App\Http\Controllers\Admin\SPController;
 use App\Http\Controllers\Admin\ToolsEngController;
 use App\Http\Controllers\Admin\ToolsHKController;
 use App\Http\Controllers\Admin\ToolsSecurityController;
 use App\Http\Controllers\Admin\VisitorsController;
 use App\Http\Controllers\Admin\WaterUUSController;
-use App\Http\Controllers\API\VisitorController;
-use App\Imports\UnitImport;
-use App\Models\ForgotAttendance;
-use App\Models\IncidentalReportHK;
-use App\Models\PermitHR;
-use Illuminate\Support\Facades\Auth;
+use App\Mail\MonthlyOtherBillMail;
+use App\Models\MonthlyArTenant;
 
 /*
 |--------------------------------------------------------------------------
@@ -155,6 +147,14 @@ Route::get('payment-event', function () {
         'status' => 'settlement',
     ];
     broadcast(new PaymentEvent($datanotif));
+});
+
+Route::get('send-mail', function () {
+    $ar = ConnectionDB::setConnection(new MonthlyArTenant());
+
+    $ar = $ar->find(450);
+
+    return new MonthlyOtherBillMail($ar, 'park-royale');
 });
 
 Route::post('/payments/midtrans-notifications', [PaymentController::class, 'receive']);
@@ -239,6 +239,7 @@ Route::prefix('admin')->group(function () {
         Route::post('tenant-unit/unit', [TenantUnitController::class, 'getUnitIDFromTU'])->name('getUnitIDFromTU');
         Route::get('get-vehicle/by-unit/{id}', [TenantUnitController::class, 'getVehicleUnit']);
         Route::post('/store/tenantunit', [TenantUnitController::class, 'storeTenantUnit'])->name('storeTenantUnit');
+        Route::post('/import/tenant-unit', [TenantUnitController::class, 'importTenantUnit'])->name('importTenantUnit');
 
         Route::get('/tenantunits/{id}', [TenantUnitController::class, 'show'])->name('tenantunitsShow');
 
@@ -571,6 +572,11 @@ Route::prefix('admin')->group(function () {
         // CRUD Utility
         Route::resource('utilitys', UtilityController::class);
 
+        // CRUD Other Bills
+        Route::resource('other-bills', OtherBillController::class);
+        Route::post('/other-bill/isactive/{id}', [OtherBillController::class, 'changeActiveStatus']);
+        Route::post('/other-bill/is-require-unit-volume/{id}', [OtherBillController::class, 'changeRequireVolume']);
+
         // CRUD JenisDenda
         Route::resource('jenisdendas', JenisDendaController::class);
         Route::post('/jenis-denda/isactive/{id}', [JenisDendaController::class, 'isActive']);
@@ -654,6 +660,8 @@ Route::prefix('admin')->group(function () {
         Route::post('approve/usr-electric', [ElectricUUSController::class, 'approve']);
         Route::post('update/usr-electric/{id}', [ElectricUUSController::class, 'update'])->name('updateElectric');
         Route::post('approve/update/usr-electric/{id}', [ElectricUUSController::class, 'approveUpdate'])->name('approveUpdateElectric');
+        Route::post('import/electric', [ElectricUUSController::class, 'importElectricUsage'])->name('importElectricUsage');
+
         // ---------------End UUS Electric-----------------
 
         // ---------------Start UUS Water -------------------
@@ -663,6 +671,7 @@ Route::prefix('admin')->group(function () {
         Route::post('approve/usr-water', [WaterUUSController::class, 'approve'])->name('approve-usr-water');
         Route::post('update/usr-water/{id}', [WaterUUSController::class, 'update'])->name('updateWater');
         Route::post('approve/update/usr-water/{id}', [WaterUUSController::class, 'approveUpdate'])->name('approveUpdateWater');
+        Route::post('import/water', [WaterUUSController::class, 'importWaterUsage'])->name('importWaterUsage');
         // ---------------End UUS Water -------------------
 
         // Generate monthly invoice IPL & Service charge
@@ -682,7 +691,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/invoice/get/filter-data', [InvoiceController::class, 'filteredData']);
 
         // Payment monthly tenant
-        Route::post('payment-monthly-page/{id}', [BillingController::class, 'generatePaymentMonthly'])->name('generatePaymentMonthly');
+        // Route::post('payment-monthly-page/{id}', [BillingController::class, 'generatePaymentMonthly'])->name('generatePaymentMonthly');
         Route::get('payment-monthly-page/{mt}/{id}', [BillingController::class, 'paymentMonthly'])->name('paymentMonthly');
 
         // Payment WO
@@ -694,8 +703,15 @@ Route::prefix('admin')->group(function () {
 
 
         // ======================= SP ==========================
-        Route::resource('sp1', SP1Controller::class);
-        Route::post('blastSP1', [SP1Controller::class, 'blast']);
+        Route::get('/template-sp', [SPController::class, 'template'])->name('templateSP');
+        Route::resource('sp1', SPController::class);
+        Route::post('blast-sp-1', [SPController::class, 'blast']);
+        Route::get('sp2', [SPController::class, 'sp2'])->name('SP2Index');
+        Route::post('blast-sp-2', [SPController::class, 'blastSP2']);
+        Route::get('sp3', [SPController::class, 'sp3'])->name('SP3Index');
+        Route::post('blast-sp-3', [SPController::class, 'blastSP3']);
+        Route::get('sp-final', [SPController::class, 'spFinal'])->name('SPFinalIndex');
+        Route::post('blast-sp-final', [SPController::class, 'blastSPFinal']);
         // ======================= End SP ==========================
 
         // ---------------Inspection Gartur Security-----------------

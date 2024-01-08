@@ -21,7 +21,7 @@ class ChatController extends Controller
         $rcs = $connRC->where('receiver_id', $user->id_user)
             ->orWhere('sender_id', $user->id_user)
             ->with(['Chats' => function ($q) {
-                $q->orderBy('created_at', 'desc')->first();
+                $q->latest();
             }, 'Ticket'])
             ->get();
 
@@ -34,7 +34,7 @@ class ChatController extends Controller
             $data['sender_photo'] =  $rc->Sender->profile_picture;
             $data['no_tiket'] = $rc->Ticket->no_tiket;
             $data['is_done'] = $rc->Ticket->status_request == 'COMPLETED' || $rc->Ticket->status_request == 'DONE' ? true : false;
-            $data['chats'] = $rc->chats;
+            $data['chats'] = count($rc->Chats) > 0 ? $rc->Chats[0] : null;
 
             $datas[] = $data;
         }
