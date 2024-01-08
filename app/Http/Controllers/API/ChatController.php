@@ -18,14 +18,28 @@ class ChatController extends Controller
 
         $user = $connUser->where('login_user', $request->user()->email)->first();
 
-        $rc = $connRC->where('receiver_id', $user->id_user)
+        $rcs = $connRC->where('receiver_id', $user->id_user)
             ->orWhere('sender_id', $user->id_user)
-            ->with(['Chats' => function($q) {
+            ->with(['Chats' => function ($q) {
                 $q->orderBy('created_at', 'desc')->first();
-            }])
+            }, 'Ticket'])
             ->get();
 
-        return ResponseFormatter::success($rc, 'Success get all room chats');
+        $datas = [];
+
+        foreach ($rcs as $rc) {
+            $data['id'] = $rc->id;
+            $data['receiver_id'] = $rc->receiver_id;
+            $data['sender_id'] = $rc->sender_id;
+            $data['sender_photo'] =  $rc->Sender->profile_picture;
+            $data['no_tiket'] = $rc->Ticket->no_tiket;
+            $data['is_done'] = $rc->Ticket->status_request == 'COMPLETED' || $rc->Ticket->status_request == 'DONE' ? true : false;
+            $data['chats'] = $rc->chats;
+
+            $datas[] = $data;
+        }
+
+        return ResponseFormatter::success($datas, 'Success get all room chats');
     }
 
     public function showRoomChat($id)
@@ -33,7 +47,7 @@ class ChatController extends Controller
         $connRC = ConnectionDB::setConnection(new RoomChat());
 
         $rc = $connRC->where('id', $id)
-            ->with(['Chats' => function($q) {
+            ->with(['Chats' => function ($q) {
                 $q->with(['Sender', 'Receiver']);
             }])
             ->first();
