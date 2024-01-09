@@ -57,7 +57,7 @@ class ElectricUUSController extends Controller
             });
         }
 
-        if ($request->input('select_status')) {
+        if ($request->input('select_status') != null) {
             $status = $request->input('select_status') == '0' ? null : $request->input('select_status');
             $records = $records->where('is_approve', $status);
         }
@@ -70,7 +70,7 @@ class ElectricUUSController extends Controller
             $records = $records->where('periode_tahun', $request->input('select_year'));
         }
 
-        $records = $records->paginate(200);
+        $records = $records->paginate(10);
 
         return $records;
     }
