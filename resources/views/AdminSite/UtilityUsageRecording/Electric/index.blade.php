@@ -89,7 +89,7 @@
                                         </div>
                                     </th>
                                     <td class="align-middle">
-                                        <img src="{{ $item->image ? url($item->image) : url('/assets/img/icons/spot-illustrations/proapps.png') }}"
+                                        <img src="{{ $item->image ? url($item->image) : url('/assets/img/no_image.jpeg') }}"
                                             width="100">
                                     </td>
                                     <th class="align-middle">{{ $item->Unit->nama_unit }} - {{ $item->Unit->Tower->nama_tower }}</th>
