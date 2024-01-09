@@ -128,7 +128,7 @@ class BillingController extends Controller
             $data['sc'] = $connIPLType->find(8);
             $data['sf'] = $connIPLType->find(9);
         }
-        dd($data);
+
         $data['setting'] = $setting;
         $data['transaction'] = $ar;
 
