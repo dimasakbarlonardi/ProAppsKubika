@@ -36,7 +36,8 @@ class ElectricUUSController extends Controller
         $connSetting = ConnectionDB::setConnection(new CompanySetting());
 
         $data['setting'] = $connSetting->find(1);
-        $data['elecUSS'] = $this->filteredData($request);
+        $data['elecUSS'] = $this->filteredData($request)['records'];
+        $data['all_invoices'] = $this->filteredData($request)['all_invoices'];
         $data['approve'] = $connApprove->find(9);
         $data['user'] = $request->session()->get('user');
         $data['towers'] = $connTower->get();
@@ -70,9 +71,10 @@ class ElectricUUSController extends Controller
             $records = $records->where('periode_tahun', $request->input('select_year'));
         }
 
-        $records = $records->paginate(10);
+        $data['all_invoices'] = $records->get();
+        $data['records'] = $records->paginate(10);
 
-        return $records;
+        return $data;
     }
 
     public function create()
