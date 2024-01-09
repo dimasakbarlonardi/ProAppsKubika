@@ -135,7 +135,6 @@ class BillingController extends Controller
         return response()->json([
             'html' => $html,
             'data' => $data,
-            'ar_user' => $data['transaction']->CashReceipts[0]->User->login_user,
             'email_user' => Auth::user()->email,
         ]);
     }

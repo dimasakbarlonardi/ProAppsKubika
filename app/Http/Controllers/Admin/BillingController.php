@@ -63,8 +63,7 @@ class BillingController extends Controller
                 ->where('periode_tahun', $data['elecUSS']->periode_tahun)
                 ->where('id_unit', $data['elecUSS']->id_unit)
                 ->first();
-            $data['status'] = $data['elecUSS']->Unit->TenantUnit->Tenant->User ? true : false;
-            // $data['status'] = $data['elecUSS']->Unit->TenantUnit ? true : false;
+            // $data['status'] = $data['elecUSS']->Unit->TenantUnit->Tenant->User ? true : false;
             $data['nama_unit'] = $data['elecUSS']->Unit->nama_unit;
         } elseif ($request->type == 'water') {
             $data['waterUSS'] = $connWaterUUS->find($id);
@@ -73,9 +72,11 @@ class BillingController extends Controller
                 ->where('periode_tahun', $data['waterUSS']->periode_tahun)
                 ->where('id_unit', $data['waterUSS']->id_unit)
                 ->first();
-            $data['status'] = $data['waterUSS']->Unit->TenantUnit->Tenant->User ? true : false;
+            // $data['status'] = $data['waterUSS']->Unit->TenantUnit->Tenant->User ? true : false;
             $data['nama_unit'] = $data['elecUSS']->Unit->nama_unit;
         }
+
+        $data['status'] = true;
 
         return $data;
     }
@@ -85,10 +86,10 @@ class BillingController extends Controller
         foreach ($request->IDs as $id) {
             $validate = $this->validateUtility($request, $id);
 
-            if (!$validate['status']) {
-                $validate['status'] = 401;
-                return response()->json($validate);
-            }
+            // if (!$validate['status']) {
+            //     $validate['status'] = 401;
+            //     return response()->json($validate);
+            // }
 
             if ($validate['waterUSS'] && $validate['elecUSS'] && !$validate['waterUSS']->MonthlyUtility && $validate['status']) {
                 try {
@@ -281,7 +282,7 @@ class BillingController extends Controller
                 $jml_hari_jt = $now->diff($jt)->format("%m");
             }
 
-            if ($transaction->transaction_type = 'MonthlyOtherBillTenant') { } elseif ($transaction->transaction_type = 'MonthlyUtilityTenant') { } elseif ($transaction->transaction_type = 'MonthlyIPLTenant') { }
+            // if ($transaction->transaction_type = 'MonthlyOtherBillTenant') { } elseif ($transaction->transaction_type = 'MonthlyUtilityTenant') { } elseif ($transaction->transaction_type = 'MonthlyIPLTenant') { }
             if ($perhitDenda->denda_flat_procetage != 0) {
                 $denda_bulan_sebelumnya = ((($perhitDenda->denda_flat_procetage / 100) * ($prevBill->total_tagihan_ipl + $prevBill->total_tagihan_utility)) * $jml_hari_jt);
             } else {
@@ -381,12 +382,14 @@ class BillingController extends Controller
             $sf = $connIPLType->find(9);
         }
 
-        if ($unit->Owner()->tgl_masuk) {
-            $currMonthDays =  Carbon::now()->daysInMonth;
-            $ipl_price_day = ((int) $unit->luas_unit * $sc->biaya_permeter) / $currMonthDays;
-            $cutOFFsc = (int) Carbon::now()->diff($unit->Owner()->tgl_masuk)->format("%a");
-            if ($cutOFFsc < $currMonthDays) {
-                $ipl_service_charge = $cutOFFsc * $ipl_price_day;
+        if ($unit->Owner()) {
+            if ($unit->Owner()->tgl_masuk) {
+                $currMonthDays =  Carbon::now()->daysInMonth;
+                $ipl_price_day = ((int) $unit->luas_unit * $sc->biaya_permeter) / $currMonthDays;
+                $cutOFFsc = (int) Carbon::now()->diff($unit->Owner()->tgl_masuk)->format("%a");
+                if ($cutOFFsc < $currMonthDays) {
+                    $ipl_service_charge = $cutOFFsc * $ipl_price_day;
+                }
             }
         }
 
@@ -437,15 +440,13 @@ class BillingController extends Controller
         $connTransaction = ConnectionDB::setConnection(new CashReceipt());
         $system = $connSystem->find(1);
 
-        $user = $mt->Unit->TenantUnit->Tenant->User;
-
         $countCR = $system->sequence_no_cash_receiptment + 1;
         $no_cr = $system->kode_unik_perusahaan . '/' .
             $system->kode_unik_cash_receipt . '/' .
             Carbon::now()->format('m') . Carbon::now()->format('Y') . '/' .
             sprintf("%06d", $countCR);
 
-        $order_id = $user->id_site . '-' . $no_cr;
+        $order_id = Auth::user()->id_site . '-' . $no_cr;
 
         try {
             DB::beginTransaction();
@@ -466,11 +467,13 @@ class BillingController extends Controller
             $createTransaction->no_reff = $mt->no_monthly_invoice;
             $createTransaction->no_invoice = $mt->no_monthly_invoice;
             $createTransaction->no_draft_cr = $no_cr;
-            $createTransaction->ket_pembayaran = 'INV/' . $user->id_user . '/' . $mt->Unit->nama_unit;
+            $createTransaction->ket_pembayaran = 'INV/' . Auth::user()->id_site . '/' . $mt->Unit->nama_unit;
             $createTransaction->amount = $subtotal;
             $createTransaction->sub_total = $subtotal;
             $createTransaction->transaction_status = 'PENDING';
-            $createTransaction->id_user = $user->id_user;
+            if ($mt->Unit->TenantUnit->Tenant->User) {
+                $createTransaction->id_user = $mt->Unit->TenantUnit->Tenant->User->id_user;
+            }
             $createTransaction->id_unit = $mt->id_unit;
             $createTransaction->id_monthly_ar_tenant = $mt->id_monthly_ar_tenant;
 
@@ -554,24 +557,27 @@ class BillingController extends Controller
                     $util->MonthlyUtility->sign_approval_2 = Carbon::now();
                     $util->MonthlyUtility->save();
 
-                    $dataNotif = [
-                        'models' => $setting->is_split_ar == 0 ? 'MonthlyTenant' : 'SplitMonthlyTenant',
-                        'notif_title' => 'Monthly Invoice',
-                        'id_data' => $util->MonthlyUtility->MonthlyTenant->id_monthly_ar_tenant,
-                        'sender' => $request->session()->get('user')->id_user,
-                        'division_receiver' => null,
-                        'notif_message' => 'Harap melakukan pembayaran tagihan bulanan anda',
-                        'receiver' => $util->MonthlyUtility->Unit->TenantUnit->Tenant->User->id_user,
-                        'connection' => ConnectionDB::getDBname()
-                    ];
+                    if($util->MonthlyUtility->Unit->TenantUnit) {
+                        $dataNotif = [
+                            'models' => $setting->is_split_ar == 0 ? 'MonthlyTenant' : 'SplitMonthlyTenant',
+                            'notif_title' => 'Monthly Invoice',
+                            'id_data' => $util->MonthlyUtility->MonthlyTenant->id_monthly_ar_tenant,
+                            'sender' => $request->session()->get('user')->id_user,
+                            'division_receiver' => null,
+                            'notif_message' => 'Harap melakukan pembayaran tagihan bulanan anda',
+                            'receiver' => $util->MonthlyUtility->Unit->TenantUnit->Tenant->User->id_user,
+                            'connection' => ConnectionDB::getDBname()
+                        ];
+                        broadcast(new HelloEvent($dataNotif));
+                        $email = $util->MonthlyUtility->Unit->TenantUnit->Tenant->User->login_user;
+                    } else {
+                        $email = 'billing.parkroyale12@gmail.com';
+                    }
 
-                    broadcast(new HelloEvent($dataNotif));
-
-                    SendBulkUtilityMail::dispatch($util->MonthlyUtility->Unit->TenantUnit->Tenant->User->login_user, $util->MonthlyUtility->MonthlyTenant, ConnectionDB::getDBname());
-                    SendBulkIPLMail::dispatch($util->MonthlyUtility->Unit->TenantUnit->Tenant->User->login_user, $util->MonthlyUtility->MonthlyTenant, ConnectionDB::getDBname());
-                    SendBulkOtherBillMail::dispatch($util->MonthlyUtility->Unit->TenantUnit->Tenant->User->login_user, $util->MonthlyUtility->MonthlyTenant, ConnectionDB::getDBname());
+                    SendBulkUtilityMail::dispatch($email, $util->MonthlyUtility->MonthlyTenant, ConnectionDB::getDBname());
+                    SendBulkIPLMail::dispatch($email, $util->MonthlyUtility->MonthlyTenant, ConnectionDB::getDBname());
+                    SendBulkOtherBillMail::dispatch($email, $util->MonthlyUtility->MonthlyTenant, ConnectionDB::getDBname());
                 }
-
 
                 DB::commit();
             } catch (Throwable $e) {
