@@ -31,7 +31,8 @@ class WaterUUSController extends Controller
         $data['setting'] = $connSetting->find(1);
         $data['approve'] = $connApprove->find(9);
         $data['user'] = $request->session()->get('user');
-        $data['waterUSS'] = $this->filteredData($request);
+        $data['waterUSS'] = $this->filteredData($request)['records'];
+        $data['all_invoices'] = $this->filteredData($request)['all_invoices'];
         $data['towers'] = $connTower->get();
 
         return view('AdminSite.UtilityUsageRecording.Water.index', $data);
@@ -63,9 +64,10 @@ class WaterUUSController extends Controller
             $records = $records->where('periode_tahun', $request->input('select_year'));
         }
 
-        $records = $records->paginate(10);
+        $data['all_invoices'] = $records->get();
+        $data['records'] = $records->paginate(10);
 
-        return $records;
+        return $data;
     }
 
     public function create()

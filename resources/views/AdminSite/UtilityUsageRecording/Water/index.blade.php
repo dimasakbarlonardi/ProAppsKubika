@@ -30,7 +30,7 @@
                                 <div class="d-flex row mb-4">
                                     <div class="col">
                                         <div class="justify-content-start my-3">
-                                            <h5 class="mb-3">Total invoices : <span>{{ count($waterUSS) }}</span></h5>
+                                            <h5 class="mb-3">Total invoices : <span>{{ count($all_invoices) }}</span></h5>
                                             <h5>Total selected : <span id="totalSelected">0</span></h5>
                                         </div>
                                     </div>
