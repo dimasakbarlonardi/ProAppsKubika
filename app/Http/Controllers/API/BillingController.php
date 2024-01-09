@@ -114,15 +114,23 @@ class BillingController extends Controller
         $connSetting = ConnectionDB::setConnection(new CompanySetting());
         $connAR = ConnectionDB::setConnection(new MonthlyArTenant());
 
-        $data['electric'] = $connUtility->find(1);
-        $data['water'] = $connUtility->find(2);
-        $data['sc'] = $connIPLType->find(6);
-        $data['sf'] = $connIPLType->find(7);
-
         $setting = $connSetting->find(1);
+        $ar = $connAR->find($request->arID);
 
+        if ($ar->Unit->id_hunian == 1) {
+            $data['electric'] = $connUtility->find(1);
+            $data['water'] = $connUtility->find(2);
+            $data['sc'] = $connIPLType->find(6);
+            $data['sf'] = $connIPLType->find(7);
+        } else {
+            $data['electric'] = $connUtility->find(3);
+            $data['water'] = $connUtility->find(4);
+            $data['sc'] = $connIPLType->find(8);
+            $data['sf'] = $connIPLType->find(9);
+        }
+        dd($data);
         $data['setting'] = $setting;
-        $data['transaction'] = $connAR->find($request->arID);
+        $data['transaction'] = $ar;
 
         if ($request->type == "utility") {
             $html = view('Tenant.Notification.Invoice.SplitPaymentMonthly.Utility_bill', $data)->render();
