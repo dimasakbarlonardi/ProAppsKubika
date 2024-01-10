@@ -43,7 +43,7 @@
                                         <div class="avatar avatar-xl avatar-3xl">
                                             <div class="avatar-name rounded-circle">
                                                 <img src="{{ $wo->Ticket->Tenant->profile_picture }}"
-                                                    alt="{{ $wo->Ticket->Tenant->profile_picture }}" class="avatar-image" />
+                                                    alt="" class="avatar-image" />
                                             </div>
                                         </div>
                                     </a>

@@ -5,7 +5,7 @@
             <a class="d-none d-sm-block" href="">
                 <div class="avatar avatar-xl avatar-3xl">
                     <div class="avatar-name rounded-circle">
-                        <img src="{{ $wr->Ticket->Tenant->profile_picture }}" alt="{{ $wr->Ticket->Tenant->profile_picture }}" class="avatar-image" />
+                        <img src="{{ $wr->Ticket->Tenant->profile_picture }}" alt="img" class="avatar-image" />
                     </div>
                 </div>
             </a>
