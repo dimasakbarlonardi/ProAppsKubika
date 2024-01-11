@@ -20,7 +20,7 @@
                 $unit = $data->Unit;
                 break;
 
-            case 'MonthlyUtilityTenant' || 'MonthlyIPLTenant':
+            case 'MonthlyIPLTenant':
                 $type = 'SplitMonthlyTenant';
                 $data = $transaction->MonthlyARTenant;
                 $site = \App\Models\Site::find($data->id_site);
@@ -28,7 +28,15 @@
                 $unit = $data->Unit;
                 break;
 
-            case 'WorkPermit':
+            case 'MonthlyUtilityTenant':
+                $type = 'SplitMonthlyTenant';
+                $data = $transaction->MonthlyARTenant;
+                $site = \App\Models\Site::find($data->id_site);
+                $tenant = $data->Unit->TenantUnit->Tenant;
+                $unit = $data->Unit;
+                break;
+
+            case 'paymentPermit':
                 $type = 'WorkPermit';
                 $data = $transaction->WorkPermit;
                 $site = \App\Models\Site::find($data->Ticket->Unit->id_site);
@@ -49,6 +57,7 @@
                 break;
         }
     @endphp
+    
     @if ($type == 'SplitMonthlyTenant')
         <ul class="nav nav-pills justify-content-around bg-white p-3 rounded mb-3" id="pill-myTab" role="tablist">
             <li class="nav-item" role="presentation">
@@ -295,26 +304,10 @@
                                 </div>
                             @endif
                         </div>
-                        <div class="col-lg-4">
-                            <div class="card">
+                         <div class="col-lg-4">
+                           <div class="card">
                                 <div class="card-body bg-light">
-                                    <div class="d-flex mt-3 justify-content-between fs--1 mb-1">
-                                        <p class="mb-0">Subtotal</p>
-                                        <span>{{ rupiah($data->CashReceipt->SubTotal($transaction->periode_bulan, $transaction->periode_tahun)) }}</span>
-                                    </div>
-                                    @if ($transaction != 'PENDING')
-                                        <div class="d-flex justify-content-between fs--1 mb-1 text-success">
-                                            <p class="mb-0">Tax</p><span>Rp 0</span>
-                                        </div>
-                                        <div class="d-flex justify-content-between fs--1 mb-1 text-success">
-                                            <p class="mb-0">Admin Fee</p><span
-                                                id="admin_fee">{{ Rupiah($transaction->admin_fee) }}</span>
-                                        </div>
-                                        <hr />
-                                        <h5 class="d-flex justify-content-between"><span>Grand Total</span><span
-                                                id="grand_total">{{ $transaction->gross_amount ? Rupiah($transaction->gross_amount) : rupiah($transaction->SubTotal($transaction->MonthlyARTenant->periode_bulan, $transaction->MonthlyARTenant->periode_tahun)) }}</span>
-                                        </h5>
-                                    @endif
+                                   
                                 </div>
                             </div>
                         </div>
@@ -327,7 +320,7 @@
             </div>
         </div>
     </div>
-
+    
     <script>
         $.ajaxSetup({
             headers: {
@@ -339,6 +332,7 @@
         var arID = "{{ $data->id_monthly_ar_tenant }}"
         var isCCForm = false;
         var id_user = '';
+        let typeTransaction = '{{ $type }}'
 
         $('#expDate').on('input', function() {
             var inputVal = $(this).val();
@@ -357,7 +351,8 @@
 
         $('document').ready(function() {
             let is_split = '{{ $setting->is_split_ar }}'
-            if (is_split == 1) {
+            console.log(typeTransaction);
+            if (is_split == 1 && typeTransaction != 'SplitMonthlyTenant') {
                 SelectType('utility');
             }
             $('#cc_form').css('display', 'none')
@@ -408,27 +403,27 @@
         })
 
         function SelectType(type) {
-            $('#splitPaymentData').html("")
+            // $('#splitPaymentData').html("")
 
-            $.ajax({
-                url: `/api/v1/get-splited-billing`,
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': 'Bearer ' + token
-                },
-                data: {
-                    type,
-                    arID
-                },
-                type: 'GET',
-                success: function(resp) {
-                    $('#splitPaymentData').html(resp.html)
+            // $.ajax({
+            //     url: `/api/v1/get-splited-billing`,
+            //     headers: {
+            //         'Content-Type': 'application/json',
+            //         'Authorization': 'Bearer ' + token
+            //     },
+            //     data: {
+            //         type,
+            //         arID
+            //     },
+            //     type: 'GET',
+            //     success: function(resp) {
+            //         $('#splitPaymentData').html(resp.html)
 
-                    if (resp.ar_user == resp.email_user) {
-                        $('#selectPaymentForm').css('display', 'block');
-                    }
-                }
-            });
+            //         if (resp.ar_user == resp.email_user) {
+            //             $('#selectPaymentForm').css('display', 'block');
+            //         }
+            //     }
+            // });
         }
 
         function onCreateTransaction(id) {
