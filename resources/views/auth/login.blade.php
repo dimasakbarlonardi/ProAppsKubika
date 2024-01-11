@@ -36,7 +36,7 @@
                         <label class="form-label" for="card-password">Select Site</label>
                     </div>
                     <select name="id_site" id="" class="form-control">
-                        <option value="004212">Park Royale</option>
+                        <option value="004212">Park Royale 1-2</option>
                         <option value="008914">Central Point</option>
                     </select>
                 </div>

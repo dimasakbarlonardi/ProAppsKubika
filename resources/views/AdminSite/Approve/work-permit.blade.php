@@ -5,7 +5,7 @@
         <div class="card-header py-2">
             <div class="row flex-between-center">
                 <div class="col-auto">
-                    <h6 class="my-3 text-white">Edit approve Work Order</h6>
+                    <h6 class="my-3 text-white">Edit approve Work Permit</h6>
                 </div>
             </div>
         </div>

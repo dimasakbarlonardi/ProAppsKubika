@@ -16,7 +16,6 @@
                                     <div class="input-group input-search-width"><input
                                             class="form-control form-control-sm shadow-none search" type="search"
                                             placeholder="Search by name" aria-label="search" />
-
                                     </div>
                                 </form>
                             </div>
