@@ -16,7 +16,6 @@
                                     <div class="input-group input-search-width"><input
                                             class="form-control form-control-sm shadow-none search" type="search"
                                             placeholder="Search by name" aria-label="search" />
-
                                     </div>
                                 </form>
                             </div>
@@ -43,7 +42,7 @@
                                         <div class="avatar avatar-xl avatar-3xl">
                                             <div class="avatar-name rounded-circle">
                                                 <img src="{{ $wo->Ticket->Tenant->profile_picture }}"
-                                                    alt="{{ $wo->Ticket->Tenant->profile_picture }}" class="avatar-image" />
+                                                    alt="" class="avatar-image" />
                                             </div>
                                         </div>
                                     </a>
