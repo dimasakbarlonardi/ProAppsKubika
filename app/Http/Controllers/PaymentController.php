@@ -117,15 +117,15 @@ class PaymentController extends Controller
                         break;
 
                     case ('MonthlyTenant'):
-                        $this->monthly();
+                        $this->monthly($site, $cr, $callback);
                         break;
 
                     case ('MonthlyUtilityTenant'):
-                        $this->monthly();
+                        $this->monthly($site, $cr, $callback);
                         break;
 
                     case ('MonthlyIPLTenant'):
-                        $this->monthly();
+                        $this->monthly($site, $cr, $callback);
                         break;
                 }
             }
@@ -162,7 +162,7 @@ class PaymentController extends Controller
         }
     }
 
-    function monthly() {
+    function monthly($site, $cr, $callback) {
         $setting = new CompanySetting();
         $bills = new MonthlyArTenant();
 
@@ -196,7 +196,6 @@ class PaymentController extends Controller
                 $bill->save();
             }
         }
-        break;
     }
 
     public function checkStatus($id)
