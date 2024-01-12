@@ -47,9 +47,8 @@ class ChatController extends Controller
         $connRC = ConnectionDB::setConnection(new RoomChat());
 
         $rc = $connRC->where('id', $id)
-            ->with(['Chats' => function ($q) use ($id) {
-                $q->with(['Sender', 'Receiver'])
-                    ->where('id', $id); 
+            ->with(['Chats' => function ($q) {
+                $q->with(['Sender', 'Receiver']);
             }])
             ->first();
 
