@@ -116,40 +116,16 @@ class PaymentController extends Controller
 
                         break;
 
-                    case 'MonthlyTenant' || 'MonthlyUtilityTenant' || 'MonthlyIPLTenant' :
-                        $setting = new CompanySetting();
-                        $bills = new MonthlyArTenant();
+                    case ('MonthlyTenant'):
+                        $this->monthly($site, $cr, $callback);
+                        break;
 
-                        $bills = $bills->setConnection($site->db_name);
-                        $setting = $setting->setConnection($site->db_name);
-                        $setting = $setting->find(1);
+                    case ('MonthlyUtilityTenant'):
+                        $this->monthly($site, $cr, $callback);
+                        break;
 
-                        if ($setting->is_split_ar == 0) {
-                            $bills = $bills->where('id_unit', $cr->MonthlyARTenant->id_unit)->get();
-
-                            foreach ($bills as $bill) {
-                                $installment = $cr->UpdateInstallment($bill->periode_bulan, $bill->periode_tahun, $site->db_name);
-                                if ($installment) {
-                                    $installment->status = 'PAID';
-                                    $installment->save();
-                                }
-                                $bill->tgl_bayar_invoice = Carbon::now();
-                                $bill->save();
-                            }
-                        } elseif ($setting->is_split_ar == 1) {
-                            $bills = $bills->where('id_unit', $cr->SplitMonthlyARTenantNotif($cr->id_monthly_utility, $cr->id_monthly_ipl, $site->db_name)->id_unit)->get();
-
-                            foreach ($bills as $bill) {
-                                if ($cr->id_monthly_utility) {
-                                    $bill->tgl_bayar_utility = $callback->getNotification()->settlement_time;
-                                }
-                                if ($cr->id_monthly_ipl) {
-                                    $bill->tgl_bayar_ipl = $callback->getNotification()->settlement_time;
-                                }
-
-                                $bill->save();
-                            }
-                        }
+                    case ('MonthlyIPLTenant'):
+                        $this->monthly($site, $cr, $callback);
                         break;
                 }
             }
@@ -183,6 +159,42 @@ class PaymentController extends Controller
                     'error' => true,
                     'message' => 'Signature key not verified',
                 ], 403);
+        }
+    }
+
+    function monthly($site, $cr, $callback) {
+        $setting = new CompanySetting();
+        $bills = new MonthlyArTenant();
+
+        $bills = $bills->setConnection($site->db_name);
+        $setting = $setting->setConnection($site->db_name);
+        $setting = $setting->find(1);
+
+        if ($setting->is_split_ar == 0) {
+            $bills = $bills->where('id_unit', $cr->MonthlyARTenant->id_unit)->get();
+
+            foreach ($bills as $bill) {
+                $installment = $cr->UpdateInstallment($bill->periode_bulan, $bill->periode_tahun, $site->db_name);
+                if ($installment) {
+                    $installment->status = 'PAID';
+                    $installment->save();
+                }
+                $bill->tgl_bayar_invoice = Carbon::now();
+                $bill->save();
+            }
+        } elseif ($setting->is_split_ar == 1) {
+            $bills = $bills->where('id_unit', $cr->SplitMonthlyARTenantNotif($cr->id_monthly_utility, $cr->id_monthly_ipl, $site->db_name)->id_unit)->get();
+
+            foreach ($bills as $bill) {
+                if ($cr->id_monthly_utility) {
+                    $bill->tgl_bayar_utility = $callback->getNotification()->settlement_time;
+                }
+                if ($cr->id_monthly_ipl) {
+                    $bill->tgl_bayar_ipl = $callback->getNotification()->settlement_time;
+                }
+
+                $bill->save();
+            }
         }
     }
 

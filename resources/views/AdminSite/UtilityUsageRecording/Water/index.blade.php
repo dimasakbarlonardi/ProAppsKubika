@@ -30,6 +30,7 @@
                                 <div class="d-flex row mb-4">
                                     <div class="col">
                                         <div class="justify-content-start my-3">
+                                            <h5 class="mb-3">Total invoices : <span>{{ count($all_invoices) }}</span></h5>
                                             <h5>Total selected : <span id="totalSelected">0</span></h5>
                                         </div>
                                     </div>
@@ -87,10 +88,11 @@
                                                         </div>
                                                     </th>
                                                     <td class="align-middle">
-                                                        <img src="{{ $item->image ? url($item->image) : url('/assets/img/icons/spot-illustrations/proapps.png') }}"
+                                                        <img src="{{ $item->image ? url($item->image) : url('/assets/img/no_image.jpeg') }}"
                                                             width="100">
                                                     </td>
-                                                    <th class="align-middle">{{ $item->Unit->nama_unit }} - {{ $item->Unit->Tower->nama_tower }}</th>
+                                                    <th class="align-middle">{{ $item->Unit->nama_unit }} -
+                                                        {{ $item->Unit->Tower->nama_tower }}</th>
                                                     <th class="align-middle">
                                                         Previous - <b>{{ $item->nomor_air_awal }}</b> <br>
                                                         Current - <b>{{ $item->nomor_air_akhir }}</b> <br>
@@ -381,7 +383,7 @@
                     <h6 class="mb-0">Properties</h6>
                 </div>
                 <form action="{{ route('uus-water') }}">
-                   @include('AdminSite.UtilityUsageRecording.usage_filter')
+                    @include('AdminSite.UtilityUsageRecording.usage_filter')
                 </form>
             </div>
         </div>
