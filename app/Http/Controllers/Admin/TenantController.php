@@ -77,7 +77,6 @@ class TenantController extends Controller
         //             $q->where('nama_tenant', 'like', '%' . $valueString . '%');
         //         })->orWhere('no_tiket', 'like', '%' . $valueString . '%');
         // }
-
         if ($request->tower != 'all') {
             $tower_id = $request->tower;
 
@@ -97,7 +96,6 @@ class TenantController extends Controller
         }
 
         // $tickets = $tickets->orderBy('id', 'DESC');
-        // dd($tenants->get());
         $data['tenants'] = $tenants->get();
 
         return response()->json([

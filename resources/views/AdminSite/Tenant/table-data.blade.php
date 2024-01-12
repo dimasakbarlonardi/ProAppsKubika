@@ -22,34 +22,31 @@
                 <td>
                     @if (count($tenant->TenantUnit) > 0)
                         @foreach ($tenant->TenantUnit as $tu)
-                            @if ($id_tower && $tu->Unit->Tower->id_tower == $id_tower && !$nama_unit)
+                            @php
+                                $unit = optional($tu->Unit);
+                                $tower = optional($unit->Tower);
+                            @endphp
+                            @if ($id_tower && optional($tower)->id_tower == $id_tower && !$nama_unit)
                                 @if ($tu->is_owner)
                                     <span class="badge bg-info mb-2">Pemilik</span>
                                 @else
                                     <span class="badge bg-warning mb-2">Penyewa</span>
                                 @endif
-                                {{ $tu->Unit->nama_unit }} - {{ $tu->Unit->Tower->nama_tower }} <br>
-                            @elseif ($nama_unit && $tu->Unit->nama_unit == $nama_unit && !$id_tower)
+                                {{ optional($unit)->nama_unit }} - {{ optional($tower)->nama_tower }} <br>
+                            @elseif ($nama_unit && optional($unit)->nama_unit == $nama_unit && !$id_tower)
                                 @if ($tu->is_owner)
                                     <span class="badge bg-info mb-2">Pemilik</span>
                                 @else
                                     <span class="badge bg-warning mb-2">Penyewa</span>
                                 @endif
-                                {{ $tu->Unit->nama_unit }} - {{ $tu->Unit->Tower->nama_tower }} <br>
-                            @elseif (($tu->Unit->nama_unit == $nama_unit) && ($tu->Unit->Tower->id_tower == $id_tower))
-                                @if ($tu->is_owner)
-                                    <span class="badge bg-info mb-2">Pemilik</span>
-                                @else
-                                    <span class="badge bg-warning mb-2">Penyewa</span>
-                                @endif
-                                {{ $tu->Unit->nama_unit }} - {{ $tu->Unit->Tower->nama_tower }} <br>
+                                {{ optional($unit)->nama_unit }} - {{ optional($tower)->nama_tower }} <br>
                             @elseif (!$id_tower && !$nama_unit)
                                 @if ($tu->is_owner)
                                     <span class="badge bg-info mb-2">Pemilik</span>
                                 @else
                                     <span class="badge bg-warning mb-2">Penyewa</span>
                                 @endif
-                                {{ $tu->Unit->nama_unit }} - {{ $tu->Unit->Tower->nama_tower }} <br>
+                                {{ optional($unit)->nama_unit }} - {{ optional($tower)->nama_tower }} <br>
                             @endif
                         @endforeach
                     @endif
