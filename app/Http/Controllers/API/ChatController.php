@@ -42,34 +42,29 @@ class ChatController extends Controller
         return ResponseFormatter::success($datas, 'Success get all room chats');
     }
 
-    public function showRoomChat(Request $request, $id)
+    public function showRoomChat($id)
     {
         $connRC = ConnectionDB::setConnection(new RoomChat());
-        $connUser = ConnectionDB::setConnection(new User());
-        $user = $connUser->where('login_user', $request->user()->email)->first();
 
-
-        $rcs = $connRC->where('receiver_id', $user->id_user)
-        ->orWhere('sender_id', $user->id_user)
-        ->with(['Chats' => function ($q) {
-            $q->latest();
-        }, 'Ticket'])
-        ->get();
-
-        foreach ($rcs as $rc) {
-            $data['sender_photo'] =  $rc->Sender->profile_picture;
-            $data['no_tiket'] = $rc->Ticket->no_tiket;
-            $data['is_done'] = $rc->Ticket->status_request == 'COMPLETED' || $rc->Ticket->status_request == 'DONE' ? true : false;
-
-            $datas[] = $data;
-        }
-
-        $rc = $connRC->where('id', $id)
+        $rcs = $connRC->where('id', $id)
             ->with(['Chats' => function ($q) {
                 $q->with(['Sender', 'Receiver']);
             }])
-            ->first();
+            ->get();
 
-        return ResponseFormatter::success($rc, $datas, 'Success show room chat');
+        $datas = [];
+
+            foreach ($rcs as $rc) {
+                $data['id'] = $rc->id;
+                $data['receiver_id'] = $rc->receiver_id;
+                $data['sender_id'] = $rc->sender_id;
+                $data['sender_photo'] =  $rc->Sender->profile_picture;
+                $data['no_tiket'] = $rc->Ticket->no_tiket;
+                $data['is_done'] = $rc->Ticket->status_request == 'COMPLETED' || $rc->Ticket->status_request == 'DONE' ? true : false;
+    
+                $datas[] = $data;
+            }
+
+        return ResponseFormatter::success($datas, $rcs, 'Success show room chat');
     }
 }
