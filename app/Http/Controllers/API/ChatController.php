@@ -46,25 +46,12 @@ class ChatController extends Controller
     {
         $connRC = ConnectionDB::setConnection(new RoomChat());
 
-        $rcs = $connRC->where('id', $id)
+        $rc = $connRC->where('id', $id)
             ->with(['Chats' => function ($q) {
                 $q->with(['Sender', 'Receiver']);
             }])
-            ->get();
+            ->first();
 
-        $datas = [];
-
-            foreach ($rcs as $rc) {
-                $data['id'] = $rc->id;
-                $data['receiver_id'] = $rc->receiver_id;
-                $data['sender_id'] = $rc->sender_id;
-                $data['sender_photo'] =  $rc->Sender->profile_picture;
-                $data['no_tiket'] = $rc->Ticket->no_tiket;
-                $data['is_done'] = $rc->Ticket->status_request == 'COMPLETED' || $rc->Ticket->status_request == 'DONE' ? true : false;
-    
-                $datas[] = $data;
-            }
-
-        return ResponseFormatter::success($datas, $rcs, 'Success show room chat');
+        return ResponseFormatter::success($rc, 'Success show room chat');
     }
 }
