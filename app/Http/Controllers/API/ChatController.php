@@ -43,34 +43,34 @@ class ChatController extends Controller
     }
 
     public function showRoomChat($id)
-{
-    $connRC = ConnectionDB::setConnection(new RoomChat());
+    {
+        $connRC = ConnectionDB::setConnection(new RoomChat());
 
-    $rc = $connRC->where('id', $id)
-        ->with(['Chats' => function ($q) {
-            $q->with(['Sender', 'Receiver']);
-        }])
-        ->first();
+        $rc = $connRC->where('id', $id)
+            ->with(['Chats' => function ($q) use ($id) {
+                $q->with(['Sender', 'Receiver'])
+                    ->where('id', $id); 
+            }])
+            ->first();
 
-    if (!$rc) {
-        return ResponseFormatter::error(null, 'Room chat not found', 404);
+        if (!$rc) {
+            return ResponseFormatter::error(null, 'Room chat not found', 404);
+        }
+
+        if ($rc->Ticket) {
+            $rc->tickets = $rc->Ticket->no_tiket;
+            $rc->is_done = $rc->Ticket->status_request === 'COMPLETED' || $rc->Ticket->status_request === 'DONE';
+        } else {
+            $rc->tickets = null;
+            $rc->is_done = false;
+        }
+
+        $rc->sender_photo = $rc->Sender ? $rc->Sender->profile_picture : null;
+
+        $rc->makeHidden(['Ticket', 'Sender']);
+
+        unset($rc->chats);
+
+        return ResponseFormatter::success($rc, 'Success show room chat');
     }
-
-    if ($rc->Ticket) {
-        $rc->tickets = $rc->Ticket->no_tiket;
-        $rc->is_done = $rc->Ticket->status_request === 'COMPLETED' || $rc->Ticket->status_request === 'DONE';
-    } else {
-        $rc->tickets = null;
-        $rc->is_done = false;
-    }
-
-    $rc->sender_photo = $rc->Sender ? $rc->Sender->profile_picture : null;
-
-    $rc->makeHidden(['Ticket', 'Sender']);
-
-    return ResponseFormatter::success($rc, 'Success show room chat');
-}
-
-    
-    
 }
