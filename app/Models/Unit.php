@@ -68,9 +68,9 @@ class Unit extends Model
         //     ->eyeColor(2, 39, 178, 155, 0, 0, 0)
         //     ->errorCorrection('H')
         //     ->generate(url('') . '/api/v1/insert-water/' . $this->id_unit);
-        $barcodeWater = 'https://api.qrserver.com/v1/create-qr-code/?size=1000x1000&data=' . '/api/v1/insert-water/' . $this->id_unit;
-        $barcodeElectric = 'https://api.qrserver.com/v1/create-qr-code/?size=1000x1000&data=' . '/api/v1/insert-electric/' . $this->id_unit;
-      
+        $barcodeWater = 'https://api.qrserver.com/v1/create-qr-code/?size=1000x1000&data=' . '/insert-water/' . $this->id_unit;
+        $barcodeElectric = 'https://api.qrserver.com/v1/create-qr-code/?size=1000x1000&data=' . '/insert-electric/' . $this->id_unit;
+
         // $outputListrik = '/public/' . $this->id_site . '/img/qr-code/meter-listrik/' . $this->id_unit . '-barcode_meter_listrik.png';
         // $listrik = '/storage/' . $this->id_site . '/img/qr-code/meter-listrik/' . $this->id_unit . '-barcode_meter_listrik.png';
 
@@ -83,7 +83,7 @@ class Unit extends Model
         $this->barcode_meter_listrik = $barcodeWater;
         $this->barcode_meter_air = $barcodeElectric;
         $this->save();
-        
+
     }
 
     public function Owner()
