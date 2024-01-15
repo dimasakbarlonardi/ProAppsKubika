@@ -37,20 +37,6 @@
     <link href="{{ url('assets/vendors/simplebar/simplebar.min.css') }}" rel="stylesheet">
 
     <link href="{{ url('assets/css/theme.min.css') }}" rel="stylesheet" id="style-default">
-    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
-    <script>
-        // Enable pusher logging - don't include this in production
-        Pusher.logToConsole = true;
-
-        var pusher = new Pusher('0861d580b79b849c276c', {
-            cluster: 'ap1'
-        });
-
-        var channel = pusher.subscribe('my-channel');
-        channel.bind('my-event', function(data) {
-            alert(JSON.stringify(data));
-        });
-    </script>
 </head>
 
 <body id="body">
@@ -322,27 +308,33 @@
             return prefix == undefined ? rupiah : (rupiah ? 'Rp. ' + rupiah : '');
         }
     </script>
-    <script src="{{ asset('js/app.js') }}"></script>
+    {{-- <script src="{{ asset('js/app.js') }}"></script> --}}
+    {{-- <script src="//js.pusher.com/3.1/pusher.min.js"></script> --}}
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+    <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
 
     <script>
-        document.addEventListener("DOMContentLoaded", function(event) {
-            Echo.channel("hello-channel")
-                .listen('HelloEvent', (e) => {
-                    var receiver = e.dataNotif.receiver
-                    var division_receiver = e.dataNotif.division_receiver
-                    var notif_id = e.dataNotif.id
-                    getNewNotifications(user_id, receiver, division_receiver, notif_id);
-                    sumCounter(e.dataNotif.models);
-                });
-
-            Echo.channel("chat-channel")
-                .listen('ChatEvent', (e) => {
-                    if (e.sound === true) {
-                        notifSound.play();
-                    }
-                })
+        var pusher = new Pusher('16261eeba4cdd90c12f2', {
+            encrypted: true,
+            cluster: 'ap1'
         });
+        $('document').ready(function() {
+            var channelHello = pusher.subscribe('hello-channel');
+            channelHello.bind('App\\Events\\HelloEvent', function(e) {
+                var receiver = e.dataNotif.receiver
+                var division_receiver = e.dataNotif.division_receiver
+                var notif_id = e.dataNotif.id
+                getNewNotifications(user_id, receiver, division_receiver, notif_id);
+                sumCounter(e.dataNotif.models);
+            });
+
+            var channelChat = pusher.subscribe('chat-channel');
+            channelChat.bind('App\\Events\\ChatEvent', function(e) {
+                if (e.sound === true) {
+                    notifSound.play();
+                }
+            });
+        })
 
         function getNotifications(user_id) {
             $.ajax({
