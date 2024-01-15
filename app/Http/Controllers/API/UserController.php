@@ -21,6 +21,7 @@ use League\Flysystem\Config;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 use Appy\FcmHttpV1\FcmNotification;
+use Illuminate\Testing\Fluent\Concerns\Has;
 
 class UserController extends Controller
 {
@@ -164,5 +165,35 @@ class UserController extends Controller
         $user->save();
 
         return ResponseFormatter::success(null, 'Successfully logout');
+    }
+
+    public function resetPassword(Request $request)
+    {
+        if (!Hash::check($request->current_password, Auth::user()->password, [])) {
+            return ResponseFormatter::error([
+                'message' => 'Wrong password'
+            ], 'Authentication Failed', 500);
+        }
+
+        if ($request->password != $request->confirm_password) {
+            return ResponseFormatter::error([
+                'message' => "Password didn't match"
+            ], 'Authentication Failed', 500);
+        }
+
+        $logins = Login::where('email', Auth::user()->email)->get();
+        foreach ($logins as $login) {
+            $login->password = Hash::make($request->password);
+            $login->save();
+        }
+
+        $connUser = ConnectionDB::setConnection(new User());
+        $users = $connUser->where('login_user', Auth::user()->email)->get();
+        foreach ($users as $user) {
+            $user->password_user =  Hash::make($request->password);
+            $user->save();
+        }
+
+        return ResponseFormatter::success($user, 'Success change password');
     }
 }
