@@ -314,7 +314,9 @@
     <script src="https://js.pusher.com/8.2.0/pusher.min.js"></script>
 
     <script>
-        var pusher = new Pusher('16261eeba4cdd90c12f2', {
+        var pusherKey = '{{ env('PUSHER_APP_KEY') }}';
+
+        var pusher = new Pusher(pusherKey, {
             encrypted: true,
             cluster: 'ap1'
         });
