@@ -1,7 +1,8 @@
 @extends('layouts.master')
 
 @section('css')
-    <script src="https://cdn.tiny.cloud/1/zfyksst4gxwae7gxmgzef4p86481o6u0hqh00100y0xgkyts/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <script src="https://cdn.tiny.cloud/1/zfyksst4gxwae7gxmgzef4p86481o6u0hqh00100y0xgkyts/tinymce/6/tinymce.min.js"
+        referrerpolicy="origin"></script>
 @endsection
 
 @section('content')
@@ -282,6 +283,17 @@
                                     <button class="btn btn-sm btn-send shadow-none" type="button"
                                         id="send_message">Send</button>
                                 </form>
+
+                                <script>
+                                    var input = document.getElementById("message-content");
+                                    // Execute a function when the user presses a key on the keyboard
+                                    input.addEventListener("keypress", function(event) {
+                                        if (event.key === "Enter") {
+                                            event.preventDefault();
+                                            document.getElementById("send_message").click();
+                                        }
+                                    });
+                                </script>
                             @endif
                         </div>
                     </div>
@@ -292,7 +304,8 @@
 @endsection
 
 @section('script')
-    <script src="https://cdn.tiny.cloud/1/zfyksst4gxwae7gxmgzef4p86481o6u0hqh00100y0xgkyts/tinymce/6/tinymce.min.js" referrerpolicy="origin"></script>
+    <script src="https://cdn.tiny.cloud/1/zfyksst4gxwae7gxmgzef4p86481o6u0hqh00100y0xgkyts/tinymce/6/tinymce.min.js"
+        referrerpolicy="origin"></script>
     <script>
         tinymce.init({
             selector: 'textarea#deskripsi_response', // Replace this CSS selector to match the placeholder element for TinyMCE
@@ -301,16 +314,16 @@
         });
     </script>
     <script>
-        document.addEventListener("DOMContentLoaded", function(event) {
+        $('document').ready(function() {
             var d = $('#content-message-body');
             d.scrollTop(d.prop("scrollHeight"));
 
             getChatTenant();
-            Echo.channel("chat-channel")
-                .listen('ChatEvent', (e) => {
-                    getChatTenant();
-                })
-        });
+            var channelChat = pusher.subscribe('chat-channel');
+            channelChat.bind('App\\Events\\ChatEvent', function(e) {
+                getChatTenant();
+            });
+        })
 
         function getChatTenant() {
             roomID = '{{ $ticket->id }}'
@@ -347,15 +360,6 @@
                 $("#form-response").submit();
             }
         }
-
-        var input = document.getElementById("message-content");
-        // Execute a function when the user presses a key on the keyboard
-        input.addEventListener("keypress", function(event) {
-            if (event.key === "Enter") {
-                event.preventDefault();
-                document.getElementById("send_message").click();
-            }
-        });
 
         $('#send_message').on('click', function() {
             value = $('#message-content').val();
