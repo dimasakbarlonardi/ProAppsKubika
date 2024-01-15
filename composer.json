@@ -30,6 +30,7 @@
         "realrashid/sweet-alert": "^7.0",
         "simplesoftwareio/simple-qrcode": "^4.2",
         "tymon/jwt-auth": "dev-develop",
+        "psr/log": "^3.0",
         "zendframework/zend-barcode": "^2.5"
     },
     "require-dev": {

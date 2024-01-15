@@ -42,10 +42,13 @@
             }
         });
 
-        document.addEventListener("DOMContentLoaded", function(event) {
-            Echo.channel("payment-channel")
-                .listen('PaymentEvent', (e) => {
-                    if (e.id_site == id_site && e.id == id && e.status == 'settlement') {
+        $('document').ready(function() {
+            var id_site = '{{ Request::session()->get('user')->id_site }}'
+            var id = '{{ $transaction->id }}'
+
+            var channelPayment = pusher.subscribe('payment-channel');
+            channelPayment.bind('App\\Events\\PaymentEvent', function(e) {
+                if (e.id_site == id_site && e.id == id && e.status == 'settlement') {
                         Swal.fire(
                             'Success!',
                             'Thank you, your payment is success',
@@ -54,8 +57,8 @@
                             window.location.replace(`/admin/invoice/${id}`)
                         });
                     }
-                })
-        });
+            });
+        })
 
         function checkPaymentStatus(id) {
             $.ajax({

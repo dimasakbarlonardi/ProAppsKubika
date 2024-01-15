@@ -64,18 +64,17 @@
 
 @section('script')
     <script>
-        document.addEventListener("DOMContentLoaded", function(event) {
+        $('document').ready(function() {
             var d = $('#content-message-master');
             d.scrollTop(d.prop("scrollHeight"));
 
             getRooms();
-
-            Echo.channel("chat-channel")
-                .listen('ChatEvent', (e) => {
-                    getRooms();
-                    getChatMaster(e.room);
-                })
-        });
+            var channelChat = pusher.subscribe('chat-channel');
+            channelChat.bind('App\\Events\\ChatEvent', function(e) {
+                getRooms();
+                getChatMaster(e.room);
+            });
+        })
 
         function getRooms() {
             $.ajax({
