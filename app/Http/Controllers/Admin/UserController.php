@@ -32,13 +32,24 @@ class UserController extends Controller
     // }
 
     public function index(Request $request)
-    {
-        $connUser = ConnectionDB::setConnection(new User());
+{
+    $connUser = ConnectionDB::setConnection(new User());
 
-        $data['users'] = $connUser->paginate(10);
+    $query = $connUser->orderBy('created_at', 'desc'); // Anda dapat mengubah urutan default sesuai kebutuhan
 
-        return view('AdminSite.User.index', $data);
+    // Periksa apakah ada query pencarian
+    if ($request->has('search')) {
+        $search = $request->input('search');
+        $query->where('login_user', 'like', "%$search%")
+              ->orWhere('nama_user', 'like', "%$search%")
+              ->orWhere('id_site', 'like', "%$search%");
     }
+
+    $data['users'] = $query->paginate(10);
+
+    return view('AdminSite.User.index', $data);
+}
+
 
     public function create()
     {

@@ -23,7 +23,7 @@ class ShiftTypeController extends Controller
     public function index()
     {
         $conn = ConnectionDB::setConnection(new ShiftType());
-        
+
         $data['shifttype'] = $conn->get();
         return view('AdminSite.ShiftType.index', $data);
     }
@@ -112,13 +112,20 @@ class ShiftTypeController extends Controller
     public function updateWT(Request $request, $id)
     {
         $connWorkTimeline = ConnectionDB::setConnection(new WorkTimeline());
-
-        $WorkTimeLine = $connWorkTimeline->find($request($id));
-        $WorkTimeLine->update($request->all());
-
-        Alert::success('Success', 'Successfully Updated WorkTimeline');
+    
+        $WorkTimeLine = $connWorkTimeline->where('id' , $id)->first();
+    
+        if ($WorkTimeLine) {
+            $WorkTimeLine->update($request->all());
+            Alert::success('Success', 'Successfully Updated WorkTimeline');
+        } else {
+            Alert::error('Error', 'WorkTimeline not found');
+        }
+    
         return redirect()->back();
     }
+    
+
 
     /**
      * Remove the specified resource from storage.
@@ -150,7 +157,7 @@ class ShiftTypeController extends Controller
     {
         $connListSchedule = ConnectionDB::setConnection(new WorkTimeline());
         $connKaryawan = ConnectionDB::setConnection(new Karyawan());
-        
+
         $data['work_schedules'] = $connListSchedule->get();
         $data['karyawans'] = $connKaryawan->get();
 
@@ -160,9 +167,9 @@ class ShiftTypeController extends Controller
     public function import(Request $request)
     {
         $file = $request->file('file_excel');
-        
+
         Excel::import(new WorkScheduleImport($request->karyawan_id), $file);
-        
+
         Alert::success('Success', 'Success import data');
 
         return redirect()->back();
@@ -173,7 +180,7 @@ class ShiftTypeController extends Controller
         $connWorkTimeline = ConnectionDB::setConnection(new WorkTimeline());
         $connShiftType = ConnectionDB::setConnection(new ShiftType());
         $connKaryawan = ConnectionDB::setConnection(new Karyawan());
-       
+
         $data['karyawan'] = $connKaryawan->find($id);
         $data['shift_types'] = $connShiftType->get();
         $data['work_timelines'] = $connWorkTimeline
