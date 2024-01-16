@@ -50,12 +50,12 @@
                         <label class="form-label">Meter Air Awal</label>
                         <input type="text" value="{{ $units->meter_air_awal }}" class="form-control" required>
                     </div>
-                   
+
                     <div class="col-6">
                         <label class="form-label">Meter Listrik Awal</label>
                         <input type="text" value="{{ $units->meter_listrik_awal }}" class="form-control" required>
                     </div>
-                  
+
                     <div class="col-6">
                         <label class="form-label">Description</label>
                         <input type="text" value="{{ $units->keterangan }}" class="form-control">
