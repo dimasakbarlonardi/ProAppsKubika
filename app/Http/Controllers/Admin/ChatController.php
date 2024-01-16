@@ -34,7 +34,9 @@ class ChatController extends Controller
     {
         $connRoomChat = ConnectionDB::setConnection(new RoomChat());
 
-        $data['rooms'] = $connRoomChat->orderBy('updated_at', 'DESC')->get();
+        $data['rooms'] = $connRoomChat->orderBy('updated_at', 'DESC')
+            ->with('Ticket')
+            ->get();
 
         return response()->json([
             'html' => view('AdminSite.Chat.rooms', $data)->render()

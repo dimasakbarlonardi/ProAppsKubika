@@ -48,6 +48,7 @@ Route::prefix('v1')->group(function () {
 
     Route::middleware('jwt.verify')->group(function () {
         Route::post('/logout', [UserController::class, 'logout'])->name('api-logout');
+        Route::post('/reset-password', [UserController::class, 'resetPassword']);
 
         Route::get('get/access-menu/{roleID}', [RoleController::class, 'getAccessAPI']);
 

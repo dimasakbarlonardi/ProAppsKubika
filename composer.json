@@ -8,7 +8,6 @@
         "php": "^7.3|^8.0",
         "appy/fcmhttpv1": "dev-master",
         "barryvdh/laravel-dompdf": "^2.0",
-        "beyondcode/laravel-websockets": "^1.14",
         "calcinai/php-imagick": "^0.1.2",
         "cviebrock/eloquent-sluggable": "^8.0",
         "doctrine/dbal": "^3.6",
