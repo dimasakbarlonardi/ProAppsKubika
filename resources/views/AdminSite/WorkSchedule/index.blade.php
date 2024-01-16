@@ -102,7 +102,7 @@
                                 <h5 class="modal-title" id="exampleModalLabel">Edit Work Schedule</h5>
                             </div>
                             <form action="{{ route('updateWT', $wt->id) }}" method="POST">
-                                @method('PATCH')
+                                @method('POST')
                                 @csrf
                                 <div class="modal-body">
                                     <div class="row mb-3">
