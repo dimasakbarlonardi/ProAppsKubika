@@ -15,8 +15,8 @@
         <tbody>
             @foreach ($tenant_units as $key => $tu)
                 <tr>
-                    <td>{{ $tu->unit->nama_unit }}</td>
-                    <td>{{ $tu->Owner($tu->unit->id_unit)->nama_tenant }}</td>
+                    <td>{{ optional($tu->unit)->nama_unit }}</td>
+                    <td>{{ optional(optional($tu->unit)->id_unit ? $tu->Owner($tu->unit->id_unit) : null)->nama_tenant }}</td>
                     <td>{{ $tu->tenant->nama_tenant }}</td>
                     <td class="text-center">
                         {{ !$tu->is_owner ? HumanDate($tu->tgl_masuk) : '-' }} <br>
