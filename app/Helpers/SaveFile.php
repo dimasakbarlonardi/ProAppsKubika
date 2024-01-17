@@ -28,7 +28,7 @@ class SaveFile
         $fileName = $type . '-' . Carbon::now()->format('Y-m-d') . '-' .   $file->getClientOriginalName();
         $path = '/public/' . $idSite . '/img/' . $type . '/' . $fileName;
         $storagePath = '/storage/' . $idSite . '/img/' . $type .  '/' . $fileName;
-        $img = Image::make($file);
+        $img = Image::make($file->getRealPath());
         $img->resize(100, 100, function ($constraint) {
             $constraint->aspectRatio();
         })->encode('jpg', 80);
