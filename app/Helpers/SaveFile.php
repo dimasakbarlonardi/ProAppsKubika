@@ -30,7 +30,7 @@ class SaveFile
         $storagePath = '/storage/' . $idSite . '/img/' . $type .  '/' . $fileName;
         $img = Image::make($file)->encode('jpg', 80);
 
-        Storage::disk('local')->put($path, $file);
+        Storage::disk('local')->put($path, $img);
 
         return $storagePath;
     }
