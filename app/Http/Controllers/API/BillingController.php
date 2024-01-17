@@ -438,6 +438,8 @@ class BillingController extends Controller
             }
 
             try {
+                DB::beginTransaction();
+
                 $get_abodemen = InvoiceHelper::getAbodemen($unitID, $usage);
 
                 $electricUUS = $connElecUUS->create([
@@ -462,6 +464,8 @@ class BillingController extends Controller
                     $electricUUS->image = $storagePath;
                     $electricUUS->save();
                 }
+
+                DB::commit();
 
                 return response()->json(['status' => 'ok']);
             } catch (Throwable $e) {
