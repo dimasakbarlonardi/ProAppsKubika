@@ -440,7 +440,7 @@ class BillingController extends Controller
             try {
                 DB::beginTransaction();
 
-            $get_abodemen = InvoiceHelper::getAbodemen($unitID, $usage);
+                $get_abodemen = InvoiceHelper::getAbodemen($unitID, $usage);
 
                 $electricUUS = $connElecUUS->create([
                     'periode_bulan' => $request->periode_bulan,
