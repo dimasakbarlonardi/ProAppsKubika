@@ -28334,7 +28334,11 @@ app('router')->setCompiledRoutes(
         0 => 'GET',
         1 => 'HEAD',
       ),
+<<<<<<< HEAD
       'uri' => 'invoice/{type}/{id}/{site}',
+=======
+      'uri' => 'invoice/{id}',
+>>>>>>> 10e537fe (MASTER)
       'action' =>
       array (
         'middleware' =>
