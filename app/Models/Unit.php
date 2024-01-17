@@ -80,8 +80,8 @@ class Unit extends Model
         // Storage::disk('local')->put($outputListrik, $barcodeListrik);
         // Storage::disk('local')->put($outputAir, $barcodeAir);
 
-        $this->barcode_meter_listrik = $barcodeWater;
-        $this->barcode_meter_air = $barcodeElectric;
+        $this->barcode_meter_listrik = $barcodeElectric;
+        $this->barcode_meter_air = $barcodeWater;
         $this->save();
 
     }
