@@ -467,8 +467,8 @@ class BillingController extends Controller
             } catch (Throwable $e) {
                 DB::rollBack();
                 return ResponseFormatter::error([
-                    'message' => 'Something when wrong'
-                ], 'Sorry', 500);
+                    'message' => $e
+                ], 'Something when wrong', 500);
             }
         } else {
             return ResponseFormatter::error([
