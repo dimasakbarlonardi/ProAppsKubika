@@ -24,14 +24,15 @@
                 <span class="d-none d-md-inline-block fs--1">IPL</span>
             </button>
         </li>
-
-        <li class="nav-item" role="presentation">
-            <button class="nav-link {{ Session::get('active') == 'vehicle' ? 'active' : '' }} selectTypePayment"
-                data-bs-toggle="pill" data-bs-target="#pill-tab-kendaraan" type="button" role="tab" payment-type="other">
-                <span class="fas fa-grip-horizontal me-2"></span>
-                <span class="d-none d-md-inline-block fs--1">Other</span>
-            </button>
-        </li>
+        @if (json_decode($transaction->biaya_lain))
+            <li class="nav-item" role="presentation">
+                <button class="nav-link {{ Session::get('active') == 'vehicle' ? 'active' : '' }} selectTypePayment"
+                    data-bs-toggle="pill" data-bs-target="#pill-tab-kendaraan" type="button" role="tab" payment-type="other">
+                    <span class="fas fa-grip-horizontal me-2"></span>
+                    <span class="d-none d-md-inline-block fs--1">Other</span>
+                </button>
+            </li>
+        @endif
     </ul>
     <div class="container bg-white rounded" id="splitPaymentData">
     </div>

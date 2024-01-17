@@ -45,7 +45,7 @@
         $('document').ready(function() {
             var id_site = '{{ Request::session()->get('user')->id_site }}'
             var id = '{{ $transaction->id }}'
-
+           
             var channelPayment = pusher.subscribe('payment-channel');
             channelPayment.bind('App\\Events\\PaymentEvent', function(e) {
                 if (e.id_site == id_site && e.id == id && e.status == 'settlement') {

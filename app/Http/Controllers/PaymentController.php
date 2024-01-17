@@ -135,7 +135,7 @@ class PaymentController extends Controller
                 'id' => $cr->id,
                 'status' => 'settlement',
             ];
-
+            
             broadcast(new PaymentEvent($dataPayment));
 
             if ($callback->isExpire()) {
