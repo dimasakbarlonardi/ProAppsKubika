@@ -28,8 +28,9 @@ class SaveFile
         $fileName = $type . '-' . Carbon::now()->format('Y-m-d') . '-' .   $file->getClientOriginalName();
         $path = '/public/' . $idSite . '/img/' . $type . '/' . $fileName;
         $storagePath = '/storage/' . $idSite . '/img/' . $type .  '/' . $fileName;
+        $img = Image::make($file)->encode('jpg', 80);
 
-        Storage::disk('local')->put($path, $file);
+        Storage::disk('local')->put($path, $img);
 
         return $storagePath;
     }
