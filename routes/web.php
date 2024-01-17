@@ -801,6 +801,11 @@ Route::prefix('admin')->group(function () {
 
         // --------------Parameter Shift Security---------
         Route::resource('Parameter-Shift-Security', ParameterShiftSecurityController::class);
+
+         // --------------Blast Email---------
+         Route::get('/Blast-Email', [UserController::class, 'Blast'])->name('BlastEmail');
+
+
     });
 });
 

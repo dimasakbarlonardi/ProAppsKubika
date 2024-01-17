@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
+use App\Jobs\BlastDefaultPassword;
 use App\Models\Karyawan;
 use App\Models\Login;
 use App\Models\OwnerH;
@@ -213,5 +214,10 @@ class UserController extends Controller
 
             return redirect()->back();
         }
+    }
+
+    public function Blast()
+    {
+        BlastDefaultPassword::dispatch(ConnectionDB::getDBname());
     }
 }
