@@ -212,7 +212,7 @@
     </table>
 </div>
 
-<div class="mt-5" style="display: none" id="selectPaymentForm">
+<div class="mt-5" style="display: block" id="selectPaymentForm">
     @if ($transaction->IPLCashReceipt->transaction_status == 'PENDING')
         <form action="" method="post">
             @csrf
