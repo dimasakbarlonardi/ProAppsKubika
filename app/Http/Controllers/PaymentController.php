@@ -217,10 +217,20 @@ class PaymentController extends Controller
 
     public function invoice(Request $request)
     {
-        $connUtility = ConnectionDB::setConnection(new Utility());
-        $connIPLType = ConnectionDB::setConnection(new IPLType());
-        $connSetting = ConnectionDB::setConnection(new CompanySetting());
-        $connCR = ConnectionDB::setConnection(new CashReceipt());
+        // $connUtility = ConnectionDB::setConnection(new Utility());
+        // $connIPLType = ConnectionDB::setConnection(new IPLType());
+        // $connSetting = ConnectionDB::setConnection(new CompanySetting());
+        // $connCR = ConnectionDB::setConnection(new CashReceipt());
+
+        $connUtility = new Utility();
+        $connIPLType = new IPLType();
+        $connSetting = new CompanySetting();
+        $connCR = new CashReceipt();
+
+        $connUtility = $connUtility->setConnection('park-royale');
+        $connIPLType = $connIPLType->setConnection('park-royale');
+        $connSetting = $connSetting->setConnection('park-royale');
+        $connCR = $connCR->setConnection('park-royale');
 
         $setting = $connSetting->find(1);
         $cr = $connCR->find($request->id);
