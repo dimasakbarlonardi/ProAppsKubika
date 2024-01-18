@@ -3,6 +3,8 @@
 /public/storage
 /storage/*.key
 /bootstrap/cache/*.php
+/bootstrap/cache/config.php
+/bootstrap/cache/routes-v7.php
 /vendor
 .env
 .env.backup
