@@ -59,7 +59,7 @@
                     <div class="col-auto">
                         <label class="form-label">Barcode Meter Air</label>
                         <div id="barcodeWater" class="p-1 bg-red-50">
-                            <img src="{{ url($units->barcode_meter_air) }}" alt="barcode" width="250" class="" />
+                        <img src="{{ url($units->barcode_meter_air) }}" alt="barcode" width="250" class="img-fluid">
                             <h5 id="barcodeWaterName">W-{{ $units->nama_unit }}</h5>
                         </div>
                         <a class="btn btn-success btn-sm mt-3" id="downloadWaterBarcode">Download</a>
@@ -70,7 +70,7 @@
                     <div class="col-auto">
                         <label class="form-label">Barcode Meter Listrik</label>
                         <div id="barcodeElectric" class="p-1 bg-red">
-                            <img src="{{ url($units->barcode_meter_listrik) }}" alt="barcode" width="250">
+                        <img src="{{ url($units->barcode_meter_listrik) }}" alt="barcode" width="250" class="img-fluid">
                             <h5 id="barcodeElectricName">E-{{ $units->nama_unit }}</h5>
                         </div>
                         <a class="btn btn-success btn-sm mt-3" id="downloadElectricBarcode">Download</a>

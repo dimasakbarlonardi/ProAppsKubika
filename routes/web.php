@@ -212,7 +212,9 @@ Route::prefix('admin')->group(function () {
         Route::resource('logins', LoginController::class);
 
         // CRUD User
-        Route::resource('users', UserController::class);
+        Route::resource('users', UserController::class, ['except' => ['show']]);
+        Route::get('/users/Blast-Email', [UserController::class, 'Blast'])->name('BlastEmail');
+
 
         // CRUD Role
         Route::resource('roles', RoleController::class);
@@ -801,6 +803,8 @@ Route::prefix('admin')->group(function () {
 
         // --------------Parameter Shift Security---------
         Route::resource('Parameter-Shift-Security', ParameterShiftSecurityController::class);
+
+
     });
 });
 

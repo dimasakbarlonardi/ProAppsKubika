@@ -8,10 +8,12 @@
                 <h6 class="mb-0">List Users</h6>
             </div>
             <div class="col-auto d-flex">
-                <a class="btn btn-falcon-default btn-sm text-600" href="{{ route('users.create') }}">Tambah User</a>
+                <a class="btn btn-falcon-default btn-sm text-600" href="{{ route('users.create') }}" style="margin-right: 10px;">Add User</a>
+                <a class="btn btn-falcon-default btn-sm text-600" href="{{ route('BlastEmail') }}">Send Blast Email User</a>
             </div>
         </div>
     </div>
+
     <div class="p-5">
         <div id="tableExample3" data-list='{"valueNames":["nama_user", "nama_site", "login_user"]}'>
             <div class="row justify-content-end g-0">
