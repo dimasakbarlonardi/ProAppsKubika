@@ -246,6 +246,7 @@ class PaymentController extends Controller
 
         $data['setting'] = $setting;
         $data['transaction'] = $cr;
+        $data['site'] = Site::where('db_name', $request->site)->first();
 
         if ($request->type == "utility") {
             $html = 'Tenant.Notification.Invoice.Download.Utility_bill';
