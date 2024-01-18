@@ -18,6 +18,7 @@ use App\Services\Midtrans\CallbackService;
 use PDF;
 use Symfony\Component\HttpFoundation\Request;
 use Carbon\Carbon;
+use JWTAuth;
 
 class PaymentController extends Controller
 {
@@ -165,7 +166,8 @@ class PaymentController extends Controller
         }
     }
 
-    function monthly($site, $cr, $callback) {
+    function monthly($site, $cr, $callback)
+    {
         $setting = new CompanySetting();
         $bills = new MonthlyArTenant();
 
@@ -217,20 +219,15 @@ class PaymentController extends Controller
 
     public function invoice(Request $request)
     {
-        // $connUtility = ConnectionDB::setConnection(new Utility());
-        // $connIPLType = ConnectionDB::setConnection(new IPLType());
-        // $connSetting = ConnectionDB::setConnection(new CompanySetting());
-        // $connCR = ConnectionDB::setConnection(new CashReceipt());
-
         $connUtility = new Utility();
         $connIPLType = new IPLType();
         $connSetting = new CompanySetting();
         $connCR = new CashReceipt();
 
-        $connUtility = $connUtility->setConnection('park-royale');
-        $connIPLType = $connIPLType->setConnection('park-royale');
-        $connSetting = $connSetting->setConnection('park-royale');
-        $connCR = $connCR->setConnection('park-royale');
+        $connUtility = $connUtility->setConnection($request->site);
+        $connIPLType = $connIPLType->setConnection($request->site);
+        $connSetting = $connSetting->setConnection($request->site);
+        $connCR = $connCR->setConnection($request->site);
 
         $setting = $connSetting->find(1);
         $cr = $connCR->find($request->id);

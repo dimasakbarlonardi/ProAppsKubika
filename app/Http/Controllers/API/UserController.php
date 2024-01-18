@@ -88,6 +88,7 @@ class UserController extends Controller
                     'fcm' => $hasFcm,
                     'access_token' => $token,
                     'token_type' => 'Bearer',
+                    'site' => $login->site,
                     'user' => $getUser
                 ], 'Authenticated');
             }

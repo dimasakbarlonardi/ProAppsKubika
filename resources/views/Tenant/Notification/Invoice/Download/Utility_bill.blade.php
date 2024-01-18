@@ -7,7 +7,7 @@
 
 <body>
     <div class="container">
-        <div style="max-width: 1000px;" id="doc-target">
+        <div style="max-width: 720px;" id="doc-target">
             <div class="card">
                 <div class="d-flex align-items-center">
                     <div class="col text-sm-start">
@@ -365,7 +365,7 @@
         window.jsPDF = window.jspdf.jsPDF;
 
         function generatePdf() {
-            let jsPdf = new jsPDF('l', 'pt', 'a4');
+            let jsPdf = new jsPDF('p', 'pt', 'a4');
             var doc = document.getElementById('doc-target');
 
             const opt = {
