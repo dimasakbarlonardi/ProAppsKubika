@@ -12,6 +12,7 @@
     'faker_locale' => 'en_US',
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     'key' => 'base64:YT1v6q5jOkZnnqB65lBK3aXp7PNeP0gwhrdlD6FMGVc=',
 =======
     'key' => 'base64:RPae7CX5LvGAD7+Gzz95jsSVCQwsntyoLRSX+DoIyB4=',
@@ -19,6 +20,9 @@
 =======
     'key' => 'base64:YT1v6q5jOkZnnqB65lBK3aXp7PNeP0gwhrdlD6FMGVc=',
 >>>>>>> 19d95a26 (MASTER)
+=======
+    'key' => 'base64:RPae7CX5LvGAD7+Gzz95jsSVCQwsntyoLRSX+DoIyB4=',
+>>>>>>> d0fedee4 (WEB | Download invoice)
     'cipher' => 'AES-256-CBC',
     'providers' =>
     array (
@@ -152,6 +156,7 @@
       array (
         'driver' => 'pusher',
 <<<<<<< HEAD
+<<<<<<< HEAD
         'key' => '7d9eb25363ba708d424c',
         'secret' => 'fa5a3e0b7b113fe05462',
         'app_id' => '1736020',
@@ -160,6 +165,11 @@
         'secret' => 'a55c01cbf5edf0782924',
         'app_id' => '1736018',
 >>>>>>> 921e6534 (WEB | Download invoice)
+=======
+        'key' => '7d9eb25363ba708d424c',
+        'secret' => 'fa5a3e0b7b113fe05462',
+        'app_id' => '1736020',
+>>>>>>> d0fedee4 (WEB | Download invoice)
         'options' =>
         array (
           'cluster' => 'ap1',
@@ -212,6 +222,7 @@
         'driver' => 'file',
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         'path' => '/var/www/proapps.id/storage/framework/cache/data',
 =======
         'path' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/storage/framework/cache/data',
@@ -219,6 +230,9 @@
 =======
         'path' => '/var/www/proapps.id/storage/framework/cache/data',
 >>>>>>> 19d95a26 (MASTER)
+=======
+        'path' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/storage/framework/cache/data',
+>>>>>>> d0fedee4 (WEB | Download invoice)
       ),
       'memcached' =>
       array (
@@ -312,8 +326,8 @@
         'host' => '127.0.0.1',
         'port' => '3306',
         'database' => 'db_login',
-        'username' => 'akmal',
-        'password' => '#Indoland2019!akmal',
+        'username' => 'root',
+        'password' => 'root',
         'unix_socket' => '',
         'charset' => 'utf8mb4',
         'collation' => 'utf8mb4_unicode_ci',
@@ -330,8 +344,8 @@
         'driver' => 'mysql',
         'host' => '127.0.0.1',
         'database' => 'park-royale',
-        'username' => 'akmal',
-        'password' => '#Indoland2019!akmal',
+        'username' => 'root',
+        'password' => 'root',
         'charset' => 'utf8',
         'midtrans_merchant_id' => 'G584029423G014143018',
       ),
@@ -351,8 +365,8 @@
         'host' => '127.0.0.1',
         'port' => '3306',
         'database' => 'db_login',
-        'username' => 'akmal',
-        'password' => '#Indoland2019!akmal',
+        'username' => 'root',
+        'password' => 'root',
         'charset' => 'utf8',
         'prefix' => '',
         'prefix_indexes' => true,
@@ -366,8 +380,8 @@
         'host' => '127.0.0.1',
         'port' => '3306',
         'database' => 'db_login',
-        'username' => 'akmal',
-        'password' => '#Indoland2019!akmal',
+        'username' => 'root',
+        'password' => 'root',
         'charset' => 'utf8',
         'prefix' => '',
         'prefix_indexes' => true,
@@ -415,6 +429,7 @@
     'fcm_api_server_key' => 'AAAA1m_pQSY:APA91bH02iTqdM75ca8Fvgn_O0AQYzHy6tmF0SYtlm5o5a4Iwt92qnXULLg6SmlOCEQL5Wdl0TE4MIk0Zu21cSU5vJY3iP1L5OdoNbNv66-Ht26DekJ-tCdLtf1vHJbnLPJYxRPCWF0p',
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     'fcm_json_path' => '/var/www/proapps.id/proapps-d8080-b243c85ed937.json',
 =======
     'fcm_json_path' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/proapps-d8080-b243c85ed937.json',
@@ -422,6 +437,9 @@
 =======
     'fcm_json_path' => '/var/www/proapps.id/proapps-d8080-b243c85ed937.json',
 >>>>>>> 19d95a26 (MASTER)
+=======
+    'fcm_json_path' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/proapps-d8080-b243c85ed937.json',
+>>>>>>> d0fedee4 (WEB | Download invoice)
   ),
   'filesystems' =>
   array (
@@ -433,6 +451,7 @@
         'driver' => 'local',
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         'root' => '/var/www/proapps.id/storage/app',
 =======
         'root' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/storage/app',
@@ -440,10 +459,14 @@
 =======
         'root' => '/var/www/proapps.id/storage/app',
 >>>>>>> 19d95a26 (MASTER)
+=======
+        'root' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/storage/app',
+>>>>>>> d0fedee4 (WEB | Download invoice)
       ),
       'public' =>
       array (
         'driver' => 'local',
+<<<<<<< HEAD
 <<<<<<< HEAD
 <<<<<<< HEAD
         'root' => '/var/www/proapps.id/storage/app/public',
@@ -453,6 +476,9 @@
 =======
         'root' => '/var/www/proapps.id/storage/app/public',
 >>>>>>> 19d95a26 (MASTER)
+=======
+        'root' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/storage/app/public',
+>>>>>>> d0fedee4 (WEB | Download invoice)
         'url' => 'http://localhost/storage',
         'visibility' => 'public',
       ),
@@ -472,6 +498,7 @@
     array (
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       '/var/www/proapps.id/public/storage' => '/var/www/proapps.id/storage/app/public',
 =======
       '/Users/akmalrifqi/Development/laravel/indoland/proapps/public/storage' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/storage/app/public',
@@ -479,6 +506,9 @@
 =======
       '/var/www/proapps.id/public/storage' => '/var/www/proapps.id/storage/app/public',
 >>>>>>> 19d95a26 (MASTER)
+=======
+      '/Users/akmalrifqi/Development/laravel/indoland/proapps/public/storage' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/storage/app/public',
+>>>>>>> d0fedee4 (WEB | Download invoice)
     ),
   ),
   'hashing' =>
@@ -553,6 +583,7 @@
         'driver' => 'single',
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         'path' => '/var/www/proapps.id/storage/logs/laravel.log',
 =======
         'path' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/storage/logs/laravel.log',
@@ -560,6 +591,9 @@
 =======
         'path' => '/var/www/proapps.id/storage/logs/laravel.log',
 >>>>>>> 19d95a26 (MASTER)
+=======
+        'path' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/storage/logs/laravel.log',
+>>>>>>> d0fedee4 (WEB | Download invoice)
         'level' => 'debug',
       ),
       'daily' =>
@@ -567,6 +601,7 @@
         'driver' => 'daily',
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         'path' => '/var/www/proapps.id/storage/logs/laravel.log',
 =======
         'path' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/storage/logs/laravel.log',
@@ -574,6 +609,9 @@
 =======
         'path' => '/var/www/proapps.id/storage/logs/laravel.log',
 >>>>>>> 19d95a26 (MASTER)
+=======
+        'path' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/storage/logs/laravel.log',
+>>>>>>> d0fedee4 (WEB | Download invoice)
         'level' => 'debug',
         'days' => 14,
       ),
@@ -626,6 +664,7 @@
       array (
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         'path' => '/var/www/proapps.id/storage/logs/laravel.log',
 =======
         'path' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/storage/logs/laravel.log',
@@ -633,6 +672,9 @@
 =======
         'path' => '/var/www/proapps.id/storage/logs/laravel.log',
 >>>>>>> 19d95a26 (MASTER)
+=======
+        'path' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/storage/logs/laravel.log',
+>>>>>>> d0fedee4 (WEB | Download invoice)
       ),
     ),
   ),
@@ -646,6 +688,7 @@
         'transport' => 'smtp',
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 >>>>>>> 19d95a26 (MASTER)
         'host' => 'smtp.gmail.com',
@@ -655,14 +698,19 @@
         'password' => 'dbyc tlsq ffmi iqmg',
 <<<<<<< HEAD
 =======
+=======
+>>>>>>> d0fedee4 (WEB | Download invoice)
         'host' => 'sandbox.smtp.mailtrap.io',
         'port' => '2525',
         'encryption' => NULL,
         'username' => 'd0ddc86577ec85',
         'password' => '477cf14b67f3f1',
+<<<<<<< HEAD
 >>>>>>> 921e6534 (WEB | Download invoice)
 =======
 >>>>>>> 19d95a26 (MASTER)
+=======
+>>>>>>> d0fedee4 (WEB | Download invoice)
         'timeout' => NULL,
         'auth_mode' => NULL,
       ),
@@ -714,6 +762,7 @@
       array (
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
         0 => '/var/www/proapps.id/resources/views/vendor/mail',
 =======
         0 => '/Users/akmalrifqi/Development/laravel/indoland/proapps/resources/views/vendor/mail',
@@ -721,6 +770,9 @@
 =======
         0 => '/var/www/proapps.id/resources/views/vendor/mail',
 >>>>>>> 19d95a26 (MASTER)
+=======
+        0 => '/Users/akmalrifqi/Development/laravel/indoland/proapps/resources/views/vendor/mail',
+>>>>>>> d0fedee4 (WEB | Download invoice)
       ),
     ),
   ),
@@ -839,6 +891,7 @@
     'encrypt' => false,
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
     'files' => '/var/www/proapps.id/storage/framework/sessions',
 =======
     'files' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/storage/framework/sessions',
@@ -846,6 +899,9 @@
 =======
     'files' => '/var/www/proapps.id/storage/framework/sessions',
 >>>>>>> 19d95a26 (MASTER)
+=======
+    'files' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/storage/framework/sessions',
+>>>>>>> d0fedee4 (WEB | Download invoice)
     'connection' => NULL,
     'table' => 'sessions',
     'store' => NULL,
@@ -925,6 +981,7 @@
     array (
 <<<<<<< HEAD
 <<<<<<< HEAD
+<<<<<<< HEAD
       0 => '/var/www/proapps.id/resources/views',
     ),
     'compiled' => '/var/www/proapps.id/storage/framework/views',
@@ -979,6 +1036,11 @@
       'passphrase' => NULL,
     ),
     'channel_manager' => 'BeyondCode\\LaravelWebSockets\\WebSockets\\Channels\\ChannelManagers\\ArrayChannelManager',
+=======
+      0 => '/Users/akmalrifqi/Development/laravel/indoland/proapps/resources/views',
+    ),
+    'compiled' => '/var/www/proapps.id/storage/framework/views',
+>>>>>>> d0fedee4 (WEB | Download invoice)
   ),
 >>>>>>> 921e6534 (WEB | Download invoice)
   'dompdf' =>
@@ -989,16 +1051,22 @@
     'options' =>
     array (
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> d0fedee4 (WEB | Download invoice)
       'font_dir' => '/var/www/proapps.id/storage/fonts',
       'font_cache' => '/var/www/proapps.id/storage/fonts',
       'temp_dir' => '/tmp',
       'chroot' => '/var/www/proapps.id',
+<<<<<<< HEAD
 =======
       'font_dir' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/storage/fonts',
       'font_cache' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/storage/fonts',
       'temp_dir' => '/var/folders/m7/5dv4dtpx6_j__sx_k8w27l7h0000gn/T',
       'chroot' => '/Users/akmalrifqi/Development/laravel/indoland/proapps',
 >>>>>>> 921e6534 (WEB | Download invoice)
+=======
+>>>>>>> d0fedee4 (WEB | Download invoice)
       'allowed_protocols' =>
       array (
         'file://' =>
@@ -1187,10 +1255,14 @@
     'temporary_files' =>
     array (
 <<<<<<< HEAD
+<<<<<<< HEAD
       'local_path' => '/var/www/proapps.id/storage/framework/cache/laravel-excel',
 =======
       'local_path' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/storage/framework/cache/laravel-excel',
 >>>>>>> 921e6534 (WEB | Download invoice)
+=======
+      'local_path' => '/var/www/proapps.id/storage/framework/cache/laravel-excel',
+>>>>>>> d0fedee4 (WEB | Download invoice)
       'local_permissions' =>
       array (
       ),
