@@ -6,12 +6,9 @@
                         id="no-invoice">{{ $transaction->IPLCashReceipt->no_invoice }}</span></h5>
             </div>
             <div class="col-auto">
-                <button class="btn btn-falcon-default btn-sm me-1 mb-2 mb-sm-0" type="button">
+                <a target="_blank" href="/invoice/ipl/{{ $transaction->IPLCashReceipt->id }}/{{ Auth::user()->Site->db_name }}" class="btn btn-falcon-default btn-sm me-1 mb-2 mb-sm-0" type="button">
                     <span class="fas fa-arrow-down me-1"> </span>Download (.pdf)
-                </button>
-                <button class="btn btn-falcon-default btn-sm me-1 mb-2 mb-sm-0" type="button">
-                    <span class="fas fa-print me-1"> </span>Print
-                </button>
+                </a>
             </div>
         </div>
     </div>
@@ -99,7 +96,6 @@
                         <h6 class="mb-3 mt-3">Tagihan IPL</h6>
                         <p class="mb-0">
                             Service Charge
-                            {{ $sc }}
                         </p>
                         <hr>
                         <p class="mb-0">Sink Fund</p>
@@ -164,7 +160,7 @@
                     <span>{{ Rupiah($transaction->MonthlyIPL->ipl_sink_fund) }}</span>
                 </td>
             </tr>
-            @if ($transaction->UtilityCashReceipt->denda_bulan_sebelumnya)
+            @if ($transaction->IPLCashReceipt->denda_bulan_sebelumnya)
                 <tr class="alert alert-danger my-3">
                     <td class="align-middle">
                         <h6 class="mb-0 text-nowrap">Denda Bulan Sebelumnya
