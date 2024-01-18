@@ -219,5 +219,7 @@ class UserController extends Controller
     public function Blast()
     {
         BlastDefaultPassword::dispatch(ConnectionDB::getDBname());
+        Alert::success('Berhasil', 'Blast email berhasil dikirim');
+        return redirect()->back();
     }
 }

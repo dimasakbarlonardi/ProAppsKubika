@@ -39,7 +39,7 @@ class BlastDefaultPassword implements ShouldQueue
         $tenants = $tenants->setConnection($this->db_name);
         $tenants = $tenants->get();
         foreach ($tenants as $tenant) {
-            Mail::to('dimasakbar@mail.com')->send(new DefaultPassword($tenant));
+            Mail::to($tenant->email_tenant)->send(new DefaultPassword($tenant));
         }
     }
 }
