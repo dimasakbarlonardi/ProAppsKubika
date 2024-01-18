@@ -10,7 +10,11 @@
     'locale' => 'id',
     'fallback_locale' => 'en',
     'faker_locale' => 'en_US',
+<<<<<<< HEAD
     'key' => 'base64:YT1v6q5jOkZnnqB65lBK3aXp7PNeP0gwhrdlD6FMGVc=',
+=======
+    'key' => 'base64:RPae7CX5LvGAD7+Gzz95jsSVCQwsntyoLRSX+DoIyB4=',
+>>>>>>> 921e6534 (WEB | Download invoice)
     'cipher' => 'AES-256-CBC',
     'providers' =>
     array (
@@ -143,9 +147,15 @@
       'pusher' =>
       array (
         'driver' => 'pusher',
+<<<<<<< HEAD
         'key' => '7d9eb25363ba708d424c',
         'secret' => 'fa5a3e0b7b113fe05462',
         'app_id' => '1736020',
+=======
+        'key' => '16261eeba4cdd90c12f2',
+        'secret' => 'a55c01cbf5edf0782924',
+        'app_id' => '1736018',
+>>>>>>> 921e6534 (WEB | Download invoice)
         'options' =>
         array (
           'cluster' => 'ap1',
@@ -196,7 +206,11 @@
       'file' =>
       array (
         'driver' => 'file',
+<<<<<<< HEAD
         'path' => '/var/www/proapps.id/storage/framework/cache/data',
+=======
+        'path' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/storage/framework/cache/data',
+>>>>>>> 921e6534 (WEB | Download invoice)
       ),
       'memcached' =>
       array (
@@ -391,7 +405,11 @@
     ),
     'fcm_api_url' => 'https://fcm.googleapis.com/v1/projects/proapps-d8080/messages:send',
     'fcm_api_server_key' => 'AAAA1m_pQSY:APA91bH02iTqdM75ca8Fvgn_O0AQYzHy6tmF0SYtlm5o5a4Iwt92qnXULLg6SmlOCEQL5Wdl0TE4MIk0Zu21cSU5vJY3iP1L5OdoNbNv66-Ht26DekJ-tCdLtf1vHJbnLPJYxRPCWF0p',
+<<<<<<< HEAD
     'fcm_json_path' => '/var/www/proapps.id/proapps-d8080-b243c85ed937.json',
+=======
+    'fcm_json_path' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/proapps-d8080-b243c85ed937.json',
+>>>>>>> 921e6534 (WEB | Download invoice)
   ),
   'filesystems' =>
   array (
@@ -401,12 +419,20 @@
       'local' =>
       array (
         'driver' => 'local',
+<<<<<<< HEAD
         'root' => '/var/www/proapps.id/storage/app',
+=======
+        'root' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/storage/app',
+>>>>>>> 921e6534 (WEB | Download invoice)
       ),
       'public' =>
       array (
         'driver' => 'local',
+<<<<<<< HEAD
         'root' => '/var/www/proapps.id/storage/app/public',
+=======
+        'root' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/storage/app/public',
+>>>>>>> 921e6534 (WEB | Download invoice)
         'url' => 'http://localhost/storage',
         'visibility' => 'public',
       ),
@@ -424,7 +450,11 @@
     ),
     'links' =>
     array (
+<<<<<<< HEAD
       '/var/www/proapps.id/public/storage' => '/var/www/proapps.id/storage/app/public',
+=======
+      '/Users/akmalrifqi/Development/laravel/indoland/proapps/public/storage' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/storage/app/public',
+>>>>>>> 921e6534 (WEB | Download invoice)
     ),
   ),
   'hashing' =>
@@ -497,13 +527,21 @@
       'single' =>
       array (
         'driver' => 'single',
+<<<<<<< HEAD
         'path' => '/var/www/proapps.id/storage/logs/laravel.log',
+=======
+        'path' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/storage/logs/laravel.log',
+>>>>>>> 921e6534 (WEB | Download invoice)
         'level' => 'debug',
       ),
       'daily' =>
       array (
         'driver' => 'daily',
+<<<<<<< HEAD
         'path' => '/var/www/proapps.id/storage/logs/laravel.log',
+=======
+        'path' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/storage/logs/laravel.log',
+>>>>>>> 921e6534 (WEB | Download invoice)
         'level' => 'debug',
         'days' => 14,
       ),
@@ -554,7 +592,11 @@
       ),
       'emergency' =>
       array (
+<<<<<<< HEAD
         'path' => '/var/www/proapps.id/storage/logs/laravel.log',
+=======
+        'path' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/storage/logs/laravel.log',
+>>>>>>> 921e6534 (WEB | Download invoice)
       ),
     ),
   ),
@@ -566,11 +608,19 @@
       'smtp' =>
       array (
         'transport' => 'smtp',
+<<<<<<< HEAD
         'host' => 'smtp.gmail.com',
         'port' => '465',
         'encryption' => 'ssl',
         'username' => 'proapps.idn@gmail.com',
         'password' => 'dbyc tlsq ffmi iqmg',
+=======
+        'host' => 'sandbox.smtp.mailtrap.io',
+        'port' => '2525',
+        'encryption' => NULL,
+        'username' => 'd0ddc86577ec85',
+        'password' => '477cf14b67f3f1',
+>>>>>>> 921e6534 (WEB | Download invoice)
         'timeout' => NULL,
         'auth_mode' => NULL,
       ),
@@ -620,7 +670,11 @@
       'theme' => 'default',
       'paths' =>
       array (
+<<<<<<< HEAD
         0 => '/var/www/proapps.id/resources/views/vendor/mail',
+=======
+        0 => '/Users/akmalrifqi/Development/laravel/indoland/proapps/resources/views/vendor/mail',
+>>>>>>> 921e6534 (WEB | Download invoice)
       ),
     ),
   ),
@@ -737,7 +791,11 @@
     'lifetime' => '120',
     'expire_on_close' => false,
     'encrypt' => false,
+<<<<<<< HEAD
     'files' => '/var/www/proapps.id/storage/framework/sessions',
+=======
+    'files' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/storage/framework/sessions',
+>>>>>>> 921e6534 (WEB | Download invoice)
     'connection' => NULL,
     'table' => 'sessions',
     'store' => NULL,
@@ -815,10 +873,60 @@
   array (
     'paths' =>
     array (
+<<<<<<< HEAD
       0 => '/var/www/proapps.id/resources/views',
     ),
     'compiled' => '/var/www/proapps.id/storage/framework/views',
   ),
+=======
+      0 => '/Users/akmalrifqi/Development/laravel/indoland/proapps/resources/views',
+    ),
+    'compiled' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/storage/framework/views',
+  ),
+  'websockets' =>
+  array (
+    'dashboard' =>
+    array (
+      'port' => 6001,
+    ),
+    'apps' =>
+    array (
+      0 =>
+      array (
+        'id' => '1736018',
+        'name' => 'Proapps',
+        'key' => '16261eeba4cdd90c12f2',
+        'secret' => 'a55c01cbf5edf0782924',
+        'enable_client_messages' => true,
+        'enable_statistics' => true,
+        'encrypted' => true,
+      ),
+    ),
+    'app_provider' => 'BeyondCode\\LaravelWebSockets\\Apps\\ConfigAppProvider',
+    'max_request_size_in_kb' => 250,
+    'path' => 'laravel-websockets',
+    'middleware' =>
+    array (
+      0 => 'web',
+      1 => 'BeyondCode\\LaravelWebSockets\\Dashboard\\Http\\Middleware\\Authorize',
+    ),
+    'statistics' =>
+    array (
+      'model' => 'BeyondCode\\LaravelWebSockets\\Statistics\\Models\\WebSocketsStatisticsEntry',
+      'logger' => 'BeyondCode\\LaravelWebSockets\\Statistics\\Logger\\HttpStatisticsLogger',
+      'interval_in_seconds' => 60,
+      'delete_statistics_older_than_days' => 60,
+      'perform_dns_lookup' => false,
+    ),
+    'ssl' =>
+    array (
+      'local_cert' => NULL,
+      'local_pk' => NULL,
+      'passphrase' => NULL,
+    ),
+    'channel_manager' => 'BeyondCode\\LaravelWebSockets\\WebSockets\\Channels\\ChannelManagers\\ArrayChannelManager',
+  ),
+>>>>>>> 921e6534 (WEB | Download invoice)
   'dompdf' =>
   array (
     'show_warnings' => false,
@@ -826,10 +934,17 @@
     'convert_entities' => true,
     'options' =>
     array (
+<<<<<<< HEAD
       'font_dir' => '/var/www/proapps.id/storage/fonts',
       'font_cache' => '/var/www/proapps.id/storage/fonts',
       'temp_dir' => '/tmp',
       'chroot' => '/var/www/proapps.id',
+=======
+      'font_dir' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/storage/fonts',
+      'font_cache' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/storage/fonts',
+      'temp_dir' => '/var/folders/m7/5dv4dtpx6_j__sx_k8w27l7h0000gn/T',
+      'chroot' => '/Users/akmalrifqi/Development/laravel/indoland/proapps',
+>>>>>>> 921e6534 (WEB | Download invoice)
       'allowed_protocols' =>
       array (
         'file://' =>
@@ -1017,7 +1132,11 @@
     ),
     'temporary_files' =>
     array (
+<<<<<<< HEAD
       'local_path' => '/var/www/proapps.id/storage/framework/cache/laravel-excel',
+=======
+      'local_path' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/storage/framework/cache/laravel-excel',
+>>>>>>> 921e6534 (WEB | Download invoice)
       'local_permissions' =>
       array (
       ),
