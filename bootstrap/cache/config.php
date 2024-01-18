@@ -10,7 +10,7 @@
     'locale' => 'id',
     'fallback_locale' => 'en',
     'faker_locale' => 'en_US',
-    'key' => 'base64:RPae7CX5LvGAD7+Gzz95jsSVCQwsntyoLRSX+DoIyB4=',
+    'key' => 'base64:YT1v6q5jOkZnnqB65lBK3aXp7PNeP0gwhrdlD6FMGVc=',
     'cipher' => 'AES-256-CBC',
     'providers' =>
     array (
@@ -196,7 +196,7 @@
       'file' =>
       array (
         'driver' => 'file',
-        'path' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/storage/framework/cache/data',
+        'path' => '/var/www/proapps.id/storage/framework/cache/data',
       ),
       'memcached' =>
       array (
@@ -290,8 +290,8 @@
         'host' => '127.0.0.1',
         'port' => '3306',
         'database' => 'db_login',
-        'username' => 'root',
-        'password' => 'root',
+        'username' => 'akmal',
+        'password' => '#Indoland2019!akmal',
         'unix_socket' => '',
         'charset' => 'utf8mb4',
         'collation' => 'utf8mb4_unicode_ci',
@@ -308,8 +308,8 @@
         'driver' => 'mysql',
         'host' => '127.0.0.1',
         'database' => 'park-royale',
-        'username' => 'root',
-        'password' => 'root',
+        'username' => 'akmal',
+        'password' => '#Indoland2019!akmal',
         'charset' => 'utf8',
         'midtrans_merchant_id' => 'G584029423G014143018',
       ),
@@ -329,8 +329,8 @@
         'host' => '127.0.0.1',
         'port' => '3306',
         'database' => 'db_login',
-        'username' => 'root',
-        'password' => 'root',
+        'username' => 'akmal',
+        'password' => '#Indoland2019!akmal',
         'charset' => 'utf8',
         'prefix' => '',
         'prefix_indexes' => true,
@@ -344,8 +344,8 @@
         'host' => '127.0.0.1',
         'port' => '3306',
         'database' => 'db_login',
-        'username' => 'root',
-        'password' => 'root',
+        'username' => 'akmal',
+        'password' => '#Indoland2019!akmal',
         'charset' => 'utf8',
         'prefix' => '',
         'prefix_indexes' => true,
@@ -391,7 +391,7 @@
     ),
     'fcm_api_url' => 'https://fcm.googleapis.com/v1/projects/proapps-d8080/messages:send',
     'fcm_api_server_key' => 'AAAA1m_pQSY:APA91bH02iTqdM75ca8Fvgn_O0AQYzHy6tmF0SYtlm5o5a4Iwt92qnXULLg6SmlOCEQL5Wdl0TE4MIk0Zu21cSU5vJY3iP1L5OdoNbNv66-Ht26DekJ-tCdLtf1vHJbnLPJYxRPCWF0p',
-    'fcm_json_path' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/proapps-d8080-b243c85ed937.json',
+    'fcm_json_path' => '/var/www/proapps.id/proapps-d8080-b243c85ed937.json',
   ),
   'filesystems' =>
   array (
@@ -401,12 +401,12 @@
       'local' =>
       array (
         'driver' => 'local',
-        'root' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/storage/app',
+        'root' => '/var/www/proapps.id/storage/app',
       ),
       'public' =>
       array (
         'driver' => 'local',
-        'root' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/storage/app/public',
+        'root' => '/var/www/proapps.id/storage/app/public',
         'url' => 'http://localhost/storage',
         'visibility' => 'public',
       ),
@@ -424,7 +424,7 @@
     ),
     'links' =>
     array (
-      '/Users/akmalrifqi/Development/laravel/indoland/proapps/public/storage' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/storage/app/public',
+      '/var/www/proapps.id/public/storage' => '/var/www/proapps.id/storage/app/public',
     ),
   ),
   'hashing' =>
@@ -497,13 +497,13 @@
       'single' =>
       array (
         'driver' => 'single',
-        'path' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/storage/logs/laravel.log',
+        'path' => '/var/www/proapps.id/storage/logs/laravel.log',
         'level' => 'debug',
       ),
       'daily' =>
       array (
         'driver' => 'daily',
-        'path' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/storage/logs/laravel.log',
+        'path' => '/var/www/proapps.id/storage/logs/laravel.log',
         'level' => 'debug',
         'days' => 14,
       ),
@@ -554,7 +554,7 @@
       ),
       'emergency' =>
       array (
-        'path' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/storage/logs/laravel.log',
+        'path' => '/var/www/proapps.id/storage/logs/laravel.log',
       ),
     ),
   ),
@@ -566,11 +566,11 @@
       'smtp' =>
       array (
         'transport' => 'smtp',
-        'host' => 'sandbox.smtp.mailtrap.io',
-        'port' => '2525',
-        'encryption' => NULL,
-        'username' => 'd0ddc86577ec85',
-        'password' => '477cf14b67f3f1',
+        'host' => 'smtp.gmail.com',
+        'port' => '465',
+        'encryption' => 'ssl',
+        'username' => 'proapps.idn@gmail.com',
+        'password' => 'dbyc tlsq ffmi iqmg',
         'timeout' => NULL,
         'auth_mode' => NULL,
       ),
@@ -620,7 +620,7 @@
       'theme' => 'default',
       'paths' =>
       array (
-        0 => '/Users/akmalrifqi/Development/laravel/indoland/proapps/resources/views/vendor/mail',
+        0 => '/var/www/proapps.id/resources/views/vendor/mail',
       ),
     ),
   ),
@@ -737,7 +737,7 @@
     'lifetime' => '120',
     'expire_on_close' => false,
     'encrypt' => false,
-    'files' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/storage/framework/sessions',
+    'files' => '/var/www/proapps.id/storage/framework/sessions',
     'connection' => NULL,
     'table' => 'sessions',
     'store' => NULL,
@@ -815,7 +815,7 @@
   array (
     'paths' =>
     array (
-      0 => '/Users/akmalrifqi/Development/laravel/indoland/proapps/resources/views',
+      0 => '/var/www/proapps.id/resources/views',
     ),
     'compiled' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/storage/framework/views',
   ),
