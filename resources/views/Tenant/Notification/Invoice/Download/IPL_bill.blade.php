@@ -84,7 +84,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($transaction->PreviousUtilityBill($transaction->MonthlyARTenant->periode_bulan, $transaction->MonthlyARTenant->periode_tahun) as $bill)
+                            @foreach ($transaction->PreviousIPLBill($transaction->MonthlyARTenant->periode_bulan, $transaction->MonthlyARTenant->periode_tahun) as $bill)
                                 <tr class="alert alert-success my-3">
                                     <td class="align-middle" colspan="9">
                                         <p class="mb-0 text-nowrap">Tagihan bulan
@@ -93,23 +93,23 @@
                                         </p>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td class="fs--1">
+                                <tr class="fs--1">
+                                    <td>
                                         <p class="text-nowrap fs--1">Item</p>
                                     </td>
-                                    <td class="fs--1">
+                                    <td>
                                         <p class="text-nowrap">Previous Usage</p>
                                     </td>
-                                    <td class="fs--1">
+                                    <td>
                                         <p class="text-nowrap">Current Usage</p>
                                     </td>
-                                    <td class="fs--1">
+                                    <td>
                                         <p class="text-nowrap">Usage</p>
                                     </td>
-                                    <td class="fs--1">
+                                    <td>
                                         <p class="text-nowrap">Price</p>
                                     </td>
-                                    <td class="fs--1">
+                                    <td class="text-end">
                                         <p class="text-nowrap text-end">Total</p>
                                     </td>
                                 </tr>
@@ -192,95 +192,35 @@
 
                             <tr class="fs--1">
                                 <td>
-                                    Item
-                                </td>
-                                <td>
-                                    Previous Usage
-                                </td>
-                                <td>
-                                    Current Usage
-                                </td>
-                                <td>
-                                    Usage
-                                </td>
-                                <td>
-                                    Price
-                                </td>
-                                <td>
-                                    Total
-                                </td>
-                            </tr>
-
-                            <tr>
-                                <td class="fs--1">
-                                    Listrik
-                                    @if ($transaction->MonthlyARTenant->MonthlyUtility->ElectricUUS->is_abodemen)
-                                        <br>
-                                        (Pemakaian minimum listrik
-                                        {{ $transaction->MonthlyARTenant->MonthlyUtility->ElectricUUS->abodemen_value }}
-                                        KWh)
-                                    @endif
-                                </td>
-                                <td class="fs--1">
-                                    {{ $transaction->MonthlyARTenant->MonthlyUtility->ElectricUUS->nomor_listrik_awal }}
-                                    KWh
-                                </td>
-                                <td class="fs--1">
-                                    {{ $transaction->MonthlyARTenant->MonthlyUtility->ElectricUUS->nomor_listrik_akhir }}
-                                    KWh
-                                </td>
-                                <td class="fs--1">
-                                    @if (!$transaction->MonthlyARTenant->MonthlyUtility->ElectricUUS->is_abodemen)
-                                        <span>{{ $transaction->MonthlyARTenant->MonthlyUtility->ElectricUUS->usage }}
-                                            KWh</span>
-                                    @else
-                                        <s>{{ $transaction->MonthlyARTenant->MonthlyUtility->ElectricUUS->usage }}
-                                            KWh</s>
-                                    @endif
-                                </td>
-                                <td class="fs--1">
-                                    <span>{{ DecimalRupiahRP($electric->biaya_m3) }} / KWh</span> <br>
-                                </td>
-                                <td class="fs--1 text-end">
-                                    <span>{{ DecimalRupiahRP($transaction->MonthlyARTenant->MonthlyUtility->ElectricUUS->total - $transaction->MonthlyARTenant->MonthlyUtility->ElectricUUS->ppj) }}</span>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="fs--1" colspan="5">PPJ
-                                    <small>({{ $electric->biaya_ppj }}%)</small>
-                                </td>
-                                <td class="fs--1 text-end">
-                                    {{ DecimalRupiahRP($transaction->MonthlyARTenant->MonthlyUtility->ElectricUUS->ppj) }}
-                                </td>
-                            </tr>
-                            <tr>
-                                <td class="fs--1">
-                                    <p class="mb-0">Air</p>
-                                </td>
-                                <td class="fs--1">
+                                    <h6 class="mb-3 mt-3">Tagihan IPL</h6>
                                     <p class="mb-0">
-                                        {{ $transaction->MonthlyARTenant->MonthlyUtility->WaterUUS->nomor_air_awal }}
-                                        m<sup>3</sup>
+                                        {{ $sc->nama_ipl_type }}
+                                    </p>
+                                    <hr>
+                                    <p class="mb-0">
+                                        {{ $sf->nama_ipl_type }}
                                     </p>
                                 </td>
-                                <td class="fs--1">
-                                    <p class="mb-0">
-                                        {{ $transaction->MonthlyARTenant->MonthlyUtility->WaterUUS->nomor_air_akhir }}
-                                        m<sup>3</sup>
-                                    </p>
+                                <td>
+                                    <h6 class="mb-3 mt-3 text-nowrap">Luas Unit</h6>
+                                    <span>{{ $transaction->MonthlyARTenant->MonthlyIPL->Unit->luas_unit }} m<sup>2</sup></span> <br>
+                                    <hr>
+                                    <span>{{ $transaction->MonthlyARTenant->MonthlyIPL->Unit->luas_unit }} m<sup>2</sup></span>
                                 </td>
-                                <td class="fs--1">
-                                    <span>{{ $transaction->MonthlyARTenant->MonthlyUtility->WaterUUS->usage }}
-                                        m<sup>3</sup></span>
+                                <td>
+                                    <h6 class="mb-3 mt-3">Biaya Permeter / Biaya Procentage</h6>
+                                    <span>{{ $sc->biaya_procentage ? $sc->biaya_procentage . '%' : Rupiah($sc->biaya_permeter) }}</span>
+                                    <br>
+                                    <hr>
+                                    <span>{{ $sf->biaya_procentage ? $sf->biaya_procentage . '%' : Rupiah($sf->biaya_permeter) }}</span>
                                 </td>
-                                <td class="fs--1">
-                                    <span>{{ Rupiah($water->biaya_m3) }}</span>
-                                </td>
-                                <td class="fs--1 text-end">
-                                    <span>{{ Rupiah($transaction->MonthlyARTenant->MonthlyUtility->WaterUUS->total) }}</span>
+                                <td class="text-end">
+                                    <h6 class="mb-3 mt-3">Total</h6>
+                                    <span>{{ Rupiah($transaction->MonthlyARTenant->MonthlyIPL->ipl_service_charge) }}</span> <br>
+                                    <hr>
+                                    <span>{{ Rupiah($transaction->MonthlyARTenant->MonthlyIPL->ipl_sink_fund) }}</span>
                                 </td>
                             </tr>
-
                             @if ($transaction->denda_bulan_sebelumnya)
                                 <tr class="alert alert-danger my-3">
                                     <td class="fs--1">
@@ -291,7 +231,7 @@
                                     </td>
                                     <td colspan="6"></td>
                                 </tr>
-                                @foreach ($transaction->UtilityCashReceipt->PreviousUtilityBill($transaction->periode_bulan, $transaction->periode_tahun) as $bill)
+                                @foreach ($transaction->IPLCashReceipt->PreviousUtilityBill($transaction->periode_bulan, $transaction->periode_tahun) as $bill)
                                     <tr>
                                         <td class="align-middle">
                                             <p class="mb-3 text-nowrap">Periode</p>
@@ -322,7 +262,7 @@
                                 </tr>
                             @endif
                             <tr class="border-top">
-                                <td colspan="5">
+                                <td colspan="3">
                                     <h5>Grand Total</h5>
                                 </td>
                                 <td class="align-middle text-end">
@@ -331,23 +271,6 @@
                             </tr>
                         </tbody>
                     </table>
-                </div>
-
-                <div class="container">
-                    <div class="row">
-                        <div class="col-4">
-                            <label for="">Electric meter photo : </label>
-                            <img class="img-fluid img-thumbnail rounded"
-                                src="{{ $transaction->MonthlyARTenant->MonthlyUtility->ElectricUUS->image ? url($transaction->MonthlyARTenant->MonthlyUtility->ElectricUUS->image) : url('/assets/img/no_image.jpeg') }}"
-                                width="200">
-                        </div>
-                        <div class="col-4">
-                            <label for="">Water meter photo : </label>
-                            <img class="img-fluid img-thumbnail rounded"
-                                src="{{ $transaction->MonthlyARTenant->MonthlyUtility->WaterUUS->image ? url($transaction->MonthlyARTenant->MonthlyUtility->WaterUUS->image) : url('/assets/img/no_image.jpeg') }}"
-                                width="200">
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -370,7 +293,7 @@
 
             const opt = {
                 callback: function(jsPdf) {
-                    jsPdf.save(`utility-${filename}.pdf`);
+                    jsPdf.save(`ipl-${filename}.pdf`);
                 },
                 margin: [10, 10, 10, 10],
                 html2canvas: {
