@@ -7,9 +7,6 @@
 
 <body>
     <div class="container">
-        <p>
-            <button class="btn" onclick="generatePdf()">Download PDF</button>
-        </p>
         <div style="max-width: 1000px;" id="doc-target">
             <div class="card">
                 <div class="d-flex align-items-center">
@@ -357,9 +354,14 @@
         </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
     <script src="{{ url('/js/html2canvas.js') }}"></script>
 
     <script>
+        $('document').ready(function() {
+            generatePdf();
+        })
+
         window.jsPDF = window.jspdf.jsPDF;
 
         function generatePdf() {
@@ -380,18 +382,7 @@
                 }
             };
 
-            if (doc) {
-                console.log("div is ");
-                console.log(doc);
-                console.log("hellowww");
-
-                // jsPdf.html(document.getElementById('doc-target'), {
-                //     callback: function(pdf) {
-                //         // pdf.save('DOC.pdf');
-                //     }
-                // })
-                jsPdf.html(doc, opt);
-            }
+            jsPdf.html(doc, opt);
         }
     </script>
 </body>

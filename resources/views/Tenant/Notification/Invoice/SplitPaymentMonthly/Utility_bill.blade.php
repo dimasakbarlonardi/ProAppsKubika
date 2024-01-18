@@ -6,7 +6,7 @@
                         id="no-invoice">{{ $transaction->UtilityCashReceipt->no_invoice }}</span></h5>
             </div>
             <div class="col-auto">
-                <a href="/invoice/utility/{{ $transaction->UtilityCashReceipt->id }}" class="btn btn-falcon-default btn-sm me-1 mb-2 mb-sm-0" type="button">
+                <a href="/invoice/utility/{{ $transaction->UtilityCashReceipt->id }}" target="_blank" class="btn btn-falcon-default btn-sm me-1 mb-2 mb-sm-0" type="button">
                     <span class="fas fa-arrow-down me-1"> </span>Download (.pdf)
                 </a>
             </div>
