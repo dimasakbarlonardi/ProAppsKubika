@@ -100,13 +100,6 @@
 </div>
 <script>
     $('.verifyButton').on('click', function() {
-        console.log($(this).attr('data-id'));
-        console.log($(this).attr('other-tr-status'));
-        console.log($(this).attr('utility-tr-status'));
-        console.log($(this).attr('ipl-tr-status'));
-        console.log($(this).attr('other-tr-image'));
-        console.log($(this).attr('utility-tr-image'));
-        console.log($(this).attr('ipl-tr-image'));
 
         otherTrStatus = $(this).attr('other-tr-status')
         utilityTrStatus = $(this).attr('utility-tr-status')
