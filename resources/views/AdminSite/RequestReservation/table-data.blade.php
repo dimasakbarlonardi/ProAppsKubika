@@ -1,22 +1,23 @@
-<table class="table table-striped">
-    <thead>
-        <tr>
-            <th>No</th>
-            <th>No Tiket</th>
-            <th>No Request Reservation</th>
-            <th>Tenant</th>
-            <th class="text-center">Status</th>
-            <th class="text-center">Action</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach ($reservations as $key => $req)
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
             <tr>
-                <th scope="row" class="align-middle">{{ $key + 1 }}</th>
-                <td class="align-middle">{{ $req->no_tiket }}</td>
-                <td class="align-middle">{{ $req->no_request_reservation }}</td>
-                <td class="align-middle">{{ $req->Ticket->Tenant->nama_tenant }}</td>
-                <td class="align-middle text-center">
+                <th>No</th>
+                <th>No Tiket</th>
+                <th>No Request Reservation</th>
+                <th>Tenant</th>
+                <th class="text-center">Status</th>
+                <th class="text-center">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach ($reservations as $key => $req)
+                <tr>
+                    <th scope="row" class="align-middle">{{ $key + 1 }}</th>
+                    <td class="align-middle">{{ $req->no_tiket }}</td>
+                    <td class="align-middle">{{ $req->no_request_reservation }}</td>
+                    <td class="align-middle">{{ $req->Ticket->Tenant->nama_tenant }}</td>
+                    <td class="align-middle text-center">
                     Status Request : {{ $req->Ticket->status_request }} <br>
                     {{ $req->is_deposit == 1 ? 'Berbayar' : 'Tidak Berbayar' }} <br>
                     @if ($req->status_bayar == 'PAID' && $req->is_deposit)
@@ -54,7 +55,9 @@
                         @endif
                     @endif
                 </td>
-            </tr>
-        @endforeach
-    </tbody>
-</table>
+                </tr>
+            @endforeach
+        </tbody>
+    </table>
+</div>
+
