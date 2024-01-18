@@ -27,10 +27,10 @@
                         <p class="text-500">Invoice to</p>
                         <h5>{{ $transaction->Unit->TenantUnit->Tenant->nama_tenant }}</h5>
                         <p class="fs--1">
-                            {{ Auth::user()->Site->nama_site }},
+                            {{ $site->nama_site }},
                             {{ $transaction->Unit->Tower->nama_tower }},
                             Unit {{ $transaction->Unit->nama_unit }}<br />
-                            {{ Auth::user()->Site->provinsi }}, {{ Auth::user()->Site->kode_pos }}
+                            {{ $site->provinsi }}, {{ $site->kode_pos }}
                         </p>
                         <p class="fs--1">
                             <a href="mailto:{{ $transaction->Unit->TenantUnit->Tenant->email_tenant }}">
@@ -306,7 +306,7 @@
                                     </tr>
                                 @endforeach
                             @endif
-                            @if ($transaction->MonthlyARTenant->UtilityCashReceipt->Installment())
+                            @if ($transaction->MonthlyARTenant->UtilityCashReceipt->CronInstallment($site->db_name))
                                 @php
                                     $installment = $transaction->UtilityCashReceipt->Installment();
                                 @endphp
