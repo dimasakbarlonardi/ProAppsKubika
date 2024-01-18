@@ -1,3 +1,4 @@
+{{-- {{ dd(Auth::user()->Site->db_name) }} --}}
 <div class="card mb-3 mt-3">
     <div class="card-body">
         <div class="row justify-content-between align-items-center">
@@ -6,7 +7,7 @@
                         id="no-invoice">{{ $transaction->UtilityCashReceipt->no_invoice }}</span></h5>
             </div>
             <div class="col-auto">
-                <a href="/invoice/utility/{{ $transaction->UtilityCashReceipt->id }}" target="_blank" class="btn btn-falcon-default btn-sm me-1 mb-2 mb-sm-0" type="button">
+                <a href="/invoice/utility/{{ $transaction->UtilityCashReceipt->id }}/{{ Auth::user()->Site->db_name }}" target="_blank" class="btn btn-falcon-default btn-sm me-1 mb-2 mb-sm-0" type="button">
                     <span class="fas fa-arrow-down me-1"> </span>Download (.pdf)
                 </a>
             </div>
