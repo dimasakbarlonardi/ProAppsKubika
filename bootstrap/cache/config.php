@@ -1,7 +1,7 @@
 <?php return array (
-  'app' => 
+  'app' =>
   array (
-    'name' => 'Laravel',
+    'name' => 'Proapps',
     'env' => 'local',
     'debug' => true,
     'url' => 'http://localhost',
@@ -10,9 +10,9 @@
     'locale' => 'id',
     'fallback_locale' => 'en',
     'faker_locale' => 'en_US',
-    'key' => 'base64:Y5AzJ0A7jcnZJOGEosBQy4NtnCFZ6yeJVZ91aqTPX0E=',
+    'key' => 'base64:RPae7CX5LvGAD7+Gzz95jsSVCQwsntyoLRSX+DoIyB4=',
     'cipher' => 'AES-256-CBC',
-    'providers' => 
+    'providers' =>
     array (
       0 => 'Illuminate\\Auth\\AuthServiceProvider',
       1 => 'Illuminate\\Broadcasting\\BroadcastServiceProvider',
@@ -47,7 +47,7 @@
       30 => 'Appy\\FcmHttpV1\\FcmProvider',
       31 => 'Tymon\\JWTAuth\\Providers\\LaravelServiceProvider',
     ),
-    'aliases' => 
+    'aliases' =>
     array (
       'App' => 'Illuminate\\Support\\Facades\\App',
       'Arr' => 'Illuminate\\Support\\Arr',
@@ -95,37 +95,37 @@
       'JWTFactory' => 'Tymon\\JWTAuth\\Facades\\JWTFactory',
     ),
   ),
-  'auth' => 
+  'auth' =>
   array (
-    'defaults' => 
+    'defaults' =>
     array (
       'guard' => 'web',
       'passwords' => 'users',
     ),
-    'guards' => 
+    'guards' =>
     array (
-      'web' => 
+      'web' =>
       array (
         'driver' => 'session',
         'provider' => 'users',
       ),
-      'sanctum' => 
+      'sanctum' =>
       array (
         'driver' => 'sanctum',
         'provider' => NULL,
       ),
     ),
-    'providers' => 
+    'providers' =>
     array (
-      'users' => 
+      'users' =>
       array (
         'driver' => 'eloquent',
         'model' => 'App\\Models\\Login',
       ),
     ),
-    'passwords' => 
+    'passwords' =>
     array (
-      'users' => 
+      'users' =>
       array (
         'provider' => 'users',
         'table' => 'password_resets',
@@ -135,84 +135,84 @@
     ),
     'password_timeout' => 10800,
   ),
-  'broadcasting' => 
+  'broadcasting' =>
   array (
-    'default' => 'log',
-    'connections' => 
+    'default' => 'pusher',
+    'connections' =>
     array (
-      'pusher' => 
+      'pusher' =>
       array (
         'driver' => 'pusher',
-        'key' => '',
-        'secret' => '',
-        'app_id' => '',
-        'options' => 
+        'key' => '16261eeba4cdd90c12f2',
+        'secret' => 'a55c01cbf5edf0782924',
+        'app_id' => '1736018',
+        'options' =>
         array (
-          'cluster' => 'mt1',
+          'cluster' => 'ap1',
           'encrypted' => true,
         ),
       ),
-      'ably' => 
+      'ably' =>
       array (
         'driver' => 'ably',
         'key' => NULL,
       ),
-      'redis' => 
+      'redis' =>
       array (
         'driver' => 'redis',
         'connection' => 'default',
       ),
-      'log' => 
+      'log' =>
       array (
         'driver' => 'log',
       ),
-      'null' => 
+      'null' =>
       array (
         'driver' => 'null',
       ),
     ),
   ),
-  'cache' => 
+  'cache' =>
   array (
     'default' => 'file',
-    'stores' => 
+    'stores' =>
     array (
-      'apc' => 
+      'apc' =>
       array (
         'driver' => 'apc',
       ),
-      'array' => 
+      'array' =>
       array (
         'driver' => 'array',
         'serialize' => false,
       ),
-      'database' => 
+      'database' =>
       array (
         'driver' => 'database',
         'table' => 'cache',
         'connection' => NULL,
         'lock_connection' => NULL,
       ),
-      'file' => 
+      'file' =>
       array (
         'driver' => 'file',
-        'path' => '/Applications/XAMPP/xamppfiles/htdocs/proapps/storage/framework/cache/data',
+        'path' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/storage/framework/cache/data',
       ),
-      'memcached' => 
+      'memcached' =>
       array (
         'driver' => 'memcached',
         'persistent_id' => NULL,
-        'sasl' => 
+        'sasl' =>
         array (
           0 => NULL,
           1 => NULL,
         ),
-        'options' => 
+        'options' =>
         array (
         ),
-        'servers' => 
+        'servers' =>
         array (
-          0 => 
+          0 =>
           array (
             'host' => '127.0.0.1',
             'port' => 11211,
@@ -220,13 +220,13 @@
           ),
         ),
       ),
-      'redis' => 
+      'redis' =>
       array (
         'driver' => 'redis',
         'connection' => 'cache',
         'lock_connection' => 'default',
       ),
-      'dynamodb' => 
+      'dynamodb' =>
       array (
         'driver' => 'dynamodb',
         'key' => '',
@@ -235,47 +235,47 @@
         'table' => 'cache',
         'endpoint' => NULL,
       ),
-      'octane' => 
+      'octane' =>
       array (
         'driver' => 'octane',
       ),
     ),
-    'prefix' => 'laravel_cache',
+    'prefix' => 'proapps_cache',
   ),
-  'cors' => 
+  'cors' =>
   array (
-    'paths' => 
+    'paths' =>
     array (
       0 => 'api/*',
       1 => 'sanctum/csrf-cookie',
     ),
-    'allowed_methods' => 
+    'allowed_methods' =>
     array (
       0 => '*',
     ),
-    'allowed_origins' => 
+    'allowed_origins' =>
     array (
       0 => '*',
     ),
-    'allowed_origins_patterns' => 
+    'allowed_origins_patterns' =>
     array (
     ),
-    'allowed_headers' => 
+    'allowed_headers' =>
     array (
       0 => '*',
     ),
-    'exposed_headers' => 
+    'exposed_headers' =>
     array (
     ),
     'max_age' => 0,
     'supports_credentials' => false,
   ),
-  'database' => 
+  'database' =>
   array (
     'default' => 'mysql',
-    'connections' => 
+    'connections' =>
     array (
-      'sqlite' => 
+      'sqlite' =>
       array (
         'driver' => 'sqlite',
         'url' => NULL,
@@ -283,7 +283,7 @@
         'prefix' => '',
         'foreign_key_constraints' => true,
       ),
-      'mysql' => 
+      'mysql' =>
       array (
         'driver' => 'mysql',
         'url' => NULL,
@@ -299,11 +299,11 @@
         'prefix_indexes' => true,
         'strict' => true,
         'engine' => NULL,
-        'options' => 
+        'options' =>
         array (
         ),
       ),
-      'park-royale' => 
+      'park-royale' =>
       array (
         'driver' => 'mysql',
         'host' => '127.0.0.1',
@@ -311,8 +311,9 @@
         'username' => 'root',
         'password' => 'root',
         'charset' => 'utf8',
+        'midtrans_merchant_id' => 'G584029423G014143018',
       ),
-      'central-point' => 
+      'central-point' =>
       array (
         'driver' => 'mysql',
         'host' => '127.0.0.1',
@@ -321,7 +322,7 @@
         'password' => 'root',
         'charset' => 'utf8',
       ),
-      'pgsql' => 
+      'pgsql' =>
       array (
         'driver' => 'pgsql',
         'url' => NULL,
@@ -336,7 +337,7 @@
         'schema' => 'public',
         'sslmode' => 'prefer',
       ),
-      'sqlsrv' => 
+      'sqlsrv' =>
       array (
         'driver' => 'sqlsrv',
         'url' => NULL,
@@ -351,15 +352,15 @@
       ),
     ),
     'migrations' => 'migrations',
-    'redis' => 
+    'redis' =>
     array (
       'client' => 'phpredis',
-      'options' => 
+      'options' =>
       array (
         'cluster' => 'redis',
-        'prefix' => 'laravel_database_',
+        'prefix' => 'proapps_database',
       ),
-      'default' => 
+      'default' =>
       array (
         'url' => NULL,
         'host' => '127.0.0.1',
@@ -367,7 +368,7 @@
         'port' => '6379',
         'database' => '0',
       ),
-      'cache' => 
+      'cache' =>
       array (
         'url' => NULL,
         'host' => '127.0.0.1',
@@ -377,9 +378,9 @@
       ),
     ),
   ),
-  'fcm_config' => 
+  'fcm_config' =>
   array (
-    'firebase_config' => 
+    'firebase_config' =>
     array (
       'apiKey' => 'AIzaSyCJyCzpSYcjJ1UD8-CpdvegcxKnYImavow',
       'authDomain' => 'proapps-d8080.appspot.com',
@@ -390,26 +391,26 @@
     ),
     'fcm_api_url' => 'https://fcm.googleapis.com/v1/projects/proapps-d8080/messages:send',
     'fcm_api_server_key' => 'AAAA1m_pQSY:APA91bH02iTqdM75ca8Fvgn_O0AQYzHy6tmF0SYtlm5o5a4Iwt92qnXULLg6SmlOCEQL5Wdl0TE4MIk0Zu21cSU5vJY3iP1L5OdoNbNv66-Ht26DekJ-tCdLtf1vHJbnLPJYxRPCWF0p',
-    'fcm_json_path' => '/Applications/XAMPP/xamppfiles/htdocs/proapps/proapps-d8080-b243c85ed937.json',
+    'fcm_json_path' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/proapps-d8080-b243c85ed937.json',
   ),
-  'filesystems' => 
+  'filesystems' =>
   array (
     'default' => 'local',
-    'disks' => 
+    'disks' =>
     array (
-      'local' => 
+      'local' =>
       array (
         'driver' => 'local',
-        'root' => '/Applications/XAMPP/xamppfiles/htdocs/proapps/storage/app',
+        'root' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/storage/app',
       ),
-      'public' => 
+      'public' =>
       array (
         'driver' => 'local',
-        'root' => '/Applications/XAMPP/xamppfiles/htdocs/proapps/storage/app/public',
+        'root' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/storage/app/public',
         'url' => 'http://localhost/storage',
         'visibility' => 'public',
       ),
-      's3' => 
+      's3' =>
       array (
         'driver' => 's3',
         'key' => '',
@@ -421,29 +422,29 @@
         'use_path_style_endpoint' => false,
       ),
     ),
-    'links' => 
+    'links' =>
     array (
-      '/Applications/XAMPP/xamppfiles/htdocs/proapps/public/storage' => '/Applications/XAMPP/xamppfiles/htdocs/proapps/storage/app/public',
+      '/Users/akmalrifqi/Development/laravel/indoland/proapps/public/storage' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/storage/app/public',
     ),
   ),
-  'hashing' => 
+  'hashing' =>
   array (
     'driver' => 'bcrypt',
-    'bcrypt' => 
+    'bcrypt' =>
     array (
       'rounds' => 10,
     ),
-    'argon' => 
+    'argon' =>
     array (
       'memory' => 65536,
       'threads' => 1,
       'time' => 4,
     ),
   ),
-  'jwt' => 
+  'jwt' =>
   array (
-    'secret' => 'tbzkqdPa3ZFIkGzRqhcXcZKVOJxQlYaSYvNVuKlh2GeEvAkFVefLwPc1I1V9psic',
-    'keys' => 
+    'secret' => 'kD3EB10a5GNFmO87Jd5FerrXWJXqNi1XlMLdpF6ZCeF8wZ2Q4svorKXmAfPV4Ohd',
+    'keys' =>
     array (
       'public' => NULL,
       'private' => NULL,
@@ -452,14 +453,14 @@
     'ttl' => NULL,
     'refresh_ttl' => 20160,
     'algo' => 'HS256',
-    'required_claims' => 
+    'required_claims' =>
     array (
       0 => 'iss',
       1 => 'sub',
       2 => 'iat',
       3 => 'jti',
     ),
-    'persistent_claims' => 
+    'persistent_claims' =>
     array (
     ),
     'lock_subject' => true,
@@ -467,46 +468,46 @@
     'blacklist_enabled' => false,
     'blacklist_grace_period' => 0,
     'decrypt_cookies' => false,
-    'providers' => 
+    'providers' =>
     array (
       'jwt' => 'Tymon\\JWTAuth\\Providers\\JWT\\Lcobucci',
       'auth' => 'Tymon\\JWTAuth\\Providers\\Auth\\Illuminate',
       'storage' => 'Tymon\\JWTAuth\\Providers\\Storage\\Illuminate',
     ),
   ),
-  'larafirebase' => 
+  'larafirebase' =>
   array (
     'authentication_key' => 'AAAA7hjlDzE:APA91bFmJUoGuDpWuw_IKucEtgPSQrYmlKWZ_yiMbWWzSaPGPW5rzoir7ToUeVmLezkjXzFcd__MxzeU2wdW_7aebRDOKGEbjcCLxNpNYxCWO3Yn2ob-UWykbVxF_jUMYZhP-xV5B50F',
   ),
-  'logging' => 
+  'logging' =>
   array (
     'default' => 'stack',
     'deprecations' => NULL,
-    'channels' => 
+    'channels' =>
     array (
-      'stack' => 
+      'stack' =>
       array (
         'driver' => 'stack',
-        'channels' => 
+        'channels' =>
         array (
           0 => 'single',
         ),
         'ignore_exceptions' => false,
       ),
-      'single' => 
+      'single' =>
       array (
         'driver' => 'single',
-        'path' => '/Applications/XAMPP/xamppfiles/htdocs/proapps/storage/logs/laravel.log',
+        'path' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/storage/logs/laravel.log',
         'level' => 'debug',
       ),
-      'daily' => 
+      'daily' =>
       array (
         'driver' => 'daily',
-        'path' => '/Applications/XAMPP/xamppfiles/htdocs/proapps/storage/logs/laravel.log',
+        'path' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/storage/logs/laravel.log',
         'level' => 'debug',
         'days' => 14,
       ),
-      'slack' => 
+      'slack' =>
       array (
         'driver' => 'slack',
         'url' => NULL,
@@ -514,120 +515,120 @@
         'emoji' => ':boom:',
         'level' => 'debug',
       ),
-      'papertrail' => 
+      'papertrail' =>
       array (
         'driver' => 'monolog',
         'level' => 'debug',
         'handler' => 'Monolog\\Handler\\SyslogUdpHandler',
-        'handler_with' => 
+        'handler_with' =>
         array (
           'host' => NULL,
           'port' => NULL,
         ),
       ),
-      'stderr' => 
+      'stderr' =>
       array (
         'driver' => 'monolog',
         'level' => 'debug',
         'handler' => 'Monolog\\Handler\\StreamHandler',
         'formatter' => NULL,
-        'with' => 
+        'with' =>
         array (
           'stream' => 'php://stderr',
         ),
       ),
-      'syslog' => 
+      'syslog' =>
       array (
         'driver' => 'syslog',
         'level' => 'debug',
       ),
-      'errorlog' => 
+      'errorlog' =>
       array (
         'driver' => 'errorlog',
         'level' => 'debug',
       ),
-      'null' => 
+      'null' =>
       array (
         'driver' => 'monolog',
         'handler' => 'Monolog\\Handler\\NullHandler',
       ),
-      'emergency' => 
+      'emergency' =>
       array (
-        'path' => '/Applications/XAMPP/xamppfiles/htdocs/proapps/storage/logs/laravel.log',
+        'path' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/storage/logs/laravel.log',
       ),
     ),
   ),
-  'mail' => 
+  'mail' =>
   array (
     'default' => 'smtp',
-    'mailers' => 
+    'mailers' =>
     array (
-      'smtp' => 
+      'smtp' =>
       array (
         'transport' => 'smtp',
         'host' => 'sandbox.smtp.mailtrap.io',
         'port' => '2525',
-        'encryption' => 'tls',
+        'encryption' => NULL,
         'username' => 'd0ddc86577ec85',
         'password' => '477cf14b67f3f1',
         'timeout' => NULL,
         'auth_mode' => NULL,
       ),
-      'ses' => 
+      'ses' =>
       array (
         'transport' => 'ses',
       ),
-      'mailgun' => 
+      'mailgun' =>
       array (
         'transport' => 'mailgun',
       ),
-      'postmark' => 
+      'postmark' =>
       array (
         'transport' => 'postmark',
       ),
-      'sendmail' => 
+      'sendmail' =>
       array (
         'transport' => 'sendmail',
         'path' => '/usr/sbin/sendmail -t -i',
       ),
-      'log' => 
+      'log' =>
       array (
         'transport' => 'log',
         'channel' => NULL,
       ),
-      'array' => 
+      'array' =>
       array (
         'transport' => 'array',
       ),
-      'failover' => 
+      'failover' =>
       array (
         'transport' => 'failover',
-        'mailers' => 
+        'mailers' =>
         array (
           0 => 'smtp',
           1 => 'log',
         ),
       ),
     ),
-    'from' => 
+    'from' =>
     array (
-      'address' => 'dimasnoob@mail.com',
-      'name' => 'Laravel',
+      'address' => 'proapps.idn@gmail.com',
+      'name' => 'Proapps',
     ),
-    'markdown' => 
+    'markdown' =>
     array (
       'theme' => 'default',
-      'paths' => 
+      'paths' =>
       array (
-        0 => '/Applications/XAMPP/xamppfiles/htdocs/proapps/resources/views/vendor/mail',
+        0 => '/Users/akmalrifqi/Development/laravel/indoland/proapps/resources/views/vendor/mail',
       ),
     ),
   ),
-  'mapbox' => 
+  'mapbox' =>
   array (
     'mapbox_token' => 'pk.eyJ1IjoicmlmcWk0MzIwIiwiYSI6ImNsbWFhbzhwODB1N2ozZG81bTJpZWJwamoifQ.1MRlqW9smYuN1wIieOEg2w',
   ),
-  'midtrans' => 
+  'midtrans' =>
   array (
     'mercant_id' => NULL,
     'client_key' => NULL,
@@ -636,23 +637,23 @@
     'is_sanitized' => false,
     'is_3ds' => false,
   ),
-  'queue' => 
+  'queue' =>
   array (
     'default' => 'database',
-    'connections' => 
+    'connections' =>
     array (
-      'sync' => 
+      'sync' =>
       array (
         'driver' => 'sync',
       ),
-      'database' => 
+      'database' =>
       array (
         'driver' => 'database',
         'table' => 'jobs',
         'queue' => 'default',
         'retry_after' => 9000,
       ),
-      'beanstalkd' => 
+      'beanstalkd' =>
       array (
         'driver' => 'beanstalkd',
         'host' => 'localhost',
@@ -661,7 +662,7 @@
         'block_for' => 0,
         'after_commit' => false,
       ),
-      'sqs' => 
+      'sqs' =>
       array (
         'driver' => 'sqs',
         'key' => '',
@@ -672,7 +673,7 @@
         'region' => 'us-east-1',
         'after_commit' => false,
       ),
-      'redis' => 
+      'redis' =>
       array (
         'driver' => 'redis',
         'connection' => 'default',
@@ -682,16 +683,16 @@
         'after_commit' => false,
       ),
     ),
-    'failed' => 
+    'failed' =>
     array (
       'driver' => 'database-uuids',
       'database' => 'mysql',
       'table' => 'failed_jobs',
     ),
   ),
-  'sanctum' => 
+  'sanctum' =>
   array (
-    'stateful' => 
+    'stateful' =>
     array (
       0 => 'localhost',
       1 => 'localhost:3000',
@@ -700,59 +701,59 @@
       4 => '::1',
       5 => 'localhost',
     ),
-    'guard' => 
+    'guard' =>
     array (
       0 => 'web',
     ),
     'expiration' => NULL,
-    'middleware' => 
+    'middleware' =>
     array (
       'verify_csrf_token' => 'App\\Http\\Middleware\\VerifyCsrfToken',
       'encrypt_cookies' => 'App\\Http\\Middleware\\EncryptCookies',
     ),
   ),
-  'services' => 
+  'services' =>
   array (
-    'mailgun' => 
+    'mailgun' =>
     array (
       'domain' => NULL,
       'secret' => NULL,
       'endpoint' => 'api.mailgun.net',
     ),
-    'postmark' => 
+    'postmark' =>
     array (
       'token' => NULL,
     ),
-    'ses' => 
+    'ses' =>
     array (
       'key' => '',
       'secret' => '',
       'region' => 'us-east-1',
     ),
   ),
-  'session' => 
+  'session' =>
   array (
     'driver' => 'file',
     'lifetime' => '120',
     'expire_on_close' => false,
     'encrypt' => false,
-    'files' => '/Applications/XAMPP/xamppfiles/htdocs/proapps/storage/framework/sessions',
+    'files' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/storage/framework/sessions',
     'connection' => NULL,
     'table' => 'sessions',
     'store' => NULL,
-    'lottery' => 
+    'lottery' =>
     array (
       0 => 2,
       1 => 100,
     ),
-    'cookie' => 'laravel_session',
+    'cookie' => 'proapps_session',
     'path' => '/',
     'domain' => NULL,
     'secure' => NULL,
     'http_only' => true,
     'same_site' => 'lax',
   ),
-  'sweetalert' => 
+  'sweetalert' =>
   array (
     'theme' => 'default',
     'cdn' => NULL,
@@ -763,21 +764,21 @@
     'height_auto' => true,
     'padding' => '1.25rem',
     'background' => '#fff',
-    'animation' => 
+    'animation' =>
     array (
       'enable' => false,
     ),
     'animatecss' => 'https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css',
     'show_confirm_button' => true,
     'show_close_button' => false,
-    'button_text' => 
+    'button_text' =>
     array (
       'confirm' => 'OK',
       'cancel' => 'Cancel',
     ),
     'toast_position' => 'top-end',
     'timer_progress_bar' => false,
-    'middleware' => 
+    'middleware' =>
     array (
       'autoClose' => false,
       'toast_position' => 'top-end',
@@ -785,7 +786,7 @@
       'timer' => 6000,
       'auto_display_error_messages' => true,
     ),
-    'customClass' => 
+    'customClass' =>
     array (
       'container' => NULL,
       'popup' => NULL,
@@ -810,42 +811,85 @@
     'confirm_delete_icon' => 'warning',
     'confirm_delete_show_loader_on_confirm' => true,
   ),
-  'view' => 
+  'view' =>
   array (
-    'paths' => 
+    'paths' =>
     array (
-      0 => '/Applications/XAMPP/xamppfiles/htdocs/proapps/resources/views',
+      0 => '/Users/akmalrifqi/Development/laravel/indoland/proapps/resources/views',
     ),
-    'compiled' => '/Applications/XAMPP/xamppfiles/htdocs/proapps/storage/framework/views',
+    'compiled' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/storage/framework/views',
   ),
-  'dompdf' => 
+  'websockets' =>
+  array (
+    'dashboard' =>
+    array (
+      'port' => 6001,
+    ),
+    'apps' =>
+    array (
+      0 =>
+      array (
+        'id' => '1736018',
+        'name' => 'Proapps',
+        'key' => '16261eeba4cdd90c12f2',
+        'secret' => 'a55c01cbf5edf0782924',
+        'enable_client_messages' => true,
+        'enable_statistics' => true,
+        'encrypted' => true,
+      ),
+    ),
+    'app_provider' => 'BeyondCode\\LaravelWebSockets\\Apps\\ConfigAppProvider',
+    'max_request_size_in_kb' => 250,
+    'path' => 'laravel-websockets',
+    'middleware' =>
+    array (
+      0 => 'web',
+      1 => 'BeyondCode\\LaravelWebSockets\\Dashboard\\Http\\Middleware\\Authorize',
+    ),
+    'statistics' =>
+    array (
+      'model' => 'BeyondCode\\LaravelWebSockets\\Statistics\\Models\\WebSocketsStatisticsEntry',
+      'logger' => 'BeyondCode\\LaravelWebSockets\\Statistics\\Logger\\HttpStatisticsLogger',
+      'interval_in_seconds' => 60,
+      'delete_statistics_older_than_days' => 60,
+      'perform_dns_lookup' => false,
+    ),
+    'ssl' =>
+    array (
+      'local_cert' => NULL,
+      'local_pk' => NULL,
+      'passphrase' => NULL,
+    ),
+    'channel_manager' => 'BeyondCode\\LaravelWebSockets\\WebSockets\\Channels\\ChannelManagers\\ArrayChannelManager',
+  ),
+  'dompdf' =>
   array (
     'show_warnings' => false,
     'public_path' => NULL,
     'convert_entities' => true,
-    'options' => 
+    'options' =>
     array (
-      'font_dir' => '/Applications/XAMPP/xamppfiles/htdocs/proapps/storage/fonts',
-      'font_cache' => '/Applications/XAMPP/xamppfiles/htdocs/proapps/storage/fonts',
-      'temp_dir' => '/var/folders/1h/7hjjjj9d65v0dr0lp8bvt44m0000gn/T',
-      'chroot' => '/Applications/XAMPP/xamppfiles/htdocs/proapps',
-      'allowed_protocols' => 
+      'font_dir' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/storage/fonts',
+      'font_cache' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/storage/fonts',
+      'temp_dir' => '/var/folders/m7/5dv4dtpx6_j__sx_k8w27l7h0000gn/T',
+      'chroot' => '/Users/akmalrifqi/Development/laravel/indoland/proapps',
+      'allowed_protocols' =>
       array (
-        'file://' => 
+        'file://' =>
         array (
-          'rules' => 
+          'rules' =>
           array (
           ),
         ),
-        'http://' => 
+        'http://' =>
         array (
-          'rules' => 
+          'rules' =>
           array (
           ),
         ),
-        'https://' => 
+        'https://' =>
         array (
-          'rules' => 
+          'rules' =>
           array (
           ),
         ),
@@ -865,10 +909,10 @@
       'enable_html5_parser' => true,
     ),
   ),
-  'flare' => 
+  'flare' =>
   array (
     'key' => NULL,
-    'reporting' => 
+    'reporting' =>
     array (
       'anonymize_ips' => true,
       'collect_git_information' => false,
@@ -879,24 +923,24 @@
       'grouping_type' => NULL,
       'report_logs' => true,
       'maximum_number_of_collected_logs' => 200,
-      'censor_request_body_fields' => 
+      'censor_request_body_fields' =>
       array (
         0 => 'password',
       ),
     ),
     'send_logs_as_events' => true,
-    'censor_request_body_fields' => 
+    'censor_request_body_fields' =>
     array (
       0 => 'password',
     ),
   ),
-  'ignition' => 
+  'ignition' =>
   array (
     'editor' => 'phpstorm',
     'theme' => 'light',
     'enable_share_button' => true,
     'register_commands' => false,
-    'ignored_solution_providers' => 
+    'ignored_solution_providers' =>
     array (
       0 => 'Facade\\Ignition\\SolutionProviders\\MissingPackageSolutionProvider',
     ),
@@ -905,18 +949,18 @@
     'local_sites_path' => '',
     'housekeeping_endpoint_prefix' => '_ignition',
   ),
-  'image' => 
+  'image' =>
   array (
     'driver' => 'gd',
   ),
-  'excel' => 
+  'excel' =>
   array (
-    'exports' => 
+    'exports' =>
     array (
       'chunk_size' => 1000,
       'pre_calculate_formulas' => false,
       'strict_null_comparison' => false,
-      'csv' => 
+      'csv' =>
       array (
         'delimiter' => ',',
         'enclosure' => '"',
@@ -928,7 +972,7 @@
         'output_encoding' => '',
         'test_auto_detect' => true,
       ),
-      'properties' => 
+      'properties' =>
       array (
         'creator' => '',
         'lastModifiedBy' => '',
@@ -941,15 +985,15 @@
         'company' => '',
       ),
     ),
-    'imports' => 
+    'imports' =>
     array (
       'read_only' => true,
       'ignore_empty' => false,
-      'heading_row' => 
+      'heading_row' =>
       array (
         'formatter' => 'slug',
       ),
-      'csv' => 
+      'csv' =>
       array (
         'delimiter' => NULL,
         'enclosure' => '"',
@@ -957,7 +1001,7 @@
         'contiguous' => false,
         'input_encoding' => 'UTF-8',
       ),
-      'properties' => 
+      'properties' =>
       array (
         'creator' => '',
         'lastModifiedBy' => '',
@@ -969,14 +1013,8 @@
         'manager' => '',
         'company' => '',
       ),
-      'cells' => 
-      array (
-        'middleware' => 
-        array (
-        ),
-      ),
     ),
-    'extension_detector' => 
+    'extension_detector' =>
     array (
       'xlsx' => 'Xlsx',
       'xlsm' => 'Xlsx',
@@ -995,35 +1033,35 @@
       'tsv' => 'Csv',
       'pdf' => 'Dompdf',
     ),
-    'value_binder' => 
+    'value_binder' =>
     array (
       'default' => 'Maatwebsite\\Excel\\DefaultValueBinder',
     ),
-    'cache' => 
+    'cache' =>
     array (
       'driver' => 'memory',
-      'batch' => 
+      'batch' =>
       array (
         'memory_limit' => 60000,
       ),
-      'illuminate' => 
+      'illuminate' =>
       array (
         'store' => NULL,
       ),
       'default_ttl' => 10800,
     ),
-    'transactions' => 
+    'transactions' =>
     array (
       'handler' => 'db',
-      'db' => 
+      'db' =>
       array (
         'connection' => NULL,
       ),
     ),
-    'temporary_files' => 
+    'temporary_files' =>
     array (
-      'local_path' => '/Applications/XAMPP/xamppfiles/htdocs/proapps/storage/framework/cache/laravel-excel',
-      'local_permissions' => 
+      'local_path' => '/Users/akmalrifqi/Development/laravel/indoland/proapps/storage/framework/cache/laravel-excel',
+      'local_permissions' =>
       array (
       ),
       'remote_disk' => NULL,
@@ -1031,7 +1069,7 @@
       'force_resync_remote' => NULL,
     ),
   ),
-  'sluggable' => 
+  'sluggable' =>
   array (
     'source' => NULL,
     'maxLength' => NULL,
@@ -1044,19 +1082,19 @@
     'includeTrashed' => false,
     'reserved' => NULL,
     'onUpdate' => false,
-    'slugEngineOptions' => 
+    'slugEngineOptions' =>
     array (
     ),
   ),
-  'tinker' => 
+  'tinker' =>
   array (
-    'commands' => 
+    'commands' =>
     array (
     ),
-    'alias' => 
+    'alias' =>
     array (
     ),
-    'dont_alias' => 
+    'dont_alias' =>
     array (
       0 => 'App\\Nova',
     ),
