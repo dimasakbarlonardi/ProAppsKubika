@@ -4,16 +4,20 @@ namespace App\Http\Controllers\Admin;
 
 use App\Events\HelloEvent;
 use App\Helpers\ConnectionDB;
+use App\Helpers\SaveFile;
 use App\Http\Controllers\Controller;
 use App\Models\CashReceipt;
 use App\Models\CompanySetting;
 use App\Models\Installment;
 use App\Models\IPLType;
 use App\Models\MonthlyArTenant;
+use App\Models\System;
 use App\Models\Unit;
 use App\Models\User;
 use App\Models\Utility;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use RealRashid\SweetAlert\Facades\Alert;
 
 class InvoiceController extends Controller
 {
@@ -32,6 +36,9 @@ class InvoiceController extends Controller
     {
         $connCR = ConnectionDB::setConnection(new CashReceipt());
         $connAR = ConnectionDB::setConnection(new MonthlyArTenant());
+        $connSystem = ConnectionDB::setConnection(new CompanySetting());
+
+        $data['system'] = $connSystem->find(1);
 
         if ($request->type == 'RequestBilling') {
             $transactions = $connCR->where('deleted_at', null)
@@ -162,5 +169,46 @@ class InvoiceController extends Controller
         broadcast(new HelloEvent($dataNotif));
 
         return response()->json(['status' => 'ok']);
+    }
+
+    public function manualPayment(Request $request)
+    {
+        $connAR = ConnectionDB::setConnection(new MonthlyArTenant());
+
+        $ar = $connAR->find($request->ar_id);
+        $fileUtility = $request->file('utility_cash_receipt');
+        $fileIPL = $request->file('ipl_cash_receipt');
+
+        if ($fileUtility) {
+            $storagePath = SaveFile::saveToStorage($request->user()->id_site, 'manual_payment_utility', $fileUtility);
+            $ar->UtilityCashReceipt->payment_image = $storagePath;
+            $ar->UtilityCashReceipt->transaction_status = 'PAID';
+            $ar->UtilityCashReceipt->settlement_time = Carbon::now();
+            $ar->UtilityCashReceipt->payment_type = 'MANUAL';
+            $ar->UtilityCashReceipt->save();
+
+            $ar->tgl_bayar_utility = Carbon::now();
+        }
+
+        if ($fileIPL) {
+            $storagePath = SaveFile::saveToStorage($request->user()->id_site, 'manual_payment_ipl', $fileIPL);
+            $ar->IPLCashReceipt->payment_image = $storagePath;
+            $ar->IPLCashReceipt->transaction_status = 'PAID';
+            $ar->IPLCashReceipt->settlement_time = Carbon::now();
+            $ar->IPLCashReceipt->payment_type = 'MANUAL';
+            $ar->IPLCashReceipt->save();
+
+            $ar->tgl_bayar_ipl = Carbon::now();
+        }
+
+        if ($ar->tgl_bayar_utility && $ar->tgl_bayar_ipl) {
+            $ar->status_payment = 'PAID';
+        }
+
+        $ar->save();
+
+        Alert::success('Success submit payment');
+
+        return redirect()->back();
     }
 }

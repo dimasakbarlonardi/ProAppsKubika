@@ -22,6 +22,7 @@ class CashReceipt extends Model
         'no_draft_cr',
         'ket_pembayaran',
         'transaction_status',
+        'payment_image',
         'transaction_id',
         'tgl_jt_invoice',
         'jml_hari_jt',
