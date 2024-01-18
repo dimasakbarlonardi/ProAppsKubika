@@ -6,12 +6,9 @@
                         id="no-invoice">{{ $transaction->UtilityCashReceipt->no_invoice }}</span></h5>
             </div>
             <div class="col-auto">
-                <button class="btn btn-falcon-default btn-sm me-1 mb-2 mb-sm-0" type="button">
+                <a href="/invoice/utility/{{ $transaction->UtilityCashReceipt->id }}" class="btn btn-falcon-default btn-sm me-1 mb-2 mb-sm-0" type="button">
                     <span class="fas fa-arrow-down me-1"> </span>Download (.pdf)
-                </button>
-                <button class="btn btn-falcon-default btn-sm me-1 mb-2 mb-sm-0" type="button">
-                    <span class="fas fa-print me-1"> </span>Print
-                </button>
+                </a>
             </div>
         </div>
     </div>
@@ -126,7 +123,8 @@
                         Listrik
                         @if ($transaction->MonthlyUtility->ElectricUUS->is_abodemen)
                             <br>
-                            (Pemakaian minimum listrik {{ $transaction->MonthlyUtility->ElectricUUS->abodemen_value }} KWh)
+                            (Pemakaian minimum listrik {{ $transaction->MonthlyUtility->ElectricUUS->abodemen_value }}
+                            KWh)
                         @endif
                     </td>
                     <td>
@@ -485,7 +483,8 @@
 
 <script>
     $('#cc_form_utility').css('display', 'none');
-    var subtotal = parseInt('{{ $transaction->UtilityCashReceipt->sub_total }}')
+    var subtotal = parseInt('{{ $transaction->UtilityCashReceipt->sub_total }}');
+    var transaction_id = '{{ $transaction->UtilityCashReceipt->id }}'
 
     $(".select-payment-utility-method").on('change', function() {
 
@@ -506,4 +505,19 @@
         $('#admin_fee_utility').html(`Rp ${formatRupiah(admin_fee.toString())}`)
         $('#grand_total_utility').html(`Rp ${formatRupiah(grand_total.toString())}`)
     });
+
+    function downloadInvoice() {
+
+        $.ajax({
+            url: `/invoice`,
+            type: 'GET',
+            data: {
+                type: 'utility',
+                arID: '{{ $transaction->id_monthly_ar_tenant }}'
+            },
+            success: function(resp) {
+               console.log(resp)
+            }
+        });
+    }
 </script>
