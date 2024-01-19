@@ -23,6 +23,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use RealRashid\SweetAlert\Facades\Alert;
 use Excel;
+use Illuminate\Support\Facades\Validator;
 
 class TenantController extends Controller
 {
@@ -95,6 +96,12 @@ class TenantController extends Controller
             $data['nama_unit'] = $nama_unit;
         }
 
+        if ($request->has('searchTenant') && !empty($request->searchTenant)) {
+            $searchTenant = $request->searchTenant;
+    
+            $tenants = $tenants->where('nama_tenant', 'like', '%' . $searchTenant . '%');
+        }
+
         // $tickets = $tickets->orderBy('id', 'DESC');
         $data['tenants'] = $tenants->get();
 
@@ -135,6 +142,22 @@ class TenantController extends Controller
      */
     public function store(Request $request)
     {
+        $validationRules = [
+            'id_card_type' => 'required',
+            'id_statushunian_tenant' => 'required',
+            'id_status_kawin' => 'required',
+        ];
+
+        $customMessages = [
+            Alert::error('Failed', 'Complete the Unfilled Data')
+        ];
+
+        $validator = Validator::make($request->all(), $validationRules, $customMessages);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
         $connTenant =  ConnectionDB::setConnection(new Tenant());
 
         $checkNIK = $connTenant->where('nik_tenant', $request->nik_tenant)->first();
@@ -198,7 +221,7 @@ class TenantController extends Controller
             }
             DB::commit();
 
-            Alert::success('Berhasil', 'Berhasil menambahkan tenant');
+            Alert::success('Success', 'Tenant added successfully');
 
             return redirect()->route('tenants.index');
         } catch (\Throwable $e) {

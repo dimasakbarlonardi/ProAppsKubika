@@ -132,6 +132,7 @@
                     </div>
                 </div>
                 <div class="row mb-3">
+
                     <div class="col-6">
                         <label class="form-label">Marriage Status</label>
                         <select class="form-control" name="id_status_kawin" id="id_status_kawin" required>

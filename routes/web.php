@@ -212,7 +212,7 @@ Route::prefix('admin')->group(function () {
         Route::resource('logins', LoginController::class);
 
         // CRUD User
-        Route::resource('users', UserController::class, ['except' => ['show']]);
+        Route::resource('users', UserController::class);
         Route::get('/users/Blast-Email', [UserController::class, 'Blast'])->name('BlastEmail');
 
 
