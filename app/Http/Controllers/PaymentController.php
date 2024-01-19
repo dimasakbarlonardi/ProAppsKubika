@@ -8,13 +8,17 @@ use App\Helpers\ConnectionDB;
 use App\Models\Approve;
 use App\Models\CashReceipt;
 use App\Models\CompanySetting;
+use App\Models\IPLType;
 use App\Models\MonthlyArTenant;
 use App\Models\Site;
 use App\Models\Transaction;
 use App\Models\TransactionCenter;
+use App\Models\Utility;
 use App\Services\Midtrans\CallbackService;
+use PDF;
 use Symfony\Component\HttpFoundation\Request;
 use Carbon\Carbon;
+use JWTAuth;
 
 class PaymentController extends Controller
 {
@@ -162,7 +166,8 @@ class PaymentController extends Controller
         }
     }
 
-    function monthly($site, $cr, $callback) {
+    function monthly($site, $cr, $callback)
+    {
         $setting = new CompanySetting();
         $bills = new MonthlyArTenant();
 
@@ -212,31 +217,57 @@ class PaymentController extends Controller
         return response()->json(['status' => $status]);
     }
 
-    public function invoice($id)
+    public function invoice(Request $request)
     {
-        $request = Request();
-        $site = Site::find($request->user()->id_site);
+        $connUtility = new Utility();
+        $connIPLType = new IPLType();
+        $connSetting = new CompanySetting();
         $connCR = new CashReceipt();
-        $connCR = $connCR->setConnection($site->db_name);
-        $cr = $connCR->find($id);
 
-        $data['cr'] = $cr;
+        $connUtility = $connUtility->setConnection($request->site);
+        $connIPLType = $connIPLType->setConnection($request->site);
+        $connSetting = $connSetting->setConnection($request->site);
+        $connCR = $connCR->setConnection($request->site);
 
-        return view('Tenant.invoice', $data);
+        $setting = $connSetting->find(1);
+        $cr = $connCR->find($request->id);
+
+        if ($cr->Unit->id_hunian == 1) {
+            $data['electric'] = $connUtility->find(1);
+            $data['water'] = $connUtility->find(2);
+            $data['sc'] = $connIPLType->find(6);
+            $data['sf'] = $connIPLType->find(7);
+        } else {
+            $data['electric'] = $connUtility->find(3);
+            $data['water'] = $connUtility->find(4);
+            $data['sc'] = $connIPLType->find(8);
+            $data['sf'] = $connIPLType->find(9);
+        }
+
+        $data['setting'] = $setting;
+        $data['transaction'] = $cr;
+        $data['site'] = Site::where('db_name', $request->site)->first();
+
+        if ($request->type == "utility") {
+            $html = 'Tenant.Notification.Invoice.Download.Utility_bill';
+        } elseif ($request->type == 'ipl') {
+            $html = 'Tenant.Notification.Invoice.Download.IPL_bill';
+        } elseif ($request->type == 'other') {
+            $html = 'Tenant.Notification.Invoice.Download.Other_bill';
+        }
+
+        return view($html, $data);
     }
 
     public function invoiceAPI($id)
     {
-        $request = Request();
-        $site = Site::find($request->user()->id_site);
-        $connCR = new CashReceipt();
-        $connCR = $connCR->setConnection($site->db_name);
+        $connCR = ConnectionDB::setConnection(new CashReceipt());
         $cr = $connCR->find($id);
 
-        $data['cr'] = $cr;
 
-        return response()->json([
-            'invoice' => view('Tenant.invoice', $data)->render()
-        ]);
+
+        if ($cr->transaction_type == 'MonthlyUtilityTenant') {
+            return view('Tenant.Notification.Invoice.SplitPaymentMonthly.Utility_bill');
+        }
     }
 }

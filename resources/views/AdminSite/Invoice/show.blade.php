@@ -57,7 +57,7 @@
                 break;
         }
     @endphp
-    
+
     @if ($type == 'SplitMonthlyTenant')
         <ul class="nav nav-pills justify-content-around bg-white p-3 rounded mb-3" id="pill-myTab" role="tablist">
             <li class="nav-item" role="presentation">
@@ -307,7 +307,7 @@
                          <div class="col-lg-4">
                            <div class="card">
                                 <div class="card-body bg-light">
-                                   
+
                                 </div>
                             </div>
                         </div>
@@ -320,7 +320,7 @@
             </div>
         </div>
     </div>
-    
+
     <script>
         $.ajaxSetup({
             headers: {
@@ -351,8 +351,8 @@
 
         $('document').ready(function() {
             let is_split = '{{ $setting->is_split_ar }}'
-            console.log(typeTransaction);
-            if (is_split == 1 && typeTransaction != 'SplitMonthlyTenant') {
+
+            if (is_split == 1 && typeTransaction == 'SplitMonthlyTenant') {
                 SelectType('utility');
             }
             $('#cc_form').css('display', 'none')
@@ -403,27 +403,27 @@
         })
 
         function SelectType(type) {
-            // $('#splitPaymentData').html("")
+            $('#splitPaymentData').html("")
 
-            // $.ajax({
-            //     url: `/api/v1/get-splited-billing`,
-            //     headers: {
-            //         'Content-Type': 'application/json',
-            //         'Authorization': 'Bearer ' + token
-            //     },
-            //     data: {
-            //         type,
-            //         arID
-            //     },
-            //     type: 'GET',
-            //     success: function(resp) {
-            //         $('#splitPaymentData').html(resp.html)
+            $.ajax({
+                url: `/api/v1/get-splited-billing`,
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + token
+                },
+                data: {
+                    type,
+                    arID
+                },
+                type: 'GET',
+                success: function(resp) {
+                    $('#splitPaymentData').html(resp.html)
 
-            //         if (resp.ar_user == resp.email_user) {
-            //             $('#selectPaymentForm').css('display', 'block');
-            //         }
-            //     }
-            // });
+                    if (resp.ar_user == resp.email_user) {
+                        $('#selectPaymentForm').css('display', 'block');
+                    }
+                }
+            });
         }
 
         function onCreateTransaction(id) {

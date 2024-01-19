@@ -437,32 +437,43 @@ class BillingController extends Controller
                 return response()->json(['status' => 'exist']);
             }
 
-            $get_abodemen = InvoiceHelper::getAbodemen($unitID, $usage);
+            try {
+                DB::beginTransaction();
 
-            $electricUUS = $connElecUUS->create([
-                'periode_bulan' => $request->periode_bulan,
-                'periode_tahun' => Carbon::now()->format('Y'),
-                'id_unit' => $unitID,
-                'nomor_listrik_awal' => $request->previous,
-                'nomor_listrik_akhir' => $request->current,
-                'usage' => $usage,
-                'abodemen_value' => $get_abodemen['abodemen'],
-                'is_abodemen' => $get_abodemen['isAbodemen'],
-                'ppj' => $get_abodemen['ppj'],
-                'total' => $get_abodemen['total'],
-                'id_user' => $user->id_user
-            ]);
+                $get_abodemen = InvoiceHelper::getAbodemen($unitID, $usage);
 
-            $imageData = $request->file('imageData');
+                $electricUUS = $connElecUUS->create([
+                    'periode_bulan' => $request->periode_bulan,
+                    'periode_tahun' => Carbon::now()->format('Y'),
+                    'id_unit' => $unitID,
+                    'nomor_listrik_awal' => $request->previous,
+                    'nomor_listrik_akhir' => $request->current,
+                    'usage' => $usage,
+                    'abodemen_value' => $get_abodemen['abodemen'],
+                    'is_abodemen' => $get_abodemen['isAbodemen'],
+                    'ppj' => $get_abodemen['ppj'],
+                    'total' => $get_abodemen['total'],
+                    'id_user' => $user->id_user
+                ]);
 
-            if ($imageData) {
-                $storagePath = SaveFile::saveToStorage($request->user()->id_site, 'electric-usage', $imageData);
+                $imageData = $request->file('imageData');
 
-                $electricUUS->image = $storagePath;
-                $electricUUS->save();
+                if ($imageData) {
+                    $storagePath = SaveFile::saveToStorage($request->user()->id_site, 'electric-usage', $imageData);
+
+                    $electricUUS->image = $storagePath;
+                    $electricUUS->save();
+                }
+
+                DB::commit();
+
+                return response()->json(['status' => 'ok']);
+            } catch (Throwable $e) {
+                DB::rollBack();
+                return ResponseFormatter::error([
+                    'message' => $e
+                ], 'Something when wrong', 500);
             }
-
-            return response()->json(['status' => 'ok']);
         } else {
             return ResponseFormatter::error([
                 'message' => 'Unauthorized'

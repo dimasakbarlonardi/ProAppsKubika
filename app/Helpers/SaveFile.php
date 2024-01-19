@@ -25,13 +25,10 @@ class SaveFile
 
     public static function saveToStorage($idSite, $type, $file)
     {
-        $fileName = $type . '-' . Carbon::now()->format('Y-m-d') . '-' .   $file->getClientOriginalName();
+        $fileName = $type . '-' . str_replace(" ", "-", Carbon::now()->toDateTimeString()) . '-' .   $file->getClientOriginalName();
         $path = '/public/' . $idSite . '/img/' . $type . '/' . $fileName;
         $storagePath = '/storage/' . $idSite . '/img/' . $type .  '/' . $fileName;
-        $img = Image::make($file);
-        $img->resize(100, 100, function ($constraint) {
-            $constraint->aspectRatio();
-        })->encode('jpg', 80);
+        $img = Image::make($file)->encode('jpg', 80);
 
         Storage::disk('local')->put($path, $img);
 

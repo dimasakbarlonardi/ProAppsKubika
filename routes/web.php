@@ -172,7 +172,7 @@ Route::post('/save-token', [AgamaController::class, 'saveToken'])->name('save-to
 // Check role id
 Route::get('/check-role-id', [RoleController::class, 'checkRoleID']);
 
-Route::get('/invoice/{id}', [PaymentController::class, 'invoice'])->name('invoice');
+Route::get('/invoice/{type}/{id}/{site}', [PaymentController::class, 'invoice'])->name('invoice');
 Route::get('/view-room/{idSite}/{id}', [RoomController::class, 'viewRoom']);
 
 Route::prefix('admin')->group(function () {
@@ -691,6 +691,7 @@ Route::prefix('admin')->group(function () {
         Route::get('invoice/installment/{id}', [InvoiceController::class, 'installment'])->name('installment');
         Route::post('invoice/installment/{id}', [InvoiceController::class, 'storeInstallment']);
         Route::get('/invoice/get/filter-data', [InvoiceController::class, 'filteredData']);
+        Route::post('/manual-payment', [InvoiceController::class, 'manualPayment'])->name('manualVerifyPayment');
 
         // Payment monthly tenant
         // Route::post('payment-monthly-page/{id}', [BillingController::class, 'generatePaymentMonthly'])->name('generatePaymentMonthly');
