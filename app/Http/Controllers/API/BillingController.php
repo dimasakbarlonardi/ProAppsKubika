@@ -469,6 +469,7 @@ class BillingController extends Controller
 
                 return response()->json(['status' => 'ok']);
             } catch (Throwable $e) {
+                dd($e);
                 DB::rollBack();
                 return ResponseFormatter::error([
                     'message' => $e
