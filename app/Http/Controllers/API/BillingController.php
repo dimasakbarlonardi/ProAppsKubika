@@ -500,7 +500,7 @@ class BillingController extends Controller
             $object->unit = $unit->nama_unit;
             $object->period = Carbon::now()->format('m');
             $object->current = count($unit->waterUUS) > 0 ? $unit->waterUUS[0]->nomor_air_akhir : 0;
-            $object->previous = count($unit->waterUUS) > 0 ? $unit->waterUUS[0]->meter_air_awal : $unit->meter_air_awal;
+            $object->previous = count($unit->waterUUS) > 0 ? $unit->waterUUS[0]->nomor_air_awal : $unit->nomor_air_awal;
 
             return ResponseFormatter::success(
                 $object,
