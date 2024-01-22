@@ -137,9 +137,9 @@
                 <div class="col-sm-6 col-lg-6 mb-4">
                     <div class="card text-white bg-success">
                         <div class="card-body" style="background-color: #E9F7F5;">
-                            <div class="card-title">Ticket Hold <img class="float-end" height="40" src="{{ asset('assets/img/icons/ticket_hold.png') }}" alt=""></div>
+                            <div class="card-title">Ticket Pending <img class="float-end" height="40" src="{{ asset('assets/img/icons/ticket_hold.png') }}" alt=""></div>
                             <h4 class="fs-3 fw-normal text-700 mb-0">
-                                <span>0</span>
+                                <span>{{$hold_ticket}}</span>
                                 <span>/</span>
                                 <span>{{ $entry_ticket }}</span>
                             </h4>
@@ -151,7 +151,7 @@
                         <div class="card-body" style="background-color: #BEE8E1;">
                             <div class="card-title">Ticket Cancel <img class="float-end" height="40" src="{{ asset('assets/img/icons/ticket_cancel.png') }}" alt=""></div>
                             <h4 class="fs-3 fw-normal text-700 mb-0">
-                                <span>0</span>
+                                <span>{{$cancel_ticket}}</span>
                                 <span>/</span>
                                 <span>{{ $entry_ticket }}</span>
                             </h4>
@@ -213,7 +213,7 @@
                             </div>
                             <div class="frame-2802">
                                 <div class="reservation">Reservation</div>
-                                <div class="_100">100</div>
+                                <div class="_100">{{ $rsv }}</div>
                             </div>
                         </div>
                     </div>
@@ -247,9 +247,8 @@
                         </form>
                     </div>
                 </div>
-                <!-- <div class="frame-283"> -->
                 <div class="echart-line-total-sales h-100" data-echart-responsive="true">
-                    <div class="echart-line-total-sales h-100" data-echart-responsive="true"></div>
+                    <div id="invoiceChart" class="h-100" data-echart-responsive="true"></div>
                 </div>
             </div>
         </div>
@@ -285,9 +284,9 @@
                         <div class="card-body" style="background-color: #E9F7F5;">
                             <div class="card-title"> <img class="float-end" height="40" src="{{ asset('assets/img/icons/ticket_complete.png') }}" alt=""> </div>
                             <h5 class="fs fw-normal text-700 mb-0">
-                                <span class="text-primary">RP. 150.000.000</span>
+                                <span class="text-primary">{{$PaidInvoiceTotalRP}}</span>
                                 <span>/</span>
-                                <span>RP. 250.000.000</span>
+                                <span>{{$invoiceTotalRP}}</span>
                             </h5>
                             <h6 class="mt-3">
                                 <span>Already Paid</span>
@@ -300,9 +299,9 @@
                         <div class="card-body" style="background-color: #BEE8E1;">
                             <div class="card-title"> <img class="float-end" height="40" src="{{ asset('assets/img/icons/ticket_cancel.png') }}" alt=""></div>
                             <h5 class="fs fw-normal text-700 mb-0">
-                                <span class="text-primary">RP. 50.000.000</span>
+                                <span class="text-primary">{{$CancelInvoiceTotalRP}}</span>
                                 <span>/</span>
-                                <span>RP. 250.000.000</span>
+                                <span>{{$invoiceTotalRP}}</span>
                             </h5>
                             <h6 class="mt-3">
                                 <span>Not Yet Paid</span>
@@ -344,9 +343,9 @@
                         <div class="card-body" style="background-color: #E9F7F5;">
                             <div class="card-title"> <img class="float-end" height="40" src="{{ asset('assets/img/icons/ticket_complete.png') }}" alt=""> </div>
                             <h4 class="fs fw-normal text-700 mb-0">
-                                <span class="text-primary">150</span>
+                                <span class="text-primary">{{$complete_paid}}</span>
                                 <span>/</span>
-                                <span>200 Paper</span>
+                                <span>{{$invoice}} Paper</span>
                             </h4>
                             <h6 class="mt-3">
                                 <span>Already Paid</span>
@@ -359,9 +358,9 @@
                         <div class="card-body" style="background-color: #BEE8E1;">
                             <div class="card-title"> <img class="float-end" height="40" src="{{ asset('assets/img/icons/ticket_cancel.png') }}" alt=""></div>
                             <h4 class="fs fw-normal text-700 mb-0">
-                                <span class="text-primary">50</span>
+                                <span class="text-primary">{{$cancel_paid}}</span>
                                 <span>/</span>
-                                <span>200 Paper</span>
+                                <span>{{$invoice}} Paper</span>
                             </h4>
                             <h6 class="mt-3">
                                 <span>Not Yet Paid</span>

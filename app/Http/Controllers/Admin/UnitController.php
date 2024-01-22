@@ -51,27 +51,31 @@ class UnitController extends Controller
     }
 
     public function unitsByFilter(Request $request)
-    {
-        $connUnit = ConnectionDB::setConnection(new Unit());
+{
+    $connUnit = ConnectionDB::setConnection(new Unit());
 
-        $units = $connUnit->where('deleted_at', null);
+    $units = $connUnit->where('deleted_at', null);
 
-        if (!$request->id_tower && !$request->id_floor) {
-            $units = $units;
-        }
-        if ($request->id_floor) {
-            $units = $units->where('id_lantai', $request->id_floor);
-        }
-        if ($request->id_tower) {
-            $units = $units->where('id_tower', $request->id_tower);
-        }
-
-        $data['units'] = $units->get();
-
-        return response()->json([
-            'html' => view('AdminSite.Unit.card', $data)->render(),
-        ]);
+    if ($request->id_floor) {
+        $units = $units->where('id_lantai', $request->id_floor);
     }
+
+    if ($request->id_tower) {
+        $units = $units->where('id_tower', $request->id_tower);
+    }
+
+    if ($request->has('searchUnit') && !empty($request->searchUnit)) {
+        $searchUnit = $request->searchUnit;
+        $units = $units->where('nama_unit', 'like', '%' . $searchUnit . '%');
+    }
+
+    $data['units'] = $units->get();
+
+    return response()->json([
+        'html' => view('AdminSite.Unit.card', $data)->render(),
+    ]);
+}
+
 
     /**
      * Show the form for creating a new resource.
