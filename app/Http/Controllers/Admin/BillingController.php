@@ -540,6 +540,7 @@ class BillingController extends Controller
                 if (!$arTenant->tgl_jt_invoice && !$arTenant->tgl_bayar_invoice) {
                     $jatuh_tempo_1 = $connReminder->find(1)->durasi_reminder_letter;
                     $jatuh_tempo_1 = Carbon::now()->addDays($jatuh_tempo_1);
+                    $util->MonthlyUtility->MonthlyTenant->status_payment = 'PENDING';
 
                     if ($setting->is_split_ar == 0) {
                         $util->MonthlyUtility->MonthlyTenant->CashReceipt->tgl_jt_invoice = $jatuh_tempo_1;
@@ -553,6 +554,7 @@ class BillingController extends Controller
 
                     $util->MonthlyUtility->MonthlyTenant->MonthlyIPL->sign_approval_2 = Carbon::now();
                     $util->MonthlyUtility->MonthlyTenant->MonthlyIPL->save();
+                    $util->MonthlyUtility->MonthlyTenant->save();
 
                     $util->MonthlyUtility->sign_approval_2 = Carbon::now();
                     $util->MonthlyUtility->save();

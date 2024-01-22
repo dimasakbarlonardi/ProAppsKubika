@@ -28,7 +28,14 @@ class SaveFile
         $fileName = $type . '-' . str_replace(" ", "-", Carbon::now()->toDateTimeString()) . '-' .   $file->getClientOriginalName();
         $path = '/public/' . $idSite . '/img/' . $type . '/' . $fileName;
         $storagePath = '/storage/' . $idSite . '/img/' . $type .  '/' . $fileName;
-        $img = Image::make($file)->encode('jpg', 80);
+
+        $img = Image::configure(array('driver' => 'imagick'));
+
+        $img = Image::make($file)
+            ->resize(null, 400, function ($constraint) {
+                $constraint->aspectRatio();
+            })
+            ->encode('jpg', 80);
 
         Storage::disk('local')->put($path, $img);
 
