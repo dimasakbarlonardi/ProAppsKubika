@@ -442,12 +442,14 @@ class BillingController extends Controller
                 DB::beginTransaction();
 
                 $get_abodemen = InvoiceHelper::getAbodemen($unitID, $usage);
+                $connUnit = ConnectionDB::setConnection(new Unit());
+                $unit = $connUnit->find($unitID);
 
                 $electricUUS = $connElecUUS->create([
                     'periode_bulan' => $request->periode_bulan,
                     'periode_tahun' => Carbon::now()->format('Y'),
                     'id_unit' => $unitID,
-                    'nomor_listrik_awal' => $request->previous,
+                    'nomor_listrik_awal' => $unit->electricUUS[0]->nomor_listrik_akhir,
                     'nomor_listrik_akhir' => $request->current,
                     'usage' => $usage,
                     'abodemen_value' => $get_abodemen['abodemen'],
@@ -526,6 +528,9 @@ class BillingController extends Controller
             try {
                 DB::beginTransaction();
 
+                $connUnit = ConnectionDB::setConnection(new Unit());
+                $unit = $connUnit->find($unitID);
+
                 $connWaterUUS = new WaterUUS();
                 $connWaterUUS = $connWaterUUS->setConnection($site->db_name);
 
@@ -540,7 +545,7 @@ class BillingController extends Controller
                     'periode_bulan' => $request->periode_bulan,
                     'periode_tahun' => Carbon::now()->format('Y'),
                     'id_unit' => $unitID,
-                    'nomor_air_awal' => $request->previous,
+                    'nomor_air_awal' => $unit->waterUUS[0]->nomor_air_akhir,
                     'nomor_air_akhir' => $request->current,
                     'usage' => $usage,
                     'total' => $inputWater['total'],
