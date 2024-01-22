@@ -95,6 +95,10 @@
                                     @endforeach
                                 </select>
                             </div>
+                            <div class="mb-3 mt-n2">
+                                <label class="mb-1">Unit Name</label>
+                                <input type="text" class="form-control form-control-sm" id="search-unit" placeholder="Search Unit">
+                            </div>
 
                         </form>
                     </div>
@@ -105,63 +109,73 @@
 </div>
 
 <div class="modal fade" id="modal-import" tabindex="-1" role="dialog" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 500px">
-            <div class="modal-content position-relative">
-                <div class="position-absolute top-0 end-0 mt-2 me-2 z-index-1">
-                    <button class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base"
-                        data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form action="{{ route('import-units') }}" method="post" enctype="multipart/form-data">
-                    @csrf
-                    <div class="modal-body p-0">
-                        <div class="rounded-top-lg py-3 ps-4 pe-6 bg-light">
-                            <h4 class="mb-4" id="modalExampleDemoLabel">Upload Excel File </h4>
-                            <div class="mb-3">
-                                <input type="file" name="file_excel" class="form-control" required>
-                            </div>
+    <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 500px">
+        <div class="modal-content position-relative">
+            <div class="position-absolute top-0 end-0 mt-2 me-2 z-index-1">
+                <button class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form action="{{ route('import-units') }}" method="post" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-body p-0">
+                    <div class="rounded-top-lg py-3 ps-4 pe-6 bg-light">
+                        <h4 class="mb-4" id="modalExampleDemoLabel">Upload Excel File </h4>
+                        <div class="mb-3">
+                            <input type="file" name="file_excel" class="form-control" required>
                         </div>
                     </div>
-                    <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary">Import</button>
-                    </div>
-                </form>
-            </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Import</button>
+                </div>
+            </form>
         </div>
     </div>
+</div>
 @endsection
 
 @section('script')
 <script>
-    $('document').ready(function() {
-        getUnits('', '')
-    })
+   $('document').ready(function() {
+    getUnits('', '', '');
 
     $('#id_tower').on('change', function() {
-        var id_tower = $('#id_tower').val()
-        var id_floor = $('#id_floor').val()
+        var id_tower = $('#id_tower').val();
+        var id_floor = $('#id_floor').val();
+        var searchUnit = $('#search-unit').val();
 
-        getUnits(id_tower, id_floor)
-    })
+        getUnits(id_tower, id_floor, searchUnit);
+    });
 
     $('#id_floor').on('change', function() {
-        var id_tower = $('#id_tower').val()
-        var id_floor = $('#id_floor').val()
+        var id_tower = $('#id_tower').val();
+        var id_floor = $('#id_floor').val();
+        var searchUnit = $('#search-unit').val();
 
-        getUnits(id_tower, id_floor)
-    })
+        getUnits(id_tower, id_floor, searchUnit);
+    });
 
-    function getUnits(id_tower, id_floor) {
+    $('#search-unit').on('input', function() {
+        var id_tower = $('#id_tower').val();
+        var id_floor = $('#id_floor').val();
+        var searchUnit = $(this).val();
+
+        getUnits(id_tower, id_floor, searchUnit);
+    });
+
+    function getUnits(id_tower, id_floor, searchUnit) {
         $.ajax({
             url: '/admin/units-by-filter',
             type: 'GET',
             data: {
                 id_tower,
-                id_floor
+                id_floor,
+                searchUnit
             },
             success: function(data) {
-                $('#all-units').html(data.html)
+                $('#all-units').html(data.html);
             }
-        })
+        });
     }
+});
 </script>
 @endsection

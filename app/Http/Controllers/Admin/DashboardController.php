@@ -47,6 +47,7 @@ class DashboardController extends Controller
             return redirect()->route('login');
         }
         $connTicket = ConnectionDB::setConnection(new OpenTicket());
+        $connInvoice = ConnectionDB::setConnection(new CashReceipt());
         $connWR = ConnectionDB::setConnection(new WorkRequest());
         $connWO = ConnectionDB::setConnection(new WorkOrder());
         $connBAPP = ConnectionDB::setConnection(new BAPP());
@@ -58,8 +59,31 @@ class DashboardController extends Controller
         $connOwner = ConnectionDB::setConnection(new OwnerH());
         $connTenant = ConnectionDB::setConnection(new Tenant());
         $user_id = $request->user()->id;
+        
+
+        $result = $connInvoice->selectRaw('SUM(sub_total) as total')->first();
+        $totalRP = number_format($result->total, 0, ',', '.');
+        $data['invoiceTotalRP'] = "Rp. " . $totalRP;
+
+        $result = $connInvoice
+            ->where('transaction_status', '=', 'paid')
+            ->selectRaw('SUM(sub_total) as total')
+            ->first();
+
+        $totalRP = number_format($result->total, 0, ',', '.');
+        $data['PaidInvoiceTotalRP'] = "Rp " . $totalRP;
+
+        $resultCancel = $connInvoice
+            ->where('transaction_status', '=', 'cancelled')
+            ->selectRaw('SUM(sub_total) as total')
+            ->first();
+
+        $totalRP = number_format($resultCancel->total, 0, ',', '.');
+        $data['CancelInvoiceTotalRP'] = "Rp " . $totalRP;
+
 
         $data['entry_ticket'] = $connTicket->count();
+        $data['invoice'] = $connInvoice->count();
         $data['wr'] = $connWR->count();
         $data['wo'] = $connWO->count();
         $data['bapp'] = $connBAPP->count();
@@ -72,7 +96,13 @@ class DashboardController extends Controller
         $data['tenant'] = $connTenant->count();
         $data['idusers'] = Login::where('id', $user_id)->get();
 
+        $data['complete_paid'] = $connInvoice->where('transaction_status', 'paid')->count();
+        $data['cancel_paid'] = $connInvoice->where('transaction_status', 'cancelled')->count();
+        $data['complete_paid'] = $connInvoice->where('transaction_status', 'paid')->count();
+
         $data['complete_ticket'] = $connTicket->where('status_request', 'complete')->count();
+        $data['hold_ticket'] = $connTicket->where('status_request', 'pending')->count();
+        $data['cancel_ticket'] = $connTicket->where('status_request', 'rejected')->count();
         $data['progress_ticket'] = $connTicket->where('status_request', 'proses')
             ->orWhere('status_request', 'on work')
             ->count();
@@ -426,7 +456,6 @@ class DashboardController extends Controller
         $data['setting'] = $connSetting->find(1);
 
         return $data;
-        
     }
 
     public function handleIzinKerja($getNotif)
