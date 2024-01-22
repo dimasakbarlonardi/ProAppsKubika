@@ -420,7 +420,10 @@ class BillingController extends Controller
         $login = $request->user();
         $site = Site::find($login->id_site);
 
-        $usage = $request->current - $request->previous;
+        $connUnit = ConnectionDB::setConnection(new Unit());
+        $unit = $connUnit->find($unitID);
+
+        $usage = $request->current - $unit->electricUUS[0]->nomor_listrik_akhir;
 
         if ($login) {
             $user = new User();
@@ -442,8 +445,6 @@ class BillingController extends Controller
                 DB::beginTransaction();
 
                 $get_abodemen = InvoiceHelper::getAbodemen($unitID, $usage);
-                $connUnit = ConnectionDB::setConnection(new Unit());
-                $unit = $connUnit->find($unitID);
 
                 $electricUUS = $connElecUUS->create([
                     'periode_bulan' => $request->periode_bulan,
@@ -514,7 +515,10 @@ class BillingController extends Controller
 
     public function storeWaterMeter(Request $request, $unitID)
     {
-        $usage = $request->current - $request->previous;
+        $connUnit = ConnectionDB::setConnection(new Unit());
+        $unit = $connUnit->find($unitID);
+
+        $usage = $request->current - $unit->waterUUS[0]->nomor_air_akhir;
         $login = $request->user();
         $site = Site::find($login->id_site);
 
@@ -527,9 +531,6 @@ class BillingController extends Controller
         if ($login) {
             try {
                 DB::beginTransaction();
-
-                $connUnit = ConnectionDB::setConnection(new Unit());
-                $unit = $connUnit->find($unitID);
 
                 $connWaterUUS = new WaterUUS();
                 $connWaterUUS = $connWaterUUS->setConnection($site->db_name);
