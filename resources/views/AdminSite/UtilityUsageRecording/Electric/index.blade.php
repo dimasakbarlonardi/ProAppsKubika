@@ -28,8 +28,8 @@
                             <div class="d-md-flex flex-md-row flex-column mb-4">
                                 <div class="col-md-8">
                                     <div class="justify-content-start my-3">
-                                        <h5 class="mb-3">Total invoices: <span>{{ count($all_invoices) }}</span></h5>
-                                        <h5>Total selected: <span id="totalSelected">0</span></h5>
+                                        <h5 class="mb-3">Total invoices : <span>{{ count($all_invoices) }}</span></h5>
+                                        <h5>Total selected : <span id="totalSelected">0</span></h5>
                                     </div>
                                 </div>
                                 <div class="col-md-4">
@@ -99,7 +99,7 @@
                                         approve</small>
                                     @endif
                                 </th>
-                                <th>{{ $item->periode_bulan }} - {{ $item->periode_tahun }}</th>
+                                <th class="align-middle">{{ $item->periode_bulan }} - {{ $item->periode_tahun }}</th>
                                 <th class="align-middle text-center">
                                     @if (!$item->is_approve)
                                     <h6>
@@ -318,16 +318,15 @@
                                 </div>
                             </div>
                             <div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-hidden="true">
-                            <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 500px">
-                                <div class="modal-content position-relative">
-                                    <div class="position-absolute top-0 end-0 mt-2 me-2 z-index-1">
-                                        <button class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base"
-                                            data-bs-dismiss="modal" aria-label="Close"></button>
+                                <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 500px">
+                                    <div class="modal-content position-relative">
+                                        <div class="position-absolute top-0 end-0 mt-2 me-2 z-index-1">
+                                            <button class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <img id="modal-image" alt="{{ $item->image }}" class="img-thumbnail">
                                     </div>
-                                    <img id="modal-image" alt="{{ $item->image }}" class="img-thumbnail">
                                 </div>
                             </div>
-                        </div>
                             @endforeach
                         </tbody>
                     </table>
@@ -486,10 +485,7 @@
     })
 </script>
 
-<script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
-<script>
-    new DataTable('#table-incidental');
-</script>
+
 <script>
     const modal = new bootstrap.Modal(document.getElementById('error-modal'));
     const modalImage = document.getElementById('modal-image');

@@ -79,9 +79,13 @@
                                                     <input class="form-check-input" name="bulk-elect" type="checkbox" id="{{ $item->id }}" data-bulk-select-row="data-bulk-select-row" />
                                                 </div>
                                             </th>
-                                            <td class="align-middle">
-                                                <img src="{{ $item->image ? url($item->image) : url('/assets/img/no_image.jpeg') }}" width="100">
+                                            <td>
+                                                <a href="{{ $item->image ? url($item->image) : url('/assets/img/no_image.jpeg') }}" data-bs-toggle="modal" data-bs-target="#error-modal" data-image="{{ $item->image ? url($item->image) : url('/assets/img/no_image.jpeg') }}">
+                                                    <img src="{{ $item->image ? url($item->image) : url('/assets/img/no_image.jpeg') }}" alt="{{ $item->image }}" style="max-width: 75px; height: 75px">
+                                                </a>
                                             </td>
+
+
                                             <th class="align-middle">{{ $item->Unit->nama_unit }} -
                                                 {{ $item->Unit->Tower->nama_tower }}</th>
                                             <th class="align-middle">
@@ -287,6 +291,16 @@
                                                             </button>
                                                         </div>
                                                     </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-hidden="true">
+                                            <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 500px">
+                                                <div class="modal-content position-relative">
+                                                    <div class="position-absolute top-0 end-0 mt-2 me-2 z-index-1">
+                                                        <button class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                    </div>
+                                                    <img id="modal-image" alt="{{ $item->image }}" class="img-thumbnail">
                                                 </div>
                                             </div>
                                         </div>
@@ -511,5 +525,20 @@
             }
         })
     }
+</script>
+
+
+<script>
+    const modal = new bootstrap.Modal(document.getElementById('error-modal'));
+    const modalImage = document.getElementById('modal-image');
+
+    document.querySelectorAll('[data-bs-toggle="modal"]').forEach((element) => {
+        element.addEventListener('click', (event) => {
+            event.preventDefault();
+            const imageSrc = element.getAttribute('data-image');
+            modalImage.src = imageSrc;
+            modal.show();
+        });
+    });
 </script>
 @endsection
