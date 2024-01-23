@@ -2,9 +2,7 @@
 
 namespace App\Jobs;
 
-use App\Mail\DefaultPassword;
-use App\Models\Tenant;
-use App\Models\Unit;
+use App\Mail\EmailKaryawan;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
@@ -13,20 +11,19 @@ use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Mail;
 
- class BlastDefaultPassword implements ShouldQueue
+class BlastEmailKaryawan implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    protected $db_name, $tenant;
-
+    protected $db_name, $karyawan;
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($db_name, $tenant)
+    public function __construct($db_name , $karyawan)
     {
         $this->db_name = $db_name;
-        $this->tenant = $tenant;
+        $this->karyawan = $karyawan;
     }
 
     /**
@@ -36,6 +33,6 @@ use Illuminate\Support\Facades\Mail;
      */
     public function handle()
     {
-        Mail::to($this->tenant->email_tenant)->send(new DefaultPassword($this->tenant));
+        Mail::to($this->karyawan->email_karyawan)->send(new EmailKaryawan($this->karyawan));
     }
 }

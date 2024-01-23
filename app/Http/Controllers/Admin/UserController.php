@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
 use App\Jobs\BlastDefaultPassword;
+use App\Jobs\BlastEmailKaryawan;
+use App\Mail\DefaultPassword;
 use App\Models\Karyawan;
 use App\Models\Login;
 use App\Models\OwnerH;
@@ -15,6 +17,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use RealRashid\SweetAlert\Facades\Alert;
 use Throwable;
 
@@ -35,12 +38,12 @@ class UserController extends Controller
     public function index()
     {
         $connUser = ConnectionDB::setConnection(new User());
-    
-        $data['users'] = $connUser->orderBy('nama_user', 'asc')->get(); 
-    
+
+        $data['users'] = $connUser->orderBy('nama_user', 'asc')->get();
+
         return view('AdminSite.User.index', $data);
     }
-    
+
 
 
     public function create()
@@ -209,7 +212,26 @@ class UserController extends Controller
 
     public function Blast()
     {
-        BlastDefaultPassword::dispatch(ConnectionDB::getDBname());
+        $tenants = ConnectionDB::setConnection(new Tenant());
+        $tenants = $tenants->get();
+
+        foreach ($tenants as $tenant) {
+            BlastDefaultPassword::dispatch(ConnectionDB::getDBname(), $tenant);
+        }
+
+        Alert::success('Berhasil', 'Blast email berhasil dikirim');
+        return redirect()->back();
+    }
+
+    public function BlastEmailKaryawan()
+    {
+        $karyawans = ConnectionDB::setConnection(new Karyawan());
+        $karyawans = $karyawans->get();
+        
+        foreach ($karyawans as $karyawan) {
+            BlastEmailKaryawan::dispatch(ConnectionDB::getDBname(), $karyawan);
+        }
+
         Alert::success('Berhasil', 'Blast email berhasil dikirim');
         return redirect()->back();
     }
