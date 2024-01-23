@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Helpers\ConnectionDB;
 use App\Http\Controllers\Controller;
 use App\Jobs\BlastDefaultPassword;
+use App\Jobs\BlastEmailKaryawan;
 use App\Mail\DefaultPassword;
 use App\Models\Karyawan;
 use App\Models\Login;
@@ -216,6 +217,19 @@ class UserController extends Controller
 
         foreach ($tenants as $tenant) {
             BlastDefaultPassword::dispatch(ConnectionDB::getDBname(), $tenant);
+        }
+
+        Alert::success('Berhasil', 'Blast email berhasil dikirim');
+        return redirect()->back();
+    }
+
+    public function BlastEmailKaryawan()
+    {
+        $karyawans = ConnectionDB::setConnection(new Karyawan());
+        $karyawans = $karyawans->get();
+        
+        foreach ($karyawans as $karyawan) {
+            BlastEmailKaryawan::dispatch(ConnectionDB::getDBname(), $karyawan);
         }
 
         Alert::success('Berhasil', 'Blast email berhasil dikirim');

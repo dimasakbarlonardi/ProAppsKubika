@@ -9,7 +9,8 @@
             </div>
             <div class="col-auto d-flex">
                 <a class="btn btn-falcon-default btn-sm text-600" href="{{ route('users.create') }}" style="margin-right: 10px;">Add User</a>
-                <a class="btn btn-falcon-default btn-sm text-600" href="{{ route('BlastEmail') }}">Send Blast Email User</a>
+                <a class="btn btn-falcon-default btn-sm text-600" href="{{ route('BlastEmailKaryawan') }}" onclick="confirmBlastEmail('BlastEmailKaryawan', event)" style="margin-right: 10px;">Send Blast Email Karyawan</a>
+                <a class="btn btn-falcon-default btn-sm text-600" href="{{ route('BlastEmail') }}" onclick="confirmBlastEmailTenant('BlastEmail', event)" style="margin-right: 10px;">Send Blast Email Tenant</a>
             </div>
         </div>
     </div>
@@ -63,3 +64,25 @@
     </div>
 </div>
 @endsection
+
+@section('script')
+<script>
+    function confirmBlastEmail(route, event) {
+        var userConfirmed = confirm('Are you sure you want to send a blast email?');
+
+        if (!userConfirmed) {
+            event.preventDefault();
+        }
+    }
+</script>
+<script>
+    function confirmBlastEmailTenant(route, event) {
+        var userConfirmed = confirm('Are you sure you want to send a blast email?');
+
+        if (!userConfirmed) {
+            event.preventDefault();
+        }
+    }
+</script>
+@endsection
+
