@@ -16,16 +16,17 @@ use Illuminate\Support\Facades\Mail;
 class BlastDefaultPassword implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
-    protected $db_name;
+    protected $db_name, $tenant;
 
     /**
      * Create a new job instance.
      *
      * @return void
      */
-    public function __construct($db_name)
+    public function __construct($db_name, $tenant)
     {
         $this->db_name = $db_name;
+        $this->tenant = $tenant;
     }
 
     /**
@@ -35,11 +36,6 @@ class BlastDefaultPassword implements ShouldQueue
      */
     public function handle()
     {
-        $tenants = new Tenant();
-        $tenants = $tenants->setConnection($this->db_name);
-        $tenants = $tenants->get();
-        foreach ($tenants as $tenant) {
-            Mail::to($tenant->email_tenant)->send(new DefaultPassword($tenant));
-        }
+        Mail::to($this->tenant->email_tenant)->send(new DefaultPassword($this->tenant));
     }
 }

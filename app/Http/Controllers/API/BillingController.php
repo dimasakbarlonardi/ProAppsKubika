@@ -401,8 +401,8 @@ class BillingController extends Controller
             $object = new stdClass();
             $object->unit = $unit->nama_unit;
             $object->period = Carbon::now()->format('m');
-            $object->current = count($unit->electricUUS) > 0 ? $unit->electricUUS[0]->nomor_listrik_awal : 0;
-            $object->previous = count($unit->electricUUS) > 0 ? $unit->electricUUS[0]->nomor_listrik_akhir : $unit->meter_listrik_awal;
+            $object->current = count($unit->electricUUS) > 0 ? $unit->electricUUS[0]->nomor_listrik_akhir : 0;
+            $object->previous = count($unit->electricUUS) > 0 ? $unit->electricUUS[0]->nomor_listrik_awal : $unit->nomor_listrik_awal;
 
             return ResponseFormatter::success(
                 $object,
@@ -420,7 +420,10 @@ class BillingController extends Controller
         $login = $request->user();
         $site = Site::find($login->id_site);
 
-        $usage = $request->current - $request->previous;
+        $connUnit = ConnectionDB::setConnection(new Unit());
+        $unit = $connUnit->find($unitID);
+
+        $usage = $request->current - $unit->electricUUS[0]->nomor_listrik_akhir;
 
         if ($login) {
             $user = new User();
@@ -447,7 +450,7 @@ class BillingController extends Controller
                     'periode_bulan' => $request->periode_bulan,
                     'periode_tahun' => Carbon::now()->format('Y'),
                     'id_unit' => $unitID,
-                    'nomor_listrik_awal' => $request->previous,
+                    'nomor_listrik_awal' => $unit->electricUUS[0]->nomor_listrik_akhir,
                     'nomor_listrik_akhir' => $request->current,
                     'usage' => $usage,
                     'abodemen_value' => $get_abodemen['abodemen'],
@@ -496,8 +499,8 @@ class BillingController extends Controller
             $object = new stdClass();
             $object->unit = $unit->nama_unit;
             $object->period = Carbon::now()->format('m');
-            $object->current = count($unit->waterUUS) > 0 ? $unit->waterUUS[0]->nomor_air_awal : 0;
-            $object->previous = count($unit->waterUUS) > 0 ? $unit->waterUUS[0]->nomor_air_akhir : $unit->meter_air_awal;
+            $object->current = count($unit->waterUUS) > 0 ? $unit->waterUUS[0]->nomor_air_akhir : 0;
+            $object->previous = count($unit->waterUUS) > 0 ? $unit->waterUUS[0]->nomor_air_awal : $unit->nomor_air_awal;
 
             return ResponseFormatter::success(
                 $object,
@@ -512,7 +515,10 @@ class BillingController extends Controller
 
     public function storeWaterMeter(Request $request, $unitID)
     {
-        $usage = $request->current - $request->previous;
+        $connUnit = ConnectionDB::setConnection(new Unit());
+        $unit = $connUnit->find($unitID);
+
+        $usage = $request->current - $unit->waterUUS[0]->nomor_air_akhir;
         $login = $request->user();
         $site = Site::find($login->id_site);
 
@@ -540,7 +546,7 @@ class BillingController extends Controller
                     'periode_bulan' => $request->periode_bulan,
                     'periode_tahun' => Carbon::now()->format('Y'),
                     'id_unit' => $unitID,
-                    'nomor_air_awal' => $request->previous,
+                    'nomor_air_awal' => $unit->waterUUS[0]->nomor_air_akhir,
                     'nomor_air_akhir' => $request->current,
                     'usage' => $usage,
                     'total' => $inputWater['total'],

@@ -213,7 +213,8 @@ Route::prefix('admin')->group(function () {
 
         // CRUD User
         Route::resource('users', UserController::class);
-        Route::post('/users/Blast-Email', [UserController::class, 'Blast'])->name('BlastEmail');
+        Route::get('/users/default/blast-email', [UserController::class, 'Blast'])->name('BlastEmail');
+
 
         // CRUD Role
         Route::resource('roles', RoleController::class);
