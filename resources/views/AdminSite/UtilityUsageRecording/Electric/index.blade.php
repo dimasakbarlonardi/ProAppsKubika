@@ -85,7 +85,7 @@
                                 </th>
                                 <td>
                                     <a href="{{ $item->image ? url($item->image) : url('/assets/img/no_image.jpeg') }}" data-bs-toggle="modal" data-bs-target="#error-modal" data-image="{{ $item->image ? url($item->image) : url('/assets/img/no_image.jpeg') }}">
-                                        <img src="{{ $item->image ? url($item->image) : url('/assets/img/no_image.jpeg') }}" alt="{{ $item->image }}" style="max-width: 50px; height: 50px">
+                                        <img src="{{ $item->image ? url($item->image) : url('/assets/img/no_image.jpeg') }}" alt="{{ $item->image }}" style="max-width: 75px; height: 75px">
                                     </a>
                                 </td>
 
@@ -317,6 +317,17 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="modal fade" id="error-modal" tabindex="-1" role="dialog" aria-hidden="true">
+                            <div class="modal-dialog modal-dialog-centered" role="document" style="max-width: 500px">
+                                <div class="modal-content position-relative">
+                                    <div class="position-absolute top-0 end-0 mt-2 me-2 z-index-1">
+                                        <button class="btn-close btn btn-sm btn-circle d-flex flex-center transition-base"
+                                            data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <img id="modal-image" alt="{{ $item->image }}" class="img-thumbnail">
+                                </div>
+                            </div>
+                        </div>
                             @endforeach
                         </tbody>
                     </table>
