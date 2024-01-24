@@ -33,7 +33,7 @@
                             <th scope="col">No</th>
                             <th scope="col">Email</th>
                             <th scope="col">Nama User</th>
-                            <th scope="col">ID Site</th>
+                            <th scope="col">Role</th>
                             <th class="text-center">Action</th>
                         </tr>
                     </thead>
@@ -43,7 +43,7 @@
                             <th scope="row">{{ $key + 1 }}</th>
                             <td class="login_user">{{ $user->login_user }}</td>
                             <td class="nama_user">{{ $user->nama_user }}</td>
-                            <td class="id_site">{{ $user->id_site }}</td>
+                            <td class="nama_role">{{ optional($user->RoleH)->nama_role }}</td>
                             <td class="text-center">
                                 <a href="{{ route('users.edit', $user->id_user) }}" class="btn btn-sm btn-warning">Edit</a>
                                 <form class="d-inline" action="{{ route('users.destroy', $user->id_user) }}" method="post">
