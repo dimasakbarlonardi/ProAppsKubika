@@ -103,7 +103,7 @@ class TenantController extends Controller
         }
 
         // $tickets = $tickets->orderBy('id', 'DESC');
-        $data['tenants'] = $tenants->get();
+        $data['tenants'] = $tenants->orderBy('nama_tenant','asc')->get();
 
         return response()->json([
             'html' => view('AdminSite.Tenant.table-data', $data)->render()

@@ -60,11 +60,15 @@ class TenantUnitController extends Controller
     public function show($id)
     {
         $conn = ConnectionDB::setConnection(new TenantUnit());
-
+        $connUnit = ConnectionDB::setConnection(new Unit());
+    
         $data['tenantunits'] = $conn->where('id_tenant_unit', $id)->first();
-
+    
+        $data['unit'] = $connUnit->where('id_unit', $data['tenantunits']->id_unit)->first();
+    
         return view('AdminSite.TenantUnit.Unit.show', $data);
     }
+    
 
     public function getUnitIDFromTU(Request $request)
     {

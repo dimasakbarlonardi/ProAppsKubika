@@ -35,15 +35,29 @@ class UserController extends Controller
     //     return $user;
     // }
 
-    public function index()
+    // public function index()
+    // {
+    //     $connUser = ConnectionDB::setConnection(new User());
+
+    //     $data['users'] = $connUser->orderBy('nama_user', 'asc')->get();
+
+    //     return view('AdminSite.User.index', $data);
+    // }
+
+    public function index(Request $request)
     {
         $connUser = ConnectionDB::setConnection(new User());
 
-        $data['users'] = $connUser->orderBy('nama_user', 'asc')->get();
+        $query = $connUser->orderBy('nama_user', 'asc');
+
+        if ($request->has('userCategoryFilter') && !empty($request->userCategoryFilter)) {
+            $query->where('user_category', $request->userCategoryFilter);
+        }
+
+        $data['users'] = $query->get();
 
         return view('AdminSite.User.index', $data);
     }
-
 
 
     public function create()
