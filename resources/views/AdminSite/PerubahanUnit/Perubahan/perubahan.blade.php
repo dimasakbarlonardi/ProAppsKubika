@@ -15,7 +15,7 @@
         <tbody>
             @foreach ($tenant_units as $key => $tu)
                 <tr>
-                    <td>{{ $tu->tenant->nama_tenant }}</td>
+                    <td>{{ optional($tu->tenant)->nama_tenant }}</td>
                     <td>{{ optional($tu->unit)->nama_unit }}</td>
                     <td>{{ optional(optional($tu->unit)->id_unit ? $tu->Owner($tu->unit->id_unit) : null)->nama_tenant }}</td>
                     <td class="text-center">
