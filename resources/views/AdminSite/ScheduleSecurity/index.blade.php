@@ -94,7 +94,7 @@
                         </div>
                     </div>else
                 </div>
-                <input type="hidden" name="id_parameter_security" value="{{ $eq->id }}">
+                <input type="hidden" name="id_parameter_security" value="{{ optional($eq)->id }}">
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary">Import</button>
                 </div>
