@@ -86,7 +86,7 @@
             <ul>
                 <li><strong>Email:</strong> {{ $tenant->email_tenant }}</li>
                 <li><strong>Password:</strong> password</li>
-                <li><strong>Site:</strong> Park Royal 1-2</li>
+                <li><strong>Site:</strong> Kubikahomy</li>
                 <li><strong>Access Role:</strong> Tenant</li>
             </ul>
             <p>(Please note: The password is the default; for security reasons, please change your password after the first login.)</p>
