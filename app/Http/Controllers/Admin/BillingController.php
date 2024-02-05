@@ -73,7 +73,7 @@ class BillingController extends Controller
                 ->where('id_unit', $data['waterUSS']->id_unit)
                 ->first();
             // $data['status'] = $data['waterUSS']->Unit->TenantUnit->Tenant->User ? true : false;
-            $data['nama_unit'] = $data['elecUSS']->Unit->nama_unit;
+            $data['nama_unit'] = $data['waterUSS']->Unit->nama_unit;
         }
 
         $data['status'] = true;

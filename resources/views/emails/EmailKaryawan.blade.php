@@ -77,7 +77,9 @@
             <ul>
                 <li><strong>Email:</strong> {{ $karyawan->email_karyawan }}</li>
                 <li><strong>Password:</strong> password</li>
-                <li><strong>Site:</strong> Kubikahomy</li>
+                @if ($karyawan->site)
+                <p><strong>Site:</strong> {{ $karyawan->site->nama_site }}</p>
+                @endif
                 <li><strong>Access Role:</strong> Building Management</li>
             </ul>
             <p>(Please note: The password is the default; for security reasons, please change your password after the first login.)</p>

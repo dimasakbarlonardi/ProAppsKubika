@@ -86,7 +86,9 @@
             <ul>
                 <li><strong>Email:</strong> {{ $tenant->email_tenant }}</li>
                 <li><strong>Password:</strong> password</li>
-                <li><strong>Site:</strong> Kubikahomy</li>
+                @if ($tenant->sites)
+                <p><strong>Site:</strong> {{ $tenant->sites->nama_site }}</p>
+                @endif
                 <li><strong>Access Role:</strong> Tenant</li>
             </ul>
             <p>(Please note: The password is the default; for security reasons, please change your password after the first login.)</p>
